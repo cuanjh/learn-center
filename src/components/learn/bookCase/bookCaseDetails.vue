@@ -29,6 +29,7 @@
   .tab-item .active {
     color: #0581D1;
     border-bottom: 4px solid #0581D1;
+    /* transition: all .5s linear; */
   }
   .tab-content {
     border-radius: 3px;
@@ -51,24 +52,24 @@
     color: #494949;
     margin-top: 12px;
   }
+  .book-info .desc a {
+    color: #0581D1;
+  }
 </style>
 <template>
   <div class="book-details">
     <div class="details-header">
       <div class="tab-item">
-        <span class="active">信息</span>
-        <span>资源</span>
+        <span v-bind:class="{'active': tabFlag}" @click="tabChange">信息</span>
+        <span v-bind:class="{'active': !tabFlag}" @click="tabChange">资源</span>
       </div>
     </div>
     <div class="tab-content">
       <ul class="book-info">
-        <li>
-          <p class="title">简介</p>
-          <p class="desc">Luganda (Luganda) also known as Ganda, is the main language of Uganda. More than ten million of the users are mainly concentrated in southern Uganda, includingthe cap... </p>
-        </li>
-        <li>
-          <p class="title">简介</p>
-          <p class="desc">Luganda (Luganda) also known as Ganda, is the main language of Uganda. More than ten million of the users are mainly concentrated in southern Uganda, includingthe cap... </p>
+        <li v-for="(item, key, index) in langInfoObj" :key="index" v-if="item.info">
+          <p class="title">{{item.title}}</p>
+          <p v-if="key === 'LanguageResources'" class="desc"><a :href="item.info">{{item.info}}</a></p>
+          <p v-else class="desc">{{item.info}}</p>
         </li>
       </ul>
     </div>
@@ -78,15 +79,58 @@
 import http from './../../../api/bookCase.js'
 export default {
   data () {
-    return {}
+    return {
+      tabFlag: true, // true 语言信息 false 资源 电台
+      langInfoObj: { // 目前只显示这几项 info为空代表后端没有这个信息
+        'AlternateNames': {
+          title: '别称',
+          info: ''
+        },
+        'ISO_639_3': {
+          title: '语言编码',
+          info: ''
+        },
+        'Population': {
+          title: '使用人口',
+          info: ''
+        },
+        'Location': {
+          title: '使用地区',
+          info: ''
+        },
+        'Dialects': {
+          title: '方言',
+          info: ''
+        },
+        'LanguageUse': {
+          title: '使用范围',
+          info: ''
+        },
+        'LanguageDevelopment': {
+          title: '语言发展情况',
+          info: ''
+        },
+        'LanguageResources': {
+          title: 'OLAC资源',
+          info: ''
+        }
+      }
+    }
   },
   mounted () {
-    console.log(http.langInfo)
-    http.langInfo({lang_code: 'eng-Basic'}).then(res => {
+    http.langInfo({course_code: this.$route.params.courseCode}).then(res => {
       for (var item in res.langInfo) {
-        console.log(res.langInfo[item])
+        if (this.langInfoObj[item]) {
+          this.langInfoObj[item]['info'] = res.langInfo[item]['info']
+        }
       }
+      console.log(this.langInfoObj)
     })
+  },
+  methods: {
+    tabChange () {
+      this.tabFlag = !this.tabFlag
+    }
   }
 
 }

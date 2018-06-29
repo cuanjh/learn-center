@@ -51,7 +51,7 @@ export default[
         component: bookCase
       },
       {
-        path: 'book-details',
+        path: 'book-details/:courseCode',
         component: bookCaseDetails
       }
     ]
