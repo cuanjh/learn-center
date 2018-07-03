@@ -131,7 +131,7 @@
             <p class="desc">{{item.des}}</p>
             <p class="time">课时：{{item.level_num}}课时</p>
             <p class="home-work">作业：{{item.homework_num}}</p>
-            <p class="btn">课程详情</p>
+            <p class="btn" @click="goDetails(item.code)">课程详情</p>
           </div>
         </li>
       </ul>
@@ -150,7 +150,7 @@
             <p class="desc">{{item.des}}</p>
             <p class="time">课时：{{item.level_num}}课时</p>
             <p class="home-work">作业：{{item.homework_num}}</p>
-            <p class="btn">课程详情</p>
+            <p class="btn" @click="goDetails(item.code)">课程详情</p>
           </div>
         </li>
       </ul>
@@ -189,6 +189,9 @@ export default {
     },
     hideDetails () {
       this.showDetailsHot = this.showDetailsChina = null
+    },
+    goDetails (code) {
+      this.$router.push({ path: `/learn/book-details/${code}` })
     }
   }
 }
