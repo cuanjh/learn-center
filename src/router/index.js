@@ -12,6 +12,10 @@ const bookCase = r => require.ensure([], () => r(require('@/components/learn/boo
 const bookCaseDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCaseDetails.vue'), 'learn'))
 export default[
   {
+    path: '/',
+    redirect: '/auth'
+  },
+  {
     path: '/auth',
     component: home,
     redirect: '/auth/login',
