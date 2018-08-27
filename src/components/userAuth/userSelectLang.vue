@@ -117,7 +117,7 @@
     right: 8px;
     top: 0;
     background-color: red;
-    background: url('./../../../static/img/home/search.svg') no-repeat center center;
+    background: url('./../../../static/images/home/search.svg') no-repeat center center;
     background-size: 20px;
   }
   .search-tip {

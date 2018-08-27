@@ -8,8 +8,19 @@ const authResetEmail = r => require.ensure([], () => r(require('@/components/use
 const selectLang = r => require.ensure([], () => r(require('@/components/userAuth/userSelectLang.vue')), 'userAuth')
 // 学习
 const learn = r => require.ensure([], () => r(require('@/components/learn/learn.vue'), 'learn'))
+const courseList = r => require.ensure([], () => r(require('@/components/learn/course/courseList.vue'), 'learn'))
 const bookCase = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCase.vue'), 'learn'))
 const bookCaseDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCaseDetails.vue'), 'learn'))
+const gradeLevelShow = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelShow.vue'), 'learn'))
+const gradeLevelConfirm = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelConfirm.vue'), 'learn'))
+// 学习系统
+const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue'), 'learnSystem'))
+const stage = r => require.ensure([], () => r(require('@/components/learnSystem/stage/stage.vue'), 'learnSystem'))
+const pk = r => require.ensure([], () => r(require('@/components/learnSystem/pk/pk.vue'), 'learnSystem'))
+const homework = r => require.ensure([], () => r(require('@/components/learnSystem/homework/homework.vue'), 'learnSystem'))
+const gradeLevel = r => require.ensure([], () => r(require('@/components/learnSystem/gradeLevel/gradeLevel.vue'), 'learnSystem'))
+const envirionmentTest = r => require.ensure([], () => r(require('@/components/learnSystem/userGuide/environmentTest.vue'), 'learnSystem'))
+const userGuide = r => require.ensure([], () => r(require('@/components/learnSystem/userGuide/userGuide.vue'), 'learnSystem'))
 export default[
   {
     path: '/',
@@ -17,8 +28,8 @@ export default[
   },
   {
     path: '/auth',
+    redirect: 'auth/login',
     component: home,
-    redirect: '/auth/login',
     children: [
       {
         path: 'login',
@@ -47,9 +58,16 @@ export default[
     ]
   },
   {
-    path: '/learn',
+    path: '/course',
     component: learn,
+    meta: {
+      auth: true
+    },
     children: [
+      {
+        path: 'course-list',
+        component: courseList
+      },
       {
         path: 'book-case',
         component: bookCase
@@ -57,6 +75,53 @@ export default[
       {
         path: 'book-details/:courseCode',
         component: bookCaseDetails
+      },
+      {
+        path: 'grade-level-show',
+        component: gradeLevelShow
+      },
+      {
+        path: 'grade-level-confirm',
+        component: gradeLevelConfirm
+      }
+    ]
+  },
+  {
+    path: '/learn',
+    component: learnSystem,
+    meta: {
+      auth: true
+    },
+    children: [
+      {
+        path: 'stage/:id',
+        name: 'stage',
+        props: true,
+        component: stage
+      },
+      {
+        path: 'pk',
+        name: 'pk',
+        component: pk
+      },
+      {
+        path: 'homework',
+        name: 'homework',
+        component: homework
+      },
+      {
+        path: 'gradeLevel/level:currLevel',
+        props: true,
+        name: 'gradeLevel',
+        component: gradeLevel
+      },
+      {
+        path: 'testing',
+        component: envirionmentTest
+      },
+      {
+        path: 'user-guide',
+        component: userGuide
       }
     ]
   }

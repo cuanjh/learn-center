@@ -1,0 +1,749 @@
+<template>
+  <div>
+    <div v-for="(item, index) in curLevelChapters" :key="index">
+      <div class="current-learn-course-info" v-show="item.code !== currentChapterCode"
+          :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1 && item.code !== currentChapterCode}"
+          @click="jumpToCourse(item.code)">
+        <div class="current-learn-course-flag">
+          <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image+'/format/jpeg'">
+          <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1 && item.code !== currentChapterCode"></div>
+        </div>
+        <div class="current-learn-course-word-info">
+          <div class="current-learn-course-title">
+            <span>课程</span>
+            <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
+          </div>
+          <div class="current-learn-course-describe">{{ item['info']['zh-cn']['describe'] }}</div>
+          <div class="current-learn-course-gold"  v-bind:class="{'courseIsLock': unlockCourses.indexOf(item.code) === -1  && item.code !== currentChapterCode}">
+            <i></i>
+            150金币
+          </div>
+        </div>
+        <div class="progress-area">
+          <div class="progress-bg">
+            <div class="progress" :style="{width: item.progress +'%'}"></div>
+          </div>
+          <div class="progress-val" :style="{color: item.progress ? '#0581d1' : '#cbcbcb'}">
+            {{ (item.progress ? item.progress : 0)+'%' }}
+          </div>
+        </div>
+      </div>
+
+      <transition name="fade">
+        <div class="course-core-test-check" v-show="item.code === currentChapterCode">
+          <ul>
+            <li class="course-brief">
+              <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image+'/format/jpeg'" alt="">
+              <div class="course-brief-shade">
+                <div class="course-brief-title">
+                  <span>课程</span>
+                  <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
+                </div>
+                <div class="course-brief-describe">{{ item['info']['zh-cn']['describe'] }}</div>
+                <div class="course-brief-progress-title">学习进度：</div>
+                <div class="course-brief-progress-area">
+                  <div class="course-brief-progress-bg">
+                    <div class="course-brief-progress" :style="{width: item.progress+'%'}"></div>
+                  </div>
+                  <div class="course-brief-progress-val">
+                    {{ (item.progress ? item.progress : 0)+'%'}}
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="course-core">
+              <div class="course-core-name">
+                <span>核心课程</span>
+              </div>
+              <div class="course-item-box" v-for="i in 5" :key="i">
+                <router-link :to="{ name: 'stage', params: {id: 'A0' + i}}">
+                  <div class="course-item">
+                    <p class="course-item-star" v-if="coreData[i]['isCompleted']">
+                      <span class="course-yellow-star"><i v-for="index in coreData[i]['starNum']" :key="index"></i></span>
+                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - coreData[i]['starNum'])" :key="index"></i></span>
+                    </p>
+                    <p class="course-item-progress" v-else>
+                      <span v-text="coreData[i]['completedRate']"></span>
+                    </p>
+                    <p class="course-item-icon">
+                      <img :style="coreData[i]['imgStyle']" :src="'../../../../static/images/course/course-core'+(i)+'.png'" alt="">
+                      <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate']" class="icon-course-lock"></i>
+                    </p>
+                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] }">核心{{i}}</p>
+                  </div>
+                </router-link>
+                <div class="course-circle-box" v-if="i<5">
+                  <div class="course-core-circle" :class="{'course-core-circle-locked': !coreData[i]['isCompleted'] }" v-for="index in 3" :key="index"></div>
+                </div>
+              </div>
+            </li>
+
+            <li class="course-review">
+              <div class="course-review-name">
+                <span>复习</span>
+              </div>
+              <div class="course-item-box">
+                <router-link :to="{ name: 'pk' }">
+                  <div class="course-item">
+                    <p class="course-item-star" v-show="coreData['isTestCheck'] && coreData['isTestCompleted']">
+                      <span class="course-yellow-star"><i v-for="index in coreData['starTestNum']" :key="index"></i></span>
+                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - coreData['starTestNum'])" :key="index"></i></span>
+                    </p>
+                    <p class="course-item-progress" v-show="!coreData['isTestCompleted']">
+                      <span v-show="coreData['isTestCheck'] && !coreData['isTestCompleted']" v-text="coreData['completedTestRate']"></span>
+                    </p>
+                    <p class="course-item-icon">
+                      <img :style="coreData['imgTestStyle']" :src="'../../../../static/images/course/course-review-test.png'" alt="">
+                      <i v-show="!coreData['isTestCompleted']" class="icon-review-lock"></i>
+                    </p>
+                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData['completedTestRate'] }">测试</p>
+                  </div>
+                </router-link>
+                <div class="course-circle-box">
+                  <div class="course-review-circle" :class="{'course-review-circle-locked': !coreData['isTestCompleted'] }" v-for="index in 3" :key="index"></div>
+                </div>
+              </div>
+            <div class="course-item-box">
+              <router-link :to="{ name: 'homework' }">
+                <div class="course-item">
+                  <p class="course-item-star">
+                    <span class="course-yellow-star"><i v-for="index in 5" :key="index"></i></span>
+                  </p>
+                  <p class="course-item-icon">
+                    <img v-bind:src="'../../../../static/images/course/course-review-homework.png'" alt="">
+                  </p>
+                  <p class="course-item-title">作业</p>
+                </div>
+              </router-link>
+            </div>
+          </li>
+
+          <li class="course-vip" v-show="item.code === currentChapterCode">
+              <div class="course-vip-name">
+                <p>强化</p>
+                <p>(会员专享)</p>
+              </div>
+              <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
+                <router-link :to="{ name: 'stage', params: {id: 'A' + (i + 1)}}">
+                  <div class="course-item">
+                    <p class="course-item-star" v-if="coreData['A' + (i + 1)]['isCompleted']">
+                      <span class="course-yellow-star"><i v-for="index in coreData['A' + (i + 1)]['starNum']" :key="index"></i></span>
+                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - coreData['A' + (i + 1)]['starNum'])" :key="index"></i></span>
+                    </p>
+                    <p class="course-item-progress" v-else>
+                      <span v-text="coreData['A' + (i + 1)]['completedRate']"></span>
+                    </p>
+                    <p class="course-item-icon">
+                      <img :style="coreData['A' + (i + 1)]['imgStyle']" :src="'../../../../static/images/course/course-vip-'+vipitem+'.png'" alt="">
+                      <i v-show="!coreData['A' + (i + 1)]['isCompleted'] && !coreData['A' + (i + 1)]['completedRate']" class="icon-vip-lock"></i>
+                    </p>
+                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData['A' + (i + 1)]['completedRate'] }">{{ $t("courseItem.vip."+vipitem) }}</p>
+                  </div>
+                  <div class="course-circle-box" v-if="i<(vipItemList.length-1)">
+                    <div class="course-vip-circle" :class="{'course-vip-circle-locked': !coreData['A' + (i + 1)]['isCompleted'] }" v-for="index in 3" :key="index"></div>
+                  </div>
+                </router-link>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </transition>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+export default {
+  props: ['currentCourseCode'],
+  data () {
+    return {
+      isTestCheck: 0,
+      chapterProgress: 0,
+      vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking']
+    }
+  },
+  computed: {
+    ...mapState({
+      // 个人/是否是会员 0--不是会员 1---会员 2--会员过期
+      'isVip': state => state.user.userInfo.member_info.member_type,
+      'currentChapterCode': state => state.course.currentChapterCode,
+      'unlockCourses': state => state.course.unlockCourses,
+      'buyChapters': state => state.course.buyChapters,
+      'curLevelChapters': state => state.course.curLevelChapters,
+      'courseBaseInfo': state => state.course.coursBaseInfo,
+      'curChapterProgress': state => state.course.curChapterProgress,
+      'curChapterContent': state => state.course.curChapterContent,
+      'chapterTestResult': state => state.course.chapterTestResult
+    }),
+    coreData () {
+      var that = this
+      console.log(that.curLevelChapters)
+      // 核心课程
+      let srcCoreArray = Object.keys(that.curChapterProgress).filter((item) => {
+        return item.indexOf('A0') > -1
+      }).map((el) => {
+        return that.curChapterProgress[el]
+      })
+
+      let curChapterCode = that.currentChapterCode
+      let corePartInfos = that.$store.state.course.courseBaseInfo.corePartInfos
+      let coreParts = corePartInfos.filter((item) => curChapterCode.indexOf(item.chapter_code) > 0)
+
+      let retObj = {}
+      let isTestCheck = 0
+      let partObj = coreParts[0].parts
+      partObj.forEach(element => {
+        let startForm = element.start_form - 1
+        let endForm = element.end_form
+        let coreForms = srcCoreArray.slice(startForm, endForm)
+        let obj = {}
+        let len = endForm - startForm
+        if (coreForms.length < len) {
+          obj['isCompleted'] = 0
+          obj['starNum'] = 0
+          obj['completedRate'] = !coreForms.length ? '' : ((coreForms.length / len) * 100).toFixed(0) + '%'
+          obj['imgStyle'] = !coreForms.length ? '' : {
+            'border-radius': '50% 50%',
+            'border-right': '3px solid #2A9FE4'
+          }
+          isTestCheck = 0
+        } else {
+          obj['isCompleted'] = 1
+          obj['completedRate'] = '1'
+          let correctNum = coreForms.filter((item) => item === 1).length
+          let correctRate = (correctNum / coreForms.length).toFixed(2)
+          obj['starNum'] = this.starNum(correctRate)
+          obj['imgStyle'] = {
+            'border-radius': '50% 50%',
+            'border': '3px solid #2A9FE4'
+          }
+          isTestCheck = 1
+        }
+        retObj[element.part_num] = obj
+      })
+
+      retObj['isTestCheck'] = isTestCheck
+
+      // 测试
+      let srcTestArray = Object.keys(that.curChapterProgress).filter((item) => {
+        return item.indexOf('A7') > -1
+      }).map((el) => {
+        return this.curChapterProgress[el]
+      })
+      console.log(srcTestArray)
+      if (Object.keys(that.chapterTestResult).length > 0) {
+        retObj['isTestCompleted'] = 1
+        retObj['completedTestRate'] = '1'
+        let correctRate = Math.floor((this.chapterTestResult.correct_rate).toFixed(3))
+        retObj['starTestNum'] = this.starNum(correctRate)
+        retObj['imgTestStyle'] = {
+          'border-radius': '50% 50%',
+          'border': '3px solid #7FB926'
+        }
+      } else {
+        retObj['isTestCompleted'] = 0
+        retObj['starTestNum'] = 0
+        retObj['completedTestRate'] = ''
+        retObj['imgTestStyle'] = ''
+      }
+
+      // 强化 会员专享
+      let srcVipArray = []
+      let vipFormArray = []
+      for (let i = 1; i <= 6; i++) {
+        let obj = {}
+        obj['isCompleted'] = 0
+        obj['starNum'] = 0
+        obj['completedRate'] = '0'
+        obj['imgStyle'] = ''
+
+        if (Object.keys(that.$store.state.course.curChapterContent).length > 0) {
+          srcVipArray[i] = Object.keys(that.$store.state.course.curChapterProgress).filter((item) => {
+            return item.indexOf('A' + i) > -1
+          }).map((el) => {
+            return that.curChapterProgress[el]
+          })
+          let vipParts = that.curChapterContent.improvement.parts
+          vipParts.forEach((item) => {
+            if (item.slide_type_code.indexOf('A' + i) > -1) {
+              let formsLength = 0
+              item.slides.forEach((slide) => {
+                formsLength += slide.forms.length
+              })
+              vipFormArray[i] = formsLength
+            }
+          })
+
+          if (srcVipArray[i].length < vipFormArray[i]) {
+            obj['isCompleted'] = 0
+            obj['starNum'] = 0
+            obj['completedRate'] = !srcVipArray[i].length ? '' : ((srcVipArray[i].length / vipFormArray[i]) * 100).toFixed(0) + '%'
+            obj['imgStyle'] = !srcVipArray[i].length ? '' : {
+              'border-radius': '50% 50%',
+              'border-right': '3px solid #F5A623'
+            }
+          } else {
+            obj['isCompleted'] = 1
+            obj['completedRate'] = '1'
+            let correctNum = srcVipArray[i].filter((item) => item === 1).length
+            let correctRate = (correctNum / vipFormArray[i]).toFixed(2)
+            obj['starNum'] = this.starNum(correctRate)
+            obj['imgStyle'] = {
+              'border-radius': '50% 50%',
+              'border': '3px solid #F5A623'
+            }
+          }
+        }
+        retObj['A' + i] = obj
+      }
+      console.log(srcVipArray)
+      console.log(vipFormArray)
+      return retObj
+    }
+  },
+  methods: {
+    jumpToCourse (chapterCode) {
+      if (this.unlockCourses.indexOf(chapterCode) === -1) {
+        return false
+      }
+      console.log(chapterCode)
+      this.$emit('loadChapterInfo', chapterCode)
+    },
+    starNum (correctRate) {
+      let stars = 0
+      if (correctRate > 0 && correctRate <= 0.40) {
+        stars = 1
+      } else if (correctRate <= 0.65) {
+        stars = 2
+      } else if (correctRate <= 0.80) {
+        stars = 3
+      } else if (correctRate <= 0.95) {
+        stars = 4
+      } else {
+        stars = 5
+      }
+      return stars
+    }
+  }
+}
+</script>
+
+<style scoped>
+  .current-learn-course-info{
+    padding:15px;
+    background-color:#fff;
+    border-radius: 4px;
+    margin-top:15px;
+    overflow:hidden;
+  }
+
+  .current-learn-course-disabled{
+    cursor: not-allowed;
+  }
+
+  .current-learn-course-flag{
+    float:left;
+    width:213px;
+    height:100px;
+    border-radius: 2.73px;
+    overflow:hidden;
+    position:relative;
+  }
+
+  .current-learn-course-flag img{
+    height: 100%;
+    width: 100%;
+    line-height: auto;
+    object-fit: cover;
+  }
+
+  .fix-ie-bg{
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    background-image: url('../../../../static/images/learn/learn-course-little-bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .current-learn-course-word-info{
+    float:left;
+    margin-left:28px;
+  }
+
+  .current-learn-course-title{
+    font-size: 16px;
+    color: #404040;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  .current-learn-course-describe{
+    font-size:14px;
+    color:#616161;
+    line-height: 22px;
+  }
+
+  .current-learn-course-gold{
+    color: #616161;
+    font-size: 12px;
+    line-height: 15px;
+    margin-top: 39px;
+  }
+
+ .current-learn-course-gold i{
+    float:left;
+    width:14px;
+    height:14px;
+    margin-right:10px;
+    background:url(../../../../static/images/learn/learn-course-gold.png) no-repeat;
+    background-size:100% 100%;
+  }
+
+  .courseIsLock i{
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    -webkit-filter: gray;
+    filter: gray;
+  }
+
+  .progress-area {
+    float: right;
+    margin-right: 10px;
+    display: inline-flex;
+    line-height: 100px;
+  }
+
+  .progress-bg {
+    width: 131px;
+    height: 12px;
+    background-color: #f4f4f4;
+    border-radius: 100px;
+    margin: auto 10px;
+  }
+
+  .progress{
+    background-color: #2097DD;
+    height: 12px;
+    border-radius: 100px;
+    width:0;
+  }
+
+  .progress-val{
+    display: inline-block;
+    font-size: 14px;
+    color: #cbcbcb;
+    font-weight: bold;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all .2s linear;
+    height: 950px;
+    overflow: hidden;
+  }
+
+  .fade-enter, .fade-leave-to {
+    height: 0 !important;
+    opacity: 0;
+  }
+
+  .course-core-test-check{
+    background-color:#fff;
+    margin-top: 15px;
+    padding:15px;
+    border-radius:4px;
+  }
+
+  .course-brief{
+    position: relative;
+    border-radius: 2.73px;
+    height: 422px;
+  }
+
+  .course-brief img{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 2.73px;
+  }
+
+  .course-brief-shade{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.40);
+    border-radius: 2.73px;
+    z-index: 2;
+  }
+
+  .course-brief-title{
+    margin: 80px 0 0 80px;
+    font-size: 48px;
+    color: #ffffff;
+    line-height: 48px;
+    font-weight: bold;
+  }
+
+  .course-brief-describe{
+    font-size: 24px;
+    color: #ffffff;
+    line-height: 24px;
+    font-weight: bold;
+    margin: 17px 0 0 80px;
+  }
+
+  .course-brief-progress-title{
+    font-size: 20px;
+    color: #ffffff;
+    line-height: 24px;
+    font-weight: bold;
+    margin: 62px 0 0 80px;
+  }
+
+  .course-brief-progress-area {
+    margin: 10px 0 0 80px;
+    display: inline-flex;
+    line-height: 10px;
+  }
+
+  .course-brief-progress-bg {
+    width: 200px;
+    height: 12px;
+    background-color: rgba(244,244,244,0.4);
+    border-radius: 100px;
+    margin: auto 10px 0 0;
+  }
+
+  .course-brief-progress{
+    background-color: #2097DD;
+    height: 12px;
+    border-radius: 100px;
+    width:0;
+  }
+
+  .course-brief-progress-val{
+    display: inline-block;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  .course-core{
+    width: 100%;
+    border-bottom: 1px solid rgba(233,234,235,0.50);
+    padding: 20px 0;
+  }
+
+  .course-core-name{
+    font-size: 16px;
+    font-weight: bold;
+    color:#2a9fe4;
+    display: inline-block;
+    position: relative;
+    margin-top: 50px;
+    margin-right: 25px;
+    vertical-align: top;
+  }
+
+  .course-circle-box{
+    display: inline-block;
+    position: relative;
+  }
+
+  .course-core-circle {
+    display: inline-block;
+    margin: 54px 2px;
+    border-radius: 50%;
+  }
+
+  .course-core-circle:after {
+    content: '';
+    margin: 3px;
+    display: table;
+    width: 4px;
+    height: 4px;
+    background: #0581d1;
+    border-radius: 50%;
+  }
+
+  .course-core-circle-locked:after {
+    background: #C7EAFF;
+  }
+
+  .course-item-box{
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+  }
+
+  .course-item {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    margin-left: 8px;
+    height: 120px;
+    width: 75px;
+  }
+
+  .course-item-star{
+    margin-top: 8px;
+  }
+
+  .course-item-progress {
+    height: 10px;
+    width: 75px;
+    font-size: 12px;
+    color: #4A4A4A;
+  }
+
+  .course-item-icon{
+    margin: 20px 0 0 5px;
+    position: absolute;
+    height:64px
+  }
+  .course-item-icon img{
+    width: 64px;
+    height: 64px;
+  }
+
+  .icon-course-lock {
+    background-image: url('../../../../static/images/course/icon-course-lock.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    margin: -30px 0 0 8px;
+  }
+
+  .icon-review-lock {
+    background-image: url('../../../../static/images/course/icon-review-lock.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    margin: -30px 0 0 8px;
+  }
+
+  .icon-vip-lock {
+    background-image: url('../../../../static/images/course/icon-vip-lock.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    margin: -30px 0 0 8px;
+  }
+  .course-item-title{
+    position: absolute;
+    margin: 90px 0 0 20px;
+    line-height: 30px;
+    font-size: 14px;
+    color: #444444;
+    font-weight: bold;
+  }
+
+  .course-item-title-locked {
+    color: #d8d8d8;
+  }
+
+  .course-yellow-star i{
+    float:left;
+    width:10px;
+    height:10px;
+    margin-left:4px;
+    background:url(../../../../static/images/course/course-yellow-star.png) no-repeat;
+    background-size:100% 100%;
+  }
+
+  .course-review{
+    width: 100%;
+    border-bottom: 1px solid rgba(233,234,235,0.50);
+    padding: 20px 0;
+  }
+
+  .course-review-name{
+    font-size: 16px;
+    font-weight: bold;
+    color:#7FB926;
+    display: inline-block;
+    position: relative;
+    margin-right: 56px;
+    margin-top: 50px;
+    vertical-align: top;
+  }
+
+  .course-review-circle {
+    display: inline-block;
+    position: relative;
+    margin: 54px 2px;
+    border-radius: 50%;
+  }
+
+  .course-review-circle:after {
+    content: '';
+    margin: 3px;
+    display: table;
+    width: 4px;
+    height: 4px;
+    background: #7FB926;
+    border-radius: 50%;
+  }
+
+  .course-review-circle-locked:after {
+    background: #DCF0BC;
+  }
+
+  .course-vip{
+    width: 100%;
+    padding: 20px 0;
+  }
+
+  .course-vip-name{
+    font-size: 16px;
+    font-weight: bold;
+    color:#F5A623;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    height: 80px;
+    line-height: 20px;
+    margin: 40px 15px 0 0;
+  }
+
+  .course-vip-name p{
+    font-weight: bold;
+  }
+
+  .course-vip-circle {
+    display: inline-block;
+    margin: 54px 2px;
+    border-radius: 50%;
+  }
+
+  .course-vip-circle:after {
+    content: '';
+    margin: 3px;
+    display: table;
+    width: 4px;
+    height: 4px;
+    background: #F5A623;
+    border-radius: 50%;
+  }
+
+  .course-vip-circle-locked:after {
+    background: #FFEDCD;
+  }
+</style>

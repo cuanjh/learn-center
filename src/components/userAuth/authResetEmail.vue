@@ -80,7 +80,7 @@
     position: absolute;
     left: 15px;
     top: 20px;
-    background: url('./../../../static/img/home/error.svg') no-repeat center;
+    background: url('./../../../static/images/home/error.svg') no-repeat center;
   }
 </style>
 <template>

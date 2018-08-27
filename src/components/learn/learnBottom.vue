@@ -28,7 +28,7 @@
   .right i {
     width: 30px;
     height: 30px;
-    background: url('./../../../static/img/learn/logo-icon.png');
+    background: url('./../../../static/images/learn/logo-icon.png');
     background-size: 100%;
     margin-top: 30px;
     margin-left: 30px;

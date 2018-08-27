@@ -1,0 +1,688 @@
+<template>
+  <div>
+    <div class="sentence-box"></div>
+    <div class="stage f-cb f-usn">
+      <div v-for='(type, index) in typeList' :key='index' class='f-cb' :class='[type, {current:cur==index,up:showGuide}]' v-show='show'>
+        <transition name="fade" mode="out-in">
+          <component :is="'form-'+type" :data="list[index]" :ref="'comp'+index"></component>
+        </transition>
+      </div>
+    </div>
+    <progress-bar :class="{TLY : isTeacher}" :slideList="progress" :curSlide="curSlide" />
+    <coin-box :coin="coin" :total="totalCoin" v-if="!isTeacher"></coin-box>
+    <pause-window ref='pauseWindow'></pause-window>
+    <setting-window ref='settingWindow'></setting-window>
+    <tip-box ref="tipbox" :tip="micphoneTip" />
+    <core-summary ref="summary" />
+  </div>
+</template>
+
+<script>
+import _ from 'lodash'
+import $ from 'jquery'
+import { mapState, mapMutations, mapActions } from 'vuex'
+
+import ProgressBar from '../progress.vue'
+import CoinBox from './coinBox.vue'
+import PauseWindow from './pauseWindow.vue'
+import SettingWindow from './settingWindow.vue'
+import TipBox from '../tipbox.vue'
+import CoreSummary from '../summary.vue'
+
+import Recorder from '../../../plugins/recorder'
+import common from '../../../plugins/common'
+import Loader from '../../../plugins/loader'
+// import logCollect from '../../../plugins/logCollect'
+// import { onlyId } from '../../../plugins/onlyId'
+import coinCache from '../../../plugins/coin_cache'
+
+var END = -1 // 结束标志位
+var TRANSALTE_TIME = 500 // 动画过渡时间
+let CUTDOWN_TIME = 3 // 每学3个同步一次学习进度
+let t // 计时器
+export default {
+  props: ['id'],
+  data () {
+    return {
+      cur: -1, // 当前的子组件
+      isTeacher: 0,
+      coin: 0, // 获取的金币数
+      continue_correct: 0, // 连对数
+      max_continue_correct: 0, // 最高连击数
+      continue_wrong: 0, // 连错数,
+      last_time: 0, // 持续时间,
+      showGuide: false, // 用户引导层是否显示
+      show: true,
+      micphoneTip: '', // 提示框文字
+      cutdownTime: CUTDOWN_TIME,
+      thunk: {}, // promise
+      score: 0, // 分数
+      resultForms: {},
+      forms: {},
+      typeList: [],
+      list: []
+    }
+  },
+  components: {
+    ProgressBar,
+    CoinBox,
+    PauseWindow,
+    SettingWindow,
+    TipBox,
+    CoreSummary
+  },
+  beforeRouteUpdate (to, form, next) {
+    console.log('router update')
+    if (to.name === 'stage') {
+      let id = to.params.id
+      if (id.indexOf('A0') > -1) {
+        this.updateCurCoreParts(id)
+      }
+      this.chapterProgress(id)
+      this.timeCount()
+
+      var that = this
+      let _coinCache = coinCache.get(that.completePath)
+      if (_coinCache === null) {
+        coinCache.set(that.completePath, that.coin)
+      } else {
+        that.coin = _coinCache
+        that.totalCoin = parseInt(this.totalCoin) + _coinCache
+      }
+
+      var resource = this.getResource(this.curSlide)
+      changeData(this, Loader(resource))
+
+      next()
+    } else {
+      next()
+    }
+  },
+  created () {
+    this.$on('exit', (param) => {
+      console.log('exit')
+      // 题型组件通知打开退出菜单
+      this.micphoneTip = this.tips.exit_learn_system
+      this.$refs.tipbox.$emit('confirm-show', param)
+
+      // 组件暂停
+      this.$emit('component-pause', 'pasue')
+    })
+
+    this.$on('calCoin', () => {
+      console.log('calCoin')
+      var that = this
+      var minNum = 3 // 开始扣金币的最小数值
+      var baseCoin = 2 // 连错后每次扣除的金币
+
+      if (that.continue_correct & that.continue_wrong) { return }
+      // 连续错误及连续正确均有值说明连续被中断，不再计算
+      this.getCoinCalculationRule().then(() => {
+        var rules = this.coinCalculationRule.rules
+        var coin = 0 // 答对题目获取对应的金币个数
+        $(rules.coin_rules).each((index, el) => {
+          if (that.continue_correct === el.hits) {
+            coin = el.coins
+          }
+        })
+
+        if ((that.coin + coin) > rules.max_coins) {
+          // 每个part获取的金币数量进行限制
+          coin = Math.max((rules.max_coins - that.coin), 0)
+        }
+        if ((that.continue_correct >= rules.base)) {
+          // 连续正确
+          that.coin += coin
+          that.total_coin += coin
+        } else if (that.continue_wrong >= minNum) {
+          // 连续错误
+          that.coin -= baseCoin
+          that.total_coin = Math.max((that.total_coin - baseCoin), 0)
+        }
+      })
+    })
+
+    this.$on('correct', () => {
+      // if (this.progress[this.cur_slide - 1] !== -1) { return } // 如果题目做过不再计算
+
+      this.continue_correct += 1
+      this.$emit('calCoin')
+      this.continue_wrong = 0
+    })
+
+    this.$on('wrong', () => {
+      console.log('wrong')
+      // if (this.progress[this.cur_slide - 1] !== -1) { return } // 如果题目做过不再计算
+
+      this.max_continue_correct = Math.max(this.continue_correct, this.max_continue_correct) // 更新最高连击数
+      this.continue_wrong += 1
+      this.$emit('calCoin')
+      this.continue_correct = 0
+    })
+
+    this.$on('delTimer', () => {
+      clearTimeout(this.timer)
+      this.showGuide = false
+      // this.$broadcast('delPosition')
+    })
+    // 执行下一个组件
+    this.$on('next-component', (score) => {
+      this.$emit('delTimer')
+      this.score += score || 0
+      this.cur++
+
+      if (this.cur === this.list.length) {
+        // var s = this.score / this.comLength
+
+        // 修改进度条进度
+        if (!this.isTeacher) {
+          // this.updateCurSlide(this.curSlide)
+          // this.progress.$set(this.curSlide - 1, s)
+        }
+        this.score = 0
+        this.cur = this.list.length - 1
+        this.$emit('next-slide')
+
+        return
+      }
+
+      // 开始运行组件
+      setTimeout(() => {
+        this.component_start()
+      }, 100)
+      return false
+    })
+
+    // 返回目录
+    this.$on('back-content', () => {
+      if (this.isTeacher) {
+        var url = [
+          'v2',
+          'paradise',
+          this.LANG.lang + '-' + this.LANG.code,
+          // Config.LANG.lang,
+          // Config.LANG.code,
+          this.data[0]
+        ]
+        // return console.log(Config.index + url.join('/'))
+        return (window.location.href = this.index + url.join('/'))
+      }
+      // 退出学习日志数据收集
+      // var whetherFirst = (this.progress[0] === -1) - 0
+      // var currentForm =
+      //     window.location.href
+      //       .split('index/')[1]
+      //       .replace(/#/g, '')
+      //       .split('/')
+      //       .slice(0, -1)
+      //       .join('-') +
+      //     '-' +
+      //     this.curSlide +
+      //     '-' +
+      //     (this.cur + 1)
+      // var currentForm = window.location.href + '-' + this.curSlide + '-' + (this.cur + 1)
+      // console.log(currentForm)
+      // logCollect.learnExit(whetherFirst, currentForm)
+
+      // onlyId.del() // 删除临时cookie，下次判定就是初次学习
+      console.log(2222)
+      this.subComps().forEach((item) => {
+        if (item.length > 0) {
+          item[0].$emit('break')
+        }
+      })
+      this.$router.push({path: '/course/course-list'})
+      // this.$dispatch('change-router', _.take(this.data, 3).join('/'))
+    })
+
+    // 下一个slide
+    this.$on('next-slide', () => {
+      // 每次向下学slide Time自减1
+      // 每 CUTDOWN_TIME 次 同步一次学习进度
+      this.cutdownTime--
+      if (this.cutdownTime === 0) {
+        this.cutdownTime = CUTDOWN_TIME
+        this.postProgress().then(() => {
+          coinCache.update(this.coin)
+        })
+      }
+      // console.log('slides done:', this.cur_slide)
+      $('.sentence-box').empty()
+      if (this.curSlide + 1 === this.progress.length) {
+        this.thunk = -1
+      }
+      this.$emit('switch-slide', this.curSlide + 1, true)
+      return false
+    })
+
+    // 组件暂停
+    this.$on('component-pause', (pasue) => {
+      console.log(this.subComps())
+      var cur = _.get(this.subComps(), this.cur)[0]
+      if (!cur) {
+        return
+      }
+      this.updatePause(true)
+      _.get(this.subComps(), this.cur)[0].$emit('pause')
+
+      if (pasue) {
+        return
+      }
+      this.$refs.pauseWindow.$emit('pause-show')
+    })
+    // 组件恢复
+    this.$on('component-resume', () => {
+      this.updatePause(false)
+      if (this.subComps().length > 0) {
+        _.get(this.subComps(), this.cur)[0].$emit('resume')
+      }
+    })
+
+    // 声音设置
+    this.$on('sound_setting', () => {
+      this.$refs.settingWindow.$emit('setting-show')
+      // 组件暂停
+      this.$emit('component-pause', 'pasue')
+      return false
+    })
+
+    this.$on('teacher_setting', () => {
+      this.$refs.settingWindow.$emit('teacher-show')
+
+      // 组件暂停
+      this.$emit('component-pause', 'pasue')
+      return false
+    })
+
+    this.$on('open-feedback', () => {
+      this.$broadcast('feedback-show')
+
+      // 组件暂停
+      this.$emit('component-pause', 'pasue')
+      return false
+    })
+
+    // 切换slide
+    this.$on('switch-slide', (slide, normal) => {
+      this.score = 0
+      // 广播组件销毁
+      this.component_destroy()
+      this.cur = -1
+      this.show = false
+      this.updateCurSlide(slide)
+
+      // normal为正常下一个跳转，false时则重置状态重新加载
+      if (normal) {
+        /**
+         * write by feng_hong@talkmate.com
+         * 正常跳转也加上预加载的读条
+         * @todo 更合理的方式是监听下预加载是否失败,如果失败了发个消息回来,先采用这种方式处理
+         */
+        if (END === this.thunk) {
+          // 如果下一个课程已经没有了, 直接跳过, 而不是继续预加载
+          changeData(this)
+        } else {
+          let resource1 = this.getResource(this.curSlide)
+          changeData(this, Loader(resource1))
+        }
+      } else {
+        let resource2 = this.getResource(this.curSlide)
+        /**
+         * pkLoad仅仅是借用之前的方法名而已
+         * 这里的业务含义是在预加载失败后,会读条加载新的资源数据
+         */
+        changeData(this, Loader(resource2))
+      }
+    })
+
+    this.$on('setTimer', () => {
+      console.log('setTimer')
+      var history = this.recordForm && this.recordForm.length
+      var that = this
+      clearTimeout(that.timer)
+      if (this.showGuide) { return }
+      if (history) { return }
+      if (!this.isFirst) { return }
+      if (!this.canRecord) { return }
+      //  ↑ ↑ ↑ 如果user-box已经打开、有历史记录、或者麦克风选项关闭，不再提示
+      that.timer = setTimeout(() => {
+        if (!that.isPause && this.canRecord) {
+          that.showGuide = true
+          that.$broadcast('updatePosition')
+        }
+      }, 4000)
+    })
+  },
+  mounted () {
+    console.log('stage')
+    let id = this.id
+    if (id.indexOf('A0') > -1) {
+      this.updateCurCoreParts(id)
+    }
+    this.chapterProgress(this.id)
+    // this.typeList = this.getTypeList()
+    // this.list = this.getList()
+
+    this.timeCount()
+    var that = this
+    let _coinCache = coinCache.get(that.completePath)
+    if (_coinCache === null) {
+      coinCache.set(that.completePath, that.coin)
+    } else {
+      that.coin = _coinCache
+      that.totalCoin = parseInt(this.totalCoin) + _coinCache
+    }
+
+    var resource = this.getResource(this.curSlide)
+    changeData(this, Loader(resource))
+
+    // this.$emit('next-component')
+    // 弹出提示、/////////////////////////////////////////////
+    this.$nextTick(() => {
+      var isPop
+      if (
+        Recorder.isActivity() !== true &&
+        this.refuseRecord !== true &&
+        this.canRecord
+      ) {
+        this.micphoneTip = this.tips.micphone
+        isPop = true
+      } else if (this.refuseRecord) {
+        this.micphoneTip = this.tips.micphone_failed
+        isPop = true
+      }
+      if (isPop) {
+        this.$refs.tipbox.$emit('tipbox-show')
+        this.updatePause(true)
+      }
+    })
+
+    // this.resetSize()
+  },
+  computed: {
+    ...mapState({
+      'currentCourseCode': state => state.course.currentCourseCode,
+      'curCorePart': state => state.course.curCorePart,
+      'curChapterContent': state => state.course.curChapterContent,
+      'recordForm': state => state.course.recordForm,
+      'curChapterCode': state => state.course.currentChapterCode,
+      'progress': state => state.course.progress,
+      'curSlide': state => state.course.curSlide,
+      'pathArr': state => state.course.pathArr,
+      'coinCalculationRule': state => state.learn.coinCalculationRule,
+      'tips': state => state.learn.tips,
+      'formScores': state => state.learn.formScores,
+      'canRecord': state => state.learn.canRecord,
+      'userInfo': state => state.user.userInfo
+    }),
+    totalCoin () {
+      let ui = {}
+      if (Object.keys(this.userInfo).length === 0) {
+        ui = JSON.parse(localStorage.getItem('userInfo'))
+      } else {
+        ui = this.userInfo
+      }
+      return ui.coins
+    },
+    comLength () {
+      return _.flattenDeep(this.list).length
+    },
+    completePath () {
+      let curChapterCode
+      if (!this.curChapterCode) {
+        curChapterCode = localStorage.getItem('currentChapterCode')
+      } else {
+        curChapterCode = this.curChapterCode
+      }
+      let path = curChapterCode + '-' + this.id + '-Slide' + this.curSlide
+      return path
+    }
+  },
+  watch: {
+    cur (val) {
+      // 单组件单题，单组件多题数据类型不一样
+      var isRepeat =
+        (this.list[val] ? this.list[val].form_show_type : false) ===
+        'repeatSpeak'
+      if (isRepeat) {
+        this.$emit('setTimer')
+      }
+    }
+  },
+  methods: {
+    ...mapActions({
+      getCoinCalculationRule: 'learn/getCoinCalculationRule',
+      postProgress: 'learn/postProgress',
+      postActivityRecord: 'learn/postActivityRecord',
+      getChapterContent: 'course/getChapterContent'
+    }),
+    ...mapMutations({
+      updateCurSlide: 'course/updateCurSlide',
+      chapterProgress: 'course/chapterProgress',
+      updateCurCoreParts: 'course/updateCurCoreParts',
+      updateCurAssets: 'learn/updateCurAssets',
+      updatePause: 'learn/updatePause',
+      updateFormScore: 'learn/updateFormScore'
+    }),
+    getTypeList () {
+      console.log('typelist')
+
+      var arr = []
+      _.map(this.forms, (val) => {
+        if (_.isArray(val)) {
+          arr.push(val[0].form_show_type.toLowerCase())
+        } else {
+          arr.push(val.form_show_type.toLowerCase())
+        }
+      })
+
+      return arr
+    },
+    getList (data) {
+      console.log('list')
+      let _slide = this.forms
+      let slide = []
+      let mergeArray = []
+
+      _.map(data, (val) => {
+        _slide[val.idx][val.type] = val.url
+      })
+      // 将imgtosentence的选项提取出来
+      var imgtosen = _.groupBy(_slide, 'form_show_type').imgToSentence
+      var sentences = []
+      _.each(imgtosen, (val) => {
+        sentences.push({
+          sentence: val.sentence
+        })
+      })
+
+      // 赋值到相应组件中
+      _.map(_slide, (val) => {
+        if (!/auto|repeat|fill|write|make|imgtosentence$/ig.test(val.form_show_type)) {
+          mergeArray.push(val)
+        } else {
+          val.sentences = sentences
+          slide.push(val)
+        }
+      })
+      !_.isEmpty(mergeArray) && slide.push(mergeArray)
+      return slide
+    },
+    // 学习卡片组件
+    subComps () {
+      let compArr = Object.keys(this.$refs).filter((val) => { return val.indexOf('comp') > -1 })
+      var arr = []
+      compArr.forEach((item) => {
+        arr.push(_.get(this.$refs, item))
+      })
+      return arr
+    },
+    // 开始执行组件
+    timeCount: function () {
+      this.last_time += 1
+      t = setTimeout(this.timeCount, 1000)
+    },
+    stopCount: function () {
+      clearTimeout(t)
+    },
+    component_start: function () {
+      this.$nextTick(function () {
+        console.log('component_start')
+        if (_.get(this.subComps(), this.cur)[0]) {
+          _.get(this.subComps(), this.cur)[0].$emit('start')
+        }
+      })
+    },
+    resetSize () {
+      // 重置
+      common.reset()
+      window.onresize = () => {
+        common.resize(this.list, this.typeList)
+      }
+      this.$nextTick(() => {
+        common.resize(this.list, this.list)
+      })
+    },
+    getResource (curSlide) {
+      let forms = {}
+      let curChapterContent = {}
+      if (Object.keys(this.curChapterContent).length === 0) {
+        curChapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
+      } else {
+        curChapterContent = this.curChapterContent
+      }
+      if (this.id.indexOf('A0') > -1) {
+        let startSlideNum = this.curCorePart.Slides[0]
+        let realSlideNum = startSlideNum + curSlide - 1
+
+        forms = curChapterContent.coreLessons.parts[0]
+          .slides[realSlideNum].forms
+      } else {
+        curChapterContent.improvement.parts.forEach((item) => {
+          if (item.slide_type_code.indexOf(this.id) > -1) {
+            forms = item.slides[curSlide].forms
+          }
+        })
+      }
+      forms = _.cloneDeep(forms)
+      this.$set(this, 'forms', forms)
+      var resource = []
+      _.map(this.forms, function (val, idx) {
+        val.form_id = idx + 1
+        resource.push([{
+          url: val.image,
+          idx: idx,
+          type: 'image'
+        }, {
+          url: val.sound,
+          idx: idx,
+          type: 'sound'
+        }])
+      })
+      return _.flattenDeep(resource)
+    },
+    // 销毁所有组件
+    component_destroy () {
+      this.subComps().forEach((item) => {
+        if (item.length > 0) {
+          item[0].$emit('break')
+        }
+      })
+    }
+  }
+}
+
+// 重设Data数据
+function changeData (_this, trunk) {
+  !trunk && (trunk = _this.thunk)
+  if (trunk === END) {
+    // // 核心课程结束则解锁其他的模块
+    // if (_this.data[3] == "A0") {
+    //   var open = Model.unlockProgress(_.take(_this.data, 4))
+    //   //解锁提示
+    //   if (open)
+    //     toaster.success(Config.tips.chapter_opened)
+    // } else {
+    //   Model.postProgress(_.take(_this.data, 4))
+    // }
+    // _this.stopCount() //停止计时器
+
+    // console.log(_this.coin)
+    // _this.$emit('calCoin') //结束前清算结果
+    // console.log(_this.coin)
+    // Model.postCoin(_this.coin)
+
+    // Model.postRecord(_this.coin, _this.last_time, _this.max_continue_correct, _.take(_this.data, 4))
+    // // 结束到总结页面
+    // _this.$emit("goto-summary")
+
+    // // 章节结束打点
+    // //<courseEnd>
+    // var code = _.values(Config.LANG).concat(_.take(_this.data, 4)).join("-")
+    // statistics.finish_activity(code)
+    // //</courseEnd>
+    // return
+    var arr = _.values(_this.formScores[_this.id])
+    var correctArr = arr.filter((item) => {
+      return item === 1
+    })
+    let cr = (correctArr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
+    let ccr = (arr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
+    let curChapterCode
+    if (!_this.curChapterCode) {
+      curChapterCode = localStorage.getItem('currentChapterCode')
+    } else {
+      curChapterCode = _this.curChapterCode
+    }
+    var payload = {
+      activityCode: curChapterCode + '-' + _this.id,
+      coins: _this.coin,
+      correctHits: _this.continue_correct,
+      learnTime: _this.last_time,
+      correctRate: cr,
+      courseCompleteRate: ccr
+    }
+    _this.postActivityRecord(payload).then(() => {
+      _this.$refs['summary'].$emit('coreSummary-show', _this.id)
+    })
+    return false
+  }
+  _.delay(() => {
+    trunk.then((cb, data) => {
+      console.log(data)
+      var List = _this.getList(data)
+      var Type = _this.getTypeList(List)
+      _this.$set(_this, 'typeList', Type)
+      _this.$set(_this, 'list', List)
+      _this.show = true
+      _this.$nextTick(() => {
+        // 重置 cur 游标 否则会出现视图更新 cur未更新的状态
+        _this.cur = -1
+        _this.$emit('next-component')
+      })
+      // 重置
+      common.reset()
+      window.onresize = () => {
+        common.resize(List, Type)
+      }
+      _this.$nextTick(() => {
+        common.resize(List, Type)
+      })
+
+      // 预加载
+      preLoad(_this)
+    }).catch((cb, err) => {
+      console.log(err.stack)
+    })
+  }, TRANSALTE_TIME)
+}
+
+function preLoad (_this) {
+  var resource = _this.getResource(_this.curSlide + 1)
+  _this.thunk = resource ? Loader(resource) : END
+}
+</script>
+
+<style lang="less" scoped>
+
+</style>

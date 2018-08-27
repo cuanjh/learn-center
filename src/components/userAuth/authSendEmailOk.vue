@@ -36,7 +36,7 @@
 <template>
   <div class="forget-email">
     <h2>请检查您的邮箱</h2>
-    <img src="./../../../static/img/home/email-img.svg" alt="检查邮箱">
+    <img src="./../../../static/images/home/email-img.svg" alt="检查邮箱">
     <a :href="'https://' + emailUrl">立即前往</a>
   </div>
 </template>

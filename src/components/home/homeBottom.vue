@@ -45,10 +45,10 @@
     padding-left: 40px;
   }
   .contact-our span:nth-child(1) {
-    background-image: url('./../../../static/img/home/t.svg');
+    background-image: url('./../../../static/images/home/t.svg');
   }
   .contact-our span:nth-child(2) {
-    background-image: url('./../../../static/img/home/e.svg');
+    background-image: url('./../../../static/images/home/e.svg');
   }
   .icp-record {
     width: 1000px;

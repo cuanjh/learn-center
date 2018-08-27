@@ -7,11 +7,15 @@ import VueI18n from 'vue-i18n'
 import routes from './router/index'
 import store from './store/index'
 import moreLanguage from './vueI18/locale.js'
+import {urlfix} from './filter/index'
 import './../static/css/animate.css'
 import './../static/css/reset.css'
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VueI18n)
+
+Vue.filter('urlFix', urlfix)
+
 Vue.config.productionTip = false
 const router = new VueRouter({
   mode: 'history',
@@ -20,9 +24,31 @@ const router = new VueRouter({
     return { x: 0, y: 0 }
   }
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(m => m.meta.auth)) {
+    if (window.localStorage.isLogin === '1') {
+      next()
+    } else if (to.path !== '/') {
+      next({ path: '/auth/login' })
+    }
+  } else {
+    next()
+  }
+})
 const i18n = new VueI18n({
-  locale: 'english',
+  locale: 'chinese',
   messages: moreLanguage
+})
+
+store.subscribe((mutation, state) => {
+  console.log(mutation.type)
+  console.log(mutation.payload)
+})
+
+store.subscribeAction((action, state) => {
+  console.log(action.type)
+  console.log(action.payload)
 })
 /* eslint-disable no-new */
 new Vue({

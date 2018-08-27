@@ -1,0 +1,71 @@
+.progress.TLY {
+  .progress-bar-container {
+	  width: 600px;
+	  margin-left: -300px;
+	}
+	.progress-bar {
+		b {
+			width: 28px;
+			height: 28px;
+			margin: 8px;
+			border: 3px solid rgba(255,255,255,0.5);
+			background-clip: padding-box;
+			border-radius: 50%;
+			font-size: 14px;
+			line-height: 28px;
+			text-align: center;
+			font-weight: 600;
+			&.perfect {
+				background-color: #fff;
+				color: #34590e;
+			}
+			&.perfect.current {
+				background-color: #e8474b;
+				color: #fff;
+			}
+			&.perfect.current:after {
+				border: none;
+				width: 0;
+				height: 0;
+				position: static;
+			}
+		}
+	}
+	// 导航按钮部分
+	&>.btn {
+		text-indent: -10000px;
+		width: 50px;
+		height: 50px;
+		top: -20px;
+		background-size: 100%;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-color: rgba(255,255,255,0);
+		margin: 0;
+		padding: 0;
+		&>b {
+			display: none;
+		}
+		&.back {
+			left: 50px;
+			background-image: url('../images/learnSystem/progress/btn-back.png');
+			&.click {
+				background-image: url('../images/learnSystem/progress/back-click.png');
+			}
+		}
+		&.smenu {
+			right: 50px;
+			background-image: url('../images/learnSystem/progress/btn-set.png');
+			&.click {
+				background-image: url('../images/learnSystem/progress/set-click.png');
+			}
+		}
+		&.pasue {
+			right: 130px;
+			background-image: url('../images/learnSystem/progress/btn-pasue.png');
+			&.click {
+				background-image: url('../images/learnSystem/progress/pasue-click.png');
+			}
+		}
+	}
+}

@@ -159,18 +159,18 @@
     position: absolute;
     left: 15px;
     top: 20px;
-    background: url('./../../../static/img/home/error.svg') no-repeat center;
+    background: url('./../../../static/images/home/error.svg') no-repeat center;
   }
   .asia {
-    background: url('./../../../static/img/home/bg-asia.jpg') no-repeat;
+    background: url('./../../../static/images/home/bg-asia.jpg') no-repeat;
     background-size: cover;
   }
   .europe {
-    background: url('./../../../static/img/home/bg-european.jpg') no-repeat;
+    background: url('./../../../static/images/home/bg-european.jpg') no-repeat;
     background-size: cover;
   }
   .africa {
-    background: url('./../../../static/img/home/bg-africa.jpg') no-repeat;
+    background: url('./../../../static/images/home/bg-africa.jpg') no-repeat;
   }
 </style>
 <template>

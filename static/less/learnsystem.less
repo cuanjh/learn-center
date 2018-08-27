@@ -1,0 +1,346 @@
+.stage {
+  width: 80%;
+  min-width: 680px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.autospeak,
+.repeatspeak,
+.writewords,
+.fillgap,
+.imgtosentence,
+.makesentence,
+.image-box {
+    width: 45%;
+    border-radius: 5px;
+    margin: 1.8%;
+    padding: 0.7%;
+    position: relative;
+    float: left;
+    transition: background .8s ease;
+    background: #fff;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
+    &.current {
+        background: #55a4fc;
+        &.up{
+            z-index: 2;
+        }
+    }
+    .image-container {
+        position: relative;
+        &:after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+    img {
+        display: block;
+        width: 100%;
+    }
+    .text {
+        padding-left: 5px;
+        height: 60px;
+        font-size: 18px;
+        color: #b7bed5;
+        line-height: 20px;
+        display: table;
+        padding-right: 40px;
+        box-sizing: border-box;
+        position: relative;
+        top: 4px;
+        span {
+            vertical-align: middle;
+            display: table-cell;
+        }
+        i {
+            display: inline-block;
+            margin: 0 2px;
+        }
+    }
+    .skip {
+        top: 14px;
+    }
+}
+
+.imgtosentence,
+.makesentence {
+    cursor: pointer;
+}
+
+.trumpet {
+    position: absolute;
+    background: url(../images/learnSystem/trumpet_grey.png) no-repeat;
+    width: 22px;
+    height: 20px;
+    position: absolute;
+    right: 10px;
+    top: 21px;
+    cursor: pointer;
+    &.playing {
+        background: url(../images/learnSystem/trumpet_grey.gif) no-repeat;
+        background-size: 22px 20px;
+    }
+}
+
+.unuseable {
+    background: url(../images/learnSystem/unusable.png) no-repeat !important;
+    cursor: default;
+}
+
+.current {
+    .text {
+        color: #fff;
+    }
+    .trumpet {
+        background: url(../images/learnSystem/trumpet-normal.png) no-repeat;
+        &.playing {
+            background: url(../images/learnSystem/trumpet.gif) no-repeat;
+            background-size: 22px 20px;
+        }
+    }
+}
+
+.right {
+    .image-container {
+        &:after {
+            background: url(../images/learnSystem/right.png) no-repeat center center;
+        }
+    }
+}
+
+.error {
+    .image-container:after {
+        background: url(../images/learnSystem/error.png) no-repeat center center;
+    }
+}
+
+.layout-3 {
+    width: 30%;
+    margin: 1.1%;
+    padding: 0.465%;
+}
+
+.layout-4 {
+    width: 23%;
+    margin: 0.75%;
+    padding: 0.25%;
+}
+
+.sentencetoimg,
+.imgtosentencew,
+.speaktoimg {
+    position: relative;
+    .image-box {
+        position: absolute;
+    }
+}
+
+.translation {
+    .image-box {
+        transition: top .3s ease, left .3s ease;
+        transform: translateZ(0);
+    }
+}
+
+.fade-leave,
+.fade-enter {
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.sentence-box {
+    min-height: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.text-head {
+    text-align: center;
+    padding-top: 0;
+    a {
+        position: relative;
+        margin: 0 10px;
+        padding: 10px 15px;
+        color: #fff;
+        background: #55a4fc;
+        font-size: 18px;
+        border-radius: 5px;
+        max-width: 440px;
+        display: inline-block;
+        &.border{
+            box-sizing: border-box;
+            border: 3px solid #fff;
+        }
+    }
+    .txt-box {
+        span {
+            padding-right: 30px;
+        }
+        b {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    }
+    b {
+        background: url(../images/learnSystem/trumpet-normal.png);
+        width: 22px;
+        height: 20px;
+        display: inline-block;
+        position: relative;
+        top: 2px;
+        &.playing {
+            background: url(../images/learnSystem/trumpet.gif);
+            width: 22px;
+            height: 20px;
+            background-size: 22px 20px;
+        }
+    }
+}
+
+.skip {
+    background: url(../images/learnSystem/skip.png);
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    transition: all .1s ease-in-out;
+    bottom: 76px;
+    right: 15px;
+    cursor: pointer;
+    &:hover {
+        background: url(../images/learnSystem/skip_hover.png);
+    }
+}
+
+.hidden-microphone {
+    background: url(../images/learnSystem/hidden.png);
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    transition: all .1s ease-in-out;
+    bottom: 6px;
+    right: 15px;
+    cursor: pointer;
+    z-index: 10;
+    &:hover {
+        background: url(../images/learnSystem/hidden_hover.png);
+    }
+}
+
+.text {
+    position: relative;
+    width: 99%;
+    .skip {
+        top: -28px;
+        right: 7px;
+    }
+    input {
+        background: none;
+        border: 0;
+        font-size: 18px;
+        border-bottom: 1px solid #fff;
+        width: 90%;
+        padding: 0 8px;
+        padding-bottom: 3px;
+        line-height: 1.41;
+        color: #b7bed5;
+        padding-top: 18px;
+    }
+    .err {
+        background: url(../images/learnSystem/wrong.png);
+        width: image-width;
+        height: image-height;
+        position: absolute;
+        top: 23px;
+        right: 11px;
+    }
+}
+
+.current {
+    .text {
+        input {
+            color: #fff;
+        }
+    }
+}
+
+.write {
+    display: block;
+    padding: 0;
+    width: 100%;
+}
+
+.clear {
+    clear: both;
+}
+
+.macphone-box {
+    position: relative;
+    .skip {
+        top: 8px;
+        z-index: 10;
+    }
+}
+
+.mac {
+    position: center;
+    position: absolute;
+    background-image: url(../images/learnSystem/microphone.png);
+    border-radius: 50%;
+    width: image-width;
+    height: image-height;
+    z-index: 111;
+}
+
+.m-b {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    height: 100%;
+    transition: all .5s ease;
+}
+
+.box-enter,
+.box-leave {
+    transform: scale(0);
+    opacity: 0;
+    transition: all .5s ease-in-out;
+}
+
+.m-bg {
+    position: center;
+    position: absolute;
+    width: 30px;
+    height: 50px;
+    border-radius: 50%;
+    background: #fff;
+    z-index: 11;
+}
+
+.m-track {
+    transition: all 0.3s ease;
+    position: absolute;
+    background: #35f875;
+    max-height: 32px;
+    width: 30px;
+    bottom: 16px;
+    top: auto;
+}
+
+/* 增加媒体查询，缩小组件间距 */
+@media (max-height: 670px){
+    .sentence-box{
+        padding: 5px 10px 10px 10px;
+    }
+}
+@media (min-height: 671px){
+    .sentence-box{
+        padding: 15px;
+    }
+}

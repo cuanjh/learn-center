@@ -1,4 +1,4 @@
-import { httpNoLogin } from './api.js'
+import { httpNoLogin, httpLogin } from './api.js'
 import config from './config.js'
 export default {
   courseLists () {
@@ -33,5 +33,8 @@ export default {
   },
   resetPwdEmail (params) {
     return httpNoLogin(config.resetPwdEmail, params)
+  },
+  getUserInfo () {
+    return httpLogin(config.userInfo)
   }
 }

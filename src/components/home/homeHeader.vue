@@ -20,7 +20,7 @@
     width: 100%;
     height: 100%;
     text-indent: -9999px;
-    background: url('./../../../static/img/home/logo.png') no-repeat;
+    background: url('./../../../static/images/home/logo.png') no-repeat;
     background-size: 100%;
   }
   ul {

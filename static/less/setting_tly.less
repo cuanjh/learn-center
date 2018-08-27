@@ -1,0 +1,71 @@
+.progress.TLY{
+  .progress-bar-container{
+    &>span {
+      background-image: url('../images/learnSystem/progress/tly-left.png');
+      &:hover{
+        background-image: url('../images/learnSystem/progress/tly-left-hover.png');
+      }
+    }
+  }
+}
+.progress.TLY>.vertical-btn{
+    box-sizing: border-box;
+    width: 156px;
+    height: 204px;
+    padding: 6px 10px 0 8px;
+    background: url('../images/learnSystem/progress/dialog.png') no-repeat center top;
+    background-size: 100%;
+    right: -4px;
+    top: -230px;
+    &>.btn{
+        display: block;
+        box-sizing: border-box;
+        border: none;
+        margin: 15px 19px 0 19px;
+        padding: 0;
+        width: 100px;
+        height: 26px;
+        border-radius: 13px;
+        background-color: #fff;
+        color: #7d4a13;
+        font-size: 14px;
+        line-height: 26px;
+        text-align: center;
+        box-shadow: -5px 3px 10px rgba(0,0,0,0.2);
+        &.click{
+            box-shadow: -5px 3px 10px rgba(0,0,0,0.2) inset;
+        }
+        &:hover{
+            background: linear-gradient(#fbd854,#fbd854);
+        }
+        &.s-sound>span,&.s-help>span,&.s-feedback>span,&.s-teacher>span{
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 34px;
+            width: 32px;
+            height: 32px;
+            top: -2px;
+            left: -4px;
+        }
+        &.s-sound{
+            span{
+                background-image: url('../images/learnSystem/progress/sound_tly.png');
+            }
+        }
+        &.s-help{
+            span{
+                background-image: url('../images/learnSystem/progress/help_tly.png');
+            }
+        }
+        &.s-feedback{
+            span{
+                background-image: url('../images/learnSystem/progress/feedback_tly.png');
+            }
+        }
+        &.s-teacher{
+            span{
+                background-image: url('../images/learnSystem/progress/option_tly.png');
+            }
+        }
+    }
+}

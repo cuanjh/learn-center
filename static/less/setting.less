@@ -1,0 +1,191 @@
+@import "setting_tly.less";
+.vertical-btn {
+    position: absolute;
+    vertical-align: middle;
+    width: 100px;
+    right: 38px;
+    bottom: 55px;
+    &>.btn:last-child {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    span {
+        position: absolute;
+        display: block;
+        left: 10px;
+        top: 8px;
+    }
+    .s-sound {
+        span {
+            background: url(../images/learnSystem/progress/s-mic.png) no-repeat;
+            width: 10px;
+            height: 14px;
+            left: 12px;
+        }
+    }
+    .s-help {
+        span {
+            background: url(../images/learnSystem/progress/help.png) no-repeat;
+            width: 14px;
+            height: 14px;
+        }
+    }
+    .s-qq {
+        span {
+            background: url(../images/learnSystem/progress/smile.png) no-repeat;
+            width: image-width;
+            height: image-height;
+        }
+    }
+    .s-feedback {
+        span {
+            background: url(../images/learnSystem/progress/feedback.png) no-repeat;
+            width: 14px;
+            height: 14px;
+            top: 10px;
+        }
+    }
+    .s-teacher {
+        span {
+            background: url(../images/learnSystem/progress/teacherwhite.png) no-repeat;
+            width: 14px;
+            height: 14px;
+            top: 10px;
+        }
+    }
+    .btn {
+        box-sizing: border-box;
+        border: 1px solid #e9ecf6;
+        color: #b7bed4;
+        display: block;
+        float: left;
+        position: relative;
+        height: 35px;
+        width: 100%;
+        max-width: 100%;
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        background: #fff;
+        text-indent: 1em;
+        border-radius: 4px;
+        &:hover {
+            background: linear-gradient(0deg, #59b3ff 0%, #4e9ef6 100%);
+            color: #fff;
+        }
+    }
+    a.btn{
+        height: auto;
+    }
+    .s-sound:hover {
+        span {
+            background: url(../images/learnSystem/progress/s-mic-h.png) no-repeat;
+        }
+    }
+    .s-help:hover {
+        span {
+            background: url(../images/learnSystem/progress/helpwhite.png) no-repeat;
+        }
+    }
+    .s-feedback:hover {
+        span {
+            background: url(../images/learnSystem/progress/feedbackwhite.png) no-repeat;
+        }
+    }
+    .s-teacher:hover {
+        span {
+            background: url(../images/learnSystem/progress/teacher.png) no-repeat;
+        }
+    }
+    .s-qq:hover {
+        span {
+            background: url(../images/learnSystem/progress/smile_hover.png) no-repeat;
+            width: image-width;
+            height: image-height;
+        }
+    }
+    &>.btn+.btn {
+        margin-top: -1px;
+        margin-left: 0;
+    }
+}
+
+.mui-switch {
+    top: 4px;
+    width: 40px;
+    height: 20px;
+    position: relative;
+    background-color: #e9ecf6;
+    box-shadow: #e9ecf6 0 0 0 0 inset;
+    border-radius: 20px;
+//    background-clip: content-box;
+    display: inline-block;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.mui-switch:before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.mui-switch.checked {
+    border-color: #3be08d;
+    box-shadow: #3be08d 0 0 0 16px inset;
+    background-color: #3be08d;
+}
+
+.mui-switch.checked:before {
+    left: 21px;
+}
+
+.mui-switch.mui-switch-animbg {
+    transition: background-color ease 0.4s;
+}
+
+.mui-switch.mui-switch-animbg:before {
+    transition: left 0.3s;
+}
+
+.mui-switch.mui-switch-animbg:checked {
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    background-color: #64bd63;
+    transition: border-color 0.4s, background-color ease 0.4s;
+}
+
+.mui-switch.mui-switch-animbg:checked:before {
+    transition: left 0.3s;
+}
+
+.en{
+    .progress .switch{
+        right: 180px;
+    }
+    .vertical-btn{
+        width: 120px;
+        a{
+            width: 94px !important;
+        }
+    }
+    .u-check-box{
+        text-align: left;
+        .check{
+            line-height: 2;
+        }
+    }
+}
