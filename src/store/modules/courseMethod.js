@@ -3,9 +3,11 @@ import _ from 'lodash'
 // 解锁课程的level实现方式
 function unlockArr (unLockChapters) {
   var arr = []
-  Object.keys(unLockChapters).forEach((key) => {
-    arr.push(key)
-  })
+  if (unLockChapters) {
+    Object.keys(unLockChapters).forEach((key) => {
+      arr.push(key)
+    })
+  }
   return arr
 }
 

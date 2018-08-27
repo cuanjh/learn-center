@@ -622,7 +622,7 @@ function changeData (_this, trunk) {
     // statistics.finish_activity(code)
     // //</courseEnd>
     // return
-    var arr = _.values(_this.formScores[_this.id])
+    var arr = _.values(_this.formScores)
     var correctArr = arr.filter((item) => {
       return item === 1
     })
