@@ -13,11 +13,12 @@ const bookCase = r => require.ensure([], () => r(require('@/components/learn/boo
 const bookCaseDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCaseDetails.vue'), 'learn'))
 const gradeLevelShow = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelShow.vue'), 'learn'))
 const gradeLevelConfirm = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelConfirm.vue'), 'learn'))
+const homework = r => require.ensure([], () => r(require('@/components/learn/homework/homework.vue'), 'learn'))
 // 学习系统
 const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue'), 'learnSystem'))
 const stage = r => require.ensure([], () => r(require('@/components/learnSystem/stage/stage.vue'), 'learnSystem'))
 const pk = r => require.ensure([], () => r(require('@/components/learnSystem/pk/pk.vue'), 'learnSystem'))
-const homework = r => require.ensure([], () => r(require('@/components/learnSystem/homework/homework.vue'), 'learnSystem'))
+// const homework = r => require.ensure([], () => r(require('@/components/learnSystem/homework/homework.vue'), 'learnSystem'))
 const gradeLevel = r => require.ensure([], () => r(require('@/components/learnSystem/gradeLevel/gradeLevel.vue'), 'learnSystem'))
 const envirionmentTest = r => require.ensure([], () => r(require('@/components/learnSystem/userGuide/environmentTest.vue'), 'learnSystem'))
 const userGuide = r => require.ensure([], () => r(require('@/components/learnSystem/userGuide/userGuide.vue'), 'learnSystem'))
@@ -83,6 +84,11 @@ export default[
       {
         path: 'grade-level-confirm',
         component: gradeLevelConfirm
+      },
+      {
+        path: 'homework',
+        name: 'homework',
+        component: homework
       }
     ]
   },
@@ -103,11 +109,6 @@ export default[
         path: 'pk',
         name: 'pk',
         component: pk
-      },
-      {
-        path: 'homework',
-        name: 'homework',
-        component: homework
       },
       {
         path: 'gradeLevel/level:currLevel',

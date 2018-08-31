@@ -80,6 +80,9 @@ const actions = {
   },
   levelGrade ({ commit, state }, courseCode) {
     return httpLogin(config.levelGradeGrade, { course_code: courseCode })
+  },
+  homeworkContent ({ commit, state }, activityCode) {
+    return httpLogin(config.homeworkContent, { activity_code: activityCode })
   }
 }
 

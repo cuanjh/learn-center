@@ -30,6 +30,7 @@ export default {
   getProgress: '/chapters_state/get_progress', // 获取学习结果
   hasGrade: '/level_grade/has_grade', // 返回用户对当前课程是否进行过定级操作
   levelGradeGrade: '/level_grade/grade', // 定级确认
+  homeworkContent: '/feedv3/homework/content', // 获取作业内容接口
 
   // 书架
   bookCaseIndex: '/studyv1/shelf/v2/index', // 书架首页

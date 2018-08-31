@@ -47,6 +47,7 @@ export default {
       $('.current-course').css('min-height', clientHeight + 'px')
       $('.test-level-wrap').css('min-height', clientHeight + 'px')
       $('.confirm-wrap').css('min-height', clientHeight + 'px')
+      $('.homework-wrap').css('min-height', clientHeight + 'px')
     }
   }
 }
