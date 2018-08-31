@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="29px" viewBox="0 0 28 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 16</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="11.25" height="14.0625" rx="1"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="11.25" height="14.0625" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-2" transform="translate(-101.000000, -1469.000000)">
+            <g id="Group-16" transform="translate(101.000000, 1469.000000)">
+                <g id="Group-6-Copy-4" fill="#66B8E0">
+                    <ellipse id="Oval-3-Copy-4" cx="14" cy="14.5" rx="14" ry="14"></ellipse>
+                </g>
+                <g id="Group-3" transform="translate(9.000000, 8.000000)">
+                    <use id="Rectangle" stroke="#FFFFFF" mask="url(#mask-2)" stroke-width="1.2" xlink:href="#path-1"></use>
+                    <rect id="Rectangle-2" fill="#66B8E0" x="9.375" y="6.5625" width="3.75" height="5.625"></rect>
+                </g>
+                <path d="M23.2154901,14.6311931 C23.1238993,14.5396023 22.9750644,14.5396023 22.8834736,14.6311931 L19.2302521,18.2844146 L17.7210864,16.775249 C17.6294957,16.6836583 17.4806608,16.6836583 17.38907,16.775249 C17.2974793,16.8668398 17.2974793,17.0156747 17.38907,17.1072655 L19.2292112,18.9474067 L19.2312929,18.9453251 L19.2333745,18.9474067 L23.2165309,14.9642503 C23.3070808,14.8716187 23.3070808,14.7227838 23.2154901,14.6311931 Z" id="Shape" stroke="#FFFFFF" stroke-width="0.2" fill="#FFFFFF"></path>
+                <rect id="Rectangle-49" fill="#FFFFFF" x="11.8125" y="10.8125" width="6" height="0.5" rx="0.25"></rect>
+                <rect id="Rectangle-49" fill="#FFFFFF" x="11.8125" y="12.6875" width="6" height="0.5" rx="0.25"></rect>
+                <rect id="Rectangle-49" fill="#FFFFFF" x="11.8125" y="14.5625" width="6" height="0.5" rx="0.25"></rect>
+                <rect id="Rectangle-49" fill="#FFFFFF" x="11.8125" y="19.25" width="6" height="0.5" rx="0.25"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

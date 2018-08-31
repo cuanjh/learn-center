@@ -7,6 +7,7 @@ import * as courseMethod from './courseMethod'
 
 const state = {
   language: 'chinese',
+  languagueHander: 'zh-CN', // 默认不同的level的实现方式
   learnCourses: ['1', '2'], // 已订阅的课程
   currentCourseCode: '',
   currentChapterCode: '',
@@ -96,6 +97,7 @@ const mutations = {
   },
   updateCurCourseCode (state, data) {
     state.currentCourseCode = data
+    localStorage.setItem('currentCourseCode', state.currentCourseCode)
   },
   updateCourseInfo (state, data) {
     state.courseBaseInfo = data.info.courseBaseInfo
@@ -222,12 +224,19 @@ const mutations = {
     let startSlideNum = 0
     let slideNumber = 0
     let slides = []
+    let chapterContent = {}
+    if (Object.keys(state.curChapterContent).length === 0) {
+      chapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
+    } else {
+      chapterContent = state.curChapterContent
+    }
+
     if (id.indexOf('A0') > -1) {
       slides = state.curCorePart.Slides
       startSlideNum = state.curCorePart.Slides[0]
       slideNumber = state.curCorePart.Slides.length
     } else {
-      slides = state.curChapterContent.improvement.parts.filter((item) => {
+      slides = chapterContent.improvement.parts.filter((item) => {
         return item.slide_type_code.indexOf(id) > -1
       })[0].slides
       slideNumber = slides.length
@@ -447,6 +456,9 @@ const mutations = {
     console.log(vipFormArray)
     retObj[curChapterCode] = chapterProgress
     return retObj
+  },
+  updateProgressScore (state, payload) {
+    state.progress[payload.curSlide] = payload.score
   }
 }
 

@@ -13,6 +13,10 @@ const bookCase = r => require.ensure([], () => r(require('@/components/learn/boo
 const bookCaseDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCaseDetails.vue'), 'learn'))
 const gradeLevelShow = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelShow.vue'), 'learn'))
 const gradeLevelConfirm = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelConfirm.vue'), 'learn'))
+// 学习 --- 我的
+const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue'), 'learn'))
+const userCourse = r => require.ensure([], () => r(require('@/components/learn/user/userCourse.vue'), 'learn'))
+
 // 学习系统
 const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue'), 'learnSystem'))
 const stage = r => require.ensure([], () => r(require('@/components/learnSystem/stage/stage.vue'), 'learnSystem'))
@@ -83,6 +87,16 @@ export default[
       {
         path: 'grade-level-confirm',
         component: gradeLevelConfirm
+      },
+      {
+        path: 'user',
+        component: user,
+        children: [
+          {
+            path: 'user-course',
+            component: userCourse
+          }
+        ]
       }
     ]
   },

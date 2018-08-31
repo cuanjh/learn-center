@@ -47,7 +47,7 @@
                 <span>{{ nickname }}</span>
               </p>
               <p>
-                {{ courseBaseInfo.name + ' '+ levelDes[this.level] + '.' + this.chapter + '.' + coreDes[this.core] + ' ' + '已收录5条录音' }}
+                {{ courseBaseInfo.name + ' '+ levelDes[this.level] + '.' + this.chapter + '.' + coreDes[this.core] + ' ' + '已收录'+ recordCount +'条录音' }}
               </p>
             </dd>
           </dl>
@@ -86,7 +86,13 @@ export default {
         'A02': '核心2',
         'A03': '核心3',
         'A04': '核心4',
-        'A05': '核心5'
+        'A05': '核心5',
+        'A1': '听力',
+        'A2': '口语',
+        'A3': '阅读',
+        'A4': '写作',
+        'A5': '语法',
+        'A6': '听说'
       },
       stars: 5,
       correctRate: '100%',

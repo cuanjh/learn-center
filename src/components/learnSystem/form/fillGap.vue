@@ -306,8 +306,8 @@ export default {
         options = this.data.form_options_phoneticize
         _sentence = this.data.sentence_phoneticize
       } else {
-        options = this.data.options
-        _sentence = this.data.sentence_show
+        options = this.data.form_options
+        _sentence = this.data.sentence
       }
       var option =
         this.direction < 0 ? options[options.length - 1] : options[0]
@@ -346,7 +346,7 @@ export default {
 
       var words = this.switch_state
         ? this.data.form_options_phoneticize
-        : this.data.options
+        : this.data.form_options
 
       this.word =
         this.direction < 0 ? words[words.length - 1] : words[0]

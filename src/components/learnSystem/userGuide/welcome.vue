@@ -61,8 +61,6 @@ export default {
 }
 
 .guide-body {
-  width: 710px;
-  height: 519px;
   border: #dde2ee 1px solid;
   background-color: #fff;
   padding: 36px 42px 0 42px;

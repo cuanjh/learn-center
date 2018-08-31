@@ -7,7 +7,7 @@
       <div class="sentence-box">
       </div>
       <div class="stage f-cb f-usn">
-        <div v-for="(type, index) in typeList" :key="index" class="f-cb" ref="type" v-show="show" :class="{current:cur==index}">
+        <div v-for="(type, index) in typeList" :key="index" class="f-cb" ref="type" v-show="show" :class="[type, 'f-cb', {current:cur==index}]">
           <transition name="fade" mode="out-in">
             <component :is="'form-'+type" :data="list[index]" :no-record="true" ref="compent"></component>
           </transition>

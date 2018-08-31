@@ -35,7 +35,8 @@ export default {
       cur: -1,
       pk_playerFinish: false,
       data: [], // pk数据
-      path: [] // 章节数
+      path: [], // 章节数
+      courseCode: ''
       // currLevel: 1 //当前评测定级的索引,从1开始1=A1,2=A2,3=B1,...
     }
   },
@@ -45,26 +46,37 @@ export default {
     'cutdown': cutdown
   },
   beforeRouteUpdate (to, from, next) {
-    console.log(this.contentInfo)
-    let level = 'Level' + to.params.currLevel
-    let curLevelContentInfo = _.get(this.contentInfo, [level])
-    var forms = curLevelContentInfo.slides[0].forms
-    var resource = this.getResource(forms)
-    Loader(resource).then((cb, data) => {
-      console.log(data)
-      let _slide = forms
-      _.map(data, (val) => {
-        _slide[val.idx][val.type] = val.url
+    if (to.name === 'gradeLevel') {
+      console.log(this.contentInfo)
+      this.$set(this, 'state', 'pk-menu')
+      this.$refs.cutdown.$emit('break')
+      this.$refs.pro.$emit('reset-progress')
+      // this.$set(this, 'data', [])
+      let level = 'Level' + to.params.currLevel
+      let curLevelContentInfo = _.get(this.contentInfo, [level])
+      var forms = curLevelContentInfo.slides[0].forms
+      var resource = this.getResource(forms)
+      Loader(resource).then((cb, data) => {
+        console.log(data)
+        let _slide = forms
+        _.map(data, (val) => {
+          _slide[val.idx][val.type] = val.url
+        })
+        this.$set(this, 'data', _slide)
+        this.initCutDown()
+        next()
+      }).catch((cb, err) => {
+        console.log(err.stack)
       })
-      this.$set(this, 'data', _slide)
-      this.$set(this, 'state', '')
-      this.initCutDown()
+    } else {
       next()
-    }).catch((cb, err) => {
-      console.log(err.stack)
-    })
+    }
   },
   mounted () {
+    this.courseCode = this.currentCourseCode
+    if (!this.courseCode) {
+      this.courseCode = localStorage.getItem('currentCourseCode')
+    }
     this.getGradeContent(this.courseCode).then((res) => {
       console.log(res)
       this.contentInfo = res.content_info
@@ -87,12 +99,14 @@ export default {
   },
   computed: {
     ...mapState({
-      courseCode: state => state.course.currentCourseCode,
-      curChapterContent: state => state.course.curChapterContent
+      currentCourseCode: state => state.course.currentCourseCode
     }),
     questionNum () {
       console.log(this.data)
       return Math.floor(this.data.length / 2)
+    },
+    pkData () {
+      return this.data
     }
   },
   created () {
@@ -168,7 +182,7 @@ export default {
           if (parseFloat(res.rate) >= 0.9) {
             var nextLevel = parseInt(_this.currLevel) + 1
             if (parseInt(_this.currLevel) < 6) {
-              this.$router.push({ path: '/learn/gradeLevel/level' + nextLevel })
+              this.$router.replace({ path: '/learn/gradeLevel/level' + nextLevel })
             } else {
               this.updateGradeLevelActivity(nextLevel)
               this.$router.push({ path: '/course/grade-level-confirm' })
@@ -187,6 +201,7 @@ export default {
     })
 
     this.$on('back', (content) => {
+      this.$router.push({path: '/course/course-list'})
       // window.location.href =
       //   Config.index +
       //   'v2/learn/index/' +
@@ -208,7 +223,6 @@ export default {
       this.$set(this, 'progressNum', _.fill(Array(this.questionNum), -1))
       console.log(this.progressNum)
       this.$set(this, 'state', 'cutdown')
-      // this.state = 'cutdown'
       this.cur = -1
       this.pk = true
       this.pk_finish = false

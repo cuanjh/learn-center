@@ -3,10 +3,14 @@
     <div class="content" >
       <div class="left" @mouseleave='navChangeCourseTwo'>
         <p><img src="./../../../static/images/home/logo.png" alt=""></p>
-        <p @mouseenter='navChangeCourse' @click='jumpCourse()'>
+        <p :class="{ 'header-box-left-active': activeItem === 'course' }" @mouseenter='navChangeCourse' @click='jumpCourse()'>
           学习
-          <i class='' v-bind:class="{ 'animate-down': navArrowDown, 'animate-up':navArrowUp }"></i>
+          <i class='' :class="{ 'animate-down': navArrowDown, 'animate-up':navArrowUp }"></i>
         </p>
+        <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/course/user'}">
+            我的
+        </router-link>
+        <!-- <p class="nav-find-btn" v-if="memberInfo['is_anonymous']" v-bind:class="{ 'learn-header-left-active': activeItem === 'user'  }"  v-link="{path: '/v2/user/bind'}">我的</p> -->
         <!-- <ul>
           <li @mouseenter="navChangeCourse" @click="jumpToCourse">学习
             <i v-bind:class="{'triangle-up': navArrowUp, 'triangle-down': navArrowDown}"></i>
@@ -80,9 +84,15 @@ export default {
       navArrowDown: true,
       searchFlag: false,
       navCourse: false,
+      activeItem: '',
       showExitState: false,
       learnCourse: []
     }
+  },
+  created () {
+    this.$on('activeNavItem', (item) => {
+      this.activeItem = item
+    })
   },
   mounted () {
     console.log(this.userInfo)
@@ -252,7 +262,7 @@ export default {
   text-align: center;
   line-height: 30px;
   padding:4px 31px 0 0px;
-  color:#ffffff;
+  color:#87D0FF;
   font-size: 16px;
   position: relative;
   top:3px;

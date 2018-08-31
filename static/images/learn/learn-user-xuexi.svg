@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>xuexi</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="7.5" y="7.5" width="5.90909091" height="5.90909091" rx="1"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="5.90909091" height="5.90909091" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <rect id="path-3" x="7.5" y="14.5909091" width="5.90909091" height="5.90909091" rx="1"></rect>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="5.90909091" height="5.90909091" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+        <rect id="path-5" x="14.5909091" y="7.5" width="5.90909091" height="5.90909091" rx="1"></rect>
+        <mask id="mask-6" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="5.90909091" height="5.90909091" fill="white">
+            <use xlink:href="#path-5"></use>
+        </mask>
+        <rect id="path-7" x="14.5909091" y="14.5909091" width="5.90909091" height="5.90909091" rx="1"></rect>
+        <mask id="mask-8" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="5.90909091" height="5.90909091" fill="white">
+            <use xlink:href="#path-7"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="我的-收支明细-copy-2" transform="translate(-508.000000, -560.000000)">
+            <g id="xuexi" transform="translate(508.000000, 560.000000)">
+                <ellipse id="Oval-3-Copy-7" fill="#66B8E0" cx="14" cy="14" rx="14" ry="14"></ellipse>
+                <use id="Rectangle-52" stroke="#FFFFFF" mask="url(#mask-2)" stroke-width="2" xlink:href="#path-1"></use>
+                <use id="Rectangle-52-Copy" stroke="#FFFFFF" mask="url(#mask-4)" stroke-width="2" xlink:href="#path-3"></use>
+                <use id="Rectangle-52-Copy-2" stroke="#FFFFFF" mask="url(#mask-6)" stroke-width="2" xlink:href="#path-5"></use>
+                <use id="Rectangle-52-Copy-3" stroke="#FFFFFF" mask="url(#mask-8)" stroke-width="2" xlink:href="#path-7"></use>
+            </g>
+        </g>
+    </g>
+</svg>

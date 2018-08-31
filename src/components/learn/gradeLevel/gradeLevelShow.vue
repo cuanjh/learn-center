@@ -5,7 +5,7 @@
         <div class="test-level-logo" v-if="currLevel==0">
           <img src="../../../../static/images/test-level/level-flag.png" alt="">
         </div>
-        <div class="test-level-logo" :class="curLevelClass(currLevel)" v-if="currLevel>0">
+        <div class="test-level-logo" :class="['test-level-logo', 'test-level-logo-'+currLevel]" v-if="currLevel>0">
           <span class="test-now-level">当前等级</span>
         </div>
         <div class="test-level-info">
@@ -59,7 +59,11 @@ export default {
   mounted () {
     this.$parent.$emit('initLayout')
     console.log(this.currentCourseCode)
-    this.getGradeInfo(this.currentCourseCode).then((res) => {
+    let courseCode = this.currentCourseCode
+    if (!courseCode) {
+      courseCode = localStorage.getItem('currentCourseCode')
+    }
+    this.getGradeInfo(courseCode).then((res) => {
       console.log(res)
       this.currLevel = res.grade_info.grade_level_num
     })
@@ -80,10 +84,7 @@ export default {
   computed: {
     ...mapState({
       currentCourseCode: state => state.course.currentCourseCode
-    }),
-    curLevelClass (level) {
-      return 'test-level-logo-' + level
-    }
+    })
   },
   methods: {
     ...mapActions({

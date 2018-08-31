@@ -4,7 +4,13 @@
       v-for="(form, index) in data"
       :key="index"
       :style="{top:pos[index][0],left:pos[index][1]}"
-      :class="{current:mouseover_form == form, right:sel_form==form && state_right, error:sel_form==form && state_error}"
+      :class="{
+        'layout-3': [3, 5, 6, 9].indexOf(data.length) != -1,
+        'layout-4': data.length == 7 || data.length == 8,
+        current:mouseover_form == form,
+        right:sel_form==form && state_right,
+        error:sel_form==form && state_error
+      }"
       @click="check(form)"
       @mouseover="mouseover_form=form"
       @mouseout="mouseover_form=null">
@@ -138,9 +144,9 @@ export default {
     })
   },
   mounted () {
-    // if (this.data) {
-    //   this.$set(this, 'pos', commonFn.getPos(this.data.length))
-    // }
+    if (this.data.length) {
+      this.$set(this, 'pos', commonFn.getPos(this.data.length))
+    }
     // console.log(this.data)
   },
   mixins: [

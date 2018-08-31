@@ -1,7 +1,7 @@
 <template>
   <div class="learn-wrap">
     <!-- 头部 -->
-    <learn-header></learn-header>
+    <learn-header ref="header"></learn-header>
     <router-view></router-view>
     <!-- 底部 -->
     <learn-bottom></learn-bottom>
@@ -19,6 +19,9 @@ export default {
   created () {
     this.$on('initLayout', () => {
       this.changeWrapHeight()
+    })
+    this.$on('navItem', (item) => {
+      this.$refs.header.$emit('activeNavItem', item)
     })
     this.getUserInfo().then(() => {
       console.log('12121212')
@@ -47,6 +50,7 @@ export default {
       $('.current-course').css('min-height', clientHeight + 'px')
       $('.test-level-wrap').css('min-height', clientHeight + 'px')
       $('.confirm-wrap').css('min-height', clientHeight + 'px')
+      $('.user-wrap').css('min-height', clientHeight + 'px')
     }
   }
 }
