@@ -90,11 +90,11 @@ export default[
         component: gradeLevelConfirm
       },
       {
-<<<<<<< HEAD
         path: 'homework',
         name: 'homework',
         component: homework
-=======
+      },
+      {
         path: 'user',
         component: user,
         children: [
@@ -103,7 +103,6 @@ export default[
             component: userCourse
           }
         ]
->>>>>>> 4365bc928040cce3e0eb8c2f6f1136c00376468b
       }
     ]
   },

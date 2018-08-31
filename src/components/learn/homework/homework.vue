@@ -106,6 +106,7 @@ export default {
     } else {
       curChapterCode = this.currentChapterCode
     }
+    curChapterCode = 'ENG-Basic-Level3-Unit1-Chapter1'
     let activityCode = curChapterCode + '-A8'
     this.homeworkContent(activityCode).then((res) => {
       console.log('=====>', res)
@@ -257,7 +258,7 @@ export default {
             margin: 20px 0;
             i {
               display: inline-block;
-              background: url('../../../../static/images/homework/yuyingsmall.png') no-repeat;
+              background: url('../../../../static/images/homework/write.png') no-repeat;
               background-size: 100% 100%;
               width: 12px;
               height: 18px;
