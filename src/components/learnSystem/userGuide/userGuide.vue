@@ -329,8 +329,8 @@ export default {
 <style lang="less" scoped>
 .module-user-guide {
   position: relative;
-  width: 710px;
-  height: 519px;
+  width: 796px;
+  height: 557px;
   margin: 0 auto;
   margin-top: 50px;
   .guide-header {
@@ -540,8 +540,8 @@ export default {
 }
 
 .guide-body {
-  width: 710px;
-  height: 519px;
+  width: 796px;
+  height: 557px;
   border: #dde2ee 1px solid;
   background-color: #fff;
   padding: 36px 42px 0 42px;
@@ -602,5 +602,23 @@ export default {
     min-width: 680px;
     margin: 0 auto;
     position: relative;
+}
+
+.stage {
+  width: 80%;
+  min-width: 680px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.f-usn {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.f-cb, .f-cbli li {
+  zoom: 1;
 }
 </style>

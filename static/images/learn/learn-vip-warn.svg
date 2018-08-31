@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="113px" height="113px" viewBox="0 0 113 113" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>warning</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="未解锁学习-是-copy" transform="translate(-584.000000, -182.000000)">
+            <g id="Group-3" transform="translate(428.000000, 170.000000)">
+                <g id="warning" transform="translate(156.000000, 12.000000)">
+                    <g id="Layer_1">
+                        <circle id="Oval" fill="#FD8469" cx="56.5" cy="56.5" r="56.5"></circle>
+                        <path d="M94.3372047,74.8068898 L60.1035433,14.2362205 C58.5242126,11.4334646 54.4980315,11.4334646 52.9187008,14.2362205 L18.6627953,74.8068898 C17.1057087,77.5651575 19.0854331,80.9685039 22.2663386,80.9685039 L90.7559055,80.9685039 C93.9145669,80.9685039 95.8942913,77.5651575 94.3372047,74.8068898 Z" id="Shape" fill="#FFFFFF"></path>
+                        <polygon id="Shape" fill="#FFD05B" points="24.2905512 75.0515748 56.5 18.0622047 88.7094488 75.0515748"></polygon>
+                        <g id="Group" transform="translate(52.273622, 35.145669)" fill="#FFFFFF">
+                            <path d="M8.38602362,8.67519685 C8.38602362,16.482874 6.51751969,28.494685 4.22637795,28.494685 C1.91299213,28.494685 0.0667322835,16.482874 0.0667322835,8.67519685 C0.0667322835,0.867519685 1.93523622,0.20019685 4.22637795,0.20019685 C6.53976378,0.20019685 8.38602362,0.867519685 8.38602362,8.67519685 Z" id="Shape"></path>
+                            <circle id="Oval" cx="4.22637795" cy="32.5653543" r="2.35787402"></circle>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

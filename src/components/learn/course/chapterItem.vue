@@ -118,7 +118,7 @@
             </div>
           </li>
 
-          <li class="course-vip" v-show="item.code === currentChapterCode">
+          <li class="course-vip" v-show="item.code === currentChapterCode && isVip === 1">
               <div class="course-vip-name">
                 <p>强化</p>
                 <p>(会员专享)</p>

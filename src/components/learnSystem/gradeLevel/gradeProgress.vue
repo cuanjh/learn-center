@@ -29,7 +29,7 @@ export default {
       urlFix: '&imageView2/0/w/50',
       otherplayer: {},
       level: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'],
-      pkTime: 30
+      pkTime: 0
     }
   },
   filters: {
@@ -91,8 +91,7 @@ export default {
       this.start = false
       this.warning = false
       this.error = false
-      this.$set('data', [])
-      this.$set('coupleProgress', [])
+      this.$set(this, 'coupleProgress', [])
       clearInterval(this.timeID)
       this.timeID = 0
       this.couple = false
@@ -101,7 +100,7 @@ export default {
     back () {
       clearInterval(this.timeID)
       this.reset()
-      this.$dispatch('back')
+      this.$parent.$emit('back')
     },
     getTime () {
       return this.pkTime - this.time

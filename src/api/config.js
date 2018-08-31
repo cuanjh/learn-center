@@ -1,5 +1,8 @@
 export default {
-  apiUrl: 'http://api.200h.com',
+  apiUrl: 'http://api.200h.com:81',
+  URL: {
+    channelCode: 'web_test_1'
+  },
   API_VERSION: 4.1,
   content_version: 1.5,
 
@@ -31,6 +34,7 @@ export default {
   hasGrade: '/level_grade/has_grade', // 返回用户对当前课程是否进行过定级操作
   levelGradeGrade: '/level_grade/grade', // 定级确认
   homeworkContent: '/feedv3/homework/content', // 获取作业内容接口
+  getStudyDelCourse: '/study/del_course', // 删除已购买的课程
 
   // 书架
   bookCaseIndex: '/studyv1/shelf/v2/index', // 书架首页

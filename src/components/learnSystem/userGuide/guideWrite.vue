@@ -7,7 +7,7 @@
       <div class="sentence-box">
       </div>
       <div class="stage f-cb f-usn">
-        <div v-for="(type, index) in typeList" :key="index" class="f-cb" ref="type" v-show="show" :class="{current:cur==index}">
+        <div v-for="(type, index) in typeList" :key="index" ref="type" v-show="show" :class="['f-cb', type, {current:cur==index}]">
           <transition name="fade" mode="out-in">
             <component :is="'form-'+type" :data="list[index]" :no-record="true" ref="compent"></component>
           </transition>
@@ -60,7 +60,7 @@ export default {
     })
 
     this.$on('resize', () => {
-      !this.finished && new DrawMask().resize(() => showTip.call(this))
+      !this.finished && new DrawMask().resize(() => this.showTip())
     })
 
     this.$on('startInit', () => {
@@ -72,48 +72,49 @@ export default {
           this.finished = false
           this.$parent.$emit('next-component')
           setTimeout(() => {
-            showTip.call(this)
+            this.showTip()
             this.disabled = false
           }, 4000)
         }, 1000)
       })
     })
+  },
+  methods: {
+    showTip () {
+      let mask = new DrawMask()
+      let rightDom = $('.writewords')[0]
+      let { top, left, width, height } = rightDom.getClientRects()[0]
+
+      mask.showRect({
+        top: top - 50,
+        left,
+        width,
+        height
+      })
+
+      mask.showRect({
+        top: top - 50,
+        left,
+        width,
+        height
+      })
+
+      // 显示点击手势
+      mask.showGesture({
+        left: left + width / 4,
+        top: top + height - 40
+      })
+
+      mask.on('mousemove').on('click', () => {
+        $(rightDom)
+          .find('input')
+          .focus()
+        mask.off('mousemove').off('click')
+        mask.hideMask()
+        this.finished = true
+      })
+    }
   }
-}
-
-function showTip () {
-  let mask = new DrawMask()
-  let rightDom = $(`.writewords.current:visible`)[0]
-  let { top, left, width, height } = rightDom.getClientRects()[0]
-
-  mask.showRect({
-    top: top - 50,
-    left,
-    width,
-    height
-  })
-
-  mask.showRect({
-    top: top - 50,
-    left,
-    width,
-    height
-  })
-
-  // 显示点击手势
-  mask.showGesture({
-    left: left + width / 4,
-    top: top + height - 40
-  })
-
-  mask.on('mousemove').on('click', () => {
-    $(rightDom)
-      .find('input')
-      .focus()
-    mask.off('mousemove').off('click')
-    mask.hideMask()
-    this.finished = true
-  })
 }
 </script>
 

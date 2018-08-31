@@ -276,6 +276,9 @@ const mutations = {
   },
   updateSpeakWork (state, flag) {
     state.speakwork = flag
+  },
+  setFormScoresNull (state) {
+    state.formScores = {}
   }
 }
 

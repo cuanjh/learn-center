@@ -5,6 +5,7 @@
 /* eslint-disable */
 import $ from 'jquery'
 import { Cookie } from './cookie'
+import Config from '../api/config'
 // 依赖index.php返回的Config数据
 
 var LOG_URL = 'https://statistics.talkmate.com/log.gif';
@@ -28,12 +29,16 @@ function learnProg(p13, p14, p15, p16, p17){
 
 function _reportLearn(businessNo, otherInfo) {
 	var _currentOnlyId = Cookie.getCookie('currentOnlyId');
-	var _partNumArr = window.location.href.split('index/')[1].replace(/#/g,'').split('/').slice(0,-1);
-	if(_partNumArr.length === 5){
-		_partNumArr.push('A7');
-	}
-	var _partNum = _partNumArr.join('-');
-	var _currentCoin = Config.userData.coin;
+	// var _partNumArr = window.location.href.split('index/')[1].replace(/#/g,'').split('/').slice(0,-1);
+	// if(_partNumArr.length === 5){
+	// 	_partNumArr.push('A7');
+  // }
+  var currentChapterCode = localStorage.getItem('currentChapterCode')
+  var chapterType = localStorage.getItem('chapterType')
+	// var _partNum = _partNumArr.join('-');
+  // var _currentCoin = Config.userData.coin;
+  var _partNum = currentChapterCode + '-' + chapterType
+  var _currentCoin = localStorage.getItem('userCoin')
 	var _arr = [_currentOnlyId, _partNum, _currentCoin].concat(otherInfo);
 	var _other = _arr.join('&');
 
@@ -42,11 +47,11 @@ function _reportLearn(businessNo, otherInfo) {
 
 function _report(businessNo, otherInfo) {
 	//如果是教师进入不再提交日志信息
-	if(Config.userData.is_teacher){ return }
-
+	// if(Config.userData.is_teacher){ return }
+  var userInfo = JSON.parse(localStorage.getItem('userInfo'))
 	var _businessNo = businessNo;
 	var	_userId = Cookie.getCookie('user_id');
-	var	_memberType = Config.userData.is_member;
+	var	_memberType = userInfo.member_info.member_type;
 	var	_logId = Math.round(new Date().getTime());
 	var	_timeZone = new Date().getTimezoneOffset() / 60;
 	if (_timeZone <= 0) {

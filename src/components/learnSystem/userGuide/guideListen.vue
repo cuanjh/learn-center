@@ -7,7 +7,7 @@
       <div class="sentence-box">
       </div>
       <div class="stage f-cb f-usn">
-        <div v-for="(type, index) in typeList" :key="index" :class="{current:0==index}" class="f-cb" :ref="'type'" v-show="show">
+        <div v-for="(type, index) in typeList" :key="index" :class="[type, {current:0==index}]" class="f-cb" :ref="'type'" v-show="show">
           <transition name="fade" mode="out-in">
             <component :is="'form-'+type" :data="list[index]" :no-record="true" :ref="'compent'"></component>
           </transition>
@@ -142,23 +142,5 @@ function showTip () {
   .guide-container {
     height: 378px;
   }
-}
-
-.stage {
-  width: 80%;
-  min-width: 680px;
-  margin: 0 auto;
-  position: relative;
-}
-
-.f-usn {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.f-cb, .f-cbli li {
-  zoom: 1;
 }
 </style>

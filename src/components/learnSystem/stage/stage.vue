@@ -32,8 +32,8 @@ import CoreSummary from '../summary.vue'
 import Recorder from '../../../plugins/recorder'
 import common from '../../../plugins/common'
 import Loader from '../../../plugins/loader'
-// import logCollect from '../../../plugins/logCollect'
-// import { onlyId } from '../../../plugins/onlyId'
+import logCollect from '../../../plugins/logCollect'
+import { onlyId } from '../../../plugins/onlyId'
 import coinCache from '../../../plugins/coin_cache'
 
 var END = -1 // 结束标志位
@@ -46,11 +46,13 @@ export default {
     return {
       cur: -1, // 当前的子组件
       isTeacher: 0,
+      totalCoin: 0, // 所有的金币数
       coin: 0, // 获取的金币数
       continue_correct: 0, // 连对数
       max_continue_correct: 0, // 最高连击数
       continue_wrong: 0, // 连错数,
       last_time: 0, // 持续时间,
+      isFirst: 0, // 是否第一次进入当前slide，0非首次，1为首次
       showGuide: false, // 用户引导层是否显示
       show: true,
       micphoneTip: '', // 提示框文字
@@ -133,17 +135,17 @@ export default {
         if ((that.continue_correct >= rules.base)) {
           // 连续正确
           that.coin += coin
-          that.total_coin += coin
+          that.totalCoin += coin
         } else if (that.continue_wrong >= minNum) {
           // 连续错误
           that.coin -= baseCoin
-          that.total_coin = Math.max((that.total_coin - baseCoin), 0)
+          that.totalCoin = Math.max((that.totalCoin - baseCoin), 0)
         }
       })
     })
 
     this.$on('correct', () => {
-      // if (this.progress[this.cur_slide - 1] !== -1) { return } // 如果题目做过不再计算
+      if (this.progress[this.curSlide] !== -1) { return false } // 如果题目做过不再计算
 
       this.continue_correct += 1
       this.$emit('calCoin')
@@ -152,7 +154,7 @@ export default {
 
     this.$on('wrong', () => {
       console.log('wrong')
-      // if (this.progress[this.cur_slide - 1] !== -1) { return } // 如果题目做过不再计算
+      if (this.progress[this.curSlide] !== -1) { return false } // 如果题目做过不再计算
 
       this.max_continue_correct = Math.max(this.continue_correct, this.max_continue_correct) // 更新最高连击数
       this.continue_wrong += 1
@@ -172,12 +174,11 @@ export default {
       this.cur++
 
       if (this.cur === this.list.length) {
-        // var s = this.score / this.comLength
+        var s = this.score / this.comLength
 
         // 修改进度条进度
         if (!this.isTeacher) {
-          // this.updateCurSlide(this.curSlide)
-          // this.progress.$set(this.curSlide - 1, s)
+          this.updateProgressScore({ curSlide: this.curSlide, score: s })
         }
         this.score = 0
         this.cur = this.list.length - 1
@@ -208,23 +209,13 @@ export default {
         return (window.location.href = this.index + url.join('/'))
       }
       // 退出学习日志数据收集
-      // var whetherFirst = (this.progress[0] === -1) - 0
-      // var currentForm =
-      //     window.location.href
-      //       .split('index/')[1]
-      //       .replace(/#/g, '')
-      //       .split('/')
-      //       .slice(0, -1)
-      //       .join('-') +
-      //     '-' +
-      //     this.curSlide +
-      //     '-' +
-      //     (this.cur + 1)
-      // var currentForm = window.location.href + '-' + this.curSlide + '-' + (this.cur + 1)
-      // console.log(currentForm)
-      // logCollect.learnExit(whetherFirst, currentForm)
+      var whetherFirst = (this.progress[0] === -1) - 0
+      var chapterCode = localStorage.getItem('currentChapterCode')
+      var currentForm = chapterCode + '-' + this.id + '-' + this.curSlide + '-' + (this.cur + 1)
+      console.log(currentForm)
+      logCollect.learnExit(whetherFirst, currentForm)
 
-      // onlyId.del() // 删除临时cookie，下次判定就是初次学习
+      onlyId.del() // 删除临时cookie，下次判定就是初次学习
       console.log(2222)
       this.subComps().forEach((item) => {
         if (item.length > 0) {
@@ -348,14 +339,15 @@ export default {
       that.timer = setTimeout(() => {
         if (!that.isPause && this.canRecord) {
           that.showGuide = true
-          that.$broadcast('updatePosition')
+          // that.$broadcast('updatePosition')
         }
       }, 4000)
     })
   },
-  mounted () {
+  beforeMount () {
     console.log('stage')
     let id = this.id
+    localStorage.setItem('chapterType', this.id)
     if (id.indexOf('A0') > -1) {
       this.updateCurCoreParts(id)
     }
@@ -364,6 +356,14 @@ export default {
     // this.list = this.getList()
 
     this.timeCount()
+    let ui = {}
+    if (Object.keys(this.userInfo).length === 0) {
+      ui = JSON.parse(localStorage.getItem('userInfo'))
+    } else {
+      ui = this.userInfo
+    }
+    this.totalCoin = ui.coins
+
     var that = this
     let _coinCache = coinCache.get(that.completePath)
     if (_coinCache === null) {
@@ -372,6 +372,7 @@ export default {
       that.coin = _coinCache
       that.totalCoin = parseInt(this.totalCoin) + _coinCache
     }
+    localStorage.setItem('userCoin', that.totalCoin)
 
     var resource = this.getResource(this.curSlide)
     changeData(this, Loader(resource))
@@ -396,8 +397,16 @@ export default {
         this.updatePause(true)
       }
     })
-
-    // this.resetSize()
+  },
+  mounted () {
+    this.getCoinCalculationRule()
+    this.isFirst = Number(this.progress[0] === -1)
+    // 判断是否是第一次进入，日志数据提交
+    if (!onlyId.get()) {
+      onlyId.set()
+      var whetherFirst = this.isFirst
+      logCollect.learnStart(whetherFirst)
+    }
   },
   computed: {
     ...mapState({
@@ -415,15 +424,6 @@ export default {
       'canRecord': state => state.learn.canRecord,
       'userInfo': state => state.user.userInfo
     }),
-    totalCoin () {
-      let ui = {}
-      if (Object.keys(this.userInfo).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
-      } else {
-        ui = this.userInfo
-      }
-      return ui.coins
-    },
     comLength () {
       return _.flattenDeep(this.list).length
     },
@@ -454,6 +454,7 @@ export default {
       getCoinCalculationRule: 'learn/getCoinCalculationRule',
       postProgress: 'learn/postProgress',
       postActivityRecord: 'learn/postActivityRecord',
+      postCoin: 'learn/postCoin',
       getChapterContent: 'course/getChapterContent'
     }),
     ...mapMutations({
@@ -462,13 +463,15 @@ export default {
       updateCurCoreParts: 'course/updateCurCoreParts',
       updateCurAssets: 'learn/updateCurAssets',
       updatePause: 'learn/updatePause',
-      updateFormScore: 'learn/updateFormScore'
+      updateFormScore: 'learn/updateFormScore',
+      setFormScoresNull: 'learn/setFormScoresNull',
+      updateProgressScore: 'course/updateProgressScore'
     }),
-    getTypeList () {
+    getTypeList (list) {
       console.log('typelist')
 
       var arr = []
-      _.map(this.forms, (val) => {
+      _.map(list, (val) => {
         if (_.isArray(val)) {
           arr.push(val[0].form_show_type.toLowerCase())
         } else {
@@ -540,7 +543,7 @@ export default {
         common.resize(this.list, this.typeList)
       }
       this.$nextTick(() => {
-        common.resize(this.list, this.list)
+        common.resize(this.list, this.typeList)
       })
     },
     getResource (curSlide) {
@@ -605,12 +608,13 @@ function changeData (_this, trunk) {
     // } else {
     //   Model.postProgress(_.take(_this.data, 4))
     // }
-    // _this.stopCount() //停止计时器
+    _this.postProgress()
+    _this.stopCount() // 停止计时器
 
-    // console.log(_this.coin)
-    // _this.$emit('calCoin') //结束前清算结果
-    // console.log(_this.coin)
-    // Model.postCoin(_this.coin)
+    console.log(_this.coin)
+    _this.$emit('calCoin') // 结束前清算结果
+    console.log(_this.coin)
+    _this.postCoin(_this.coin)
 
     // Model.postRecord(_this.coin, _this.last_time, _this.max_continue_correct, _.take(_this.data, 4))
     // // 结束到总结页面
@@ -626,8 +630,32 @@ function changeData (_this, trunk) {
     var correctArr = arr.filter((item) => {
       return item === 1
     })
-    let cr = (correctArr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
-    let ccr = (arr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
+
+    let cr, ccr
+    if (_this.id.indexOf('A0') > -1) {
+      cr = (correctArr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
+      ccr = (arr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
+    } else {
+      let curChapterContent = {}
+      if (Object.keys(_this.curChapterContent).length === 0) {
+        curChapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
+      } else {
+        curChapterContent = _this.curChapterContent
+      }
+
+      let formsLength = 0
+      curChapterContent.improvement.parts.forEach((item) => {
+        if (item.slide_type_code.indexOf(_this.id) > -1) {
+          var slides = item.slides
+          slides.forEach((i) => {
+            formsLength += i.forms.length
+          })
+        }
+      })
+      cr = (correctArr.length / formsLength).toFixed(2)
+      ccr = (arr.length / formsLength).toFixed(2)
+    }
+
     let curChapterCode
     if (!_this.curChapterCode) {
       curChapterCode = localStorage.getItem('currentChapterCode')
@@ -644,6 +672,7 @@ function changeData (_this, trunk) {
     }
     _this.postActivityRecord(payload).then(() => {
       _this.$refs['summary'].$emit('coreSummary-show', _this.id)
+      _this.setFormScoresNull()
     })
     return false
   }

@@ -92,6 +92,7 @@ export default {
   },
   mounted () {
     this.$parent.$emit('initLayout')
+    this.$parent.$emit('navItem', 'course')
   },
   computed: {
     ...mapState({

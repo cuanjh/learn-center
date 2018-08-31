@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="64px" height="56px" viewBox="0 0 64 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 26</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M1.29144243,49.895648 C0.74223953,49.895648 0.51929797,49.5076826 0.794232522,49.0278044 L28.4460972,0.763491638 C28.7206986,0.284194837 29.1655824,0.283613432 29.440517,0.763491638 L57.0923817,49.0278044 C57.3669831,49.5071012 57.1450408,49.895648 56.5951717,49.895648 L1.29144243,49.895648 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-3" y="-3" width="62.5336529" height="55.491847">
+            <rect x="-2.32353251" y="-2.59619902" width="62.5336529" height="55.491847" fill="white"></rect>
+            <use xlink:href="#path-1" fill="black"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="课程详情-copy" transform="translate(-468.000000, -719.000000)">
+            <g id="Group-26" transform="translate(471.000000, 722.000000)">
+                <g id="Group-20">
+                    <g id="Shape">
+                        <use fill="#FFD05B" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <use stroke="#E46773" mask="url(#mask-2)" stroke-width="6" xlink:href="#path-1"></use>
+                    </g>
+                    <g id="Group" transform="translate(26.000000, 17.000000)" fill="#FFFFFF">
+                        <path d="M6.23385827,6.3616727 C6.23385827,12.0871781 4.84488189,20.895648 3.14173228,20.895648 C1.42204724,20.895648 0.0496062992,12.0871781 0.0496062992,6.3616727 C0.0496062992,0.63616727 1.43858268,0.146807831 3.14173228,0.146807831 C4.86141732,0.146807831 6.23385827,0.63616727 6.23385827,6.3616727 Z" id="Shape"></path>
+                        <ellipse id="Oval" cx="3.14173228" cy="23.8807406" rx="1.75275591" ry="1.72907001"></ellipse>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
