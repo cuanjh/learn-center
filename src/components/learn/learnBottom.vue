@@ -1,8 +1,34 @@
+<template>
+  <div class="bottom-box">
+    <div class="content">
+      <div class="left">
+        <p>2018 @ talkmate</p>
+        <p>条框 | 隐私</p>
+      </div>
+      <div class="right">
+        <p>帮助 | 联系我们</p>
+        <i></i>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data () {
+    return {}
+  }
+}
+</script>
+
 <style scoped>
   .bottom-box {
     width: 100%;
     height: 90px;
     background-color: #fff;
+    position: relative;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
   .content {
     width: 1200px;
@@ -34,24 +60,3 @@
     margin-left: 30px;
   }
 </style>
-<template>
-  <div class="bottom-box">
-    <div class="content">
-      <div class="left">
-        <p>2018 @ talkmate</p>
-        <p>条框 | 隐私</p>
-      </div>
-      <div class="right">
-        <p>帮助 | 联系我们</p>
-        <i></i>
-      </div>
-    </div>
-  </div>
-</template>
-<script>
-export default {
-  data () {
-    return {}
-  }
-}
-</script>

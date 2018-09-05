@@ -2,19 +2,25 @@
   <div class="learn-wrap">
     <!-- 头部 -->
     <learn-header ref="header"></learn-header>
+    <div class="learn-cover learn-all-hide-cover" v-show="coverShow" @click="coverHide"></div> <!-- 遮罩 -->
+    <div class="learn-cover learn-all-hide-cover" v-show="anonymousCover"></div>
     <router-view></router-view>
     <!-- 底部 -->
     <learn-bottom></learn-bottom>
+    <photo-uploader></photo-uploader>
   </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import $ from 'jquery'
 import learnHeader from './learnHeader.vue'
 import learnBottom from './learnBottom.vue'
+import PhotoUploader from '../common/user/photoUploader.vue'
+
 export default {
   data () {
-    return {}
+    return {
+    }
   },
   created () {
     this.$on('initLayout', () => {
@@ -23,6 +29,12 @@ export default {
     this.$on('navItem', (item) => {
       this.$refs.header.$emit('activeNavItem', item)
     })
+    this.$on('changeCourseCode', (courseCode) => {
+      this.$router.push({ path: '/app/course-list' })
+      this.$nextTick(() => {
+        this.changeCourseCode(courseCode)
+      })
+    })
     this.getUserInfo().then(() => {
       console.log('12121212')
       console.log(this.userInfo.current_course_code)
@@ -30,16 +42,44 @@ export default {
   },
   components: {
     learnHeader,
-    learnBottom
+    learnBottom,
+    PhotoUploader
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.user.userInfo,
+      currentChapterCode: state => state.course.currentChapterCode,
+      contentUrl: state => state.course.contentUrl,
+      coverShow: state => state.course.coverShow,
+      anonymousCover: state => state.user.anonymousCover
     })
   },
   methods: {
     ...mapActions({
-      getUserInfo: 'user/getUserInfo'
+      getUserInfo: 'user/getUserInfo',
+      getLearnInfo: 'course/getLearnInfo',
+      getUnlockChapter: 'course/getUnlockChapter',
+      getCourseContent: 'course/getCourseContent',
+      getProgress: 'course/getProgress',
+      getChapterContent: 'course/getChapterContent',
+      getRecord: 'course/getRecord',
+      getCourseTestRanking: 'learn/getCourseTestRanking'
+    }),
+    ...mapMutations({
+      updateCurCourseCode: 'course/updateCurCourseCode',
+      updateCourseInfo: 'course/updateCourseInfo',
+      updateChapters: 'course/updateChapters',
+      updateCurChapterUrl: 'course/updateCurChapterUrl',
+      updateCurChapter: 'course/updateCurChapter',
+      updateCurChapterProgress: 'course/updateCurChapterProgress',
+      updateChapterContent: 'course/updateChapterContent',
+      updateCoverState: 'course/updateCoverState',
+      updatePurchaseIconPay: 'user/updatePurchaseIconPay',
+      updateConfirmAlert: 'user/updateConfirmAlert',
+      updateSuccessAlert: 'user/updateSuccessAlert',
+      updateErrorTip: 'user/updateErrorTip',
+      updateAlertType: 'user/updateAlertType',
+      updateChapterTestResult: 'course/updateChapterTestResult'
     }),
     changeWrapHeight () {
       /**
@@ -52,6 +92,47 @@ export default {
       $('.confirm-wrap').css('min-height', clientHeight + 'px')
       $('.homework-wrap').css('min-height', clientHeight + 'px')
       $('.user-wrap').css('min-height', clientHeight + 'px')
+    },
+    changeCourseCode (courseCode) {
+      var that = this
+      that.$nextTick(() => {
+        that.updateCurCourseCode(courseCode)
+        Promise.all([
+          that.getLearnInfo(courseCode).then((res) => {
+            that.updateCourseInfo(res)
+          }),
+          that.getUnlockChapter(courseCode)
+        ]).then(() => {
+          that.getCourseContent(that.contentUrl).then((res) => {
+            that.updateChapters(res)
+            that.updateCurChapterUrl(that.currentChapterCode)
+            that.updateCurChapter(that.currentChapterCode)
+            that.getChapterContent().then((res) => {
+              this.updateChapterContent(res)
+            })
+          })
+        }).then(() => {
+          that.getRecord(that.currentChapterCode + '-A0')
+          that.getProgress(that.currentChapterCode).then((res) => {
+            if (res.state !== 0) {
+              that.updateCurChapterProgress(res.record.forms)
+            } else {
+              that.updateCurChapterProgress('')
+            }
+          })
+          this.getCourseTestRanking(that.currentChapterCode).then((res) => {
+            this.updateChapterTestResult(res.result.current_user)
+          })
+        })
+      })
+    },
+    coverHide () {
+      this.updateCoverState(false)
+      this.updatePurchaseIconPay(false)
+      this.updateConfirmAlert(false)
+      this.updateSuccessAlert(false)
+      this.updateErrorTip(false)
+      this.updateAlertType('')
     }
   }
 }
@@ -61,5 +142,16 @@ export default {
   .learn-wrap {
     padding-top: 80px;
     background: #f1f5f8;
+  }
+
+  .learn-cover {
+    width: 100%;
+    height: 100%;
+    opacity: .9;
+    background-color: #003d5a;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000028;
   }
 </style>

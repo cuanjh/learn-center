@@ -83,7 +83,7 @@
                 <span>复习</span>
               </div>
               <div class="course-item-box">
-                <router-link :to="{ name: 'pk' }">
+                <a href="javascript:void(0);" @click="startTest(coreData['isTestCheck'])">
                   <div class="course-item">
                     <p class="course-item-star" v-show="coreData['isTestCheck'] && coreData['isTestCompleted']">
                       <span class="course-yellow-star"><i v-for="index in coreData['starTestNum']" :key="index"></i></span>
@@ -98,7 +98,7 @@
                     </p>
                     <p class="course-item-title" :class="{'course-item-title-locked': !coreData['completedTestRate'] }">测试</p>
                   </div>
-                </router-link>
+                </a>
                 <div class="course-circle-box">
                   <div class="course-review-circle" :class="{'course-review-circle-locked': !coreData['isTestCompleted'] }" v-for="index in 3" :key="index"></div>
                 </div>
@@ -118,13 +118,13 @@
             </div>
           </li>
 
-          <li class="course-vip" v-show="item.code === currentChapterCode && isVip === 1">
+          <li class="course-vip" v-show="item.code === currentChapterCode">
               <div class="course-vip-name">
                 <p>强化</p>
                 <p>(会员专享)</p>
               </div>
               <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
-                <router-link :to="{ name: 'stage', params: {id: 'A' + (i + 1)}}">
+                <a href="javascript:void(0);" @click="jumpVipPage(coreData['isTestCheck'], 'A' + (i + 1))">
                   <div class="course-item">
                     <p class="course-item-star" v-if="coreData['A' + (i + 1)]['isCompleted']">
                       <span class="course-yellow-star"><i v-for="index in coreData['A' + (i + 1)]['starNum']" :key="index"></i></span>
@@ -142,12 +142,18 @@
                   <div class="course-circle-box" v-if="i<(vipItemList.length-1)">
                     <div class="course-vip-circle" :class="{'course-vip-circle-locked': !coreData['A' + (i + 1)]['isCompleted'] }" v-for="index in 3" :key="index"></div>
                   </div>
-                </router-link>
+                </a>
               </div>
             </li>
           </ul>
         </div>
       </transition>
+    </div>
+    <div class="nolock-test-check" v-show="nolockTestCheckShow">
+      <p class="animated flipInX" v-show="nolockTestCheckShow">学习需要循序渐进, <br>请先完成核心课程的学习哦！
+        <i></i>
+        <span class="goBackCore" @click="goBackLearn">继续学习</span>
+      </p>
     </div>
   </div>
 </template>
@@ -160,13 +166,13 @@ export default {
     return {
       isTestCheck: 0,
       chapterProgress: 0,
-      vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking']
+      vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
+      nolockTestCheckShow: false
     }
   },
   computed: {
     ...mapState({
-      // 个人/是否是会员 0--不是会员 1---会员 2--会员过期
-      'isVip': state => state.user.userInfo.member_info.member_type,
+      userInfo: state => state.user.userInfo,
       'currentChapterCode': state => state.course.currentChapterCode,
       'unlockCourses': state => state.course.unlockCourses,
       'buyChapters': state => state.course.buyChapters,
@@ -176,6 +182,17 @@ export default {
       'curChapterContent': state => state.course.curChapterContent,
       'chapterTestResult': state => state.course.chapterTestResult
     }),
+    ui () {
+      let ui = this.userInfo
+      if (Object.keys(ui).length === 0) {
+        ui = JSON.parse(localStorage.getItem('userInfo'))
+      }
+      return ui
+    },
+    isVip () {
+      // 个人/是否是会员 0--不是会员 1---会员 2--会员过期
+      return this.ui.member_info.member_type
+    },
     coreData () {
       var that = this
       console.log(that.curLevelChapters)
@@ -324,6 +341,27 @@ export default {
         stars = 5
       }
       return stars
+    },
+    startTest (isTestCheck) {
+      if (!isTestCheck) {
+        this.nolockTestCheckShow = true
+      } else {
+        this.$router.push({ path: '/learn/pk' })
+      }
+    },
+    jumpVipPage (isCoreComplete, id) {
+      if (this.isVip !== 1) {
+        this.$router.push({ path: '/app/user/vip' })
+      } else {
+        if (isCoreComplete) {
+          this.$router.push({ name: 'stage', params: {id: id} })
+        } else {
+          this.nolockTestCheckShow = true
+        }
+      }
+    },
+    goBackLearn () {
+      this.nolockTestCheckShow = false
     }
   }
 }
@@ -745,5 +783,67 @@ export default {
 
   .course-vip-circle-locked:after {
     background: #FFEDCD;
+  }
+
+  .nolock-test-check{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #003d5a;
+    opacity: .9;
+    z-index:99999999;
+  }
+
+  .nolock-test-check p{
+    width:354px;
+    height:250px;
+    padding:80px 30px 0px;
+    text-align:center;
+    font-size:14px;
+    color:#4a4a4a;
+    word-wrap:break-word;
+    word-break:normal;
+    background-color:#fff;
+    border-radius:4px;
+    position:absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    margin:auto;
+  }
+
+  .nolock-test-check p i{
+    position:absolute;
+    width:110px;
+    height:110px;
+    padding:26px;
+    border-radius:55px;
+    top:0px;
+    left:50%;
+    margin-left:-55px;
+    margin-top:-55px;
+    background:url(../../../../static/images/learn/learn-vip-warn.png) #fff center center no-repeat;
+    background-size:86%;
+  }
+
+  .goBackCore {
+    position: absolute;
+    left: 50%;
+    margin-left: -84px;
+    bottom: 30px;
+    width: 168px;
+    height: 40px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 20px;
+    line-height: 40px;
+    text-align: center;
+    background-color: #fd8469;
   }
 </style>

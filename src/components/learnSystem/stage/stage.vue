@@ -222,7 +222,7 @@ export default {
           item[0].$emit('break')
         }
       })
-      this.$router.push({path: '/course/course-list'})
+      this.$router.push({path: '/app/course-list'})
       // this.$dispatch('change-router', _.take(this.data, 3).join('/'))
     })
 

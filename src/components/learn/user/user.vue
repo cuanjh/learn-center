@@ -17,34 +17,34 @@
           </ol>
           <div>
             <p><i></i>认证用户</p>
-            <router-link tag="p" :class="{'active': judgeVip}" :to="{ path:'/user/vip' }"><i></i>会员用户</router-link>
+            <router-link tag="p" :class="{'active': judgeVip}" :to="{ path:'/app/user/vip' }"><i></i>会员用户</router-link>
           </div>
         </div>
         <div class="user-left-nav">
           <ul>
             <li :class="{'active': activeItem === 'course' }">
-              <router-link tag="p" :to="{ path:'/user/course' }"><i></i>课程</router-link>
+              <router-link tag="p" :to="{ path:'/app/user/course' }"><i></i>课程</router-link>
             </li>
             <li :class="{'active': activeItem === 'doc' }">
-              <router-link tag="p" :to="{ path:'/user/doc' }"><i></i>档案</router-link>
+              <router-link tag="p" :to="{ path:'/app/user/doc' }"><i></i>档案</router-link>
             </li>
           </ul>
           <ul class='spe-ul'>
             <li :class="{'active': activeItem === 'wallet' }">
-              <router-link tag="p" :to="{ path:'/user/wallet' }" ><i></i>钱包</router-link>
+              <router-link tag="p" :to="{ path:'/app/user/wallet' }" ><i></i>钱包</router-link>
             </li>
             <li :class="{'active': activeItem === 'vip' }">
-              <router-link tag="p" :to="{ path:'/user/vip' }" ><i></i>会员</router-link>
+              <router-link tag="p" :to="{ path:'/app/user/vip' }" ><i></i>会员</router-link>
             </li>
           </ul>
           <ul class='spe-set'>
             <li :class="{'active': activeItem === 'setting' }">
-              <router-link tag="p" :to="{ path:'/user/setting' }" ><i></i>设置</router-link>
+              <router-link tag="p" :to="{ path:'/app/user/setting' }" ><i></i>设置</router-link>
             </li>
           </ul>
           <ul class='spe-bind' v-if="memberInfo['is_anonymous']">
             <li :class="{'active': activeItem === 'bind' }">
-              <router-link tag="p" :to="{ path:'/user/bind' }" ><i></i>绑定</router-link>
+              <router-link tag="p" :to="{ path:'/app/user/bind' }" ><i></i>绑定</router-link>
             </li>
           </ul>
         </div>
@@ -58,7 +58,7 @@
 
 <script>
 import $ from 'jquery'
-import { mapState } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -67,9 +67,21 @@ export default {
       judgeVip: false
     }
   },
+  created () {
+    this.$on('activeNavUserItem', (e) => {
+      this.activeItem = e
+    })
+
+    this.$on('activate', e => {
+      $('#avatar-modal').hide()
+    })
+  },
   mounted () {
     this.$parent.$emit('initLayout')
     this.$parent.$emit('navItem', 'user')
+    this.getTradeRecord()
+    this.getCoinsProduct()
+    this.getMemberProductsList()
   },
   computed: {
     ...mapState({
@@ -88,20 +100,19 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      updateCoverState: 'course/updateCoverState'
+    }),
+    ...mapActions({
+      getTradeRecord: 'user/getTradeRecord',
+      getCoinsProduct: 'user/getCoinsProduct',
+      getMemberProductsList: 'user/getMemberProductsList'
+    }),
     uploadPicBtn () {
       $('#avatar-modal').fadeIn()
       console.log(window.location.href)
-      this.$dispatch('coverState', true)
+      this.updateCoverState(true)
     }
-  },
-  created () {
-    this.$on('activeNavUserItem', e => {
-      this.activeItem = e
-    })
-
-    this.$on('activate', e => {
-      $('#avatar-modal').hide()
-    })
   }
 }
 </script>

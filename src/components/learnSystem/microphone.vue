@@ -117,6 +117,7 @@ export default {
         if (!this.qiniuToken) {
           this.getQiniuToken().then(() => {
             Recorder.uploadQiniu(this.qiniuToken, this.code, this.sentence)
+            console.log(Recorder.recorderUrl)
             this.isRecord = false
           })
         } else {

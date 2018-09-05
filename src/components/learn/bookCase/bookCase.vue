@@ -79,7 +79,7 @@ export default {
       this.showDetailsHot = this.showDetailsChina = null
     },
     goDetails (code) {
-      this.$router.push({ path: `/course/book-details/${code}` })
+      this.$router.push({ path: `/app/book-details/${code}` })
     }
   }
 }

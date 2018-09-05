@@ -8,16 +8,26 @@ import * as courseMethod from './courseMethod'
 const state = {
   language: 'chinese',
   languagueHander: 'zh-CN', // 默认不同的level的实现方式
-  learnCourses: ['1', '2'], // 已订阅的课程
+  learnCourses: [], // 已订阅的课程
+  loading: true, // 用来判断加载状态程序
   currentCourseCode: '',
   currentChapterCode: '',
   courseBaseInfo: {},
+  coverShow: false, // 遮罩
   learnInfo: {},
   finishedChapter: 0,
   chapterNum: 0,
   curLevel: '',
   levelNum: 6,
   levelDetail: ['level1', 'level2', 'level3', 'level4', 'level5', 'level6'],
+  levelDes: {
+    'Level1': '初级A1',
+    'Level2': '初级A2',
+    'Level3': '中级B1',
+    'Level4': '中级B2',
+    'Level5': '高级C1',
+    'Level6': '高级C1'
+  },
   contentUrl: '',
   assetsUrl: '',
   chapters: {},
@@ -38,9 +48,17 @@ const state = {
 }
 
 const actions = {
-  getLearnCourses ({commit, state}) {
+  getLearnCourses ({commit, state, dispatch}) {
     return httpLogin(config.getMoreLearnCourses).then((res) => {
-      commit('updateLearnCourses', res.learn_courses)
+      commit('clearMoreCourses')
+      _.map(res.learn_courses, (course) => {
+        if (course['course_type'] === 0) {
+          dispatch('getUnlockChapter', course['code']).then((data) => {
+            console.log(data)
+            commit('updateLearnCourses', { course, data })
+          })
+        }
+      })
     })
   },
   getCourseList ({ commit }) {
@@ -55,9 +73,7 @@ const actions = {
     return httpAssets(contentUrl)
   },
   getUnlockChapter ({ commit }, courseCode) {
-    return httpLogin(config.unlockChapter, { course_code: courseCode }).then((res) => {
-      commit('updateUnlockCourseList', res)
-    })
+    return httpLogin(config.unlockChapter, { course_code: courseCode })
   },
   getRecord ({ commit }, currentChapterCode) {
     return httpLogin(config.getRecord, { activity_code: currentChapterCode }).then((res) => {
@@ -84,19 +100,32 @@ const actions = {
   },
   homeworkContent ({ commit, state }, activityCode) {
     return httpLogin(config.homeworkContent, { activity_code: activityCode })
+  },
+  // 删除已订阅的课程的接口实现
+  getDeletePurchase ({ commit, dispatch }, code) {
+    commit('showLoading')
+    httpLogin(config.getStudyDelCourse, { code: code }).then((res) => {
+      dispatch('getLearnCourses')
+    })
   }
 }
 
 const mutations = {
   // 更新更多订阅课程
-  updateLearnCourses (state, courses) {
-    state.learnCourses = []
-    _.map(courses, (course) => {
-      if (course['course_type'] === 0) {
-        state.learnCourses.push(course)
-      }
+  updateLearnCourses (state, payload) {
+    let course = payload.course
+    var arr = payload.data.current_chapter_code.split('-')
+    course['currentLevel'] = arr[2]
+    course['currentChapter'] = arr[4]
+    let unlockCourses = []
+    Object.keys(payload.data.unlock).map(key => {
+      unlockCourses.push(key)
     })
-    console.log(state.learnCourses)
+    var num = unlockCourses.findIndex((value, index, arr) => {
+      return value === course['current_chapter_code']
+    })
+    course['completeRate'] = (((num + 1) / payload.course.chapter_num) * 100).toFixed(0) + '%'
+    state.learnCourses.push(course)
   },
   updateCurCourseCode (state, data) {
     state.currentCourseCode = data
@@ -330,138 +359,20 @@ const mutations = {
   updateChapterTestResult (state, result) {
     state.chapterTestResult = result
   },
-  chapterData (chapter) {
-    var that = this
-    console.log(that.curLevelChapters)
-    // 核心课程
-    let srcCoreArray = Object.keys(that.curChapterProgress).filter((item) => {
-      return item.indexOf('A0') > -1
-    }).map((el) => {
-      return that.curChapterProgress[el]
-    })
-
-    let curChapterCode = that.currentChapterCode
-    let corePartInfos = that.$store.state.course.courseBaseInfo.corePartInfos
-    let coreParts = corePartInfos.filter((item) => curChapterCode.indexOf(item.chapter_code) > 0)
-
-    let retObj = {}
-    let isTestCheck = 0
-    var chapterProgress = 0
-    let partObj = coreParts[0].parts
-    partObj.forEach(element => {
-      let startForm = element.start_form - 1
-      let endForm = element.end_form
-      let coreForms = srcCoreArray.slice(startForm, endForm)
-      let obj = {}
-      let len = endForm - startForm
-      if (coreForms.length < len) {
-        obj['isCompleted'] = 0
-        obj['starNum'] = 0
-        obj['completedRate'] = !coreForms.length ? '' : ((coreForms.length / len) * 100).toFixed(0) + '%'
-        obj['imgStyle'] = !coreForms.length ? '' : {
-          'border-radius': '50% 50%',
-          'border-right': '3px solid #2A9FE4'
-        }
-        isTestCheck = 0
-      } else {
-        obj['isCompleted'] = 1
-        obj['completedRate'] = '1'
-        chapterProgress += 10
-        let correctNum = coreForms.filter((item) => item === 1).length
-        let correctRate = (correctNum / coreForms.length).toFixed(2)
-        obj['starNum'] = this.starNum(correctRate)
-        obj['imgStyle'] = {
-          'border-radius': '50% 50%',
-          'border': '3px solid #2A9FE4'
-        }
-        isTestCheck = 1
-      }
-      retObj[element.part_num] = obj
-    })
-
-    retObj['isTestCheck'] = isTestCheck
-
-    // 测试
-    let srcTestArray = Object.keys(that.curChapterProgress).filter((item) => {
-      return item.indexOf('A7') > -1
-    }).map((el) => {
-      return this.curChapterProgress[el]
-    })
-    console.log(srcTestArray)
-    if (Object.keys(that.chapterTestResult).length > 0) {
-      retObj['isTestCompleted'] = 1
-      retObj['completedTestRate'] = '1'
-      chapterProgress += 10
-      let correctRate = Math.floor((this.chapterTestResult.correct_rate).toFixed(3))
-      retObj['starTestNum'] = this.starNum(correctRate)
-      retObj['imgTestStyle'] = {
-        'border-radius': '50% 50%',
-        'border': '3px solid #7FB926'
-      }
-    } else {
-      retObj['isTestCompleted'] = 0
-      retObj['starTestNum'] = 0
-      retObj['completedTestRate'] = ''
-      retObj['imgTestStyle'] = ''
-    }
-
-    // 强化 会员专享
-    let srcVipArray = []
-    let vipFormArray = []
-    for (let i = 1; i <= 6; i++) {
-      let obj = {}
-      obj['isCompleted'] = 0
-      obj['starNum'] = 0
-      obj['completedRate'] = '0'
-      obj['imgStyle'] = ''
-
-      if (Object.keys(that.$store.state.course.curChapterContent).length > 0) {
-        srcVipArray[i] = Object.keys(that.$store.state.course.curChapterProgress).filter((item) => {
-          return item.indexOf('A' + i) > -1
-        }).map((el) => {
-          return that.curChapterProgress[el]
-        })
-        let vipParts = that.curChapterContent.improvement.parts
-        vipParts.forEach((item) => {
-          if (item.slide_type_code.indexOf('A' + i) > -1) {
-            let formsLength = 0
-            item.slides.forEach((slide) => {
-              formsLength += slide.forms.length
-            })
-            vipFormArray[i] = formsLength
-          }
-        })
-
-        if (srcVipArray[i].length < vipFormArray[i]) {
-          obj['isCompleted'] = 0
-          obj['starNum'] = 0
-          obj['completedRate'] = !srcVipArray[i].length ? '' : ((srcVipArray[i].length / vipFormArray[i]) * 100).toFixed(0) + '%'
-          obj['imgStyle'] = !srcVipArray[i].length ? '' : {
-            'border-radius': '50% 50%',
-            'border-right': '3px solid #F5A623'
-          }
-        } else {
-          obj['isCompleted'] = 1
-          obj['completedRate'] = '1'
-          chapterProgress += 5
-          let correctNum = srcVipArray[i].filter((item) => item === 1).length
-          let correctRate = (correctNum / vipFormArray[i]).toFixed(2)
-          obj['starNum'] = this.starNum(correctRate)
-          obj['imgStyle'] = {
-            'border-radius': '50% 50%',
-            'border': '3px solid #F5A623'
-          }
-        }
-      }
-      retObj['A' + i] = obj
-    }
-    console.log(srcVipArray)
-    console.log(vipFormArray)
-    retObj[curChapterCode] = chapterProgress
-    return retObj
-  },
   updateProgressScore (state, payload) {
     state.progress[payload.curSlide] = payload.score
+  },
+  clearMoreCourses (state) {
+    state.learnCourses = []
+  },
+  showLoading (state) {
+    state.loading = true
+  },
+  hideLoading (state) {
+    state.loading = false
+  },
+  updateCoverState (state, flag) {
+    state.coverShow = flag
   }
 }
 

@@ -15,11 +15,13 @@
         @loadChapterInfo="loadChapterInfo"
       />
     </div>
+    <pulse-loader :loading="loading" class="loading"/>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LeftSide from './leftSide.vue'
 import LevelTabs from './levelTabs.vue'
 import ChapterItem from './chapterItem.vue'
@@ -33,7 +35,8 @@ export default {
   components: {
     LeftSide,
     LevelTabs,
-    ChapterItem
+    ChapterItem,
+    PulseLoader
   },
   // beforeRouteLeave (to, from, next) {
   //   console.log(11111111111111111111)
@@ -57,15 +60,25 @@ export default {
   //   }
   // },
   created () {
-    this.$store.dispatch('user/getUserInfo').then((res) => {
-      this.updateCurCourseCode(this.userInfo.current_course_code)
-      return Promise.resolve()
-    }).then(() => {
+    this.showLoading()
+    let lastCourseCode = localStorage.getItem('lastCourseCode')
+    if (!lastCourseCode) {
+      this.$store.dispatch('user/getUserInfo').then((res) => {
+        this.updateCurCourseCode(this.userInfo.current_course_code)
+        localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
+        return Promise.resolve()
+      })
+    } else {
+      this.updateCurCourseCode(lastCourseCode)
+    }
+    this.$nextTick(() => {
       Promise.all([
         this.getLearnInfo(this.currentCourseCode).then((res) => {
           this.updateCourseInfo(res)
         }),
-        this.getUnlockChapter(this.currentCourseCode)
+        this.getUnlockChapter(this.currentCourseCode).then((res) => {
+          this.updateUnlockCourseList(res)
+        })
       ]).then(() => {
         this.getCourseContent(this.contentUrl).then((res) => {
           this.updateChapters(res)
@@ -73,6 +86,9 @@ export default {
           this.updateCurChapter(this.currentChapterCode)
           this.getChapterContent().then((res) => {
             this.updateChapterContent(res)
+            setTimeout(() => {
+              this.hideLoading()
+            }, 100)
           })
         })
       }).then(() => {
@@ -87,6 +103,10 @@ export default {
         this.getCourseTestRanking(this.currentChapterCode).then((res) => {
           this.updateChapterTestResult(res.result.current_user)
         })
+      }).then(() => {
+        // setTimeout(() => {
+        //   this.hideLoading()
+        // }, 500)
       })
     })
   },
@@ -104,7 +124,8 @@ export default {
       'levelNum': state => state.course.levelNum,
       'contentUrl': state => state.course.contentUrl,
       'chapters': state => state.course.chapters,
-      'chapterTestResult': state => state.course.chapterTestResult
+      'chapterTestResult': state => state.course.chapterTestResult,
+      'loading': state => state.course.loading
     })
   },
   methods: {
@@ -128,7 +149,10 @@ export default {
       updateCurChapter: 'course/updateCurChapter',
       updateCourseInfo: 'course/updateCourseInfo',
       updateChapterTestResult: 'course/updateChapterTestResult',
-      updateChapterContent: 'course/updateChapterContent'
+      updateChapterContent: 'course/updateChapterContent',
+      updateUnlockCourseList: 'course/updateUnlockCourseList',
+      showLoading: 'course/showLoading',
+      hideLoading: 'course/hideLoading'
     }),
     loadChapterInfo (chapterCode) {
       this.$nextTick(() => {
@@ -168,5 +192,11 @@ export default {
   display: inline-block;
   margin-left: 20px;
   vertical-align: top;
+}
+
+.loading {
+  position: absolute;
+  left: 55% ;
+  top: 400px;
 }
 </style>

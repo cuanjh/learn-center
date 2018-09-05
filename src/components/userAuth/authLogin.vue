@@ -66,7 +66,7 @@ export default {
           Cookies.set('user_id', res.user_id)
           Cookies.set('verify', res.verify)
           this.updateIsLogin('1')
-          this.$router.push({path: '/course/course-list'})
+          this.$router.push({path: '/app/course-list'})
         } else {
           this.loading = false
           this.errText = errCode[res.code]

@@ -185,11 +185,11 @@ export default {
               this.$router.replace({ path: '/learn/gradeLevel/level' + nextLevel })
             } else {
               this.updateGradeLevelActivity(nextLevel)
-              this.$router.push({ path: '/course/grade-level-confirm' })
+              this.$router.push({ path: '/app/grade-level-confirm' })
             }
           } else {
             this.updateGradeLevelActivity(_this.currLevel)
-            this.$router.push({ path: '/course/grade-level-confirm' })
+            this.$router.push({ path: '/app/grade-level-confirm' })
           }
         })
       }
@@ -201,7 +201,7 @@ export default {
     })
 
     this.$on('back', (content) => {
-      this.$router.push({path: '/course/course-list'})
+      this.$router.push({path: '/app/course-list'})
       // window.location.href =
       //   Config.index +
       //   'v2/learn/index/' +

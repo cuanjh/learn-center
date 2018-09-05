@@ -15,7 +15,7 @@
     </div>
 
     <ul class="level-test-guide">
-      <li class="learn-test-guide learn-level" @click="jumpToPage('/course/grade-level-show')">
+      <li class="learn-test-guide learn-level" @click="jumpToPage('/app/grade-level-show')">
         <i></i>
         <span>测评定级</span>
       </li>
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     switchCourse () {
-      this.$router.push({ path: '/course/book-case' })
+      this.$router.push({ path: '/app/book-case' })
     },
     jumpToPage (path) {
       this.$router.push({ path: path })

@@ -10,6 +10,7 @@ export default {
   courseList_v2: '/info/course_langs_v2', // 获取课程第二个接口，增加大洲字段
   userLogin: '/user/login', // 登录
   phoneVertify: '/user/get_sms_code_by_guest', // 注册获取验证码接口
+  bindEmail: '/user/bind_email', // 绑定邮箱
   getCaptionCode: '/auth/caption', // 获取验证码
   checkCaptionCode: '/user/check_caption_code', // 检查图片验证码
   register: '/user/register', // 注册
@@ -20,7 +21,16 @@ export default {
   resetPwdPhone: '/user/reset_password', // 通过手机号找回密码
   resetPwdEmail: '/user/reset_password_email', // 通过邮箱找回密码
   userInfo: '/user/get_info', // 获取用户信息
+  updateInfo: '/user/update_info', // 更新用户信息
   logout: '/user/logout', // 用户退出
+  resetPwd: '/user/reset_password_anonymous', // 匿名账号重置密码
+  changePwd: '/user/change_pwd', // 修改密码
+  getCountries: '/info/get_countries', // 获取国家课程列表
+  getLanguages: '/info/get_mother_tongue', // 获取语言列表
+  bindPhoneNumber: '/user/bind_phonenumber', // 绑定手机号
+  resetAnonymous: '/user/reset_password_anonymous', // 匿名账号重置
+  unbindIdentity: '/user/unbind_identity', // 解除邮箱或者手机号绑定
+  uploadUserPhoto: '/user/upload_user_photo', // 上传用户头像(需要登录)
 
   // 课程
   // getCourseList: '/info/get_course_list', // 获取官方语言列表
@@ -35,6 +45,12 @@ export default {
   levelGradeGrade: '/level_grade/grade', // 定级确认
   homeworkContent: '/feedv1/homework/content', // 获取作业内容接口
   getStudyDelCourse: '/study/del_course', // 删除已购买的课程
+  getCourseArchives: '/study_archive/get_archives', // 获取课程档案接口
+  getTradeRecord: '/trade_record/get_lists', // 交易记录列表的实现
+  getCoinsProduct: '/product/lists', // 金币充值进行扫描支付
+  createAliWebOrder: '/pay/ali_web_order', // 创建支付宝网页支付订单
+  getMemberProductsList: '/product/lists', // 会员产品支付渠道暂定于国内
+  getMemberCard: '/member/card', // 会员卡激活账号的接口
 
   // 书架
   bookCaseIndex: '/studyv1/shelf/v2/index', // 书架首页

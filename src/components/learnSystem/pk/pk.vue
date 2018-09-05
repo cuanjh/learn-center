@@ -229,7 +229,7 @@ export default {
       if (this.state === 'pk-menu' || content) {
         // this.$dispatch('change-router', _.take(this.path, 3).join('/'))
         // this.$broadcast('break-rebot')
-        this.$router.push({ path: '/course/course-list' })
+        this.$router.push({ path: '/app/course-list' })
       } else {
         // pk中断强制上传时间
         if (this.$refs.pro) {

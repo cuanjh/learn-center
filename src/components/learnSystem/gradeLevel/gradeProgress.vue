@@ -378,6 +378,7 @@ export default {
       width: 7px;
       height: 11px;
       margin-right: 5px;
+      margin-top: 4px;
     }
   }
   .smenu {

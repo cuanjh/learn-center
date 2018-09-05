@@ -64,7 +64,7 @@ export default {
 </script>
 
 <style lang="less">
-  @import '../../../static/less/lib.less';
+  // @import '../../../static/less/lib.less';
   @import '../../../static/less/ui-dialog.less';
   @import '../../../static/less/animate.less';
   @import "../../../static/less/toast.less";

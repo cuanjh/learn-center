@@ -73,7 +73,7 @@ export default {
       this.$router.push({path: '/learn/gradeLevel/level1'})
     },
     _gotoCourseListView () {
-      this.$router.push({path: '/course/course-list'})
+      this.$router.push({path: '/app/course-list'})
     }
   }
 }

@@ -17,6 +17,10 @@ const homework = r => require.ensure([], () => r(require('@/components/learn/hom
 // 学习 --- 我的
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue'), 'learn'))
 const userCourse = r => require.ensure([], () => r(require('@/components/learn/user/userCourse.vue'), 'learn'))
+const userDoc = r => require.ensure([], () => r(require('@/components/learn/user/userDoc.vue'), 'learn'))
+const userWallet = r => require.ensure([], () => r(require('@/components/learn/user/userWallet.vue'), 'learn'))
+const userVip = r => require.ensure([], () => r(require('@/components/learn/user/userVip.vue'), 'learn'))
+const userSetting = r => require.ensure([], () => r(require('@/components/learn/user/userSetting.vue'), 'learn'))
 
 // 学习系统
 const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue'), 'learnSystem'))
@@ -63,7 +67,7 @@ export default[
     ]
   },
   {
-    path: '/course',
+    path: '/app',
     component: learn,
     meta: {
       auth: true
@@ -97,10 +101,27 @@ export default[
       {
         path: 'user',
         component: user,
+        redirect: 'user/course',
         children: [
           {
-            path: 'user-course',
+            path: 'course',
             component: userCourse
+          },
+          {
+            path: 'doc',
+            component: userDoc
+          },
+          {
+            path: 'wallet',
+            component: userWallet
+          },
+          {
+            path: 'vip',
+            component: userVip
+          },
+          {
+            path: 'setting',
+            component: userSetting
           }
         ]
       }

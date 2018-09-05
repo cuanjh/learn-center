@@ -8,11 +8,11 @@
         </div>
         <ol>
           <li><span>全球说</span><span>《{{item.name[languagueHander]}}》</span></li>
-          <li><span v-text='item.unlock.levelRate'></span>-<span v-text='item.unlock.course'></span></li>
-          <li><span :style="{ width: item['unlock']['complate'] }" v-if='!showLoading'></span></li>
-          <router-link tag="li" :to="{name: 'course_level', params:{lan_code: item['lan_code'], level:item.unlock.level}}" v-if='!showLoading'>继续学习</router-link>
-          <span class='user-course-del-btn' @click.stop="showDel($index)" :class="{ 'arrowDown' : this.showIdx === index ? this.arrowDown : false }"></span>
-          <span class='user-course-del-btn-tag' v-show='this.showIdx === $index ? this.delBtn : false' @click='deleteCourse(item.code)'><i></i>删除课程</span>
+          <li><span v-text="levelDes[item.currentLevel]"></span>-<span v-text="item.currentChapter.replace('Chapter', '课程')"></span></li>
+          <li><span :style="{ width: item['complateRate'] }"></span></li>
+          <li @click="continueLearn(item.code)">继续学习</li>
+          <span class='user-course-del-btn' @click.stop="showDel(index)" :class="{ 'arrowDown' : showIdx === index ? arrowDown : false }"></span>
+          <span class='user-course-del-btn-tag' v-show='showIdx === index ? delBtn : false' @click='deleteCourse(item.code)'><i></i>删除课程</span>
         </ol>
       </div>
       <div class='user-course-nocourse' v-show='courseShow'>
@@ -25,7 +25,7 @@
         </dl>
       </div>
   </div>
-  <pulse-loader  :loading="showLoading" :color="red" :size="size" class='user-course-view'></pulse-loader>
+  <!-- <pulse-loader  :loading="showLoading" class='user-course-view'></pulse-loader> -->
   </section>
 </template>
 
@@ -52,9 +52,8 @@ export default {
     })
   },
   mounted () {
-    this.$parent.$emit('navItemUser', 'course')
+    this.$parent.$emit('activeNavUserItem', 'course')
     this.$parent.$emit('navItem', 'user')
-    console.log(this.learnCourses)
   },
   computed: {
     ...mapState({
@@ -62,12 +61,13 @@ export default {
       courseShow: state => state.user.courseShow,
       courseRader: state => state.user.courseRader,
       languagueHander: state => state.course.languagueHander,
-      learnCourses: state => state.course.learnCourses
+      learnCourses: state => state.course.learnCourses,
+      levelDes: state => state.course.levelDes
     }),
     // 订阅的时间越靠后显示靠前
     courseRander () {
       var _object = []
-      var obj = this.courseRader
+      var obj = this.learnCourses
       for (var i in obj) {
         _object.unshift(obj[i])
       }
@@ -85,6 +85,10 @@ export default {
     },
     deleteCourse (code) {
       this.getDeletePurchase(code)
+    },
+    continueLearn (courseCode) {
+      localStorage.setItem('lastCourseCode', courseCode)
+      this.$router.push({ path: '/app/course-list' })
     }
   }
 }
@@ -122,6 +126,11 @@ export default {
   height: 155.6px;
   margin: 10px 14px;
   float: left;
+}
+
+.user-course-item-wrap .user-course-item div img {
+  max-width: 100%;
+  height: auto;
 }
 .user-course-item-wrap .user-course-item ol {
   width: 318px;

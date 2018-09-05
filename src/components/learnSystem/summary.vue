@@ -164,7 +164,7 @@ export default {
       if (core < 5) {
         this.$router.push('/learn/stage/A0' + (core + 1))
       } else {
-        this.$router.push('/course/course-list')
+        this.$router.push('/app/course-list')
       }
     }
   }
@@ -233,7 +233,7 @@ export default {
       .line {
         width: 1px;
         height: 32px;
-        top: -15px;
+        top: 8px;
         display: inline-block;
         position: relative;
         background-color: #9DDAFF;

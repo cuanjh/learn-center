@@ -455,6 +455,7 @@ export default {
       border-radius: 0;
       display: inline-block;
       position: relative;
+      margin-top: 4px;
     }
   }
   .back {

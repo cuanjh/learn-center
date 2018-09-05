@@ -7,7 +7,7 @@
           学习
           <i class='' :class="{ 'animate-down': navArrowDown, 'animate-up':navArrowUp }"></i>
         </p>
-        <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/course/user'}">
+        <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
             我的
         </router-link>
         <!-- <p class="nav-find-btn" v-if="memberInfo['is_anonymous']" v-bind:class="{ 'learn-header-left-active': activeItem === 'user'  }"  v-link="{path: '/v2/user/bind'}">我的</p> -->
@@ -64,6 +64,7 @@
           <transition name="fade">
             <span class='user-login-out mycourse-loginout animated' v-show="showExitState">
               <img class='arrow' src="./../../../static/images/course/learn-big-arrow.png">
+              <router-link tag="span" :to="{ path: '/app/user/setting' }">设置</router-link>
               <span @click='jumpSystem()'>退出</span>
             </span>
           </transition>
@@ -103,8 +104,6 @@ export default {
   computed: {
     ...mapState({
       learnCourses: state => state.course.learnCourses,
-      contentUrl: state => state.course.contentUrl,
-      currentChapterCode: state => state.course.currentChapterCode,
       userInfo: state => state.user.userInfo
     }),
     ...mapGetters({
@@ -125,29 +124,18 @@ export default {
           }
         }
         this.learnCourse = _object
+      } else {
+        this.learnCourse = newData
       }
     }
   },
   methods: {
     ...mapActions({
       getLearnCourses: 'course/getLearnCourses',
-      getLearnInfo: 'course/getLearnInfo',
-      getUnlockChapter: 'course/getUnlockChapter',
       getCurrentCourse: 'course/getCurrentCourse',
-      getCourseContent: 'course/getCourseContent',
-      getProgress: 'course/getProgress',
-      getChapterContent: 'course/getChapterContent',
-      getRecord: 'course/getRecord',
       logout: 'user/logout'
     }),
     ...mapMutations({
-      updateCurCourseCode: 'course/updateCurCourseCode',
-      updateChapters: 'course/updateChapters',
-      updateCurChapterUrl: 'course/updateCurChapterUrl',
-      updateCurChapter: 'course/updateCurChapter',
-      updateCurChapterProgress: 'course/updateCurChapterProgress',
-      updateCourseInfo: 'course/updateCourseInfo',
-      updateChapterContent: 'course/updateChapterContent',
       updateIsLogin: 'user/updateIsLogin'
     }),
     showSearch (e) {
@@ -164,7 +152,7 @@ export default {
       this.navCourse = false
     },
     jumpToCourse () {
-      this.$router.push({ path: '/course/course-list' })
+      this.$router.push({ path: '/app/course-list' })
     },
     showExit () {
       this.showExitState = true
@@ -182,32 +170,11 @@ export default {
       })
     },
     changeCourseCode (courseCode) {
-      var that = this
-      that.updateCurCourseCode(courseCode)
-      Promise.all([
-        that.getLearnInfo(courseCode).then((res) => {
-          that.updateCourseInfo(res)
-        }),
-        that.getUnlockChapter(courseCode)
-      ]).then(() => {
-        that.getCourseContent(that.contentUrl).then((res) => {
-          that.updateChapters(res)
-          that.updateCurChapterUrl(that.currentChapterCode)
-          that.updateCurChapter(that.currentChapterCode)
-          that.getChapterContent().then((res) => {
-            this.updateChapterContent(res)
-          })
-        })
-      }).then(() => {
-        that.getRecord(that.currentChapterCode + '-A0')
-        that.getProgress(that.currentChapterCode).then((res) => {
-          if (res.state !== 0) {
-            that.updateCurChapterProgress(res.record.forms)
-          } else {
-            that.updateCurChapterProgress('')
-          }
-        })
-      })
+      localStorage.setItem('lastCourseCode', courseCode)
+      this.$parent.$emit('changeCourseCode', courseCode)
+    },
+    jumpCourse () {
+      this.$router.push({ path: '/app/course-list' })
     }
   }
 }
