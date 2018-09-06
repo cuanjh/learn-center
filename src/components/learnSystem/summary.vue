@@ -1,75 +1,84 @@
 <template>
-  <div class="summary-container" v-show="show">
-    <div class="core-summary-box">
-      <div class="core-summary-header">
-        <div class="header-left">
-          <dl>
-            <dt><img :src="userInfo.photo"></dt>
-            <dd>
-              <p v-text='coreDes[core] + "完成"'></p>
-              <p class="summary-star">
-                <span class="summary-yellow-star"><i v-for="index in stars" :key="index"></i></span>
-                <span class="summary-gray-star"><i v-for="index in (5 - stars)" :key="index"></i></span>
-              </p>
-            </dd>
-          </dl>
+  <div>
+    <div class="summary-container" v-show="show">
+      <div class="core-summary-box">
+        <div class="core-summary-header">
+          <div class="header-left">
+            <dl>
+              <dt><img :src="userInfo.photo"></dt>
+              <dd>
+                <p v-text='coreDes[core] + "完成"'></p>
+                <p class="summary-star">
+                  <span class="summary-yellow-star"><i v-for="index in stars" :key="index"></i></span>
+                  <span class="summary-gray-star"><i v-for="index in (5 - stars)" :key="index"></i></span>
+                </p>
+              </dd>
+            </dl>
+          </div>
+          <div class="header-right">
+            <ul>
+              <li>
+                <span>正确率</span>
+                <span>{{correctRate}}</span>
+              </li>
+              <div class="line"></div>
+              <li>
+                <span>最高连击</span>
+                <span>{{correctHits}}</span>
+              </li>
+              <div class="line"></div>
+              <li>
+                <span>获得金币</span>
+                <span>{{coins}}</span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="header-right">
-          <ul>
-            <li>
-              <span>正确率</span>
-              <span>{{correctRate}}</span>
-            </li>
-            <div class="line"></div>
-            <li>
-              <span>最高连击</span>
-              <span>{{correctHits}}</span>
-            </li>
-            <div class="line"></div>
-            <li>
-              <span>获得金币</span>
-              <span>{{coins}}</span>
-            </li>
-          </ul>
+        <div class="core-summary-content">
+          <div class="tooltip">
+            <i></i>
+            <span>系统已把你的录音自动生成了本节课程！</span>
+          </div>
+          <div class="record-box" @click="ShowDetail(code + '-' + core)">
+            <dl>
+              <dt><img :src="imgCover" alt=""></dt>
+              <dd>
+                <p>
+                  <img :src="userInfo.photo">
+                  <span>{{ nickname }}</span>
+                </p>
+                <p>
+                  {{ courseBaseInfo.name + ' '+ levelDes[this.level] + '.' + this.chapter + '.' + coreDes[this.core] + ' ' + '已收录'+ recordCount +'条录音' }}
+                </p>
+              </dd>
+            </dl>
+          </div>
         </div>
-      </div>
-      <div class="core-summary-content">
-        <div class="tooltip">
-          <i></i>
-          <span>系统已把你的录音自动生成了本节课程！</span>
+        <div class="core-summary-footer">
+          <a class="btn review" @click="review">复习</a>
+          <a class="btn continue" @click="continueLearn">继续学习</a>
         </div>
-        <div class="record-box">
-          <dl>
-            <dt><img :src="imgCover" alt=""></dt>
-            <dd>
-              <p>
-                <img :src="userInfo.photo">
-                <span>{{ nickname }}</span>
-              </p>
-              <p>
-                {{ courseBaseInfo.name + ' '+ levelDes[this.level] + '.' + this.chapter + '.' + coreDes[this.core] + ' ' + '已收录'+ recordCount +'条录音' }}
-              </p>
-            </dd>
-          </dl>
-        </div>
-      </div>
-      <div class="core-summary-footer">
-        <a class="btn review" @click="review">复习</a>
-        <a class="btn continue" @click="continueLearn">继续学习</a>
       </div>
     </div>
+    <record-list
+      ref="record"
+      :isShow="isShow"
+      @updateIsShow="updateIsShow" />
   </div>
+
 </template>
 
 <script>
 import dialog from '../../plugins/dialog'
 import { mapState, mapActions } from 'vuex'
+import RecordList from './recordList.vue'
 
 export default {
   data () {
     return {
       window: {},
       show: false,
+      isShow: false,
       level: '',
       levelDes: {
         level1: '初级A1',
@@ -102,37 +111,37 @@ export default {
       nickname: '',
       recordCount: 0,
       userInfo: {},
-      courseBaseInfo: {}
+      courseBaseInfo: {},
+      recordCourseList: []
     }
   },
+  components: {
+    RecordList
+  },
   created () {
+    var _this = this
     this.$on('coreSummary-show', (id) => {
-      let curChapterCode
-      if (!this.curChapterCode) {
-        curChapterCode = localStorage.getItem('currentChapterCode')
-      } else {
-        curChapterCode = this.curChapterCode
-      }
+      let curChapterCode = _this.code
       var arr = curChapterCode.split('-')
-      this.level = arr[2].toLowerCase()
-      this.chapter = arr[4].toLowerCase().replace('chapter', '课程')
-      this.core = id
-      let activityCode = curChapterCode + '-' + this.core
+      _this.level = arr[2].toLowerCase()
+      _this.chapter = arr[4].toLowerCase().replace('chapter', '课程')
+      _this.core = id
+      let activityCode = curChapterCode + '-' + _this.core
 
-      this['learn/getFinishedInfo'](activityCode).then(() => {
-        this.stars = this.finishedInfo.stars
-        this.correctHits = this.finishedInfo.correct_hits
-        this.correctRate = Math.round(parseFloat(this.finishedInfo.correct_rate * 100)) + '%'
-        this.coins = this.finishedInfo.coins
-        this.imgCover = this.finishedInfo.record_course.cover
-        this.nickname = this.finishedInfo.record_course.nickname
-        this.recordCount = this.finishedInfo.record_course.record_count
+      _this.getFinishedInfo(activityCode).then(() => {
+        _this.stars = _this.finishedInfo.stars
+        _this.correctHits = _this.finishedInfo.correct_hits
+        _this.correctRate = Math.round(parseFloat(_this.finishedInfo.correct_rate * 100)) + '%'
+        _this.coins = _this.finishedInfo.coins
+        _this.imgCover = _this.finishedInfo.record_course.cover
+        _this.nickname = _this.finishedInfo.record_course.nickname
+        _this.recordCount = _this.finishedInfo.record_course.record_count
 
         let ui = this.$store.state.user.userInfo
-        this.userInfo = (Object.keys(ui).length === 0) ? JSON.parse(localStorage.getItem('userInfo')) : ui
+        _this.userInfo = (Object.keys(ui).length === 0) ? JSON.parse(localStorage.getItem('userInfo')) : ui
 
         let cbi = this.$store.state.course.courseBaseInfo
-        this.courseBaseInfo = (Object.keys(cbi).length === 0) ? JSON.parse(localStorage.getItem('courseBaseInfo')) : cbi
+        _this.courseBaseInfo = (Object.keys(cbi).length === 0) ? JSON.parse(localStorage.getItem('courseBaseInfo')) : cbi
 
         this.window = dialog({
           width: '652px',
@@ -148,10 +157,22 @@ export default {
     ...mapState({
       curChapterCode: state => state.course.currentChapterCode,
       finishedInfo: state => state.learn.finishedInfo
-    })
+    }),
+    code () {
+      let curChapterCode
+      if (!this.curChapterCode) {
+        curChapterCode = localStorage.getItem('currentChapterCode')
+      } else {
+        curChapterCode = this.curChapterCode
+      }
+      return curChapterCode
+    }
   },
   methods: {
-    ...mapActions(['learn/getFinishedInfo']),
+    ...mapActions({
+      getFinishedInfo: 'learn/getFinishedInfo',
+      getRecordCourseList: 'learn/getRecordCourseList'
+    }),
     review () {
       this.window.remove()
       this.$parent.$emit('switch-slide', 0)
@@ -166,6 +187,23 @@ export default {
       } else {
         this.$router.push('/app/course-list')
       }
+    },
+    ShowDetail (activityCode) {
+      let _this = this
+      _this.getRecordCourseList(activityCode).then((res) => {
+        console.log(res)
+        _this.recordCourseList = res.course_list
+        _this.$refs['record'].$emit('init', res.course_list)
+        _this.isShow = true
+      })
+      // let _this = this
+      // _this.getRecordCourse(courseId).then((res) => {
+      //   _this.recordCourse = res.course
+      //   _this.isShow = true
+      // })
+    },
+    updateIsShow (flag) {
+      this.isShow = flag
     }
   }
 }
@@ -265,6 +303,7 @@ export default {
       border-radius: 3px;
       margin-top: 15px;
       padding: 15px;
+      cursor: pointer;
       dl>dt {
         float: left;
         img {

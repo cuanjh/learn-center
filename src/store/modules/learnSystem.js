@@ -183,6 +183,12 @@ const actions = {
       progress: payload.progress,
       level: payload.level
     })
+  },
+  getRecordCourseList ({ commit }, activityCode) {
+    return httpLogin(config.getRecordCourseList, { activity_code: activityCode })
+  },
+  getRecordCourse ({ commit }, courseId) {
+    return httpLogin(config.getRecordCourse, { course_id: courseId })
   }
 }
 

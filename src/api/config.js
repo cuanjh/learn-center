@@ -67,5 +67,7 @@ export default {
   finishedInfo: '/study_info/finished_info', // 返回每部分学完的学习完成信息
   activityRecord: '/chapters_state/activity_record', // 各个部分即A0-A8学完，上传统计结果
   getGradeContent: '/level_grade/get_content', // 用来获取课程定级的内容
-  postGradeResult: '/level_grade/grade_result' // 用来接收用户在定级的过程中学习的结果
+  postGradeResult: '/level_grade/grade_result', // 用来接收用户在定级的过程中学习的结果
+  getRecordCourseList: '/study_info/record_course_list', // 获取用户录音课程
+  getRecordCourse: '/study_info/record_course' // 获取用户录音课程
 }
