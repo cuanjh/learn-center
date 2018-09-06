@@ -115,7 +115,8 @@ export default {
     this.$on('upload-qiniu', () => {
       if (this.isRecord) {
         if (!this.qiniuToken) {
-          this.getQiniuToken().then(() => {
+          this.getQiniuToken().then((res) => {
+            this.updateQiniuToken(res)
             Recorder.uploadQiniu(this.qiniuToken, this.code, this.sentence)
             console.log(Recorder.recorderUrl)
             this.isRecord = false
@@ -165,6 +166,7 @@ export default {
       getQiniuToken: 'learn/getQiniuToken'
     }),
     ...mapMutations({
+      updateQiniuToken: 'learn/updateQiniuToken',
       'updateLocked': 'learn/updateLocked'
     }),
     draw () {

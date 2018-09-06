@@ -367,7 +367,7 @@ export default {
     getTime: function (cb) {
         return this.recorder ? this.recorder.getSoundTime(cb) : 0;
     },
-    //是否激活
+    // 是否激活
     isActivity: function (speakwork, canRecord) {
 
         if (speakwork) {
