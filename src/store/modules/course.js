@@ -28,6 +28,7 @@ const state = {
     'Level5': '高级C1',
     'Level6': '高级C1'
   },
+  chapterDes: '',
   contentUrl: '',
   assetsUrl: '',
   chapters: {},
@@ -48,6 +49,11 @@ const state = {
 }
 
 const actions = {
+  currentCourse () {
+    return httpLogin(config.currentCourse, {
+      content_version: '1.5'
+    })
+  },
   getLearnCourses ({commit, state, dispatch}) {
     return httpLogin(config.getMoreLearnCourses).then((res) => {
       commit('clearMoreCourses')
@@ -56,6 +62,7 @@ const actions = {
           dispatch('getUnlockChapter', course['code']).then((data) => {
             console.log(data)
             commit('updateLearnCourses', { course, data })
+            localStorage.setItem('learnMoreCourses', JSON.stringify(state.learnCourses))
           })
         }
       })
@@ -376,6 +383,17 @@ const mutations = {
   },
   updateCoverState (state, flag) {
     state.coverShow = flag
+  },
+  updateChapterDes (state, chapterCode) {
+    let arr = chapterCode.split('-')
+    let learnMoreCourse = state.learnCourses
+    if (Object.keys(learnMoreCourse).length === 0) {
+      learnMoreCourse = JSON.parse(localStorage.getItem('learnMoreCourses'))
+    }
+    let course = learnMoreCourse.filter((item) => {
+      return item.lan_code === arr[0]
+    })
+    state.chapterDes = course[0].name['zh-CN'] + '.' + state.levelDes[arr[2]] + '.' + arr[4].replace('Chapter', '课程')
   }
 }
 
