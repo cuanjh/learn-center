@@ -108,6 +108,9 @@ const actions = {
   homeworkContent ({ commit, state }, activityCode) {
     return httpLogin(config.homeworkContent, { activity_code: activityCode })
   },
+  homeworkPub ({ commit, state }, params) {
+    return httpLogin(config.homeworkPub, params)
+  },
   // 删除已订阅的课程的接口实现
   getDeletePurchase ({ commit, dispatch }, code) {
     commit('showLoading')

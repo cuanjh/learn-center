@@ -44,6 +44,7 @@ export default {
   hasGrade: '/level_grade/has_grade', // 返回用户对当前课程是否进行过定级操作
   levelGradeGrade: '/level_grade/grade', // 定级确认
   homeworkContent: '/feedv1/homework/content', // 获取作业内容接口
+  homeworkPub: ' /feedv1/homework/pub', // 写作业接口
   getStudyDelCourse: '/study/del_course', // 删除已购买的课程
   getCourseArchives: '/study_archive/get_archives', // 获取课程档案接口
   getTradeRecord: '/trade_record/get_lists', // 交易记录列表的实现

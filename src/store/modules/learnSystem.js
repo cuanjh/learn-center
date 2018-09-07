@@ -169,9 +169,7 @@ const actions = {
     })
   },
   getQiniuToken ({ commit }) {
-    return httpGetToken(config.qiniuToken).then((res) => {
-      commit('updateQiniuToken', res)
-    })
+    return httpGetToken(config.qiniuToken)
   },
   getGradeContent ({ commit, state }, courseCode) {
     return httpLogin(config.getGradeContent, {course_code: courseCode})

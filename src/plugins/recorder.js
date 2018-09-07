@@ -322,7 +322,6 @@ export default {
     audio: new Audio(),
     init: function () {
         init( (rec) => {
-          console.log(1212121212)
             if (rec) {
                 this.recorder = rec;
             } else {
@@ -367,7 +366,7 @@ export default {
     getTime: function (cb) {
         return this.recorder ? this.recorder.getSoundTime(cb) : 0;
     },
-    //是否激活
+    // 是否激活
     isActivity: function (speakwork, canRecord) {
 
         if (speakwork) {
