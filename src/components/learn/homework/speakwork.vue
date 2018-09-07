@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="shadow"></div>
     <!-- 作业列表，分为语音和写作 -->
     <div class="speak" @click="showTips()">
       <div class="question">
@@ -10,10 +11,10 @@
         <p>{{homework.sentence}}</p>
       </div>
       <div class="footer">
-        <p class="btn" :class="{'submint':submint}">{{msg}}</p>
+        <p class="btn" :class="{'submint':submint}">{{homework.has_done?'完成':'未完成'}}</p>
       </div>
     </div>
-    <div class="repeatSpeak-box" v-show="isShow">
+    <div class="repeatSpeak-box" v-show="isShow" @click.stop="closeShadow()">
       <div class="repeatSpeak-container">
         <div class="repeatSpeak-content">
           <div class="repeatSpeak-header">
@@ -26,8 +27,8 @@
           <p class="line"></p>
           <div class="que-record">
             <!-- 点击开始录音 -->
-            <div class="record" v-show="recordShow" @click="showRecord()">
-              <div class="record-img"></div>
+            <div class="record" v-show="recordShow" >
+              <div class="record-img" @click.stop="showRecord()"></div>
               <p class="text">点击录音</p>
             </div>
             <!-- 蓝色录音标志 -->
@@ -37,26 +38,26 @@
                 <div class="m-bg">
                     <div class="m-track" :style="{height:track_height}"></div>
                 </div>
-                <div class="mac" @click="recordStart()"></div>
+                <div class="mac" @click.stop="recordStart()"></div>
               </div>
             </transition>
             <!-- 录音完毕就显示三个图标，录音，语音，发送 -->
               <div class="recording" v-show="lastShow">
-                <div class="again-recording" @click="againRecord()">
+                <div class="again-recording" @click.stop="againRecord()">
                   <i></i>
                   <span>重新录音</span>
                 </div>
                 <div class="audio-play-box">
-                  <i class="note-line" @click="repeatMySound()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                  <i class="note-line" @click.stop="startMySound()">
+                    <span :class="{'animat':animat}"></span>
+                    <span :class="{'animat':animat}"></span>
+                    <span :class="{'animat':animat}"></span>
+                    <span :class="{'animat':animat}"></span>
+                    <span :class="{'animat':animat}"></span>
+                    <span :class="{'animat':animat}"></span>
                   </i>
                 </div>
-                <div class="send" @click="exit()">
+                <div class="send" @click.prevent="exit()">
                   <i></i>
                   <span>发送</span>
                 </div>
@@ -65,22 +66,22 @@
         </div>
       </div>
     </div>
+    <tip-box ref="tipbox" :tip="micphoneTip" />
   </div>
 </template>
 <script>
 import _ from 'lodash'
 import { mapMutations, mapState, mapActions } from 'vuex'
-import $ from 'jquery'
-// import tipbox from '../../learnSystem/tipbox'
 import Recorder from '../../../plugins/recorder'
-// import SoundCtrl from '../../../plugins/soundCtrl'
+import TipBox from '../../learnSystem//tipbox'
 
 export default {
   props: ['homework'],
   data () {
     return {
+      micphoneTip: '', // 提示框文字
+      animat: false,
       submint: false,
-      msg: '未完成',
       isShow: false, // 禁止弹框显示
       recordShow: false, // 开始录音
       mShow: false, // 录音图标
@@ -90,14 +91,14 @@ export default {
       timeoutId_record: null,
       delay_record: 10000,
       track_height: 0,
-      sndctr: null,
       intervalId_draw: null,
       delay_draw: 40,
-      recordActivity: false, // 录音是否激活
-      micphoneTip: ''
+      recordActivity: false // 录音是否激活
     }
   },
-  components: {},
+  components: {
+    TipBox
+  },
   created () {
     this.$on('init', () => {
       this.init()
@@ -106,6 +107,24 @@ export default {
   mounted () {
     // 初始化
     Recorder.init()
+    // this.$nextTick(() => {
+    //   var isPop
+    //   if (
+    //     Recorder.isActivity() !== true &&
+    //     this.refuseRecord !== true &&
+    //     this.canRecord
+    //   ) {
+    //     this.micphoneTip = this.tips.micphone
+    //     isPop = true
+    //   } else if (this.refuseRecord) {
+    //     this.micphoneTip = this.tips.micphone_failed
+    //     isPop = true
+    //   }
+    //   if (isPop) {
+    //     this.$refs.tipbox.$emit('tipbox-show')
+    //     this.updatePause(true)
+    //   }
+    // })
   },
   computed: {
     ...mapState({
@@ -113,7 +132,6 @@ export default {
       refuseRecord: state => state.learn.refuseRecord,
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
-      tipsMsg: state => state.learn.tips,
       userInfo: state => state.user.userInfo,
       qiniuToken: state => state.learn.qiniuToken
     }),
@@ -128,7 +146,8 @@ export default {
     }),
     ...mapMutations({
       updateQiniuToken: 'learn/updateQiniuToken',
-      updateSpeakWork: 'learn/updateSpeakWork'
+      updateSpeakWork: 'learn/updateSpeakWork',
+      updatePause: 'learn/updatePause'
     }),
     showRecord () {
       this.recordShow = false
@@ -146,30 +165,10 @@ export default {
       ctx.stroke()
     },
     showTips () {
-      this.isShow = true
+      this.isShow = !this.isShow
       this.recordShow = true
     },
-    checkMic () { // 弹出提示
-      var isPop
-      if (
-        Recorder.isActivity(this.speakwork, this.canRecord) !== true &&
-        this.refuseRecord !== true &&
-        this.canRecord
-      ) {
-        this.micphoneTip = this.tipsMsg.micphone
-        isPop = true
-      } else if (this.refuseRecord) {
-        this.micphoneTip = this.tipsMsg.homework_micphoneFailed
-        isPop = true
-      }
-      if (isPop) {
-        this.$refs['tipbox'].$emit('tipbox-show')
-      }
-      return isPop
-    },
     recordStart () {
-      // 停止声音播放
-      if (this.sndctr) this.sndctr.stop()
       // 如果正在录音则停止录音
       if (this.recording) {
         this.recordStop()
@@ -178,7 +177,9 @@ export default {
       // 判断是否在录音
       if (!this.checkRecording()) return
       // 录音状态下不可点
+      this.submint = false
       this.recording = true
+      // this.tips = false
       // 开始检测录音音量
       this.$on('record_setVolume', this.setVolume)
       Recorder.startRecording()
@@ -209,8 +210,7 @@ export default {
       this.$off('record_setVolume')
       console.log('record stop!!!!!')
       // if (this.recording) this.gray = false // 绿色的喇叭
-      this.track_height = 0
-      // this.tips = true
+      // this.track_height = 0
       this.recording = false // 不在录音
       this.recordActivity = false // 录音没有激活
       this.mShow = false // 蓝色录音图标
@@ -243,36 +243,49 @@ export default {
       this.lastShow = false
       this.mShow = true
     },
-    // 播放录音
-    repeatMySound () {
-      $('.note-line').find('span').css({'-webkit-animation':'load 1s ease infinite'})
-      // $('.note-line').find('span').attr('animation-play-state')
-      Recorder.playRecording()
+    // 播放录音 点击动画停止，播完停止动画
+    startMySound () {
+      this.animat = !this.animat
+      if (this.animat) {
+        let audio = Recorder.audio
+        Recorder.playRecording()
+        audio.addEventListener('ended', () => {
+          this.animat = false
+        })
+      } else {
+        Recorder.stopRecordSoud()
+      }
     },
     // 发送作业 先调七牛云上传音频，调后台写作业接口
     exit () {
       let code = this.homework.form_id
       let sentence = this.homework.sentence
-      let recorderUrl = Recorder.recorderUrl
-      let sndTime = Recorder.getSndData()
-      let audio = new Audio()
-      audio.src = window.URL.createObjectURL(sndTime)
-      audio.onloadedmetadata = () => {
-        let time = audio.duration
+      Recorder.getTime((time) => {
         console.log('time', time)
         // 上传七牛云
         this.getQiniuToken().then((res) => {
           this.updateQiniuToken(res)
           Recorder.uploadQiniu(this.qiniuToken, code, sentence)
+          let recorderUrl = Recorder.recorderUrl
+          console.log('recorderUrl', Recorder.recorderUrl)
           // 请求后端接口
           this.homeworkPub({ code, sound_url: recorderUrl, time }).then(res => {
             console.log('res', res)
+            // 返回成功之后再处理
+            // 返回失败具体提示
+            this.homework.has_done = true
             this.isShow = false
-            this.msg = '完成'
             this.submint = true
+            this.recordShow = false
+            this.mShow = false
+            this.lastShow = false
+            this.animat = false
           })
         })
-      }
+      })
+    },
+    closeShadow () { // 遮罩层的显示和隐藏
+      this.isShow = !this.isShow
     }
   }
 }
@@ -431,7 +444,7 @@ export default {
           left: 50%;
           top: 50%;
           margin-top: -23%;
-          margin-left: -23%;
+          margin-left: -19%;
           background-image: url('../../../../static/images/homework/yuying.png');
           background-size: 100% 100%;
           border-radius: 50%;
@@ -442,9 +455,10 @@ export default {
         .text {
           position: absolute;
           bottom: 20px;
-          margin-left: 35%;
+          margin-left: -8%;
           font-size: 14px;
           color: #d8d8d8;
+          left: 50%;
         }
       }
       .m-b {
@@ -459,7 +473,7 @@ export default {
         canvas {
           position: absolute;
           z-index: 1;
-          left: -6px;
+          left: 3px;
           top: -6px;
           transform: rotate(-90deg);
         }
@@ -495,7 +509,7 @@ export default {
           z-index: 111;
           left: 50%;
           top: 50%;
-          margin-left: -50px;
+          margin-left: -40px;
           margin-top: -50px;
         }
       }
@@ -552,48 +566,48 @@ export default {
             background: #2a9fe4;
             // -webkit-animation: load 1s ease infinite;
             // animation-play-state: paused;
-          }
-          // &.loading {
-          //     -webkit-animation: load 1s ease infinite;
-          //   }
-          span:nth-child(1){
-            animation-delay:0.2s;
-            -webkit-animation-delay:0.2s;
-            -ms-animation-delay:0.2s;
-            -o-animation-delay:0.2s;
-            -moz-animation-delay:0.2s;
-          }
-          span:nth-child(2){
-            animation-delay:0.3s;
-            -webkit-animation-delay:0.3s;
-            -ms-animation-delay:0.3s;
-            -o-animation-delay:0.3s;
-            -moz-animation-delay:0.3s;
-          }
-          span:nth-child(3){
-            height: 0.4rem;
-          }
-          span:nth-child(4){
-            height: 0.4rem;
-            animation-delay:0.1s;
-            -webkit-animation-delay:0.1s;
-            -ms-animation-delay:0.1s;
-            -o-animation-delay:0.1s;
-            -moz-animation-delay:0.1s;
-          }
-          span:nth-child(5){
-            animation-delay:0.4s;
-            -webkit-animation-delay:0.4s;
-            -ms-animation-delay:0.4s;
-            -o-animation-delay:0.4s;
-            -moz-animation-delay:0.4s;
-          }
-          span:nth-child(6){
-            animation-delay:0.5s;
-            -webkit-animation-delay:0.5s;
-            -ms-animation-delay:0.5s;
-            -o-animation-delay:0.5s;
-            -moz-animation-delay:0.5s;
+            &.animat {
+              -webkit-animation: load 1s ease infinite;
+            }
+            &:nth-child(1){
+              animation-delay:0.2s;
+              -webkit-animation-delay:0.2s;
+              -ms-animation-delay:0.2s;
+              -o-animation-delay:0.2s;
+              -moz-animation-delay:0.2s;
+            }
+            &:nth-child(2){
+              animation-delay:0.3s;
+              -webkit-animation-delay:0.3s;
+              -ms-animation-delay:0.3s;
+              -o-animation-delay:0.3s;
+              -moz-animation-delay:0.3s;
+            }
+            &:nth-child(3){
+              height: 0.4rem;
+            }
+            &:nth-child(4){
+              height: 0.4rem;
+              animation-delay:0.1s;
+              -webkit-animation-delay:0.1s;
+              -ms-animation-delay:0.1s;
+              -o-animation-delay:0.1s;
+              -moz-animation-delay:0.1s;
+            }
+            &:nth-child(5){
+              animation-delay:0.4s;
+              -webkit-animation-delay:0.4s;
+              -ms-animation-delay:0.4s;
+              -o-animation-delay:0.4s;
+              -moz-animation-delay:0.4s;
+            }
+            &:nth-child(6){
+              animation-delay:0.5s;
+              -webkit-animation-delay:0.5s;
+              -ms-animation-delay:0.5s;
+              -o-animation-delay:0.5s;
+              -moz-animation-delay:0.5s;
+            }
           }
         }
         @keyframes load{

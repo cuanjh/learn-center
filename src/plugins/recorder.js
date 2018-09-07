@@ -322,7 +322,6 @@ export default {
     audio: new Audio(),
     init: function () {
         init( (rec) => {
-          console.log(1212121212)
             if (rec) {
                 this.recorder = rec;
             } else {

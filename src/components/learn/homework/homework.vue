@@ -7,7 +7,7 @@
       </div>
       <div class="homework-content">
         <div class="homework-title">
-          <p>英语.中级B1.课程1</p>
+          <p>{{chapterDes}}</p>
         </div>
         <div class="my-work">
           <p class="line"></p>
@@ -22,8 +22,7 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
-// import $ from 'jquery'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import speakwork from './speakwork.vue'
 export default {
   data () {
@@ -32,6 +31,9 @@ export default {
     }
   },
   created () {},
+  components: {
+    speakwork
+  },
   mounted () {
     this.$parent.$emit('initLayout')
     let curChapterCode
@@ -43,19 +45,21 @@ export default {
     }
     let activityCode = curChapterCode + '-A8'
     this.homeworkContent(activityCode).then(res => {
-      console.log('=====>', res)
+      console.log('res', res)
       this.homeworkList = res.contents
     })
-  },
-  components: {
-    speakwork
+    this.updateChapterDes(curChapterCode)
   },
   computed: {
     ...mapState({
-      currentChapterCode: state => state.course.currentChapterCode
+      currentChapterCode: state => state.course.currentChapterCode,
+      chapterDes: state => state.course.chapterDes
     })
   },
   methods: {
+    ...mapMutations({
+      updateChapterDes: 'course/updateChapterDes'
+    }),
     ...mapActions({
       homeworkContent: 'course/homeworkContent'
     })
