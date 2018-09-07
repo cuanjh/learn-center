@@ -1,42 +1,78 @@
 <template>
-  <div class="learn-wrap" @click="hide()" v-show="isShow">
+  <div class="learn-wrap" v-show="isShow">
     <div class="learn-record-container">
       <div class="learn-record-header">
-        <a href="javascript:void(0)" @click="hide()" class="back">
-          <i></i>
+        <p @click="hide()" class="back">
+          <img src="../../../static/images/learnSystem/record-back.png" alt="">
           返回
-        </a>
+        </p>
         <img :src="photo" alt="">
         <p v-text="nickname"></p>
         <p v-text="chapterDes"></p>
       </div>
-      <div class="learn-myrecord">
+      <div class="learn-myrecord" v-if="isShowMyRecord">
         <div class="title">
           <span></span>
           我的录音
         </div>
         <div class="learn-myrecord-list">
           <div class="big-pre">
-            <img src="../../../static/images/learnSystem/record-big-left.png" alt="">
+            <img src="../../../static/images/learnSystem/record-big-left.png" @click="pre()" alt="">
           </div>
-          <div class="learn-myrecord-item"></div>
+          <div class="learn-myrecord-item">
+            <img :src="curMyRecord.image" alt="">
+            <div class="sentence">{{ curMyRecord.sentence }}</div>
+            <div class="my-record-play" @click="play()">
+              <audio id="record-sound" :src="curMyRecord.record_sound" />
+              <i>
+                <span :class="{loading:loading}"></span>
+                <span :class="{loading:loading}"></span>
+                <span :class="{loading:loading}"></span>
+                <span :class="{loading:loading}"></span>
+                <span :class="{loading:loading}"></span>
+                <span :class="{loading:loading}"></span>
+              </i>
+            </div>
+          </div>
           <div class="big-next">
-            <img src="../../../static/images/learnSystem/record-big-right.png" alt="">
+            <img src="../../../static/images/learnSystem/record-big-right.png" @click="next()" alt="">
           </div>
         </div>
         <div class="learn-myrecord-bottom">
-          <span v-text="'< '"></span>
-          <span v-text="'1 '"></span>/<span v-text="' 3'"></span>
-          <span v-text="' >'"></span>
+          <span @click="pre()" v-text="'< '"></span>
+          <span v-text="(curNum + 1) + ' '"></span>/<span v-text="' ' + myRecordList.length"></span>
+          <span @click="next()" v-text="' >'"></span>
         </div>
       </div>
+      <div class="learn-no-myrecord" v-else></div>
       <div class="learn-partner">
         <div class="title">
           <span></span>
           更多语伴录音
         </div>
         <div class="learn-partner-list">
-          <div class="learn-partner-item"></div>
+          <div class="learn-partner-item" v-for="(item, index) in otherRecordList" :key="index">
+            <img :src="item.cover" alt="">
+            <div class="learn-partner-info">
+              <img :src="item.photo" alt="">
+              <div class="partner-record-play" @click="playPartnerRecord(item.course_id)">
+                <i>
+                  <span :class="{loading:loading}"></span>
+                  <span :class="{loading:loading}"></span>
+                  <span :class="{loading:loading}"></span>
+                  <span :class="{loading:loading}"></span>
+                  <span :class="{loading:loading}"></span>
+                  <span :class="{loading:loading}"></span>
+                </i>
+              </div>
+              <span v-text="item.nickname"></span>
+              <p>
+                <span class="record-count">{{ item.record_count + '条录音' }}</span>
+                <span class="praise-count">{{ item.praise_count }}</span>
+                <span class="partner-chapter">{{ chapterDes }} </span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -56,7 +92,12 @@ export default {
       photo: '',
       praiseCount: 0,
       myRecord: {},
-      myRecordList: {}
+      myRecordList: [],
+      curMyRecord: {},
+      curNum: 0,
+      otherRecordList: [],
+      isShowMyRecord: true,
+      loading: false
     }
   },
   created () {
@@ -75,6 +116,18 @@ export default {
         _this.photo = res.course.photo
         _this.praiseCount = res.course.praise_count
         _this.myRecordList = res.course.records
+        if (_this.myRecordList.length === 0) {
+          _this.isShowMyRecord = false
+        }
+        _this.curMyRecord = _this.myRecordList[0]
+      })
+
+      recordCourseList.forEach((item) => {
+        if (_this.otherRecordList.length < 4) {
+          if (item.user_id !== userId) {
+            _this.otherRecordList.push(item)
+          }
+        }
       })
     })
   },
@@ -95,6 +148,44 @@ export default {
     }),
     hide () {
       this.$emit('updateIsShow', false)
+    },
+    pre () {
+      this.loading = false
+      if (this.curNum > 0) {
+        this.curNum--
+        this.curMyRecord = this.myRecordList[this.curNum]
+      }
+    },
+    next () {
+      this.loading = false
+      if (this.curNum < this.myRecordList.length - 1) {
+        this.curNum++
+        this.curMyRecord = this.myRecordList[this.curNum]
+      }
+    },
+    play () {
+      this.loading = true
+      let audio = document.getElementById('record-sound')
+      audio.loop = false
+      audio.addEventListener('ended', () => {
+        this.loading = false
+      }, false)
+      audio.play()
+    },
+    playPartnerRecord (courseId) {
+      var _this = this
+      this.loading = false
+      _this.getRecordCourse(courseId).then((res) => {
+        _this.activityCode = res.course.activity_code
+        _this.updateChapterDes(_this.activityCode)
+
+        _this.nickname = res.course.nickname
+        _this.photo = res.course.photo
+        _this.praiseCount = res.course.praise_count
+        _this.myRecordList = res.course.records
+        _this.curMyRecord = _this.myRecordList[0]
+        _this.curNum = 0
+      })
     }
   }
 }
@@ -108,13 +199,14 @@ export default {
     background: #e9ecf6;
     top: 0;
     left: 0;
+    overflow:auto;
     z-index: 9999;
   }
 
   .learn-record-container {
     width: 740px;
-    height: 700px;
-    margin: 120px auto 0;
+    height: auto;
+    margin: 120px auto;
     border-radius: 5px;
     background-color: #fff;
   }
@@ -129,9 +221,16 @@ export default {
     margin-left: 25px;
     margin-top: 20px;
     text-align: center;
+    cursor: pointer;
   }
 
-  .learn-record-header img {
+  .back > img {
+    width: 8px;
+    height: 8px;
+    margin-top: 10px;
+  }
+
+  .learn-record-header>img {
     height: 120px;
     width: 120px;
     position: absolute;
@@ -142,7 +241,7 @@ export default {
     box-shadow: 0 3px 9px #C5C9CB;
   }
 
-  .learn-record-header p:first-of-type {
+  .learn-record-header p:nth-of-type(2) {
     text-align: center;
     position: absolute;
     margin-top: 80px;
@@ -151,7 +250,7 @@ export default {
     font-size: 20px;
   }
 
-  .learn-record-header p:nth-of-type(2) {
+  .learn-record-header p:nth-of-type(3) {
     text-align: center;
     position: absolute;
     margin-top: 110px;
@@ -160,13 +259,17 @@ export default {
     color: #AFAFAF;
   }
 
+  .learn-no-myrecord {
+    padding: 150px 25px 20px;
+  }
+
   .learn-myrecord {
     padding: 150px 25px 20px;
   }
 
-  .itle {
+  .title {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
     color: #444444;
   }
 
@@ -188,7 +291,8 @@ export default {
   .learn-myrecord-list .big-pre {
     display: inline-block;
     height: 320px;
-    line-height: 320px
+    line-height: 320px;
+    cursor: pointer;
   }
 
   .learn-myrecord-list .big-pre img {
@@ -210,7 +314,8 @@ export default {
   .learn-myrecord-list .big-next {
     display: inline-block;
     height: 320px;
-    line-height: 320px
+    line-height: 320px;
+    cursor: pointer;
   }
 
   .learn-myrecord-list .big-next img {
@@ -223,4 +328,232 @@ export default {
     text-align: center;
   }
 
+  .learn-myrecord-bottom span:nth-of-type(1) {
+    cursor: pointer;
+  }
+
+  .learn-myrecord-bottom span:nth-of-type(4) {
+    cursor: pointer;
+  }
+
+  .learn-partner {
+    padding: 10px 25px 20px;
+  }
+
+  .learn-partner-list {
+    margin-top: 10px;
+  }
+  .learn-partner-item {
+    padding: 10px 0;
+    border-top: 1px solid #EAEAEA;
+  }
+  .learn-partner-item > img {
+    width: 143px;
+    height: 80px;
+    border-radius: 2px;
+  }
+
+  .learn-partner-info {
+    margin-left: 15px;
+    display: inline-block;
+  }
+
+  .learn-partner-info > img {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+  }
+
+  .learn-partner-info > span {
+    color: #333333;
+    font-size: 16px;
+  }
+
+  .learn-partner-info > p {
+    font-size: 14px;
+    margin-top: 25px;
+    margin-left: 38px;
+    width: 100%;
+  }
+
+  .record-count {
+    color: #999999;
+  }
+
+  .record-count::before {
+    content: "";
+    width: 10px;
+    height: 14px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-right: 6px;
+    background-image: url('../../../static/images/learnSystem/record-sound.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .praise-count {
+    color: #999999;
+    margin-left: 20px;
+  }
+
+  .praise-count::before {
+    content: "";
+    width: 14px;
+    height: 13px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-right: 6px;
+    background-image: url('../../../static/images/learnSystem/record-like.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .partner-chapter {
+    float: right;
+    color: #444444;
+    margin-left: 200px;
+  }
+
+  .learn-myrecord-item {
+    padding: 15px;
+  }
+
+  .learn-myrecord-item img {
+    width: 434px;
+    height: 243px;
+    border-radius: 2px;
+  }
+
+  .learn-myrecord-item .sentence {
+    margin-top: 17px;
+    color: #444444;
+    text-align: center;
+  }
+
+  .my-record-play {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    margin-left: 180px;
+    margin-top: -200px;
+  }
+
+  .my-record-play i {
+    display: flex;
+    width: 70px;
+    height: 70px;
+    padding: 0 10px;
+    box-shadow: 0 6px 18px rgba(172,191,203,.6);
+    background: rgba(255,255,255,.8);
+    margin: 0 auto;
+    align-items: center;
+    border-radius: 100%;
+    font-style: normal;
+    cursor: pointer;
+  }
+
+  .my-record-play i span {
+
+    display: inline-block;
+    width: 4px;
+    height: 8px;
+    margin: 0 2px;
+    border-radius: 4px;
+    background-color: #2a9fe4;
+  }
+
+.my-record-play i .loading {
+  animation: load 1s ease infinite;
+  -webkit-animation: load 1s ease infinite;
+  -ms-animation: load 1s ease infinite;
+  -moz-animation: load 1s ease infinite;
+  -o-animation: load 1s ease infinite;
+}
+@keyframes load{
+  0%,100%{
+    height: 24px;
+  }
+  50%{
+    height: 10px;
+  }
+}
+.my-record-play i span:nth-child(1){
+  animation-delay:0.2s;
+  -webkit-animation-delay:0.2s;
+  -ms-animation-delay:0.2s;
+  -o-animation-delay:0.2s;
+  -moz-animation-delay:0.2s;
+}
+.my-record-play i span:nth-child(2){
+  animation-delay:0.3s;
+  -webkit-animation-delay:0.3s;
+  -ms-animation-delay:0.3s;
+  -o-animation-delay:0.3s;
+  -moz-animation-delay:0.3s;
+}
+.my-record-play i span:nth-child(3){
+  height: 18px;
+}
+.my-record-play i span:nth-child(4){
+  height: 18px;
+  animation-delay:0.1s;
+  -webkit-animation-delay:0.1s;
+  -ms-animation-delay:0.1s;
+  -o-animation-delay:0.1s;
+  -moz-animation-delay:0.1s;
+}
+.my-record-play i span:nth-child(5){
+  animation-delay:0.4s;
+  -webkit-animation-delay:0.4s;
+  -ms-animation-delay:0.4s;
+  -o-animation-delay:0.4s;
+  -moz-animation-delay:0.4s;
+}
+.my-record-play i span:nth-child(6){
+  animation-delay:0.5s;
+  -webkit-animation-delay:0.5s;
+  -ms-animation-delay:0.5s;
+  -o-animation-delay:0.5s;
+  -moz-animation-delay:0.5s;
+}
+
+.partner-record-play {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  margin-left: -112px;
+  margin-top: -10px;
+}
+
+.partner-record-play i {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  padding: 0 8px;
+  box-shadow: 0 6px 18px rgba(172,191,203,.6);
+  background: rgba(255,255,255,.8);
+  margin: 0 auto;
+  align-items: center;
+  border-radius: 100%;
+  font-style: normal;
+  cursor: pointer;
+}
+
+.partner-record-play i span {
+  display: inline-block;
+  width: 2px;
+  height: 8px;
+  margin: 0 1px;
+  border-radius: 4px;
+  background-color: #2a9fe4;
+}
+
+.partner-record-play i span:nth-of-type(3) {
+  height: 12px;
+}
+
+.partner-record-play i span:nth-of-type(4) {
+  height: 12px;
+}
 </style>
