@@ -2,7 +2,7 @@
   <div class="homework-wrap">
     <div class="homework-container">
       <div class="homework-balk">
-        <i></i>
+        <p></p>
         <span @click="$router.back(-1)">返回</span>
       </div>
       <div class="homework-content">
@@ -79,11 +79,11 @@ export default {
     line-height: 30px;
     border-radius: 6px;
     margin-bottom: 28px;
-    i {
+    p {
       display: inline-block;
       background: url(../../../../static/images/homework/balck.png);
       background-size: 100% 100%;
-      background-position-y: 3px;
+      margin-top: 6px;
       width: 12px;
       height: 18px;
     }
