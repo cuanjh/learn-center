@@ -127,17 +127,17 @@ export default {
     }
     // 语音css
     .homework-list {
-      width: 100%;
+      width: 106%;
       margin-top: 20px;
-      display: flex;
-      display: -webkit-box;
-      display: -webkit-flex;
-      flex-wrap: wrap;
+      overflow: hidden;
+
     }
     .homework-item {
-      width: 280px;
-      margin-left: 15px;
+      width: 290px;
+      float: left;
+      margin-right: 15px;
     }
+
   }
 }
 </style>
