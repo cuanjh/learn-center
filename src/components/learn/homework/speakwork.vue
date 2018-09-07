@@ -260,7 +260,8 @@ export default {
     exit () {
       let code = this.homework.form_id
       let sentence = this.homework.sentence
-      Recorder.getTime((time) => {
+      Recorder.getTime((duration) => {
+        let time = Math.round(duration)
         console.log('time', time)
         // 上传七牛云
         this.getQiniuToken().then((res) => {
@@ -269,7 +270,7 @@ export default {
           let recorderUrl = Recorder.recorderUrl
           console.log('recorderUrl', Recorder.recorderUrl)
           // 请求后端接口
-          this.homeworkPub({ code, sound_url: recorderUrl, time }).then(res => {
+          this.homeworkPub({ code, sound_url: recorderUrl, sound_time: time }).then(res => {
             console.log('res', res)
             // 返回成功之后再处理 返回失败具体提示
             this.homework.has_done = true
