@@ -271,8 +271,7 @@ export default {
           // 请求后端接口
           this.homeworkPub({ code, sound_url: recorderUrl, time }).then(res => {
             console.log('res', res)
-            // 返回成功之后再处理
-            // 返回失败具体提示
+            // 返回成功之后再处理 返回失败具体提示
             this.homework.has_done = true
             this.isShow = false
             this.submint = true
@@ -361,19 +360,21 @@ export default {
   }
 }
 .repeatSpeak-box {
-  // display: none;
+  display: block;
   width: 100%;
-  height: 843px;
+  height: 979px;
   position: absolute;
-  top: 80px;
+  top: 0;
   left: 0;
-  background: rgba(37, 36, 36, 0.5);
+  bottom: 0;
+  background: rgba(20, 18, 18, 0.5);
+  z-index: 99;
 }
 .repeatSpeak-container {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: -10%;
+  margin-top: -15%;
   margin-left: -10%;
   width: 286px;
   background: #ffffff;
