@@ -67,9 +67,9 @@
                     </p>
                     <p class="course-item-icon">
                       <img :style="coreData[i]['imgStyle']" :src="'../../../../static/images/course/course-core'+(i)+'.png'" alt="">
-                      <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate']" class="icon-course-lock"></i>
+                      <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate'] && !coreData[i]['isActive']" class="icon-course-lock"></i>
                     </p>
-                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] }">核心{{i}}</p>
+                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] &&  !coreData[i]['isActive']}">核心{{i}}</p>
                   </div>
                 </router-link>
                 <div class="course-circle-box" v-if="i<5">
@@ -106,13 +106,18 @@
             <div class="course-item-box">
               <router-link :to="{ name: 'homework' }">
                 <div class="course-item">
-                  <p class="course-item-star">
-                    <span class="course-yellow-star"><i v-for="index in 5" :key="index"></i></span>
+                  <p class="course-item-star"  v-show="coreData['isTestCheck']  && coreData['isHomeworkCompleted']">
+                    <span class="course-yellow-star"><i v-for="index in homeworkData['starHomeworkNum']" :key="index"></i></span>
+                    <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - homeworkData['starHomeworkNum'])" :key="index"></i></span>
+                  </p>
+                  <p class="course-item-progress" v-show="!coreData['isHomeworkCompleted']">
+                    <span v-show="coreData['isHomeworkCheck'] && !coreData['isHomeworkCompleted']" v-text="coreData['completedHomeworkRate']"></span>
                   </p>
                   <p class="course-item-icon">
-                    <img v-bind:src="'../../../../static/images/course/course-review-homework.png'" alt="">
+                    <img :style="coreData['imgHomeworkStyle']" :src="'../../../../static/images/course/course-review-homework.png'" alt="">
+                    <i v-show="!coreData['isHomeworkCompleted']" class="icon-review-lock"></i>
                   </p>
-                  <p class="course-item-title">作业</p>
+                  <p class="course-item-title" :class="{'course-item-title-locked': !coreData['completedHomeworkRate'] }">作业</p>
                 </div>
               </router-link>
             </div>
@@ -180,7 +185,8 @@ export default {
       'courseBaseInfo': state => state.course.coursBaseInfo,
       'curChapterProgress': state => state.course.curChapterProgress,
       'curChapterContent': state => state.course.curChapterContent,
-      'chapterTestResult': state => state.course.chapterTestResult
+      'chapterTestResult': state => state.course.chapterTestResult,
+      'homeworkContent': state => state.course.homeworkContent
     }),
     ui () {
       let ui = this.userInfo
@@ -237,6 +243,14 @@ export default {
           }
           isTestCheck = 1
         }
+        obj['isActive'] = 0
+        if (element.part_num === 1) {
+          obj['isActive'] = 1
+        } else {
+          if (retObj[element.part_num - 1]['isCompleted'] === 1) {
+            obj['isActive'] = 1
+          }
+        }
         retObj[element.part_num] = obj
       })
 
@@ -292,7 +306,7 @@ export default {
             }
           })
 
-          if (srcVipArray[i].length < vipFormArray[i]) {
+          if (srcVipArray[i] && (srcVipArray[i].length < vipFormArray[i])) {
             obj['isCompleted'] = 0
             obj['starNum'] = 0
             obj['completedRate'] = !srcVipArray[i].length ? '' : ((srcVipArray[i].length / vipFormArray[i]) * 100).toFixed(0) + '%'
@@ -316,6 +330,45 @@ export default {
       }
       console.log(srcVipArray)
       console.log(vipFormArray)
+      return retObj
+    },
+    homeworkData () {
+      // 作业
+      // let srcHomeworkArray = Object.keys(that.curChapterProgress).filter((item) => {
+      //   return item.indexOf('A8') > -1
+      // }).map((el) => {
+      //   return this.curChapterProgress[el]
+      // })
+      // console.log(srcHomeworkArray)
+      let that = this
+      let retObj = {}
+      if (that.homeworkContent && Object.keys(that.homeworkContent).length > 0) {
+        let homeworkNum = that.homeworkContent.length
+        let doneNum = 0
+        that.homeworkContent.forEach((item) => {
+          if (item.has_done) {
+            doneNum++
+          }
+        })
+        if (homeworkNum === doneNum) {
+          retObj['isHomeworkCompleted'] = 1
+          retObj['starHomeworkNum'] = 5
+          retObj['completedHomeworkRate'] = '0'
+        } else {
+          retObj['isHomeworkCompleted'] = 0
+          retObj['starHomeworkNum'] = 0
+          retObj['completedHomeworkRate'] = (doneNum / homeworkNum).toFixed(2)
+        }
+        retObj['imgHomeworkStyle'] = {
+          'border-radius': '50% 50%',
+          'border': '3px solid #7FB926'
+        }
+      } else {
+        retObj['isHomeworkCompleted'] = 0
+        retObj['starHomeworkNum'] = 0
+        retObj['completedHomeworkRate'] = ''
+        retObj['imgHomeworkStyle'] = ''
+      }
       return retObj
     }
   },

@@ -99,6 +99,9 @@ export default {
           } else {
             this.updateCurChapterProgress('')
           }
+          this.homeworkContent(this.currentChapterCode + '-A8').then((res) => {
+            this.updateHomeworkContent(res.contents)
+          })
         })
         this.getCourseTestRanking(this.currentChapterCode).then((res) => {
           this.updateChapterTestResult(res.result.current_user)
@@ -137,7 +140,8 @@ export default {
       getProgress: 'course/getProgress',
       getChapterContent: 'course/getChapterContent',
       setCurrentChapter: 'course/setCurrentChapter',
-      getCourseTestRanking: 'learn/getCourseTestRanking'
+      getCourseTestRanking: 'learn/getCourseTestRanking',
+      homeworkContent: 'course/homeworkContent'
     }),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
@@ -152,7 +156,8 @@ export default {
       updateChapterContent: 'course/updateChapterContent',
       updateUnlockCourseList: 'course/updateUnlockCourseList',
       showLoading: 'course/showLoading',
-      hideLoading: 'course/hideLoading'
+      hideLoading: 'course/hideLoading',
+      updateHomeworkContent: 'course/updateHomeworkContent'
     }),
     loadChapterInfo (chapterCode) {
       this.$nextTick(() => {
