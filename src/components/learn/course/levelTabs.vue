@@ -62,6 +62,8 @@ export default {
   .learn-footer-course-nav > ul {
     list-style: none;
     padding: 0px 0px !important;
+    height: 60px;
+    display: flex;
   }
 
   .learn-footer-course-nav > ul > li {

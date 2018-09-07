@@ -569,7 +569,7 @@ export default {
   }
 
   .course-brief-shade{
-    position: absolute;
+    position: relative;
     height: 100%;
     width: 100%;
     background: rgba(0,0,0,0.40);
@@ -578,11 +578,12 @@ export default {
   }
 
   .course-brief-title{
-    margin: 80px 0 0 80px;
     font-size: 48px;
     color: #ffffff;
     line-height: 48px;
     font-weight: bold;
+    padding-top: 15%;
+    padding-left: 80px;
   }
 
   .course-brief-describe{
