@@ -180,7 +180,7 @@ export default {
       // 清除
       var Child = this.child
       if (!_.isEmpty(Child)) {
-        Child.$destroy(true)
+        // Child.$destroy(true)
       }
     },
     // 检查对错

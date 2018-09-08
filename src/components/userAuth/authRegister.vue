@@ -282,7 +282,8 @@ export default {
       updateIsLogin: 'user/updateIsLogin'
     }),
     ...mapActions({
-      updateUserInfo: 'user/updateInfo'
+      updateInfo: 'user/updateInfo',
+      getUserInfo: 'user/getUserInfo'
     }),
     changeType () {
       this.registerFlag = !this.registerFlag
@@ -343,6 +344,7 @@ export default {
         if (res.success) {
           Cookies.set('user_id', res.user_id)
           Cookies.set('verify', res.verify)
+          console.log(randomString)
           var date = new Date()
           var params = {
             nickname: randomString(10),
@@ -353,8 +355,9 @@ export default {
             course_code: this.registerLang.lan_code + '-Basic',
             description: '这个家伙很懒，什么都没有留下'
           }
-          this.updateUserInfo(params).then((res) => {
+          this.updateInfo(params).then((res) => {
             if (res.success) {
+              localStorage.removeItem('lastCourseCode')
               this.updateIsLogin('1')
               this.$router.push({ path: '/app/course-list' })
             } else {

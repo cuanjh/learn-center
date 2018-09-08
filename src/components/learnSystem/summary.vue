@@ -37,7 +37,8 @@
         <div class="core-summary-content">
           <div class="tooltip">
             <i></i>
-            <span>系统已把你的录音自动生成了本节课程！</span>
+            <span v-if="own">系统已把你的录音自动生成了本节课程！</span>
+            <span v-else>没有收录到你的课程语音，去听听语伴的吧！</span>
           </div>
           <div class="record-box" @click="ShowDetail(code + '-' + core)">
             <dl>
@@ -109,6 +110,8 @@ export default {
       coins: 0,
       imgCover: '',
       nickname: '',
+      own: '1',
+      recordCourse: {},
       recordCount: 0,
       userInfo: {},
       courseBaseInfo: {},
@@ -136,6 +139,8 @@ export default {
         _this.imgCover = _this.finishedInfo.record_course.cover
         _this.nickname = _this.finishedInfo.record_course.nickname
         _this.recordCount = _this.finishedInfo.record_course.record_count
+        _this.own = _this.finishedInfo.record_course.own
+        _this.recordCourse = _this.finishedInfo.record_course
 
         let ui = this.$store.state.user.userInfo
         _this.userInfo = (Object.keys(ui).length === 0) ? JSON.parse(localStorage.getItem('userInfo')) : ui
@@ -193,14 +198,9 @@ export default {
       _this.getRecordCourseList(activityCode).then((res) => {
         console.log(res)
         _this.recordCourseList = res.course_list
-        _this.$refs['record'].$emit('init', res.course_list)
+        _this.$refs['record'].$emit('init', res.course_list, _this.recordCourse)
         _this.isShow = true
       })
-      // let _this = this
-      // _this.getRecordCourse(courseId).then((res) => {
-      //   _this.recordCourse = res.course
-      //   _this.isShow = true
-      // })
     },
     updateIsShow (flag) {
       this.isShow = flag

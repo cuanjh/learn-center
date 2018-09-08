@@ -300,15 +300,9 @@ export default {
 
     getSentence () {
       console.log('getSentence')
-      var options
-      var _sentence
-      if (this.switch_state) {
-        options = this.data.form_options_phoneticize
-        _sentence = this.data.sentence_phoneticize
-      } else {
-        options = this.data.form_options
-        _sentence = this.data.sentence
-      }
+      var options = this.data.options
+      var _sentence = this.data.sentence_show
+
       var option =
         this.direction < 0 ? options[options.length - 1] : options[0]
       var _key = this.getKey(option)
@@ -344,9 +338,7 @@ export default {
       this.switch_state = this.switchState
       this.sentence = this.getSentence()
 
-      var words = this.switch_state
-        ? this.data.form_options_phoneticize
-        : this.data.form_options
+      var words = this.data.options
 
       this.word =
         this.direction < 0 ? words[words.length - 1] : words[0]

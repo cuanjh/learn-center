@@ -63,6 +63,7 @@ export default {
         password: encrypt(this.userPwd)
       }).then(res => {
         if (res.success) {
+          localStorage.clear()
           Cookies.set('user_id', res.user_id)
           Cookies.set('verify', res.verify)
           this.updateIsLogin('1')

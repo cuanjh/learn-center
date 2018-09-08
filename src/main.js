@@ -10,11 +10,16 @@ import routes from './router/index'
 import store from './store/index'
 import moreLanguage from './vueI18/locale.js'
 import {urlfix} from './filter/index'
-import './../static/css/animate.css'
-import './../static/css/reset.css'
-import './../static/css/style.css'
+require('./../static/css/animate.css')
+require('./../static/css/reset.css')
+require('./../static/css/style.css')
 // import 'bootstrap/dist/css/bootstrap.css'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+// require('../static/jquery-1.10.2.js')
+// require('./../static/cropper.min.js')
+// require('./../static/sitelogo')
+require('./../static/bootstrap.min.js')
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
@@ -50,6 +55,9 @@ const i18n = new VueI18n({
   locale: Vue.config.lang,
   messages: moreLanguage
 })
+if (window.__webpack_public_path__) {
+  window.__webpack_public_path__ = 'http://www.baidu.com'
+}
 
 // store.subscribe((mutation, state) => {
 //   console.log(mutation.type)

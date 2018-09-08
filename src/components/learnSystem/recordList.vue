@@ -57,12 +57,12 @@
               <img :src="item.photo" alt="">
               <div class="partner-record-play" @click="playPartnerRecord(item.course_id)">
                 <i>
-                  <span :class="{loading:loading}"></span>
-                  <span :class="{loading:loading}"></span>
-                  <span :class="{loading:loading}"></span>
-                  <span :class="{loading:loading}"></span>
-                  <span :class="{loading:loading}"></span>
-                  <span :class="{loading:loading}"></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </i>
               </div>
               <span v-text="item.nickname"></span>
@@ -102,12 +102,18 @@ export default {
   },
   created () {
     var _this = this
-    this.$on('init', (recordCourseList) => {
-      let userId = Cookies.get('user_id')
-      _this.myRecord = recordCourseList.filter((item) => {
-        return item.user_id === userId
-      })
-      let courseId = this.myRecord[0].course_id
+    this.$on('init', (recordCourseList, recordCourse) => {
+      let own = recordCourse.own
+      let courseId = recordCourse.course_id
+      let userId = ''
+      if (own) {
+        userId = Cookies.get('user_id')
+        _this.myRecord = recordCourseList.filter((item) => {
+          return item.user_id === userId
+        })
+        courseId = this.myRecord[0].course_id
+      }
+
       _this.getRecordCourse(courseId).then((res) => {
         _this.activityCode = res.course.activity_code
         _this.updateChapterDes(_this.activityCode)
@@ -447,6 +453,7 @@ export default {
     box-shadow: 0 6px 18px rgba(172,191,203,.6);
     background: rgba(255,255,255,.8);
     margin: 0 auto;
+    justify-content: space-around;
     align-items: center;
     border-radius: 100%;
     font-style: normal;
@@ -454,7 +461,6 @@ export default {
   }
 
   .my-record-play i span {
-
     display: inline-block;
     width: 4px;
     height: 8px;

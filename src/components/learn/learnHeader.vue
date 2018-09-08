@@ -34,7 +34,7 @@
                           <div class='fix-ie-filter-bug'></div>
                         </a>
                       </dt>
-                      <dd><span><a>全球说</a></span><span class='mycourse-lang'><a href="">{{ !course.name ? '' : course.name[languagueHander] }}</a></span></dd>
+                      <dd><span><a>全球说</a></span><span class='mycourse-lang'><a href="">{{ !course.name ? '' : course.name['zh-CN'] }}</a></span></dd>
                     </dl>
                   </li>
                   <li class='learn-courseList-add-more' style="display:none">

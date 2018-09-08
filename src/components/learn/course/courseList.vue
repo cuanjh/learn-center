@@ -62,6 +62,7 @@ export default {
   created () {
     this.showLoading()
     let lastCourseCode = localStorage.getItem('lastCourseCode')
+    console.log(this.learnCourses)
     if (!lastCourseCode) {
       this.$store.dispatch('user/getUserInfo').then((res) => {
         this.updateCurCourseCode(this.userInfo.current_course_code)
@@ -128,7 +129,8 @@ export default {
       'contentUrl': state => state.course.contentUrl,
       'chapters': state => state.course.chapters,
       'chapterTestResult': state => state.course.chapterTestResult,
-      'loading': state => state.course.loading
+      'loading': state => state.course.loading,
+      'learnCourses': state => state.course.learnCourses
     })
   },
   methods: {

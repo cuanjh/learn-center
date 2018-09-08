@@ -23,6 +23,7 @@ export default {
     }
   },
   created () {
+    this.getUserInfo()
     this.$on('initLayout', () => {
       this.changeWrapHeight()
     })
@@ -34,10 +35,6 @@ export default {
       this.$nextTick(() => {
         this.changeCourseCode(courseCode)
       })
-    })
-    this.getUserInfo().then(() => {
-      console.log('12121212')
-      console.log(this.userInfo.current_course_code)
     })
   },
   components: {
