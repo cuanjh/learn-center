@@ -11,7 +11,7 @@
         <p>{{homework.sentence}}</p>
       </div>
       <div class="footer">
-        <p class="btn" :class="{'submint':submint}">{{homework.has_done?'完成':'未完成'}}</p>
+        <p class="btn" :class="{'submint':homework.has_done}">{{homework.has_done?'完成':'未完成'}}</p>
       </div>
     </div>
     <div class="repeatSpeak-box" v-show="isShow" @click.stop="closeShadow()">
@@ -32,15 +32,13 @@
               <p class="text">点击录音</p>
             </div>
             <!-- 蓝色录音标志 -->
-            <transition name="move">
-              <div class="m-b" v-show="mShow">
-                <canvas width="112" height="112"></canvas>
-                <div class="m-bg">
-                    <div class="m-track" :style="{height:track_height}"></div>
-                </div>
-                <div class="mac" @click.stop="recordStart()"></div>
+            <div class="m-b" v-show="mShow">
+              <canvas width="112" height="112"></canvas>
+              <div class="m-bg">
+                  <div class="m-track" :style="{height:track_height}"></div>
               </div>
-            </transition>
+              <div class="mac" @click.stop="recordStart()"></div>
+            </div>
             <!-- 录音完毕就显示三个图标，录音，语音，发送 -->
               <div class="recording" v-show="lastShow">
                 <div class="again-recording" @click.stop="againRecord()">
@@ -81,7 +79,6 @@ export default {
     return {
       micphoneTip: '', // 提示框文字
       animat: false,
-      submint: false,
       isShow: false, // 禁止弹框显示
       recordShow: false, // 开始录音
       mShow: false, // 录音图标
@@ -106,6 +103,7 @@ export default {
   },
   mounted () {
     // 初始化
+    console.log('===>', this.homework)
     Recorder.init()
     // this.$nextTick(() => {
     //   var isPop
@@ -175,11 +173,11 @@ export default {
         return
       }
       // 判断是否在录音
-      if (!this.checkRecording()) return
+      if (!this.checkRecording()) {
+        return
+      }
       // 录音状态下不可点
-      this.submint = false
       this.recording = true
-      // this.tips = false
       // 开始检测录音音量
       this.$on('record_setVolume', this.setVolume)
       Recorder.startRecording()
@@ -202,6 +200,7 @@ export default {
           return
         }
         percent += step
+        console.log('percent:', percent)
         _this.draw(percent)
       }, this.delay_draw)
     },
@@ -215,13 +214,12 @@ export default {
       this.recordActivity = false // 录音没有激活
       this.mShow = false // 蓝色录音图标
       this.lastShow = true // 三个录音图标
-
       clearInterval(this.timeoutId_record)
-      // 也可以在这里上传到七牛云
     },
     // 是否可以录音
     checkRecording () {
       this.updateSpeakWork(true)
+      console.log('mic激活：', Recorder.isActivity(this.speakwork, this.canRecord))
       return Recorder.isActivity(this.speakwork, this.canRecord)
     },
     // 录音音量mac动画
@@ -275,7 +273,6 @@ export default {
             // 返回成功之后再处理 返回失败具体提示
             this.homework.has_done = true
             this.isShow = false
-            this.submint = true
             this.recordShow = false
             this.mShow = false
             this.lastShow = false
@@ -283,9 +280,16 @@ export default {
           })
         })
       })
+      this.clear()
+      this.updateSpeakWork(false)
     },
     closeShadow () { // 遮罩层的显示和隐藏
       this.isShow = !this.isShow
+      this.mShow = false
+      this.lastShow = false
+    },
+    clear () {
+      this.recording = false
     }
   }
 }
@@ -425,12 +429,6 @@ export default {
       position: relative;
       width: 100%;
       height: 200px;
-      &.move-leave,.move-enter{
-        transform: rotate3d(1, 0, 0, 90deg);
-      }
-      &.move-enter, .move-leave-to {
-        opacity: 0
-      }
       canvas {
         position: absolute;
         z-index: 1;
@@ -614,10 +612,10 @@ export default {
         }
         @keyframes load{
           0%,100%{
-            height: 0.4rem;
+            height: 8px;
           }
           50%{
-            height: 0.2rem;
+            height: 16px;
           }
         }
         .send {
