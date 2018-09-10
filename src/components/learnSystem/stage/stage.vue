@@ -8,7 +8,7 @@
           {
             current:cur==index,
             up:showGuide,
-            'layout-3': [3, 5, 6, 9].indexOf(typeList.length) != -1 && typeList.length === [...new Set(typeList)].length,
+            'layout-3': isLayout3,
             'layout-4': typeList.length == 7 || typeList.length == 8
           }
         ]"
@@ -450,6 +450,15 @@ export default {
       }
       let path = curChapterCode + '-' + this.id + '-Slide' + this.curSlide
       return path
+    },
+    isLayout3 () {
+      if ([5, 6, 9].indexOf(this.typeList.length) !== -1) {
+        return true
+      }
+      if (this.typeList.length === 3 && [...new Set(this.typeList)].length === 1) {
+        return true
+      }
+      return false
     }
   },
   watch: {
