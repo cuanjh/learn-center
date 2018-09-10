@@ -64,20 +64,17 @@
         </div>
       </div>
     </div>
-    <tip-box ref="tipbox" :tip="micphoneTip" />
   </div>
 </template>
 <script>
 import _ from 'lodash'
 import { mapMutations, mapState, mapActions } from 'vuex'
 import Recorder from '../../../plugins/recorder'
-import TipBox from '../../learnSystem//tipbox'
 
 export default {
   props: ['homework'],
   data () {
     return {
-      micphoneTip: '', // 提示框文字
       animat: false,
       isShow: false, // 禁止弹框显示
       recordShow: false, // 开始录音
@@ -93,9 +90,7 @@ export default {
       recordActivity: false // 录音是否激活
     }
   },
-  components: {
-    TipBox
-  },
+  components: {},
   created () {
     this.$on('init', () => {
       this.init()
@@ -103,26 +98,7 @@ export default {
   },
   mounted () {
     // 初始化
-    console.log('===>', this.homework)
     Recorder.init()
-    // this.$nextTick(() => {
-    //   var isPop
-    //   if (
-    //     Recorder.isActivity() !== true &&
-    //     this.refuseRecord !== true &&
-    //     this.canRecord
-    //   ) {
-    //     this.micphoneTip = this.tips.micphone
-    //     isPop = true
-    //   } else if (this.refuseRecord) {
-    //     this.micphoneTip = this.tips.micphone_failed
-    //     isPop = true
-    //   }
-    //   if (isPop) {
-    //     this.$refs.tipbox.$emit('tipbox-show')
-    //     this.updatePause(true)
-    //   }
-    // })
   },
   computed: {
     ...mapState({
@@ -147,8 +123,7 @@ export default {
     }),
     ...mapMutations({
       updateQiniuToken: 'learn/updateQiniuToken',
-      updateSpeakWork: 'learn/updateSpeakWork',
-      updatePause: 'learn/updatePause'
+      updateSpeakWork: 'learn/updateSpeakWork'
     }),
     showRecord () {
       this.recordShow = false
@@ -201,7 +176,6 @@ export default {
           return
         }
         percent += step
-        console.log('percent:', percent)
         _this.draw(percent)
       }, this.delay_draw)
     },
@@ -209,8 +183,6 @@ export default {
       Recorder.stopRecording()
       this.$off('record_setVolume')
       console.log('record stop!!!!!')
-      // if (this.recording) this.gray = false // 绿色的喇叭
-      // this.track_height = 0
       this.recording = false // 不在录音
       this.recordActivity = false // 录音没有激活
       this.mShow = false // 蓝色录音图标
@@ -261,16 +233,13 @@ export default {
       let sentence = this.homework.sentence
       Recorder.getTime((duration) => {
         let time = Math.round(duration)
-        console.log('time', time)
         // 上传七牛云
         this.getQiniuToken().then((res) => {
           this.updateQiniuToken(res)
           Recorder.uploadQiniu(this.qiniuToken, code, sentence)
           let recorderUrl = Recorder.recorderUrl
-          console.log('recorderUrl', Recorder.recorderUrl)
           // 请求后端接口
           this.homeworkPub({ code, sound_url: recorderUrl, sound_time: time }).then(res => {
-            console.log('res', res)
             // 返回成功之后再处理 返回失败具体提示
             this.homework.has_done = true
             this.isShow = false
