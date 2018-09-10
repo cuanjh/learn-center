@@ -135,6 +135,11 @@ export default {
     }),
     dir () {
       return this.direction < 0
+    },
+    ctx () {
+      return this.$el.parentElement
+        .querySelectorAll('canvas')[1]
+        .getContext('2d')
     }
   },
   methods: {
@@ -152,15 +157,13 @@ export default {
       this.mShow = true
     },
     draw (progress) { // canvas画图
-      var $progress = document.querySelector('canvas')
-      if (!$progress) return
-      var ctx = $progress.getContext('2d')
-      ctx.clearRect(0, 0, 112, 112)
-      ctx.beginPath()
-      ctx.arc(56, 56, 51, 0, Math.PI * 2 * progress, false)
-      ctx.lineWidth = 8.0
-      ctx.strokeStyle = '#6ade80'
-      ctx.stroke()
+      if (!this.ctx) return
+      this.ctx.clearRect(0, 0, 112, 112)
+      this.ctx.beginPath()
+      this.ctx.arc(56, 56, 51, 0, Math.PI * 2 * progress, false)
+      this.ctx.lineWidth = 8.0
+      this.ctx.strokeStyle = '#6ade80'
+      this.ctx.stroke()
     },
     showTips () {
       this.isShow = !this.isShow
