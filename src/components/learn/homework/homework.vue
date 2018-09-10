@@ -31,8 +31,8 @@ import Recorder from '../../../plugins/recorder'
 export default {
   data () {
     return {
-      micphoneTip: '', // 提示框文字
-      homeworkList: [] // 作业列表
+      micphoneTip: '' // 提示框文字
+      // homeworkList: [] // 作业列表
     }
   },
   created () {
@@ -72,7 +72,8 @@ export default {
     let activityCode = curChapterCode + '-A8'
     this.homeworkContent(activityCode).then(res => {
       console.log('res', res)
-      this.homeworkList = res.contents
+      this.updateHomeworkContent(res.contents)
+      // this.homeworkList = res.contents
     })
     this.updateChapterDes(curChapterCode)
   },
@@ -80,13 +81,15 @@ export default {
     ...mapState({
       currentChapterCode: state => state.course.currentChapterCode,
       tips: state => state.learn.tips,
-      chapterDes: state => state.course.chapterDes
+      chapterDes: state => state.course.chapterDes,
+      homeworkList: state => state.course.homeworkContent
     })
   },
   methods: {
     ...mapMutations({
       updateChapterDes: 'course/updateChapterDes',
-      updatePause: 'learn/updatePause'
+      updatePause: 'learn/updatePause',
+      updateHomeworkContent: 'course/updateHomeworkContent'
     }),
     ...mapActions({
       homeworkContent: 'course/homeworkContent'
