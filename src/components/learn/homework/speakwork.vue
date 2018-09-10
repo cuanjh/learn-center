@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div class="shadow"></div>
     <!-- 作业列表，分为语音和写作 -->
     <div class="speak" @click="showTips()">
       <div class="question">
@@ -97,6 +96,7 @@ export default {
     })
   },
   mounted () {
+    console.log('====>', this.homework)
     // 初始化
     Recorder.init()
   },

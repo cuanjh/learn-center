@@ -199,9 +199,10 @@ export default {
     line-height: 55px;
     border-bottom: 1px solid #e9ecf6;
     font-size: 1.3em;
+    overflow: hidden;
     .name {
       float: left;
-      width: 120px;
+      width: 85px;
       text-align: left;
       color: #333;
       overflow: hidden;
