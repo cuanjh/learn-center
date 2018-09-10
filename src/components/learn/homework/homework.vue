@@ -19,46 +19,22 @@
         </div>
       </div>
     </div>
-    <tip-box ref="tipbox" :tip="micphoneTip" />
   </div>
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import speakwork from './speakwork.vue'
-import TipBox from '../../learnSystem//tipbox'
 import Recorder from '../../../plugins/recorder'
 
 export default {
   data () {
-    return {
-      micphoneTip: '' // 提示框文字
-      // homeworkList: [] // 作业列表
-    }
+    return {}
   },
   created () {
     Recorder.init()
-    this.$nextTick(() => {
-      var isPop
-      if (
-        Recorder.isActivity() !== true &&
-        this.refuseRecord !== true &&
-        this.canRecord
-      ) {
-        this.micphoneTip = this.tips.micphone
-        isPop = true
-      } else if (this.refuseRecord) {
-        this.micphoneTip = this.tips.micphone_failed
-        isPop = true
-      }
-      if (isPop) {
-        this.$refs.tipbox('tipbox-show')
-        this.updatePause(true)
-      }
-    })
   },
   components: {
-    speakwork,
-    TipBox
+    speakwork
   },
   mounted () {
     this.$parent.$emit('initLayout')
@@ -88,7 +64,6 @@ export default {
   methods: {
     ...mapMutations({
       updateChapterDes: 'course/updateChapterDes',
-      updatePause: 'learn/updatePause',
       updateHomeworkContent: 'course/updateHomeworkContent'
     }),
     ...mapActions({
