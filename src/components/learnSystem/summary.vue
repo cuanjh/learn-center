@@ -155,7 +155,9 @@ export default {
       })
     })
     this.$on('coreSummary-hide', () => {
-      this.window.close()
+      if (Object.keys(this.window).length > 0) {
+        this.window.close()
+      }
     })
   },
   mounted () {
