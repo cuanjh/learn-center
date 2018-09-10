@@ -3,8 +3,16 @@
     <div class="sentence-box"></div>
     <div class="stage f-cb f-usn">
       <div v-for='(type, index) in typeList' :key='index' class='f-cb'
-        :class="[type, {current:cur==index,up:showGuide,'layout-3': [3, 5, 6, 9].indexOf(typeList.length) != -1,
-        'layout-4': typeList.length == 7 || typeList.length == 8}]" v-show='show'>
+        :class="[
+          type,
+          {
+            current:cur==index,
+            up:showGuide,
+            'layout-3': [3, 5, 6, 9].indexOf(typeList.length) != -1 && typeList.length === [...new Set(typeList)].length,
+            'layout-4': typeList.length == 7 || typeList.length == 8
+          }
+        ]"
+        v-show='show'>
         <transition name="fade" mode="out-in">
           <component :is="'form-'+type" :data="list[index]" :ref="'comp'+index"></component>
         </transition>
@@ -15,7 +23,7 @@
     <pause-window ref='pauseWindow'></pause-window>
     <setting-window ref='settingWindow'></setting-window>
     <tip-box ref="tipbox" :tip="micphoneTip" />
-    <core-summary ref="summary" />
+    <core-summary ref="summary"/>
   </div>
 </template>
 
@@ -74,6 +82,10 @@ export default {
     SettingWindow,
     TipBox,
     CoreSummary
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$refs['summary'].$emit('coreSummary-hide')
+    next()
   },
   beforeRouteUpdate (to, form, next) {
     console.log('router update')
@@ -240,7 +252,6 @@ export default {
         })
       }
       // console.log('slides done:', this.cur_slide)
-      $('.sentence-box').empty()
       if (this.curSlide + 1 === this.progress.length) {
         this.thunk = -1
       }
@@ -299,6 +310,7 @@ export default {
     this.$on('switch-slide', (slide, normal) => {
       this.score = 0
       // 广播组件销毁
+      $('.sentence-box').empty()
       this.component_destroy()
       this.cur = -1
       this.show = false
@@ -593,6 +605,9 @@ export default {
           item[0].$emit('break')
         }
       })
+    },
+    updateIsShowDialog (flag) {
+      this.showDialog = flag
     }
   }
 }

@@ -78,8 +78,8 @@ export default {
   data () {
     return {
       window: {},
-      show: false,
       isShow: false,
+      show: false,
       level: '',
       levelDes: {
         level1: '初级A1',
@@ -154,6 +154,9 @@ export default {
         }).showModal()
       })
     })
+    this.$on('coreSummary-hide', () => {
+      this.window.close()
+    })
   },
   mounted () {
     console.log(this.id)
@@ -179,11 +182,11 @@ export default {
       getRecordCourseList: 'learn/getRecordCourseList'
     }),
     review () {
-      this.window.remove()
+      this.window.close()
       this.$parent.$emit('switch-slide', 0)
     },
     continueLearn () {
-      this.window.remove()
+      this.window.close()
       let currentRoute = this.$router.currentRoute
       let id = currentRoute.params.id
       let core = parseInt(id.replace('A0', ''))
@@ -210,6 +213,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.summary-container {
+  opacity: 0.7;
+  background: rgb(0, 0, 0);
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+  z-index: 1025;
+}
 .core-summary-box {
   width: 652px;
   background-color: #ffffff;
