@@ -67,9 +67,9 @@
                     </p>
                     <p class="course-item-icon">
                       <img :style="coreData[i]['imgStyle']" :src="'../../../../static/images/course/course-core'+(i)+'.png'" alt="">
-                      <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate']" class="icon-course-lock"></i>
+                      <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate'] && !coreData[i]['isActive']" class="icon-course-lock"></i>
                     </p>
-                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] }">核心{{i}}</p>
+                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] &&  !coreData[i]['isActive']}">核心{{i}}</p>
                   </div>
                 </router-link>
                 <div class="course-circle-box" v-if="i<5">
@@ -83,20 +83,20 @@
                 <span>复习</span>
               </div>
               <div class="course-item-box">
-                <a href="javascript:void(0);" @click="startTest(coreData['isTestCheck'])">
+                <a href="javascript:void(0);" @click="startTest(coreData['isCoreCompleted'])">
                   <div class="course-item">
-                    <p class="course-item-star" v-show="coreData['isTestCheck'] && coreData['isTestCompleted']">
+                    <p class="course-item-star" v-show="coreData['isCoreCompleted'] && coreData['isTestCompleted']">
                       <span class="course-yellow-star"><i v-for="index in coreData['starTestNum']" :key="index"></i></span>
                       <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - coreData['starTestNum'])" :key="index"></i></span>
                     </p>
                     <p class="course-item-progress" v-show="!coreData['isTestCompleted']">
-                      <span v-show="coreData['isTestCheck'] && !coreData['isTestCompleted']" v-text="coreData['completedTestRate']"></span>
+                      <span v-show="coreData['isCoreCompleted'] && !coreData['isTestCompleted']" v-text="coreData['completedTestRate']"></span>
                     </p>
                     <p class="course-item-icon">
                       <img :style="coreData['imgTestStyle']" :src="'../../../../static/images/course/course-review-test.png'" alt="">
-                      <i v-show="!coreData['isTestCompleted']" class="icon-review-lock"></i>
+                      <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                     </p>
-                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData['completedTestRate'] }">测试</p>
+                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">测试</p>
                   </div>
                 </a>
                 <div class="course-circle-box">
@@ -106,13 +106,18 @@
             <div class="course-item-box">
               <router-link :to="{ name: 'homework' }">
                 <div class="course-item">
-                  <p class="course-item-star">
-                    <span class="course-yellow-star"><i v-for="index in 5" :key="index"></i></span>
+                  <p class="course-item-star"  v-show="coreData['isCoreCompleted']  && coreData['isHomeworkCompleted']">
+                    <span class="course-yellow-star"><i v-for="index in homeworkData['starHomeworkNum']" :key="index"></i></span>
+                    <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - homeworkData['starHomeworkNum'])" :key="index"></i></span>
+                  </p>
+                  <p class="course-item-progress" v-show="!coreData['isHomeworkCompleted']">
+                    <span v-show="coreData['isHomeworkCheck'] && !coreData['isHomeworkCompleted']" v-text="coreData['completedHomeworkRate']"></span>
                   </p>
                   <p class="course-item-icon">
-                    <img v-bind:src="'../../../../static/images/course/course-review-homework.png'" alt="">
+                    <img :style="coreData['imgHomeworkStyle']" :src="'../../../../static/images/course/course-review-homework.png'" alt="">
+                    <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                   </p>
-                  <p class="course-item-title">作业</p>
+                  <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">作业</p>
                 </div>
               </router-link>
             </div>
@@ -124,23 +129,23 @@
                 <p>(会员专享)</p>
               </div>
               <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
-                <a href="javascript:void(0);" @click="jumpVipPage(coreData['isTestCheck'], 'A' + (i + 1))">
+                <a href="javascript:void(0);" @click="jumpVipPage(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'], 'A' + (i + 1))">
                   <div class="course-item">
-                    <p class="course-item-star" v-if="coreData['A' + (i + 1)]['isCompleted']">
-                      <span class="course-yellow-star"><i v-for="index in coreData['A' + (i + 1)]['starNum']" :key="index"></i></span>
-                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - coreData['A' + (i + 1)]['starNum'])" :key="index"></i></span>
+                    <p class="course-item-star" v-if="vipData['A' + (i + 1)]['isCompleted']">
+                      <span class="course-yellow-star"><i v-for="index in vipData['A' + (i + 1)]['starNum']" :key="index"></i></span>
+                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - vipData['A' + (i + 1)]['starNum'])" :key="index"></i></span>
                     </p>
                     <p class="course-item-progress" v-else>
-                      <span v-text="coreData['A' + (i + 1)]['completedRate']"></span>
+                      <span v-text="vipData['A' + (i + 1)]['completedRate']"></span>
                     </p>
                     <p class="course-item-icon">
-                      <img :style="coreData['A' + (i + 1)]['imgStyle']" :src="'../../../../static/images/course/course-vip-'+vipitem+'.png'" alt="">
-                      <i v-show="!coreData['A' + (i + 1)]['isCompleted'] && !coreData['A' + (i + 1)]['completedRate']" class="icon-vip-lock"></i>
+                      <img :style="vipData['A' + (i + 1)]['imgStyle']" :src="'../../../../static/images/course/course-vip-'+vipitem+'.png'" alt="">
+                      <i v-show="!(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'])" class="icon-vip-lock"></i>
                     </p>
-                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData['A' + (i + 1)]['completedRate'] }">{{ $t("courseItem.vip."+vipitem) }}</p>
+                    <p class="course-item-title" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
                   </div>
                   <div class="course-circle-box" v-if="i<(vipItemList.length-1)">
-                    <div class="course-vip-circle" :class="{'course-vip-circle-locked': !coreData['A' + (i + 1)]['isCompleted'] }" v-for="index in 3" :key="index"></div>
+                    <div class="course-vip-circle" :class="{'course-vip-circle-locked': !vipData['A' + (i + 1)]['completedRate'] }" v-for="index in 3" :key="index"></div>
                   </div>
                 </a>
               </div>
@@ -150,7 +155,7 @@
       </transition>
     </div>
     <div class="nolock-test-check" v-show="nolockTestCheckShow">
-      <p class="animated flipInX" v-show="nolockTestCheckShow">学习需要循序渐进, <br>请先完成核心课程的学习哦！
+      <p class="animated flipInX" v-show="nolockTestCheckShow">学习需要循序渐进, <br>请先完成前面课程的学习哦！
         <i></i>
         <span class="goBackCore" @click="goBackLearn">继续学习</span>
       </p>
@@ -164,7 +169,7 @@ export default {
   props: ['currentCourseCode'],
   data () {
     return {
-      isTestCheck: 0,
+      isCoreCompleted: 0,
       chapterProgress: 0,
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
       nolockTestCheckShow: false
@@ -180,7 +185,8 @@ export default {
       'courseBaseInfo': state => state.course.coursBaseInfo,
       'curChapterProgress': state => state.course.curChapterProgress,
       'curChapterContent': state => state.course.curChapterContent,
-      'chapterTestResult': state => state.course.chapterTestResult
+      'chapterTestResult': state => state.course.chapterTestResult,
+      'homeworkContent': state => state.course.homeworkContent
     }),
     ui () {
       let ui = this.userInfo
@@ -208,8 +214,8 @@ export default {
       let coreParts = corePartInfos.filter((item) => curChapterCode.indexOf(item.chapter_code) > 0)
 
       let retObj = {}
-      let isTestCheck = 0
       let partObj = coreParts[0].parts
+      let coreNum = 0
       partObj.forEach(element => {
         let startForm = element.start_form - 1
         let endForm = element.end_form
@@ -224,7 +230,6 @@ export default {
             'border-radius': '50% 50%',
             'border-right': '3px solid #2A9FE4'
           }
-          isTestCheck = 0
         } else {
           obj['isCompleted'] = 1
           obj['completedRate'] = '1'
@@ -235,12 +240,20 @@ export default {
             'border-radius': '50% 50%',
             'border': '3px solid #2A9FE4'
           }
-          isTestCheck = 1
+          coreNum++
+        }
+        obj['isActive'] = 0
+        if (element.part_num === 1) {
+          obj['isActive'] = 1
+        } else {
+          if (retObj[element.part_num - 1]['isCompleted'] === 1) {
+            obj['isActive'] = 1
+          }
         }
         retObj[element.part_num] = obj
       })
 
-      retObj['isTestCheck'] = isTestCheck
+      retObj['isCoreCompleted'] = (coreNum === 5) ? 1 : 0
 
       // 测试
       let srcTestArray = Object.keys(that.curChapterProgress).filter((item) => {
@@ -264,8 +277,12 @@ export default {
         retObj['completedTestRate'] = ''
         retObj['imgTestStyle'] = ''
       }
-
-      // 强化 会员专享
+      return retObj
+    },
+    // 强化 会员专享
+    vipData () {
+      let that = this
+      let retObj = {}
       let srcVipArray = []
       let vipFormArray = []
       for (let i = 1; i <= 6; i++) {
@@ -292,7 +309,7 @@ export default {
             }
           })
 
-          if (srcVipArray[i].length < vipFormArray[i]) {
+          if (srcVipArray[i] && (srcVipArray[i].length < vipFormArray[i])) {
             obj['isCompleted'] = 0
             obj['starNum'] = 0
             obj['completedRate'] = !srcVipArray[i].length ? '' : ((srcVipArray[i].length / vipFormArray[i]) * 100).toFixed(0) + '%'
@@ -312,10 +329,61 @@ export default {
             }
           }
         }
+        obj['isActive'] = 0
+        if (i === 1) {
+          obj['isActive'] = 1
+        } else {
+          if (retObj['A' + (i - 1)]['isCompleted'] === 1) {
+            obj['isActive'] = 1
+          }
+        }
+        if (!this.isVip) {
+          obj['isActive'] = 0
+        }
         retObj['A' + i] = obj
       }
       console.log(srcVipArray)
       console.log(vipFormArray)
+      return retObj
+    },
+    // 作业
+    homeworkData () {
+      // 作业
+      // let srcHomeworkArray = Object.keys(that.curChapterProgress).filter((item) => {
+      //   return item.indexOf('A8') > -1
+      // }).map((el) => {
+      //   return this.curChapterProgress[el]
+      // })
+      // console.log(srcHomeworkArray)
+      let that = this
+      let retObj = {}
+      if (that.homeworkContent && Object.keys(that.homeworkContent).length > 0) {
+        let homeworkNum = that.homeworkContent.length
+        let doneNum = 0
+        that.homeworkContent.forEach((item) => {
+          if (item.has_done) {
+            doneNum++
+          }
+        })
+        if (homeworkNum === doneNum) {
+          retObj['isHomeworkCompleted'] = 1
+          retObj['starHomeworkNum'] = 5
+          retObj['completedHomeworkRate'] = '0'
+        } else {
+          retObj['isHomeworkCompleted'] = 0
+          retObj['starHomeworkNum'] = 0
+          retObj['completedHomeworkRate'] = (doneNum / homeworkNum).toFixed(2)
+        }
+        retObj['imgHomeworkStyle'] = {
+          'border-radius': '50% 50%',
+          'border': '3px solid #7FB926'
+        }
+      } else {
+        retObj['isHomeworkCompleted'] = 0
+        retObj['starHomeworkNum'] = 0
+        retObj['completedHomeworkRate'] = ''
+        retObj['imgHomeworkStyle'] = ''
+      }
       return retObj
     }
   },
@@ -342,18 +410,18 @@ export default {
       }
       return stars
     },
-    startTest (isTestCheck) {
-      if (!isTestCheck) {
+    startTest (isCoreCompleted) {
+      if (!isCoreCompleted) {
         this.nolockTestCheckShow = true
       } else {
         this.$router.push({ path: '/learn/pk' })
       }
     },
-    jumpVipPage (isCoreComplete, id) {
+    jumpVipPage (isActive, id) {
       if (this.isVip !== 1) {
         this.$router.push({ path: '/app/user/vip' })
       } else {
-        if (isCoreComplete) {
+        if (isActive) {
           this.$router.push({ name: 'stage', params: {id: id} })
         } else {
           this.nolockTestCheckShow = true
@@ -794,8 +862,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #003d5a;
-    opacity: .9;
+    background-color: rgba(0, 61, 90, .9);
     z-index:99999999;
   }
 

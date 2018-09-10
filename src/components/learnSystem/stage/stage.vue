@@ -2,7 +2,9 @@
   <div>
     <div class="sentence-box"></div>
     <div class="stage f-cb f-usn">
-      <div v-for='(type, index) in typeList' :key='index' class='f-cb' :class='[type, {current:cur==index,up:showGuide}]' v-show='show'>
+      <div v-for='(type, index) in typeList' :key='index' class='f-cb'
+        :class="[type, {current:cur==index,up:showGuide,'layout-3': [3, 5, 6, 9].indexOf(typeList.length) != -1,
+        'layout-4': typeList.length == 7 || typeList.length == 8}]" v-show='show'>
         <transition name="fade" mode="out-in">
           <component :is="'form-'+type" :data="list[index]" :ref="'comp'+index"></component>
         </transition>

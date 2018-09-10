@@ -282,7 +282,7 @@ export default {
       this.clear()
       var Child = this.child
       if (!_.isEmpty(Child)) {
-        Child.$destroy(true)
+        // Child.$destroy(true)
       }
     },
     // 检查对错

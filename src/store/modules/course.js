@@ -45,6 +45,7 @@ const state = {
   progress: {},
   recordForm: {},
   levelActivity: 0,
+  homeworkContent: {},
   chapterTestResult: {} // 记录用户的课程测试结果
 }
 
@@ -394,6 +395,9 @@ const mutations = {
       return item.lan_code === arr[0]
     })
     state.chapterDes = course[0].name['zh-CN'] + '.' + state.levelDes[arr[2]] + '.' + arr[4].replace('Chapter', '课程')
+  },
+  updateHomeworkContent (state, data) {
+    state.homeworkContent = data
   }
 }
 

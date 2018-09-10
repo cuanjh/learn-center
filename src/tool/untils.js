@@ -24,11 +24,12 @@ export var encrypt = function (password) {
   encryptPwd += len
   return encryptPwd
 }
-function randomString (len) {
+export var randomString = function (len) {
   var rdmString = ''
   for (; rdmString.length < len; rdmString += Math.random().toString(36).substr(2)) {}
   return rdmString.substr(0, len)
 }
+
 // 登录注册需要device_id产生方法
 export var deviceId = function () {
   var time = Math.round(new Date().getTime() / 1000).toString()

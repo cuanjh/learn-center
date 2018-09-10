@@ -226,8 +226,9 @@ import validation from './../../tool/validation.js'
 import http from './../../api/userAuth.js'
 import errCode from './../../api/code.js'
 import Config from './../../api/config.js'
-import { encrypt } from './../../tool/untils.js'
+import { randomString, encrypt } from './../../tool/untils.js'
 import Cookies from 'js-cookie'
+import { mapMutations, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -277,6 +278,13 @@ export default {
     })
   },
   methods: {
+    ...mapMutations({
+      updateIsLogin: 'user/updateIsLogin'
+    }),
+    ...mapActions({
+      updateInfo: 'user/updateInfo',
+      getUserInfo: 'user/getUserInfo'
+    }),
     changeType () {
       this.registerFlag = !this.registerFlag
     },
@@ -336,6 +344,26 @@ export default {
         if (res.success) {
           Cookies.set('user_id', res.user_id)
           Cookies.set('verify', res.verify)
+          console.log(randomString)
+          var date = new Date()
+          var params = {
+            nickname: randomString(10),
+            gender: 'male',
+            country_code: 'CN',
+            birthday: [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-'),
+            photo_url: 'http://uploadfile.talkmate.com/app_image/male.jpg?v=1',
+            course_code: this.registerLang.lan_code + '-Basic',
+            description: '这个家伙很懒，什么都没有留下'
+          }
+          this.updateInfo(params).then((res) => {
+            if (res.success) {
+              localStorage.removeItem('lastCourseCode')
+              this.updateIsLogin('1')
+              this.$router.push({ path: '/app/course-list' })
+            } else {
+              this.errText = errCode[res.code]
+            }
+          })
         } else {
           this.loading = false
           this.getCodeUrl()

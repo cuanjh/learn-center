@@ -11,6 +11,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const copyList = require('./copyFile-conf.js')
+const cdnConfig = require('../app.config').cdn
 
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
@@ -28,6 +29,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
+    publicPath: cdnConfig.host,
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
   plugins: [

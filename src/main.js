@@ -4,19 +4,22 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import VueI18n from 'vue-i18n'
-import VueValidator from 'vue-validator'
 // import BootstrapVue from 'bootstrap-vue'
 
 import routes from './router/index'
 import store from './store/index'
 import moreLanguage from './vueI18/locale.js'
 import {urlfix} from './filter/index'
-import { Cookie } from './tool/cookie'
-import './../static/css/animate.css'
-import './../static/css/reset.css'
-import './../static/css/style.css'
+require('./../static/css/animate.css')
+require('./../static/css/reset.css')
+require('./../static/css/style.css')
 // import 'bootstrap/dist/css/bootstrap.css'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+// require('../static/jquery-1.10.2.js')
+// require('./../static/cropper.min.js')
+// require('./../static/sitelogo')
+require('./../static/bootstrap.min.js')
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
@@ -46,50 +49,25 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-var lang = Cookie.getCookie('talkmateLang')
-if (lang == null) {
-  try {
-    if (window.navigator.browserLanguage !== 'undefined' || window.navigator.browserLanguage !== null) {
-      if (window.navigator.systemLanguage === 'zh-CN' || window.navigator.systemLanguage === 'zh') {
-        Vue.config.lang = 'cn'
-      } else {
-        Vue.config.lang = 'en'
-      }
-    }
-    if (window.navigator.language.substring(0, 2) === 'zh') {
-      Vue.config.lang = 'cn'
-    } else {
-      Vue.config.lang = 'en'
-    }
-  } catch (e) {
-    console.log('<=ie9')
-  }
-} else {
-  Vue.config.lang = lang
-}
-
-// use validator
-Vue.use(VueValidator)
-
-// 验证 图片验证码
-Vue.validator('validatorCodeValidator', (val) => {
-  return /^\d{5}$/.test(val)
-})
+Vue.config.lang = 'cn'
 
 const i18n = new VueI18n({
   locale: Vue.config.lang,
   messages: moreLanguage
 })
+if (window.__webpack_public_path__) {
+  window.__webpack_public_path__ = 'http://www.baidu.com'
+}
 
-store.subscribe((mutation, state) => {
-  console.log(mutation.type)
-  console.log(mutation.payload)
-})
+// store.subscribe((mutation, state) => {
+//   console.log(mutation.type)
+//   console.log(mutation.payload)
+// })
 
-store.subscribeAction((action, state) => {
-  console.log(action.type)
-  console.log(action.payload)
-})
+// store.subscribeAction((action, state) => {
+//   console.log(action.type)
+//   console.log(action.payload)
+// })
 /* eslint-disable no-new */
 new Vue({
   // el: '#app',
