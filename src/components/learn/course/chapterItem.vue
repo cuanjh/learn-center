@@ -203,11 +203,11 @@ export default {
       var that = this
       console.log(that.curLevelChapters)
       // 核心课程
-      let srcCoreArray = Object.keys(that.curChapterProgress).filter((item) => {
-        return item.indexOf('A0') > -1
-      }).map((el) => {
-        return that.curChapterProgress[el]
-      })
+      // let srcCoreArray = Object.keys(that.curChapterProgress).filter((item) => {
+      //   return item.indexOf('A0') > -1
+      // }).map((el) => {
+      //   return that.curChapterProgress[el]
+      // })
 
       let curChapterCode = that.currentChapterCode
       let corePartInfos = that.$store.state.course.courseBaseInfo.corePartInfos
@@ -219,7 +219,16 @@ export default {
       partObj.forEach(element => {
         let startForm = element.start_form - 1
         let endForm = element.end_form
-        let coreForms = srcCoreArray.slice(startForm, endForm)
+        let coreForms = []
+        element.Slides.forEach((slide) => {
+          Object.keys(that.curChapterProgress).filter((item) => {
+            return item.indexOf('A0-' + slide) > -1
+          }).map((el) => {
+            return that.curChapterProgress[el]
+          }).forEach((i) => {
+            coreForms.push(i)
+          })
+        })
         let obj = {}
         let len = endForm - startForm
         if (coreForms.length < len) {

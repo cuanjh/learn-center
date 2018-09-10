@@ -4,10 +4,10 @@
       <span class="prev" v-if="slideList.length>12" @click="tab(-1)"></span>
       <div class="progress-bar">
         <b
-          v-for="(item, index) in slideList"
+          v-for="(value, index) in slideList"
           :key="index"
-          :class="{great:item>=0&&item<1,perfect:item==1,current:index==curSlide}"
-          @click="switch_slide(index)"
+          :class="{great:value>=0&&value<1,perfect:value==1,current:index==curSlide}"
+          @click="switch_slide(value, index)"
         >{{ index+1 }}</b>
       </div>
       <span class="next" v-if="slideList.length>12" @click="tab(1)"></span>
@@ -132,12 +132,12 @@ export default {
     // })
   },
   methods: {
-    switch_slide (index) {
+    switch_slide (value, index) {
       console.log('switch-slide:' + index)
       // 点选题目页码后，清空页码手动位移量，自动调整
       this.offset = null
       if (index !== this.curSlide) {
-        this.$parent.$emit('switch-slide', index)
+        value >= 0 && this.$parent.$emit('switch-slide', index)
       }
     },
     back () {
