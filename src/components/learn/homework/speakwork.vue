@@ -563,7 +563,7 @@ export default {
           i span {
             display: inline-block;
             width: 3px;
-            height: 16px;
+            height: 8px;
             border-radius: 4px;
             background: #2a9fe4;
             // -webkit-animation: load 1s ease infinite;
@@ -586,10 +586,10 @@ export default {
               -moz-animation-delay:0.3s;
             }
             &:nth-child(3){
-              height: 0.4rem;
+              height: 16px;
             }
             &:nth-child(4){
-              height: 0.4rem;
+              height: 16px;
               animation-delay:0.1s;
               -webkit-animation-delay:0.1s;
               -ms-animation-delay:0.1s;

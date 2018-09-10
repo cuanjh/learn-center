@@ -237,7 +237,6 @@ export default {
 .single-pk,
 .couple-pk {
   a {
-    //        color: #5a6caf;
     color: #333;
   }
   .time {

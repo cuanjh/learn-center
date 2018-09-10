@@ -183,6 +183,7 @@ export default {
   }
   span {
     font-size: 22px;
+    line-height: 75px;
   }
   .yellow {
     color: rgb(253, 227, 53);
@@ -203,6 +204,9 @@ export default {
       width: 120px;
       text-align: left;
       color: #333;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     img {
       float: left;
@@ -216,11 +220,16 @@ export default {
     .order {
       float: left;
       width: 50px;
+      height: 55px;
       margin-right: 10px;
       span {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
         font-size: 14px;
         line-height: 30px;
         color: #55a4fc;
+        margin-top: 11px;
       }
     }
     b {
@@ -235,7 +244,8 @@ export default {
       b {
         background: url(../../../../static/images/learnSystem/pk/target.png) no-repeat;
         width: 16px;
-        height: 16px;
+        height: 55px;
+        background-position-y: 16px;
       }
     }
     .self {
@@ -252,8 +262,9 @@ export default {
       float: left;
       b {
         background: url(../../../../static/images/learnSystem/pk/time.png) no-repeat;
-        width: 14px;
-        height: 14px;
+        width: 16px;
+        height: 55px;
+        background-position-y: 18px;
       }
     }
   }

@@ -286,6 +286,7 @@ export default {
       })
     },
     getPkForms (chapterContent, slideTypeCode) {
+      console.log('chapterContent', chapterContent)
       let forms = []
       chapterContent.improvement.parts.forEach((item) => {
         if (item.slide_type_code === slideTypeCode) {
