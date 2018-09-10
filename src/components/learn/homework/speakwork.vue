@@ -137,9 +137,7 @@ export default {
       return this.direction < 0
     },
     ctx () {
-      return this.$el.parentElement
-        .querySelectorAll('canvas')[1]
-        .getContext('2d')
+      return this.$el.querySelectorAll('canvas')[0].getContext('2d')
     }
   },
   methods: {
