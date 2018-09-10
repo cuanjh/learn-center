@@ -14,8 +14,22 @@ function unlockArr (unLockChapters) {
 // 学习进度的实现调用三个方法
 function progressAgain (obj) {
   var num = 0
-  if (obj['A0']) {
-    num += 50
+  if (obj['A01']) {
+    num += 10
+  }
+  if (obj['A02']) {
+    num += 10
+  }
+  if (obj['A03']) {
+    num += 10
+  }
+  if (obj['A04']) {
+    num += 10
+  }
+  if (obj['A05']) {
+    num += 10
+  }
+  if (obj['A01'] && obj['A02'] && obj['A03'] && obj['A04'] && obj['A05']) {
     num += progressAgainOne(obj)
     num += progressAgainTwo(obj)
     num += progressAgainThree(obj)
@@ -86,6 +100,7 @@ export var getCourseStructure = (themes, unLockChapters) => {
       }
       for (var i = 0; i < arr.length; i++) {
         if (arr[i] === chapter.code) {
+          console.log('chapter' + chapter)
           chapter.judge = true
           chapter.progressTest = progressAgain(unLockChapters[arr[i]])
           chapter.progress = progressAgain(unLockChapters[arr[i]])

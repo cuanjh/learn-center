@@ -104,22 +104,22 @@
                 </div>
               </div>
             <div class="course-item-box">
-              <router-link :to="{ name: 'homework' }">
+              <a href="javascript:void(0)" @click="startHomework(coreData['isCoreCompleted'])">
                 <div class="course-item">
-                  <p class="course-item-star"  v-show="coreData['isCoreCompleted']  && coreData['isHomeworkCompleted']">
+                  <p class="course-item-star"  v-show="coreData['isCoreCompleted']  && homeworkData['isHomeworkCompleted']">
                     <span class="course-yellow-star"><i v-for="index in homeworkData['starHomeworkNum']" :key="index"></i></span>
                     <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - homeworkData['starHomeworkNum'])" :key="index"></i></span>
                   </p>
-                  <p class="course-item-progress" v-show="!coreData['isHomeworkCompleted']">
-                    <span v-show="coreData['isHomeworkCheck'] && !coreData['isHomeworkCompleted']" v-text="coreData['completedHomeworkRate']"></span>
+                  <p class="course-item-progress" v-show="!homeworkData['isHomeworkCompleted']">
+                    <span v-show="coreData['isCoreCompleted'] && !homeworkData['isHomeworkCompleted']" v-text="homeworkData['completedHomeworkRate']"></span>
                   </p>
                   <p class="course-item-icon">
-                    <img :style="coreData['imgHomeworkStyle']" :src="'../../../../static/images/course/course-review-homework.png'" alt="">
+                    <img :style="homeworkData['imgHomeworkStyle']" :src="'../../../../static/images/course/course-review-homework.png'" alt="">
                     <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                   </p>
                   <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">作业</p>
                 </div>
-              </router-link>
+              </a>
             </div>
           </li>
 
@@ -348,13 +348,6 @@ export default {
     },
     // 作业
     homeworkData () {
-      // 作业
-      // let srcHomeworkArray = Object.keys(that.curChapterProgress).filter((item) => {
-      //   return item.indexOf('A8') > -1
-      // }).map((el) => {
-      //   return this.curChapterProgress[el]
-      // })
-      // console.log(srcHomeworkArray)
       let that = this
       let retObj = {}
       if (that.homeworkContent && Object.keys(that.homeworkContent).length > 0) {
@@ -369,14 +362,18 @@ export default {
           retObj['isHomeworkCompleted'] = 1
           retObj['starHomeworkNum'] = 5
           retObj['completedHomeworkRate'] = '0'
+          retObj['imgHomeworkStyle'] = {
+            'border-radius': '50% 50%',
+            'border': '3px solid #7FB926'
+          }
         } else {
           retObj['isHomeworkCompleted'] = 0
           retObj['starHomeworkNum'] = 0
-          retObj['completedHomeworkRate'] = (doneNum / homeworkNum).toFixed(2)
-        }
-        retObj['imgHomeworkStyle'] = {
-          'border-radius': '50% 50%',
-          'border': '3px solid #7FB926'
+          retObj['completedHomeworkRate'] = (doneNum === 0) ? '' : (doneNum / homeworkNum * 100).toFixed(0) + '%'
+          retObj['imgHomeworkStyle'] = (doneNum === 0) ? '' : {
+            'border-radius': '50% 50%',
+            'border-right': '3px solid #7FB926'
+          }
         }
       } else {
         retObj['isHomeworkCompleted'] = 0
@@ -415,6 +412,13 @@ export default {
         this.nolockTestCheckShow = true
       } else {
         this.$router.push({ path: '/learn/pk' })
+      }
+    },
+    startHomework (isCoreCompleted) {
+      if (!isCoreCompleted) {
+        this.nolockTestCheckShow = true
+      } else {
+        this.$router.push({ path: '/app/homework' })
       }
     },
     jumpVipPage (isActive, id) {

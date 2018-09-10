@@ -175,6 +175,9 @@ export default {
             } else {
               this.updateCurChapterProgress('')
             }
+            this.homeworkContent(this.currentChapterCode + '-A8').then((res) => {
+              this.updateHomeworkContent(res.contents)
+            })
           })
           this.getCourseTestRanking(chapterCode).then((res) => {
             this.updateChapterTestResult(res.result.current_user)
