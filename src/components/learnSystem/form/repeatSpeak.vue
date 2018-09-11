@@ -108,7 +108,7 @@ export default {
     })
 
     this.$on('stop-sound', () => {
-      this.$data.sndctr.stop()
+      this.sndctr.stop()
       this.playing = false
       this.updateLocked(false)
     })
@@ -129,7 +129,7 @@ export default {
     })
 
     this.$on('stop-record-play', () => {
-      this.$broadcast('microphone-stop-playing')
+      this.$refs['microphone'].$emit('microphone-stop-playing')
     })
 
     this.$on('runSkip', () => {
