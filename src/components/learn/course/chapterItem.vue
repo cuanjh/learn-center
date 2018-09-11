@@ -263,29 +263,6 @@ export default {
       })
 
       retObj['isCoreCompleted'] = (coreNum === 5) ? 1 : 0
-
-      // 测试
-      let srcTestArray = Object.keys(that.curChapterProgress).filter((item) => {
-        return item.indexOf('A7') > -1
-      }).map((el) => {
-        return this.curChapterProgress[el]
-      })
-      console.log(srcTestArray)
-      if (Object.keys(that.chapterTestResult).length > 0) {
-        retObj['isTestCompleted'] = 1
-        retObj['completedTestRate'] = '1'
-        let correctRate = Math.floor((this.chapterTestResult.correct_rate).toFixed(3))
-        retObj['starTestNum'] = this.starNum(correctRate)
-        retObj['imgTestStyle'] = {
-          'border-radius': '50% 50%',
-          'border': '3px solid #7FB926'
-        }
-      } else {
-        retObj['isTestCompleted'] = 0
-        retObj['starTestNum'] = 0
-        retObj['completedTestRate'] = ''
-        retObj['imgTestStyle'] = ''
-      }
       return retObj
     },
     // 强化 会员专享
@@ -762,6 +739,14 @@ export default {
   .course-item-icon img{
     width: 64px;
     height: 64px;
+  }
+
+  .course-item-icon .core-canvas {
+    width: 64px;
+    height: 64px;
+    background-color: red;
+    position: absolute;
+    z-index: -1;
   }
 
   .icon-course-lock {

@@ -85,6 +85,7 @@ export default {
     this.$listen.css('display', 'flex')
     this.$next.show()
     this.bindEvent()
+    this.bindMessageEvent()
     this.show()
   },
   computed: {
@@ -265,7 +266,7 @@ export default {
 .module-test-dialog {
   position: absolute;
   width: 603px;
-  height: 308px;
+  height: 318px;
   z-index: 902;
   background-color: #fff;
   display: none;
@@ -370,7 +371,7 @@ export default {
     }
   }
   .finish-region {
-    height: 28px;
+    height: 48px;
     border-bottom: #e7e7e7 1px solid;
     text-align: center;
     padding-left: 193px;
