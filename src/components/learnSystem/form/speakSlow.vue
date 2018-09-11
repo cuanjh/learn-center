@@ -45,11 +45,12 @@ export default {
       this.sound.src = this.source.replace('.mp3', '') + '_0_75.mp3'
     },
     play () {
-      this.$dispatch('stop-sound')
+      this.$parent.$emit('stop-sound')
       SoundCtrl.stop()
-      SoundCtrl.setSnd(this.sound)
+      SoundCtrl.setSnd(this.sound.src)
       SoundCtrl.play()
-      this.$dispatch('stop-record-play')
+      this.$parent.$emit('stop-record-play')
+      this.show = false
     },
     showSlow () {
       this.show = !this.show
@@ -93,12 +94,11 @@ export default {
   }
 }
 
-.fadeinT-enter {
-  animation-name: fadeinT;
+.fadeinT-enter-active {
+  animation: fadeinT .5s;
 }
-
-.fadeinT-leave {
-  animation-name: fadeoutT;
+.fadeinT-leave-active {
+  animation: fadeoutT .5s;
 }
 
 @keyframes fadeinT {
@@ -108,7 +108,7 @@ export default {
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0) scale(1.1);
   }
 }
 
