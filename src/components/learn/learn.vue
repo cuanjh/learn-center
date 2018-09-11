@@ -76,7 +76,10 @@ export default {
       updateSuccessAlert: 'user/updateSuccessAlert',
       updateErrorTip: 'user/updateErrorTip',
       updateAlertType: 'user/updateAlertType',
-      updateChapterTestResult: 'course/updateChapterTestResult'
+      updateChapterTestResult: 'course/updateChapterTestResult',
+      showLoading: 'course/showLoading',
+      hideLoading: 'course/hideLoading',
+      updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     changeWrapHeight () {
       /**
@@ -92,13 +95,16 @@ export default {
     },
     changeCourseCode (courseCode) {
       var that = this
+      that.showLoading()
       that.$nextTick(() => {
         that.updateCurCourseCode(courseCode)
         Promise.all([
           that.getLearnInfo(courseCode).then((res) => {
             that.updateCourseInfo(res)
           }),
-          that.getUnlockChapter(courseCode)
+          that.getUnlockChapter(courseCode).then((res) => {
+            this.updateUnlockCourseList(res)
+          })
         ]).then(() => {
           that.getCourseContent(that.contentUrl).then((res) => {
             that.updateChapters(res)
@@ -106,6 +112,7 @@ export default {
             that.updateCurChapter(that.currentChapterCode)
             that.getChapterContent().then((res) => {
               this.updateChapterContent(res)
+              this.hideLoading()
             })
           })
         }).then(() => {

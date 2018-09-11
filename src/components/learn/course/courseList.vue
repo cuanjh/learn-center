@@ -38,29 +38,20 @@ export default {
     ChapterItem,
     PulseLoader
   },
-  created () {
-    this.showLoading()
-    let lastCourseCode = localStorage.getItem('lastCourseCode')
-    console.log(this.learnCourses)
-    if (!lastCourseCode) {
-      this.$store.dispatch('user/getUserInfo').then((res) => {
-        this.updateCurCourseCode(this.userInfo.current_course_code)
-        localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
-        return Promise.resolve()
-      })
-    } else {
-      this.updateCurCourseCode(lastCourseCode)
-    }
-  },
   mounted () {
     this.$parent.$emit('initLayout')
     this.$parent.$emit('navItem', 'course')
+    this.showLoading()
+    let curCourseCode = this.currentCourseCode
+    if (!curCourseCode) {
+      curCourseCode = localStorage.getItem('currentCourseCode')
+    }
     this.$nextTick(() => {
       Promise.all([
-        this.getLearnInfo(this.currentCourseCode).then((res) => {
+        this.getLearnInfo(curCourseCode).then((res) => {
           this.updateCourseInfo(res)
         }),
-        this.getUnlockChapter(this.currentCourseCode).then((res) => {
+        this.getUnlockChapter(curCourseCode).then((res) => {
           this.updateUnlockCourseList(res)
         })
       ]).then(() => {
@@ -90,10 +81,6 @@ export default {
         this.getCourseTestRanking(this.currentChapterCode).then((res) => {
           this.updateChapterTestResult(res.result.current_user)
         })
-      }).then(() => {
-        // setTimeout(() => {
-        //   this.hideLoading()
-        // }, 500)
       })
     })
   },
@@ -184,6 +171,7 @@ export default {
 }
 
 .loading {
+  display: block;
   position: absolute;
   left: 55% ;
   top: 400px;
