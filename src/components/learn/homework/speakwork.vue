@@ -305,6 +305,7 @@ export default {
     font-size: 16px;
     color: #4a4a4a;
     margin-left: 16px;
+    width: 252px;
     p {
       font-size: 16px;
       font-weight: Semlbold;
@@ -321,7 +322,6 @@ export default {
       height: 30px;
       border-radius: 6px;
       text-align: center;
-      background-color: #2a9fe4;
       line-height: 30px;
       background-color: #e9ecf6;
       color: #b5bccf;
