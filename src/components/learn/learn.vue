@@ -23,7 +23,9 @@ export default {
     }
   },
   created () {
-    this.getUserInfo()
+    this.getUserInfo().then((res) => {
+      this.updateUserInfo(res)
+    })
     this.$on('initLayout', () => {
       this.changeWrapHeight()
     })
@@ -79,7 +81,8 @@ export default {
       updateChapterTestResult: 'course/updateChapterTestResult',
       showLoading: 'course/showLoading',
       hideLoading: 'course/hideLoading',
-      updateUnlockCourseList: 'course/updateUnlockCourseList'
+      updateUnlockCourseList: 'course/updateUnlockCourseList',
+      updateUserInfo: 'user/updateUserInfo'
     }),
     changeWrapHeight () {
       /**

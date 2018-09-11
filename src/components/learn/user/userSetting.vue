@@ -229,7 +229,8 @@ export default {
   methods: {
     ...mapMutations({
       updateUserAnonymous: 'user/updateUserAnonymous',
-      updateAlertType: 'user/updateAlertType'
+      updateAlertType: 'user/updateAlertType',
+      updateUserInfo: 'user/updateUserInfo'
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo',
@@ -375,7 +376,9 @@ export default {
           _this.updateAlertType('bindSuccess')
           _this.alertMessage = '恭喜您绑定邮箱成功！'
           _this.alertButton = '确定'
-          _this.getUserInfo()
+          _this.getUserInfo().then((res) => {
+            this.updateUserInfo(res)
+          })
           _this.loadData()
         } else {
           _this.showAlertView(res)
@@ -482,7 +485,9 @@ export default {
           _this.updateAlertType('showMessage')
           _this.alertMessage = '信息修改成功'
           _this.alertButton = '确定'
-          _this.getUserInfo()
+          _this.getUserInfo().then((res) => {
+            _this.updateUserInfo(res)
+          })
           _this.loadData()
           this.noticeSetting = false
         } else {

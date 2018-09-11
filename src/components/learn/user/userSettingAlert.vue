@@ -144,7 +144,8 @@ export default {
   methods: {
     ...mapMutations({
       updateCoverState: 'course/updateCoverState',
-      updateAlertType: 'user/updateAlertType'
+      updateAlertType: 'user/updateAlertType',
+      updateUserInfo: 'user/updateUserInfo'
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo',
@@ -183,7 +184,9 @@ export default {
           _this.updateAlertType('bindSuccess')
           _this.$emit('updateAlertMessage', '恭喜您绑定手机成功！')
           _this.$emit('updateAlertButton', '确定')
-          _this.getUserInfo()
+          _this.getUserInfo().then((res) => {
+            this.updateUserInfo(res)
+          })
           _this.$emit('memberupdate')
         } else {
           this.showAlert(res)
@@ -237,7 +240,9 @@ export default {
       var _this = this
       _this.unbindIdentity(params).then((res) => {
         if (res.success) {
-          _this.getUserInfo()
+          _this.getUserInfo().then((res) => {
+            this.updateUserInfo(res)
+          })
           _this.$emit('memberupdate')
           _this.closeView()
         } else {

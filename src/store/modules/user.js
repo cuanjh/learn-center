@@ -42,9 +42,7 @@ const getters = {
 
 const actions = {
   getUserInfo ({commit}) {
-    return httpLogin(config.userInfo).then((res) => {
-      commit('updateUserInfo', res)
-    })
+    return httpLogin(config.userInfo)
   },
   logout ({commit}) {
     return httpLogin(config.logout)

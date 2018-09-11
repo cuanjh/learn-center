@@ -97,7 +97,8 @@ export default {
       updateConfirmAlert: 'user/updateConfirmAlert',
       updateErrorTip: 'user/updateErrorTip',
       updateSuccessAlert: 'user/updateSuccessAlert',
-      updatePurchaseSuccess: 'user/updatePurchaseSuccess'
+      updatePurchaseSuccess: 'user/updatePurchaseSuccess',
+      updateUserInfo: 'user/updateUserInfo'
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo',
@@ -132,7 +133,9 @@ export default {
       this.updatePurchaseSuccess(false)
       this.updateConfirmAlert(false)
       this.updateCoverState(false)
-      this.getUserInfo()
+      this.getUserInfo().then((res) => {
+        this.updateUserInfo(res)
+      })
     }
     // ,
     // backLearn () {
