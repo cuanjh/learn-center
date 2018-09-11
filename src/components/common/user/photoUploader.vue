@@ -67,12 +67,12 @@ export default {
   },
   mounted () {
     this.getUploadPhotoUrl({})
-    // // 重新加载上传头像插件js
-    // var head = document.getElementsByTagName('head')[0]
-    // var script = document.createElement('script')
-    // script.type = 'text/javascript'
-    // script.src = '/static/sitelogo.js'
-    // head.appendChild(script)
+    // 重新加载上传头像插件js
+    var head = document.getElementsByTagName('head')[0]
+    var script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.src = '/static/sitelogo.js'
+    head.appendChild(script)
   },
   methods: {
     ...mapMutations({

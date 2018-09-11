@@ -4,7 +4,7 @@
       :key="index"
       class="image-box"
       :class="{
-        'layout-3': [3, 5, 6, 9].indexOf(data.length) != -1,
+        'layout-3': isLayout3,
         'layout-4': data.length == 7 || data.length == 8,
         current:index==repeat_len || (repeated && mouseover_form==form),
         right:sel_form==form && state_right,
@@ -126,6 +126,15 @@ export default {
     }),
     dir () {
       return this.direction < 0
+    },
+    isLayout3 () {
+      if ([5, 6, 9].indexOf(this.data.length) !== -1) {
+        return true
+      }
+      if (this.typeList.length === 3 && this.typeList.join(',').indexOf('sentencetoimg') === -1) {
+        return true
+      }
+      return false
     }
   },
   methods: {
