@@ -50,8 +50,17 @@ export default {
     'pk-progress': pkProgress
   },
   mounted () {
-    let slideTypeCode = this.currentChapterCode + '-A7'
-    var forms = this.getPkForms(this.curChapterContent, slideTypeCode)
+    var chapterCode = this.currentChapterCode
+    if (!chapterCode) {
+      chapterCode = localStorage.getItem('currentChapterCode')
+    }
+
+    let slideTypeCode = chapterCode + '-A7'
+    let chapterContent = this.curChapterContent
+    if (Object.keys(chapterContent).length === 0) {
+      chapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
+    }
+    var forms = this.getPkForms(chapterContent, slideTypeCode)
     var resource = this.getResource(forms)
     Loader(resource).then((cb, data) => {
       console.log(data)
@@ -123,7 +132,7 @@ export default {
       }
     },
     partNum () {
-      return this.data[0].form_sound.src
+      return this.data[0].sound
         .split('sounds/')[1]
         .split('-')[0]
         .split('/')
@@ -172,7 +181,10 @@ export default {
             progress: JSON.stringify(that.save_progress)
           })
           // var result = that.$refs.pro.getResult(this.pk_time)
-          that.$refs.pro.$emit('reset-progress')
+          if (that.$refs.pro) {
+            that.$refs.pro.$emit('reset-progress')
+          }
+          that.pk = false
           this.$nextTick(() => {
             that.$refs['single-result'].$emit(
               'init-result',

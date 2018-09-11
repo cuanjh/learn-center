@@ -89,7 +89,7 @@ export default {
     this.$on('timeup', () => {
       this.timeup()
       this.clear()
-      this.$refs.cutdown.$emit('break')
+      this.$emit('break')
     })
 
     this.$on('break', () => {

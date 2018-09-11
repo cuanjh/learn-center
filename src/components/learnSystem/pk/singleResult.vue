@@ -58,12 +58,18 @@ export default {
     this.$on('init-result', (result) => {
       console.log(result)
       var _this = this
-      this['learn/getCourseTestRanking'](this.currentChapterCode).then((res) => {
+      var chapterCode = this.currentChapterCode
+      if (!chapterCode) {
+        chapterCode = localStorage.getItem('currentChapterCode')
+      }
+      this['learn/getCourseTestRanking'](chapterCode).then((res) => {
         console.log(res)
-        _this.loaded = false
-        this.currentUser = res.result.current_user
-        _this.percent = Math.floor((this.currentUser.correct_rate).toFixed(3) * 100000) / 1000
-        _this.$set(_this, 'users', res.result.ranking)
+        if (res.success) {
+          _this.loaded = false
+          this.currentUser = res.result.current_user
+          _this.percent = Math.floor((this.currentUser.correct_rate).toFixed(3) * 100000) / 1000
+          _this.$set(_this, 'users', res.result.ranking)
+        }
       })
       //            Model.setPKScore(this.path, result.score)
       // var _this = this
