@@ -91,10 +91,10 @@ export default {
       getGradeInfo: 'course/getGradeInfo'
     }),
     reTest () {
+      if (this.currLevel === 6) {
+        this.currLevel = 0
+      }
       this.$router.push({ path: '/learn/gradeLevel/Level' + (this.currLevel + 1) })
-      // var _gotoUrl =
-      //   Config.jumpSystem + this.lanCode + '/Basic#/level-grade/Level1'
-      // window.location.href = _gotoUrl
     }
   }
 }
