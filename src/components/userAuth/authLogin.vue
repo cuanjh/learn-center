@@ -48,7 +48,8 @@ export default {
   methods: {
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
-      updateIsLogin: 'user/updateIsLogin'
+      updateIsLogin: 'user/updateIsLogin',
+      updateUserInfo: 'user/updateUserInfo'
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo'
@@ -88,6 +89,7 @@ export default {
           if (!lastCourseCode) {
             this.$nextTick(() => {
               this.getUserInfo().then((res) => {
+                this.updateUserInfo(res)
                 this.updateCurCourseCode(this.userInfo.current_course_code)
                 localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
                 this.updateIsLogin('1')
