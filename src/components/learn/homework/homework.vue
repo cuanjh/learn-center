@@ -139,11 +139,8 @@ export default {
 
     }
     .homework-item {
-      width: 290px;
-      height: 200px;
-      float: left;
-      margin-right: 15px;
-      margin-top: 10px;
+      display: inline-block;
+      width: 32.3333%;
     }
 
   }
