@@ -38,27 +38,6 @@ export default {
     ChapterItem,
     PulseLoader
   },
-  // beforeRouteLeave (to, from, next) {
-  //   console.log(11111111111111111111)
-  //   if (to.name === 'stage') {
-  //     let id = to.params.id
-  //     if (id.indexOf('A0') > -1) {
-  //       this.updateCurCoreParts(id)
-  //     } else {
-  //       this.updateCurChapterUrl()
-  //     }
-
-  //     this['course/getChapterContent']().then(() => {
-  //       this.chapterProgress(id)
-  //       next()
-  //     })
-  //   } else if (to.name === 'pk' || to.name === 'homework') {
-  //     this.updateCurChapterUrl()
-  //     this['course/getChapterContent']().then(() => {
-  //       next()
-  //     })
-  //   }
-  // },
   created () {
     this.showLoading()
     let lastCourseCode = localStorage.getItem('lastCourseCode')
