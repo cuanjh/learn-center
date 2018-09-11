@@ -96,7 +96,6 @@ export default {
     })
   },
   mounted () {
-    console.log('====>', this.homework)
     // 初始化
     Recorder.init()
   },
