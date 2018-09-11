@@ -72,6 +72,10 @@ export default {
     } else {
       this.updateCurCourseCode(lastCourseCode)
     }
+  },
+  mounted () {
+    this.$parent.$emit('initLayout')
+    this.$parent.$emit('navItem', 'course')
     this.$nextTick(() => {
       Promise.all([
         this.getLearnInfo(this.currentCourseCode).then((res) => {
@@ -113,10 +117,6 @@ export default {
         // }, 500)
       })
     })
-  },
-  mounted () {
-    this.$parent.$emit('initLayout')
-    this.$parent.$emit('navItem', 'course')
   },
   computed: {
     ...mapState({

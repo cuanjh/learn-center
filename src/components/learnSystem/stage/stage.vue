@@ -455,7 +455,7 @@ export default {
       if ([5, 6, 9].indexOf(this.typeList.length) !== -1) {
         return true
       }
-      if (this.typeList.length === 3 && [...new Set(this.typeList)].length === 1) {
+      if (this.typeList.length === 3 && this.typeList.join(',').indexOf('sentencetoimg') === -1) {
         return true
       }
       return false
