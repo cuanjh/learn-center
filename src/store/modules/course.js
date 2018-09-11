@@ -182,6 +182,7 @@ const mutations = {
   },
   updateUnlockCourseList (state, data) {
     state.unlock = data.unlock
+    state.unlockCourses = ''
     for (var item in data.unlock) {
       state.unlockCourses += item + ',' // 已经解锁的课程
       if (data.unlock[item]['Has_purchased']) {

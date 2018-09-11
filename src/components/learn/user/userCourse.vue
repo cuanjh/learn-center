@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
 export default {
@@ -75,6 +75,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      updateCurCourseCode: 'course/updateCurCourseCode'
+    }),
     ...mapActions({
       getDeletePurchase: 'course/getDeletePurchase'
     }),
@@ -88,6 +91,7 @@ export default {
     },
     continueLearn (courseCode) {
       localStorage.setItem('lastCourseCode', courseCode)
+      this.updateCurCourseCode(courseCode)
       this.$router.push({ path: '/app/course-list' })
     }
   }

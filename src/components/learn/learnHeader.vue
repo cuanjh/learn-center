@@ -136,7 +136,8 @@ export default {
       logout: 'user/logout'
     }),
     ...mapMutations({
-      updateIsLogin: 'user/updateIsLogin'
+      updateIsLogin: 'user/updateIsLogin',
+      updateCurCourseCode: 'course/updateCurCourseCode'
     }),
     showSearch (e) {
       this.searchFlag = !this.searchFlag
@@ -171,6 +172,7 @@ export default {
     },
     changeCourseCode (courseCode) {
       localStorage.setItem('lastCourseCode', courseCode)
+      this.updateCurCourseCode(courseCode)
       this.$parent.$emit('changeCourseCode', courseCode)
     },
     jumpCourse () {

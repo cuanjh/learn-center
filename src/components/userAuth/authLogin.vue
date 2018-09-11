@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import http from './../../api/userAuth.js'
 import validation from './../../tool/validation.js'
 import errCode from './../../api/code.js'
@@ -40,9 +40,18 @@ export default {
       errText: ''
     }
   },
+  computed: {
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    })
+  },
   methods: {
     ...mapMutations({
+      updateCurCourseCode: 'course/updateCurCourseCode',
       updateIsLogin: 'user/updateIsLogin'
+    }),
+    ...mapActions({
+      getUserInfo: 'user/getUserInfo'
     }),
     autoLogin () {
       this.autoFlag = !this.autoFlag
@@ -63,11 +72,33 @@ export default {
         password: encrypt(this.userPwd)
       }).then(res => {
         if (res.success) {
-          localStorage.clear()
+          localStorage.removeItem('userInfo')
           Cookies.set('user_id', res.user_id)
           Cookies.set('verify', res.verify)
-          this.updateIsLogin('1')
-          this.$router.push({path: '/app/course-list'})
+
+          let UserId = Cookies.get('user_id')
+          let lastUserId = Cookies.get('last_user_id')
+          if (lastUserId !== UserId) {
+            Cookies.set('lastUserId', UserId)
+            localStorage.removeItem('lastCourseCode')
+          }
+
+          let lastCourseCode = localStorage.getItem('lastCourseCode')
+          console.log(this.learnCourses)
+          if (!lastCourseCode) {
+            this.$nextTick(() => {
+              this.getUserInfo().then((res) => {
+                this.updateCurCourseCode(this.userInfo.current_course_code)
+                localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
+                this.updateIsLogin('1')
+                this.$router.push({path: '/app/course-list'})
+              })
+            })
+          } else {
+            this.updateCurCourseCode(lastCourseCode)
+            this.updateIsLogin('1')
+            this.$router.push({path: '/app/course-list'})
+          }
         } else {
           this.loading = false
           this.errText = errCode[res.code]

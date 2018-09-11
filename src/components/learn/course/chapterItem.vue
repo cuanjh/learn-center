@@ -85,22 +85,22 @@
               <div class="course-item-box">
                 <a href="javascript:void(0);" @click="startTest(coreData['isCoreCompleted'])">
                   <div class="course-item">
-                    <p class="course-item-star" v-show="coreData['isCoreCompleted'] && coreData['isTestCompleted']">
-                      <span class="course-yellow-star"><i v-for="index in coreData['starTestNum']" :key="index"></i></span>
-                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - coreData['starTestNum'])" :key="index"></i></span>
+                    <p class="course-item-star" v-show="coreData['isCoreCompleted'] && testData['isTestCompleted']">
+                      <span class="course-yellow-star"><i v-for="index in testData['starTestNum']" :key="index"></i></span>
+                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - testData['starTestNum'])" :key="index"></i></span>
                     </p>
-                    <p class="course-item-progress" v-show="!coreData['isTestCompleted']">
-                      <span v-show="coreData['isCoreCompleted'] && !coreData['isTestCompleted']" v-text="coreData['completedTestRate']"></span>
+                    <p class="course-item-progress" v-show="!testData['isTestCompleted']">
+                      <span v-show="coreData['isCoreCompleted'] && !testData['isTestCompleted']" v-text="testData['completedTestRate']"></span>
                     </p>
                     <p class="course-item-icon">
-                      <img :style="coreData['imgTestStyle']" :src="'../../../../static/images/course/course-review-test.png'" alt="">
+                      <img :style="testData['imgTestStyle']" :src="'../../../../static/images/course/course-review-test.png'" alt="">
                       <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                     </p>
                     <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">测试</p>
                   </div>
                 </a>
                 <div class="course-circle-box">
-                  <div class="course-review-circle" :class="{'course-review-circle-locked': !coreData['isTestCompleted'] }" v-for="index in 3" :key="index"></div>
+                  <div class="course-review-circle" :class="{'course-review-circle-locked': !testData['isTestCompleted'] }" v-for="index in 3" :key="index"></div>
                 </div>
               </div>
             <div class="course-item-box">
@@ -353,6 +353,33 @@ export default {
       }
       console.log(srcVipArray)
       console.log(vipFormArray)
+      return retObj
+    },
+    testData () {
+      // 测试
+      var that = this
+      let retObj = {}
+      let srcTestArray = Object.keys(that.curChapterProgress).filter((item) => {
+        return item.indexOf('A7') > -1
+      }).map((el) => {
+        return that.curChapterProgress[el]
+      })
+      console.log(srcTestArray)
+      if (Object.keys(that.chapterTestResult).length > 0) {
+        retObj['isTestCompleted'] = 1
+        retObj['completedTestRate'] = '1'
+        let correctRate = Math.floor((this.chapterTestResult.correct_rate).toFixed(3))
+        retObj['starTestNum'] = this.starNum(correctRate)
+        retObj['imgTestStyle'] = {
+          'border-radius': '50% 50%',
+          'border': '3px solid #7FB926'
+        }
+      } else {
+        retObj['isTestCompleted'] = 0
+        retObj['starTestNum'] = 0
+        retObj['completedTestRate'] = ''
+        retObj['imgTestStyle'] = ''
+      }
       return retObj
     },
     // 作业
