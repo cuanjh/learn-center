@@ -82,7 +82,7 @@ export default {
       if ([5, 6, 9].indexOf(this.data.length) !== -1) {
         return true
       }
-      if (this.typeList.length === 3 && this.typeList.join(',').indexOf('sentencetoimg') === -1) {
+      if (this.data.length === 3 && this.data.join(',').indexOf('sentencetoimg') === -1) {
         return true
       }
       return false
