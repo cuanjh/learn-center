@@ -59,7 +59,14 @@ export default {
     //   return this.pkTime
     // },
     userphoto () {
-      return this.userInfo.photo
+      return this.ui.photo
+    },
+    ui () {
+      let ui = this.userInfo
+      if (Object.keys(ui).length === 0) {
+        ui = JSON.parse(localStorage.getItem('userInfo'))
+      }
+      return ui
     }
   },
   created () {
@@ -122,7 +129,7 @@ export default {
       clearInterval(this.timeID)
       this.reset()
       this.$parent.$emit('clientBack') // 通知父组件，用户点击了返回退出，不直接用back的原因是其他地方也会调用这个函数，区分功能
-      this.$parent.$emit('back')
+      this.$parent.$emit('back', true)
     },
     getTime () {
       return this.pkTime - this.time
@@ -218,6 +225,29 @@ export default {
       -webkit-transition: all 0.3s ease;
       transition: all 0.3s ease;
       font-weight: 400;
+      &.perfect {
+        background-color: #1ec8ba;
+        cursor: pointer;
+      }
+      &.great {
+        background-color: #f4b401;
+        // color: #f4b401;
+        cursor: pointer;
+      }
+      &.current {
+        position: relative;
+        &:after {
+          content: "";
+          border: 4px solid #c8cdde;
+          position: absolute;
+          width: 26px;
+          height: 26px;
+          top: -4px;
+          left: -4px;
+          border-radius: 50%;
+          // opacity: 0.5;
+        }
+      }
       &.current {
         position: relative;
         &:after {
@@ -265,7 +295,7 @@ export default {
   .p-pk {
     &>b {
       position: relative;
-      top: -10px;
+      top: 5px;
       cursor: default;
     }
     img {
@@ -287,7 +317,7 @@ export default {
       border-radius: 20px;
       display: inline-block;
       position: relative;
-      top: -10px;
+      top: -5px;
       height: 35px;
       transition: all 0.3s ease;
       // width: 55px;
