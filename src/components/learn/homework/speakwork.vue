@@ -102,7 +102,6 @@ export default {
   computed: {
     ...mapState({
       direction: state => state.learn.direction,
-      refuseRecord: state => state.learn.refuseRecord,
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
       userInfo: state => state.user.userInfo,

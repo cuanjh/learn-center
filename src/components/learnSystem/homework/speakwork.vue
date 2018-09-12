@@ -75,7 +75,6 @@ export default {
   computed: {
     ...mapState({
       direction: state => state.learn.direction,
-      refuseRecord: state => state.learn.refuseRecord,
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
       tipsMsg: state => state.learn.tips,
@@ -130,12 +129,12 @@ export default {
       var isPop
       if (
         Recorder.isActivity(this.speakwork, this.canRecord) !== true &&
-        this.refuseRecord !== true &&
+        Recorder.refuseRecord !== true &&
         this.canRecord
       ) {
         this.micphoneTip = this.tipsMsg.micphone
         isPop = true
-      } else if (this.refuseRecord) {
+      } else if (Recorder.refuseRecord) {
         this.micphoneTip = this.tipsMsg.homework_micphoneFailed
         isPop = true
       }

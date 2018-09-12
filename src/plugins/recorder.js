@@ -269,7 +269,6 @@ class Recorder {
 
     // 抛出异常
     static throwError(message) {
-        Config.refuseRecord = true;
         console.log(message);
     }
 
@@ -294,7 +293,6 @@ let init = (callback, config) => {
                         case 'PERMISSION_DENIED':
                         case 'PermissionDeniedError':
                             Recorder.throwError('抱歉，未获取到麦克风设备。');
-                            Config.refuseRecord = true;
                             break;
                         case 'NOT_SUPPORTED_ERROR':
                         case 'NotSupportedError':
@@ -308,9 +306,11 @@ let init = (callback, config) => {
                             Recorder.throwError('无法打开麦克风。异常信息:' + (error.code || error.name));
                             break;
                     }
+                    Recorder.refuseRecord = true
                 })
         } else {
             Recorder.throwError('当前浏览器不支持录音功能。');
+            Recorder.refuseRecord = true
             return;
         }
     }
@@ -319,6 +319,7 @@ let init = (callback, config) => {
 export default {
     recorder: null,
     recorderUrl: '',
+    refuseRecord: false,
     audio: new Audio(),
     init: function () {
         init( (rec) => {

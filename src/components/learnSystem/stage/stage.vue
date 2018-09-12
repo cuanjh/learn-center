@@ -397,12 +397,12 @@ export default {
       var isPop
       if (
         Recorder.isActivity() !== true &&
-        this.refuseRecord !== true &&
+        Recorder.refuseRecord !== true &&
         this.canRecord
       ) {
         this.micphoneTip = this.tips.micphone
         isPop = true
-      } else if (this.refuseRecord) {
+      } else if (Recorder.refuseRecord) {
         this.micphoneTip = this.tips.micphone_failed
         isPop = true
       }

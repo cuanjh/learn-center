@@ -12,7 +12,6 @@ const state = {
   isPause: false,
   hiddenMicrophone: false,
   direction: 1,
-  refuseRecord: false,
   canRecord: true,
   autoJump: true,
   switchState: false,
