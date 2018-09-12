@@ -1,9 +1,9 @@
 <template>
   <div class="homework-wrap">
     <div class="homework-container">
-      <div class="homework-balk">
+      <div class="homework-balk" @click="$router.back(-1)">
         <p></p>
-        <span @click="$router.back(-1)">返回</span>
+        <span>返回</span>
       </div>
       <div class="homework-content">
         <div class="homework-title">
