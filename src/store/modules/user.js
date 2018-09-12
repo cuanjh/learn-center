@@ -57,9 +57,7 @@ const actions = {
   },
   // 新的档案接口
   getCourseArchives ({commit}) {
-    httpLogin(config.getCourseArchives).then((result) => {
-      commit('updateCourseArchives', result)
-    })
+    return httpLogin(config.getCourseArchives)
   },
   getTradeRecord ({commit, dispatch, state}) {
     commit('dataPageing') // 用于分页展示使用

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import $ from 'jquery'
 import DocItem from './userDocItem.vue'
 export default {
@@ -36,9 +36,10 @@ export default {
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'doc')
     this.$parent.$emit('navItem', 'user')
-    this.getCourseArchives().then(() => {
+    this.getCourseArchives().then((res) => {
+      this.updateCourseArchives(res)
       setTimeout(() => {
-        let height = $('.user-right-wrap').height() + 100
+        let height = $('.user-container').height() + 100
         $('.user-wrap').css('height', height + 'px')
       }, 100)
     })
@@ -67,6 +68,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      updateCourseArchives: 'user/updateCourseArchives'
+    }),
     ...mapActions({
       getCourseArchives: 'user/getCourseArchives'
     })
