@@ -13,7 +13,7 @@
         <p class="btn" :class="{'submint':homework.has_done}">{{homework.has_done?'完成':'未完成'}}</p>
       </div>
     </div>
-    <div class="repeatSpeak-box" v-show="isShow" @click.stop="closeShadow()">
+    <div class="repeatSpeak-box" v-show="isShow" @click.stop.prevent="closeShadow()">
       <div class="repeatSpeak-container">
         <div class="repeatSpeak-content">
           <div class="repeatSpeak-header">
@@ -27,38 +27,38 @@
           <div class="que-record">
             <!-- 点击开始录音 -->
             <div class="record" v-show="recordShow" >
-              <div class="record-img" @click.stop="showRecord()"></div>
+              <div class="record-img" @click.stop.prevent="showRecord()"></div>
               <p class="text">点击录音</p>
             </div>
             <!-- 蓝色录音标志 -->
             <div class="m-b" v-show="mShow">
               <canvas width="112" height="112"></canvas>
-              <div class="m-bg">
+              <!-- <div class="m-bg">
                   <div class="m-track" :style="{height:track_height}"></div>
-              </div>
-              <div class="mac" @click.stop="recordStart()"></div>
+              </div> -->
+              <div class="mac" onselectstart="return false;" @click.stop.prevent="recordStart()"></div>
             </div>
             <!-- 录音完毕就显示三个图标，录音，语音，发送 -->
-              <div class="recording" v-show="lastShow">
-                <div class="again-recording" @click.stop="againRecord()">
-                  <i></i>
-                  <span>重新录音</span>
-                </div>
-                <div class="audio-play-box">
-                  <i class="note-line" @click.stop="startMySound()">
-                    <span :class="{'animat':animat}"></span>
-                    <span :class="{'animat':animat}"></span>
-                    <span :class="{'animat':animat}"></span>
-                    <span :class="{'animat':animat}"></span>
-                    <span :class="{'animat':animat}"></span>
-                    <span :class="{'animat':animat}"></span>
-                  </i>
-                </div>
-                <div class="send" @click.prevent="exit()">
-                  <i></i>
-                  <span>发送</span>
-                </div>
+            <div class="recording" v-show="lastShow">
+              <div class="again-recording" @click.stop.prevent="againRecord()">
+                <i></i>
+                <span>重新录音</span>
               </div>
+              <div class="audio-play-box">
+                <i class="note-line" @click.stop.prevent="startMySound()">
+                  <span :class="{'animat':animat}"></span>
+                  <span :class="{'animat':animat}"></span>
+                  <span :class="{'animat':animat}"></span>
+                  <span :class="{'animat':animat}"></span>
+                  <span :class="{'animat':animat}"></span>
+                  <span :class="{'animat':animat}"></span>
+                </i>
+              </div>
+              <div class="send" @click.prevent="exit()">
+                <i></i>
+                <span>发送</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -445,29 +445,29 @@ export default {
           top: -6px;
           transform: rotate(-90deg);
         }
-        .m-bg {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          margin-left: -15px;
-          margin-top: -25px;
-          position: absolute;
-          width: 30px;
-          height: 50px;
-          border-radius: 50%;
-          background: #fff;
-          z-index: 11;
-          .m-track {
-            -webkit-transition: all .3s ease;
-            transition: all .3s ease;
-            position: absolute;
-            background: #35f875;
-            max-height: 32px;
-            width: 30px;
-            bottom: 16px;
-            top: auto;
-          }
-        }
+        // .m-bg {
+        //   position: absolute;
+        //   left: 50%;
+        //   top: 50%;
+        //   margin-left: -15px;
+        //   margin-top: -25px;
+        //   position: absolute;
+        //   width: 30px;
+        //   height: 50px;
+        //   border-radius: 50%;
+        //   background: #fff;
+        //   z-index: 11;
+        //   .m-track {
+        //     -webkit-transition: all .3s ease;
+        //     transition: all .3s ease;
+        //     position: absolute;
+        //     background: #35f875;
+        //     max-height: 32px;
+        //     width: 30px;
+        //     bottom: 16px;
+        //     top: auto;
+        //   }
+        // }
         .mac {
           position: absolute;
           background-image: url('../../../../static/images/learnSystem/microphone.png');
