@@ -336,8 +336,8 @@ export default {
 .repeatSpeak-box {
   display: block;
   width: 100%;
-  height: 979px;
-  position: absolute;
+  height: 100%;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
