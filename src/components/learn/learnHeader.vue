@@ -249,13 +249,13 @@ export default {
   margin-left: 175px!important;
 }
 .header-box .left>p:nth-of-type(2) i,.header-box .left>p:nth-of-type(5) i{
+  display: inline-block;
   width: 9px;
   height: 6px;
   background: url("./../../../static/images/learn/triangle.png") no-repeat;
   background-size: 9px 6px;
-  position: absolute;
   margin-top: -16px;
-  margin-left: 23px;
+  margin-left: 37px;
 }
 
 .triangle-up {

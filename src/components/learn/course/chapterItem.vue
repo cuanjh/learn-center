@@ -755,8 +755,9 @@ export default {
     background-size: cover;
     height: 25px;
     width: 25px;
-    position: absolute;
-    margin: -30px 0 0 8px;
+    display: inline-block;
+    margin-top: -30px;
+    margin-left: 40px;
   }
 
   .icon-review-lock {
@@ -765,8 +766,9 @@ export default {
     background-size: cover;
     height: 25px;
     width: 25px;
-    position: absolute;
-    margin: -30px 0 0 8px;
+    display: inline-block;
+    margin-top: -30px;
+    margin-left: 40px;
   }
 
   .icon-vip-lock {
@@ -775,8 +777,9 @@ export default {
     background-size: cover;
     height: 25px;
     width: 25px;
-    position: absolute;
-    margin: -30px 0 0 8px;
+    display: inline-block;
+    margin-top: -30px;
+    margin-left: 40px;
   }
   .course-item-title{
     position: absolute;
