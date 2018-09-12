@@ -37,8 +37,10 @@ export default {
     this.$parent.$emit('activeNavUserItem', 'doc')
     this.$parent.$emit('navItem', 'user')
     this.getCourseArchives().then(() => {
-      let height = $('.user-right-wrap').height()
-      $('.user-wrap').css('height', height + 'px')
+      setTimeout(() => {
+        let height = $('.user-right-wrap').height() + 100
+        $('.user-wrap').css('height', height + 'px')
+      }, 100)
     })
   },
   computed: {
