@@ -1,0 +1,7 @@
+{
+	"src_dir":"/Users/talkmate/Documents/gitlab/learn-center/dist",
+	"key_prefix":"",
+	"bucket":"learnsys",
+	"overwrite":true,
+	"rescan_local":true
+}
