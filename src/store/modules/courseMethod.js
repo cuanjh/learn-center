@@ -41,7 +41,7 @@ function progressAgainOne (obj) {
   var arrTemp = ['A1', 'A2']
   for (var i = 0; i < arrTemp.length; i++) {
     if (obj[arrTemp[i]]) {
-      num += 8
+      num += 5
     }
   }
   return num
@@ -51,14 +51,14 @@ function progressAgainTwo (obj) {
   var arrTemp = ['A3', 'A4', 'A5', 'A6']
   for (var i = 0; i < arrTemp.length; i++) {
     if (obj[arrTemp[i]]) {
-      num += 6
+      num += 5
     }
   }
   return num
 }
 function progressAgainThree (obj) {
   var num = 0
-  if (obj['A8']) {
+  if (obj['A8'] || obj['A7']) {
     num += 10
   }
   return num

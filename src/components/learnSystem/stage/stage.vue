@@ -498,7 +498,8 @@ export default {
       updateFormScore: 'learn/updateFormScore',
       setFormScoresNull: 'learn/setFormScoresNull',
       updateProgressScore: 'course/updateProgressScore',
-      updateUnlockCourseList: 'course/updateUnlockCourseList'
+      updateUnlockCourseList: 'course/updateUnlockCourseList',
+      updateCurChapter: 'course/updateCurChapter'
     }),
     getTypeList (list) {
       console.log('typelist')
@@ -732,6 +733,7 @@ function changeData (_this, trunk) {
       }
 
       if (_this.unlockCourses.indexOf(nextChapter) === -1) {
+        _this.updateCurChapter(nextChapter)
         _this.postUnlockChapter(params).then((r) => {
           _this.getUnlockChapter(nextChapter).then((res) => {
             _this.updateUnlockCourseList(res)
@@ -750,17 +752,17 @@ function changeData (_this, trunk) {
     _this.postActivityRecord(payload).then(() => {
       var params = {
         chapter_code: curChapterCode,
-        core: this.core,
-        homework: this.homework,
-        improvement: this.improvement,
-        core_complete: this.coreComplete,
-        homework_complete: this.homeworkComplete,
-        improvement_complete: this.improvementComplete,
+        core: _this.core,
+        homework: _this.homework,
+        improvement: _this.improvement,
+        core_complete: _this.coreComplete,
+        homework_complete: _this.homeworkComplete,
+        improvement_complete: _this.improvementComplete,
         learn_time: _this.last_time,
         correct_rate: cr,
         group_id: ''
       }
-      _this.postUnlockChapter(params).then(() => {
+      _this.postUnlockChapter(params).then((res) => {
         _this.$refs['summary'].$emit('coreSummary-show', _this.id)
         _this.setFormScoresNull()
       })
