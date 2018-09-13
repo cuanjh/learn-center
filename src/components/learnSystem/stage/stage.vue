@@ -432,6 +432,13 @@ export default {
       'progress': state => state.course.progress,
       'curSlide': state => state.course.curSlide,
       'pathArr': state => state.course.pathArr,
+      'core': state => state.course.core,
+      'homework': state => state.course.homework,
+      'improvement': state => state.course.improvement,
+      'coreComplete': state => state.course.coreComplete,
+      'homeworkComplete': state => state.course.homeworkComplete,
+      'improvementComplete': state => state.course.improvementComplete,
+      'unlockCourses': state => state.course.unlockCourses,
       'coinCalculationRule': state => state.learn.coinCalculationRule,
       'tips': state => state.learn.tips,
       'formScores': state => state.learn.formScores,
@@ -478,7 +485,9 @@ export default {
       postProgress: 'learn/postProgress',
       postActivityRecord: 'learn/postActivityRecord',
       postCoin: 'learn/postCoin',
-      getChapterContent: 'course/getChapterContent'
+      getChapterContent: 'course/getChapterContent',
+      postUnlockChapter: 'course/postUnlockChapter',
+      getUnlockChapter: 'course/getUnlockChapter'
     }),
     ...mapMutations({
       updateCurSlide: 'course/updateCurSlide',
@@ -488,7 +497,8 @@ export default {
       updatePause: 'learn/updatePause',
       updateFormScore: 'learn/updateFormScore',
       setFormScoresNull: 'learn/setFormScoresNull',
-      updateProgressScore: 'course/updateProgressScore'
+      updateProgressScore: 'course/updateProgressScore',
+      updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     getTypeList (list) {
       console.log('typelist')
@@ -688,6 +698,47 @@ function changeData (_this, trunk) {
     } else {
       curChapterCode = _this.curChapterCode
     }
+
+    if (_this.coreComplete && _this.id.indexOf('A0') > -1) {
+      let nextChapter
+      let arr = curChapterCode.split('-')
+      if (arr[4].toLowerCase() === 'chapter6') {
+        if (arr[3] === 'Unit4') {
+          if (arr[2] === 'Level7') {
+            return
+          } else {
+            let level = 'Level' + parseInt(arr[2].replace('Level', '')) + 1
+            nextChapter = arr[0] + '-' + arr[1] + '-' + level + 'Unit1-Chapter1'
+          }
+        } else {
+          let unit = 'Unit-' + (parseInt(arr[3].replace('Unit', '')) + 1)
+          nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + unit + '-Chapter1'
+        }
+      } else {
+        let chapter = 'Chapter' + (parseInt(arr[4].replace('Chapter', '')) + 1)
+        nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + arr[3] + '-' + chapter
+      }
+      var params = {
+        chapter_code: nextChapter,
+        core: true,
+        homework: false,
+        improvement: false,
+        core_complete: false,
+        homework_complete: false,
+        improvement_complete: false,
+        learn_time: 0,
+        correct_rate: 0,
+        group_id: ''
+      }
+
+      if (_this.unlockCourses.indexOf(nextChapter) === -1) {
+        _this.postUnlockChapter(params).then((r) => {
+          _this.getUnlockChapter(nextChapter).then((res) => {
+            _this.updateUnlockCourseList(res)
+          })
+        })
+      }
+    }
     var payload = {
       activityCode: curChapterCode + '-' + _this.id,
       coins: _this.coin,
@@ -697,8 +748,22 @@ function changeData (_this, trunk) {
       courseCompleteRate: ccr
     }
     _this.postActivityRecord(payload).then(() => {
-      _this.$refs['summary'].$emit('coreSummary-show', _this.id)
-      _this.setFormScoresNull()
+      var params = {
+        chapter_code: curChapterCode,
+        core: this.core,
+        homework: this.homework,
+        improvement: this.improvement,
+        core_complete: this.coreComplete,
+        homework_complete: this.homeworkComplete,
+        improvement_complete: this.improvementComplete,
+        learn_time: _this.last_time,
+        correct_rate: cr,
+        group_id: ''
+      }
+      _this.postUnlockChapter(params).then(() => {
+        _this.$refs['summary'].$emit('coreSummary-show', _this.id)
+        _this.setFormScoresNull()
+      })
     })
     return false
   }

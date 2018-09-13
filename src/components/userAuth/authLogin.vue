@@ -28,7 +28,7 @@ import http from './../../api/userAuth.js'
 import validation from './../../tool/validation.js'
 import errCode from './../../api/code.js'
 import { encrypt } from './../../tool/untils.js'
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 
 export default {
   data () {
@@ -74,18 +74,23 @@ export default {
       }).then(res => {
         if (res.success) {
           localStorage.removeItem('userInfo')
-          Cookies.set('user_id', res.user_id)
-          Cookies.set('verify', res.verify)
-
-          let UserId = Cookies.get('user_id')
-          let lastUserId = Cookies.get('last_user_id')
+          localStorage.removeItem('user_id')
+          localStorage.removeItem('verify')
+          // Cookies.set('user_id', res.user_id)
+          // Cookies.set('verify', res.verify)
+          localStorage.setItem('user_id', res.user_id)
+          localStorage.setItem('verify', res.verify)
+          // let UserId = Cookies.get('user_id')
+          // let lastUserId = Cookies.get('last_user_id')
+          let UserId = localStorage.getItem('user_id')
+          let lastUserId = localStorage.getItem('last_user_id')
           if (lastUserId !== UserId) {
-            Cookies.set('lastUserId', UserId)
+            // Cookies.set('lastUserId', UserId)
+            localStorage.setItem('lastUserId', UserId)
             localStorage.removeItem('lastCourseCode')
           }
 
           let lastCourseCode = localStorage.getItem('lastCourseCode')
-          console.log(this.learnCourses)
           if (!lastCourseCode) {
             this.$nextTick(() => {
               this.getUserInfo().then((res) => {

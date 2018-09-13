@@ -45,6 +45,12 @@ const state = {
   progress: {},
   recordForm: {},
   levelActivity: 0,
+  core: false,
+  homework: false,
+  improvement: false,
+  coreComplete: false,
+  homeworkComplete: false,
+  improvementComplete: false,
   homeworkContent: {},
   chapterTestResult: {} // 记录用户的课程测试结果
 }
@@ -118,6 +124,9 @@ const actions = {
     httpLogin(config.getStudyDelCourse, { code: code }).then((res) => {
       dispatch('getLearnCourses')
     })
+  },
+  postUnlockChapter ({ commit }, params) {
+    return httpLogin(config.postUnlockChapter, params)
   }
 }
 
@@ -185,6 +194,12 @@ const mutations = {
     state.unlockCourses = ''
     for (var item in data.unlock) {
       state.unlockCourses += item + ',' // 已经解锁的课程
+      state.core = data.unlock[item].Core
+      state.coreComplete = data.unlock[item].Core_complete
+      state.homework = data.unlock[item].Homework
+      state.homeworkComplete = data.unlock[item].Homework_complete
+      state.improvement = data.unlock[item].Improvement
+      state.improvementComplete = data.unlock[item].Improvement_complete
       if (data.unlock[item]['Has_purchased']) {
         state.buyChapters += item + ',' // 购买的课程
       }
