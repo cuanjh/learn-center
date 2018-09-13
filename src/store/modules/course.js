@@ -19,7 +19,7 @@ const state = {
   chapterNum: 0,
   curLevel: '',
   levelNum: 6,
-  levelDetail: ['level1', 'level2', 'level3', 'level4', 'level5', 'level6'],
+  levelDetail: [],
   levelDes: {
     'Level1': '初级A1',
     'Level2': '初级A2',
@@ -158,6 +158,8 @@ const mutations = {
     state.chapterNum = state.courseBaseInfo.chapter_num
     state.finishedChapter = state.learnInfo.chapter_num_finished
     state.levelNum = state.courseBaseInfo.level_num
+    let levelDetail = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6']
+    state.levelDetail = levelDetail.slice(0, state.courseBaseInfo.level_num)
     let curChapterCode = state.learnInfo.current_chapter_code
     state.curLevel = curChapterCode.split('-')[2]
     state.assetsUrl = data.info.courseBaseInfo.content_config.assets_url
