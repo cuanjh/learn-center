@@ -892,6 +892,7 @@ export default {
     bottom: 0;
     background-color: rgba(0, 61, 90, .9);
     z-index:99999999;
+    overflow: hidden;
   }
 
   .nolock-test-check p{
