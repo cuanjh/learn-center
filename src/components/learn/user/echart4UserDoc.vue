@@ -47,7 +47,7 @@ export default {
               fontSize: 12
             }
           },
-          nameGap: 10,
+          nameGap: 7,
           splitArea: {
             show: false
           },
