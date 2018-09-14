@@ -159,6 +159,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 10000028;
+    z-index: 99;
+    overflow: hidden;
   }
 </style>

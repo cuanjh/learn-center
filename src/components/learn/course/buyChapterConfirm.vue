@@ -1,5 +1,5 @@
 <template>
-  <div id="vip-content">
+  <div class="vip-container" v-show="coverShow">
     <section class='vip-update-success learn-begin-study-warn animated flipInX ' v-show='costAlert'>
       <!-- 提示花费金币弹出框 -->
       <div class='vip-update-success-logo learn-begin-study-warn-logo animated tada'></div>
@@ -51,6 +51,7 @@ export default {
   },
   computed: {
     ...mapState({
+      coverShow: state => state.course.coverShow,
       userInfo: state => state.user.userInfo,
       buyHide: state => state.course.buyHide
     }),
@@ -82,12 +83,10 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState',
-      updateUnlockCourseList: 'course/updateUnlockCourseList'
+      updateCoverState: 'course/updateCoverState'
     }),
     ...mapActions({
-      getBuyChapter: 'course/getBuyChapter',
-      getUnlockChapter: 'course/getUnlockChapter'
+      getBuyChapter: 'course/getBuyChapter'
     }),
     btnCancel () {
       this.costAlert = false
@@ -127,13 +126,17 @@ export default {
 
 <style scoped>
 /*弹出层*/
+.vip-container {
+  position: fixed;
+  z-index: 9999;
+}
 .vip-update-success{
   width: 424px;
   height: 284px;
   border-radius: 4px;
   background-color: #ffffff;
   position: fixed;
-  z-index: 9999999999;
+  z-index: 999;
   top:50%;
   left: 50%;
   margin-left: -212px;
