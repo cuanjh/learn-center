@@ -82,10 +82,12 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState'
+      updateCoverState: 'course/updateCoverState',
+      updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     ...mapActions({
-      getBuyChapter: 'course/getBuyChapter'
+      getBuyChapter: 'course/getBuyChapter',
+      getUnlockChapter: 'course/getUnlockChapter'
     }),
     btnCancel () {
       this.costAlert = false

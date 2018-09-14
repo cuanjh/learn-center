@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(item, index) in curLevelChapters" :key="index">
-      <div class="current-learn-course-info" v-show="item.code !== currentChapterCode ||  buyChapters.indexOf(item.code) === -1"
+      <div class="current-learn-course-info" v-show="item.code !== currentChapterCode"
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
           @click="jumpToCourse(item.code)">
         <div class="current-learn-course-flag">
@@ -30,7 +30,7 @@
       </div>
 
       <transition name="fade">
-        <div class="course-core-test-check" v-show="item.code === currentChapterCode && buyChapters.indexOf(item.code) !== -1">
+        <div class="course-core-test-check" v-show="item.code === currentChapterCode && unlockCourses.indexOf(item.code) > -1 && (buyChapters.indexOf(item.code) !== -1 || isVip ===1)">
           <ul>
             <li class="course-brief">
               <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image+'/format/jpeg'" alt="">
