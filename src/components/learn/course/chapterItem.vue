@@ -56,7 +56,7 @@
                 <span>核心课程</span>
               </div>
               <div class="course-item-box" v-for="i in 5" :key="i">
-                <router-link :to="{ name: 'stage', params: {id: 'A0' + i}}">
+                <a href="javascript:void(0)" @click="startCore('A0' + i, coreData[i]['isActive'])" :to="{ name: 'stage', params: {id: 'A0' + i}}">
                   <div class="course-item">
                     <p class="course-item-star" v-if="coreData[i]['isCompleted']">
                       <span class="course-yellow-star"><i v-for="index in coreData[i]['starNum']" :key="index"></i></span>
@@ -71,7 +71,7 @@
                     </p>
                     <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] &&  !coreData[i]['isActive']}">核心{{i}}</p>
                   </div>
-                </router-link>
+                </a>
                 <div class="course-circle-box" v-if="i<5">
                   <div class="course-core-circle" :class="{'course-core-circle-locked': !coreData[i]['isCompleted'] }" v-for="index in 3" :key="index"></div>
                 </div>
@@ -419,6 +419,13 @@ export default {
         stars = 5
       }
       return stars
+    },
+    startCore (id, isActive) {
+      if (isActive) {
+        this.$router.push({ name: 'stage', params: {id: id} })
+      } else {
+        this.nolockTestCheckShow = true
+      }
     },
     startTest (isCoreCompleted) {
       if (!isCoreCompleted) {

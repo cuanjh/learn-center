@@ -82,7 +82,7 @@ export default {
     font-style: normal;
     font-stretch: normal;
     color: #4a4a4a;
-    width: 50%;
+    width: 80%;
     cursor: pointer;
   }
 
