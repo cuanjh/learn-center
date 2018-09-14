@@ -128,6 +128,7 @@ export default {
       updateHomeworkContent: 'course/updateHomeworkContent'
     }),
     loadChapterInfo (chapterCode) {
+      this.showLoading()
       this.$nextTick(() => {
         this.setCurrentChapter(chapterCode).then(() => {
           this.updateCurChapterUrl(chapterCode)
@@ -143,6 +144,7 @@ export default {
             }
             this.homeworkContent(this.currentChapterCode + '-A8').then((res) => {
               this.updateHomeworkContent(res.contents)
+              this.hideLoading()
             })
           })
           this.getCourseTestRanking(chapterCode).then((res) => {
