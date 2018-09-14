@@ -700,7 +700,7 @@ function changeData (_this, trunk) {
       curChapterCode = _this.curChapterCode
     }
 
-    if (_this.coreComplete && _this.id.indexOf('A0') > -1) {
+    if (_this.id.indexOf('A05') > -1) {
       let nextChapter
       let arr = curChapterCode.split('-')
       if (arr[4].toLowerCase() === 'chapter6') {
@@ -721,12 +721,12 @@ function changeData (_this, trunk) {
       }
       var params = {
         chapter_code: nextChapter,
-        core: true,
-        homework: false,
-        improvement: false,
-        core_complete: false,
-        homework_complete: false,
-        improvement_complete: false,
+        core: 1,
+        homework: 0,
+        improvement: 0,
+        core_complete: 0,
+        homework_complete: 0,
+        improvement_complete: 0,
         learn_time: 0,
         correct_rate: 0,
         group_id: ''
@@ -752,12 +752,12 @@ function changeData (_this, trunk) {
     _this.postActivityRecord(payload).then(() => {
       var params = {
         chapter_code: curChapterCode,
-        core: _this.core,
-        homework: _this.homework,
-        improvement: _this.improvement,
-        core_complete: _this.coreComplete,
-        homework_complete: _this.homeworkComplete,
-        improvement_complete: _this.improvementComplete,
+        core: (_this.core) ? 1 : 0,
+        homework: (_this.id.indexOf('A05') > -1) ? 1 : 0,
+        improvement: (_this.id.indexOf('A05') > -1) ? 1 : 0,
+        core_complete: (_this.id.indexOf('A05') > -1) ? 1 : 0,
+        homework_complete: (_this.homeworkComplete) ? 1 : 0,
+        improvement_complete: (_this.improvementComplete) ? 1 : 0,
         learn_time: _this.last_time,
         correct_rate: cr,
         group_id: ''

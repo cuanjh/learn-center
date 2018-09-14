@@ -37,6 +37,7 @@ const state = {
   unlockCourseList: {},
   unlockCourses: '',
   buyChapters: '',
+  buyHide: true, // 购买成功后浮层消失
   curChapterProgress: '',
   curCorePart: {},
   curChapterContent: {},
@@ -127,6 +128,9 @@ const actions = {
   },
   postUnlockChapter ({ commit }, params) {
     return httpLogin(config.postUnlockChapter, params)
+  },
+  getBuyChapter ({ commit }, params) {
+    return httpLogin(config.getBuyChapter, params)
   }
 }
 

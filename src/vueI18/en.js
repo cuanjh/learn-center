@@ -8,7 +8,17 @@ export default {
   level6: 'Senior C2',
   courseList: {
     finish: '完成率',
-    correct: '正确率'
+    correct: '正确率',
+    'pay': {
+      'title': '获取此课程需要花费',
+      'num': '金币',
+      'balan': '金币余额',
+      'openvip': '开通会员解锁所有功能'
+    }
+  },
+  button: {
+    confirm: '确认',
+    cancel: '取消'
   },
   'header': {
     'learning-center': 'Learning',

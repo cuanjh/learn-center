@@ -53,6 +53,7 @@ export default {
   getMemberProductsList: '/product/lists', // 会员产品支付渠道暂定于国内
   getMemberCard: '/member/card', // 会员卡激活账号的接口
   postUnlockChapter: '/chapters_state/unlock_chapter', // 解锁课程
+  getBuyChapter: '/chapter_purchase/purchase',
 
   // 书架
   bookCaseIndex: '/studyv1/shelf/v2/index', // 书架首页

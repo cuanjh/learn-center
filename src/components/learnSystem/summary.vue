@@ -202,9 +202,13 @@ export default {
       let _this = this
       _this.getRecordCourseList(activityCode).then((res) => {
         console.log(res)
-        _this.recordCourseList = res.course_list
-        _this.$refs['record'].$emit('init', res.course_list, _this.recordCourse)
-        _this.isShow = true
+        if (res.course_list.length > 0) {
+          _this.recordCourseList = res.course_list
+          _this.$refs['record'].$emit('init', res.course_list, _this.recordCourse)
+          _this.isShow = true
+        } else {
+          return false
+        }
       })
     },
     updateIsShow (flag) {

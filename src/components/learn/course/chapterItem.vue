@@ -14,7 +14,7 @@
             <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
           </div>
           <div class="current-learn-course-describe">{{ item['info']['zh-cn']['describe'] }}</div>
-          <div class="current-learn-course-gold"  v-bind:class="{'courseIsLock': unlockCourses.indexOf(item.code) === -1  && item.code !== currentChapterCode}">
+          <div class="current-learn-course-gold"  v-bind:class="{'courseIsLock': (unlockCourses.indexOf(item.code) === -1 && buyChapters.indexOf(item.code) === -1 && isVip !== 1)}">
             <i></i>
             150金币
           </div>
@@ -160,11 +160,13 @@
         <span class="goBackCore" @click="goBackLearn">继续学习</span>
       </p>
     </div>
+    <buy-chapter ref='buyChapter' />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import BuyChapter from './buyChapterConfirm.vue'
 export default {
   props: ['currentCourseCode'],
   data () {
@@ -174,6 +176,9 @@ export default {
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
       nolockTestCheckShow: false
     }
+  },
+  components: {
+    BuyChapter
   },
   computed: {
     ...mapState({
@@ -399,11 +404,15 @@ export default {
   },
   methods: {
     jumpToCourse (chapterCode) {
-      if (this.unlockCourses.indexOf(chapterCode) === -1) {
-        return false
+      // if (this.unlockCourses.indexOf(chapterCode) === -1) {
+      //   return false
+      // }
+      if (this.buyChapters.indexOf(chapterCode) === -1 && this.isVip !== 1) {
+        this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
+      } else {
+        console.log(chapterCode)
+        this.$emit('loadChapterInfo', chapterCode)
       }
-      console.log(chapterCode)
-      this.$emit('loadChapterInfo', chapterCode)
     },
     starNum (correctRate) {
       let stars = 0
