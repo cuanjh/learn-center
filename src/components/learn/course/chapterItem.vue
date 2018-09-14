@@ -1,12 +1,12 @@
 <template>
   <div>
     <div v-for="(item, index) in curLevelChapters" :key="index">
-      <div class="current-learn-course-info" v-show="item.code !== currentChapterCode"
-          :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1 && item.code !== currentChapterCode}"
+      <div class="current-learn-course-info" v-show="item.code !== currentChapterCode ||  buyChapters.indexOf(item.code) === -1"
+          :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
           @click="jumpToCourse(item.code)">
         <div class="current-learn-course-flag">
           <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image+'/format/jpeg'">
-          <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1 && item.code !== currentChapterCode"></div>
+          <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1"></div>
         </div>
         <div class="current-learn-course-word-info">
           <div class="current-learn-course-title">
@@ -14,7 +14,7 @@
             <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
           </div>
           <div class="current-learn-course-describe">{{ item['info']['zh-cn']['describe'] }}</div>
-          <div class="current-learn-course-gold"  v-bind:class="{'courseIsLock': (unlockCourses.indexOf(item.code) === -1 && buyChapters.indexOf(item.code) === -1 && isVip !== 1)}">
+          <div class="current-learn-course-gold"  :class="{'courseIsLock': (isVip === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
             <i></i>
             150金币
           </div>
@@ -30,7 +30,7 @@
       </div>
 
       <transition name="fade">
-        <div class="course-core-test-check" v-show="item.code === currentChapterCode">
+        <div class="course-core-test-check" v-show="item.code === currentChapterCode && buyChapters.indexOf(item.code) !== -1">
           <ul>
             <li class="course-brief">
               <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image+'/format/jpeg'" alt="">
@@ -404,9 +404,10 @@ export default {
   },
   methods: {
     jumpToCourse (chapterCode) {
-      // if (this.unlockCourses.indexOf(chapterCode) === -1) {
-      //   return false
-      // }
+      if (this.unlockCourses.indexOf(chapterCode) === -1) {
+        this.nolockTestCheckShow = true
+        return false
+      }
       if (this.buyChapters.indexOf(chapterCode) === -1 && this.isVip !== 1) {
         this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
       } else {
