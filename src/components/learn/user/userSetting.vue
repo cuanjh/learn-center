@@ -9,7 +9,7 @@
       <form action="#">
         <div>
           <div>
-            <span style='position:relative;top:2px;display: inline-block;width:74px'>昵称</span>
+            <span style='position:relative;line-height: 40px;display: inline-block;width:74px'>昵称</span>
             <input type="text" placeholder='昵称限制50个字符' maxlength="50" :class="['reg-input', {'error':!nicknameError}]" v-model="nickname">
             <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
           </div>
@@ -18,7 +18,7 @@
 
         <div>
           <div>
-            <span style='position:relative;top:2px;display: inline-block;width:74px'>手机</span>
+            <span style='position:relative;line-height: 40px;display: inline-block;width:74px'>手机</span>
             <input type="text" placeholder='请填写手机号' :class="['reg-input', {'error':!phoneNumberValidator}]" v-model="phone">
             <template v-if="!phonenumberConfirmed">
               <em class='bind-logical-textState adjust'>未绑定</em>
@@ -26,14 +26,14 @@
             </template>
             <template v-if="phonenumberConfirmed">
               <em class='bind-logical-textState adjust'>已绑定</em>
-              <span class='bind-logical-btnState adjust'  @click="unbindIdentity('phonenumber')">解除绑定</span>
+              <span class='bind-logical-btnState adjustOff'  @click="unbindIdentity('phonenumber')">解除绑定</span>
             </template>
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'><i></i><em>请输入正确的手机号</em></div>
         </div>
         <div>
           <div>
-            <span style='position:relative;top:2px;display: inline-block;width:74px'>邮箱</span>
+            <span style='position:relative;line-height: 40px;display: inline-block;width:74px'>邮箱</span>
             <input type="text" placeholder='请填写邮箱账号' :class="['reg-input', {'error':!mailValidator}]" v-model="email">
             <template v-if="emailConfirmedStatus == 0">
               <em class='bind-logical-textState adjust'>未绑定</em>
@@ -42,7 +42,7 @@
             <template v-if="emailConfirmedStatus == 1">
               <em class='bind-logical-textState adjust'>未验证</em>
               <span class='bind-logical-btnState' style="margin-left:-56px" @click="confirmEmail(email)">验证邮箱</span>
-              <span class='bind-logical-btnState' style='' @click="unbindIdentity('email')">解除绑定</span>
+              <span class='bind-logical-btnState adjustOff' style='' @click="unbindIdentity('email')">解除绑定</span>
             </template>
             <template v-if="emailConfirmedStatus == 2">
               <em class='bind-logical-textState adjust'>已绑定</em>
@@ -52,7 +52,7 @@
           <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'><i></i><em>请输入正确的邮箱账号</em></div>
         </div>
         <div :class="{'error':!gender}">
-          <span style='margin-right: 20px; position: relative; top:2px;display: inline-block;width:74px'>性别</span>
+          <span style='margin-right: 20px; position: relative; line-height: 40px;display: inline-block;width:74px'>性别</span>
           <div class='selsex'>
             <gender-selector ref="gender" :value="'male'" @update="updateGender"></gender-selector>
           </div>
@@ -60,7 +60,7 @@
         </div>
 
         <div :class="{'error':!birthday}">
-          <span style='margin-right: 20px; position: relative; top:2px; display: inline-block;width:74px'>生日</span>
+          <span style='margin-right: 20px; position: relative; line-height: 40px; display: inline-block;width:74px'>生日</span>
           <div class='seldate'>
             <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" @focus="WdatePicker({skin:'twoer',maxDate:'{{dateNow}}'})"/> -->
             <date-picker ref="datePicker" :value="birthday" @update="updateBirthday"></date-picker>
@@ -69,7 +69,7 @@
         </div>
 
         <div :class="{'error':!country}">
-          <span style='margin-right:13px; position: relative; top:2px;'>国籍/地区</span>
+          <span style='margin-right:13px; position: relative; line-height: 40px;'>国籍/地区</span>
           <div class='selsex selcity'>
             <country-selector ref="country" :value="country" @update="updateCountry"></country-selector>
           </div>
@@ -77,7 +77,7 @@
         </div>
 
         <div class='expertLang-box' :class="{'error':!languageSkill}">
-          <span style='position:relative;vertical-align: top;top:2px;'>精通语言</span>
+          <span style='position:relative;vertical-align: top;line-height: 40px;'>精通语言</span>
           <div class="selsex sellang">
             <language-skill-selector ref="langSkill" :value="languageSkill" @update="updateLanguageSkill"></language-skill-selector>
           </div>
@@ -632,7 +632,7 @@ input {
 .user-setting-form form > div {
   height: 40px;
   /* line-height: 40px; */
-  margin: 15px 0;
+  margin: 22px 0;
 }
 
 .user-setting-form form > div > span {
@@ -880,12 +880,18 @@ input {
   cursor: pointer;
   margin-top: 6px;
 }
+.user-setting-form form .adjustOff {
+  position: relative;
+  right: 56px;
+  line-height: 30px;
+}
 .user-setting-form form .bind-logical-btnState:hover {
   background: #05618d;
 }
 .user-setting-form form .adjust {
   position: relative;
   right: 56px;
+  line-height: 40px;
 }
 .user-right-wrap {
   position: relative;
@@ -941,6 +947,7 @@ input {
 }
 .user-fixpassword p.error > input {
   border-color: #e46773;
+  margin-top: 10px;
 }
 .user-setting-wrap .user-setting-form .multiselect__input,
 .user-setting-wrap .user-setting-form .multiselect__single {
