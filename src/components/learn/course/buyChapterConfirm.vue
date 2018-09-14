@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="vip-content">
     <section class='vip-update-success learn-begin-study-warn animated flipInX ' v-show='costAlert'>
       <!-- 提示花费金币弹出框 -->
       <div class='vip-update-success-logo learn-begin-study-warn-logo animated tada'></div>
