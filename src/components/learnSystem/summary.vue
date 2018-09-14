@@ -42,7 +42,7 @@
           </div>
           <div class="record-box" @click="ShowDetail(code + '-' + core)">
             <dl>
-              <dt><img :src="imgCover" alt=""></dt>
+              <dt><img :src="imgCover | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt=""></dt>
               <dd>
                 <p>
                   <img :src="userInfo.photo">

@@ -917,7 +917,7 @@ input {
   height: 20px;
   margin: 0;
   line-height: 20px;
-  padding-left: 58px;
+  padding-left: 77px;
 }
 .learn-setting-error-tips-settingpage i {
   display: inline-block;
