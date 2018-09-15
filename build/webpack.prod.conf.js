@@ -29,8 +29,8 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     // filename: utils.assetsPath('js/[name].[chunkhash:8].js'),
-    // publicPath: 'https://study.talkmate.com/',
-    publicPath: config.cdn,
+    publicPath: 'https://study.talkmate.com/',
+    // publicPath: config.cdn,
     chunkFilename: utils.assetsPath('js/[name].[chunkhash:8].js')
   },
   plugins: [
