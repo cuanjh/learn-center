@@ -882,7 +882,7 @@ input {
 }
 .user-setting-form form .adjustOff {
   position: relative;
-  right: 56px;
+  /* right: 56px; */
   line-height: 30px;
 }
 .user-setting-form form .bind-logical-btnState:hover {
