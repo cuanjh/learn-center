@@ -82,6 +82,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import Cookies from 'js-cookie'
+import SoundCtrl from '../../plugins/soundCtrl'
 
 export default {
   props: ['isShow'],
@@ -97,7 +98,8 @@ export default {
       curNum: 0,
       otherRecordList: [],
       isShowMyRecord: true,
-      loading: false
+      loading: false,
+      sndctr: SoundCtrl
     }
   },
   created () {
@@ -173,10 +175,13 @@ export default {
       this.loading = true
       let audio = document.getElementById('record-sound')
       audio.loop = false
-      audio.addEventListener('ended', () => {
-        this.loading = false
-      }, false)
-      audio.play()
+      let currentSrc = audio.currentSrc
+      if (currentSrc) {
+        this.sndctr.setSnd(currentSrc)
+        this.sndctr.play(() => {
+          this.loading = false
+        })
+      }
     },
     playPartnerRecord (courseId) {
       var _this = this
