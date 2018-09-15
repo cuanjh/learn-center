@@ -438,8 +438,8 @@ export default {
   }
 
   .my-record-play {
-    width: 70px;
-    height: 70px;
+    width: 74px;
+    height: 74px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -449,9 +449,9 @@ export default {
 
   .my-record-play i {
     display: flex;
-    width: 70px;
-    height: 70px;
-    padding: 0 10px;
+    width: 74px;
+    height: 74px;
+    padding: 0 16px;
     box-shadow: 0 6px 18px rgba(172,191,203,.6);
     background: rgba(255,255,255,.8);
     margin: 0 auto;
@@ -459,14 +459,14 @@ export default {
     align-items: center;
     border-radius: 100%;
     font-style: normal;
-    /* cursor: pointer; */
+    cursor: pointer;
   }
 
   .my-record-play i span {
     display: inline-block;
-    width: 4px;
+    width: 8px;
     height: 8px;
-    /* margin: 0 2px; */
+    margin: 0 2px;
     border-radius: 4px;
     background-color: #2a9fe4;
   }
@@ -480,18 +480,10 @@ export default {
 }
 @keyframes load{
   0%,100%{
-    height: 24px;
+    height: 8px;
   }
   50%{
-    height: 10px;
-  }
-}
-@-webkit-keyframes load{
-  0%,100%{
-    height: 24px;
-  }
-  50%{
-    height: 10px;
+    height: 16px;
   }
 }
 .my-record-play i span:nth-child(1){
@@ -509,10 +501,10 @@ export default {
   -moz-animation-delay:0.3s;
 }
 .my-record-play i span:nth-child(3){
-  height: 18px;
+  height: 16px;
 }
 .my-record-play i span:nth-child(4){
-  height: 18px;
+  height: 16px;
   animation-delay:0.1s;
   -webkit-animation-delay:0.1s;
   -ms-animation-delay:0.1s;
