@@ -124,9 +124,7 @@ const actions = {
     })
   },
   postProgress ({ commit, state }) {
-    return httpLogin(config.postProgress, { forms: JSON.stringify(state.formScores) }).then((data) => {
-      console.log(data)
-    })
+    return httpLogin(config.postProgress, { forms: JSON.stringify(state.formScores) })
   },
   postCoin ({ commit, state }, coins) {
     // 老师进入数据不再更新
@@ -134,15 +132,13 @@ const actions = {
     var userid = Cookies.get('user_id')
     var verify = Cookies.get('verify')
     var coinsToken = md5(userid + verify + coins)
-    console.log('postCoin, coins_token is %s', coinsToken)
+    // console.log('postCoin, coins_token is %s', coinsToken)
 
     var apiPath = config.coinsIncrease
     if (coins < 0) {
       apiPath = config.coinsReduce
     }
-    return httpLogin(apiPath, { coins: coins, coins_token: coinsToken, course_code: '' }).then((res) => {
-      console.log(res)
-    })
+    return httpLogin(apiPath, { coins: coins, coins_token: coinsToken, course_code: '' })
   },
   postCourseTestRecord ({ commit, state }, payload) {
     return httpLogin(config.courseTestRecord, { chapter_code: payload.chapterCode, progress: payload.progress })
@@ -163,8 +159,6 @@ const actions = {
       learn_time: payload.learnTime,
       correct_rate: payload.correctRate,
       course_completed_rate: payload.courseCompleteRate
-    }).then((res) => {
-      console.log(res)
     })
   },
   getQiniuToken ({ commit }) {
@@ -266,7 +260,7 @@ const mutations = {
     var idArray = id.match(/(Level\d)-(Unit\d)-(Chapter\d)-(A\d)-(\d+-\d+)/)
     idArray = idArray.slice(1)
     state.formScores[id] = score
-    console.log(id, score)
+    // console.log(id, score)
     // 设置本地进度
     _.set(state.recordForm, idArray, score)
   },

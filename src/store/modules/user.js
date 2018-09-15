@@ -69,7 +69,6 @@ const actions = {
       page_size: pageSize,
       money_type: 'coins'
     }).then((res) => {
-      console.log(res)
       if (res['trade_records'].length === pageSize) {
         commit('showloadingMore')
       } else {

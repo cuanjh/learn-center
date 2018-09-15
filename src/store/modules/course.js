@@ -68,7 +68,7 @@ const actions = {
       _.map(res.learn_courses, (course) => {
         if (course['course_type'] === 0) {
           dispatch('getUnlockChapter', course['code']).then((data) => {
-            console.log(data)
+            // console.log(data)
             commit('updateLearnCourses', { course, data })
             localStorage.setItem('learnMoreCourses', JSON.stringify(state.learnCourses))
           })
@@ -77,9 +77,7 @@ const actions = {
     })
   },
   getCourseList ({ commit }) {
-    return httpLogin(config.getCourseList).then((res) => {
-      console.log(res)
-    })
+    return httpLogin(config.getCourseList)
   },
   getLearnInfo ({ commit }, courseCode) {
     return httpLogin(config.learnInfo, { course_code: courseCode })
@@ -91,9 +89,7 @@ const actions = {
     return httpLogin(config.unlockChapter, { course_code: courseCode })
   },
   getRecord ({ commit }, currentChapterCode) {
-    return httpLogin(config.getRecord, { activity_code: currentChapterCode }).then((res) => {
-      console.log(res)
-    })
+    return httpLogin(config.getRecord, { activity_code: currentChapterCode })
   },
   getProgress ({ commit }, currentChapterCode) {
     return httpLogin(config.getProgress, { chapter_code: currentChapterCode, state: '' })
@@ -174,9 +170,9 @@ const mutations = {
   },
   updateChapters (state, data) {
     state.chapters = courseMethod.getCourseStructure(data.themes, state.unlock)
-    state.chapters.map((item) => {
-      console.log(item)
-    })
+    // state.chapters.map((item) => {
+    //   console.log(item)
+    // })
     state.curLevelChapters = []
     state.chapters
       .filter((item) => { return item.code.indexOf(state.curLevel) > -1 })
@@ -212,7 +208,7 @@ const mutations = {
     }
   },
   updateCurLevel  (state, level) {
-    console.log(state.unlockCourses)
+    // console.log(state.unlockCourses)
     if (state.unlockCourses.toLowerCase().indexOf(level) > 0) {
       let unlockCourseList = state.unlockCourses.trim(',').split(',')
       state.currentChapterCode = unlockCourseList.slice(0, unlockCourseList.length - 1).filter((item) => { return item.toLowerCase().indexOf(level) > -1 }).pop()
@@ -243,7 +239,6 @@ const mutations = {
     localStorage.setItem('curChapterProgress', JSON.stringify(forms))
   },
   updateCurCoreParts (state, id) {
-    console.log(111)
     let corePartInfos = {}
     if (Object.keys(state.courseBaseInfo).length === 0) {
       corePartInfos = JSON.parse(localStorage.getItem('courseBaseInfo')).corePartInfos
@@ -277,7 +272,6 @@ const mutations = {
     state.curChapterUrl = chapter.chapter_url
   },
   chapterProgress (state, id) {
-    console.log('chapterProgress')
     let group = {}
     let record = {}
     if (Object.keys(state.curChapterProgress).length === 0) {
