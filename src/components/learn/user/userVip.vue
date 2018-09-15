@@ -397,7 +397,7 @@ input:-ms-input-placeholder {
   line-height: 40px;
 }
 .userVip-tabItem-purchase div ol li:nth-of-type(2) {
-  margin-top: 10px;
+  margin-top: 30px;
 }
 .userVip-tabItem-purchase div ol li:nth-of-type(2) span {
   font-size: 50px;
