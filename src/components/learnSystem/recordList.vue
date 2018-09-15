@@ -459,14 +459,14 @@ export default {
     align-items: center;
     border-radius: 100%;
     font-style: normal;
-    cursor: pointer;
+    /* cursor: pointer; */
   }
 
   .my-record-play i span {
     display: inline-block;
     width: 4px;
     height: 8px;
-    margin: 0 2px;
+    /* margin: 0 2px; */
     border-radius: 4px;
     background-color: #2a9fe4;
   }
@@ -479,6 +479,14 @@ export default {
   -o-animation: load 1s ease infinite;
 }
 @keyframes load{
+  0%,100%{
+    height: 24px;
+  }
+  50%{
+    height: 10px;
+  }
+}
+@-webkit-keyframes load{
   0%,100%{
     height: 24px;
   }
