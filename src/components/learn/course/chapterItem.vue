@@ -66,6 +66,7 @@
                       <span v-text="coreData[i]['completedRate']"></span>
                     </p>
                     <p class="course-item-icon">
+                      <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
                       <img :style="coreData[i]['imgStyle']" :src="'../../../../static/images/course/course-core'+(i)+'.png'" alt="">
                       <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate'] && !coreData[i]['isActive']" class="icon-course-lock"></i>
                     </p>
@@ -93,6 +94,7 @@
                       <span v-show="coreData['isCoreCompleted'] && !testData['isTestCompleted']" v-text="testData['completedTestRate']"></span>
                     </p>
                     <p class="course-item-icon">
+                      <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
                       <img :style="testData['imgTestStyle']" :src="'../../../../static/images/course/course-review-test.png'" alt="">
                       <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                     </p>
@@ -114,6 +116,7 @@
                     <span v-show="coreData['isCoreCompleted'] && !homeworkData['isHomeworkCompleted']" v-text="homeworkData['completedHomeworkRate']"></span>
                   </p>
                   <p class="course-item-icon">
+                    <canvas width="300" height="300" :id="item.code + '-canvas-A8'"></canvas>
                     <img :style="homeworkData['imgHomeworkStyle']" :src="'../../../../static/images/course/course-review-homework.png'" alt="">
                     <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                   </p>
@@ -139,6 +142,7 @@
                       <span v-text="vipData['A' + (i + 1)]['completedRate']"></span>
                     </p>
                     <p class="course-item-icon">
+                      <canvas width="300" height="300" :id="item.code + '-canvas-A' + (i + 1)"></canvas>
                       <img :style="vipData['A' + (i + 1)]['imgStyle']" :src="'../../../../static/images/course/course-vip-'+vipitem+'.png'" alt="">
                       <i v-show="!(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'])" class="icon-vip-lock"></i>
                     </p>
@@ -180,6 +184,9 @@ export default {
   components: {
     BuyChapter
   },
+  created () {
+    this.$on('draw', this.drawProgress)
+  },
   computed: {
     ...mapState({
       userInfo: state => state.user.userInfo,
@@ -208,11 +215,6 @@ export default {
       var that = this
       console.log(that.curLevelChapters)
       // 核心课程
-      // let srcCoreArray = Object.keys(that.curChapterProgress).filter((item) => {
-      //   return item.indexOf('A0') > -1
-      // }).map((el) => {
-      //   return that.curChapterProgress[el]
-      // })
 
       let curChapterCode = that.currentChapterCode
       let corePartInfos = that.$store.state.course.courseBaseInfo.corePartInfos
@@ -240,20 +242,15 @@ export default {
           obj['isCompleted'] = 0
           obj['starNum'] = 0
           obj['completedRate'] = !coreForms.length ? '' : ((coreForms.length / len) * 100).toFixed(0) + '%'
-          obj['imgStyle'] = !coreForms.length ? '' : {
-            'border-radius': '50% 50%',
-            'border-right': '3px solid #2A9FE4'
-          }
+          obj['imgStyle'] = ''
         } else {
           obj['isCompleted'] = 1
           obj['completedRate'] = '1'
           let correctNum = coreForms.filter((item) => item === 1).length
           let correctRate = (correctNum / coreForms.length).toFixed(2)
           obj['starNum'] = this.starNum(correctRate)
-          obj['imgStyle'] = {
-            'border-radius': '50% 50%',
-            'border': '3px solid #2A9FE4'
-          }
+          obj['imgStyle'] = ''
+
           coreNum++
         }
         obj['isActive'] = 0
@@ -268,6 +265,7 @@ export default {
       })
 
       retObj['isCoreCompleted'] = (coreNum === 5) ? 1 : 0
+      this.$emit('draw', 'core', retObj)
       return retObj
     },
     // 强化 会员专享
@@ -304,20 +302,14 @@ export default {
             obj['isCompleted'] = 0
             obj['starNum'] = 0
             obj['completedRate'] = !srcVipArray[i].length ? '' : ((srcVipArray[i].length / vipFormArray[i]) * 100).toFixed(0) + '%'
-            obj['imgStyle'] = !srcVipArray[i].length ? '' : {
-              'border-radius': '50% 50%',
-              'border-right': '3px solid #F5A623'
-            }
+            obj['imgStyle'] = ''
           } else {
             obj['isCompleted'] = 1
             obj['completedRate'] = '1'
             let correctNum = srcVipArray[i].filter((item) => item === 1).length
             let correctRate = (correctNum / vipFormArray[i]).toFixed(2)
             obj['starNum'] = this.starNum(correctRate)
-            obj['imgStyle'] = {
-              'border-radius': '50% 50%',
-              'border': '3px solid #F5A623'
-            }
+            obj['imgStyle'] = ''
           }
         }
         obj['isActive'] = 0
@@ -335,6 +327,7 @@ export default {
       }
       console.log(srcVipArray)
       console.log(vipFormArray)
+      this.$emit('draw', 'vip', retObj)
       return retObj
     },
     testData () {
@@ -352,16 +345,14 @@ export default {
         retObj['completedTestRate'] = '1'
         let correctRate = Math.floor((this.chapterTestResult.correct_rate).toFixed(3))
         retObj['starTestNum'] = this.starNum(correctRate)
-        retObj['imgTestStyle'] = {
-          'border-radius': '50% 50%',
-          'border': '3px solid #7FB926'
-        }
+        retObj['imgTestStyle'] = ''
       } else {
         retObj['isTestCompleted'] = 0
         retObj['starTestNum'] = 0
         retObj['completedTestRate'] = ''
         retObj['imgTestStyle'] = ''
       }
+      this.$emit('draw', 'test', retObj)
       return retObj
     },
     // 作业
@@ -380,18 +371,12 @@ export default {
           retObj['isHomeworkCompleted'] = 1
           retObj['starHomeworkNum'] = 5
           retObj['completedHomeworkRate'] = '0'
-          retObj['imgHomeworkStyle'] = {
-            'border-radius': '50% 50%',
-            'border': '3px solid #7FB926'
-          }
+          retObj['imgHomeworkStyle'] = ''
         } else {
           retObj['isHomeworkCompleted'] = 0
           retObj['starHomeworkNum'] = 0
           retObj['completedHomeworkRate'] = (doneNum === 0) ? '' : (doneNum / homeworkNum * 100).toFixed(0) + '%'
-          retObj['imgHomeworkStyle'] = (doneNum === 0) ? '' : {
-            'border-radius': '50% 50%',
-            'border-right': '3px solid #7FB926'
-          }
+          retObj['imgHomeworkStyle'] = ''
         }
       } else {
         retObj['isHomeworkCompleted'] = 0
@@ -399,6 +384,7 @@ export default {
         retObj['completedHomeworkRate'] = ''
         retObj['imgHomeworkStyle'] = ''
       }
+      this.$emit('draw', 'homework', retObj)
       return retObj
     }
   },
@@ -464,6 +450,51 @@ export default {
     },
     goBackLearn () {
       this.nolockTestCheckShow = false
+    },
+    drawProgress (type, retObj) {
+      console.log(retObj)
+      let chapterCode = this.currentChapterCode
+      if (type === 'core') {
+        for (let i = 1; i <= 5; i++) {
+          let rate = parseFloat(retObj[i]['completedRate'] ? retObj[i]['completedRate'] : 0)
+          let id = '#' + chapterCode + '-canvas-A0' + i
+          let color = '#2A9FE4'
+          this.draw(id, rate, color)
+        }
+      } else if (type === 'test') {
+        let rate = parseFloat(retObj['completedTestRate'] ? retObj['completedTestRate'] : 0)
+        let id = '#' + chapterCode + '-canvas-A7'
+        let color = '#7FB926'
+        this.draw(id, rate, color)
+      } else if (type === 'homework') {
+        let rate = parseFloat(retObj['completedHomeworkRate'] ? retObj['completedHomeworkRate'] : 0)
+        let id = '#' + chapterCode + '-canvas-A8'
+        let color = '#7FB926'
+        this.draw(id, rate, color)
+      } else if (type === 'vip') {
+        for (let i = 1; i <= 6; i++) {
+          let rate = parseFloat(retObj['A' + i]['completedRate'] ? retObj['A' + i]['completedRate'] : 0)
+          let id = '#' + chapterCode + '-canvas-A' + i
+          let color = '#F5A623'
+          this.draw(id, rate, color)
+        }
+      }
+    },
+    draw (id, rate, color) {
+      if (this.$el && this.$el.querySelector(id)) {
+        rate = (rate === 1) ? 100 : rate
+        let startAngle = -(1 / 2 * Math.PI) // 开始角度
+        let canvas = this.$el.querySelector(id)
+        let ctx = canvas.getContext('2d')
+        let mW = canvas.width
+        let mH = canvas.height
+        ctx.clearRect(0, 0, mW, mH)
+        ctx.beginPath()
+        ctx.arc(140, 157, 101, startAngle, startAngle + 2 * Math.PI * rate * 0.01)
+        ctx.lineWidth = 9
+        ctx.strokeStyle = color
+        ctx.stroke()
+      }
     }
   }
 }
@@ -756,6 +787,7 @@ export default {
   .course-item-icon img{
     width: 64px;
     height: 64px;
+    position: relative;
   }
 
   .course-item-icon .core-canvas {
@@ -775,6 +807,7 @@ export default {
     display: inline-block;
     margin-top: -30px;
     margin-left: 40px;
+    position: relative;
   }
 
   .icon-review-lock {
@@ -786,6 +819,7 @@ export default {
     display: inline-block;
     margin-top: -30px;
     margin-left: 40px;
+    position: relative;
   }
 
   .icon-vip-lock {
@@ -797,6 +831,7 @@ export default {
     display: inline-block;
     margin-top: -30px;
     margin-left: 40px;
+    position: relative;
   }
   .course-item-title{
     position: absolute;
@@ -959,5 +994,14 @@ export default {
     line-height: 40px;
     text-align: center;
     background-color: #fd8469;
+  }
+
+  canvas {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    display: block;
+    margin-left: -15px;
+    margin-top: -20px;
   }
 </style>
