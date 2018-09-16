@@ -38,14 +38,14 @@
           <div class="tooltip">
             <i></i>
             <span v-if="own">系统已把你的录音自动生成了本节课程！</span>
-            <span v-else>没有收录到你的课程语音，去听听语伴的吧！</span>
+            <span v-else>没有收录到你的课程语音，去听听其他语伴的吧！</span>
           </div>
           <div class="record-box" @click="ShowDetail(code + '-' + core)">
             <dl>
               <dt><img :src="imgCover | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt=""></dt>
               <dd>
                 <p>
-                  <img :src="userInfo.photo">
+                  <img :src="recordPhoto">
                   <span>{{ nickname }}</span>
                 </p>
                 <p>
@@ -56,6 +56,7 @@
           </div>
         </div>
         <div class="core-summary-footer">
+          <a class="btn review" @click="back">返回</a>
           <a class="btn review" @click="review">复习</a>
           <a class="btn continue" @click="continueLearn">继续学习</a>
         </div>
@@ -110,6 +111,7 @@ export default {
       coins: 0,
       imgCover: '',
       nickname: '',
+      recordPhoto: '',
       own: '1',
       recordCourse: {},
       recordCount: 0,
@@ -137,6 +139,7 @@ export default {
         _this.correctRate = Math.round(parseFloat(_this.finishedInfo.correct_rate * 100)) + '%'
         _this.coins = _this.finishedInfo.coins
         _this.imgCover = _this.finishedInfo.record_course.cover
+        _this.recordPhoto = _this.finishedInfo.record_course.photo
         _this.nickname = _this.finishedInfo.record_course.nickname
         _this.recordCount = _this.finishedInfo.record_course.record_count
         _this.own = _this.finishedInfo.record_course.own
@@ -186,6 +189,10 @@ export default {
     review () {
       this.window.close()
       this.$parent.$emit('switch-slide', 0)
+    },
+    back () {
+      this.window.close()
+      this.$router.push({ path: '/app/course-list' })
     },
     continueLearn () {
       this.window.close()

@@ -96,6 +96,7 @@ export default {
       'chapters': state => state.course.chapters,
       'chapterTestResult': state => state.course.chapterTestResult,
       'loading': state => state.course.loading,
+      'unlockCourses': state => state.course.unlockCourses,
       'learnCourses': state => state.course.learnCourses
     })
   },
@@ -128,30 +129,32 @@ export default {
       updateHomeworkContent: 'course/updateHomeworkContent'
     }),
     loadChapterInfo (chapterCode) {
-      this.showLoading()
-      this.$nextTick(() => {
-        this.setCurrentChapter(chapterCode).then(() => {
-          this.updateCurChapterUrl(chapterCode)
-          this.updateCurChapter(chapterCode)
-          this.getChapterContent().then((res) => {
-            this.updateChapterContent(res)
-          })
-          this.getProgress(chapterCode).then((res) => {
-            if (res.state !== 0) {
-              this.updateCurChapterProgress(res.record.forms)
-            } else {
-              this.updateCurChapterProgress('')
-            }
-            this.homeworkContent(this.currentChapterCode + '-A8').then((res) => {
-              this.updateHomeworkContent(res.contents)
-              this.hideLoading()
+      if (this.unlockCourses.indexOf(chapterCode) > -1) {
+        this.showLoading()
+        this.$nextTick(() => {
+          this.setCurrentChapter(chapterCode).then(() => {
+            this.updateCurChapterUrl(chapterCode)
+            this.updateCurChapter(chapterCode)
+            this.getChapterContent().then((res) => {
+              this.updateChapterContent(res)
+            })
+            this.getProgress(chapterCode).then((res) => {
+              if (res.state !== 0) {
+                this.updateCurChapterProgress(res.record.forms)
+              } else {
+                this.updateCurChapterProgress('')
+              }
+              this.homeworkContent(this.currentChapterCode + '-A8').then((res) => {
+                this.updateHomeworkContent(res.contents)
+                this.hideLoading()
+              })
+            })
+            this.getCourseTestRanking(chapterCode).then((res) => {
+              this.updateChapterTestResult(res.result.current_user)
             })
           })
-          this.getCourseTestRanking(chapterCode).then((res) => {
-            this.updateChapterTestResult(res.result.current_user)
-          })
         })
-      })
+      }
     }
   }
 }

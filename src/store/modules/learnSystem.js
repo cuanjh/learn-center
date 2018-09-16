@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import _ from 'lodash'
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 import md5 from 'md5'
 
 import { httpLogin, httpGetToken } from '../../api/api'
@@ -129,8 +129,8 @@ const actions = {
   postCoin ({ commit, state }, coins) {
     // 老师进入数据不再更新
     // if(isTeacher){ return }
-    var userid = Cookies.get('user_id')
-    var verify = Cookies.get('verify')
+    var userid = localStorage.getItem('user_id')
+    var verify = localStorage.getItem('verify')
     var coinsToken = md5(userid + verify + coins)
     // console.log('postCoin, coins_token is %s', coinsToken)
 

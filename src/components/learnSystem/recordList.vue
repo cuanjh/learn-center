@@ -13,7 +13,8 @@
       <div class="learn-myrecord" v-if="isShowMyRecord">
         <div class="title">
           <span></span>
-          我的录音
+          {{ nickname + '的录音'}}
+
         </div>
         <div class="learn-myrecord-list">
           <div class="big-pre">
@@ -81,7 +82,6 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import Cookies from 'js-cookie'
 import SoundCtrl from '../../plugins/soundCtrl'
 
 export default {
@@ -109,19 +109,18 @@ export default {
       let courseId = recordCourse.course_id
       let userId = ''
       if (own) {
-        userId = Cookies.get('user_id')
+        userId = localStorage.getItem('user_id')
         _this.myRecord = recordCourseList.filter((item) => {
           return item.user_id === userId
         })
         courseId = this.myRecord[0].course_id
       }
 
+      _this.nickname = recordCourse.nickname
+      _this.photo = recordCourse.photo
       _this.getRecordCourse(courseId).then((res) => {
         _this.activityCode = res.course.activity_code
         _this.updateChapterDes(_this.activityCode)
-
-        _this.nickname = res.course.nickname
-        _this.photo = res.course.photo
         _this.praiseCount = res.course.praise_count
         _this.myRecordList = res.course.records
         if (_this.myRecordList.length === 0) {
@@ -256,7 +255,7 @@ export default {
     text-align: center;
     position: absolute;
     margin-top: 80px;
-    margin-left: 310px;
+    width: 720px;
     color: #000;
     font-size: 20px;
   }

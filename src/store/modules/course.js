@@ -209,15 +209,16 @@ const mutations = {
   },
   updateCurLevel  (state, level) {
     // console.log(state.unlockCourses)
-    if (state.unlockCourses.toLowerCase().indexOf(level) > 0) {
-      let unlockCourseList = state.unlockCourses.trim(',').split(',')
-      state.currentChapterCode = unlockCourseList.slice(0, unlockCourseList.length - 1).filter((item) => { return item.toLowerCase().indexOf(level) > -1 }).pop()
-    } else {
-      let path = [state.currentChapterCode.split('-')[0], state.currentChapterCode.split('-')[1], 'Level' + level.replace('level', ''), 'Unit1', 'Chapter1']
-      state.currentChapterCode = path.join('-')
-    }
+    // if (state.unlockCourses.toLowerCase().indexOf(level) > 0) {
+    //   let unlockCourseList = state.unlockCourses.trim(',').split(',')
+    //   state.currentChapterCode = unlockCourseList.slice(0, unlockCourseList.length - 1).filter((item) => { return item.toLowerCase().indexOf(level) > -1 }).pop()
+    // }
+    // else {
+    //   let path = [state.currentChapterCode.split('-')[0], state.currentChapterCode.split('-')[1], 'Level' + level.replace('level', ''), 'Unit1', 'Chapter1']
+    //   state.currentChapterCode = path.join('-')
+    // }
 
-    localStorage.setItem('currentChapterCode', state.currentChapterCode)
+    // localStorage.setItem('currentChapterCode', state.currentChapterCode)
 
     state.curLevelChapters = []
     state.chapters

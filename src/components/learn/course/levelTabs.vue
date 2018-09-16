@@ -43,8 +43,8 @@ export default {
     }),
     selLevel (level) {
       this.updateCurLevel(level)
-      let chapterCode = this.currentChapterCode
-      this.$emit('loadChapterInfo', chapterCode)
+      // let chapterCode = this.currentChapterCode
+      // this.$emit('loadChapterInfo', chapterCode)
     }
   }
 }

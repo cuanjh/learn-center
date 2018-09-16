@@ -226,7 +226,7 @@ class Recorder {
         params: {
           'x:course_code': courseCode,
           'x:form_code': code,
-          'x:user_id': Cookies.get('user_id'),
+          'x:user_id': localStorage.getItem('user_id'),
           'x:sentence': sentence
         },
         mimeType: [] || null
@@ -261,7 +261,7 @@ class Recorder {
     GetKey (code) {
       var date = new Date()
       var d = date.format('yyyy/MM/dd');
-      var userId = Cookies.get('user_id');
+      var userId = localStorage.getItem('user_id');
       var time = date.getTime()
 
       return d + '/' + code + '/' + userId + '/' + time + '.wav';

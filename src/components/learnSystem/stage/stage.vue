@@ -250,6 +250,9 @@ export default {
         this.postProgress().then(() => {
           coinCache.update(this.coin)
         })
+        this.getProgress(this.curChapterCode).then((res) => {
+          this.updateCurChapterProgress(res.record.forms)
+        })
       }
       // console.log('slides done:', this.cur_slide)
       if (this.curSlide + 1 === this.progress.length) {
@@ -359,17 +362,6 @@ export default {
     })
   },
   beforeMount () {
-    console.log('stage')
-    let id = this.id
-    localStorage.setItem('chapterType', this.id)
-    if (id.indexOf('A0') > -1) {
-      this.updateCurCoreParts(id)
-    }
-    this.chapterProgress(this.id)
-    // this.typeList = this.getTypeList()
-    // this.list = this.getList()
-
-    this.timeCount()
     let ui = {}
     if (Object.keys(this.userInfo).length === 0) {
       ui = JSON.parse(localStorage.getItem('userInfo'))
@@ -378,15 +370,29 @@ export default {
     }
     this.totalCoin = ui.coins
 
-    var that = this
-    let _coinCache = coinCache.get(that.completePath)
-    if (_coinCache === null) {
-      coinCache.set(that.completePath, that.coin)
-    } else {
-      that.coin = _coinCache
-      that.totalCoin = parseInt(this.totalCoin) + _coinCache
+    // var that = this
+    // let _coinCache = coinCache.get(that.completePath)
+    // if (_coinCache === null) {
+    //   coinCache.set(that.completePath, that.coin)
+    // } else {
+    //   that.coin = _coinCache
+    //   that.totalCoin = parseInt(this.totalCoin) + _coinCache
+    // }
+    localStorage.setItem('userCoin', ui.coins)
+  },
+  mounted () {
+    console.log('stage')
+    let id = this.id
+    localStorage.setItem('chapterType', this.id)
+    if (id.indexOf('A0') > -1) {
+      this.updateCurCoreParts(id)
     }
-    localStorage.setItem('userCoin', that.totalCoin)
+
+    this.chapterProgress(this.id)
+    // this.typeList = this.getTypeList()
+    // this.list = this.getList()
+
+    this.timeCount()
 
     var resource = this.getResource(this.curSlide)
     changeData(this, Loader(resource))
@@ -411,8 +417,6 @@ export default {
         this.updatePause(true)
       }
     })
-  },
-  mounted () {
     this.getCoinCalculationRule()
     this.isFirst = Number(this.progress[0] === -1)
     // 判断是否是第一次进入，日志数据提交
@@ -428,7 +432,7 @@ export default {
       'curCorePart': state => state.course.curCorePart,
       'curChapterContent': state => state.course.curChapterContent,
       'recordForm': state => state.course.recordForm,
-      'curChapterCode': state => state.course.currentChapterCode,
+      'currentChapterCode': state => state.course.currentChapterCode,
       'progress': state => state.course.progress,
       'curSlide': state => state.course.curSlide,
       'pathArr': state => state.course.pathArr,
@@ -449,13 +453,7 @@ export default {
       return _.flattenDeep(this.list).length
     },
     completePath () {
-      let curChapterCode
-      if (!this.curChapterCode) {
-        curChapterCode = localStorage.getItem('currentChapterCode')
-      } else {
-        curChapterCode = this.curChapterCode
-      }
-      let path = curChapterCode + '-' + this.id + '-Slide' + this.curSlide
+      let path = this.curChapterCode + '-' + this.id + '-Slide' + this.curSlide
       return path
     },
     isLayout3 () {
@@ -466,6 +464,15 @@ export default {
         return true
       }
       return false
+    },
+    curChapterCode () {
+      let curChapterCode
+      if (!this.currentChapterCode) {
+        curChapterCode = localStorage.getItem('currentChapterCode')
+      } else {
+        curChapterCode = this.currentChapterCode
+      }
+      return curChapterCode
     }
   },
   watch: {
@@ -487,7 +494,8 @@ export default {
       postCoin: 'learn/postCoin',
       getChapterContent: 'course/getChapterContent',
       postUnlockChapter: 'course/postUnlockChapter',
-      getUnlockChapter: 'course/getUnlockChapter'
+      getUnlockChapter: 'course/getUnlockChapter',
+      getProgress: 'course/getProgress'
     }),
     ...mapMutations({
       updateCurSlide: 'course/updateCurSlide',
@@ -499,7 +507,8 @@ export default {
       setFormScoresNull: 'learn/setFormScoresNull',
       updateProgressScore: 'course/updateProgressScore',
       updateUnlockCourseList: 'course/updateUnlockCourseList',
-      updateCurChapter: 'course/updateCurChapter'
+      updateCurChapter: 'course/updateCurChapter',
+      updateCurChapterProgress: 'course/updateCurChapterProgress'
     }),
     getTypeList (list) {
       console.log('typelist')
@@ -648,6 +657,9 @@ function changeData (_this, trunk) {
     _this.postProgress()
     _this.stopCount() // 停止计时器
 
+    _this.getProgress(_this.curChapterCode).then((res) => {
+      _this.updateCurChapterProgress(res.record.forms)
+    })
     console.log(_this.coin)
     _this.$emit('calCoin') // 结束前清算结果
     console.log(_this.coin)
@@ -693,16 +705,9 @@ function changeData (_this, trunk) {
       ccr = (arr.length / formsLength).toFixed(2)
     }
 
-    let curChapterCode
-    if (!_this.curChapterCode) {
-      curChapterCode = localStorage.getItem('currentChapterCode')
-    } else {
-      curChapterCode = _this.curChapterCode
-    }
-
     if (_this.id.indexOf('A05') > -1) {
       let nextChapter
-      let arr = curChapterCode.split('-')
+      let arr = _this.curChapterCode.split('-')
       if (arr[4].toLowerCase() === 'chapter6') {
         if (arr[3] === 'Unit4') {
           if (arr[2] === 'Level7') {
@@ -742,7 +747,7 @@ function changeData (_this, trunk) {
       }
     }
     var payload = {
-      activityCode: curChapterCode + '-' + _this.id,
+      activityCode: _this.curChapterCode + '-' + _this.id,
       coins: _this.coin,
       correctHits: _this.continue_correct,
       learnTime: _this.last_time,
@@ -751,7 +756,7 @@ function changeData (_this, trunk) {
     }
     _this.postActivityRecord(payload).then(() => {
       var params = {
-        chapter_code: curChapterCode,
+        chapter_code: _this.curChapterCode,
         core: (_this.core) ? 1 : 0,
         homework: (_this.id.indexOf('A05') > -1) ? 1 : 0,
         improvement: (_this.id.indexOf('A05') > -1) ? 1 : 0,
