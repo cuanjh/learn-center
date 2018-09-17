@@ -2,7 +2,7 @@
   <div class="bg-box">
     <div class="user-login">
       <h2>Hi，欢迎回来</h2>
-      <input type="text" placeholder="输入手机/邮箱" v-model="userName">
+      <input type="text" placeholder="输入手机/邮箱" v-model="userName" @keyup.enter="goLogin">
       <input type="password" placeholder="输入密码" v-model="userPwd" @keyup.enter="goLogin">
       <div class="auto-forget">
         <p class="auto-login">
