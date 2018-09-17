@@ -150,7 +150,7 @@ export default {
       // 判断是否在录音
       if (!this.checkRecording()) {
         alert('对不起：无法打开麦克风！')
-        this.$router.go(-1)
+        this.isShow = false
       }
       // 录音状态下不可点
       this.recording = true
