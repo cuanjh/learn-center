@@ -225,7 +225,7 @@
 import validation from './../../tool/validation.js'
 import http from './../../api/userAuth.js'
 import errCode from './../../api/code.js'
-import Config from './../../api/config.js'
+// import Config from './../../api/config.js'
 import { randomString, encrypt } from './../../tool/untils.js'
 import Cookies from 'js-cookie'
 import { mapMutations, mapActions } from 'vuex'
@@ -283,7 +283,8 @@ export default {
     }),
     ...mapActions({
       updateInfo: 'user/updateInfo',
-      getUserInfo: 'user/getUserInfo'
+      getUserInfo: 'user/getUserInfo',
+      getCodeUrl: 'user/getCodeUrl'
     }),
     changeType () {
       this.registerFlag = !this.registerFlag
@@ -330,7 +331,7 @@ export default {
       })
     },
     getCodeUrl () { // 图片验证码链接
-      this.imgCodeUrl = Config.apiUrl + Config.getCaptionCode + '?' + Math.random()
+      this.imgCodeUrl = this.getCodeUrl()
     },
     signUp () { // 注册
       http.signUp({

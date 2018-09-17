@@ -51,6 +51,9 @@ const actions = {
   sendCode ({commit}, params) {
     return httpNoLogin(config.phoneVertify, params)
   },
+  getCodeUrl () {
+    return process.env.API_HOST + config.getCaptionCode + '?' + Math.random()
+  },
   // 绑定邮箱
   bindEmail ({commit}, email) {
     return httpLogin(config.bindEmail, { email: email })
