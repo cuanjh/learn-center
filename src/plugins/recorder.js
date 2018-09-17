@@ -1,5 +1,4 @@
 /* eslint-disable */
-import Cookies from 'js-cookie'
 import EventEmitter from "EventEmitter";
 let $event = new EventEmitter()
 var qiniu = require('qiniu-js')

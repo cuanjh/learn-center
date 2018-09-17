@@ -272,7 +272,7 @@ export default {
 }
 
 .vip-update-confirm p:nth-of-type(4) span {
-  width: auto;
+  width: 100%;
   height: 28px;
   border-radius: 100px;
   padding: 0 10px;

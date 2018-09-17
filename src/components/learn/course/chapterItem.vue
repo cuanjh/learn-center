@@ -770,6 +770,10 @@ export default {
 
   .course-item-star{
     margin-top: 8px;
+    height: 10px;
+  }
+  .course-item-star span{
+    display: inline-block;
   }
 
   .course-item-progress {
@@ -780,7 +784,7 @@ export default {
   }
 
   .course-item-icon{
-    margin: 20px 0 0 5px;
+    margin: 10px 0 0 5px;
     position: absolute;
     height:64px
   }
