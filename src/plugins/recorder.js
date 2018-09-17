@@ -1,7 +1,5 @@
 /* eslint-disable */
-import Cookies from 'js-cookie'
-import EventEmitter from "EventEmitter";
-let $event = new EventEmitter()
+import bus from '../bus'
 var qiniu = require('qiniu-js')
 // or
 // import * as qiniu from 'qiniu-js'
@@ -145,7 +143,7 @@ class Recorder {
         //音频采集
         this.recorder.onaudioprocess = e => {
             this.audioData.input(e.inputBuffer.getChannelData(0));
-            $event.emit("record_setVolume", [e.inputBuffer.getChannelData(0)]);
+            bus.$emit("record_setVolume", [e.inputBuffer.getChannelData(0)]);
         }
 
     }

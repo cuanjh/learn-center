@@ -68,6 +68,7 @@
 <script>
 import _ from 'lodash'
 import { mapMutations, mapState, mapActions } from 'vuex'
+import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 
 export default {
@@ -154,7 +155,7 @@ export default {
       // 录音状态下不可点
       this.recording = true
       // 开始检测录音音量
-      this.$on('record_setVolume', this.setVolume)
+      bus.$on('record_setVolume', this.setVolume)
       Recorder.startRecording()
       var _this = this
       console.log('record start!!!!!')
@@ -180,7 +181,7 @@ export default {
     },
     recordStop () {
       Recorder.stopRecording()
-      this.$off('record_setVolume')
+      bus.$off('record_setVolume')
       console.log('record stop!!!!!')
       this.recording = false // 不在录音
       this.recordActivity = false // 录音没有激活
