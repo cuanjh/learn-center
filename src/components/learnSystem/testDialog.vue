@@ -34,13 +34,14 @@
 import { mapState } from 'vuex'
 import $ from 'jquery'
 import _ from 'lodash'
-import EventEmitter from 'event-emitter'
+import bus from '../../bus'
+// import EventEmitter from 'event-emitter'
 import common from '../../plugins/common'
 import Recorder from '../../plugins/recorder'
 
 import CanvasComp from './canvas.vue'
 
-let $event = new EventEmitter()
+// let $event = new EventEmitter()
 
 export default {
   props: {
@@ -68,6 +69,20 @@ export default {
   },
   components: {
     CanvasComp
+  },
+  created () {
+    // 绑定麦克风回调
+    bus.$on('record_setVolume', data => {
+      var res = []
+      for (var i = 0; i < data.length; i = i + 186) {
+        var value = Math.abs(data[i]) * 6
+        value = value * value * 16
+        value = value >= 50 ? 50 - _.random(3, 10) : value
+        res.push(value)
+      }
+      this.voice = true
+      this.setBar(res)
+    })
   },
   mounted () {
     this.audio.src = 'https://course-assets1.talkmate.com/new_guide/sample.mp3'
@@ -100,19 +115,6 @@ export default {
       window.onresize = () => {
         this.setPos()
       }
-
-      // 绑定麦克风回调
-      $event.on('record_setVolume', data => {
-        var res = []
-        for (var i = 0; i < data.length; i = i + 186) {
-          var value = Math.abs(data[i]) * 6
-          value = value * value * 16
-          value = value >= 50 ? 50 - _.random(3, 10) : value
-          res.push(value)
-        }
-        this.voice = true
-        this.setBar(res)
-      })
     },
     bindEvent () {
       var that = this

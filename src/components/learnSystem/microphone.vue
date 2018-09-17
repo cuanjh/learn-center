@@ -22,11 +22,9 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import _ from 'lodash'
-
+import bus from '../../bus'
 import Recorder from '../../plugins/recorder'
 import SoundManager from '../../plugins/soundManager'
-import Event from 'EventEmitter'
-var $event = new Event()
 
 export default {
   props: ['time', 'code', 'sentence'],
@@ -54,7 +52,7 @@ export default {
     this.$on('microphone-stop', () => {
       Recorder.stopRecording()
       // 停止检测录音音量
-      $event.off('record_setVolume')
+      bus.$off('record_setVolume')
     })
     this.$on('microphone-reset', () => {
       this.stopDraw = true
@@ -94,7 +92,7 @@ export default {
         window.requestAnimationFrame(this.step)
       }, 1000)
 
-      $event.on('record_setVolume', data => {
+      bus.$on('record_setVolume', data => {
         var res = []
         for (var i = 0; i < data.length; i = i + 186) {
           var value = Math.abs(data[i]) * 6

@@ -39,7 +39,7 @@ import _ from 'lodash'
 import { mapState, mapMutations } from 'vuex'
 
 import tipbox from '../tipbox.vue'
-
+import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 import SoundCtrl from '../../../plugins/soundCtrl'
 
@@ -161,7 +161,7 @@ export default {
       this.recording = true
       this.tips = false
       // 开始检测录音音量
-      this.$on('record_setVolume', this.setVolume)
+      bus.$on('record_setVolume', this.setVolume)
       Recorder.startRecording()
       var _this = this
       console.log('record start!!!!!')
@@ -189,7 +189,7 @@ export default {
 
     recordStop () {
       Recorder.stopRecording()
-      this.$off('record_setVolume')
+      bus.$off('record_setVolume')
       console.log('record stop!!!!!')
       if (this.recording) this.gray = false
       this.track_height = 0
