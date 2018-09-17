@@ -15,7 +15,7 @@ export const httpLogin = (_url, _params) => { // 已经登录
   // _params.verify = Cookies.get('verify')
   _params.user_id = localStorage.getItem('user_id')
   _params.verify = localStorage.getItem('verify')
-  return Vue.http.jsonp(config.apiUrl + _url, {params: _params})
+  return Vue.http.jsonp(process.env.API_HOST + _url, {params: _params})
     .then(res => {
       if (res['data']['success']) {
         return new Promise((resolve, reject) => {
@@ -52,7 +52,7 @@ export const httpGetToken = (_url) => { // 已经登录
   var p = new Promise((resolve, reject) => {
     $.ajax({
       type: 'GET',
-      url: config.apiUrl + _url,
+      url: process.env.API_HOST + _url,
       data: data,
       dataType: 'jsonp',
       success: (res) => {
@@ -80,7 +80,7 @@ export const httpNoLogin = (_url, _params) => { // 未登录
     Cookies.set('device_id', _deviceId)
   }
   _params.device_id = Cookies.get('device_id')
-  return Vue.http.jsonp(config.apiUrl + _url, {params: _params})
+  return Vue.http.jsonp(process.env.API_HOST + _url, {params: _params})
     .then(res => {
       // return res['data']
       if (res['data']['success']) {
@@ -127,7 +127,7 @@ export const httpLoginUrl = (_url, _params) => {
   _params.user_id = localStorage.getItem('user_id')
   _params.verify = localStorage.getItem('verify')
 
-  let url = config.apiUrl + _url + '?'
+  let url = process.env.API_HOST + _url + '?'
   Object.keys(_params).forEach((key) => {
     url += key + '=' + _params[key] + '&'
   })

@@ -13,7 +13,7 @@
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "lint-fix": "eslint --fix --ext .js,.vue src test/unit test/e2e/specs",
     "upload": "node build/upload.js",
-    "build": "node build/build.js"
+    "build": "node build/build.js && tar -zcvf dist_learn_center.tar.gz dist"
   },
   "dependencies": {
     "EventEmitter": "^1.0.0",
