@@ -1,10 +1,10 @@
 <template>
   <div class="homework-wrap">
     <div class="homework-container">
-      <div class="homework-balk" @click="$router.back(-1)">
+      <router-link class="homework-balk" :to="{path: '/app/course-list'}">
         <p></p>
         <span>返回</span>
-      </div>
+      </router-link>
       <div class="homework-content">
         <div class="homework-title">
           <p>{{chapterDes}}</p>
@@ -74,10 +74,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+a {
+  text-decoration:none;
+}
 .homework-container {
   width: 890px;
   margin: 80px auto 0;
   .homework-balk {
+    display: block;
     width: 80px;
     height: 30px;
     background: #ffffff;
@@ -85,6 +89,9 @@ export default {
     line-height: 30px;
     border-radius: 6px;
     margin-bottom: 28px;
+    &:hover{
+      background: #2a9fe4;
+    }
     p {
       display: inline-block;
       background: url(../../../../static/images/homework/balck.png);
@@ -92,6 +99,13 @@ export default {
       margin-top: 6px;
       width: 12px;
       height: 18px;
+    }
+    span {
+      font-size: 16px;
+      color: #333333;
+      &:hover {
+        color: #ffffff;
+      }
     }
   }
   .homework-content {
