@@ -284,7 +284,7 @@ export default {
     ...mapActions({
       updateInfo: 'user/updateInfo',
       getUserInfo: 'user/getUserInfo',
-      getCodeUrl: 'user/getCodeUrl'
+      getCaptchaUrl: 'user/getCaptchaUrl'
     }),
     changeType () {
       this.registerFlag = !this.registerFlag
@@ -331,7 +331,9 @@ export default {
       })
     },
     getCodeUrl () { // 图片验证码链接
-      this.imgCodeUrl = this.getCodeUrl()
+      this.getCaptchaUrl().then((res) => {
+        this.imgCodeUrl = res
+      })
     },
     signUp () { // 注册
       http.signUp({

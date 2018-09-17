@@ -51,7 +51,7 @@ const actions = {
   sendCode ({commit}, params) {
     return httpNoLogin(config.phoneVertify, params)
   },
-  getCodeUrl () {
+  getCaptchaUrl () {
     return process.env.API_HOST + config.getCaptionCode + '?' + Math.random()
   },
   // 绑定邮箱

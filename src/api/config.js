@@ -1,5 +1,5 @@
 export default {
-  apiUrl: 'http://api.200h.com:81',
+  // apiUrl: 'http://api.200h.com:81',
   URL: {
     channelCode: 'web_test_1'
   },
