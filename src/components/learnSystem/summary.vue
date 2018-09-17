@@ -9,7 +9,7 @@
               <dd>
                 <p v-text='coreDes[core] + "完成"'></p>
                 <p class="summary-star">
-                  <span class="summary-yellow-star"><i v-for="index in stars" :key="index"></i></span>
+                    <span class="summary-yellow-star"><i v-for="index in stars" :key="index" :class="{active:active}"></i></span>
                   <span class="summary-gray-star"><i v-for="index in (5 - stars)" :key="index"></i></span>
                 </p>
               </dd>
@@ -78,6 +78,7 @@ import RecordList from './recordList.vue'
 export default {
   data () {
     return {
+      active: true, // 星星动画
       window: {},
       isShow: false,
       show: false,
@@ -402,13 +403,65 @@ export default {
   margin-top: 55px;
 }
 
-.summary-yellow-star i{
+.summary-star .summary-yellow-star i{
   float:left;
   width:26px;
   height:26px;
   margin-left:4px;
   background:url(../../../static/images/learnSystem/summary-star.png) no-repeat;
   background-size:100% 100%;
+}
+.summary-star .summary-yellow-star i.active {
+  animation: scaleDraw 1s ease;
+  -webkit-animation: scaleDraw 1s ease;
+  -ms-animation: scaleDraw 1s ease;
+  -moz-animation: scaleDraw 1s ease;
+  -o-animation: scaleDraw 1s ease;
+}
+@keyframes scaleDraw {
+  0%{
+      transform: scale(5);
+      opacity: 0;
+  }
+  100%{
+    transform: scale(1);
+      opacity: 1;
+  }
+}
+.summary-yellow-star i.active:nth-child(1){
+  animation-delay:0.2s;
+  -webkit-animation-delay:0.2s;
+  -ms-animation-delay:0.2s;
+  -o-animation-delay:0.2s;
+  -moz-animation-delay:0.2s;
+}
+.summary-yellow-star i.active:nth-child(2){
+  animation-delay:0.4s;
+  -webkit-animation-delay:0.4s;
+  -ms-animation-delay:0.4s;
+  -o-animation-delay:0.4s;
+  -moz-animation-delay:0.4s;
+}
+.summary-yellow-star i.active:nth-child(3){
+  animation-delay:0.6s;
+  -webkit-animation-delay:0.6s;
+  -ms-animation-delay:0.6s;
+  -o-animation-delay:0.6s;
+  -moz-animation-delay:0.6s;
+}
+.summary-yellow-star i.active:nth-child(4){
+  animation-delay:0.8s;
+  -webkit-animation-delay:0.8s;
+  -ms-animation-delay:0.8s;
+  -o-animation-delay:0.8s;
+  -moz-animation-delay:0.8s;
+}
+.summary-yellow-star i.active:nth-child(5){
+  animation-delay:1s;
+  -webkit-animation-delay:1s;
+  -ms-animation-delay:1s;
+  -o-animation-delay:1s;
+  -moz-animation-delay:1s;
 }
 
 .summary-gray-star i{
