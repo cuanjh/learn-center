@@ -127,6 +127,7 @@ export default {
           _this.isShowMyRecord = false
         }
         _this.curMyRecord = _this.myRecordList[0]
+        _this.play()
       })
 
       recordCourseList.forEach((item) => {
@@ -161,6 +162,7 @@ export default {
       if (this.curNum > 0) {
         this.curNum--
         this.curMyRecord = this.myRecordList[this.curNum]
+        this.play()
       }
     },
     next () {
@@ -168,6 +170,7 @@ export default {
       if (this.curNum < this.myRecordList.length - 1) {
         this.curNum++
         this.curMyRecord = this.myRecordList[this.curNum]
+        this.play()
       }
     },
     play () {
@@ -195,6 +198,7 @@ export default {
         _this.myRecordList = res.course.records
         _this.curMyRecord = _this.myRecordList[0]
         _this.curNum = 0
+        _this.play()
       })
     }
   }
