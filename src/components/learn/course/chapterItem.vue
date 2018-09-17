@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(item, index) in curLevelChapters" :key="index">
-      <div class="current-learn-course-info" v-show="item.code !== currentChapterCode"
+      <div class="current-learn-course-info" v-show="isShow ? isShow : item.code !== currentChapterCode"
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
           @click="jumpToCourse(item.code)">
         <div class="current-learn-course-flag">
@@ -30,9 +30,9 @@
       </div>
 
       <transition name="fade">
-        <div class="course-core-test-check" v-show="item.code === currentChapterCode && unlockCourses.indexOf(item.code) > -1 && (buyChapters.indexOf(item.code) !== -1 || isVip ===1)">
+        <div class="course-core-test-check" v-show="item.code === currentChapterCode && unlockCourses.indexOf(item.code) > -1 && (buyChapters.indexOf(item.code) !== -1 || isVip ===1) && !isShow">
           <ul>
-            <li class="course-brief">
+            <li class="course-brief" @click="switchShow()">
               <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image+'/format/jpeg'" alt="">
               <div class="course-brief-shade">
                 <div class="course-brief-title">
@@ -178,7 +178,8 @@ export default {
       isCoreCompleted: 0,
       chapterProgress: 0,
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
-      nolockTestCheckShow: false
+      nolockTestCheckShow: false,
+      isShow: false
     }
   },
   components: {
@@ -397,6 +398,7 @@ export default {
       if (this.buyChapters.indexOf(chapterCode) === -1 && this.isVip !== 1) {
         this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
       } else {
+        this.isShow = false
         console.log(chapterCode)
         this.$emit('loadChapterInfo', chapterCode)
       }
@@ -495,6 +497,9 @@ export default {
         ctx.strokeStyle = color
         ctx.stroke()
       }
+    },
+    switchShow () {
+      this.isShow = true
     }
   }
 }
