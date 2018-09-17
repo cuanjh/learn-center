@@ -88,3 +88,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.cov-date-body {
+  height: 510px;
+}
+.cov-picker-box {
+  height: 310px !important;
+}
+</style>

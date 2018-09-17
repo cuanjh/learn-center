@@ -68,8 +68,10 @@ export default {
     courseRander () {
       var _object = []
       var obj = this.learnCourses
-      for (var i in obj) {
-        _object.unshift(obj[i])
+      if (Object.keys(obj).length > 0) {
+        for (var i in obj) {
+          _object.unshift(obj[i])
+        }
       }
       return _object
     }

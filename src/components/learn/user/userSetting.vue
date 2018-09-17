@@ -62,7 +62,7 @@
         <div :class="{'error':!birthday}">
           <span style='margin-right: 20px; position: relative; line-height: 40px; display: inline-block;width:74px'>生日</span>
           <div class='seldate'>
-            <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" @focus="WdatePicker({skin:'twoer',maxDate:'{{dateNow}}'})"/> -->
+            <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" v-focus/> -->
             <date-picker ref="datePicker" :value="birthday" @update="updateBirthday"></date-picker>
           </div>
           <i class='user-setting-require-item'>*</i>
@@ -194,6 +194,15 @@ export default {
       this.updateAlertType('bindAccount')
     }
   },
+  // directives: {
+  //   focus: {
+  //     // 指令的定义
+  //     inserted: function (el) {
+  //       el.focus()
+  //       WdatePicker({skin: 'twoer'})
+  //     }
+  //   }
+  // },
   computed: {
     ...mapState({
       userInfo: state => state.user.userInfo,
@@ -288,7 +297,7 @@ export default {
           _date.getDate()
       }
 
-      this.$refs['datePicker'].$emit('initDate', _this.birthday)
+      // this.$refs['datePicker'].$emit('initDate', _this.birthday)
 
       if (result.country) {
         var _tmp = {}
