@@ -719,7 +719,7 @@ export default {
   .course-core{
     width: 100%;
     border-bottom: 1px solid rgba(233,234,235,0.50);
-    padding: 20px 0;
+    padding: 20px 0 40px;
   }
 
   .course-core-name{
@@ -777,6 +777,7 @@ export default {
   .course-item-star{
     margin-top: 8px;
     height: 10px;
+    display: inline-flex;
   }
   .course-item-star span{
     display: inline-block;
@@ -787,7 +788,7 @@ export default {
     width: 75px;
     font-size: 12px;
     color: #4A4A4A;
-    line-height: 18px;
+    margin-bottom: 7px;
   }
 
   .course-item-icon{
@@ -869,7 +870,7 @@ export default {
   .course-review{
     width: 100%;
     border-bottom: 1px solid rgba(233,234,235,0.50);
-    padding: 20px 0;
+    padding: 20px 0 40px;
   }
 
   .course-review-name{
@@ -906,7 +907,7 @@ export default {
 
   .course-vip{
     width: 100%;
-    padding: 20px 0;
+    padding: 20px 0 40px;
   }
 
   .course-vip-name{
