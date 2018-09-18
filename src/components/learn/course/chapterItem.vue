@@ -782,10 +782,11 @@ export default {
   }
 
   .course-item-progress {
-    height: 10px;
+    height: 18px;
     width: 75px;
     font-size: 12px;
     color: #4A4A4A;
+    line-height: 18px;
   }
 
   .course-item-icon{
