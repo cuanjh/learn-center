@@ -597,6 +597,7 @@ export default {
     margin-right: 10px;
     display: inline-flex;
     line-height: 100px;
+    width: 190px;
   }
 
   .progress-bg {
