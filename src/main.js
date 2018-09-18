@@ -10,7 +10,7 @@ import routes from './router/index'
 import store from './store/index'
 import moreLanguage from './vueI18/locale.js'
 import {urlfix} from './filter/index'
-import 'babel-polyfill'
+// import 'babel-polyfill'
 
 require('./../static/css/animate.css')
 require('./../static/css/reset.css')
