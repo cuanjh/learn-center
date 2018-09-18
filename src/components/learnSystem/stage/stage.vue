@@ -9,7 +9,8 @@
             current:cur==index,
             up:showGuide,
             'layout-3': isLayout3,
-            'layout-4': typeList.length == 7 || typeList.length == 8
+            'layout-4': typeList.length == 7 || typeList.length == 8,
+            'translation': 'sentencetoimg,imgtosentencew,speaktoimg'.indexOf(type) > -1
           }
         ]"
         v-show='show'>
