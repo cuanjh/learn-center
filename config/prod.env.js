@@ -1,5 +1,5 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  API_HOST: '"http://api.talkmate.com"'
+  API_HOST: '"https://api.talkmate.com"'
 }
