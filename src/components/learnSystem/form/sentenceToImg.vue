@@ -331,7 +331,7 @@ export default {
           clearTimeout(this.timeoutId_shake)
         } else {
           this.showSkip = true
-          this.shakeIsRight(itm, true)
+          this.shakeIsRight(this, true)
         }
       } else {
         if (!curForm.finished) {
@@ -339,7 +339,7 @@ export default {
           curForm.score = 0
         }
         SoundManager.playSnd('wrong')
-        this.shakeIsRight(itm, false)
+        this.shakeIsRight(this, false)
 
         // add by david_li, 金币逻辑
         if (!this.has_dispatch_wrong) {

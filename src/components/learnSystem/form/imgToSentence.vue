@@ -230,7 +230,7 @@ export default {
           this.finished = true
           this.score = 0
         }
-        this.shake(itm)
+        this.shake(this)
 
         // add by david_li, 金币逻辑
         if (!this.has_dispatch_wrong) {

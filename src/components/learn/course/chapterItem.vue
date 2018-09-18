@@ -736,6 +736,7 @@ export default {
   .course-circle-box{
     display: inline-block;
     position: relative;
+    margin-top: 4px;
   }
 
   .course-core-circle {

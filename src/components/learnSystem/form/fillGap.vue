@@ -227,7 +227,7 @@ export default {
           this.finished = true
           this.score = 0
         }
-        this.shake(itm)
+        this.shake(this)
 
         // add by david_li, 金币逻辑
         if (!this.has_dispatch_wrong) {
@@ -241,14 +241,14 @@ export default {
     shake (itm) {
       var _this = this
       // 清除css和计时器
-      $(itm.$el).removeClass('shake')
+      $(this.$el).removeClass('shake')
       clearTimeout(this.timeoutId_shake)
       // 重新添加css和计时器
-      $(itm.$el).addClass('shake')
+      $(this.$el).addClass('shake')
       this.state_error = true
       this.timeoutId_shake = setTimeout(() => {
         // _this.pos = common.randomItems(_this.pos)
-        $(itm.$el).removeClass('shake')
+        $(this.$el).removeClass('shake')
         _this.state_error = false
       }, this.delay_shake)
     },
