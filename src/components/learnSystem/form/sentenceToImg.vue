@@ -11,7 +11,8 @@
         right:sel_form==form && state_right,
         error:sel_form==form && state_error
       }"
-      @click="check(form)"
+      :id="'image-box' + index"
+      @click="check(form, 'image-box' + index)"
       @mouseover="mouseover_form=form"
       @mouseout="mouseover_form=null">
          <div class="image-container">
@@ -295,16 +296,18 @@ export default {
       }
     },
     // 检查对错
-    check (itm) {
+    check (itm, id) {
+      let currentTarget = $('#' + id)[0]
       // 选择正确则屏蔽点击
       if (this.sel_form && this.sel_form.sentence_box_show) return
+      this.mouseover_form = itm
       this.sel_form = itm
       // console.log('itm:', itm)
       var curForm = this.curForm
       if (!curForm) return
       // console.log('cur_form:', cur_form)
       // 先清除延迟的shake
-      this.clearShake()
+      // this.clearShake()
       this.state_error = false
       this.state_right = false
       // 分数只有第一次点击有效
@@ -331,7 +334,7 @@ export default {
           clearTimeout(this.timeoutId_shake)
         } else {
           this.showSkip = true
-          this.shakeIsRight(this, true)
+          this.shakeIsRight(currentTarget, true)
         }
       } else {
         if (!curForm.finished) {
@@ -339,7 +342,8 @@ export default {
           curForm.score = 0
         }
         SoundManager.playSnd('wrong')
-        this.shakeIsRight(this, false)
+        this.shake(currentTarget)
+        // this.shakeIsRight(currentTarget, false)
 
         // add by david_li, 金币逻辑
         if (!this.has_dispatch_wrong) {

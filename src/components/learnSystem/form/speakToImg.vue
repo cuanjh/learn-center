@@ -8,7 +8,9 @@
         'layout-4': data.length == 7 || data.length == 8,
         current:index==repeat_len || (repeated && mouseover_form==form),
         right:sel_form==form && state_right,
-        error:sel_form==form && state_error}"
+        error:sel_form==form && state_error,
+        shake: isShake
+      }"
       :style="{top:pos[index][0],left:pos[index][1]}"
       @click="check(form)"
       @mouseover="mouseover_form=form"
@@ -44,6 +46,7 @@ export default {
     return {
       timeoutId_next: null,
       timeoutId_shake: null,
+      isShake: false,
       delay_next: 1000,
       delay_shake: 800,
       score: 100,
@@ -370,15 +373,17 @@ export default {
     shake (itm) {
       var _this = this
       // 清除css和计时器
-      $(itm.$el).removeClass('shake')
+      // $(itm.$el).removeClass('shake')
+      _this.isShake = false
       clearTimeout(this.timeoutId_shake)
       // 重新添加css和计时器
-      $(itm.$el).addClass('shake')
+      // $(itm.$el).addClass('shake')
+      _this.isShake = true
       this.state_error = true
       this.timeoutId_shake = setTimeout(() => {
         _this.pos = common.randomItems(_this.pos)
-        $(itm.$el).removeClass('shake')
-
+        // $(itm.$el).removeClass('shake')
+        _this.isShake = false
         _this.state_error = false
       }, this.delay_shake)
     },

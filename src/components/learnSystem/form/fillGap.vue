@@ -51,7 +51,7 @@ export default {
   beforeDestroy () {
     this.break()
   },
-  mixins: [minx.formScore, minx.learnProgLog],
+  mixins: [minx.shake, minx.formScore, minx.learnProgLog],
   created () {
     // 下一步操作
     this.$on('start', () => {
@@ -117,7 +117,7 @@ export default {
           `<transition name="fade">
             <div class="text-head" id='${id}' v-show="show">
               <div :class="{rtl:dir}"">
-                <a :class="{border:isTeacher}" v-for='(word, index) in words' :key="index" @click='check(word)'>
+                <a :class="{border:isTeacher}" v-for='(word, index) in words' :key="index" @click='check(word, $event)'>
                   <span v-text="word"></span>
                 </a>
               </div>
@@ -127,11 +127,12 @@ export default {
           words: [],
           show: true,
           dir: this.direction < 0,
+          isShake: false,
           isTeacher: 0
         },
         methods: {
-          check (itm) {
-            _this.check(itm)
+          check (itm, event) {
+            _this.check(itm, event)
           }
         }
       })
@@ -183,7 +184,7 @@ export default {
       }
     },
     // 检查对错
-    check (itm) {
+    check (itm, event) {
       // if (this.selected) return
       // 分数只有第一次点击有效
       if (itm === this.word) {
@@ -227,7 +228,8 @@ export default {
           this.finished = true
           this.score = 0
         }
-        this.shake(this)
+        let currentTarget = event.currentTarget
+        this.shake(currentTarget)
 
         // add by david_li, 金币逻辑
         if (!this.has_dispatch_wrong) {
@@ -236,21 +238,6 @@ export default {
           this.has_dispatch_wrong = true
         }
       }
-    },
-    // wrong effect
-    shake (itm) {
-      var _this = this
-      // 清除css和计时器
-      $(this.$el).removeClass('shake')
-      clearTimeout(this.timeoutId_shake)
-      // 重新添加css和计时器
-      $(this.$el).addClass('shake')
-      this.state_error = true
-      this.timeoutId_shake = setTimeout(() => {
-        // _this.pos = common.randomItems(_this.pos)
-        $(this.$el).removeClass('shake')
-        _this.state_error = false
-      }, this.delay_shake)
     },
 
     // 结束退出
