@@ -54,7 +54,7 @@
         <div :class="{'error':!gender}">
           <span style='margin-right: 20px; position: relative; line-height: 40px;display: inline-block;width:74px'>性别</span>
           <div class='selsex'>
-            <gender-selector ref="gender" :value="'male'" @update="updateGender"></gender-selector>
+            <!-- <gender-selector ref="gender" :value="'male'" @update="updateGender"></gender-selector> -->
           </div>
           <i class='user-setting-require-item'>*</i>
         </div>
@@ -139,14 +139,14 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import Constant from '../../../api/constant'
 import SetAlert from './userSettingAlert.vue'
 import DatePicker from '../../common/user/datepicker.vue'
-import GenderSelector from '../../common/user/GenerSelector.vue'
+// import GenderSelector from '../../common/user/GenerSelector.vue'
 import CountrySelector from '../../common/user/countrySelector.vue'
 import LanguageSkillSelector from '../../common/user/languageSkillSelector.vue'
 export default {
   components: {
     DatePicker,
     SetAlert,
-    GenderSelector,
+    // GenderSelector,
     CountrySelector,
     LanguageSkillSelector
   },
