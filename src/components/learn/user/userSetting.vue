@@ -54,7 +54,7 @@
         <div :class="{'error':!gender}">
           <span style='margin-right: 20px; position: relative; line-height: 40px;display: inline-block;width:74px'>性别</span>
           <div class='selsex'>
-            <gender-selector ref="gender" :value="'male'" @update="updateGender"></gender-selector>
+            <!-- <gender-selector ref="gender" :value="'male'" @update="updateGender"></gender-selector> -->
           </div>
           <i class='user-setting-require-item'>*</i>
         </div>
