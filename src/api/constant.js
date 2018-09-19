@@ -1,8 +1,7 @@
 /**
  * Created by Peak on 21/1/17.
  */
-/* eslint-disalbe */
-var getGenderByCode = function (code) {
+let getGenderByCode = (code) => {
   if (code === undefined || code === '') {
     return ''
   }
@@ -13,17 +12,17 @@ var getGenderByCode = function (code) {
   return generConfig[code]
 }
 
-var getGenderSelectorDataByCode = function (code) {
+let getGenderSelectorDataByCode = (code) => {
   var _tmp = {
     name: '',
     language: ''
   }
   _tmp.language = code
-  _tmp.name = this.getGenderByCode(code)
+  _tmp.name = getGenderByCode(code)
   return _tmp
 }
 
-var generConfig = {
+let generConfig = {
   male: '男',
   female: '女'
 }
