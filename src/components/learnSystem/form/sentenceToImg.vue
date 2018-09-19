@@ -11,16 +11,18 @@
         right:sel_form==form && state_right,
         error:sel_form==form && state_error
       }"
-      @click="check(form)"
+      :id="'image-box' + index"
       @mouseover="mouseover_form=form"
       @mouseout="mouseover_form=null">
-         <div class="image-container">
-          <img :src="form.image">
-        </div>
-        <div class="skip" @click="skip" v-show="showSkip"></div>
-        <div class="text" :class="{rtl:dir}">
-          <span v-text="form.sentence" v-show="form.sentence_box_show==true"></span>
-          <b></b>
+        <div @click="check(form, $event)">
+          <div class="image-container">
+            <img :src="form.image">
+          </div>
+          <div class="skip" @click="skip" v-show="showSkip"></div>
+          <div class="text" :class="{rtl:dir}">
+            <span v-text="form.sentence" v-show="form.sentence_box_show==true"></span>
+            <b></b>
+          </div>
         </div>
     </div>
   </div>
@@ -295,16 +297,18 @@ export default {
       }
     },
     // 检查对错
-    check (itm) {
+    check (itm, event) {
+      let currentTarget = event.currentTarget
       // 选择正确则屏蔽点击
       if (this.sel_form && this.sel_form.sentence_box_show) return
+      this.mouseover_form = itm
       this.sel_form = itm
       // console.log('itm:', itm)
       var curForm = this.curForm
       if (!curForm) return
       // console.log('cur_form:', cur_form)
       // 先清除延迟的shake
-      this.clearShake()
+      // this.clearShake()
       this.state_error = false
       this.state_right = false
       // 分数只有第一次点击有效
@@ -331,7 +335,7 @@ export default {
           clearTimeout(this.timeoutId_shake)
         } else {
           this.showSkip = true
-          this.shakeIsRight(itm, true)
+          this.shakeIsRight(currentTarget, true)
         }
       } else {
         if (!curForm.finished) {
@@ -339,7 +343,9 @@ export default {
           curForm.score = 0
         }
         SoundManager.playSnd('wrong')
-        this.shakeIsRight(itm, false)
+        // $('#' + id).addClass('shake')
+        this.shake(currentTarget)
+        // this.shakeIsRight(currentTarget, false)
 
         // add by david_li, 金币逻辑
         if (!this.has_dispatch_wrong) {

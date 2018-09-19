@@ -6,16 +6,16 @@ var minx = {}
 
 minx.shake = {
   methods: {
-    shake: function (itm) {
-      this.shakeIsRight(itm, false)
+    shake: function (currentTarget) {
+      this.shakeIsRight(currentTarget, false)
     },
 
-    shakeIsRight: function (itm, isRight) {
+    shakeIsRight: function (currentTarget, isRight) {
       var _this = this
       // 清除css
-      $(itm.$el).removeClass('shake')
+      $(currentTarget).removeClass('shake')
       // 重新添加css和计时器
-      $(itm.$el).addClass('shake')
+      $(currentTarget).addClass('shake')
       // 显示对应的图标
       if (isRight) {
         _this.state_right = true
@@ -27,8 +27,7 @@ minx.shake = {
           var newPos = common.randomItems(_this.pos)
           _this.$set(this, 'pos', newPos)
         }
-        $(itm.$el).removeClass('shake')
-
+        $(currentTarget).removeClass('shake')
         if (isRight) {
           _this.state_right = false
         } else {
