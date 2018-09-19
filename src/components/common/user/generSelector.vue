@@ -1,6 +1,5 @@
 <template>
   <multiselect
-    track-by="name"
     label="name"
     :selected="value"
     v-model="selected"
@@ -10,17 +9,15 @@
     placeholder='性别'
     select-label='选择'
     deselect-label='取消'
-    selected-label='已选择'>
-  </multiselect>
+    selected-label='已选择' />
 </template>
 
 <script>
 import Multiselect from 'vue-multiselect'
-// import Constant from '../../../api/constant'
+import Constant from '../../../api/constant'
 export default {
-  props: [
-    'value' // male or female
-  ],
+  // male or female
+  props: ['value'],
   components: {
     Multiselect
   },
@@ -36,8 +33,8 @@ export default {
     return {
       selected: this.value,
       options: [
-        // Constant.getGenderSelectorDataByCode('male'),
-        // Constant.getGenderSelectorDataByCode('female')
+        Constant.getGenderSelectorDataByCode('male'),
+        Constant.getGenderSelectorDataByCode('female')
       ]
     }
   },
