@@ -139,7 +139,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import Constant from '../../../api/constant'
 import SetAlert from './userSettingAlert.vue'
 import DatePicker from '../../common/user/datepicker.vue'
-import GenderSelector from '../../common/user/GenerSelector.vue'
+import GenderSelector from '../../common/user/generSelector.vue'
 import CountrySelector from '../../common/user/countrySelector.vue'
 import LanguageSkillSelector from '../../common/user/languageSkillSelector.vue'
 export default {

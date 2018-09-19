@@ -1,6 +1,5 @@
 <template>
-  <div></div>
-  <!-- <multiselect
+  <multiselect
     label="name"
     :selected="value"
     v-model="selected"
@@ -11,40 +10,40 @@
     select-label='选择'
     deselect-label='取消'
     selected-label='已选择' >
-  </multiselect> -->
+  </multiselect>
 </template>
 
 <script>
-// import Multiselect from 'vue-multiselect'
-// import Constant from '../../../api/constant'
+import Multiselect from 'vue-multiselect'
+import Constant from '../../../api/constant'
 export default {
   // male or female
-  // props: ['value'],
-  // components: {
-  //   Multiselect
-  // },
-  // created () {
-  //   this.$on('init', (val) => {
-  //     this.selected = val
-  //   })
-  // },
-  // mounted () {
-  //   console.log('------' + this.value)
-  // },
-  // data () {
-  //   return {
-  //     selected: this.value,
-  //     options: [
-  //       // Constant.getGenderSelectorDataByCode('male'),
-  //       // Constant.getGenderSelectorDataByCode('female')
-  //     ]
-  //   }
-  // },
-  // methods: {
-  //   updateSelected (newValue) {
-  //     this.$emit('update', newValue)
-  //   }
-  // }
+  props: ['value'],
+  components: {
+    Multiselect
+  },
+  created () {
+    this.$on('init', (val) => {
+      this.selected = val
+    })
+  },
+  mounted () {
+    console.log('------' + this.value)
+  },
+  data () {
+    return {
+      selected: this.value,
+      options: [
+        Constant.getGenderSelectorDataByCode('male'),
+        Constant.getGenderSelectorDataByCode('female')
+      ]
+    }
+  },
+  methods: {
+    updateSelected (newValue) {
+      this.$emit('update', newValue)
+    }
+  }
 }
 </script>
 
