@@ -12,16 +12,17 @@
         error:sel_form==form && state_error
       }"
       :id="'image-box' + index"
-      @click="check(form, 'image-box' + index)"
       @mouseover="mouseover_form=form"
       @mouseout="mouseover_form=null">
-         <div class="image-container">
-          <img :src="form.image">
-        </div>
-        <div class="skip" @click="skip" v-show="showSkip"></div>
-        <div class="text" :class="{rtl:dir}">
-          <span v-text="form.sentence" v-show="form.sentence_box_show==true"></span>
-          <b></b>
+        <div @click="check(form, $event)">
+          <div class="image-container">
+            <img :src="form.image">
+          </div>
+          <div class="skip" @click="skip" v-show="showSkip"></div>
+          <div class="text" :class="{rtl:dir}">
+            <span v-text="form.sentence" v-show="form.sentence_box_show==true"></span>
+            <b></b>
+          </div>
         </div>
     </div>
   </div>
@@ -296,8 +297,8 @@ export default {
       }
     },
     // 检查对错
-    check (itm, id) {
-      let currentTarget = $('#' + id)[0]
+    check (itm, event) {
+      let currentTarget = event.currentTarget
       // 选择正确则屏蔽点击
       if (this.sel_form && this.sel_form.sentence_box_show) return
       this.mouseover_form = itm
@@ -342,6 +343,7 @@ export default {
           curForm.score = 0
         }
         SoundManager.playSnd('wrong')
+        // $('#' + id).addClass('shake')
         this.shake(currentTarget)
         // this.shakeIsRight(currentTarget, false)
 
