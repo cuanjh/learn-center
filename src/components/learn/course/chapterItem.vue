@@ -485,14 +485,23 @@ export default {
     draw (id, rate, color) {
       if (this.$el && this.$el.querySelector(id)) {
         rate = (rate === 1) ? 100 : rate
-        let startAngle = -(1 / 2 * Math.PI) // 开始角度
         let canvas = this.$el.querySelector(id)
         let ctx = canvas.getContext('2d')
         let mW = canvas.width
         let mH = canvas.height
+        let startAngle = -(1 / 2 * Math.PI) // 开始角度
+        let endAngle = startAngle + 2 * Math.PI * rate * 0.01 // 结束角度
+        var xAngle = 1 * (Math.PI / 720) // 偏移角度量
+        if (startAngle >= endAngle) {
+          return
+        } else if (startAngle + xAngle > endAngle) {
+          startAngle = endAngle
+        } else {
+          startAngle += xAngle
+        }
         ctx.clearRect(0, 0, mW, mH)
         ctx.beginPath()
-        ctx.arc(140, 157, 101, startAngle, startAngle + 2 * Math.PI * rate * 0.01)
+        ctx.arc(140, 157, 98, startAngle, endAngle)
         ctx.lineWidth = 9
         ctx.strokeStyle = color
         ctx.stroke()
@@ -797,8 +806,8 @@ export default {
     height:64px
   }
   .course-item-icon img{
-    width: 64px;
-    height: 64px;
+    width: 65px;
+    height: 65px;
     position: relative;
   }
 
@@ -1009,11 +1018,12 @@ export default {
   }
 
   canvas {
-    width: 100px;
-    height: 100px;
+    width: 95px;
+    height: 95px;
     position: absolute;
     display: block;
-    margin-left: -15px;
-    margin-top: -20px;
+    margin-left: -12px;
+    margin-top: -17px;
+    z-index: 1;
   }
 </style>
