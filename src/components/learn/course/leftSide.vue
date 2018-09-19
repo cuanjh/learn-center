@@ -5,7 +5,7 @@
         <dt><img :src="courseBaseInfo.cover | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
           <p v-text='langDesc'></p>
-          <p @click="switchCourse" style="display:none">{{$t('course.switchCourse')}}</p>
+          <p @click="switchCourse">{{$t('course.switchCourse')}}</p>
         </dd>
       </dl>
       <div class="finished-course">
