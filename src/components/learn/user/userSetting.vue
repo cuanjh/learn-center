@@ -46,7 +46,7 @@
             </template>
             <template v-if="emailConfirmedStatus == 2">
               <em class='bind-logical-textState adjust'>已绑定</em>
-              <span class='bind-logical-btnState adjust' style="position:absolute; right: 0" @click="unbindIdentity('email')">解除绑定</span>
+              <span class='bind-logical-btnState adjustOff' style="" @click="unbindIdentity('email')">解除绑定</span>
             </template>
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'><i></i><em>请输入正确的邮箱账号</em></div>
