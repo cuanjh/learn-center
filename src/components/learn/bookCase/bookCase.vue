@@ -15,7 +15,7 @@
             @mouseenter="showDetails('hot', index)"
             @mouseleave="hideDetails">
             <img :src="qnUrl(item.flag)" alt="">
-            <p class="name-number"><span class="name">{{ item.name }}</span><span class="number">{{ item.buy_num>999999?'999999+':item.buy_num }}</span></p>
+            <p class="name-number"><span class="name">{{ item.name }}</span><span class="number">{{ item.buy_num>999999?'999,999+':toThousands(item.buy_num) }}</span></p>
             <div class="details animated fadeIn" v-show="showDetailsHot === index">
               <p class="desc">{{item.des}}</p>
               <p class="time">课时：{{item.level_num}}课时</p>
@@ -26,7 +26,7 @@
         </ul>
       </div>
       <div class="course-box">
-        <p class="title">中国方言地图<span>所有课程</span></p>
+        <p class="title">中国方言地图<a>所有课程</a></p>
         <ul class="course-item">
           <li v-for="(item, index) in chinaLangMap"
             :key="index"
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script>
-import http from './../../../api/bookCase.js'
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -60,13 +60,18 @@ export default {
     }
   },
   mounted () {
-    http.bookCaseIndex().then(res => {
+    // 书架首页接口 热门课程、中国方言地图
+    this.bookCaseIndex().then(res => {
+      console.log(res)
       this.hotCourse = res.data.worldMapCourse.courses
       this.chinaLangMap = res.data.chinaMapCourse.courses
       this.langMapBanner = res.data.langMapBanner
     })
   },
   methods: {
+    ...mapActions({
+      bookCaseIndex: 'course/bookCaseIndex'
+    }),
     qnUrl (url) {
       return url.split('?')[0] + '?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1'
     },
@@ -82,6 +87,10 @@ export default {
     },
     goDetails (code) {
       this.$router.push({ path: `/app/book-details/${code}` })
+    },
+    // 数字没三位添加逗号
+    toThousands (num) {
+      return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
     }
   }
 }
@@ -119,10 +128,14 @@ export default {
     padding-bottom: 144px;
   }
 
+  .course-box {
+    margin-top: 45px;
+  }
+
   .course-box .title {
     font-size: 30px;
     color: #333333;
-    margin: 20px 0;
+    margin: 30px 0;
   }
   .course-box .title a {
     text-decoration:none;
@@ -132,6 +145,7 @@ export default {
     background-size: 5px 9px;
     padding-left: 20px;
     padding-right: 10px;
+    vertical-align: initial;
   }
   .course-item {
     overflow: hidden;
@@ -154,8 +168,8 @@ export default {
   }
   .course-item li img {
     float: right;
-    width: 124px;
-    height: 124px;
+    width: 100px;
+    height: 100px;
     box-shadow: 0 5px 12px rgba(81,120,135,0.18);
     border-radius: 8px;
     margin-top: 18px;
@@ -165,7 +179,7 @@ export default {
     height: 28px;
     line-height: 28px;
     position: absolute;
-    top: 200px;
+    top: 170px;
   }
   .course-item li .name {
     width: 80px;
@@ -175,7 +189,6 @@ export default {
     bottom: 0px;
   }
   .course-item li .number {
-    width: 84px;
     font-size: 15px;
     color: #999999;
     overflow: hidden;
@@ -184,7 +197,8 @@ export default {
     padding-left: 22px;
     position: absolute;
     right: 0px;
-    text-align: center;
+    padding-top: 3px;
+    text-align: left;
   }
   .course-item li .details {
     width: 100%;

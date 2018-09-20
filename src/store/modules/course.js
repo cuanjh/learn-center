@@ -127,6 +127,13 @@ const actions = {
   },
   getBuyChapter ({ commit }, params) {
     return httpLogin(config.getBuyChapter, params)
+  },
+  /**
+   * 书架相关
+   */
+  // 书架首页接口
+  bookCaseIndex () {
+    return httpLogin(config.bookCaseIndex)
   }
 }
 
