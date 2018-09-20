@@ -65,11 +65,11 @@
                     <p class="course-item-progress" v-else>
                       <span v-text="coreData[i]['completedRate']"></span>
                     </p>
-                    <p class="course-item-icon">
+                    <div class="course-item-icon">
                       <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
-                      <img :style="coreData[i]['imgStyle']" :src="'../../../../static/images/course/course-core'+(i)+'.png'" alt="">
+                      <div :class="'core' + i"></div>
                       <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate'] && !coreData[i]['isActive']" class="icon-course-lock"></i>
-                    </p>
+                    </div>
                     <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] &&  !coreData[i]['isActive']}">核心{{i}}</p>
                   </div>
                 </a>
@@ -93,11 +93,11 @@
                     <p class="course-item-progress" v-show="!testData['isTestCompleted']">
                       <span v-show="coreData['isCoreCompleted'] && !testData['isTestCompleted']" v-text="testData['completedTestRate']"></span>
                     </p>
-                    <p class="course-item-icon">
+                    <div class="course-item-icon">
                       <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
-                      <img :style="testData['imgTestStyle']" :src="'../../../../static/images/course/course-review-test.png'" alt="">
+                      <div class="review-test"></div>
                       <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
-                    </p>
+                    </div>
                     <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">测试</p>
                   </div>
                 </a>
@@ -115,11 +115,11 @@
                   <p class="course-item-progress" v-show="!homeworkData['isHomeworkCompleted']">
                     <span v-show="coreData['isCoreCompleted'] && !homeworkData['isHomeworkCompleted']" v-text="homeworkData['completedHomeworkRate']"></span>
                   </p>
-                  <p class="course-item-icon">
+                  <div class="course-item-icon">
                     <canvas width="300" height="300" :id="item.code + '-canvas-A8'"></canvas>
-                    <img :style="homeworkData['imgHomeworkStyle']" :src="'../../../../static/images/course/course-review-homework.png'" alt="">
+                    <div class="review-homework"></div>
                     <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
-                  </p>
+                  </div>
                   <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">作业</p>
                 </div>
               </a>
@@ -141,11 +141,11 @@
                     <p class="course-item-progress" v-else>
                       <span v-text="vipData['A' + (i + 1)]['completedRate']"></span>
                     </p>
-                    <p class="course-item-icon">
+                    <div class="course-item-icon">
                       <canvas width="300" height="300" :id="item.code + '-canvas-A' + (i + 1)"></canvas>
-                      <img :style="vipData['A' + (i + 1)]['imgStyle']" :src="'../../../../static/images/course/course-vip-'+vipitem+'.png'" alt="">
+                      <div :class="'vip'+ (i + 1)"></div>
                       <i v-show="!(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'])" class="icon-vip-lock"></i>
-                    </p>
+                    </div>
                     <p class="course-item-title" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
                   </div>
                   <div class="course-circle-box" v-if="i<(vipItemList.length-1)">
@@ -491,14 +491,6 @@ export default {
         let mH = canvas.height
         let startAngle = -(1 / 2 * Math.PI) // 开始角度
         let endAngle = startAngle + 2 * Math.PI * rate * 0.01 // 结束角度
-        var xAngle = 1 * (Math.PI / 720) // 偏移角度量
-        if (startAngle >= endAngle) {
-          return
-        } else if (startAngle + xAngle > endAngle) {
-          startAngle = endAngle
-        } else {
-          startAngle += xAngle
-        }
         ctx.clearRect(0, 0, mW, mH)
         ctx.beginPath()
         ctx.arc(140, 157, 98, startAngle, endAngle)
@@ -806,10 +798,64 @@ export default {
     position: absolute;
     height:64px
   }
-  .course-item-icon img{
+  .course-item-icon div{
     width: 65px;
     height: 65px;
     position: relative;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .course-item-icon img[src=""]{
+    opacity: 0;
+  }
+
+  .course-item-icon .core1{
+    background-image: url('../../../../static/images/course/course-core1.png');
+  }
+
+  .course-item-icon .core2{
+    background-image: url('../../../../static/images/course/course-core2.png');
+  }
+
+  .course-item-icon .core3{
+    background-image: url('../../../../static/images/course/course-core3.png');
+  }
+
+  .course-item-icon .core4{
+    background-image: url('../../../../static/images/course/course-core4.png');
+  }
+
+  .course-item-icon .core5{
+    background-image: url('../../../../static/images/course/course-core5.png');
+  }
+
+  .course-item-icon .review-test {
+    background-image: url('../../../../static/images/course/course-review-test.png')
+  }
+
+  .course-item-icon .review-homework {
+    background-image: url('../../../../static/images/course/course-review-homework.png')
+  }
+
+  .course-item-icon .vip1 {
+    background-image: url('../../../../static/images/course/course-vip-listen.png')
+  }
+  .course-item-icon .vip2 {
+    background-image: url('../../../../static/images/course/course-vip-oral.png')
+  }
+  .course-item-icon .vip3 {
+    background-image: url('../../../../static/images/course/course-vip-reading.png')
+  }
+  .course-item-icon .vip4 {
+    background-image: url('../../../../static/images/course/course-vip-writing.png')
+  }
+  .course-item-icon .vip5 {
+    background-image: url('../../../../static/images/course/course-vip-grammar.png')
+  }
+  .course-item-icon .vip6 {
+    background-image: url('../../../../static/images/course/course-vip-speaking.png')
   }
 
   .course-item-icon .core-canvas {
