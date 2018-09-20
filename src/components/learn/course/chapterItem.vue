@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="(item, index) in curLevelChapters" :key="index">
+    <div v-for="(item, index) in curLevelChapters" :key="index" :id="item.code">
       <div class="current-learn-course-info" v-show="isShow ? isShow : item.code !== currentChapterCode"
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
           @click="jumpToCourse(item.code)">
@@ -170,9 +170,10 @@
 
 <script>
 import { mapState } from 'vuex'
+import $ from 'jquery'
 import BuyChapter from './buyChapterConfirm.vue'
 export default {
-  props: ['currentCourseCode'],
+  props: ['currentCourseCode', 'item'],
   data () {
     return {
       isCoreCompleted: 0,
@@ -402,6 +403,14 @@ export default {
         console.log(chapterCode)
         this.$emit('loadChapterInfo', chapterCode)
       }
+
+      let top = $('#' + chapterCode)[0].offsetTop
+      console.log(top)
+      if (top > 3600) {
+        top = top - 850
+      }
+      console.log(top)
+      $('body,html').animate({ scrollTop: top - 10 }, 200)
     },
     starNum (correctRate) {
       let stars = 0
