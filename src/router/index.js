@@ -11,6 +11,8 @@ const learn = r => require.ensure([], () => r(require('@/components/learn/learn.
 const courseList = r => require.ensure([], () => r(require('@/components/learn/course/courseList.vue')), 'course-list')
 const bookCase = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCase.vue')), 'book-case')
 const bookCaseDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCaseDetails.vue')), 'book-case-details')
+const hotCourses = r => require.ensure([], () => r(require('@/components/learn/bookCase/hotCourses.vue')), 'hot-courses')
+const worldMap = r => require.ensure([], () => r(require('@/components/learn/bookCase/worldMap.vue')), 'world-map')
 const gradeLevelShow = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelShow.vue')), 'grade-level-show')
 const gradeLevelConfirm = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelConfirm.vue')), 'grade-level-confirm')
 const homework = r => require.ensure([], () => r(require('@/components/learn/homework/homework.vue')), 'homework')
@@ -84,6 +86,14 @@ export default[
       {
         path: 'book-details/:courseCode',
         component: bookCaseDetails
+      },
+      {
+        path: 'hot-courses',
+        component: hotCourses
+      },
+      {
+        path: 'world-map',
+        component: worldMap
       },
       {
         path: 'grade-level-show',

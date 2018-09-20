@@ -1,11 +1,13 @@
 <template>
   <div>
-    <div class="banner">
-      <input type="button" value="发现更多语言">
-    </div>
+    <router-link class="banner" :to="{path: '/app/world-map'}">
+      <input type="button" value="查看全部">
+    </router-link>
     <div class="book-case">
       <div class="course-box">
-        <p class="title">热门课程<span>所有课程</span></p>
+        <p class="title">热门课程
+          <router-link :to="{path: '/app/hot-courses'}">所有课程</router-link>
+        </p>
         <ul class="course-item">
           <li v-for="(item, index) in hotCourse"
             :key="index"
@@ -87,6 +89,7 @@ export default {
 
 <style scoped>
   .banner {
+    display: inline-block;
     height: 320px;
     width: 100%;
     background-image: url('../../../../static/images/course/book-case-banner.png');
@@ -119,9 +122,10 @@ export default {
   .course-box .title {
     font-size: 30px;
     color: #333333;
-    margin-bottom: 16px;
+    margin: 20px 0;
   }
-  .course-box .title span {
+  .course-box .title a {
+    text-decoration:none;
     font-size: 15px;
     color: #2A9FE4;
     background: url('./../../../../static/images/learn/triangle-blue.png') no-repeat right center;
@@ -180,6 +184,7 @@ export default {
     padding-left: 22px;
     position: absolute;
     right: 0px;
+    text-align: center;
   }
   .course-item li .details {
     width: 100%;
