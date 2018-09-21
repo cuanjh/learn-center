@@ -76,7 +76,7 @@
 </template>
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import Cookies from 'js-cookie'
+import Bus from '../../bus'
 
 export default {
   data () {
@@ -93,6 +93,9 @@ export default {
   created () {
     this.$on('activeNavItem', (item) => {
       this.activeItem = item
+    })
+    Bus.$on('changeCourseCode', (courseCode) => {
+      this.changeCourseCode(courseCode)
     })
   },
   mounted () {
@@ -163,9 +166,9 @@ export default {
     },
     jumpSystem () {
       this.logout().then((res) => {
-        Cookies.remove('device_id')
-        Cookies.remove('user_id')
-        Cookies.remove('verify')
+        localStorage.removeItem('device_id')
+        localStorage.removeItem('user_id')
+        localStorage.removeItem('verify')
         this.$router.push({ path: '/' })
         this.updateIsLogin('0')
       })

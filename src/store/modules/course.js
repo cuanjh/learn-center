@@ -9,6 +9,7 @@ const state = {
   language: 'chinese',
   languagueHander: 'zh-CN', // 默认不同的level的实现方式
   learnCourses: [], // 已订阅的课程
+  subscribeCoursesStr: '',
   loading: true, // 用来判断加载状态程序
   currentCourseCode: '',
   currentChapterCode: '',
@@ -138,6 +139,13 @@ const actions = {
   // 语言课程信息接口
   langInfo ({ commit }, params) {
     return httpLogin(config.langInfo, params)
+  },
+  // 获取课程资源列表
+  getShelfResList ({ commit }, params) {
+    return httpLogin(config.shelfResList, params)
+  },
+  postPurchaseCourse ({ commit }, params) {
+    return httpLogin(config.purchaseCourse, params)
   }
 }
 
@@ -157,6 +165,10 @@ const mutations = {
     })
     course['completeRate'] = (((num + 1) / payload.course.chapter_num) * 100).toFixed(0) + '%'
     state.learnCourses.push(course)
+    let subscribeCoursesStr = localStorage.getItem('subscribeCoursesStr')
+    subscribeCoursesStr += course.code + ','
+    state.subscribeCoursesStr = subscribeCoursesStr
+    localStorage.setItem('subscribeCoursesStr', subscribeCoursesStr)
   },
   updateCurCourseCode (state, data) {
     state.currentCourseCode = data
@@ -403,6 +415,8 @@ const mutations = {
   },
   clearMoreCourses (state) {
     state.learnCourses = []
+    state.subscribeCoursesStr = ''
+    localStorage.setItem('subscribeCoursesStr', '')
   },
   showLoading (state) {
     state.loading = true
