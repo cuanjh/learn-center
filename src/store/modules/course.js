@@ -134,6 +134,10 @@ const actions = {
   // 书架首页接口
   bookCaseIndex () {
     return httpLogin(config.bookCaseIndex)
+  },
+  // 语言课程信息接口
+  langInfo ({ commit }, params) {
+    return httpLogin(config.langInfo, params)
   }
 }
 

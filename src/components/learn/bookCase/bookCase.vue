@@ -88,7 +88,7 @@ export default {
     goDetails (code) {
       this.$router.push({ path: `/app/book-details/${code}` })
     },
-    // 数字没三位添加逗号
+    // 数字每三位添加逗号
     toThousands (num) {
       return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
     }
@@ -217,6 +217,17 @@ export default {
     color: #333333;
     overflow: hidden;
     margin-bottom: 15px;
+    position: relative;
+  }
+
+  .course-item li .details .desc::after {
+    content:"...";
+    font-weight:bold;
+    position:absolute;
+    bottom:0;
+    right:0;
+    /* padding:0 0px 1px 30px; */
+    background:url(http://css88.b0.upaiyun.com/css88/2014/09/ellipsis_bg.png) repeat-y;
   }
   .course-item li .details .time,
   .course-item li .details .home-work {

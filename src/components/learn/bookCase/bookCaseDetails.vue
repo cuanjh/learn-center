@@ -86,7 +86,8 @@
   </div>
 </template>
 <script>
-import http from './../../../api/bookCase.js'
+import { mapActions } from 'vuex'
+
 export default {
   data () {
     return {
@@ -128,16 +129,19 @@ export default {
     }
   },
   mounted () {
-    http.langInfo({course_code: this.$route.params.courseCode}).then(res => {
+    this.langInfo({course_code: this.$route.params.courseCode}).then(res => {
       for (var item in res.langInfo) {
         if (this.langInfoObj[item]) {
           this.langInfoObj[item]['info'] = res.langInfo[item]['info']
         }
       }
-      console.log(this.langInfoObj)
+      console.log(res)
     })
   },
   methods: {
+    ...mapActions({
+      'langInfo': 'course/langInfo'
+    }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
     }
