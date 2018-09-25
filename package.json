@@ -25,6 +25,7 @@
     "lodash": "^4.17.10",
     "md5": "^2.2.1",
     "qiniu-js": "^2.4.0",
+    "simple-pinyin": "^3.0.2",
     "thenjs": "^2.1.0",
     "vue": "^2.5.2",
     "vue-datepicker2": "^2.3.0-dev",

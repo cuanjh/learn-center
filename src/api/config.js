@@ -27,13 +27,13 @@ export default {
   changePwd: '/user/change_pwd', // 修改密码
   getCountries: '/info/get_countries', // 获取国家课程列表
   getLanguages: '/info/get_mother_tongue', // 获取语言列表
+  getCourseList: '/info/get_course_list', // 获取官方语言列表
   bindPhoneNumber: '/user/bind_phonenumber', // 绑定手机号
   resetAnonymous: '/user/reset_password_anonymous', // 匿名账号重置
   unbindIdentity: '/user/unbind_identity', // 解除邮箱或者手机号绑定
   uploadUserPhoto: '/user/upload_user_photo', // 上传用户头像(需要登录)
 
   // 课程
-  // getCourseList: '/info/get_course_list', // 获取官方语言列表
   getMoreLearnCourses: '/study/more_learn_courses', // 获取更多的订阅课程
   currentCourse: '/study/current_course', // 获取一个课程的详情
   learnInfo: '/studyv1/learn_info/index', // 1.一门课程基本配置 2.用户针对此课程学习基本配置 3.学习信息

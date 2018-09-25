@@ -31,7 +31,8 @@ const state = {
     tradeNo: '', // 订单号
     productId: '' // 套餐ID
   },
-  loadingMore: false // 显示收支详细是否加载完成
+  loadingMore: false, // 显示收支详细是否加载完成
+  courseFilterAll: []
 }
 
 const getters = {
@@ -136,6 +137,12 @@ const actions = {
   getLanguages ({commit}, params) {
     return httpNoLogin(config.getLanguages, params)
   },
+  // 获取官方语言列表接口
+  getCourseList ({ commit }) {
+    return httpLogin(config.getCourseList, {}).then((result) => {
+      commit('getCourseList', result['course_list'])
+    })
+  },
   bindPhoneNumber ({commit}, params) {
     return httpLogin(config.bindPhoneNumber, params)
   },
@@ -232,6 +239,11 @@ const mutations = {
   },
   updateUploadPhotoUrl (state, url) {
     state.uploadPhotoUrl = url
+  },
+  getCourseList (state, courseList) {
+    // state.courseList = useMethod.LanguageList(courseList, state.languageHandler)
+    // state.courseListAll = courseList
+    state.courseFilterAll = useMethod.courseAllFilter(courseList, state.languageHandler)
   }
 }
 
