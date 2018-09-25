@@ -49,7 +49,7 @@
         </transition>
       </div>
       <div class="right" @mouseleave="hideExit">
-        <div class="search" v-bind:class="{'active':searchFlag}" style="display:none">
+        <div class="search" v-bind:class="{'active':searchFlag}">
           <input type="text">
           <i @click="showSearch"></i>
         </div>
@@ -274,15 +274,15 @@ export default {
 }
 .right div {
   float: left;
-  margin-left: 18px;
 }
 .search {
   width: 44px;
   height: 44px;
   border-radius: 22px;
+  margin-left: -100px;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.4);
-  margin-top: 18px;
+  margin-top: 20px;
   padding-right: 44px;
   position: relative;
 }
