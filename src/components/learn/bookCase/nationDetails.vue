@@ -1,0 +1,274 @@
+<template>
+  <div class="nation-details">
+    <router-link class="nation-balk" :to="{path: '/app/book-case'}">
+      <span>返回</span>
+    </router-link>
+    <div class="nation-header">
+      <div class="background-img"></div>
+      <div class="nation-top">
+        <div class="nation-title">
+          <p>世界地图语言</p>
+        </div>
+        <div class="nation-content">
+          <div class="containers">
+            <p class="nation">白俄罗斯</p>
+            <p class="continents">欧洲</p>
+          </div>
+          <div class="nation-img">
+            <img src="../../../../static/images/bookCase/caseBig.png" alt="世界语言大图标">
+          </div>
+        </div>
+      </div>
+      <div class="tab-item">
+        <span v-bind:class="{'active': 'info' == tabFlag}" @click="tabChange('info')">国家资料</span>
+        <span v-bind:class="{'active': 'language' == tabFlag}" @click="tabChange('language')">拥有语言</span>
+      </div>
+    </div>
+    <div class="country-content">
+      <ul class="country-info" v-show="'info' == tabFlag">
+        <li>
+          <p class="title">正式名称</p>
+          <p class="desc">白俄罗斯共和国</p>
+        </li>
+        <li>
+          <p class="title">人口</p>
+          <p class="desc">100033百万</p>
+        </li>
+        <li>
+          <p class="title">主要语言</p>
+          <p class="desc">俄语</p>
+        </li>
+        <li>
+          <p class="title">识字率</p>
+          <p class="desc">联合国教科文组织100%</p>
+        </li>
+        <li>
+          <p class="title">移民语言</p>
+          <p class="desc">联合国教科文组织100%</p>
+        </li>
+        <li>
+          <p class="title">语言方面</p>
+          <p class="desc">联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%</p>
+        </li>
+      </ul>
+      <ul class="country-language" v-show="'language' == tabFlag">
+        <li>
+          <div class="country-img">
+            <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
+          </div>
+          <div class="country-title">
+            <p>阿根廷</p>
+          </div>
+          <div class="country-icon"></div>
+        </li>
+        <li>
+          <div class="country-img">
+            <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
+          </div>
+          <div class="country-title">
+            <p>阿根廷</p>
+          </div>
+          <div class="country-icon"></div>
+        </li>
+        <li>
+          <div class="country-img">
+            <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
+          </div>
+          <div class="country-title">
+            <p>阿根廷</p>
+          </div>
+          <div class="country-icon"></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data () {
+    return {
+      tabFlag: 'info'
+    }
+  },
+  methods: {
+    tabChange (tabFlag) {
+      this.tabFlag = tabFlag
+    }
+  }
+
+}
+</script>
+<style lang="less">
+a {
+    text-decoration:none;
+  }
+  .nation-balk {
+    display: block;
+    width: 80px;
+    height: 30px;
+    background: #ffffff;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 6px;
+    margin-bottom: 28px;
+    margin-top: 20px;
+  }
+  .nation-balk p {
+    display: inline-block;
+    background: url(../../../../static/images/homework/balck.png);
+    background-size: 100% 100%;
+    margin-top: 6px;
+    width: 12px;
+    height: 18px;
+  }
+  .nation-balk span {
+    font-size: 16px;
+    color: #999999;
+  }
+  .nation-details {
+    width: 1180px;
+    height: 1191px;
+    margin: 0 auto;
+  }
+  .nation-header {
+    position: relative;
+    width: 1180px;
+    height: 191px;
+    background: #ffffff;
+    .nation-top {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      .nation-title {
+        width: 144px;
+        height: 29px;
+        color: #2A9FE4;
+        font-size: 24px;
+      }
+      .nation-content {
+        height: 137px;
+        width: 426px;
+        position: absolute;
+        right: 40px;
+        bottom: 15%;
+        .containers {
+          display: inline-block;
+          width: 208px;
+          margin-top: 40px;
+          .nation {
+            font-size: 40px;
+            color: #444444;
+            margin-bottom: 18px;
+            font-weight: bold;
+          }
+          .continents {
+            font-size: 20px;
+            color: #999999;
+          }
+        }
+        .nation-img {
+          display: inline-block;
+          width: 208px;
+          height: 137px;
+          box-shadow: 0px 2px 4px 0px #000000;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+    .background-img {
+      width: 253px;
+      height: 253px;
+      background: url('../../../../static/images/bookCase/backgroundMap.png') no-repeat;
+      background-size: contain;
+      margin: 0 auto;
+    }
+    .tab-item {
+      overflow: hidden;
+      position: absolute;
+      bottom: 0px;
+      span {
+        float: left;
+        display: block;
+        font-size: 16px;
+        color: #333333;
+        cursor: pointer;
+        margin-left: 20px;
+        padding: 0px 2px 12px;
+        &.active {
+          color: #2A9FE4;
+          border-bottom: 4px solid #2A9FE4;
+        }
+      }
+    }
+  }
+  .country-content {
+    background-color: #fff;
+    padding: 30px 20px;
+    margin-top: 20px;
+    .country-info {
+      width: 1082px;
+      li {
+        width: 1082px;
+        height: 69px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        .title {
+          font-size: 16px;
+          color: #333333;
+          border-bottom: 1px solid #EAEAEA;
+          padding-bottom: 10px;
+          margin-bottom: 10px;
+        }
+        .desc {
+          font-size: 16px;
+          color: #999999;
+        }
+      }
+    }
+    .country-language {
+      width: 100%;
+      height: 630px;
+      padding: 0px 16px 0px 0px;
+      li {
+        position: relative;
+        width: 100%;
+        height: 73px;
+        border-bottom: 1px solid #EBEBEB;
+        margin-bottom: 20px;
+        .country-img {
+          display: inline-block;
+          width: 75px;
+          height: 50px;
+          img {
+            width: 75px;
+            height: 50px;
+          }
+        }
+        .country-title {
+          display: inline-block;
+          font-size: 14px;
+          color: #444444;
+          padding-left: 15px;
+          line-height: 50px;
+        }
+        .country-icon {
+          position: absolute;
+          top: 15px;
+          right: 0;
+          display: inline-block;
+          width: 10px;
+          height: 18px;
+          background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
+          background-size: 10px 18px;
+        }
+      }
+    }
+  }
+</style>

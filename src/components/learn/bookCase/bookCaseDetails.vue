@@ -1,17 +1,15 @@
 <template>
   <div class="book-details">
-    <div>
     <router-link class="book-balk" :to="{path: '/app/book-case'}">
       <span>返回</span>
     </router-link>
-    </div>
     <div class="details-header">
       <div class="details-top">
         <div class="details-title">
           <p>世界地图语言</p>
         </div>
         <div class="details-content">
-          <div class="contains">
+          <div class="container">
             <div class="details-img">
               <img :src="courseInfo.flag" alt="世界语言大图标">
             </div>
@@ -78,7 +76,11 @@
         </li>
       </ul>
       <ul class="book-nation" v-show="'nation' == tabFlag">
+<<<<<<< HEAD
+        <li>
+=======
         <li v-for="item in countryInfo" :key="item.code">
+>>>>>>> 07db38f0387cd29743af74bbbab569738e25de7f
           <div class="nation-img">
             <img :src="item.flag" alt="资源图片">
           </div>
@@ -266,7 +268,7 @@ export default {
     /* border-bottom: 1px solid #EAEAEA; */
     margin: 10px 10px;
   }
-  .details-top .details-content .contains {
+  .details-top .details-content .container {
     width: 80%;
     height: 100%;
     border-bottom: 1px solid #EAEAEA;
