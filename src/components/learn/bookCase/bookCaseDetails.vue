@@ -76,11 +76,7 @@
         </li>
       </ul>
       <ul class="book-nation" v-show="'nation' == tabFlag">
-<<<<<<< HEAD
         <li>
-=======
-        <li v-for="item in countryInfo" :key="item.code">
->>>>>>> 07db38f0387cd29743af74bbbab569738e25de7f
           <div class="nation-img">
             <img :src="item.flag" alt="资源图片">
           </div>
