@@ -9,10 +9,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-import _ from 'lodash'
-import simplePinyin from 'simple-pinyin'
 import Bus from '../../../bus'
 
 export default {
@@ -21,6 +19,7 @@ export default {
   },
   data () {
     return {
+      filterCourseList: []
     }
   },
   filters: {
@@ -43,45 +42,36 @@ export default {
     ...mapState({
       subscribeCoursesStr: state => state.course.subscribeCoursesStr,
       courseFilterAll: state => state.user.courseFilterAll
-    }),
-    courseFilterAllTemp () {
-      var _courseArr = []
-      for (var _index in this.courseFilterAll) {
-        var _course = this.courseFilterAll[_index]
-        _course.pinyin = _.flattenDeep(
-          simplePinyin(_course.name, { pinyinOnly: false })
-        ).join('')
-        _courseArr.push(_course)
+    })
+  },
+  watch: {
+    searchUserCourse (newVal, oldVal) {
+      if (newVal) {
+        this.shelfSearch({key_word: newVal}).then((res) => {
+          if (res.data.courses.length > 0) {
+            this.filterCourseList = res.data.courses
+          }
+        })
       }
-      return _courseArr
-    },
-    learnCourses () {
-      return this.$store.state.course.learnCourses
-    },
-    filterCourseList () {
-      var key = this.searchUserCourse
-      let courseList = this.courseFilterAllTemp
-      return courseList.filter((item) => {
-        return item.name.indexOf(key.toLowerCase()) !== -1 || item.lan_code.indexOf(key.toLowerCase()) !== -1 || item.pinyin.indexOf(key.toLowerCase()) !== -1
-      })
     }
   },
   methods: {
+    ...mapActions({
+      shelfSearch: 'course/shelfSearch'
+    }),
     routerGo (item) {
+      let langCode = item['code'].split('_')[0]
       if (this.subscribeCoursesStr.length === 0) {
-        this.$router.push({path: '/app/book-details/' + item['lan_code']})
+        this.$router.push({path: '/app/book-details/' + langCode})
         this.$emit('hideLangList')
         return
       }
-      for (var i = 0; i < this.learnCourses.length; i++) {
-        if (this.learnCourses[i]['lan_code'] === item['lan_code']) {
-          let courseCode = this.learnCourses[i]['code']
-          Bus.$emit('changeCourseCode', courseCode)
-          this.$emit('hideLangList')
-          return
-        }
+      if (this.subscribeCoursesStr.indexOf(item['code'])) {
+        Bus.$emit('changeCourseCode', item['code'])
+        this.$emit('hideLangList')
+        return
       }
-      this.$router.push({path: '/app/book-details/' + item['lan_code']})
+      this.$router.push({path: '/app/book-details/' + langCode})
       this.$emit('hideLangList')
     }
   }

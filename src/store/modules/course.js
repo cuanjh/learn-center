@@ -146,6 +146,9 @@ const actions = {
   },
   postPurchaseCourse ({ commit }, params) {
     return httpLogin(config.purchaseCourse, params)
+  },
+  shelfSearch ({commit}, params) {
+    return httpLogin(config.shelfSearchApi, params)
   }
 }
 

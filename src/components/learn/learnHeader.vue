@@ -99,7 +99,6 @@ export default {
   mounted () {
     console.log(this.userInfo)
     this.getLearnCourses()
-    this.getCourseList()
   },
   computed: {
     ...mapState({
@@ -140,8 +139,7 @@ export default {
     ...mapActions({
       getLearnCourses: 'course/getLearnCourses',
       getCurrentCourse: 'course/getCurrentCourse',
-      logout: 'user/logout',
-      getCourseList: 'user/getCourseList'
+      logout: 'user/logout'
     }),
     ...mapMutations({
       updateIsLogin: 'user/updateIsLogin',

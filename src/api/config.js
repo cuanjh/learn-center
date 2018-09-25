@@ -27,11 +27,12 @@ export default {
   changePwd: '/user/change_pwd', // 修改密码
   getCountries: '/info/get_countries', // 获取国家课程列表
   getLanguages: '/info/get_mother_tongue', // 获取语言列表
-  getCourseList: '/info/get_course_list', // 获取官方语言列表
+  // getCourseList: '/info/get_course_list', // 获取官方语言列表 --弃用
   bindPhoneNumber: '/user/bind_phonenumber', // 绑定手机号
   resetAnonymous: '/user/reset_password_anonymous', // 匿名账号重置
   unbindIdentity: '/user/unbind_identity', // 解除邮箱或者手机号绑定
   uploadUserPhoto: '/user/upload_user_photo', // 上传用户头像(需要登录)
+  shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
 
   // 课程
   getMoreLearnCourses: '/study/more_learn_courses', // 获取更多的订阅课程
