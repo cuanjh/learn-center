@@ -11,36 +11,39 @@
         <div class="details-content">
           <div class="container">
             <div class="details-img">
-              <img src="../../../../static/images/bookCase/caseBig.png" alt="世界语言大图标">
+              <img :src="courseInfo.flag" alt="世界语言大图标">
             </div>
             <div class="details-resource">
               <p class="details-title">麦格</p>
-              <p class="details">意大利语课程</p>
+              <p class="details">{{ courseInfo.name }}课程</p>
               <div class="course-content">
                 <ul class="course">
                   <li>
                     <p class="title">课程</p>
-                    <p class="number">144课时</p>
+                    <p class="number">{{ courseInfo.lesson_num }}课时</p>
                   </li>
                   <li>
                     <p class="title">作业</p>
-                    <p class="number">2344份</p>
+                    <p class="number">{{ courseInfo.homework_num}}份</p>
                   </li>
                   <li>
                     <p class="title">价格</p>
-                    <p class="number">150金币/课</p>
+                    <p class="number">{{ courseInfo.price }}金币/课</p>
                   </li>
                   <li>
                     <p class="title">语言大使</p>
-                    <p class="number">招募中</p>
+                    <p class="number" v-text="(courseInfo.lang_ambassadors && courseInfo.lang_ambassadors.length > 0) ? courseInfo.lang_ambassadors.join('、') : '招募中'"></p>
                   </li>
                 </ul>
               </div>
             </div>
           </div>
-          <router-link class="button" :to="{path: '/app/course-list'}">
+          <a v-if="subscribeCourses.indexOf(courseCode) > -1" href="javascript:void(0)" class="button" @click="startLearn()">
             <span>开始学习</span>
-          </router-link>
+          </a>
+          <a v-else href="javascript:void(0)" class="button" @click="subscribeCourse()">
+            <span>订阅课程</span>
+          </a>
         </div>
       </div>
       <div class="tab-item">
@@ -58,24 +61,31 @@
         </li>
       </ul>
       <ul class="book-resource" v-show="'resource' == tabFlag">
-        <li>
+        <li v-for="(item, index) in resourceInfoRadios" :key="index">
           <div class="book-img">
-            <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
+            <img :src="item.cover" alt="资源图片">
           </div>
           <div class="book-title">
-            <p class="share-title">语言学习主题分享</p>
-            <p class="share">奇迹蔷薇</p>
+            <p class="share-title">{{ item.title }}</p>
+            <p class="share">{{ item.author_name }}</p>
           </div>
           <div class="icon"></div>
         </li>
+        <li v-if="resPage > 1" @click="loadMore()">
+          <p class="more">加载更多...</p>
+        </li>
       </ul>
       <ul class="book-nation" v-show="'nation' == tabFlag">
+<<<<<<< HEAD
         <li>
+=======
+        <li v-for="item in countryInfo" :key="item.code">
+>>>>>>> 07db38f0387cd29743af74bbbab569738e25de7f
           <div class="nation-img">
-            <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
+            <img :src="item.flag" alt="资源图片">
           </div>
           <div class="nation-title">
-            <p>阿根廷</p>
+            <p>{{ item.name }}</p>
           </div>
           <div class="nation-icon"></div>
         </li>
@@ -84,7 +94,9 @@
   </div>
 </template>
 <script>
-import http from './../../../api/bookCase.js'
+import { mapState, mapActions } from 'vuex'
+import Bus from '../../../bus'
+
 export default {
   data () {
     return {
@@ -122,22 +134,72 @@ export default {
           title: 'OLAC资源',
           info: ''
         }
-      }
+      },
+      courseInfo: {},
+      countryInfo: {},
+      resourceInfoRadios: [],
+      resPage: 1
     }
   },
   mounted () {
-    http.langInfo({course_code: this.$route.params.courseCode}).then(res => {
+    this.langInfo({course_code: this.courseCode}).then(res => {
       for (var item in res.langInfo) {
         if (this.langInfoObj[item]) {
           this.langInfoObj[item]['info'] = res.langInfo[item]['info']
         }
       }
-      console.log(this.langInfoObj)
+      this.courseInfo = res.courseInfo
+      this.countryInfo = res.countryInfo
+      this.resourceInfoRadios = res.resourceInfo.radios
+      this.resPage = res.resourceInfo.page
+      console.log(res)
     })
   },
+  computed: {
+    ...mapState({
+      subscribeCoursesStr: state => state.course.subscribeCoursesStr
+    }),
+    courseCode () {
+      return this.$route.params.courseCode
+    },
+    subscribeCourses () {
+      let sc = this.subscribeCoursesStr
+      if (!sc) {
+        sc = localStorage.getItem('subscribeCoursesStr')
+      }
+      return sc
+    }
+  },
   methods: {
+    ...mapActions({
+      langInfo: 'course/langInfo',
+      getShelfResList: 'course/getShelfResList',
+      postPurchaseCourse: 'course/postPurchaseCourse',
+      getLearnCourses: 'course/getLearnCourses'
+    }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
+    },
+    loadMore () {
+      let _this = this
+      _this.getShelfResList({ page: _this.resPage }).then((res) => {
+        res.resourceInfo.radios.forEach((item) => {
+          _this.resourceInfoRadios.push(item)
+        })
+        _this.resPage = res.page
+      })
+    },
+    startLearn () {
+      let courseCode = this.courseCode
+      Bus.$emit('changeCourseCode', courseCode)
+      setTimeout(() => {
+        this.$router.push({path: '/app/course-list'})
+      }, 1000)
+    },
+    subscribeCourse () {
+      this.postPurchaseCourse({ code: this.courseCode }).then((res) => {
+        this.getLearnCourses()
+      })
     }
   }
 
@@ -183,6 +245,10 @@ export default {
     background-color: #fff;
     padding: 18px 36px 0px;
     position: relative;
+    background-image: url('../../../../static/images/bookCase/bg-earth.png');
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-size: 210px 210px;
   }
   .details-top {
     width: 100%;
@@ -215,6 +281,8 @@ export default {
   .details-top .details-content .details-img img {
     width: 100%;
     height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
   }
   .details-top .details-content .details-resource {
     display: inline-block;
@@ -287,7 +355,7 @@ export default {
     border-radius: 3px;
     background-color: #fff;
     /* box-shadow: 0px 2px 4px #DAE6F3; */
-    padding: 46px 36px 22px;
+    padding: 25px 36px 22px;
     margin-top: 20px;
   }
   .book-info  li {
@@ -310,13 +378,13 @@ export default {
   }
   .book-resource {
     width: 100%;
-    height: 630px;
+    min-height: 630px;
     padding: 0px 60px 10px;
   }
   .book-resource li {
     position: relative;
     width: 100%;
-    height: 73px;
+    padding: 25px 0;
     border-bottom: 1px solid #EBEBEB;
   }
   .book-resource li .book-img {
@@ -327,6 +395,8 @@ export default {
   .book-resource li .book-img img{
     width: 100px;
     height: 50px;
+    border-radius: 2px;
+    object-fit: cover;
   }
   .book-resource li .book-title {
     display: inline-block;
@@ -335,13 +405,14 @@ export default {
   }
   .book-resource li .book-title .share-title {
     color: #444444;
+    font-weight: bold;
   }
   .book-resource li .book-title .share {
     color: #999999;
   }
   .book-resource li .icon {
     position: absolute;
-    top: 15px;
+    margin-top: 16px;
     right: 0;
     display: inline-block;
     width: 10px;
@@ -349,15 +420,19 @@ export default {
     background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
     background-size: 10px 18px;
   }
+
+  .book-resource li:last-child {
+    border: 0;
+  }
   .book-nation {
     width: 100%;
-    height: 630px;
+    min-height: 630px;
     padding: 0px 60px 10px;
   }
   .book-nation li {
     position: relative;
     width: 100%;
-    height: 73px;
+    padding: 25px 0;
     border-bottom: 1px solid #EBEBEB;
   }
   .book-nation li .nation-img {
@@ -368,6 +443,8 @@ export default {
   .book-nation li .nation-img img{
     width: 100px;
     height: 50px;
+    border-radius: 2px;
+    box-shadow: 0px 4px 6px rgba(36, 87, 120, 0.21)
   }
   .book-nation li .nation-title {
     display: inline-block;
@@ -378,12 +455,21 @@ export default {
   }
   .book-nation li .nation-icon {
     position: absolute;
-    top: 15px;
+    margin-top: 16px;
     right: 0;
     display: inline-block;
     width: 10px;
     height: 18px;
     background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
     background-size: 10px 18px;
+  }
+
+  .book-nation li:last-child {
+    border: 0px;
+  }
+
+  .more {
+    text-align: center;
+    cursor: pointer;
   }
 </style>

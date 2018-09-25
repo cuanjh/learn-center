@@ -82,7 +82,6 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import SoundCtrl from '../../plugins/soundCtrl'
 
 export default {
   props: ['isShow'],
@@ -98,8 +97,7 @@ export default {
       curNum: 0,
       otherRecordList: [],
       isShowMyRecord: true,
-      loading: false,
-      sndctr: SoundCtrl
+      loading: false
     }
   },
   created () {
@@ -127,7 +125,9 @@ export default {
           _this.isShowMyRecord = false
         }
         _this.curMyRecord = _this.myRecordList[0]
-        _this.play()
+        setTimeout(() => {
+          _this.play()
+        }, 100)
       })
 
       recordCourseList.forEach((item) => {
@@ -174,16 +174,17 @@ export default {
       }
     },
     play () {
-      this.loading = true
       let audio = document.getElementById('record-sound')
       audio.loop = false
-      let currentSrc = audio.currentSrc
-      if (currentSrc) {
-        this.sndctr.setSnd(currentSrc)
-        this.sndctr.play(() => {
-          this.loading = false
-        })
+      this.loading = true
+      audio.play()
+      audio.onloadedmetadata = () => {
+        audio.play()
       }
+
+      audio.addEventListener('ended', () => {
+        this.loading = false
+      }, false)
     },
     playPartnerRecord (courseId) {
       var _this = this
