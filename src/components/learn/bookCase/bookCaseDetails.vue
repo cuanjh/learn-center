@@ -76,7 +76,7 @@
         </li>
       </ul>
       <ul class="book-nation" v-show="'nation' == tabFlag">
-        <li>
+        <li v-for="(item, index) in countryInfo" :key="index">
           <div class="nation-img">
             <img :src="item.flag" alt="资源图片">
           </div>
@@ -265,7 +265,7 @@ export default {
     margin: 10px 10px;
   }
   .details-top .details-content .container {
-    width: 80%;
+    /* width: 80%; */
     height: 100%;
     border-bottom: 1px solid #EAEAEA;
   }
