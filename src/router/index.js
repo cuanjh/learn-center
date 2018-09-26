@@ -13,6 +13,7 @@ const bookCase = r => require.ensure([], () => r(require('@/components/learn/boo
 const bookCaseDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCaseDetails.vue')), 'book-case-details')
 const hotCourses = r => require.ensure([], () => r(require('@/components/learn/bookCase/hotCourses.vue')), 'hot-courses')
 const worldMap = r => require.ensure([], () => r(require('@/components/learn/bookCase/worldMap.vue')), 'world-map')
+const chinaLangMap = r => require.ensure([], () => r(require('@/components/learn/bookCase/chinaLangMap.vue')), 'china-lang-map')
 const nationDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/nationDetails.vue')), 'nation-details')
 const gradeLevelShow = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelShow.vue')), 'grade-level-show')
 const gradeLevelConfirm = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelConfirm.vue')), 'grade-level-confirm')
@@ -95,6 +96,10 @@ export default[
       {
         path: 'world-map',
         component: worldMap
+      },
+      {
+        path: 'china-lang-map',
+        component: chinaLangMap
       },
       {
         path: 'nation-details/:countryCode',

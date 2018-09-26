@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import Cookie from 'js-cookie'
 
-import { httpLogin, httpAssets } from '../../api/api'
+import { httpLogin, httpAssets, httpNoLogin } from '../../api/api'
 import config from '../../api/config'
 import * as courseMethod from './courseMethod'
 
@@ -153,6 +153,18 @@ const actions = {
   },
   countryInfo ({ commit }, params) {
     return httpLogin(config.countryInfo, params)
+  },
+  // 书架语言课程搜索
+  shelfSearch ({commit}, params) {
+    return httpLogin(config.shelfSearchApi, params)
+  },
+  // 获取和课程相关的语言列表信息
+  getCourseLangs ({commit}) {
+    return httpNoLogin(config.courseLangs)
+  },
+  // 中国方言地图课程列表
+  getChinaLangMap ({commit}) {
+    return httpLogin(config.chinaLangMapApi)
   }
 }
 

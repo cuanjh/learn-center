@@ -1,10 +1,10 @@
 <template>
-  <div class="hot-courses">
+  <div class="china-lang-map">
     <router-link class="course-balk" :to="{path: '/app/book-case'}">
       <p></p>
       <span>返回</span>
     </router-link>
-    <div class="hot-container">
+    <div class="china-lang-container">
       <div class="hot-letter">
         <div class="letter">
           <a
@@ -16,22 +16,8 @@
           </a>
         </div>
       </div>
-      <div class="hot-content">
+      <div class="china-lang-content">
         <div class="hot-list">
-          <div class="section">
-            <a id="热门" class="letter-gray">热门</a>
-            <ul>
-              <li v-for="item in hotLangs" :key="item.lan_code">
-                <div class="hot-img">
-                  <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
-                </div>
-                <div class="hot-title">
-                  <p>{{ item.name[languagueHander] }}</p>
-                </div>
-                <div class="hot-icon" @click="routerGo(item)"></div>
-              </li>
-            </ul>
-          </div>
           <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
             <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
             <ul>
@@ -40,7 +26,7 @@
                   <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
                 </div>
                 <div class="hot-title">
-                  <p>{{ item.name[languagueHander]}}</p>
+                  <p>{{ item.name}}</p>
                 </div>
                 <div class="hot-icon" @click="routerGo(item)"></div>
               </li>
@@ -62,22 +48,21 @@ import Bus from '../../../bus'
 export default {
   data () {
     return {
-      letterList: ['热门', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+      letterList: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
       hotLangs: [],
       courseLangs: [],
       groupCourseLangs: [],
-      activeLetter: '热门'
+      activeLetter: 'A'
     }
   },
   mounted () {
     let _this = this
-    // 获取官方课程信息
-    _this.getCourseLangs().then((res) => {
+    // 获取中国方言地图课程
+    _this.getChinaLangMap().then((res) => {
       console.log(res)
-      _this.hotLangs = res.hot_langs
-      res.course_langs.forEach((item) => {
-        let obj = item
-        let name = item.name[_this.languagueHander]
+      res.data.forEach((item) => {
+        let obj = item.province_courses[0]
+        let name = obj.name
         let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
         obj['pinyin'] = pinyin
         obj['letter'] = pinyin.slice(0, 1).toUpperCase()
@@ -103,13 +88,12 @@ export default {
   },
   computed: {
     ...mapState({
-      languagueHander: state => state.course.languagueHander,
       subscribeCoursesStr: state => state.course.subscribeCoursesStr
     })
   },
   methods: {
     ...mapActions({
-      getCourseLangs: 'course/getCourseLangs'
+      getChinaLangMap: 'course/getChinaLangMap'
     }),
     compareUp (propertyName) {
       // 升序排序
@@ -129,19 +113,19 @@ export default {
     scrollPosition (letter) {
       if ($('#' + letter).offset()) {
         this.activeLetter = letter
-        let top = $('.hot-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265
-        $('.hot-content').animate({scrollTop: top}, 300)
+        let top = $('.china-lang-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265
+        $('.china-lang-content').animate({scrollTop: top}, 300)
       }
     },
     scrollEvent () {
       let sections = $('.section')
-      $('.hot-content').on('scroll', () => {
-        let scrollTop = $('.hot-content').scrollTop()
+      $('.china-lang-content').on('scroll', () => {
+        let scrollTop = $('.china-lang-content').scrollTop()
         let len = sections.length - 1
         for (; len > -1; len--) {
           let that = sections.eq(len)
           let letter = that.find('a').attr('id')
-          if (scrollTop >= $('.hot-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265) {
+          if (scrollTop >= $('.china-lang-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265) {
             this.activeLetter = letter
             break
           }
@@ -149,12 +133,12 @@ export default {
       })
     },
     routerGo (item) {
-      let langCode = item['lan_code']
+      let langCode = item['code'].split('-')[0]
       if (this.subscribeCoursesStr.length === 0) {
         this.$router.push({path: '/app/book-details/' + langCode})
         return
       }
-      let courseCode = item['lan_code'] + '-Basic'
+      let courseCode = item['code']
       if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
         Bus.$emit('changeCourseCode', courseCode)
         return
@@ -168,7 +152,7 @@ export default {
   a {
     text-decoration:none;
   }
-  .hot-courses {
+  .china-lang-map {
     width: 1200px;
     margin: 0px auto 144px;
   }
@@ -195,18 +179,18 @@ export default {
     font-size: 16px;
     color: #999999;
   }
-  .hot-container {
+  .china-lang-container {
     width: 1200px;
     min-height: 800px;
     background: #ffffff;
     padding: 30px 0 30px 30px;
   }
-  .hot-container .hot-letter {
+  .china-lang-container .hot-letter {
     width: 100%;
     height: 65px;
     border-bottom: 1px solid #EBEBEB;
   }
-  .hot-container .hot-letter .letter {
+  .china-lang-container .hot-letter .letter {
     width: 880px;
     height: 65px;
     display: flex;
@@ -220,7 +204,7 @@ export default {
     box-shadow: 0px 2px 4px #000000;
     border-radius: 3px;
   }
-  .hot-container .hot-letter .letter .letter_list {
+  .china-lang-container .hot-letter .letter .letter_list {
     display: inline-block;
     padding: 0 8px;
     font-size: 16px;
@@ -229,54 +213,54 @@ export default {
     height: 35px;
     line-height: 35px;
   }
-  .hot-container .hot-content {
+  .china-lang-container .china-lang-content {
     width: 100%;
     padding-top: 10px;
     overflow-y: auto;
     height: 800px;
   }
 
-  .hot-content::-webkit-scrollbar {
+  .china-lang-content::-webkit-scrollbar {
     display: none;
   }
-  .hot-container .hot-content .hot-list {
+  .china-lang-container .china-lang-content .hot-list {
     width: 1100px;
     margin-left: 20px;
   }
-  .hot-container .hot-content .hot-list .letter-gray {
+  .china-lang-container .china-lang-content .hot-list .letter-gray {
     display: inline-block;
     width: 100%;
     height: 28px;
     font-size: 16px;
     color: #333333;
   }
-  .hot-container .hot-content .hot-list ul {
+  .china-lang-container .china-lang-content .hot-list ul {
     width: 100%;
   }
-  .hot-container .hot-content .hot-list ul li{
+  .china-lang-container .china-lang-content .hot-list ul li{
     position: relative;
     width: 100%;
     padding: 16px 0;
     border-top: 1px solid #EBEBEB;
   }
-  .hot-container .hot-content .hot-list ul li .hot-img{
+  .china-lang-container .china-lang-content .hot-list ul li .hot-img{
     display: inline-block;
     width: 56px;
     height: 56px;
   }
-  .hot-container .hot-content .hot-list ul li .hot-img img{
+  .china-lang-container .china-lang-content .hot-list ul li .hot-img img{
     width: 100%;
     height: 100%;
     border-radius: 4px;
   }
-  .hot-container .hot-content .hot-list ul li .hot-title {
+  .china-lang-container .china-lang-content .hot-list ul li .hot-title {
     display: inline-block;
     font-size: 14px;
     color: #444444;
     line-height: 56px;
     margin-left: 30px;
   }
-  .hot-container .hot-content .hot-list ul li .hot-icon {
+  .china-lang-container .china-lang-content .hot-list ul li .hot-icon {
     position: absolute;
     top: 40px;
     right: 0;

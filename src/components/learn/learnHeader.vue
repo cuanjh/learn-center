@@ -10,15 +10,6 @@
         <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
             我的
         </router-link>
-        <!-- <p class="nav-find-btn" v-if="memberInfo['is_anonymous']" v-bind:class="{ 'learn-header-left-active': activeItem === 'user'  }"  v-link="{path: '/v2/user/bind'}">我的</p> -->
-        <!-- <ul>
-          <li @mouseenter="navChangeCourse" @click="jumpToCourse">学习
-            <i v-bind:class="{'triangle-up': navArrowUp, 'triangle-down': navArrowDown}"></i>
-          </li>
-          <li></li>
-          <li style="display:none">发现</li>
-          <li style="display:none">我的</li>
-        </ul> -->
         <transition name="fade">
           <section class='mycourse-wrap mycourse-loginout animated' v-show="navCourse">
             <img class='mycourse-wrap-arrow' src="../../../static/images/course/learn-big-arrow.png">
@@ -50,9 +41,10 @@
       </div>
       <div class="right" @mouseleave="hideExit">
         <div class="search" v-bind:class="{'active':searchFlag}">
-          <input type="text">
+          <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <i @click="showSearch"></i>
         </div>
+        <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
         <div class="vip" style="display:none"></div>
         <div class="head-nation" style="display:none">
           <img class="head" src="https://course-assets1.talkmate.com/course/icons/FRE-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="头像">
@@ -77,6 +69,7 @@
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import Bus from '../../bus'
+import SearchCourse from '../common/find/searchCourse'
 
 export default {
   data () {
@@ -87,8 +80,13 @@ export default {
       navCourse: false,
       activeItem: '',
       showExitState: false,
-      learnCourse: []
+      learnCourse: [],
+      searchUserCourse: '',
+      courseDetailShow: false
     }
+  },
+  components: {
+    SearchCourse
   },
   created () {
     this.$on('activeNavItem', (item) => {
@@ -100,9 +98,7 @@ export default {
   },
   mounted () {
     console.log(this.userInfo)
-    this.getLearnCourses().then(() => {
-      console.log(1111)
-    })
+    this.getLearnCourses()
   },
   computed: {
     ...mapState({
@@ -129,6 +125,13 @@ export default {
         this.learnCourse = _object
       } else {
         this.learnCourse = newData
+      }
+    },
+    searchUserCourse () {
+      if (this.searchUserCourse.length <= 0) {
+        this.courseDetailShow = false
+      } else {
+        this.courseDetailShow = true
       }
     }
   },
@@ -180,6 +183,12 @@ export default {
     },
     jumpCourse () {
       this.$router.push({ path: '/app/course-list' })
+    },
+    enterSearch () {
+      this.$refs['search'].$emit('enterSearch')
+    },
+    hideLangList () {
+      this.courseDetailShow = false
     }
   }
 }
@@ -276,23 +285,24 @@ export default {
   float: left;
 }
 .search {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border-radius: 22px;
-  margin-left: -100px;
+  margin-left: -70px;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.4);
-  margin-top: 20px;
-  padding-right: 44px;
-  position: relative;
+  margin-top: 23px;
+  padding-right: 36px;
+  position: absolute;
 }
 .active {
   animation: widthAdd 0.5s ease 0s;
   animation-fill-mode: forwards;
+  transform: translateX(-200px);
 }
 @keyframes widthAdd {
   from {
-    width: 44px;
+    width: 36px;
   }
   to {
     width: 240px;
@@ -301,14 +311,15 @@ export default {
 .search input {
   width: 100%;
   border: none;
-  height: 44px;
+  height: 36px;
   text-indent: 20px;
-  font-size: 16px;
+  font-size: 14px;
+  color: #fff;
   background-color: transparent;
 }
 .search i {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
   background: url("./../../../static/images/learn/search.png") no-repeat center
     center;
@@ -616,5 +627,18 @@ export default {
 .right .user-login-out span:nth-of-type(1):hover{
   color:#3c9bbe;
   background-image: url(./../../../static/images/learn/learn-header-setting-blue.svg);
+}
+
+input::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #2A9FE4;
+}
+input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #2A9FE4;
+}
+input::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #2A9FE4;
+}
+input:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #2A9FE4;
 }
 </style>

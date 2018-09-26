@@ -62,7 +62,8 @@ export default {
       getProgress: 'course/getProgress',
       getChapterContent: 'course/getChapterContent',
       getRecord: 'course/getRecord',
-      getCourseTestRanking: 'learn/getCourseTestRanking'
+      getCourseTestRanking: 'learn/getCourseTestRanking',
+      homeworkContent: 'course/homeworkContent'
     }),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
@@ -82,7 +83,9 @@ export default {
       showLoading: 'course/showLoading',
       hideLoading: 'course/hideLoading',
       updateUnlockCourseList: 'course/updateUnlockCourseList',
-      updateUserInfo: 'user/updateUserInfo'
+      updateUserInfo: 'user/updateUserInfo',
+      updateHomeworkContent: 'course/updateHomeworkContent'
+
     }),
     changeWrapHeight () {
       /**
@@ -129,6 +132,9 @@ export default {
           })
           this.getCourseTestRanking(that.currentChapterCode).then((res) => {
             this.updateChapterTestResult(res.result.current_user)
+          })
+          this.homeworkContent(that.currentChapterCode + '-A8').then(res => {
+            this.updateHomeworkContent(res.contents)
           })
         })
       })

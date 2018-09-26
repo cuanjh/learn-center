@@ -31,7 +31,8 @@ const state = {
     tradeNo: '', // 订单号
     productId: '' // 套餐ID
   },
-  loadingMore: false // 显示收支详细是否加载完成
+  loadingMore: false, // 显示收支详细是否加载完成
+  courseFilterAll: []
 }
 
 const getters = {
