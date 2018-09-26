@@ -7,68 +7,161 @@
     <div class="hot-container">
       <div class="hot-letter">
         <div class="letter">
-          <a href="#" class="letter_list active" v-for="(item , index) in letterList" :key="index">{{item}}</a>
+          <a
+            @click="scrollPosition(item)"
+            :class="['letter_list', { 'active': activeLetter == item }]"
+            v-for="(item , index) in letterList"
+            :key="index">
+            {{item}}
+          </a>
         </div>
       </div>
       <div class="hot-content">
         <div class="hot-list">
-          <a href="#" class="letter-gray">热门</a>
-          <ul>
-            <li>
-              <div class="hot-img">
-                <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
-              </div>
-              <div class="hot-title">
-                <p>阿根廷</p>
-              </div>
-              <div class="hot-icon"></div>
-            </li>
-            <li>
-              <div class="hot-img">
-                <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
-              </div>
-              <div class="hot-title">
-                <p>阿根廷</p>
-              </div>
-              <div class="hot-icon"></div>
-            </li>
-          </ul>
-        </div>
-        <div class="hot-list">
-          <a href="#" class="letter-gray">A</a>
-          <ul>
-            <li>
-              <div class="hot-img">
-                <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
-              </div>
-              <div class="hot-title">
-                <p>阿根廷</p>
-              </div>
-              <div class="hot-icon"></div>
-            </li>
-            <li>
-              <div class="hot-img">
-                <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
-              </div>
-              <div class="hot-title">
-                <p>阿根廷</p>
-              </div>
-              <div class="hot-icon"></div>
-            </li>
-          </ul>
+          <div class="section">
+            <a id="热门" class="letter-gray">热门</a>
+            <ul>
+              <li v-for="item in hotLangs" :key="item.lan_code">
+                <div class="hot-img">
+                  <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
+                </div>
+                <div class="hot-title">
+                  <p>{{ item.name[languagueHander] }}</p>
+                </div>
+                <div class="hot-icon" @click="routerGo(item)"></div>
+              </li>
+            </ul>
+          </div>
+          <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
+            <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
+            <ul>
+              <li v-for="item in group.list" :key="item.lan_code">
+                <div class="hot-img">
+                  <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
+                </div>
+                <div class="hot-title">
+                  <p>{{ item.name[languagueHander]}}</p>
+                </div>
+                <div class="hot-icon"></div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState, mapActions } from 'vuex'
+import simplePinyin from 'simple-pinyin'
+import _ from 'lodash'
+import $ from 'jquery'
+
+import Bus from '../../../bus'
+
 export default {
   data () {
     return {
-      letterList: ['热门', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+      letterList: ['热门', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+      hotLangs: [],
+      courseLangs: [],
+      groupCourseLangs: [],
+      activeLetter: '热门'
+    }
+  },
+  mounted () {
+    let _this = this
+    // 获取官方课程信息
+    _this.getCourseLangs().then((res) => {
+      console.log(res)
+      _this.hotLangs = res.hot_langs
+      res.course_langs.forEach((item) => {
+        let obj = item
+        let name = item.name[_this.languagueHander]
+        let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
+        obj['pinyin'] = pinyin
+        obj['letter'] = pinyin.slice(0, 1).toUpperCase()
+        _this.courseLangs.push(obj)
+      })
+      console.log(_this.courseLangs)
+      console.log(_this.courseLangs.sort(_this.compareUp('pinyin')))
+      let sortCourseLangs = _this.courseLangs.sort(_this.compareUp('pinyin'))
+      let letterArr = _this.getUpperLetters()
+      letterArr.forEach((letter) => {
+        let obj = {}
+        obj['letter'] = letter
+        obj['list'] = sortCourseLangs.filter((courseLang) => {
+          return letter === courseLang.letter
+        })
+        _this.groupCourseLangs.push(obj)
+      })
+      console.log(_this.groupCourseLangs)
+      setTimeout(() => {
+        this.scrollEvent()
+      }, 100)
+    })
+  },
+  computed: {
+    ...mapState({
+      languagueHander: state => state.course.languagueHander,
+      subscribeCoursesStr: state => state.course.subscribeCoursesStr
+    })
+  },
+  methods: {
+    ...mapActions({
+      getCourseLangs: 'course/getCourseLangs'
+    }),
+    compareUp (propertyName) {
+      // 升序排序
+      return (object1, object2) => {
+        var value1 = object1[propertyName]
+        var value2 = object2[propertyName]
+        return value1.localeCompare(value2)
+      }
+    },
+    getUpperLetters () {
+      var arr = []
+      for (let i = 65; i < 91; i++) {
+        arr.push(String.fromCharCode(i))
+      }
+      return arr
+    },
+    scrollPosition (letter) {
+      if ($('#' + letter).offset()) {
+        this.activeLetter = letter
+        let top = $('.hot-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265
+        $('.hot-content').animate({scrollTop: top}, 300)
+      }
+    },
+    scrollEvent () {
+      let sections = $('.section')
+      $('.hot-content').on('scroll', () => {
+        let scrollTop = $('.hot-content').scrollTop()
+        let len = sections.length - 1
+        for (; len > -1; len--) {
+          let that = sections.eq(len)
+          let letter = that.find('a').attr('id')
+          if (scrollTop >= $('.hot-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265) {
+            this.activeLetter = letter
+            break
+          }
+        }
+      })
+    },
+    routerGo (item) {
+      let langCode = item['lan_code']
+      if (this.subscribeCoursesStr.length === 0) {
+        this.$router.push({path: '/app/book-details/' + langCode})
+        return
+      }
+      let courseCode = item['lan_code'] + '-Basic'
+      if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
+        Bus.$emit('changeCourseCode', courseCode)
+        return
+      }
+      this.$router.push({path: '/app/book-details/' + langCode})
     }
   }
-
 }
 </script>
 <style scoped>
@@ -104,9 +197,9 @@ export default {
   }
   .hot-container {
     width: 1200px;
-    height: 800px;
+    min-height: 800px;
     background: #ffffff;
-    padding: 30px;
+    padding: 30px 0 30px 30px;
   }
   .hot-container .hot-letter {
     width: 100%;
@@ -114,35 +207,37 @@ export default {
     border-bottom: 1px solid #EBEBEB;
   }
   .hot-container .hot-letter .letter {
-    width: 820px;
+    width: 880px;
     height: 65px;
     display: flex;
     justify-content: space-between;
     margin-left: 20px;
   }
-  .hot-container .hot-letter .letter a:nth-child(1) {
-    display: inline-block;
-    width: 56px;
+  .active {
     height: 35px;
-    font-size: 16px;
     background: #0581D1;
-    color: #ffffff;
+    color: #ffffff !important;
     box-shadow: 0px 2px 4px #000000;
     border-radius: 3px;
-    text-align: center;
-    line-height: 35px;
   }
   .hot-container .hot-letter .letter .letter_list {
     display: inline-block;
-    width: 16px;
-    font-size: 18px;
+    padding: 0 8px;
+    font-size: 16px;
     color: #2A9FE4;
     text-align: center;
+    height: 35px;
     line-height: 35px;
   }
   .hot-container .hot-content {
     width: 100%;
-    margin-top: 10px;
+    padding-top: 10px;
+    overflow-y: auto;
+    height: 800px;
+  }
+
+  .hot-content::-webkit-scrollbar {
+    display: none;
   }
   .hot-container .hot-content .hot-list {
     width: 1100px;
@@ -172,12 +267,14 @@ export default {
   .hot-container .hot-content .hot-list ul li .hot-img img{
     width: 100%;
     height: 100%;
+    border-radius: 4px;
   }
   .hot-container .hot-content .hot-list ul li .hot-title {
     display: inline-block;
     font-size: 14px;
     color: #444444;
     line-height: 56px;
+    margin-left: 30px;
   }
   .hot-container .hot-content .hot-list ul li .hot-icon {
     position: absolute;
@@ -188,5 +285,6 @@ export default {
     height: 18px;
     background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
     background-size: 10px 18px;
+    cursor: pointer;
   }
 </style>

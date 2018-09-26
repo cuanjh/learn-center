@@ -66,7 +66,7 @@ export default {
         this.$emit('hideLangList')
         return
       }
-      if (this.subscribeCoursesStr.indexOf(item['code'])) {
+      if (this.subscribeCoursesStr.indexOf(item['code']) > -1) {
         Bus.$emit('changeCourseCode', item['code'])
         this.$emit('hideLangList')
         return
