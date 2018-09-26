@@ -4,7 +4,7 @@
       <p></p>
       <span>返回</span>
     </router-link>
-    <div class="hot-container">
+    <div class="china-lang-container">
       <div class="hot-letter">
         <div class="letter">
           <a
@@ -16,7 +16,7 @@
           </a>
         </div>
       </div>
-      <div class="hot-content">
+      <div class="china-lang-content">
         <div class="hot-list">
           <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
             <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
@@ -113,19 +113,19 @@ export default {
     scrollPosition (letter) {
       if ($('#' + letter).offset()) {
         this.activeLetter = letter
-        let top = $('.hot-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265
-        $('.hot-content').animate({scrollTop: top}, 300)
+        let top = $('.china-lang-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265
+        $('.china-lang-content').animate({scrollTop: top}, 300)
       }
     },
     scrollEvent () {
       let sections = $('.section')
-      $('.hot-content').on('scroll', () => {
-        let scrollTop = $('.hot-content').scrollTop()
+      $('.china-lang-content').on('scroll', () => {
+        let scrollTop = $('.china-lang-content').scrollTop()
         let len = sections.length - 1
         for (; len > -1; len--) {
           let that = sections.eq(len)
           let letter = that.find('a').attr('id')
-          if (scrollTop >= $('.hot-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265) {
+          if (scrollTop >= $('.china-lang-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265) {
             this.activeLetter = letter
             break
           }
@@ -179,18 +179,18 @@ export default {
     font-size: 16px;
     color: #999999;
   }
-  .hot-container {
+  .china-lang-container {
     width: 1200px;
     min-height: 800px;
     background: #ffffff;
     padding: 30px 0 30px 30px;
   }
-  .hot-container .hot-letter {
+  .china-lang-container .hot-letter {
     width: 100%;
     height: 65px;
     border-bottom: 1px solid #EBEBEB;
   }
-  .hot-container .hot-letter .letter {
+  .china-lang-container .hot-letter .letter {
     width: 880px;
     height: 65px;
     display: flex;
@@ -204,7 +204,7 @@ export default {
     box-shadow: 0px 2px 4px #000000;
     border-radius: 3px;
   }
-  .hot-container .hot-letter .letter .letter_list {
+  .china-lang-container .hot-letter .letter .letter_list {
     display: inline-block;
     padding: 0 8px;
     font-size: 16px;
@@ -213,54 +213,54 @@ export default {
     height: 35px;
     line-height: 35px;
   }
-  .hot-container .hot-content {
+  .china-lang-container .china-lang-content {
     width: 100%;
     padding-top: 10px;
     overflow-y: auto;
     height: 800px;
   }
 
-  .hot-content::-webkit-scrollbar {
+  .china-lang-content::-webkit-scrollbar {
     display: none;
   }
-  .hot-container .hot-content .hot-list {
+  .china-lang-container .china-lang-content .hot-list {
     width: 1100px;
     margin-left: 20px;
   }
-  .hot-container .hot-content .hot-list .letter-gray {
+  .china-lang-container .china-lang-content .hot-list .letter-gray {
     display: inline-block;
     width: 100%;
     height: 28px;
     font-size: 16px;
     color: #333333;
   }
-  .hot-container .hot-content .hot-list ul {
+  .china-lang-container .china-lang-content .hot-list ul {
     width: 100%;
   }
-  .hot-container .hot-content .hot-list ul li{
+  .china-lang-container .china-lang-content .hot-list ul li{
     position: relative;
     width: 100%;
     padding: 16px 0;
     border-top: 1px solid #EBEBEB;
   }
-  .hot-container .hot-content .hot-list ul li .hot-img{
+  .china-lang-container .china-lang-content .hot-list ul li .hot-img{
     display: inline-block;
     width: 56px;
     height: 56px;
   }
-  .hot-container .hot-content .hot-list ul li .hot-img img{
+  .china-lang-container .china-lang-content .hot-list ul li .hot-img img{
     width: 100%;
     height: 100%;
     border-radius: 4px;
   }
-  .hot-container .hot-content .hot-list ul li .hot-title {
+  .china-lang-container .china-lang-content .hot-list ul li .hot-title {
     display: inline-block;
     font-size: 14px;
     color: #444444;
     line-height: 56px;
     margin-left: 30px;
   }
-  .hot-container .hot-content .hot-list ul li .hot-icon {
+  .china-lang-container .china-lang-content .hot-list ul li .hot-icon {
     position: absolute;
     top: 40px;
     right: 0;
