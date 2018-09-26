@@ -154,6 +154,10 @@ const actions = {
   // 获取和课程相关的语言列表信息
   getCourseLangs ({commit}) {
     return httpNoLogin(config.courseLangs)
+  },
+  // 中国方言地图课程列表
+  getChinaLangMap ({commit}) {
+    return httpLogin(config.chinaLangMapApi)
   }
 }
 

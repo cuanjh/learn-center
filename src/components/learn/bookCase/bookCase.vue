@@ -26,7 +26,9 @@
         </ul>
       </div>
       <div class="course-box">
-        <p class="title">中国方言地图<a>所有课程</a></p>
+        <p class="title">中国方言地图
+          <router-link :to="{path: '/app/china-lang-map'}">所有课程</router-link>
+        </p>
         <ul class="course-item">
           <li v-for="(item, index) in chinaLangMap"
             :key="index"

@@ -1,5 +1,5 @@
 <template>
-  <div class="hot-courses">
+  <div class="china-lang-map">
     <router-link class="course-balk" :to="{path: '/app/book-case'}">
       <p></p>
       <span>返回</span>
@@ -18,20 +18,6 @@
       </div>
       <div class="hot-content">
         <div class="hot-list">
-          <div class="section">
-            <a id="热门" class="letter-gray">热门</a>
-            <ul>
-              <li v-for="item in hotLangs" :key="item.lan_code">
-                <div class="hot-img">
-                  <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
-                </div>
-                <div class="hot-title">
-                  <p>{{ item.name[languagueHander] }}</p>
-                </div>
-                <div class="hot-icon" @click="routerGo(item)"></div>
-              </li>
-            </ul>
-          </div>
           <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
             <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
             <ul>
@@ -40,7 +26,7 @@
                   <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
                 </div>
                 <div class="hot-title">
-                  <p>{{ item.name[languagueHander]}}</p>
+                  <p>{{ item.name}}</p>
                 </div>
                 <div class="hot-icon" @click="routerGo(item)"></div>
               </li>
@@ -62,22 +48,21 @@ import Bus from '../../../bus'
 export default {
   data () {
     return {
-      letterList: ['热门', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+      letterList: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
       hotLangs: [],
       courseLangs: [],
       groupCourseLangs: [],
-      activeLetter: '热门'
+      activeLetter: 'A'
     }
   },
   mounted () {
     let _this = this
-    // 获取官方课程信息
-    _this.getCourseLangs().then((res) => {
+    // 获取中国方言地图课程
+    _this.getChinaLangMap().then((res) => {
       console.log(res)
-      _this.hotLangs = res.hot_langs
-      res.course_langs.forEach((item) => {
-        let obj = item
-        let name = item.name[_this.languagueHander]
+      res.data.forEach((item) => {
+        let obj = item.province_courses[0]
+        let name = obj.name
         let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
         obj['pinyin'] = pinyin
         obj['letter'] = pinyin.slice(0, 1).toUpperCase()
@@ -103,13 +88,12 @@ export default {
   },
   computed: {
     ...mapState({
-      languagueHander: state => state.course.languagueHander,
       subscribeCoursesStr: state => state.course.subscribeCoursesStr
     })
   },
   methods: {
     ...mapActions({
-      getCourseLangs: 'course/getCourseLangs'
+      getChinaLangMap: 'course/getChinaLangMap'
     }),
     compareUp (propertyName) {
       // 升序排序
@@ -149,12 +133,12 @@ export default {
       })
     },
     routerGo (item) {
-      let langCode = item['lan_code']
+      let langCode = item['code'].split('-')[0]
       if (this.subscribeCoursesStr.length === 0) {
         this.$router.push({path: '/app/book-details/' + langCode})
         return
       }
-      let courseCode = item['lan_code'] + '-Basic'
+      let courseCode = item['code']
       if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
         Bus.$emit('changeCourseCode', courseCode)
         return
@@ -168,7 +152,7 @@ export default {
   a {
     text-decoration:none;
   }
-  .hot-courses {
+  .china-lang-map {
     width: 1200px;
     margin: 0px auto 144px;
   }

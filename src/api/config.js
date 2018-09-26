@@ -32,7 +32,6 @@ export default {
   resetAnonymous: '/user/reset_password_anonymous', // 匿名账号重置
   unbindIdentity: '/user/unbind_identity', // 解除邮箱或者手机号绑定
   uploadUserPhoto: '/user/upload_user_photo', // 上传用户头像(需要登录)
-  shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
 
   // 课程
   getMoreLearnCourses: '/study/more_learn_courses', // 获取更多的订阅课程
@@ -62,6 +61,8 @@ export default {
   shelfResList: '/studyv1/shelf/v2/res_list', // 资源列表接口
   purchaseCourse: '/store/purchase_course', // 购买课程
   courseLangs: '/info/course_langs', // 获取和课程相关的语言列表信息
+  shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
+  chinaLangMapApi: '/studyv1/shelf/china_lang_map', // 中国方言课程地图接口
 
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token
