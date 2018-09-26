@@ -60,6 +60,8 @@ export default {
   langInfo: '/studyv1/shelf/v2/lang_info', // 课程详情信息
   shelfResList: '/studyv1/shelf/v2/res_list', // 资源列表接口
   purchaseCourse: '/store/purchase_course', // 购买课程
+  languageMap: '/studyv1/shelf/v2/lang_map', // 世界语言地图
+  countryInfo: '/studyv1/shelf/v2/country_info', // 国家信息
 
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token

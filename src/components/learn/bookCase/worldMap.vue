@@ -7,11 +7,11 @@
     <div class="world-container">
       <div class="world-header">
         <div class="five-continents">
-          <a class="america" v-bind:class="{'active': 'america' == tabCountry}" @click="tabChange('america')"  href="javascript:;"><i></i><span>美洲</span></a>
-          <a class="europe" v-bind:class="{'active': 'europe' == tabCountry}" @click="tabChange('europe')"  href="javascript:;"><i></i><span>欧洲</span></a>
-          <a class="asia" v-bind:class="{'active': 'asia' == tabCountry}" @click="tabChange('asia')"  href="javascript:;"><i></i><span>亚洲</span></a>
-          <a class="africa" v-bind:class="{'active': 'africa' == tabCountry}" @click="tabChange('africa')"  href="javascript:;"><i></i><span>非洲</span></a>
-          <a class="oceania" v-bind:class="{'active': 'oceania' == tabCountry}" @click="tabChange('oceania')"  href="javascript:;"><i></i><span>大洋洲</span></a>
+          <a class="america" v-bind:class="{'active': 'Americas' == tabCountry}" @click="tabChange('Americas')"  href="javascript:;"><i></i><span>美洲</span></a>
+          <a class="europe" v-bind:class="{'active': 'Europe' == tabCountry}" @click="tabChange('Europe')"  href="javascript:;"><i></i><span>欧洲</span></a>
+          <a class="asia" v-bind:class="{'active': 'Asia' == tabCountry}" @click="tabChange('Asia')"  href="javascript:;"><i></i><span>亚洲</span></a>
+          <a class="africa" v-bind:class="{'active': 'Africa' == tabCountry}" @click="tabChange('Africa')"  href="javascript:;"><i></i><span>非洲</span></a>
+          <a class="oceania" v-bind:class="{'active': 'Pacific' == tabCountry}" @click="tabChange('Pacific')"  href="javascript:;"><i></i><span>大洋洲</span></a>
         </div>
         <div class="content">
           <div class="text" v-show="'country' == tabCountry">
@@ -22,7 +22,7 @@
               <span>在左侧地图选择大洲</span>
             </p>
           </div>
-          <div class="country-america" v-show="'america' == tabCountry">
+          <div class="country-america" v-show="'Americas' == tabCountry">
             <ul class="america-list">
               <i class="background"></i>
               <li class="title">美洲</li>
@@ -46,7 +46,7 @@
               </li>
             </ul>
           </div>
-          <div class="country-europe" v-show="'europe' == tabCountry">
+          <div class="country-europe" v-show="'Europe' == tabCountry">
             <ul class="europe-list">
               <i class="background"></i>
               <li class="title">欧洲</li>
@@ -70,7 +70,7 @@
               </li>
             </ul>
           </div>
-          <div class="country-asia" v-show="'asia' == tabCountry">
+          <div class="country-asia" v-show="'Asia' == tabCountry">
             <ul class="asia-list">
               <i class="background"></i>
               <li class="title">亚洲</li>
@@ -94,7 +94,7 @@
               </li>
             </ul>
           </div>
-          <div class="country-africa" v-show="'africa' == tabCountry">
+          <div class="country-africa" v-show="'Africa' == tabCountry">
             <ul class="africa-list">
               <i class="background"></i>
               <li class="title">非洲</li>
@@ -118,7 +118,7 @@
               </li>
             </ul>
           </div>
-          <div class="country-oceania" v-show="'oceania' == tabCountry">
+          <div class="country-oceania" v-show="'Pacific' == tabCountry">
             <ul class="oceania-list">
               <i class="background"></i>
               <li class="title">大洋洲</li>
@@ -142,24 +142,74 @@
         </div>
       </div>
     </div>
-    <countyies/>
+    <countyies :allAreasInfo='allAreasInfo' :tabCountry='tabCountry'/>
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 import countyies from './countries'
 export default {
   data () {
     return {
       tabCountry: 'country',
-      isShow: false
+      isShow: false,
+      allAreasInfo: [] // 全部
     }
   },
   components: {
     countyies
   },
+  mounted () {
+    this.getMapInfoByCountry()
+  },
   methods: {
+    ...mapActions({
+      worldLanguageMap: 'course/worldLanguageMap'
+    }),
     tabChange (tabCountry) {
       this.tabCountry = tabCountry
+      this.getMapInfoByCountry(tabCountry)
+    },
+    getMapInfoByCountry (tabCountry) {
+      this.allAreasInfo = []
+      this.worldLanguageMap().then(res => {
+        console.log('res', res)
+        res.maps.forEach(items => {
+          let pName2 = items.name
+          let pCode2 = items.code
+          if (tabCountry) {
+            if (pName2 === tabCountry) {
+              items.areasInfo.forEach(item => {
+                let pCode1 = item.code
+                let pName1 = item.name
+                item.countriesInfo.forEach(country => {
+                  let obj = country
+                  obj['pCode1'] = pCode1
+                  obj['pCode2'] = pCode2
+                  obj['pName1'] = pName1
+                  obj['pName2'] = pName2
+                  obj['letter'] = country.name.slice(0, 1)
+                  this.allAreasInfo.push(obj)
+                })
+              })
+            }
+          } else {
+            items.areasInfo.forEach(item => {
+              let pCode1 = item.code
+              let pName1 = item.name
+              item.countriesInfo.forEach(country => {
+                let obj = country
+                obj['pCode1'] = pCode1
+                obj['pCode2'] = pCode2
+                obj['pName1'] = pName1
+                obj['pName2'] = pName2
+                obj['letter'] = country.name.slice(0, 1)
+                this.allAreasInfo.push(obj)
+              })
+            })
+          }
+        })
+      })
     }
   }
 }

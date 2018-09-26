@@ -145,6 +145,7 @@ export default {
         }
       }
       this.courseInfo = res.courseInfo
+      console.log('courseInfo', this.courseInfo)
       this.countryInfo = res.countryInfo
       this.resourceInfoRadios = res.resourceInfo.radios
       this.resPage = res.resourceInfo.page

@@ -11,11 +11,11 @@
         </div>
         <div class="nation-content">
           <div class="containers">
-            <p class="nation">白俄罗斯</p>
-            <p class="continents">欧洲</p>
+            <p class="nation">{{naInfo.name}}</p>
+            <p class="continents">{{naInfo.pName2}}</p>
           </div>
           <div class="nation-img">
-            <img src="../../../../static/images/bookCase/caseBig.png" alt="世界语言大图标">
+            <img :src="naInfo.flag" alt="世界语言大图标">
           </div>
         </div>
       </div>
@@ -24,58 +24,52 @@
         <span v-bind:class="{'active': 'language' == tabFlag}" @click="tabChange('language')">拥有语言</span>
       </div>
     </div>
-    <div class="country-content">
+    <div class="country-contents">
       <ul class="country-info" v-show="'info' == tabFlag">
-        <li>
-          <p class="title">正式名称</p>
-          <p class="desc">白俄罗斯共和国</p>
+        <li v-if="nationInfo.DeafPopulation">
+          <p class="title">{{nationInfo.DeafPopulation.title}}</p>
+          <p class="desc">{{nationInfo.DeafPopulation.info}}</p>
         </li>
-        <li>
-          <p class="title">人口</p>
-          <p class="desc">100033百万</p>
+        <li v-if="nationInfo.GeneralReferences">
+          <p class="title">{{nationInfo.GeneralReferences.title}}</p>
+          <p class="desc">{{nationInfo.GeneralReferences.info}}</p>
         </li>
-        <li>
-          <p class="title">主要语言</p>
-          <p class="desc">俄语</p>
+        <li v-if="nationInfo.GeneralRemarks">
+          <p class="title">{{nationInfo.GeneralRemarks.title}}</p>
+          <p class="desc">{{nationInfo.GeneralRemarks.info}}</p>
         </li>
-        <li>
-          <p class="title">识字率</p>
-          <p class="desc">联合国教科文组织100%</p>
+        <li v-if="nationInfo.ImmigrantLanguages">
+          <p class="title">{{nationInfo.ImmigrantLanguages.title}}</p>
+          <p class="desc">{{nationInfo.ImmigrantLanguages.info}}%</p>
         </li>
-        <li>
-          <p class="title">移民语言</p>
-          <p class="desc">联合国教科文组织100%</p>
+        <li v-if="nationInfo.LanguageCounts">
+          <p class="title">{{nationInfo.LanguageCounts.title}}</p>
+          <p class="desc">{{nationInfo.LanguageCounts.info}}%</p>
         </li>
-        <li>
-          <p class="title">语言方面</p>
-          <p class="desc">联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%联合国教科文组织100%</p>
+        <li v-if="nationInfo.LiteracyRate">
+          <p class="title">{{nationInfo.LiteracyRate.title}}</p>
+          <p class="desc">{{nationInfo.LiteracyRate.info}}</p>
+        </li>
+        <li v-if="nationInfo.OfficialName">
+          <p class="title">{{nationInfo.OfficialName.title}}</p>
+          <p class="desc">{{nationInfo.OfficialName.info}}</p>
+        </li>
+        <li v-if="nationInfo.Population">
+          <p class="title">{{nationInfo.Population.title}}</p>
+          <p class="desc">{{nationInfo.Population.info}}</p>
+        </li>
+        <li v-if="nationInfo.PrincipalLanguages">
+          <p class="title">{{nationInfo.PrincipalLanguages.title}}</p>
+          <p class="desc">{{nationInfo.PrincipalLanguages.info}}</p>
         </li>
       </ul>
       <ul class="country-language" v-show="'language' == tabFlag">
-        <li>
+        <li v-for="(item, index) in langInfos" :key="index">
           <div class="country-img">
-            <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
+            <img :src="item.flag" alt="资源图片">
           </div>
           <div class="country-title">
-            <p>阿根廷</p>
-          </div>
-          <div class="country-icon"></div>
-        </li>
-        <li>
-          <div class="country-img">
-            <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
-          </div>
-          <div class="country-title">
-            <p>阿根廷</p>
-          </div>
-          <div class="country-icon"></div>
-        </li>
-        <li>
-          <div class="country-img">
-            <img src="../../../../static/images/bookCase/case.png" alt="资源图片">
-          </div>
-          <div class="country-title">
-            <p>阿根廷</p>
+            <p>{{item.name}}</p>
           </div>
           <div class="country-icon"></div>
         </li>
@@ -84,18 +78,37 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      tabFlag: 'info'
+      tabFlag: 'info',
+      nationInfo: {},
+      langInfos: []
     }
   },
+  computed: {
+    naInfo () {
+      let nationInfo = JSON.parse(localStorage.getItem('nationInfo'))
+      return nationInfo
+    }
+  },
+  mounted () {
+    this.countryInfo({code: this.$route.params.countryCode}).then(res => {
+      console.log('res====>', res)
+      this.nationInfo = res.country_info.info
+      this.langInfos = res.country_info.langsInfo
+      console.log('langInfos', this.langInfos)
+    })
+  },
   methods: {
+    ...mapActions({
+      countryInfo: 'course/countryInfo'
+    }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
     }
   }
-
 }
 </script>
 <style lang="less">
@@ -140,7 +153,7 @@ a {
       top: 0;
       width: 100%;
       height: 100%;
-      padding: 20px;
+      padding: 20px 30px;
       .nation-title {
         width: 144px;
         height: 29px;
@@ -149,14 +162,13 @@ a {
       }
       .nation-content {
         height: 137px;
-        width: 426px;
         position: absolute;
         right: 40px;
         bottom: 15%;
         .containers {
           display: inline-block;
-          width: 208px;
           margin-top: 40px;
+          margin-right: 16px;
           .nation {
             font-size: 40px;
             color: #444444;
@@ -197,7 +209,7 @@ a {
         font-size: 16px;
         color: #333333;
         cursor: pointer;
-        margin-left: 20px;
+        margin-left: 30px;
         padding: 0px 2px 12px;
         &.active {
           color: #2A9FE4;
@@ -206,15 +218,17 @@ a {
       }
     }
   }
-  .country-content {
+  .country-contents {
     background-color: #fff;
-    padding: 30px 20px;
     margin-top: 20px;
+    padding: 30px 30px;
+    height: 880px;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {display:none}
     .country-info {
       width: 1082px;
       li {
         width: 1082px;
-        height: 69px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;

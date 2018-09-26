@@ -146,6 +146,13 @@ const actions = {
   },
   postPurchaseCourse ({ commit }, params) {
     return httpLogin(config.purchaseCourse, params)
+  },
+  // 世界语言地图
+  worldLanguageMap ({ commit }, params) {
+    return httpLogin(config.languageMap, params)
+  },
+  countryInfo ({ commit }, params) {
+    return httpLogin(config.countryInfo, params)
   }
 }
 

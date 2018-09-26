@@ -97,7 +97,7 @@ export default[
         component: worldMap
       },
       {
-        path: 'nation-details',
+        path: 'nation-details/:countryCode',
         component: nationDetails
       },
       {
