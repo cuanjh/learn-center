@@ -1,9 +1,15 @@
 <template>
   <div class="hot-courses">
-    <router-link class="course-balk" :to="{path: '/app/book-case'}">
-      <p></p>
-      <span>返回</span>
-    </router-link>
+    <div class="nav">
+      <div class="nav-circle"></div>
+      <router-link :to="{path: '/app/book-case'}">
+        <span>书架</span>
+      </router-link>
+      /
+      <div class="nav-current">
+        热门课程
+      </div>
+    </div>
     <div class="hot-container">
       <div class="hot-letter">
         <div class="letter">
@@ -168,22 +174,38 @@ export default {
   a {
     text-decoration:none;
   }
+
   .hot-courses {
     width: 1200px;
     margin: 0px auto 144px;
   }
-  .course-balk {
-    display: block;
-    width: 80px;
-    height: 30px;
-    background: #ffffff;
-    text-align: center;
-    line-height: 30px;
-    border-radius: 6px;
-    margin-bottom: 28px;
-    margin-top: 20px;
+
+  .nav {
+    margin: 20px 0;
+    font-weight: bold;
+    display: inline-block;
+    font-size: 20px;
   }
-   .bocourseok-balk p {
+
+  .nav-circle {
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background-color: #999999;
+    display: inline-block;
+    margin-top: 9px;
+  }
+
+  .nav span {
+    color: #999999;
+  }
+
+  .nav-current {
+    display: inline-block;
+    color: #2A9FE4;
+  }
+
+  .bocourseok-balk p {
     display: inline-block;
     background: url(../../../../static/images/homework/balck.png);
     background-size: 100% 100%;
@@ -191,10 +213,7 @@ export default {
     width: 12px;
     height: 18px;
   }
-  .course-balk span {
-    font-size: 16px;
-    color: #999999;
-  }
+
   .hot-container {
     width: 1200px;
     min-height: 800px;
@@ -225,6 +244,7 @@ export default {
     padding: 0 8px;
     font-size: 16px;
     color: #2A9FE4;
+    font-weight: bold;
     text-align: center;
     height: 35px;
     line-height: 35px;
