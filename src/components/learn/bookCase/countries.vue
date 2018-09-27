@@ -3,40 +3,46 @@
     <div class="country-container">
       <div class="country-letter">
         <div class="letter">
-          <a :href="`#mubiao`+index" rel="nofollow" target="_self" class="letter_list" v-bind:class="{bg:index===isActive}" v-for="(item, index) in letterLists" :key="index" @click="navScroll(item, index)">{{item}}</a>
+          <a
+            :class="['letter_list', { 'active': activeLetter == item }]"
+            v-for="(item, index) in letterLists"
+            :key="index"
+            @click="navScroll(item)">
+            {{item}}
+          </a>
           <p class="countries">{{getChineseName(tabCountry)}}</p>
         </div>
       </div>
-      <div class="country-content">
-        <div class="country-list" v-for="(item , index) in countryList" :key="index">
-          <span :id="`mubiao`+index" class="letter-gray">{{item.letter}}</span>
-          <ul>
-            <li @click="nationDetail(item.code, item.flag, item.name, item.pName2)" v-for="(item , index) in item.lists" :key="index">
-              <div class="country-img">
-                <img :src="item.flag" alt="资源图片">
-              </div>
-              <div class="country-title">
-                <p>{{item.name}}</p>
-              </div>
-              <div class="country-icon"></div>
-            </li>
-          </ul>
+      <div class="country-scroll">
+        <div class="country-content">
+          <div class="country-list" v-if="countryList.length > 0" v-for="(item , index) in countryList" :key="index">
+            <a :id="item.letter" class="letter-gray">{{item.letter}}</a>
+            <ul>
+              <li @click="nationDetail(item.code, item.flag, item.name, item.pName2)" v-for="(item , index) in item.lists" :key="index">
+                <div class="country-img">
+                  <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
+                </div>
+                <div class="country-title">
+                  <p>{{item.name}}</p>
+                </div>
+                <div class="country-icon"></div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-      <div :class="['tip-box']" v-show="tipAppear">{{tipTxt}}</div>
     </div>
   </div>
 </template>
 <script>
+import $ from 'jquery'
 export default {
   props: ['allAreasInfo', 'tabCountry'],
   data () {
     return {
-      isActive: 0,
-      tipAppear: false, // 弹框
-      tipTxt: '', // 弹框的文字
       A_Z: '', // 生成26个字母
-      letterLists: [] // 字母列表
+      letterLists: [], // 字母列表
+      activeLetter: 'A'
     }
   },
   mounted () {
@@ -44,6 +50,9 @@ export default {
       this.A_Z += String.fromCharCode(i) + ''
     }
     this.letterLists = this.A_Z.split('')
+    setTimeout(() => {
+      this.scrollContent()
+    }, 100)
   },
   computed: {
     countryList () {
@@ -55,6 +64,9 @@ export default {
         }
         for (let i = this.allAreasInfo.length - 1; i >= 0; i--) {
           let item = this.allAreasInfo[i]
+          if (!item.flag) {
+            continue
+          }
           if (item.letter === letter) {
             obj.lists.push(item)
           }
@@ -70,6 +82,10 @@ export default {
       }
       console.log('arr', arr)
       return arr
+    },
+    // 获取list列表
+    countriesLists () {
+      return $('.country-list')
     }
   },
   methods: {
@@ -83,13 +99,35 @@ export default {
       localStorage.setItem('nationInfo', jsonStr)
       this.$router.push({ path: `/app/nation-details/${code}` })
     },
-    navScroll (id, index) {
-      this.tipTxt = id
-      this.tipAppear = true
-      setTimeout(() => {
-        this.tipAppear = false
-      }, 1000)
-      this.isActive = index
+    navScroll (letter) {
+      if ($('#' + letter).offset()) {
+        this.activeLetter = letter
+        let top = $('.country-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 746
+        $('.country-content').animate({scrollTop: top}, 300)
+      }
+    },
+    scrollContent () {
+      this.$nextTick(() => {
+        let countryLists = this.countriesLists
+        console.log('countryLists', countryLists)
+        console.log('countryLists', countryLists.length)
+        $('.country-content').on('scroll', () => {
+          let scrollTop = $('.country-content').scrollTop()
+          console.log('scollTop----->', scrollTop)
+          let len = countryLists.length - 1
+          console.log('len------>', len)
+          for (; len > -1; len--) {
+            let that = countryLists.eq(len)
+            let letter = that.find('a').attr('id')
+            console.log('letter----->', letter)
+            console.log("$('.country-content').scrollTop():", $('.country-content').scrollTop(), '$("#" + letter).scrollTop():', $('#' + letter).scrollTop(), "$('#' + letter).offset().top:", $('#' + letter).offset().top)
+            if (scrollTop >= $('.country-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 746) {
+              this.activeLetter = letter
+              break
+            }
+          }
+        })
+      })
     },
     getChineseName (tabCountry) {
       switch (tabCountry) {
@@ -166,7 +204,7 @@ export default {
     color: #2A9FE4;
     text-align: center;
     line-height: 35px;
-    &.bg {
+    &.active {
       display: inline-block;
       width: 26px;
       height: 35px;
@@ -188,11 +226,16 @@ export default {
     left: 236px;
     top: 10px;
   }
+  .country-container .country-scroll {
+    width: 1130px;
+    overflow: hidden;
+    height: 800px;
+  }
   .country-container .country-content {
-    width: 100%;
+    width: 1180px;
     margin-top: 10px;
-    height: 2000px;
-    overflow-y: scroll;
+    height: 800px;
+    overflow-y: auto;
   }
   .country-container .country-content::-webkit-scrollbar {display:none}
   .country-container .country-content .country-list {
@@ -217,8 +260,8 @@ export default {
   }
   .country-container .country-content .country-list ul li .country-img{
     display: inline-block;
-    width: 56px;
-    height: 56px;
+    width: 75px;
+    height: 50px;
   }
   .country-container .country-content .country-list ul li .country-img img{
     width: 100%;
@@ -229,6 +272,7 @@ export default {
     font-size: 14px;
     color: #444444;
     line-height: 56px;
+    margin-left: 20px;
   }
   .country-container .country-content .country-list ul li .country-icon {
     position: absolute;

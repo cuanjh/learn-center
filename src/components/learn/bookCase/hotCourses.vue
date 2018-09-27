@@ -22,35 +22,37 @@
           </a>
         </div>
       </div>
-      <div class="hot-content">
-        <div class="hot-list">
-          <div class="section">
-            <a id="热门" class="letter-gray">热门</a>
-            <ul>
-              <li v-for="item in hotLangs" :key="item.lan_code">
-                <div class="hot-img">
-                  <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
-                </div>
-                <div class="hot-title">
-                  <p>{{ item.name[languagueHander] }}</p>
-                </div>
-                <div class="hot-icon" @click="routerGo(item)"></div>
-              </li>
-            </ul>
-          </div>
-          <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
-            <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
-            <ul>
-              <li v-for="item in group.list" :key="item.lan_code">
-                <div class="hot-img">
-                  <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
-                </div>
-                <div class="hot-title">
-                  <p>{{ item.name[languagueHander]}}</p>
-                </div>
-                <div class="hot-icon" @click="routerGo(item)"></div>
-              </li>
-            </ul>
+      <div class="hot-scroll">
+        <div class="hot-content">
+          <div class="hot-list">
+            <div class="section">
+              <a id="热门" class="letter-gray">热门</a>
+              <ul>
+                <li v-for="item in hotLangs" :key="item.lan_code">
+                  <div class="hot-img">
+                    <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
+                  </div>
+                  <div class="hot-title">
+                    <p>{{ item.name[languagueHander] }}</p>
+                  </div>
+                  <div class="hot-icon" @click="routerGo(item)"></div>
+                </li>
+              </ul>
+            </div>
+            <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
+              <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
+              <ul>
+                <li v-for="item in group.list" :key="item.lan_code">
+                  <div class="hot-img">
+                    <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
+                  </div>
+                  <div class="hot-title">
+                    <p>{{ item.name[languagueHander]}}</p>
+                  </div>
+                  <div class="hot-icon" @click="routerGo(item)"></div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -79,7 +81,7 @@ export default {
     let _this = this
     // 获取官方课程信息
     _this.getCourseLangs().then((res) => {
-      console.log(res)
+      console.log('res', res)
       _this.hotLangs = res.hot_langs
       res.course_langs.forEach((item) => {
         let obj = item
@@ -147,6 +149,7 @@ export default {
         for (; len > -1; len--) {
           let that = sections.eq(len)
           let letter = that.find('a').attr('id')
+          console.log('letter', letter)
           if (scrollTop >= $('.hot-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265) {
             this.activeLetter = letter
             break
@@ -249,8 +252,13 @@ export default {
     height: 35px;
     line-height: 35px;
   }
+  .hot-container .hot-scroll {
+    width: 1150px;
+    height: 800px;
+    overflow: hidden;
+  }
   .hot-container .hot-content {
-    width: 100%;
+    width: 1200px;
     padding-top: 10px;
     overflow-y: auto;
     height: 800px;
@@ -259,6 +267,11 @@ export default {
   .hot-content::-webkit-scrollbar {
     display: none;
   }
+  .hot-content {
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+  }
+  .hot-content::-webkit-scrollbar{width: 0px}
   .hot-container .hot-content .hot-list {
     width: 1100px;
     margin-left: 20px;

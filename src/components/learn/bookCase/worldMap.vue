@@ -148,43 +148,119 @@
         </div>
       </div>
     </div>
-    <countyies :allAreasInfo='allAreasInfo' :tabCountry='tabCountry'/>
+    <div class="country-courses">
+      <div class="country-container">
+        <div class="country-letter">
+          <div class="letter">
+            <a
+              :class="['letter_list', { 'active': activeLetter == item }]"
+              v-for="(item, index) in letterLists"
+              :key="index"
+              @click="navScroll(item)">
+              {{item}}
+            </a>
+            <p class="countries">{{getChineseName(tabCountry)}}</p>
+          </div>
+        </div>
+        <div class="country-scroll">
+          <div class="country-content">
+            <div class="country-list" v-if="arr.length > 0" v-for="(item , index) in arr" :key="index">
+              <a :id="item.letter" class="letter-gray">{{item.letter}}</a>
+              <ul>
+                <li @click="nationDetail(item.code, item.flag, item.name, item.pName2)" v-for="(item , index) in item.lists" :key="index">
+                  <div class="country-img">
+                    <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
+                  </div>
+                  <div class="country-title">
+                    <p>{{item.name}}</p>
+                  </div>
+                  <div class="country-icon"></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import { mapActions } from 'vuex'
-import countyies from './countries'
+import $ from 'jquery'
+// import countyies from './countries'
 export default {
   data () {
     return {
+      A_Z: '', // 生成26个字母
+      obj: {},
+      letterLists: [], // 字母列表
+      activeLetter: 'A',
       tabCountry: 'country',
       isShow: false,
-      allAreasInfo: [] // 全部
+      allAreasInfos: [], // 全部
+      arr: []
     }
   },
-  components: {
-    countyies
-  },
   mounted () {
-    this.getMapInfoByCountry()
+    for (var i = 65; i < 91; i++) {
+      this.A_Z += String.fromCharCode(i) + ''
+    }
+    this.letterLists = this.A_Z.split('')
+    this.$nextTick(() => {
+      this.getMapInfoByCountry()
+    })
   },
   methods: {
     ...mapActions({
       worldLanguageMap: 'course/worldLanguageMap'
     }),
-    tabChange (tabCountry) {
+    tabChange (tabCountry) { // 点击显示洲的右边信息
       this.tabCountry = tabCountry
       this.getMapInfoByCountry(tabCountry)
     },
+    getChineseName (tabCountry) { // 点击显示对应的洲的中文
+      switch (tabCountry) {
+        case 'Americas':
+          return '美洲'
+        case 'Europe':
+          return '欧洲'
+        case 'Asia':
+          return '亚洲'
+        case 'Africa':
+          return '非洲'
+        case 'Pacific':
+          return '大洋洲'
+        default :
+          return '全世界'
+      }
+    },
     getMapInfoByCountry (tabCountry) {
-      this.allAreasInfo = []
-      this.worldLanguageMap().then(res => {
-        console.log('res', res)
-        res.maps.forEach(items => {
-          let pName2 = items.name
-          let pCode2 = items.code
-          if (tabCountry) {
-            if (pName2 === tabCountry) {
+      this.arr = []
+      this.$nextTick(() => {
+        this.activeLetter = 'A'
+        this.worldLanguageMap().then(res => {
+          console.log('res', res)
+          res.maps.forEach(items => {
+            let pName2 = items.name
+            let pCode2 = items.code
+            if (tabCountry) {
+              this.tabCountry = tabCountry
+              if (pName2 === tabCountry) {
+                items.areasInfo.forEach(item => {
+                  let pCode1 = item.code
+                  let pName1 = item.name
+                  item.countriesInfo.forEach(country => {
+                    let obj = country
+                    obj['pCode1'] = pCode1
+                    obj['pCode2'] = pCode2
+                    obj['pName1'] = pName1
+                    obj['pName2'] = pName2
+                    obj['letter'] = country.name.slice(0, 1)
+                    this.allAreasInfos.push(obj)
+                  })
+                })
+              }
+            } else {
               items.areasInfo.forEach(item => {
                 let pCode1 = item.code
                 let pName1 = item.name
@@ -195,26 +271,84 @@ export default {
                   obj['pName1'] = pName1
                   obj['pName2'] = pName2
                   obj['letter'] = country.name.slice(0, 1)
-                  this.allAreasInfo.push(obj)
+                  this.allAreasInfos.push(obj)
                 })
               })
             }
-          } else {
-            items.areasInfo.forEach(item => {
-              let pCode1 = item.code
-              let pName1 = item.name
-              item.countriesInfo.forEach(country => {
-                let obj = country
-                obj['pCode1'] = pCode1
-                obj['pCode2'] = pCode2
-                obj['pName1'] = pName1
-                obj['pName2'] = pName2
-                obj['letter'] = country.name.slice(0, 1)
-                this.allAreasInfo.push(obj)
-              })
-            })
+          })
+          this.letterLists.forEach(letter => {
+            let obj = {
+              letter: letter,
+              lists: []
+            }
+            for (let i = this.allAreasInfos.length - 1; i >= 0; i--) {
+              let item = this.allAreasInfos[i]
+              if (!item.flag) {
+                continue
+              }
+              if (item.letter === letter) {
+                obj.lists.push(item)
+                this.allAreasInfos.splice(i, 1)
+              }
+            }
+            this.arr.push(obj)
+          })
+          for (let i = this.arr.length - 1; i >= 0; i--) {
+            let item = this.arr[i]
+            if (item.lists.length > 0) {
+            } else {
+              this.arr.splice(i, 1)
+            }
           }
+          console.log('arr', this.arr)
+          setTimeout(() => {
+            this.scrollContent()
+          }, 100)
         })
+      })
+    },
+    // 跳转国家详情的路由传参
+    nationDetail (code, flag, name, pName2) {
+      let OBJ = {
+        'flag': flag,
+        'name': name,
+        'pName2': pName2
+      }
+      let jsonStr = JSON.stringify(OBJ)
+      localStorage.setItem('nationInfo', jsonStr)
+      this.$router.push({ path: `/app/nation-details/${code}` })
+    },
+    // 处理点击字母
+    navScroll (letter) {
+      if ($('#' + letter).offset()) {
+        this.activeLetter = letter
+        let top = $('.country-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 746
+        $('.country-content').animate({scrollTop: top}, 300)
+      }
+    },
+    // 处理滚动内容
+    scrollContent () {
+      let countryLists = $('.country-list')
+      console.log('countryLists', countryLists)
+      console.log('countryLists', countryLists.length)
+      $('.country-content').on('scroll', () => {
+        let scrollTop = $('.country-content').scrollTop()
+        let len = countryLists.length - 1
+        console.log('scrollTop', scrollTop)
+        console.log('len', len)
+        for (; len > -1; len--) {
+          let that = countryLists.eq(len)
+          let letter = that.find('a').attr('id')
+          console.log('a', that.find('a'))
+          console.log('that', that)
+          console.log('top', $('#' + letter))
+          console.log('top', $('#' + letter).offset())
+          console.log('top', $('#' + letter).offset().top)
+          if (scrollTop >= $('.country-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 746) {
+            this.activeLetter = letter
+            break
+          }
+        }
       })
     }
   }
@@ -554,6 +688,7 @@ a {
                 height: 26px;
                 box-shadow: 0px 2px 4px 0px #000000;
                 margin-bottom: 10px;
+                border-radius: 2px;
                 &:nth-child(1){
                   background: url('../../../../static/images/bookCase/america/CN@2x.png') no-repeat;
                   background-size: 40px 26px;
@@ -666,6 +801,7 @@ a {
                 height: 26px;
                 box-shadow: 0px 2px 4px 0px #000000;
                 margin-bottom: 10px;
+                border-radius: 4px;
                 &:nth-child(1){
                   background: url('../../../../static/images/bookCase/europe/CN@2x.png') no-repeat;
                   background-size: 40px 26px;
@@ -778,6 +914,7 @@ a {
                 height: 26px;
                 box-shadow: 0px 2px 4px 0px #000000;
                 margin-bottom: 10px;
+                border-radius: 4px;
                 &:nth-child(1){
                   background: url('../../../../static/images/bookCase/asia/CN@2x.png') no-repeat;
                   background-size: 40px 26px;
@@ -883,13 +1020,14 @@ a {
             }
             .main-list {
               display: inline-block;
-              width: 152px;
+              width: 162px;
               i {
                 display: inline-block;
                 width: 40px;
                 height: 26px;
                 box-shadow: 0px 2px 4px 0px #000000;
                 margin-bottom: 10px;
+                border-radius: 4px;
                 &:nth-child(1){
                   background: url('../../../../static/images/bookCase/africa/CN@2x.png') no-repeat;
                   background-size: 40px 26px;
@@ -907,6 +1045,7 @@ a {
                 &:nth-child(4){
                   background: url('../../../../static/images/bookCase/africa/KR@2x.png') no-repeat;
                   background-size: 40px 26px;
+                  margin-right: 10px;
                 }
                 &:nth-child(5){
                   background: url('../../../../static/images/bookCase/africa/MA@2x.png') no-repeat;
@@ -1002,6 +1141,7 @@ a {
                 height: 26px;
                 box-shadow: 0px 2px 4px 0px #000000;
                 margin-bottom: 10px;
+                border-radius: 4px;
                 &:nth-child(1){
                   background: url('../../../../static/images/bookCase/oceania/CN@2x.png') no-repeat;
                   background-size: 40px 26px;
@@ -1019,4 +1159,152 @@ a {
     }
   }
 }
+a {
+    text-decoration:none;
+  }
+  .country-courses {
+    width: 1180px;
+    margin-top: 20px;
+  }
+  .course-balk {
+    display: block;
+    width: 80px;
+    height: 30px;
+    background: #ffffff;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 6px;
+    margin-bottom: 28px;
+    margin-top: 20px;
+  }
+  .bocourseok-balk p {
+    display: inline-block;
+    background: url(../../../../static/images/homework/balck.png);
+    background-size: 100% 100%;
+    margin-top: 6px;
+    width: 12px;
+    height: 18px;
+  }
+  .course-balk span {
+    font-size: 16px;
+    color: #999999;
+  }
+  .country-container {
+    width: 1180px;
+    background: #ffffff;
+    padding: 30px;
+  }
+  .country-container .country-letter {
+    width: 100%;
+    height: 65px;
+    border-bottom: 1px solid #EBEBEB;
+  }
+  .country-container .country-letter .letter {
+    width: 820px;
+    height: 65px;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 20px;
+  }
+  .country-container .country-letter .letter .letter_list {
+    display: inline-block;
+    width: 16px;
+    height: 35px;
+    font-size: 18px;
+    color: #2A9FE4;
+    text-align: center;
+    line-height: 35px;
+    &.active {
+      display: inline-block;
+      width: 26px;
+      height: 35px;
+      font-size: 16px;
+      box-shadow: 0px 2px 4px #000000;
+      border-radius: 3px;
+      text-align: center;
+      line-height: 35px;
+      background: #0581D1;
+      color: #ffffff;
+    }
+  }
+  .country-container .country-letter .letter .countries {
+    width: 54px;
+    height: 26px;
+    font-size: 18px;
+    color: #0581D1;
+    position: relative;
+    left: 236px;
+    top: 10px;
+  }
+  .country-container .country-scroll {
+    width: 1130px;
+    overflow: hidden;
+    height: 800px;
+  }
+  .country-container .country-content {
+    width: 1180px;
+    margin-top: 10px;
+    height: 800px;
+    overflow-y: auto;
+  }
+  .country-container .country-content::-webkit-scrollbar {display:none}
+  .country-container .country-content .country-list {
+    width: 1100px;
+    margin-left: 20px;
+  }
+  .country-container .country-content .country-list .letter-gray {
+    display: inline-block;
+    width: 100%;
+    height: 28px;
+    font-size: 16px;
+    color: #333333;
+  }
+  .country-container .country-content .country-list ul {
+    width: 100%;
+  }
+  .country-container .country-content .country-list ul li{
+    position: relative;
+    width: 100%;
+    padding: 16px 0;
+    border-top: 1px solid #EBEBEB;
+  }
+  .country-container .country-content .country-list ul li .country-img{
+    display: inline-block;
+    width: 75px;
+    height: 50px;
+  }
+  .country-container .country-content .country-list ul li .country-img img{
+    width: 100%;
+    height: 100%;
+  }
+  .country-container .country-content .country-list ul li .country-title {
+    display: inline-block;
+    font-size: 14px;
+    color: #444444;
+    line-height: 56px;
+    margin-left: 20px;
+  }
+  .country-container .country-content .country-list ul li .country-icon {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    display: inline-block;
+    width: 10px;
+    height: 18px;
+    background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
+    background-size: 10px 18px;
+  }
+  .tip-box {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -100%);
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    background-color: #009efc;
+    font-size: 40px;
+    text-align: center;
+    line-height: 60px;
+  }
 </style>
