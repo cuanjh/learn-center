@@ -228,7 +228,7 @@ export default {
     margin: 20px 0;
     font-weight: bold;
     display: inline-block;
-    font-size: 20px;
+    font-size: 16px;
   }
 
   .nav-circle {
