@@ -15,7 +15,7 @@
             <p class="continents">{{naInfo.pName2}}</p>
           </div>
           <div class="nation-img">
-            <img :src="naInfo.flag" alt="世界语言大图标">
+            <img :src="naInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="世界语言大图标">
           </div>
         </div>
       </div>
@@ -64,9 +64,9 @@
         </li>
       </ul>
       <ul class="country-language" v-show="'language' == tabFlag">
-        <li v-for="(item, index) in langInfos" :key="index">
+        <li v-for="(item, index) in langInfos" :key="index" v-if="item.flag">
           <div class="country-img">
-            <img :src="item.flag" alt="资源图片">
+            <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
           </div>
           <div class="country-title">
             <p>{{item.name}}</p>
@@ -256,6 +256,9 @@ a {
         height: 73px;
         border-bottom: 1px solid #EBEBEB;
         margin-bottom: 20px;
+        &:last-child {
+          border-bottom: 0px;
+        }
         .country-img {
           display: inline-block;
           width: 75px;
