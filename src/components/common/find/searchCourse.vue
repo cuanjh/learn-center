@@ -60,7 +60,7 @@ export default {
       shelfSearch: 'course/shelfSearch'
     }),
     routerGo (item) {
-      let langCode = item['code'].split('_')[0]
+      let langCode = item['code'].split('-')[0]
       if (this.subscribeCoursesStr.length === 0) {
         this.$router.push({path: '/app/book-details/' + langCode})
         this.$emit('hideLangList')

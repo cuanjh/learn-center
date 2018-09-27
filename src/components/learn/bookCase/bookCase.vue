@@ -50,7 +50,8 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import Bus from '../../../bus'
 export default {
   data () {
     return {
@@ -70,6 +71,11 @@ export default {
       this.langMapBanner = res.data.langMapBanner
     })
   },
+  computed: {
+    ...mapState({
+      subscribeCoursesStr: state => state.course.subscribeCoursesStr
+    })
+  },
   methods: {
     ...mapActions({
       bookCaseIndex: 'course/bookCaseIndex'
@@ -87,8 +93,17 @@ export default {
     hideDetails () {
       this.showDetailsHot = this.showDetailsChina = null
     },
-    goDetails (code) {
-      this.$router.push({ path: `/app/book-details/${code}` })
+    goDetails (courseCode) {
+      let langCode = courseCode.split('-')[0]
+      if (this.subscribeCoursesStr.length === 0) {
+        this.$router.push({path: '/app/book-details/' + langCode})
+        return
+      }
+      if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
+        Bus.$emit('changeCourseCode', courseCode)
+        return
+      }
+      this.$router.push({path: '/app/book-details/' + langCode})
     },
     // 数字每三位添加逗号
     toThousands (num) {

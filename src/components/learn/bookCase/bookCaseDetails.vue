@@ -22,7 +22,7 @@
         <div class="details-content">
           <div class="container">
             <div class="details-img">
-              <img :src="courseInfo.flag" alt="世界语言大图标">
+              <img :src="courseInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="世界语言大图标">
             </div>
             <div class="details-resource">
               <p class="details-title">麦格</p>
@@ -94,7 +94,7 @@
           <div class="nation-title">
             <p>{{ item.name }}</p>
           </div>
-          <div class="nation-icon"></div>
+          <router-link :to="{ path: '/app/nation-details/' + item.code }" class="nation-icon"></router-link>
         </li>
       </ul>
     </div>
@@ -150,7 +150,7 @@ export default {
   },
   mounted () {
     console.log(this.$route)
-    this.langInfo({course_code: this.courseCode}).then(res => {
+    this.langInfo({lang_code: this.courseCode}).then(res => {
       for (var item in res.langInfo) {
         if (this.langInfoObj[item]) {
           this.langInfoObj[item]['info'] = res.langInfo[item]['info']
@@ -199,14 +199,14 @@ export default {
       })
     },
     startLearn () {
-      let courseCode = this.courseCode
+      let courseCode = this.courseCode + '-Basic'
       Bus.$emit('changeCourseCode', courseCode)
       setTimeout(() => {
         this.$router.push({path: '/app/course-list'})
       }, 1000)
     },
     subscribeCourse () {
-      this.postPurchaseCourse({ code: this.courseCode }).then((res) => {
+      this.postPurchaseCourse({ code: this.courseCode + '-Basic' }).then((res) => {
         this.getLearnCourses()
       })
     }
