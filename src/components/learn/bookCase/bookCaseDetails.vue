@@ -1,8 +1,19 @@
 <template>
   <div class="book-details">
-    <router-link class="book-balk" :to="{path: '/app/book-case'}">
-      <span>返回</span>
-    </router-link>
+    <div class="nav">
+      <div class="nav-circle"></div>
+      <router-link :to="{path: '/app/book-case'}">
+        <span>书架</span>
+      </router-link>
+      /
+      <router-link :to="{path: '/app/hot-courses'}">
+        <span>热门课程</span>
+      </router-link>
+      /
+      <div class="nav-current">
+        语言详情
+      </div>
+    </div>
     <div class="details-header">
       <div class="details-top">
         <div class="details-title">
@@ -138,6 +149,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.$route)
     this.langInfo({course_code: this.courseCode}).then(res => {
       for (var item in res.langInfo) {
         if (this.langInfoObj[item]) {
@@ -211,29 +223,32 @@ export default {
   a {
     text-decoration:none;
   }
-  .book-balk {
-    display: block;
-    width: 80px;
-    height: 30px;
-    background: #ffffff;
-    text-align: center;
-    line-height: 30px;
-    border-radius: 6px;
-    margin-bottom: 28px;
-    margin-top: 20px;
-  }
-  .book-balk p {
+
+  .nav {
+    margin: 20px 0;
+    font-weight: bold;
     display: inline-block;
-    background: url(../../../../static/images/homework/balck.png);
-    background-size: 100% 100%;
-    margin-top: 6px;
-    width: 12px;
-    height: 18px;
+    font-size: 20px;
   }
-  .book-balk span {
-    font-size: 16px;
+
+  .nav-circle {
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background-color: #999999;
+    display: inline-block;
+    margin-top: 9px;
+  }
+
+  .nav span {
     color: #999999;
   }
+
+  .nav-current {
+    display: inline-block;
+    color: #2A9FE4;
+  }
+
   .details-header {
     width: 100%;
     height: 302px;

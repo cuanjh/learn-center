@@ -1,9 +1,15 @@
 <template>
   <div class="china-lang-map">
-    <router-link class="course-balk" :to="{path: '/app/book-case'}">
-      <p></p>
-      <span>返回</span>
-    </router-link>
+    <div class="nav">
+      <div class="nav-circle"></div>
+      <router-link :to="{path: '/app/book-case'}">
+        <span>书架</span>
+      </router-link>
+      /
+      <div class="nav-current">
+        中国方言地图
+      </div>
+    </div>
     <div class="china-lang-container">
       <div class="hot-letter">
         <div class="letter">
@@ -156,29 +162,32 @@ export default {
     width: 1200px;
     margin: 0px auto 144px;
   }
-  .course-balk {
-    display: block;
-    width: 80px;
-    height: 30px;
-    background: #ffffff;
-    text-align: center;
-    line-height: 30px;
-    border-radius: 6px;
-    margin-bottom: 28px;
-    margin-top: 20px;
-  }
-   .bocourseok-balk p {
+
+  .nav {
+    margin: 20px 0;
+    font-weight: bold;
     display: inline-block;
-    background: url(../../../../static/images/homework/balck.png);
-    background-size: 100% 100%;
-    margin-top: 6px;
-    width: 12px;
-    height: 18px;
+    font-size: 20px;
   }
-  .course-balk span {
-    font-size: 16px;
+
+  .nav-circle {
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background-color: #999999;
+    display: inline-block;
+    margin-top: 9px;
+  }
+
+  .nav span {
     color: #999999;
   }
+
+  .nav-current {
+    display: inline-block;
+    color: #2A9FE4;
+  }
+
   .china-lang-container {
     width: 1200px;
     min-height: 800px;
@@ -210,6 +219,7 @@ export default {
     font-size: 16px;
     color: #2A9FE4;
     text-align: center;
+    font-weight: bold;
     height: 35px;
     line-height: 35px;
   }
