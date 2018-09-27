@@ -328,22 +328,13 @@ export default {
     },
     // 处理滚动内容
     scrollContent () {
-      let countryLists = $('.country-list')
-      console.log('countryLists', countryLists)
-      console.log('countryLists', countryLists.length)
       $('.country-content').on('scroll', () => {
+        let countryLists = $('.country-list')
         let scrollTop = $('.country-content').scrollTop()
         let len = countryLists.length - 1
-        console.log('scrollTop', scrollTop)
-        console.log('len', len)
         for (; len > -1; len--) {
           let that = countryLists.eq(len)
           let letter = that.find('a').attr('id')
-          console.log('a', that.find('a'))
-          console.log('that', that)
-          console.log('top', $('#' + letter))
-          console.log('top', $('#' + letter).offset())
-          console.log('top', $('#' + letter).offset().top)
           if (scrollTop >= $('.country-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 746) {
             this.activeLetter = letter
             break
