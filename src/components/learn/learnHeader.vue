@@ -40,9 +40,9 @@
         </transition>
       </div>
       <div class="right" @mouseleave="hideExit">
-        <div class="search" v-bind:class="{'active':searchFlag}">
+        <div class="container">
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
-          <i @click="showSearch"></i>
+          <div class="search"></div>
         </div>
         <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
         <div class="vip" style="display:none"></div>
@@ -76,7 +76,6 @@ export default {
     return {
       navArrowUp: false,
       navArrowDown: true,
-      searchFlag: false,
       navCourse: false,
       activeItem: '',
       showExitState: false,
@@ -145,9 +144,6 @@ export default {
       updateIsLogin: 'user/updateIsLogin',
       updateCurCourseCode: 'course/updateCurCourseCode'
     }),
-    showSearch (e) {
-      this.searchFlag = !this.searchFlag
-    },
     navChangeCourse () {
       this.navArrowDown = false
       this.navArrowUp = true
@@ -284,50 +280,140 @@ export default {
 .right div {
   float: left;
 }
-.search {
-  width: 36px;
-  height: 36px;
-  border-radius: 22px;
-  margin-left: -70px;
-  overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.4);
-  margin-top: 23px;
-  padding-right: 36px;
-  position: absolute;
-}
 .active {
-  animation: widthAdd 0.5s ease 0s;
+  animation: widthAdd 1s ease-in-out;
   animation-fill-mode: forwards;
   transform: translateX(-200px);
 }
-@keyframes widthAdd {
-  from {
-    width: 36px;
-  }
-  to {
-    width: 240px;
-  }
-}
-.search input {
-  width: 100%;
-  border: none;
+.container {
+  position: absolute;
+  margin: auto;
+  top: 90px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 238px;
   height: 36px;
-  text-indent: 20px;
+}
+.container .search {
+  position: absolute;
+  margin-left: 200px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 395px;
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,.4);
+  border-radius: 50%;
+  transition: all 1s;
+  z-index: 4;
+}
+.container .search:hover {
+  cursor: pointer;
+}
+.container .search::before {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: 8px;
+  right: 0;
+  bottom: 0;
+  left: 12px;
+  width: 8px;
+  height: 2px;
+  background: white;
+  transform: rotate(45deg);
+  transition: all .5s;
+}
+.container .search::after {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: -4px;
+  right: 0px;
+  bottom: 0;
+  left: -1px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid white;
+  transition: all .5s;
+}
+.container input {
   font-size: 14px;
   color: #fff;
   background-color: transparent;
-}
-.search i {
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-  background: url("./../../../static/images/learn/search.png") no-repeat center
-    center;
-  background-size: 100%;
   position: absolute;
-  top: 0px;
-  right: 0px;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 396px;
+  width: 238px;
+  height: 36px;
+  outline: none;
+  text-decoration: none;
+  border: none;
+  background: rgba(255,255,255,.4);
+  color: white;
+  text-shadow: 0 2px 4px rgba(255,255,255,.4);
+  padding: 0 80px 0 20px;
+  border-radius: 30px;
+  box-shadow: 0 2px 4px 0 rgba(255,255,255,.4);
+  transition: all 1s;
+  opacity: 0;
+  z-index: 5;
+  font-weight: bolder;
 }
+.container input:focus{ outline:none; border:0;}
+.container input[type="text"]{-moz-appearance: textfield;}
+.container input:hover {
+  cursor: pointer;
+}
+.container input:focus {
+  width: 238px;
+  opacity: 1;
+}
+.container input:focus ~ .search {
+  right: -200px;
+  z-index: 6;
+  background: rgba(255,255,255,0);
+}
+.container input:focus ~ .search::before {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: 8px;
+  right: 0;
+  bottom: 0;
+  left: 12px;
+  width: 8px;
+  height: 2px;
+  background: white;
+  transform: rotate(45deg);
+  transition: all .5s;
+}
+.container input:focus ~ .search::after {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: -4px;
+  right: 0px;
+  bottom: 0;
+  left: -1px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid white;
+  transition: all .5s;
+}
+.container input::placeholder {
+  color: white;
+  opacity: 0.5;
+  font-weight: bolder;
+}
+
 .vip {
   width: 33px;
   height: 30px;

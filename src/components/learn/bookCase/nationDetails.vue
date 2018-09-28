@@ -75,21 +75,22 @@
         </li>
       </ul>
       <ul class="country-language" v-show="'language' == tabFlag">
-        <li v-for="(item, index) in langInfos" :key="index" v-if="item.flag">
+        <li v-for="item in langInfos" :key="item.lang_code" v-if="item.flag">
           <div class="country-img">
             <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
           </div>
           <div class="country-title">
             <p>{{item.name}}</p>
           </div>
-          <div class="country-icon"></div>
+          <div class="country-icon" @click="routerGo(item)"></div>
         </li>
       </ul>
     </div>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import Bus from '../../../bus'
 export default {
   data () {
     return {
@@ -99,9 +100,12 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      subscribeCoursesStr: state => state.course.subscribeCoursesStr
+    }),
     naInfo () {
-      let nationInfo = JSON.parse(localStorage.getItem('nationInfo'))
-      return nationInfo
+      let nationInfos = JSON.parse(localStorage.getItem('nationInfos'))
+      return nationInfos
     }
   },
   mounted () {
@@ -118,6 +122,19 @@ export default {
     }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
+    },
+    routerGo (item) {
+      let langCode = item['lang_code']
+      if (this.subscribeCoursesStr.length === 0) {
+        this.$router.push({path: '/app/book-details/' + langCode})
+        return
+      }
+      let courseCode = item['courseCode']
+      if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
+        Bus.$emit('changeCourseCode', courseCode)
+        return
+      }
+      this.$router.push({path: '/app/book-details/' + langCode})
     }
   }
 }
@@ -298,6 +315,7 @@ export default {
           height: 18px;
           background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
           background-size: 10px 18px;
+          cursor: pointer;
         }
       }
     }

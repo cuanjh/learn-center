@@ -167,17 +167,25 @@
             <div class="country-list" v-if="arr.length > 0" v-for="(item , index) in arr" :key="index">
               <a :id="item.letter" class="letter-gray">{{item.letter}}</a>
               <ul>
-                <li @click="nationDetail(item.code, item.flag, item.name, item.pName2)" v-for="(item , index) in item.lists" :key="index">
+                <li v-for="(item , index) in item.lists" :key="index">
                   <div class="country-img">
                     <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
                   </div>
                   <div class="country-title">
                     <p>{{item.name}}</p>
                   </div>
-                  <div class="country-icon"></div>
+                  <div class="country-icon" @click="nationDetail(item.code, item.flag, item.name, item.pName2)"></div>
                 </li>
               </ul>
             </div>
+            <!-- <div class="go">
+              <div class="go-dog pointer dog"></div>
+              <div class="list">
+                <div class="go-home">首页</div>
+                <div class="go-book">书架</div>
+                <div class="go-my">我的</div>
+              </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -315,14 +323,14 @@ export default {
         'pName2': pName2
       }
       let jsonStr = JSON.stringify(OBJ)
-      localStorage.setItem('nationInfo', jsonStr)
+      localStorage.setItem('nationInfos', jsonStr)
       this.$router.push({ path: `/app/nation-details/${code}` })
     },
     // 处理点击字母
     navScroll (letter) {
       if ($('#' + letter).offset()) {
         this.activeLetter = letter
-        let top = $('.country-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 746
+        let top = $('.country-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 726
         $('.country-content').animate({scrollTop: top}, 300)
       }
     },
@@ -335,7 +343,7 @@ export default {
         for (; len > -1; len--) {
           let that = countryLists.eq(len)
           let letter = that.find('a').attr('id')
-          if (scrollTop >= $('.country-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 746) {
+          if (scrollTop >= $('.country-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 726) {
             this.activeLetter = letter
             break
           }
@@ -1251,7 +1259,7 @@ a {
     color: #333333;
   }
   .country-container .country-content .country-list ul {
-    width: 100%;
+    width: 1060px;
   }
   .country-container .country-content .country-list ul li{
     position: relative;
@@ -1284,6 +1292,7 @@ a {
     height: 18px;
     background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
     background-size: 10px 18px;
+    cursor: pointer;
   }
   .tip-box {
     position: fixed;
@@ -1297,5 +1306,109 @@ a {
     font-size: 40px;
     text-align: center;
     line-height: 60px;
+  }
+  .go {
+    position: fixed;
+    bottom: 47%;
+    right: 20px;
+    width: 150px;
+    height: 150px;
+    .list {
+      display: none;
+      width: 140px;
+      height: 140px;
+      font-size: 12px;
+      color: #ffffff;
+      margin: 0 auto;
+      margin-top: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .go-home {
+        display: none;
+        width: 40px;
+        height: 40px;
+        background: #2A9FE4;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        animation: goHome 2s linear;
+      }
+      .go-book {
+        display: none;
+        width: 40px;
+        height: 40px;
+        background: #2A9FE4;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        animation: goBook 2s linear;
+      }
+      .go-my {
+        display: none;
+        width: 40px;
+        height: 40px;
+        background: #2A9FE4;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        animation: goMy 2s linear;
+      }
+    }
+  }
+  .go .go-dog {
+    background: url('../../../../static/images/bookCase/dog.png') no-repeat;
+    width: 41px;
+    height: 46px;
+    background-size: 80px auto;
+    position: absolute;
+    bottom: 35%;
+    left: 0;
+    z-index: 2;
+    animation: dog steps(1,end) 2s infinite
+  }
+  @-webkit-keyframes dog {
+    50%{
+      background-position:-41px 0
+    }
+  }
+  @-webkit-keyframes goHome {
+    0%{
+      transform: translate(0px, 0px) rotate(0deg);
+      opacity: 0;
+    }
+    50%{
+      transform: translate(60px, 0px) rotate(360deg);
+      opacity: 1;
+    }
+    100%{
+      transform: translateX(60px)
+    }
+  }
+  @-webkit-keyframes goBook {
+    0%{
+      transform: translate(0px, 0px) rotate(0deg);
+      opacity: 0;
+    }
+    50%{
+      transform: translate(80px, 0px) rotate(360deg);
+      opacity: 1;
+    }
+    100%{
+      transform: translateX(80px)
+    }
+  }
+  @-webkit-keyframes goMy {
+    0%{
+      transform: translate(0px, 0px) rotate(0deg);
+      opacity: 0;
+    }
+    50%{
+      transform: translate(60px, 0px) rotate(360deg);
+      opacity: 1;
+    }
+    100%{
+      transform: translateX(60px)
+    }
   }
 </style>

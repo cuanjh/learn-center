@@ -59,7 +59,7 @@
       </div>
       <div class="tab-item">
         <span v-bind:class="{'active': 'info' == tabFlag}" @click="tabChange('info')">信息</span>
-        <span v-bind:class="{'active': 'resource' == tabFlag}" @click="tabChange('resource')">资源</span>
+        <span v-bind:class="{'active': 'resource' == tabFlag}" @click="tabChange('resource')" style="display: none">资源</span>
         <span v-bind:class="{'active': 'nation' == tabFlag}" @click="tabChange('nation')">国家</span>
       </div>
     </div>
@@ -94,7 +94,8 @@
           <div class="nation-title">
             <p>{{ item.name }}</p>
           </div>
-          <router-link :to="{ path: '/app/nation-details/' + item.code }" class="nation-icon"></router-link>
+          <!-- <router-link :to="{ path: '/app/nation-details/' + item.code }" class="nation-icon"></router-link> -->
+          <a class="nation-icon" @click="nationDetail(item.code, item.flag, item.name)"></a>
         </li>
       </ul>
     </div>
@@ -151,6 +152,7 @@ export default {
   mounted () {
     console.log(this.$route)
     this.langInfo({lang_code: this.courseCode}).then(res => {
+      console.log('res', res)
       for (var item in res.langInfo) {
         if (this.langInfoObj[item]) {
           this.langInfoObj[item]['info'] = res.langInfo[item]['info']
@@ -188,6 +190,15 @@ export default {
     }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
+    },
+    nationDetail (code, flag, name) {
+      let OBJ = {
+        'flag': flag,
+        'name': name
+      }
+      let jsonStr = JSON.stringify(OBJ)
+      localStorage.setItem('nationInfos', jsonStr)
+      this.$router.push({ path: `/app/nation-details/${code}` })
     },
     loadMore () {
       let _this = this
@@ -391,7 +402,7 @@ export default {
   .book-resource {
     width: 100%;
     min-height: 630px;
-    padding: 0px 60px 10px;
+    padding: 0px 40px 10px;
   }
   .book-resource li {
     position: relative;
@@ -439,7 +450,7 @@ export default {
   .book-nation {
     width: 100%;
     min-height: 630px;
-    padding: 0px 60px 10px;
+    padding: 0px 40px 10px;
   }
   .book-nation li {
     position: relative;
