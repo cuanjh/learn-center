@@ -200,17 +200,22 @@ export default {
   z-index: 10;
 }
 .header-box .content {
-  width: 1200px;
+  width: 70%;
+  height: 80px;
   margin: 0px auto;
   position: relative;
 }
 
-/* .header-box .left{
-  width:60%;
+.header-box .left{
+  display: inline-block;
+  width:40%;
+  height: 80px;
 }
 .header-box .right{
+  display: inline-block;
   width:40%;
-} */
+  height: 80px;
+}
 .header-box .left>p{
   float: left;
   cursor: pointer;
@@ -275,7 +280,8 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 .right {
-  float: right;
+  position: absolute;
+  right: 0;
 }
 .right div {
   float: left;
@@ -288,8 +294,8 @@ export default {
 .container {
   position: absolute;
   margin: auto;
-  top: 90px;
-  left: 0;
+  top: 0;
+  left: 51px;
   right: 0;
   bottom: 0;
   width: 238px;
@@ -301,7 +307,7 @@ export default {
   top: 0;
   right: 0;
   bottom: 0;
-  left: 395px;
+  left: 63px;
   width: 36px;
   height: 36px;
   background: rgba(255,255,255,.4);
@@ -349,7 +355,7 @@ export default {
   top: 0;
   right: 0;
   bottom: 0;
-  left: 396px;
+  left: 63px;
   width: 238px;
   height: 36px;
   outline: none;
@@ -639,8 +645,9 @@ export default {
 }
 
 .right .learn-user{
-  margin-right: 30px;
-  margin-top: 14px;
+  position: absolute;
+  top: 12px;
+  right: 6px;
   width:45px;
   height: 45px;
   padding: 5px;
@@ -652,9 +659,6 @@ export default {
   border-radius: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
-}
-.right p.learn-user{
-  position: relative;
 }
 .right p.learn-user a {
   width: 45px;

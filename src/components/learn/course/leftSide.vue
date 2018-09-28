@@ -100,6 +100,11 @@ export default {
     object-fit: cover;
   }
 
+  .lang-overview dd {
+    height: 100px;
+    position: relative;
+  }
+
   .lang-overview dd p {
     font-size: 16px;
     font-weight: bold;
@@ -116,9 +121,9 @@ export default {
     background-repeat: no-repeat;
     background-position: 90% 50%;
     cursor:pointer;
-    position: relative;
-    margin-top: 55px;
-    margin-right: 20px;
+    position: absolute;
+    bottom: 0;
+    right: 16px;
     float: right;
     color: #fff;
     font-size: 12px;
