@@ -7,13 +7,12 @@
 <script>
 import DatePicker from 'vue-datepicker2'
 export default {
-  props: ['value'],
   components: {
     DatePicker
   },
   data () {
     return {
-      startTime: this.value,
+      startTime: '',
       option: {
         type: 'day',
         // week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
@@ -95,5 +94,11 @@ export default {
 }
 .cov-picker-box {
   height: 310px !important;
+}
+
+.cov-datepicker {
+  border-radius: 4px !important;
+  border: solid 1px #dcdbdb !important;
+  box-shadow: none !important;
 }
 </style>

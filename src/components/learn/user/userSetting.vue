@@ -22,11 +22,11 @@
             <input type="text" placeholder='请填写手机号' :class="['reg-input', {'error':!phoneNumberValidator}]" v-model="phone">
             <template v-if="!phonenumberConfirmed">
               <em class='bind-logical-textState adjust'>未绑定</em>
-              <span class='bind-logical-btnState adjust' @click="bindPhoneNumber(phone)" v-show="phoneNumberValidator&&phone">绑定手机</span>
+              <span class='bind-logical-btnState adjust' style="line-height: 30px;" @click="bindPhoneNumber(phone)" v-show="phoneNumberValidator&&phone">绑定手机</span>
             </template>
             <template v-if="phonenumberConfirmed">
               <em class='bind-logical-textState adjust'>已绑定</em>
-              <span class='bind-logical-btnState adjustOff'  @click="unbindIdentity('phonenumber')">解除绑定</span>
+              <span class='bind-logical-btnState adjustOff' style="line-height: 30px;"  @click="unbindIdentity('phonenumber')">解除绑定</span>
             </template>
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'><i></i><em>请输入正确的手机号</em></div>
@@ -63,7 +63,7 @@
           <span style='margin-right: 20px; position: relative; line-height: 40px; display: inline-block;width:74px'>生日</span>
           <div class='seldate'>
             <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" v-focus/> -->
-            <date-picker ref="datePicker" :value="birthday" @update="updateBirthday"></date-picker>
+            <date-picker ref="datePicker" @update="updateBirthday"></date-picker>
           </div>
           <i class='user-setting-require-item'>*</i>
         </div>
@@ -291,13 +291,13 @@ export default {
         var _date = new Date(result.birthday * 1000)
         _this.birthday =
           _date.getFullYear() +
-          '-' +
+          '-0' +
           (_date.getMonth() + 1) +
-          '-' +
+          '-0' +
           _date.getDate()
       }
 
-      // this.$refs['datePicker'].$emit('initDate', _this.birthday)
+      this.$refs['datePicker'].$emit('initDate', _this.birthday)
 
       if (result.country) {
         var _tmp = {}
@@ -387,8 +387,8 @@ export default {
           _this.alertButton = '确定'
           _this.getUserInfo().then((res) => {
             this.updateUserInfo(res)
+            _this.loadData()
           })
-          _this.loadData()
         } else {
           _this.showAlertView(res)
         }
@@ -496,8 +496,8 @@ export default {
           _this.alertButton = '确定'
           _this.getUserInfo().then((res) => {
             _this.updateUserInfo(res)
+            _this.loadData()
           })
-          _this.loadData()
           this.noticeSetting = false
         } else {
           _this.showAlertView(res)
