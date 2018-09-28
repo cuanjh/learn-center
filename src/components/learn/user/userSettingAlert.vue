@@ -186,8 +186,8 @@ export default {
           _this.$emit('updateAlertButton', '确定')
           _this.getUserInfo().then((res) => {
             this.updateUserInfo(res)
+            _this.$emit('memberupdate')
           })
-          _this.$emit('memberupdate')
         } else {
           this.showAlert(res)
         }
@@ -242,8 +242,8 @@ export default {
         if (res.success) {
           _this.getUserInfo().then((res) => {
             this.updateUserInfo(res)
+            _this.$emit('memberupdate')
           })
-          _this.$emit('memberupdate')
           _this.closeView()
         } else {
           this.showAlertView(res)
