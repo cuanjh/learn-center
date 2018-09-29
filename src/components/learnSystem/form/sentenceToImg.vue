@@ -185,7 +185,7 @@ export default {
         template:
           `<transition name="fade">
             <div class="text-head" id='${id}' v-show="show">
-              <div :class="{rtl:dir}" @click="repeat()">
+              <div :class="{rtl:dirChild}" @click="repeatChild()">
                 <a :class="{border:isTeacher}" class="txt-box">
                   <span>{{sentence}}</span>
                   <b :class="{playing:hornPlaying}"></b>
@@ -196,12 +196,12 @@ export default {
         data: {
           sentence: '',
           show: true,
-          dir: this.direction < 0,
+          dirChild: this.direction < 0,
           hornPlaying: false, // 喇叭图标播放
           isTeacher: 0
         },
         methods: {
-          repeat () {
+          repeatChild () {
             _this.repeat()
           }
         }

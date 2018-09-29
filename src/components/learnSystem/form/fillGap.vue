@@ -117,7 +117,7 @@ export default {
           `<transition name="fade">
             <div class="text-head" id='${id}' v-show="show">
               <div :class="{rtl:dir}"">
-                <a :class="{border:isTeacher}" v-for='(word, index) in words' :key="index" @click='check(word, $event)'>
+                <a :class="{border:isTeacher}" v-for='(word, index) in words' :key="index" @click='checkChild(word, $event)'>
                   <span v-text="word"></span>
                 </a>
               </div>
@@ -131,7 +131,7 @@ export default {
           isTeacher: 0
         },
         methods: {
-          check (itm, event) {
+          checkChild (itm, event) {
             _this.check(itm, event)
           }
         }
