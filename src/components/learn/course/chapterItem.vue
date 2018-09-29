@@ -81,7 +81,7 @@
 
             <li class="course-review">
               <div class="course-review-name">
-                <span>复习</span>
+                <span>测试</span>
               </div>
               <div class="course-item-box">
                 <a href="javascript:void(0);" @click="startTest(coreData['isCoreCompleted'])">
@@ -939,12 +939,14 @@ export default {
   }
 
   .course-review-name{
+    width: 72px;
+    text-align: center;
     font-size: 16px;
     font-weight: bold;
-    color:#7FB926;
+    color: #7FB926;
     display: inline-block;
     position: relative;
-    margin-right: 56px;
+    margin-right: 18px;
     margin-top: 50px;
     vertical-align: top;
   }
