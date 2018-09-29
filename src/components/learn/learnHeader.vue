@@ -39,11 +39,12 @@
           </section>
         </transition>
       </div>
-      <div class="right" @mouseleave="hideExit">
+      <div class="right" @mouseleave="hideExit" v-if="userInfo.member_info">
         <div class="container">
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <div class="search"></div>
         </div>
+        <div class="vip-img" v-if="userInfo.member_info.member_type == 1"></div>
         <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
         <div class="vip" style="display:none"></div>
         <div class="head-nation" style="display:none">
@@ -96,7 +97,7 @@ export default {
     })
   },
   mounted () {
-    console.log(this.userInfo)
+    console.log('====>', this.userInfo)
     this.getLearnCourses()
   },
   computed: {
@@ -200,7 +201,7 @@ export default {
   z-index: 10;
 }
 .header-box .content {
-  width: 70%;
+  width: 1200px;
   height: 80px;
   margin: 0px auto;
   position: relative;
@@ -208,12 +209,11 @@ export default {
 
 .header-box .left{
   display: inline-block;
-  width:40%;
   height: 80px;
 }
 .header-box .right{
   display: inline-block;
-  width:40%;
+  width:480px;
   height: 80px;
 }
 .header-box .left>p{
@@ -281,10 +281,19 @@ export default {
 }
 .right {
   position: absolute;
-  right: 0;
+  right: 15px;
 }
 .right div {
   float: left;
+}
+.right .vip-img {
+  background: url('../../../static/images/user-guide/crown.png') no-repeat;
+  background-size: 33px 31px;
+  width: 33px;
+  height: 31px;
+  position: absolute;
+  right: 57px;
+  top: 26px;
 }
 .active {
   animation: widthAdd 1s ease-in-out;
@@ -295,7 +304,7 @@ export default {
   position: absolute;
   margin: auto;
   top: 0;
-  left: 51px;
+  left: -20px;
   right: 0;
   bottom: 0;
   width: 238px;
