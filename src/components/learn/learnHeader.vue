@@ -44,7 +44,7 @@
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <div class="search"></div>
         </div>
-        <div class="vip-img" v-if="userInfo.member_info.member_type == 1"></div>
+        <a class="vip-img" v-if="userInfo.member_info.member_type !== 1"></a>
         <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
         <div class="vip" style="display:none"></div>
         <div class="head-nation" style="display:none">
@@ -287,13 +287,15 @@ export default {
   float: left;
 }
 .right .vip-img {
+  display: inline-block;
   background: url('../../../static/images/user-guide/crown.png') no-repeat;
   background-size: 33px 31px;
   width: 33px;
   height: 31px;
   position: absolute;
-  right: 57px;
+  right: 46px;
   top: 26px;
+  margin: 0 16px;
 }
 .active {
   animation: widthAdd 1s ease-in-out;
@@ -304,7 +306,7 @@ export default {
   position: absolute;
   margin: auto;
   top: 0;
-  left: -20px;
+  left: -40px;
   right: 0;
   bottom: 0;
   width: 238px;
@@ -372,9 +374,8 @@ export default {
   border: none;
   background: rgba(255,255,255,.4);
   color: white;
-  text-shadow: 0 2px 4px rgba(255,255,255,.4);
   padding: 0 80px 0 20px;
-  border-radius: 30px;
+  border-radius: 20px;
   box-shadow: 0 2px 4px 0 rgba(255,255,255,.4);
   transition: all 1s;
   opacity: 0;
@@ -424,8 +425,8 @@ export default {
   transition: all .5s;
 }
 .container input::placeholder {
-  color: white;
-  opacity: 0.5;
+  color: #2A9FE4;
+  font-size: 14px;
   font-weight: bolder;
 }
 
@@ -663,11 +664,12 @@ export default {
 }
 
 .right .learn-user img {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   border-radius: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
+  margin-top: 3px;
 }
 .right p.learn-user a {
   width: 45px;
@@ -692,7 +694,7 @@ export default {
 .right .user-login-out .arrow {
   opacity: 1;
   position: absolute;
-  top: -9px;
+  top: -12px;
   left: 53px;
   opacity: 1;
   width: 20px;
@@ -701,8 +703,8 @@ export default {
 .right .user-login-out span{
   display: inline-block;
   width:100%;
-  height: 35px;
-  line-height: 35px;
+  height: 40px;
+  line-height: 40px;
   font-size: 14px;
   color:#4a4a4a;
   text-align: center;
