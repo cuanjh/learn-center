@@ -44,7 +44,7 @@
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <div class="search"></div>
         </div>
-        <a class="vip-img" v-if="userInfo.member_info.member_type !== 1"></a>
+        <router-link :to="{path: '/app/user/vip'}"  class="vip-img" v-if="userInfo.member_info.member_type !== 1"></router-link>
         <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
         <div class="vip" style="display:none"></div>
         <div class="head-nation" style="display:none">
