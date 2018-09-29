@@ -22,7 +22,7 @@
         <div class="details-content">
           <div class="container">
             <div class="details-img">
-              <img :src="courseInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="世界语言大图标">
+              <img :src="courseInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" :alt="courseInfo.name + '图片'">
             </div>
             <div class="details-resource">
               <p class="details-title">麦格</p>
@@ -278,7 +278,7 @@ export default {
     height: 30px;
   }
   .details-top .details-title {
-    width: 144px;
+    /* width: 144px; */
     height: 30px;
     font-size: 24px;
     color: #2A9FE4;
@@ -295,6 +295,7 @@ export default {
     /* width: 80%; */
     height: 100%;
     border-bottom: 1px solid #EAEAEA;
+    padding-left: 0px;
   }
   .details-top .details-content .details-img {
     display: inline-block;
@@ -319,15 +320,17 @@ export default {
     margin-bottom: 5px;
   }
   .details-top .details-content .details-resource .course-content {
-    width: 500px;
+    /* width: 500px; */
     height: 50px;
     margin-top: 34px;
   }
   .details-top .details-content .details-resource .course-content .course {
-    display: flex;
-    justify-content: space-between;
+    /* display: flex;
+    justify-content: space-between; */
   }
   .details-top .details-content .details-resource .course-content .course li {
+    display: inline-block;
+    margin-right: 40px;
     height: 100%;
   }
   .details-top .details-content .details-resource .course-content .course li .title{
@@ -359,12 +362,13 @@ export default {
     overflow: hidden;
     position: absolute;
     bottom: 0px;
+    margin-left: 10px;
   }
   .tab-item span {
     float: left;
     display: block;
     font-size: 16px;
-    color: #999;
+    color: #333333;
     cursor: pointer;
     margin-right: 68px;
     padding: 0px 2px 12px;
@@ -378,7 +382,7 @@ export default {
     border-radius: 3px;
     background-color: #fff;
     /* box-shadow: 0px 2px 4px #DAE6F3; */
-    padding: 25px 36px 22px;
+    padding: 25px 36px 22px 46px;
     margin-top: 20px;
   }
   .book-info  li {

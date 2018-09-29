@@ -34,11 +34,11 @@
               <li class="title">美洲</li>
               <li class="number">
                 <span>所有人口</span>
-                <span>437654678</span>
+                <span>996212940</span>
               </li>
               <li class="language">
                 <span>拥有语言</span>
-                <span>2300</span>
+                <span>1060</span>
               </li>
               <li class="main-countries">
                   <span>主要国家</span>
@@ -58,11 +58,11 @@
               <li class="title">欧洲</li>
               <li class="number">
                 <span>所有人口</span>
-                <span>437654678</span>
+                <span>741002200</span>
               </li>
               <li class="language">
                 <span>拥有语言</span>
-                <span>2300</span>
+                <span>288</span>
               </li>
               <li class="main-countries">
                   <span>主要国家</span>
@@ -106,11 +106,11 @@
               <li class="title">非洲</li>
               <li class="number">
                 <span>所有人口</span>
-                <span>437654678</span>
+                <span>1195667795</span>
               </li>
               <li class="language">
                 <span>拥有语言</span>
-                <span>2300</span>
+                <span>2143</span>
               </li>
               <li class="main-countries">
                   <span>主要国家</span>
@@ -130,11 +130,11 @@
               <li class="title">大洋洲</li>
               <li class="number">
                 <span>所有人口</span>
-                <span>437654678</span>
+                <span>39803720</span>
               </li>
               <li class="language">
                 <span>拥有语言</span>
-                <span>2300</span>
+                <span>1306</span>
               </li>
               <li class="main-countries">
                   <span>主要国家</span>
@@ -407,6 +407,7 @@ a {
         height: 391px;
         display: inline-block;
         &:hover {
+          z-index: 99 !important;
           i {
             transform: scale(1.2,1.2);
           }
@@ -435,7 +436,11 @@ a {
         display: inline-block;
         width: 500px;
         height: 180px;
+        position: absolute;
+        top: -2px;
+        left: 254px;
         &:hover {
+          z-index: 99 !important;
           i {
             transform: scale(1.2,1.2);
           }
@@ -451,9 +456,9 @@ a {
         }
         span {
           display: inline-block;
-          position: absolute;
-          top: 27%;
-          left: 47%;
+          position: relative;
+          top: -71px;
+          left: 28%;
         }
         &.active {
           i {
@@ -472,6 +477,7 @@ a {
         top: 126px;
         left: 381px;
         &:hover {
+          z-index: 99 !important;
           i {
             transform: scale(1.2,1.2);
           }
@@ -504,6 +510,7 @@ a {
         top: 173px;
         left: 294px;
         &:hover {
+          z-index: 99 !important;
           i {
             transform: scale(1.2,1.2);
           }
@@ -536,6 +543,7 @@ a {
         top: 210px;
         left: 550px;
         &:hover {
+          z-index: 99 !important;
           i {
             transform: scale(1.2,1.2);
           }
@@ -637,7 +645,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             span:nth-child(2){
               width: 76px;
@@ -645,7 +653,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .language {
@@ -657,7 +665,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             span:nth-child(2){
               width: 76px;
@@ -665,7 +673,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .main-countries {
@@ -750,7 +758,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             span:nth-child(2){
               width: 76px;
@@ -758,7 +766,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .language {
@@ -770,7 +778,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             span:nth-child(2){
               width: 76px;
@@ -778,7 +786,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .main-countries {
@@ -863,7 +871,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             span:nth-child(2){
               width: 76px;
@@ -871,7 +879,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .language {
@@ -891,7 +899,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .main-countries {
@@ -902,7 +910,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             .main-list {
               display: inline-block;
@@ -976,7 +984,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             span:nth-child(2){
               width: 76px;
@@ -984,7 +992,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .language {
@@ -996,7 +1004,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             span:nth-child(2){
               width: 76px;
@@ -1004,7 +1012,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .main-countries {
@@ -1090,7 +1098,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             span:nth-child(2){
               width: 76px;
@@ -1098,7 +1106,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .language {
@@ -1110,7 +1118,7 @@ a {
               font-size: 15px;
               color: #444444;
               margin-right: 10px;
-              line-height: 21px;
+              line-height: 25px;
             }
             span:nth-child(2){
               width: 76px;
@@ -1118,7 +1126,7 @@ a {
               display: inline-block;
               font-size: 15px;
               color: #B5B5B5;
-              line-height: 18px;
+              line-height: 25px;
             }
           }
           .main-countries {
