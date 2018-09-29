@@ -695,7 +695,7 @@ export default {
   opacity: 1;
   position: absolute;
   top: -12px;
-  left: 53px;
+  left: 51px;
   opacity: 1;
   width: 20px;
   height: 20px;
