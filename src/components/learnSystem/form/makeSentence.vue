@@ -115,8 +115,8 @@ export default {
         template:
           `<transition name="fade">
             <div class="text-head" id='${id}' v-show="show">
-              <div :class="{rtl:dir}"">
-                <a :class="{border:isTeacher}" v-for='(word, index) in words' :key="index" @click='placed(index)'>
+              <div :class="{rtl:dirChild}"">
+                <a :class="{border:isTeacher}" v-for='(word, index) in words' :key="index" @click='placedChild(index)'>
                   <span>{{word}}</span>
                 </a>
               </div>
@@ -125,11 +125,11 @@ export default {
         data: {
           words: [],
           show: true,
-          dir: this.direction < 0,
+          dirChild: this.direction < 0,
           isTeacher: 0
         },
         methods: {
-          placed: (idx) => {
+          placedChild: (idx) => {
             _this.placed(idx)
           }
         }

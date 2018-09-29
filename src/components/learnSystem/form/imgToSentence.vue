@@ -115,8 +115,8 @@ export default {
         template:
         `<transition name="fade">
             <div class="text-head" id='${id}' v-show="show">
-              <div :class="{rtl:dir}"">
-                <a :class="{border:isTeacher, shake: isShake}" v-for='(itm, index) in sentences' :key="index" @click='check(itm)' class="txt-box">
+              <div :class="{rtl:dirChild}"">
+                <a :class="{border:isTeacher, shake: isShake}" v-for='(itm, index) in sentences' :key="index" @click='checkChild(itm)' class="txt-box">
                   <span>{{switch_state ?itm.phoneticize : itm.sentence}}</span>
                 </a>
               </div>
@@ -126,11 +126,11 @@ export default {
           sentences: [],
           show: true,
           switch_state: false,
-          dir: this.direction < 0,
+          dirChild: this.direction < 0,
           isTeacher: 0
         },
         methods: {
-          check (itm) {
+          checkChild (itm) {
             _this.check(itm)
           }
         }

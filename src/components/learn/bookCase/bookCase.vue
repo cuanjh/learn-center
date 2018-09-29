@@ -244,7 +244,6 @@ export default {
     bottom:0;
     right:0;
     /* padding:0 0px 1px 30px; */
-    background:url(http://css88.b0.upaiyun.com/css88/2014/09/ellipsis_bg.png) repeat-y;
   }
   .course-item li .details .time,
   .course-item li .details .home-work {
