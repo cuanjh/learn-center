@@ -16,12 +16,14 @@
             @mouseleave="hideDetails">
             <img :src="qnUrl(item.flag)" alt="">
             <p class="name-number"><span class="name">{{ item.name }}</span><span class="number">{{ item.buy_num>999999?'999,999+':toThousands(item.buy_num) }}</span></p>
-            <div class="details animated fadeIn" v-show="showDetailsHot === index">
-              <p class="desc">{{item.des}}</p>
-              <p class="time">课时：{{item.level_num}}课时</p>
-              <p class="home-work">作业：{{item.homework_num}}</p>
-              <p class="btn" @click="goDetails(item.code)">课程详情</p>
-            </div>
+            <transition name="fade">
+              <div class="details" v-show="showDetailsHot === index">
+                <p class="desc">{{item.des}}</p>
+                <p class="time">课时：{{item.level_num}}课时</p>
+                <p class="home-work">作业：{{item.homework_num}}</p>
+                <p class="btn" @click="goDetails(item.code)">课程详情</p>
+              </div>
+            </transition>
           </li>
         </ul>
       </div>
@@ -37,12 +39,14 @@
             @mouseleave="hideDetails">
             <img :src="qnUrl(item.flag)" alt="">
             <p class="name-number"><span class="name">{{ item.name }}</span><span class="number">{{ item.buy_num>999999?'999999+':item.buy_num }}</span></p>
-            <div class="details animated fadeIn" v-show="showDetailsChina === index">
-              <p class="desc">{{item.des}}</p>
-              <p class="time">课时：{{item.level_num}}课时</p>
-              <p class="home-work">作业：{{item.homework_num}}</p>
-              <p class="btn" @click="goDetails(item.code)">课程详情</p>
-            </div>
+            <transition name="fade">
+              <div class="details" v-show="showDetailsChina === index">
+                <p class="desc">{{item.des}}</p>
+                <p class="time">课时：{{item.level_num}}课时</p>
+                <p class="home-work">作业：{{item.homework_num}}</p>
+                <p class="btn" @click="goDetails(item.code)">课程详情</p>
+              </div>
+            </transition>
           </li>
         </ul>
       </div>
@@ -262,5 +266,13 @@ export default {
     position: absolute;
     right: 22px;
     bottom: 24px;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all .3s ease
+  }
+  .fade-enter, .fade-leave-to {
+    transform: translateY(100px);
+    opacity: 0;
   }
 </style>
