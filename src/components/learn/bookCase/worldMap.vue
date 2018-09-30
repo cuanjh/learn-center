@@ -169,7 +169,7 @@
               <ul>
                 <li v-for="(item , index) in item.lists" :key="index">
                   <div class="country-img">
-                    <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
+                    <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" :onerror="defaultImg" alt="资源图片">
                   </div>
                   <div class="country-title">
                     <p>{{item.name}}</p>
@@ -206,7 +206,8 @@ export default {
       tabCountry: 'country',
       isShow: false,
       allAreasInfos: [], // 全部
-      arr: []
+      arr: [],
+      defaultImg: 'this.src="/static/images/bookCase/default_course.png"'
     }
   },
   mounted () {

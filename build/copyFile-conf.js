@@ -26,6 +26,11 @@ var copyList = [
 		from: _from + '/images/bookCase/img_default_maige.png',
     to: _to + '/images/bookCase/img_default_maige.png',
 		toType: 'file'
+	},
+	{
+		from: _from + '/images/bookCase/default_course.png',
+    to: _to + '/images/bookCase/default_course.png',
+		toType: 'file'
 	}
 ]
 module.exports = copyList;
