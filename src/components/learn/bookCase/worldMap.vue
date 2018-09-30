@@ -169,7 +169,7 @@
               <ul>
                 <li v-for="(item , index) in item.lists" :key="index"  @click="nationDetail(item.code, item.flag, item.name, item.pName2)">
                   <div class="country-img">
-                    <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" :onerror="defaultImg" alt="资源图片">
+                    <img :src="item.flag" :onerror="defaultImg" alt="资源图片">
                   </div>
                   <div class="country-title">
                     <p>{{item.name}}</p>
@@ -1285,6 +1285,7 @@ a {
   .country-container .country-content .country-list ul li .country-img img{
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
   .country-container .country-content .country-list ul li .country-title {
     display: inline-block;

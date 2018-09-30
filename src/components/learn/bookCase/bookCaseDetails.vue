@@ -92,7 +92,7 @@
       <ul class="book-nation" v-show="'nation' == tabFlag">
         <li v-for="(item, index) in countryInfo" :key="index"  @click="nationDetail(item.code, item.flag, item.name)">
           <div class="nation-img">
-            <img :src="item.flag" alt="资源图片">
+            <img :src="item.flag" :onerror="defaultImg" alt="资源图片">
           </div>
           <div class="nation-title">
             <p>{{ item.name }}</p>
@@ -149,7 +149,8 @@ export default {
       courseInfo: {},
       countryInfo: {},
       resourceInfoRadios: [],
-      resPage: 1
+      resPage: 1,
+      defaultImg: 'this.src="/static/images/bookCase/default_course.png"'
     }
   },
   mounted () {

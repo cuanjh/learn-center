@@ -292,6 +292,7 @@ export default {
     width: 100%;
     height: 100%;
     border-radius: 4px;
+    object-fit: cover;
   }
   .hot-container .hot-content .hot-list ul li .hot-title {
     display: inline-block;

@@ -263,6 +263,7 @@ export default {
     width: 100%;
     height: 100%;
     border-radius: 4px;
+    object-fit: cover;
   }
   .china-lang-container .china-lang-content .hot-list ul li .hot-title {
     display: inline-block;
