@@ -398,6 +398,10 @@ export default {
     padding: 25px 36px 22px 46px;
     margin-top: 20px;
   }
+
+  .book-info {
+    min-height: 630px;
+  }
   .book-info  li {
     margin-bottom: 34px;
   }
