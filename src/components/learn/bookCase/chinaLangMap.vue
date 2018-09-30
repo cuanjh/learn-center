@@ -14,7 +14,7 @@
       <div class="hot-letter">
         <div class="letter">
           <a
-            @click="scrollPosition(item)"
+            @click="scrollPosition(item.letter)"
             :class="['letter_list', { 'active': activeLetter == item.letter, 'locked': item.list.length === 0 }]"
             v-for="(item , index) in groupCourseLangs"
             :key="index">
