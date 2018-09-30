@@ -153,21 +153,21 @@
         <div class="country-letter">
           <div class="letter">
             <a
-              :class="['letter_list', { 'active': activeLetter == item }]"
-              v-for="(item, index) in letterLists"
+              :class="['letter_list', { 'active': activeLetter == item.letter, 'locked': item.lists.length === 0 }]"
+              v-for="(item, index) in arr"
               :key="index"
-              @click="navScroll(item)">
-              {{item}}
+              @click="navScroll(item.letter)">
+              {{item.letter}}
             </a>
             <p class="countries">{{getChineseName(tabCountry)}}</p>
           </div>
         </div>
         <div class="country-scroll">
           <div class="country-content">
-            <div class="country-list" v-if="arr.length > 0" v-for="(item , index) in arr" :key="index">
+            <div class="country-list" v-if="arr.length > 0 && item.lists.length > 0" v-for="(item , index) in arr" :key="index">
               <a :id="item.letter" class="letter-gray">{{item.letter}}</a>
               <ul>
-                <li v-for="(item , index) in item.lists" :key="index">
+                <li v-for="(item , index) in item.lists" :key="index"  @click="nationDetail(item.code, item.flag, item.name, item.pName2)">
                   <div class="country-img">
                     <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" :onerror="defaultImg" alt="资源图片">
                   </div>
@@ -302,13 +302,13 @@ export default {
             }
             this.arr.push(obj)
           })
-          for (let i = this.arr.length - 1; i >= 0; i--) {
-            let item = this.arr[i]
-            if (item.lists.length > 0) {
-            } else {
-              this.arr.splice(i, 1)
-            }
-          }
+          // for (let i = this.arr.length - 1; i >= 0; i--) {
+          //   let item = this.arr[i]
+          //   if (item.lists.length > 0) {
+          //   } else {
+          //     this.arr.splice(i, 1)
+          //   }
+          // }
           console.log('arr', this.arr)
           setTimeout(() => {
             this.scrollContent()
@@ -1275,6 +1275,7 @@ a {
     width: 100%;
     padding: 16px 0;
     border-top: 1px solid #EBEBEB;
+    cursor: pointer;
   }
   .country-container .country-content .country-list ul li .country-img{
     display: inline-block;
@@ -1419,5 +1420,15 @@ a {
     100%{
       transform: translateX(60px)
     }
+  }
+
+  .locked {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    -webkit-filter: gray;
+    filter: gray;
   }
 </style>

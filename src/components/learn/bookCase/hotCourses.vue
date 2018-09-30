@@ -15,34 +15,20 @@
         <div class="letter">
           <a
             @click="scrollPosition(item)"
-            :class="['letter_list', { 'active': activeLetter == item }]"
-            v-for="(item , index) in letterList"
+            :class="['letter_list', { 'active': activeLetter == item.letter, 'locked': item.list.length === 0 }]"
+            v-for="(item , index) in groupCourseLangs"
             :key="index">
-            {{item}}
+            {{item.letter}}
           </a>
         </div>
       </div>
       <div class="hot-scroll">
         <div class="hot-content">
           <div class="hot-list">
-            <div class="section">
-              <a id="热门" class="letter-gray">热门</a>
-              <ul>
-                <li v-for="item in hotLangs" :key="item.lan_code">
-                  <div class="hot-img">
-                    <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
-                  </div>
-                  <div class="hot-title">
-                    <p>{{ item.name[languagueHander] }}</p>
-                  </div>
-                  <div class="hot-icon" @click="routerGo(item)"></div>
-                </li>
-              </ul>
-            </div>
             <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
               <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
               <ul>
-                <li v-for="item in group.list" :key="item.lan_code">
+                <li v-for="item in group.list" :key="item.lan_code" @click="routerGo(item)">
                   <div class="hot-img">
                     <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
                   </div>
@@ -83,6 +69,11 @@ export default {
     _this.getCourseLangs().then((res) => {
       console.log('res', res)
       _this.hotLangs = res.hot_langs
+      _this.groupCourseLangs.push({
+        letter: '热门',
+        list: _this.hotLangs
+      })
+
       res.course_langs.forEach((item) => {
         let obj = item
         let name = item.name[_this.languagueHander]
@@ -149,7 +140,6 @@ export default {
         for (; len > -1; len--) {
           let that = sections.eq(len)
           let letter = that.find('a').attr('id')
-          console.log('letter', letter)
           if (scrollTop >= $('.hot-content').scrollTop() - $('#' + letter).scrollTop() + $('#' + letter).offset().top - 265) {
             this.activeLetter = letter
             break
@@ -158,7 +148,6 @@ export default {
       })
     },
     routerGo (item) {
-      console.log('item---->', item)
       let langCode = item['lan_code']
       if (this.subscribeCoursesStr.length === 0) {
         this.$router.push({path: '/app/book-details/' + langCode})
@@ -292,6 +281,7 @@ export default {
     width: 100%;
     padding: 16px 0;
     border-top: 1px solid #EBEBEB;
+    cursor: pointer;
   }
   .hot-container .hot-content .hot-list ul li .hot-img{
     display: inline-block;
@@ -320,5 +310,15 @@ export default {
     background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
     background-size: 10px 18px;
     cursor: pointer;
+  }
+
+  .locked {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    -webkit-filter: gray;
+    filter: gray;
   }
 </style>

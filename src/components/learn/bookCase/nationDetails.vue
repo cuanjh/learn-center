@@ -75,7 +75,7 @@
         </li>
       </ul>
       <ul class="country-language" v-show="'language' == tabFlag">
-        <li v-for="item in langInfos" :key="item.lang_code" v-if="item.flag">
+        <li v-for="item in langInfos" :key="item.lang_code" v-if="item.flag" @click="routerGo(item)">
           <div class="country-img">
             <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
           </div>
@@ -215,10 +215,15 @@ export default {
           display: inline-block;
           width: 208px;
           height: 137px;
-          box-shadow: 0px 2px 4px 0px #000000;
+          padding: 3px;
+          background-color: #ffffff;
+          border-radius: 10px;
+          box-shadow: 0px 2px 4px 0px #999999;
           img {
             width: 100%;
             height: 100%;
+            border-radius: 8px;
+            object-fit: cover;
           }
         }
       }
@@ -287,16 +292,20 @@ export default {
         height: 73px;
         border-bottom: 1px solid #EBEBEB;
         margin-bottom: 20px;
+        cursor: pointer;
         &:last-child {
           border-bottom: 0px;
         }
         .country-img {
           display: inline-block;
-          width: 75px;
+          width: 50px;
           height: 50px;
+          border-radius: 4px;
           img {
-            width: 75px;
+            width: 50px;
             height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
           }
         }
         .country-title {

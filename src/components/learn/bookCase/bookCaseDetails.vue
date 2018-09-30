@@ -90,7 +90,7 @@
         </li>
       </ul>
       <ul class="book-nation" v-show="'nation' == tabFlag">
-        <li v-for="(item, index) in countryInfo" :key="index">
+        <li v-for="(item, index) in countryInfo" :key="index"  @click="nationDetail(item.code, item.flag, item.name)">
           <div class="nation-img">
             <img :src="item.flag" alt="资源图片">
           </div>
@@ -220,7 +220,7 @@ export default {
       }, 1000)
     },
     subscribeCourse () {
-      this.postPurchaseCourse({ code: this.courseCode + '-Basic' }).then((res) => {
+      this.postPurchaseCourse({ code: this.courseCode.toUpperCase() + '-Basic' }).then((res) => {
         this.getLearnCourses()
       })
     }
@@ -356,7 +356,7 @@ export default {
       right: 6%;
       top: 35%;
       border-radius: 30px;
-      box-shadow: 0px 5px 10px 0px #304A69;
+      box-shadow: 0px 5px 10px 0px #999999;
    }
    .details-top .details-content .button:hover {
      background: rgba(11, 108, 224, .6)
@@ -478,6 +478,7 @@ export default {
     width: 100%;
     padding: 25px 0;
     border-bottom: 1px solid #EBEBEB;
+    cursor: pointer;
   }
   .book-nation li .nation-img {
     display: inline-block;

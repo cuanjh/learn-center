@@ -15,10 +15,10 @@
         <div class="letter">
           <a
             @click="scrollPosition(item)"
-            :class="['letter_list', { 'active': activeLetter == item }]"
-            v-for="(item , index) in letterList"
+            :class="['letter_list', { 'active': activeLetter == item.letter, 'locked': item.list.length === 0 }]"
+            v-for="(item , index) in groupCourseLangs"
             :key="index">
-            {{item}}
+            {{item.letter}}
           </a>
         </div>
       </div>
@@ -27,7 +27,7 @@
           <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
             <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
             <ul>
-              <li v-for="item in group.list" :key="item.lan_code">
+              <li v-for="item in group.list" :key="item.lan_code" @click="routerGo(item)">
                 <div class="hot-img">
                   <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
                 </div>
@@ -252,6 +252,7 @@ export default {
     width: 100%;
     padding: 16px 0;
     border-top: 1px solid #EBEBEB;
+    cursor: pointer;
   }
   .china-lang-container .china-lang-content .hot-list ul li .hot-img{
     display: inline-block;
@@ -280,5 +281,15 @@ export default {
     background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
     background-size: 10px 18px;
     cursor: pointer;
+  }
+
+  .locked {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    -webkit-filter: gray;
+    filter: gray;
   }
 </style>
