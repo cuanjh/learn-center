@@ -22,7 +22,7 @@
         <div class="details-content">
           <div class="container">
             <div class="details-img">
-              <img :src="courseInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" :alt="courseInfo.name + '图片'">
+              <img :src="(courseInfo.flag ? courseInfo.flag : '/static/images/bookCase/img_default_maige.png') | urlFix('imageView2/0/w/200/h/200/format/jpg')" :alt="courseInfo.name + '图片'">
             </div>
             <div class="details-resource">
               <p class="details-title">麦格</p>
@@ -49,11 +49,14 @@
               </div>
             </div>
           </div>
-          <a v-if="subscribeCourses.indexOf(courseCode) > -1" href="javascript:void(0)" class="button" @click="startLearn()">
+          <a v-if="subscribeCourses.indexOf(courseCode) > -1 && courseInfo.has_course" href="javascript:void(0)" class="button" @click="startLearn()">
             <span>开始学习</span>
           </a>
-          <a v-else href="javascript:void(0)" class="button" @click="subscribeCourse()">
+          <a v-else-if="subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course" href="javascript:void(0)" class="button" @click="subscribeCourse()">
             <span>订阅课程</span>
+          </a>
+          <a v-else href="javascript:void(0)" class="button locked">
+            <span>课程建设中</span>
           </a>
         </div>
       </div>
@@ -358,6 +361,16 @@ export default {
    .details-top .details-content .button:hover {
      background: rgba(11, 108, 224, .6)
    }
+
+  .locked {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    -webkit-filter: gray;
+    filter: gray;
+  }
   .tab-item {
     overflow: hidden;
     position: absolute;

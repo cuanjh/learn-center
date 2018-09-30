@@ -21,6 +21,11 @@ var copyList = [
 		from: _from + '/bootstrap.min.js',
     to: _to + '/bootstrap.min.js',
 		toType: 'file'
+	},
+	{
+		from: _from + '/images/bookCase/img_default_maige.png',
+    to: _to + '/images/bookCase/img_default_maige.png',
+		toType: 'file'
 	}
 ]
 module.exports = copyList;
