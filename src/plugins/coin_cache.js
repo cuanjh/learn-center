@@ -3,7 +3,7 @@
 	备份当前会话用户学习所得金币
 */
 
-import { Cookie } from './cookie'
+import Cookie from '../tool/cookie'
 
 function encryption (str) {   // 加密
   return window.btoa(str)

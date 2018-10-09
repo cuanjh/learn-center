@@ -25,6 +25,7 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LeftSide from './leftSide.vue'
 import LevelTabs from './levelTabs.vue'
 import ChapterItem from './chapterItem.vue'
+import Cookie from '../../../tool/cookie'
 
 export default {
   data () {
@@ -43,6 +44,10 @@ export default {
     this.$parent.$emit('navItem', 'course')
     this.showLoading()
     let curCourseCode = this.currentCourseCode
+    let langCode = Cookie.getCookie('lang_code')
+    if (langCode) {
+      curCourseCode = langCode + '-Basic'
+    }
     if (!curCourseCode) {
       curCourseCode = localStorage.getItem('currentCourseCode')
     }

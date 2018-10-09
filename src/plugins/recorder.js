@@ -1,5 +1,6 @@
 /* eslint-disable */
 import bus from '../bus'
+import Cookie from '../tool/cookie' 
 var qiniu = require('qiniu-js')
 // or
 // import * as qiniu from 'qiniu-js'
@@ -224,7 +225,7 @@ class Recorder {
         params: {
           'x:course_code': courseCode,
           'x:form_code': code,
-          'x:user_id': localStorage.getItem('user_id'),
+          'x:user_id': Cookie.getCookie('user_id'),
           'x:sentence': sentence
         },
         mimeType: [] || null
@@ -259,7 +260,7 @@ class Recorder {
     GetKey (code) {
       var date = new Date()
       var d = date.format('yyyy/MM/dd');
-      var userId = localStorage.getItem('user_id');
+      var userId = Cookie.getCookie('user_id');
       var time = date.getTime()
 
       return d + '/' + code + '/' + userId + '/' + time + '.wav';

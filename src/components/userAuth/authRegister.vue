@@ -227,7 +227,7 @@ import http from './../../api/userAuth.js'
 import errCode from './../../api/code.js'
 // import Config from './../../api/config.js'
 import { randomString, encrypt } from './../../tool/untils.js'
-import Cookies from 'js-cookie'
+import Cookie from '../../tool/cookie'
 import { mapMutations, mapActions } from 'vuex'
 export default {
   data () {
@@ -345,8 +345,8 @@ export default {
         lan_code: this.registerLang.lan_code
       }).then(res => {
         if (res.success) {
-          Cookies.set('user_id', res.user_id)
-          Cookies.set('verify', res.verify)
+          Cookie.setCookieAuto('user_id', res.user_id)
+          Cookie.setCookieAuto('verify', res.verify)
           console.log(randomString)
           var date = new Date()
           var params = {

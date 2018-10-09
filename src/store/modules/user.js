@@ -42,6 +42,13 @@ const getters = {
 }
 
 const actions = {
+  /**
+   * 用户模块
+   */
+  // 登录
+  login ({commit}, params) {
+    return httpNoLogin(config.userLogin, params)
+  },
   getUserInfo ({commit}) {
     return httpLogin(config.userInfo)
   },

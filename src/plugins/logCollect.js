@@ -4,7 +4,7 @@
  */
 /* eslint-disable */
 import $ from 'jquery'
-import { Cookie } from './cookie'
+import Cookie from '../tool/cookie'
 import Config from '../api/config'
 // 依赖index.php返回的Config数据
 

@@ -3,7 +3,7 @@
 	生成用户当前会话的唯一id
 	详细文档参考http://wiki.200h.com/pages/viewpage.action?pageId=853504
 */
-import { Cookie } from './cookie'
+import Cookie from '../tool/cookie'
 
 function _onlyId() {
   	return Math.round(new Date().getTime());

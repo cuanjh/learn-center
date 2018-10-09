@@ -4,7 +4,7 @@
  */
 /* eslint-disable */
 import Vue from 'vue'
-import { Cookie } from './cookie'
+import Cookie from './cookie'
 import Config from '../api/config'
 
 var LOG_URL = 'https://statistics.talkmate.com/log.gif';

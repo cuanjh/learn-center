@@ -24,10 +24,11 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import http from './../../api/userAuth.js'
 import validation from './../../tool/validation.js'
-import errCode from './../../api/code.js'
 import { encrypt } from './../../tool/untils.js'
+import Cookie from '../../tool/cookie'
+import errCode from './../../api/code.js'
+
 // import Cookies from 'js-cookie'
 
 export default {
@@ -52,7 +53,8 @@ export default {
       updateUserInfo: 'user/updateUserInfo'
     }),
     ...mapActions({
-      getUserInfo: 'user/getUserInfo'
+      getUserInfo: 'user/getUserInfo',
+      login: 'user/login'
     }),
     autoLogin () {
       this.autoFlag = !this.autoFlag
@@ -68,24 +70,26 @@ export default {
         return false
       }
       this.loading = true
-      http.login({
+      this.login({
         identity: this.userName,
         password: encrypt(this.userPwd)
       }).then(res => {
         if (res.success) {
           localStorage.removeItem('userInfo')
-          localStorage.removeItem('user_id')
-          localStorage.removeItem('verify')
-          // Cookies.set('user_id', res.user_id)
-          // Cookies.set('verify', res.verify)
-          localStorage.setItem('user_id', res.user_id)
-          localStorage.setItem('verify', res.verify)
-          // let UserId = Cookies.get('user_id')
-          // let lastUserId = Cookies.get('last_user_id')
-          let UserId = localStorage.getItem('user_id')
+          Cookie.delCookie('user_id')
+          Cookie.delCookie('verify')
+          // if (this.autoFlag) {
+          //   Cookie.setCookieAuto('user_id', res.user_id)
+          //   Cookie.setCookieAuto('verify', res.verify)
+          // } else {
+          //   Cookie.setCookieSession('user_id', res.user_id)
+          //   Cookie.setCookieSession('verify', res.verify)
+          // }
+          Cookie.setCookie('user_id', res.user_id)
+          Cookie.setCookie('verify', res.verify)
+          let UserId = Cookie.getCookie('user_id')
           let lastUserId = localStorage.getItem('last_user_id')
           if (lastUserId !== UserId) {
-            // Cookies.set('lastUserId', UserId)
             localStorage.setItem('lastUserId', UserId)
             localStorage.removeItem('lastCourseCode')
           }

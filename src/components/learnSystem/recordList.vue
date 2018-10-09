@@ -82,6 +82,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import Cookie from '../../tool/cookie'
 
 export default {
   props: ['isShow'],
@@ -107,7 +108,7 @@ export default {
       let courseId = recordCourse.course_id
       let userId = ''
       if (own) {
-        userId = localStorage.getItem('user_id')
+        userId = Cookie.getCookie('user_id')
         _this.myRecord = recordCourseList.filter((item) => {
           return item.user_id === userId
         })

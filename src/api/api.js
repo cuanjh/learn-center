@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import config from './config'
-import Cookies from 'js-cookie'
+import Cookie from '../tool/cookie'
 import errorCode from './errorCode'
 import { deviceId } from './../tool/untils.js'
 import $ from 'jquery'
@@ -10,11 +10,9 @@ export const httpLogin = (_url, _params) => { // 已经登录
     _params = {}
   }
   _params.HTTP_API_VERSION = config.API_VERSION
-  _params.device_id = Cookies.get('device_id')
-  // _params.user_id = Cookies.get('user_id')
-  // _params.verify = Cookies.get('verify')
-  _params.user_id = localStorage.getItem('user_id')
-  _params.verify = localStorage.getItem('verify')
+  _params.device_id = Cookie.getCookie('device_id')
+  _params.user_id = Cookie.getCookie('user_id')
+  _params.verify = Cookie.getCookie('verify')
   return Vue.http.jsonp(process.env.API_HOST + _url, {params: _params})
     .then(res => {
       if (res['data']['success']) {
@@ -42,11 +40,9 @@ export const httpLogin = (_url, _params) => { // 已经登录
 export const httpGetToken = (_url) => { // 已经登录
   var data = {
     HTTP_API_VERSION: config.API_VERSION,
-    device_id: Cookies.get('device_id'),
-    // user_id: Cookies.get('user_id'),
-    // verify: Cookies.get('verify')
-    user_id: localStorage.getItem('user_id'),
-    verify: localStorage.getItem('verify')
+    device_id: Cookie.getCookie('device_id'),
+    user_id: Cookie.getCookie('user_id'),
+    verify: Cookie.getCookie('verify')
   }
 
   var p = new Promise((resolve, reject) => {
@@ -72,14 +68,13 @@ export const httpNoLogin = (_url, _params) => { // 未登录
     _params = {}
   }
   _params.HTTP_API_VERSION = config.API_VERSION
-  if (Cookies.get('device_id')) {
-    _params.device_id = Cookies.get('device_id')
+  if (Cookie.getCookie('device_id')) {
+    _params.device_id = Cookie.getCookie('device_id')
   } else {
     let _deviceId = deviceId()
     _params.device_id = _deviceId
-    Cookies.set('device_id', _deviceId)
+    Cookie.setCookie('device_id', _deviceId)
   }
-  _params.device_id = Cookies.get('device_id')
   return Vue.http.jsonp(process.env.API_HOST + _url, {params: _params})
     .then(res => {
       // return res['data']
@@ -121,11 +116,9 @@ export const httpLoginUrl = (_url, _params) => {
     _params = {}
   }
   _params.HTTP_API_VERSION = config.API_VERSION
-  _params.device_id = Cookies.get('device_id')
-  // _params.user_id = Cookies.get('user_id')
-  // _params.verify = Cookies.get('verify')
-  _params.user_id = localStorage.getItem('user_id')
-  _params.verify = localStorage.getItem('verify')
+  _params.device_id = Cookie.getCookie('device_id')
+  _params.user_id = Cookie.getCookie('user_id')
+  _params.verify = Cookie.getCookie('verify')
 
   let url = process.env.API_HOST + _url + '?'
   Object.keys(_params).forEach((key) => {
