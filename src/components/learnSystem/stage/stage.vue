@@ -46,6 +46,7 @@ import Loader from '../../../plugins/loader'
 import logCollect from '../../../plugins/logCollect'
 import { onlyId } from '../../../plugins/onlyId'
 import coinCache from '../../../plugins/coin_cache'
+import Cookie from '../../../tool/cookie'
 
 var END = -1 // 结束标志位
 var TRANSALTE_TIME = 500 // 动画过渡时间
@@ -365,7 +366,7 @@ export default {
   beforeMount () {
     let ui = {}
     if (Object.keys(this.userInfo).length === 0) {
-      ui = JSON.parse(localStorage.getItem('userInfo'))
+      ui = JSON.parse(localStorage.getItem('userInfo')) || JSON.parse(Cookie.getCookie('userInfo'))
     } else {
       ui = this.userInfo
     }

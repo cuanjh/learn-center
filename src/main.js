@@ -10,6 +10,7 @@ import routes from './router/index'
 import store from './store/index'
 import moreLanguage from './vueI18/locale.js'
 import {urlfix} from './filter/index'
+import Cookie from './tool/cookie'
 // import 'babel-polyfill'
 
 require('./../static/css/animate.css')
@@ -41,7 +42,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(m => m.meta.auth)) {
-    if (window.localStorage.isLogin === '1') {
+    let isLogin = Cookie.getCookie('isLogin')
+    if (isLogin === '1') {
       next()
     } else if (to.path !== '/') {
       next({ path: '/auth/login' })

@@ -21,7 +21,7 @@ export const httpLogin = (_url, _params) => { // 已经登录
         })
       } else {
         if (res['data']['code'][0] === 1005) {
-          localStorage.setItem('isLogin', 0)
+          Cookie.setCookie('isLogin', 0)
           window.location.href = '' // 回到登录
         } else {
           return new Promise((resolve, reject) => {
@@ -84,7 +84,7 @@ export const httpNoLogin = (_url, _params) => { // 未登录
         })
       } else {
         if (res['data']['code'][0] === 1005) {
-          localStorage.setItem('isLogin', 0)
+          Cookie.setCookie('isLogin', 0)
           window.location.href = '' // 回到登录
         } else {
           return new Promise((resolve, reject) => {

@@ -2,6 +2,7 @@ import { httpLogin, httpNoLogin, httpLoginUrl } from '../../api/api'
 import config from '../../api/config'
 import * as useMethod from './userMethod'
 import expense from './expense'
+import Cookie from '../../tool/cookie'
 
 const state = {
   showLoading: true, // 用来判断加载状态程序
@@ -169,7 +170,7 @@ const mutations = {
   },
   updateIsLogin (state, isLogin) {
     state.isLogin = isLogin
-    localStorage.setItem('isLogin', isLogin)
+    Cookie.setCookie('isLogin', isLogin)
   },
   getCourseProgress (state) {
     state.courseRader = state.courseRaderRastart
