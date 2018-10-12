@@ -5,7 +5,7 @@
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
           @click="jumpToCourse(item.code)">
         <div class="current-learn-course-flag">
-          <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image+'/format/jpeg'">
+          <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'">
           <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1"></div>
         </div>
         <div class="current-learn-course-word-info">
@@ -33,7 +33,7 @@
         <div class="course-core-test-check" v-show="item.code === currentChapterCode && unlockCourses.indexOf(item.code) > -1 && (buyChapters.indexOf(item.code) !== -1 || isVip ===1) && !isShow">
           <ul>
             <li class="course-brief" @click="switchShow()">
-              <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image+'/format/jpeg'" alt="">
+              <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
               <div class="course-brief-shade">
                 <div class="course-brief-title">
                   <span>课程</span>
@@ -673,12 +673,12 @@ export default {
   .course-brief{
     position: relative;
     border-radius: 2.73px;
-    height: 422px;
+    height: 322px;
   }
 
   .course-brief img{
     position: absolute;
-    height: 100%;
+    height: 322px;
     width: 100%;
     object-fit: cover;
     border-radius: 2.73px;
@@ -698,7 +698,7 @@ export default {
     color: #ffffff;
     line-height: 48px;
     font-weight: bold;
-    padding-top: 15%;
+    padding-top: 55px;
     padding-left: 80px;
   }
 
@@ -749,7 +749,7 @@ export default {
   .course-core{
     width: 100%;
     border-bottom: 1px solid rgba(233,234,235,0.50);
-    padding: 20px 0 40px;
+    padding: 15px 0 30px;
   }
 
   .course-core-name{
@@ -955,7 +955,7 @@ export default {
   .course-review{
     width: 100%;
     border-bottom: 1px solid rgba(233,234,235,0.50);
-    padding: 20px 0 40px;
+    padding: 15px 0 30px;
   }
 
   .course-review-name{
@@ -994,7 +994,7 @@ export default {
 
   .course-vip{
     width: 100%;
-    padding: 20px 0 40px;
+    padding: 15px 0 30px;
   }
 
   .course-vip-name{
