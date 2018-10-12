@@ -143,9 +143,6 @@ const actions = {
   postCourseTestRecord ({ commit, state }, payload) {
     return httpLogin(config.courseTestRecord, { chapter_code: payload.chapterCode, progress: payload.progress })
   },
-  getCourseTestRanking ({ commit, state }, chapterCode) {
-    return httpLogin(config.courseTestRanking, { chapter_code: chapterCode })
-  },
   getFinishedInfo ({ commit, state }, activityCode) {
     return httpLogin(config.finishedInfo, { activity_code: activityCode }).then((res) => {
       commit('updateFinishedInfo', res)

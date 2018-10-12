@@ -46,6 +46,7 @@ import Loader from '../../../plugins/loader'
 import logCollect from '../../../plugins/logCollect'
 import { onlyId } from '../../../plugins/onlyId'
 import coinCache from '../../../plugins/coin_cache'
+
 import Cookie from '../../../tool/cookie'
 
 var END = -1 // 结束标志位
@@ -252,9 +253,7 @@ export default {
         this.postProgress().then(() => {
           coinCache.update(this.coin)
         })
-        this.getProgress(this.curChapterCode).then((res) => {
-          this.updateCurChapterProgress(res.record.forms)
-        })
+        this.getProgress(this.curChapterCode)
       }
       // console.log('slides done:', this.cur_slide)
       if (this.curSlide + 1 === this.progress.length) {
@@ -363,93 +362,40 @@ export default {
       }, 4000)
     })
   },
-  beforeMount () {
-    let ui = {}
-    if (Object.keys(this.userInfo).length === 0) {
-      ui = JSON.parse(localStorage.getItem('userInfo')) || JSON.parse(Cookie.getCookie('userInfo'))
-    } else {
-      ui = this.userInfo
-    }
-    this.totalCoin = ui.coins
-
-    // var that = this
-    // let _coinCache = coinCache.get(that.completePath)
-    // if (_coinCache === null) {
-    //   coinCache.set(that.completePath, that.coin)
-    // } else {
-    //   that.coin = _coinCache
-    //   that.totalCoin = parseInt(this.totalCoin) + _coinCache
-    // }
-    localStorage.setItem('userCoin', ui.coins)
-  },
   mounted () {
-    console.log('stage')
-    let id = this.id
-    localStorage.setItem('chapterType', this.id)
-    if (id.indexOf('A0') > -1) {
-      this.updateCurCoreParts(id)
-    }
-
-    this.chapterProgress(this.id)
-    // this.typeList = this.getTypeList()
-    // this.list = this.getList()
-
-    this.timeCount()
-
-    var resource = this.getResource(this.curSlide)
-    changeData(this, Loader(resource))
-
-    // this.$emit('next-component')
-    // 弹出提示、/////////////////////////////////////////////
-    this.$nextTick(() => {
-      var isPop
-      if (
-        Recorder.isActivity() !== true &&
-        Recorder.refuseRecord !== true &&
-        this.canRecord
-      ) {
-        this.micphoneTip = this.tips.micphone
-        isPop = true
-      } else if (Recorder.refuseRecord) {
-        this.micphoneTip = this.tips.micphone_failed
-        isPop = true
-      }
-      if (isPop) {
-        this.$refs.tipbox.$emit('tipbox-show')
-        this.updatePause(true)
-      }
-    })
-    this.getCoinCalculationRule()
-    this.isFirst = Number(this.progress[0] === -1)
-    // 判断是否是第一次进入，日志数据提交
-    if (!onlyId.get()) {
-      onlyId.set()
-      var whetherFirst = this.isFirst
-      logCollect.learnStart(whetherFirst)
+    let isAnonymous = Cookie.getCookie('is_anonymous')
+    console.log('isAnonymous--->', isAnonymous)
+    if (isAnonymous) {
+      console.log(11111)
+      this.initAnonymousData()
+      console.log(2222)
+    } else {
+      this.initData()
     }
   },
   computed: {
     ...mapState({
-      'currentCourseCode': state => state.course.currentCourseCode,
-      'curCorePart': state => state.course.curCorePart,
-      'curChapterContent': state => state.course.curChapterContent,
-      'recordForm': state => state.course.recordForm,
-      'currentChapterCode': state => state.course.currentChapterCode,
-      'progress': state => state.course.progress,
-      'curSlide': state => state.course.curSlide,
-      'pathArr': state => state.course.pathArr,
-      'core': state => state.course.core,
-      'homework': state => state.course.homework,
-      'improvement': state => state.course.improvement,
-      'coreComplete': state => state.course.coreComplete,
-      'homeworkComplete': state => state.course.homeworkComplete,
-      'improvementComplete': state => state.course.improvementComplete,
-      'unlockCourses': state => state.course.unlockCourses,
-      'coinCalculationRule': state => state.learn.coinCalculationRule,
-      'tips': state => state.learn.tips,
-      'formScores': state => state.learn.formScores,
-      'canRecord': state => state.learn.canRecord,
-      'userInfo': state => state.user.userInfo
+      currentCourseCode: state => state.course.currentCourseCode,
+      curCorePart: state => state.course.curCorePart,
+      curChapterContent: state => state.course.curChapterContent,
+      recordForm: state => state.course.recordForm,
+      currentChapterCode: state => state.course.currentChapterCode,
+      progress: state => state.course.progress,
+      curSlide: state => state.course.curSlide,
+      pathArr: state => state.course.pathArr,
+      core: state => state.course.core,
+      homework: state => state.course.homework,
+      improvement: state => state.course.improvement,
+      coreComplete: state => state.course.coreComplete,
+      homeworkComplete: state => state.course.homeworkComplete,
+      improvementComplete: state => state.course.improvementComplete,
+      unlockCourses: state => state.course.unlockCourses,
+      coinCalculationRule: state => state.learn.coinCalculationRule,
+      tips: state => state.learn.tips,
+      formScores: state => state.learn.formScores,
+      canRecord: state => state.learn.canRecord,
+      userInfo: state => state.user.userInfo,
+      contentUrl: state => state.course.contentUrl
     }),
     comLength () {
       return _.flattenDeep(this.list).length
@@ -494,10 +440,14 @@ export default {
       postProgress: 'learn/postProgress',
       postActivityRecord: 'learn/postActivityRecord',
       postCoin: 'learn/postCoin',
-      getChapterContent: 'course/getChapterContent',
       postUnlockChapter: 'course/postUnlockChapter',
       getUnlockChapter: 'course/getUnlockChapter',
-      getProgress: 'course/getProgress'
+      getProgress: 'course/getProgress',
+      getUserInfo: 'user/getUserInfo',
+      getChapterContent: 'course/getChapterContent',
+      getLearnInfo: 'course/getLearnInfo',
+      getCourseContent: 'course/getCourseContent',
+      getRecord: 'course/getRecord'
     }),
     ...mapMutations({
       updateCurSlide: 'course/updateCurSlide',
@@ -509,8 +459,7 @@ export default {
       setFormScoresNull: 'learn/setFormScoresNull',
       updateProgressScore: 'course/updateProgressScore',
       updateUnlockCourseList: 'course/updateUnlockCourseList',
-      updateCurChapter: 'course/updateCurChapter',
-      updateCurChapterProgress: 'course/updateCurChapterProgress'
+      updateCurCourseCode: 'course/updateCurCourseCode'
     }),
     getTypeList (list) {
       console.log('typelist')
@@ -639,6 +588,83 @@ export default {
     },
     updateIsShowDialog (flag) {
       this.showDialog = flag
+    },
+    async initAnonymousData () {
+      console.log(4444)
+      await this.getUserInfo()
+      console.log('userInfo===>', this.userInfo)
+      let curCourseCode = this.userInfo.current_course_code
+      this.updateCurCourseCode(curCourseCode)
+      await this.getLearnInfo(curCourseCode)
+      await this.getUnlockChapter(curCourseCode).then((res) => {
+        console.log('init unlock', res)
+        this.updateUnlockCourseList(res)
+      })
+      await this.getCourseContent(this.contentUrl)
+      await this.getChapterContent()
+
+      await this.getRecord(this.currentChapterCode + '-A0')
+      await this.getProgress(this.currentChapterCode)
+      console.log(5555)
+      this.initData()
+    },
+    initData () {
+      console.log(3333)
+      this.totalCoin = this.userInfo.coins
+      localStorage.setItem('userCoin', this.userInfo.coins)
+      // var that = this
+      // let _coinCache = coinCache.get(that.completePath)
+      // if (_coinCache === null) {
+      //   coinCache.set(that.completePath, that.coin)
+      // } else {
+      //   that.coin = _coinCache
+      //   that.totalCoin = parseInt(this.totalCoin) + _coinCache
+      // }
+
+      console.log('stage')
+      let id = this.id
+      localStorage.setItem('chapterType', this.id)
+      if (id.indexOf('A0') > -1) {
+        this.updateCurCoreParts(id)
+      }
+
+      this.chapterProgress(this.id)
+      // this.typeList = this.getTypeList()
+      // this.list = this.getList()
+
+      this.timeCount()
+
+      var resource = this.getResource(this.curSlide)
+      changeData(this, Loader(resource))
+
+      // this.$emit('next-component')
+      // 弹出提示、/////////////////////////////////////////////
+      this.$nextTick(() => {
+        var isPop
+        if (
+          Recorder.isActivity() !== true &&
+          Recorder.refuseRecord !== true &&
+          this.canRecord
+        ) {
+          this.micphoneTip = this.tips.micphone
+          isPop = true
+        } else if (Recorder.refuseRecord) {
+          this.micphoneTip = this.tips.micphone_failed
+          isPop = true
+        }
+        if (isPop) {
+          this.$refs.tipbox.$emit('tipbox-show')
+          this.updatePause(true)
+        }
+      })
+      this.getCoinCalculationRule()
+      this.isFirst = Number(this.progress[0] === -1)
+      // 判断是否是第一次进入，日志数据提交
+      if (!onlyId.get()) {
+        onlyId.set()
+        var whetherFirst = this.isFirst
+        logCollect.learnStart(whetherFirst)
+      }
     }
   }
 }
@@ -659,9 +685,7 @@ function changeData (_this, trunk) {
     _this.postProgress()
     _this.stopCount() // 停止计时器
 
-    _this.getProgress(_this.curChapterCode).then((res) => {
-      _this.updateCurChapterProgress(res.record.forms)
-    })
+    _this.getProgress(_this.curChapterCode)
     console.log(_this.coin)
     _this.$emit('calCoin') // 结束前清算结果
     console.log(_this.coin)

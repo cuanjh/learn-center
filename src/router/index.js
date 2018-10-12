@@ -25,6 +25,7 @@ const userDoc = r => require.ensure([], () => r(require('@/components/learn/user
 const userWallet = r => require.ensure([], () => r(require('@/components/learn/user/userWallet.vue')), 'user-wallet')
 const userVip = r => require.ensure([], () => r(require('@/components/learn/user/userVip.vue')), 'userVip')
 const userSetting = r => require.ensure([], () => r(require('@/components/learn/user/userSetting.vue')), 'user-setting')
+const userAnonymous = r => require.ensure([], () => r(require('@/components/learn/user/userAnonymous.vue')), 'user-anonymous')
 
 // 学习系统
 const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue')), 'learn-system')
@@ -142,6 +143,10 @@ export default[
           {
             path: 'setting',
             component: userSetting
+          },
+          {
+            path: 'bind',
+            component: userAnonymous
           }
         ]
       }

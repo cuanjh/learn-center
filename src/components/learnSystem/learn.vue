@@ -19,6 +19,8 @@ import writeWords from './form/writeWords.vue'
 import makeSentence from './form/makeSentence.vue'
 import fillGap from './form/fillGap.vue'
 
+import Bus from '../../bus'
+
 Vue.use(autoSpeak)
 Vue.use(repeatSpeak)
 Vue.use(sentenceToImg)
@@ -38,6 +40,11 @@ Vue.component('form-makesentence', makeSentence)
 Vue.component('form-fillgap', fillGap)
 
 export default {
+  created () {
+    Bus.$on('initAnonymousData', () => {
+      this.initAnonymousData()
+    })
+  },
   mounted () {
     console.log('mounted')
     SoundManager.load(this.sndEff)
@@ -46,19 +53,41 @@ export default {
   },
   computed: {
     ...mapState({
+      userInfo: state => state.user.userInfo,
+      contentUrl: state => state.course.contentUrl,
+      currentChapterCode: state => state.course.currentChapterCode,
       'sndEff': state => state.learn.sndEff
     })
   },
   methods: {
     ...mapActions({
       getChapterContent: 'course/getChapterContent',
-      getQiniuToken: 'learn/getQiniuToken'
+      getLearnInfo: 'course/getLearnInfo',
+      getQiniuToken: 'learn/getQiniuToken',
+      getUserInfo: 'user/getUserInfo',
+      getUnlockChapter: 'course/getUnlockChapter',
+      getCourseContent: 'course/getCourseContent',
+      getRecord: 'course/getRecord',
+      getProgress: 'course/getProgress'
     }),
     ...mapMutations({
-      updateCurCoreParts: 'course/updateCurCoreParts',
-      updateCurChapterUrl: 'course/updateCurChapterUrl',
-      chapterProgress: 'course/chapterProgress'
-    })
+      updateUserInfo: 'user/updateUserInfo',
+      updateUnlockCourseList: 'course/updateUnlockCourseList'
+    }),
+    async initAnonymousData () {
+      await this.getUserInfo()
+      console.log(this.userInfo)
+      let curCourseCode = this.userInfo.current_course_code
+      await this.getLearnInfo(curCourseCode)
+      await this.getUnlockChapter(curCourseCode).then((res) => {
+        this.updateUnlockCourseList(res)
+      })
+      await this.getCourseContent(this.contentUrl)
+      await this.getChapterContent()
+
+      await this.getRecord(this.currentChapterCode + '-A0')
+      await this.getProgress(this.currentChapterCode)
+    }
   }
 }
 </script>

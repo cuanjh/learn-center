@@ -14,6 +14,7 @@ export default {
   getCaptionCode: '/auth/caption', // 获取验证码
   checkCaptionCode: '/user/check_caption_code', // 检查图片验证码
   register: '/user/register', // 注册
+  anonymousRegisterApi: '/user_anonymous/register', // 匿名用户注册接口
   checkPhonenumber: '/user_check/phonenumber', // 检测手机号是否被注册
   checkEmail: '/user_check/email', // 检查有限是否被注册
   sendEmail: '/user/send_code', // 发邮件找回密码

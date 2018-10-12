@@ -133,9 +133,7 @@ export default {
       this.updatePurchaseSuccess(false)
       this.updateConfirmAlert(false)
       this.updateCoverState(false)
-      this.getUserInfo().then((res) => {
-        this.updateUserInfo(res)
-      })
+      this.getUserInfo()
     }
     // ,
     // backLearn () {

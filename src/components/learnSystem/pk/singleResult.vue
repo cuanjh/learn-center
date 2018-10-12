@@ -51,26 +51,23 @@ export default {
   },
   computed: {
     ...mapState({
-      currentChapterCode: state => state.course.currentChapterCode
+      currentChapterCode: state => state.course.currentChapterCode,
+      chapterTestResult: state => state.course.chapterTestResult
     })
   },
   created () {
-    this.$on('init-result', (result) => {
+    this.$on('init-result', async (result) => {
       console.log(result)
       var _this = this
       var chapterCode = this.currentChapterCode
       if (!chapterCode) {
         chapterCode = localStorage.getItem('currentChapterCode')
       }
-      this['learn/getCourseTestRanking'](chapterCode).then((res) => {
-        console.log(res)
-        if (res.success) {
-          _this.loaded = false
-          this.currentUser = res.result.current_user
-          _this.percent = Math.floor((this.currentUser.correct_rate).toFixed(3) * 100000) / 1000
-          _this.$set(_this, 'users', res.result.ranking)
-        }
-      })
+      await this.getCourseTestRanking(chapterCode)
+      _this.loaded = false
+      this.currentUser = this.chapterTestResult.current_user
+      _this.percent = Math.floor((this.currentUser.correct_rate).toFixed(3) * 100000) / 1000
+      _this.$set(_this, 'users', this.chapterTestResult.ranking)
       //            Model.setPKScore(this.path, result.score)
       // var _this = this
       // var code = _.values(Config.LANG)
@@ -117,7 +114,9 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['learn/getCourseTestRanking']),
+    ...mapActions({
+      getCourseTestRanking: 'course/getCourseTestRanking'
+    }),
     retry () {
       this.$parent.$emit('back')
     },

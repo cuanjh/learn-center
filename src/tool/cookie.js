@@ -1,5 +1,6 @@
 /* eslint-disable */
 var getCookie = function (name) {
+  // console.log(document.cookie);
 	var curCookie = document.cookie.split(';');
 	var itemVal = null;
 	for (var i = 0; i < curCookie.length; i++) {

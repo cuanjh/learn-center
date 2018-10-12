@@ -1,3 +1,275 @@
+<template>
+  <div class="bg-box" v-bind:class="[registerLang.area]">
+    <div class="resigter-box">
+      <div class="hello">
+        <img :src="registerLang.flag" alt="">
+        <span>{{ registerLang.hi }}</span>
+      </div>
+      <p class="tip">马上注册并开始学习</p>
+      <div class="phone-resigter" v-show="registerFlag">
+        <div class="item">
+          <input type="text" placeholder="手机号码" v-model="registerInfo.phone">
+        </div>
+        <div  class="item">
+          <input type="password" placeholder="输入6-15位字母/数字" v-model="registerInfo.phonePwd">
+        </div>
+        <div  class="item verify-code">
+          <input type="text" placeholder="输入验证码" v-model="registerInfo.imgCode">
+          <img :src="imgCodeUrl" alt="图片验证码" @click="getCodeUrl">
+        </div>
+        <div  class="item phone-code">
+          <input type="text" placeholder="手机验证码" v-model="registerInfo.phoneCode">
+          <button v-bind:disabled="!isGetCode" @click="getCode">{{ time === 6?'获取':time+'s' }}</button>
+        </div>
+        <p class="go-register">
+          <span @click="changeType">邮箱账号注册</span>
+        </p>
+      </div>
+      <div class="mail-resigter" v-show="!registerFlag">
+        <div class="item">
+          <input type="text" placeholder="邮箱" v-model="registerInfo.email">
+        </div>
+        <div class="item">
+          <input type="password" placeholder="输入6-15位字母/数字" v-model="registerInfo.emailPwd">
+        </div>
+        <div  class="item verify-code">
+          <input type="text" placeholder="输入验证码" v-model="registerInfo.imgCode">
+          <img :src="imgCodeUrl" alt="图片验证码" @click="getCodeUrl">
+        </div>
+        <p class="go-register">
+          <span @click="changeType">手机号注册</span>
+        </p>
+      </div>
+      <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
+      <button class="register-btn" v-bind:disabled="loading" @click="goRegister">{{loading?'loading':'注册'}}</button>
+      <p class="go-login">已有账号！ <router-link to="/auth/login"><span>去登陆</span></router-link></p>
+    </div>
+  </div>
+</template>
+<script>
+import validation from './../../tool/validation.js'
+import http from './../../api/userAuth.js'
+import errCode from './../../api/code.js'
+// import Config from './../../api/config.js'
+import { randomString, encrypt } from './../../tool/untils.js'
+import Cookie from '../../tool/cookie'
+import { mapMutations, mapActions } from 'vuex'
+export default {
+  data () {
+    return {
+      loading: false,
+      registerLang: {},
+      registerFlag: true, // true 手机号 false 邮箱
+      registerInfo: {
+        phone: '',
+        email: '',
+        phonePwd: '',
+        emailPwd: '',
+        phoneCode: '',
+        imgCode: ''
+      },
+      imgCodeUrl: '', // 图片验证码
+      time: 6,
+      timer: null, // 定时器
+      errText: '' // 错误提示
+    }
+  },
+  computed: {
+    isGetCode () {
+      return validation.phoneNumber(this.registerInfo.phone) && this.time === 6
+    }
+  },
+  mounted () {
+    this.getCodeUrl()
+    var _code = this.$route.params.code
+    if (!_code) {
+      this.$router.push('/auth/select-lang')
+    }
+    http.courseLists().then(res => {
+      res.course_langs.forEach(element => {
+        element.lang_infos.forEach(item => {
+          if (item.lan_code === this.$route.params.code) {
+            this.registerLang = item
+            if (element.area_key === 'europe' || element.area_key === 'artificial') {
+              this.registerLang.area = 'europe'
+            } else if (element.area_key === 'africa') {
+              this.registerLang.area = 'africa'
+            } else {
+              this.registerLang.area = 'asia'
+            }
+          }
+        })
+      })
+    })
+  },
+  methods: {
+    ...mapMutations({
+      updateIsLogin: 'user/updateIsLogin'
+    }),
+    ...mapActions({
+      updateInfo: 'user/updateInfo',
+      getCaptchaUrl: 'user/getCaptchaUrl',
+      signUp: 'user/signUp',
+      postAnonymousRegister: 'user/postAnonymousRegister',
+      getUserInfo: 'user/getUserInfo'
+    }),
+    changeType () {
+      this.registerFlag = !this.registerFlag
+    },
+    getCode () {
+      if (this.timer || !validation.phoneNumber(this.registerInfo.phone)) {
+        return
+      }
+      http.sendCode({phonenumber: this.registerInfo.phone}).then(res => {
+        if (res.success) {
+          this.timer = setInterval(() => {
+            --this.time
+            if (this.time === 0) {
+              this.time = 6
+              clearInterval(this.timer)
+              this.timer = null
+            }
+          }, 1000)
+        } else {
+          this.errText = errCode[res.code]
+        }
+      })
+    },
+    goRegister () {
+      this.errText = ''
+      if (this.registerFlag) {
+        if (!this.phoneRegister()) return false
+      } else {
+        if (!this.emailRegister()) return false
+      }
+      this.loading = true
+      http.checkCaption({caption: this.registerInfo.imgCode}).then(res => {
+        if (res.success) {
+          if (res.result) {
+            let isAnonymous = Cookie.getCookie('is_anonymous')
+            if (isAnonymous) {
+              console.log('anonymousRegister')
+              this.anonymousRegister()
+            } else {
+              console.log('commonRegister')
+              this.commonRegister()
+            }
+          } else {
+            this.loading = false
+            this.errText = errCode['e04']
+          }
+        } else {
+          this.loading = false
+          this.errText = errCode[res.code]
+        }
+      })
+    },
+    getCodeUrl () { // 图片验证码链接
+      this.getCaptchaUrl().then((res) => {
+        this.imgCodeUrl = res
+      })
+    },
+    commonRegister () { // 注册
+      this.signUp({
+        identity: this.registerFlag ? this.registerInfo.phone : this.registerInfo.email,
+        password: encrypt(this.registerFlag ? this.registerInfo.phonePwd : this.registerInfo.emailPwd),
+        nickname: '',
+        type: this.registerFlag ? 'phonenumber' : 'email',
+        verification_code: this.registerFlag ? this.registerInfo.phoneCode : null,
+        lan_code: this.registerLang.lan_code
+      }).then(res => {
+        if (res.success) {
+          Cookie.setCookieAuto('user_id', res.user_id)
+          Cookie.setCookieAuto('verify', res.verify)
+          console.log(randomString)
+          var date = new Date()
+          var params = {
+            nickname: randomString(10),
+            gender: 'male',
+            country_code: 'CN',
+            birthday: [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-'),
+            photo_url: 'http://uploadfile.talkmate.com/app_image/male.jpg?v=1',
+            course_code: this.registerLang.lan_code + '-Basic',
+            description: '这个家伙很懒，什么都没有留下'
+          }
+          this.updateInfo(params).then((res) => {
+            if (res.success) {
+              localStorage.removeItem('lastCourseCode')
+              this.updateIsLogin('1')
+              this.$router.push({ path: '/app/course-list' })
+            } else {
+              this.errText = errCode[res.code]
+            }
+          })
+        } else {
+          this.loading = false
+          this.getCodeUrl()
+          this.errText = errCode[res.code]
+        }
+      })
+    },
+    anonymousRegister () {
+      console.log(Cookie)
+      let userID = Cookie.getCookie('user_id')
+      console.log(userID)
+      let params = {
+        user_id: userID,
+        email: this.registerInfo.email,
+        phonenumber: this.registerInfo.phone,
+        verification_code: this.registerFlag ? this.registerInfo.phoneCode : null,
+        password: encrypt(this.registerFlag ? this.registerInfo.phonePwd : this.registerInfo.emailPwd)
+      }
+      this.postAnonymousRegister(params).then((res) => {
+        console.log(res)
+        if (res.success) {
+          Cookie.setCookieAuto('user_id', res.user_id)
+          Cookie.setCookieAuto('verify', res.verify)
+          Cookie.delCookieTalkmate('is_anonymous')
+          this.updateIsLogin('1')
+          this.getUserInfo().then(() => {
+            this.$router.push({ path: '/app/course-list' })
+          })
+        } else {
+          this.loading = false
+          this.getCodeUrl()
+          this.errText = errCode[res.code]
+        }
+      })
+    },
+    phoneRegister () {
+      if (!validation.phoneNumber(this.registerInfo.phone)) {
+        this.errText = errCode['e01']
+        return false
+      }
+      if (!validation.pwd(this.registerInfo.phonePwd)) {
+        this.errText = errCode['e02']
+        return false
+      }
+      if (!validation.verfiyCode(this.registerInfo.imgCode) || !validation.verfiyCode(this.registerInfo.phoneCode)) {
+        this.errText = errCode['e03']
+        return false
+      }
+      return true
+    },
+    emailRegister () {
+      if (!validation.email(this.registerInfo.email)) {
+        this.errText = errCode['e05']
+        return false
+      }
+      if (!validation.pwd(this.registerInfo.emailPwd)) {
+        this.errText = errCode['e02']
+        return false
+      }
+      if (!validation.verfiyCode(this.registerInfo.imgCode)) {
+        this.errText = errCode['e03']
+        return false
+      }
+      return true
+    }
+  }
+}
+</script>
+
 <style scoped>
   .bg-box {
     /* background-color: #fcf1d5; */
@@ -173,237 +445,3 @@
     background: url('./../../../static/images/home/bg-africa.jpg') no-repeat;
   }
 </style>
-<template>
-  <div class="bg-box" v-bind:class="[registerLang.area]">
-    <div class="resigter-box">
-      <div class="hello">
-        <img :src="registerLang.flag" alt="">
-        <span>{{ registerLang.hi }}</span>
-      </div>
-      <p class="tip">马上注册并开始学习</p>
-      <div class="phone-resigter" v-show="registerFlag">
-        <div class="item">
-          <input type="text" placeholder="手机号码" v-model="registerInfo.phone">
-        </div>
-        <div  class="item">
-          <input type="password" placeholder="输入6-15位字母/数字" v-model="registerInfo.phonePwd">
-        </div>
-        <div  class="item verify-code">
-          <input type="text" placeholder="输入验证码" v-model="registerInfo.imgCode">
-          <img :src="imgCodeUrl" alt="图片验证码" @click="getCodeUrl">
-        </div>
-        <div  class="item phone-code">
-          <input type="text" placeholder="手机验证码" v-model="registerInfo.phoneCode">
-          <button v-bind:disabled="!isGetCode" @click="getCode">{{ time === 6?'获取':time+'s' }}</button>
-        </div>
-        <p class="go-register">
-          <span @click="changeType">邮箱账号注册</span>
-        </p>
-      </div>
-      <div class="mail-resigter" v-show="!registerFlag">
-        <div class="item">
-          <input type="text" placeholder="邮箱" v-model="registerInfo.email">
-        </div>
-        <div class="item">
-          <input type="password" placeholder="输入6-15位字母/数字" v-model="registerInfo.emailPwd">
-        </div>
-        <div  class="item verify-code">
-          <input type="text" placeholder="输入验证码" v-model="registerInfo.imgCode">
-          <img :src="imgCodeUrl" alt="图片验证码" @click="getCodeUrl">
-        </div>
-        <p class="go-register">
-          <span @click="changeType">手机号注册</span>
-        </p>
-      </div>
-      <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
-      <button class="register-btn" v-bind:disabled="loading" @click="goRegister">{{loading?'loading':'注册'}}</button>
-      <p class="go-login">已有账号！ <router-link to="/auth/login"><span>去登陆</span></router-link></p>
-    </div>
-  </div>
-</template>
-<script>
-import validation from './../../tool/validation.js'
-import http from './../../api/userAuth.js'
-import errCode from './../../api/code.js'
-// import Config from './../../api/config.js'
-import { randomString, encrypt } from './../../tool/untils.js'
-import Cookie from '../../tool/cookie'
-import { mapMutations, mapActions } from 'vuex'
-export default {
-  data () {
-    return {
-      loading: false,
-      registerLang: {},
-      registerFlag: true, // true 手机号 false 邮箱
-      registerInfo: {
-        phone: '',
-        email: '',
-        phonePwd: '',
-        emailPwd: '',
-        phoneCode: '',
-        imgCode: ''
-      },
-      imgCodeUrl: '', // 图片验证码
-      time: 6,
-      timer: null, // 定时器
-      errText: '' // 错误提示
-    }
-  },
-  computed: {
-    isGetCode () {
-      return validation.phoneNumber(this.registerInfo.phone) && this.time === 6
-    }
-  },
-  mounted () {
-    this.getCodeUrl()
-    var _code = this.$route.params.code
-    if (!_code) {
-      this.$router.push('/auth/select-lang')
-    }
-    http.courseLists().then(res => {
-      res.course_langs.forEach(element => {
-        element.lang_infos.forEach(item => {
-          if (item.lan_code === this.$route.params.code) {
-            this.registerLang = item
-            if (element.area_key === 'europe' || element.area_key === 'artificial') {
-              this.registerLang.area = 'europe'
-            } else if (element.area_key === 'africa') {
-              this.registerLang.area = 'africa'
-            } else {
-              this.registerLang.area = 'asia'
-            }
-          }
-        })
-      })
-    })
-  },
-  methods: {
-    ...mapMutations({
-      updateIsLogin: 'user/updateIsLogin'
-    }),
-    ...mapActions({
-      updateInfo: 'user/updateInfo',
-      getUserInfo: 'user/getUserInfo',
-      getCaptchaUrl: 'user/getCaptchaUrl'
-    }),
-    changeType () {
-      this.registerFlag = !this.registerFlag
-    },
-    getCode () {
-      if (this.timer || !validation.phoneNumber(this.registerInfo.phone)) {
-        return
-      }
-      http.sendCode({phonenumber: this.registerInfo.phone}).then(res => {
-        if (res.success) {
-          this.timer = setInterval(() => {
-            --this.time
-            if (this.time === 0) {
-              this.time = 6
-              clearInterval(this.timer)
-              this.timer = null
-            }
-          }, 1000)
-        } else {
-          this.errText = errCode[res.code]
-        }
-      })
-    },
-    goRegister () {
-      this.errText = ''
-      if (this.registerFlag) {
-        if (!this.phoneRegister()) return false
-      } else {
-        if (!this.emailRegister()) return false
-      }
-      this.loading = true
-      http.checkCaption({caption: this.registerInfo.imgCode}).then(res => {
-        if (res.success) {
-          if (res.result) {
-            this.signUp()
-          } else {
-            this.loading = false
-            this.errText = errCode['e04']
-          }
-        } else {
-          this.loading = false
-          this.errText = errCode[res.code]
-        }
-      })
-    },
-    getCodeUrl () { // 图片验证码链接
-      this.getCaptchaUrl().then((res) => {
-        this.imgCodeUrl = res
-      })
-    },
-    signUp () { // 注册
-      http.signUp({
-        identity: this.registerFlag ? this.registerInfo.phone : this.registerInfo.email,
-        password: encrypt(this.registerFlag ? this.registerInfo.phonePwd : this.registerInfo.emailPwd),
-        nickname: '',
-        type: this.registerFlag ? 'phonenumber' : 'email',
-        verification_code: this.registerFlag ? this.registerInfo.phoneCode : null,
-        lan_code: this.registerLang.lan_code
-      }).then(res => {
-        if (res.success) {
-          Cookie.setCookieAuto('user_id', res.user_id)
-          Cookie.setCookieAuto('verify', res.verify)
-          console.log(randomString)
-          var date = new Date()
-          var params = {
-            nickname: randomString(10),
-            gender: 'male',
-            country_code: 'CN',
-            birthday: [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-'),
-            photo_url: 'http://uploadfile.talkmate.com/app_image/male.jpg?v=1',
-            course_code: this.registerLang.lan_code + '-Basic',
-            description: '这个家伙很懒，什么都没有留下'
-          }
-          this.updateInfo(params).then((res) => {
-            if (res.success) {
-              localStorage.removeItem('lastCourseCode')
-              this.updateIsLogin('1')
-              this.$router.push({ path: '/app/course-list' })
-            } else {
-              this.errText = errCode[res.code]
-            }
-          })
-        } else {
-          this.loading = false
-          this.getCodeUrl()
-          this.errText = errCode[res.code]
-        }
-      })
-    },
-    phoneRegister () {
-      if (!validation.phoneNumber(this.registerInfo.phone)) {
-        this.errText = errCode['e01']
-        return false
-      }
-      if (!validation.pwd(this.registerInfo.phonePwd)) {
-        this.errText = errCode['e02']
-        return false
-      }
-      if (!validation.verfiyCode(this.registerInfo.imgCode) || !validation.verfiyCode(this.registerInfo.phoneCode)) {
-        this.errText = errCode['e03']
-        return false
-      }
-      return true
-    },
-    emailRegister () {
-      if (!validation.email(this.registerInfo.email)) {
-        this.errText = errCode['e05']
-        return false
-      }
-      if (!validation.pwd(this.registerInfo.emailPwd)) {
-        this.errText = errCode['e02']
-        return false
-      }
-      if (!validation.verfiyCode(this.registerInfo.imgCode)) {
-        this.errText = errCode['e03']
-        return false
-      }
-      return true
-    }
-  }
-}
-</script>

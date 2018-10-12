@@ -10,6 +10,7 @@
         <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
             我的
         </router-link>
+        <router-link tag="span"  :to="{ path: '/auth/register/' + langCode }" class='learn-login-right-tips-probation learn-login-right-tips-probation-modify' v-show="userInfo.is_anonymous">您是试用账号<span>去注册</span></router-link>
         <transition name="fade">
           <section class='mycourse-wrap mycourse-loginout animated' v-show="navCourse">
             <img class='mycourse-wrap-arrow' src="../../../static/images/course/learn-big-arrow.png">
@@ -741,5 +742,38 @@ input::-moz-placeholder { /* Mozilla Firefox 19+ */
 }
 input:-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    #2A9FE4;
+}
+
+.learn-login-right-tips-probation{
+  position: absolute;
+  top:15px;
+  right:95px;
+  width: 220px;
+  height: 30px;
+  color:#fff;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 100px;
+  padding-left: 20px;
+  background-color: #7bc16b;
+  font-size: 16px;
+  cursor:pointer;
+  background-image: url(../../../static/images/learn/learn-probation.svg);
+  background-repeat:no-repeat;
+  background-position: 20px center;
+}
+.learn-login-right-tips-probation span {
+  margin-left: 4px;
+  text-decoration: underline;
+}
+.learn-login-right-tips-probation:hover{
+  background-color: #6ab359;
+}
+
+.learn-login-right-tips-probation-modify{
+  position: static !important;
+  float: right;
+  margin-top: 25px;
+  margin-right:5px;
 }
 </style>

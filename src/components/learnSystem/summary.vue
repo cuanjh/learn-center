@@ -9,7 +9,7 @@
               <dd>
                 <p v-text='coreDes[core] + "完成"'></p>
                 <p class="summary-star">
-                    <span class="summary-yellow-star"><i v-for="index in stars" :key="index" :class="{active:active}"></i></span>
+                  <span class="summary-yellow-star"><i v-for="index in stars" :key="index" :class="{active:active}"></i></span>
                   <span class="summary-gray-star"><i v-for="index in (5 - stars)" :key="index"></i></span>
                 </p>
               </dd>
@@ -67,7 +67,6 @@
       :isShow="isShow"
       @updateIsShow="updateIsShow" />
   </div>
-
 </template>
 
 <script>
@@ -152,9 +151,10 @@ export default {
         let cbi = this.$store.state.course.courseBaseInfo
         _this.courseBaseInfo = (Object.keys(cbi).length === 0) ? JSON.parse(localStorage.getItem('courseBaseInfo')) : cbi
 
+        let content = document.querySelector('.core-summary-box')
         this.window = dialog({
           width: '652px',
-          content: document.querySelector('.core-summary-box')
+          content: content
         }).showModal()
       })
     })

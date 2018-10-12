@@ -71,7 +71,6 @@ const actions = {
           dispatch('getUnlockChapter', course['code']).then((data) => {
             // console.log(data)
             commit('updateLearnCourses', { course, data })
-            localStorage.setItem('learnMoreCourses', JSON.stringify(state.learnCourses))
           })
         }
       })
@@ -81,10 +80,16 @@ const actions = {
     return httpLogin(config.getCourseList)
   },
   getLearnInfo ({ commit }, courseCode) {
-    return httpLogin(config.learnInfo, { course_code: courseCode })
+    return httpLogin(config.learnInfo, { course_code: courseCode }).then((res) => {
+      commit('updateCourseInfo', res)
+    })
   },
-  getCourseContent ({ commit }, contentUrl) {
-    return httpAssets(contentUrl)
+  getCourseContent ({ commit, state }, contentUrl) {
+    return httpAssets(contentUrl).then((res) => {
+      commit('updateChapters', res)
+      commit('updateCurChapterUrl', state.currentChapterCode)
+      commit('updateCurChapter', state.currentChapterCode)
+    })
   },
   getUnlockChapter ({ commit }, courseCode) {
     return httpLogin(config.unlockChapter, { course_code: courseCode })
@@ -93,16 +98,24 @@ const actions = {
     return httpLogin(config.getRecord, { activity_code: currentChapterCode })
   },
   getProgress ({ commit }, currentChapterCode) {
-    return httpLogin(config.getProgress, { chapter_code: currentChapterCode, state: '' })
-    // .then((res) => {
-    //   // commit('updateCurChapterProgress', res.record.forms)
-    // })
+    return httpLogin(config.getProgress, { chapter_code: currentChapterCode, state: '' }).then((res) => {
+      if (res.state !== 0) {
+        commit('updateCurChapterProgress', res.record.forms)
+      } else {
+        commit('updateCurChapterProgress', '')
+      }
+    })
   },
   setCurrentChapter ({ commit }, curChapter) {
-    return httpLogin(config.setCurChapter, { chapter_code: curChapter })
+    return httpLogin(config.setCurChapter, { chapter_code: curChapter }).then((res) => {
+      commit('updateCurChapterUrl', curChapter)
+      commit('updateCurChapter', curChapter)
+    })
   },
   getChapterContent ({ commit, state }) {
-    return httpAssets(state.assetsUrl + state.curChapterUrl)
+    return httpAssets(state.assetsUrl + state.curChapterUrl).then((res) => {
+      commit('updateChapterContent', res)
+    })
   },
   getGradeInfo ({ commit, state }, courseCode) {
     return httpLogin(config.hasGrade, { content_version: '1.5', course_code: courseCode })
@@ -111,7 +124,9 @@ const actions = {
     return httpLogin(config.levelGradeGrade, { course_code: courseCode })
   },
   homeworkContent ({ commit, state }, activityCode) {
-    return httpLogin(config.homeworkContent, { activity_code: activityCode })
+    return httpLogin(config.homeworkContent, { activity_code: activityCode }).then((res) => {
+      commit('updateHomeworkContent', res.contents)
+    })
   },
   homeworkPub ({ commit, state }, params) {
     return httpLogin(config.homeworkPub, params)
@@ -128,6 +143,11 @@ const actions = {
   },
   getBuyChapter ({ commit }, params) {
     return httpLogin(config.getBuyChapter, params)
+  },
+  getCourseTestRanking ({ commit, state }, chapterCode) {
+    return httpLogin(config.courseTestRanking, { chapter_code: chapterCode }).then((res) => {
+      commit('updateChapterTestResult', res.result)
+    })
   },
   /**
    * 书架相关
@@ -188,12 +208,14 @@ const mutations = {
     subscribeCoursesStr += course.code + ','
     state.subscribeCoursesStr = subscribeCoursesStr
     localStorage.setItem('subscribeCoursesStr', subscribeCoursesStr)
+    localStorage.setItem('learnMoreCourses', JSON.stringify(state.learnCourses))
   },
   updateCurCourseCode (state, data) {
     state.currentCourseCode = data
     localStorage.setItem('currentCourseCode', state.currentCourseCode)
   },
   updateCourseInfo (state, data) {
+    console.log('updateCourseInfo', data)
     state.courseBaseInfo = data.info.courseBaseInfo
     localStorage.setItem('courseBaseInfo', JSON.stringify(state.courseBaseInfo))
     state.learnInfo = data.info.learnInfo
@@ -248,6 +270,8 @@ const mutations = {
         state.buyChapters += item + ',' // 购买的课程
       }
     }
+    console.log('buyChapter==>', state.buyChapters)
+    console.log('unlock ===> ', data.unlock)
   },
   updateCurLevel  (state, level) {
     // console.log(state.unlockCourses)

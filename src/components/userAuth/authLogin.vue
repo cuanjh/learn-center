@@ -59,7 +59,7 @@ export default {
     autoLogin () {
       this.autoFlag = !this.autoFlag
     },
-    goLogin () {
+    async goLogin () {
       this.errText = ''
       if (!validation.phoneNumber(this.userName) && !validation.email(this.userName)) {
         this.errText = errCode['e06']
@@ -70,12 +70,13 @@ export default {
         return false
       }
       this.loading = true
-      this.login({
+      await this.login({
         identity: this.userName,
         password: encrypt(this.userPwd)
       }).then(res => {
         if (res.success) {
           localStorage.removeItem('userInfo')
+          Cookie.delCookieTalkmate('is_anonymous')
           Cookie.delCookie('user_id')
           Cookie.delCookie('verify')
           // if (this.autoFlag) {
@@ -93,28 +94,23 @@ export default {
             localStorage.setItem('lastUserId', UserId)
             localStorage.removeItem('lastCourseCode')
           }
-
-          let lastCourseCode = localStorage.getItem('lastCourseCode')
-          if (!lastCourseCode) {
-            this.$nextTick(() => {
-              this.getUserInfo().then((res) => {
-                this.updateUserInfo(res)
-                this.updateCurCourseCode(this.userInfo.current_course_code)
-                localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
-                this.updateIsLogin('1')
-                this.$router.push({path: '/app/course-list'})
-              })
-            })
-          } else {
-            this.updateCurCourseCode(lastCourseCode)
-            this.updateIsLogin('1')
-            this.$router.push({path: '/app/course-list'})
-          }
         } else {
           this.loading = false
           this.errText = errCode[res.code]
         }
       })
+      let lastCourseCode = localStorage.getItem('lastCourseCode')
+      if (!lastCourseCode) {
+        await this.getUserInfo()
+        this.updateCurCourseCode(this.userInfo.current_course_code)
+        localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
+        this.updateIsLogin('1')
+        this.$router.push({path: '/app/course-list'})
+      } else {
+        this.updateCurCourseCode(lastCourseCode)
+        this.updateIsLogin('1')
+        this.$router.push({path: '/app/course-list'})
+      }
     }
   }
 }

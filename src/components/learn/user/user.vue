@@ -42,7 +42,7 @@
               <router-link tag="p" :to="{ path:'/app/user/setting' }" ><i></i>设置</router-link>
             </li>
           </ul>
-          <ul class='spe-bind' v-if="memberInfo['is_anonymous']">
+          <ul class='spe-bind' v-if="false">
             <li :class="{'active': activeItem === 'bind' }">
               <router-link tag="p" :to="{ path:'/app/user/bind' }" ><i></i>绑定</router-link>
             </li>

@@ -23,9 +23,7 @@ export default {
     }
   },
   created () {
-    this.getUserInfo().then((res) => {
-      this.updateUserInfo(res)
-    })
+    this.getUserInfo()
     this.$on('initLayout', () => {
       this.changeWrapHeight()
     })
@@ -62,29 +60,21 @@ export default {
       getProgress: 'course/getProgress',
       getChapterContent: 'course/getChapterContent',
       getRecord: 'course/getRecord',
-      getCourseTestRanking: 'learn/getCourseTestRanking',
+      getCourseTestRanking: 'course/getCourseTestRanking',
       homeworkContent: 'course/homeworkContent'
     }),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
-      updateCourseInfo: 'course/updateCourseInfo',
-      updateChapters: 'course/updateChapters',
-      updateCurChapterUrl: 'course/updateCurChapterUrl',
-      updateCurChapter: 'course/updateCurChapter',
-      updateCurChapterProgress: 'course/updateCurChapterProgress',
-      updateChapterContent: 'course/updateChapterContent',
       updateCoverState: 'course/updateCoverState',
       updatePurchaseIconPay: 'user/updatePurchaseIconPay',
       updateConfirmAlert: 'user/updateConfirmAlert',
       updateSuccessAlert: 'user/updateSuccessAlert',
       updateErrorTip: 'user/updateErrorTip',
       updateAlertType: 'user/updateAlertType',
-      updateChapterTestResult: 'course/updateChapterTestResult',
       showLoading: 'course/showLoading',
       hideLoading: 'course/hideLoading',
       updateUnlockCourseList: 'course/updateUnlockCourseList',
-      updateUserInfo: 'user/updateUserInfo',
-      updateHomeworkContent: 'course/updateHomeworkContent'
+      updateUserInfo: 'user/updateUserInfo'
 
     }),
     changeWrapHeight () {
@@ -99,45 +89,21 @@ export default {
       $('.homework-wrap').css('min-height', clientHeight + 'px')
       $('.user-wrap').css('min-height', clientHeight + 'px')
     },
-    changeCourseCode (courseCode) {
+    async changeCourseCode (courseCode) {
       var that = this
       that.showLoading()
-      that.$nextTick(() => {
-        that.updateCurCourseCode(courseCode)
-        Promise.all([
-          that.getLearnInfo(courseCode).then((res) => {
-            that.updateCourseInfo(res)
-          }),
-          that.getUnlockChapter(courseCode).then((res) => {
-            this.updateUnlockCourseList(res)
-          })
-        ]).then(() => {
-          that.getCourseContent(that.contentUrl).then((res) => {
-            that.updateChapters(res)
-            that.updateCurChapterUrl(that.currentChapterCode)
-            that.updateCurChapter(that.currentChapterCode)
-            that.getChapterContent().then((res) => {
-              this.updateChapterContent(res)
-              this.hideLoading()
-            })
-          })
-        }).then(() => {
-          that.getRecord(that.currentChapterCode + '-A0')
-          that.getProgress(that.currentChapterCode).then((res) => {
-            if (res.state !== 0) {
-              that.updateCurChapterProgress(res.record.forms)
-            } else {
-              that.updateCurChapterProgress('')
-            }
-          })
-          this.getCourseTestRanking(that.currentChapterCode).then((res) => {
-            this.updateChapterTestResult(res.result.current_user)
-          })
-          this.homeworkContent(that.currentChapterCode + '-A8').then(res => {
-            this.updateHomeworkContent(res.contents)
-          })
-        })
+      that.updateCurCourseCode(courseCode)
+      await that.getLearnInfo(courseCode)
+      await that.getUnlockChapter(courseCode).then((res) => {
+        this.updateUnlockCourseList(res)
       })
+      await that.getCourseContent(that.contentUrl)
+
+      await that.getChapterContent()
+      await that.getRecord(that.currentChapterCode + '-A0')
+      await that.getProgress(that.currentChapterCode)
+      await this.getCourseTestRanking(that.currentChapterCode)
+      await this.homeworkContent(that.currentChapterCode + '-A8')
     },
     coverHide () {
       this.updateCoverState(false)

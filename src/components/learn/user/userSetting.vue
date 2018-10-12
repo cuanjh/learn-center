@@ -194,15 +194,6 @@ export default {
       this.updateAlertType('bindAccount')
     }
   },
-  // directives: {
-  //   focus: {
-  //     // 指令的定义
-  //     inserted: function (el) {
-  //       el.focus()
-  //       WdatePicker({skin: 'twoer'})
-  //     }
-  //   }
-  // },
   computed: {
     ...mapState({
       userInfo: state => state.user.userInfo,
@@ -378,21 +369,19 @@ export default {
       this.birthday = val
     },
     // 绑定邮箱
-    bindEmail (email) {
+    async bindEmail (email) {
       var _this = this
-      this.bindEmail(email).then((res) => {
+      await this.bindEmail(email).then((res) => {
         if (res.success) {
           _this.updateAlertType('bindSuccess')
           _this.alertMessage = '恭喜您绑定邮箱成功！'
           _this.alertButton = '确定'
-          _this.getUserInfo().then((res) => {
-            this.updateUserInfo(res)
-            _this.loadData()
-          })
         } else {
           _this.showAlertView(res)
         }
       })
+      await _this.getUserInfo()
+      _this.loadData()
     },
     // 发送邮箱确认邮件
     confirmEmail (email) {
@@ -450,7 +439,7 @@ export default {
     saveNotice () {
       this.updateAlertType('saveNotice')
     },
-    saveUserInfo () {
+    async saveUserInfo () {
       var _params = {}
       if (this.nickname !== '') {
         _params.nickname = this.nickname
@@ -489,20 +478,17 @@ export default {
       }
       // console.log(JSON.stringify(this.$data))
       var _this = this
-      _this.updateInfo(_params).then((res) => {
+      await _this.updateInfo(_params).then((res) => {
         if (res.success) {
           _this.updateAlertType('showMessage')
           _this.alertMessage = '信息修改成功'
           _this.alertButton = '确定'
-          _this.getUserInfo().then((res) => {
-            _this.updateUserInfo(res)
-            _this.loadData()
-          })
           this.noticeSetting = false
         } else {
           _this.showAlertView(res)
         }
       })
+      await _this.getUserInfo()
     },
     modifyPsw () {
       var _this = this

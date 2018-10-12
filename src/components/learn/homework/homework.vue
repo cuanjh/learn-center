@@ -46,11 +46,7 @@ export default {
       curChapterCode = this.currentChapterCode
     }
     let activityCode = curChapterCode + '-A8'
-    this.homeworkContent(activityCode).then(res => {
-      console.log('res', res)
-      this.updateHomeworkContent(res.contents)
-      // this.homeworkList = res.contents
-    })
+    this.homeworkContent(activityCode)
     this.updateChapterDes(curChapterCode)
   },
   computed: {
@@ -63,8 +59,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateChapterDes: 'course/updateChapterDes',
-      updateHomeworkContent: 'course/updateHomeworkContent'
+      updateChapterDes: 'course/updateChapterDes'
     }),
     ...mapActions({
       homeworkContent: 'course/homeworkContent'

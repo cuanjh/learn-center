@@ -50,8 +50,16 @@ const actions = {
   login ({commit}, params) {
     return httpNoLogin(config.userLogin, params)
   },
+  signUp ({commit}, params) {
+    return httpNoLogin(config.register, params)
+  },
+  postAnonymousRegister ({commit}, params) {
+    return httpNoLogin(config.anonymousRegisterApi, params)
+  },
   getUserInfo ({commit}) {
-    return httpLogin(config.userInfo)
+    return httpLogin(config.userInfo).then((res) => {
+      commit('updateUserInfo', res)
+    })
   },
   logout ({commit}) {
     return httpLogin(config.logout)
@@ -166,6 +174,10 @@ const actions = {
 const mutations = {
   updateUserInfo: function (state, data) {
     state.userInfo = data
+    let isAnonymous = Cookie.getCookie('is_anonymous')
+    if (isAnonymous) {
+      state.userInfo['is_anonymous'] = true
+    }
     localStorage.setItem('userInfo', JSON.stringify(data))
   },
   updateIsLogin (state, isLogin) {
@@ -241,6 +253,17 @@ const mutations = {
   },
   updateUploadPhotoUrl (state, url) {
     state.uploadPhotoUrl = url
+  },
+  modefiyEmailMemberInfo (state, param) {
+    state.userInfo['email'] = param.email
+    state.userInfo['is_anonymous'] = false
+    Cookie.delCookieTalkmate('is_anonymous')
+  },
+  modefiyPhoneMemberInfo (state, param) {
+    state.userInfo['phonenumber'] = param.phoneNumber
+    state.userInfo['email'] = ''
+    state.userInfo['is_anonymous'] = false
+    Cookie.delCookieTalkmate('is_anonymous')
   }
 }
 

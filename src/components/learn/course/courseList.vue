@@ -25,7 +25,6 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LeftSide from './leftSide.vue'
 import LevelTabs from './levelTabs.vue'
 import ChapterItem from './chapterItem.vue'
-import Cookie from '../../../tool/cookie'
 
 export default {
   data () {
@@ -44,50 +43,10 @@ export default {
     this.$parent.$emit('navItem', 'course')
     this.showLoading()
     let curCourseCode = this.currentCourseCode
-    let langCode = Cookie.getCookie('lang_code')
-    if (langCode) {
-      curCourseCode = langCode + '-Basic'
-    }
     if (!curCourseCode) {
       curCourseCode = localStorage.getItem('currentCourseCode')
     }
-    this.$nextTick(() => {
-      Promise.all([
-        this.getLearnInfo(curCourseCode).then((res) => {
-          this.updateCourseInfo(res)
-        }),
-        this.getUnlockChapter(curCourseCode).then((res) => {
-          this.updateUnlockCourseList(res)
-        })
-      ]).then(() => {
-        this.getCourseContent(this.contentUrl).then((res) => {
-          this.updateChapters(res)
-          this.updateCurChapterUrl(this.currentChapterCode)
-          this.updateCurChapter(this.currentChapterCode)
-          this.getChapterContent().then((res) => {
-            this.updateChapterContent(res)
-            setTimeout(() => {
-              this.hideLoading()
-            }, 100)
-          })
-        })
-      }).then(() => {
-        this.getRecord(this.currentChapterCode + '-A0')
-        this.getProgress(this.currentChapterCode).then((res) => {
-          if (res.state !== 0) {
-            this.updateCurChapterProgress(res.record.forms)
-          } else {
-            this.updateCurChapterProgress('')
-          }
-          this.homeworkContent(this.currentChapterCode + '-A8').then((res) => {
-            this.updateHomeworkContent(res.contents)
-          })
-        })
-        this.getCourseTestRanking(this.currentChapterCode).then((res) => {
-          this.updateChapterTestResult(res.result.current_user)
-        })
-      })
-    })
+    this.initData(curCourseCode)
   },
   computed: {
     ...mapState({
@@ -114,52 +73,45 @@ export default {
       getProgress: 'course/getProgress',
       getChapterContent: 'course/getChapterContent',
       setCurrentChapter: 'course/setCurrentChapter',
-      getCourseTestRanking: 'learn/getCourseTestRanking',
+      getCourseTestRanking: 'course/getCourseTestRanking',
       homeworkContent: 'course/homeworkContent'
     }),
     ...mapMutations({
-      updateCurCourseCode: 'course/updateCurCourseCode',
-      updateChapters: 'course/updateChapters',
-      updateCurChapterProgress: 'course/updateCurChapterProgress',
-      updateCurCoreParts: 'course/updateCurCoreParts',
-      chapterProgress: 'course/chapterProgress',
-      updateCurChapterUrl: 'course/updateCurChapterUrl',
-      updateCurChapter: 'course/updateCurChapter',
-      updateCourseInfo: 'course/updateCourseInfo',
-      updateChapterTestResult: 'course/updateChapterTestResult',
-      updateChapterContent: 'course/updateChapterContent',
       updateUnlockCourseList: 'course/updateUnlockCourseList',
       showLoading: 'course/showLoading',
-      hideLoading: 'course/hideLoading',
-      updateHomeworkContent: 'course/updateHomeworkContent'
+      hideLoading: 'course/hideLoading'
     }),
-    loadChapterInfo (chapterCode) {
+    async loadChapterInfo (chapterCode) {
       if (this.unlockCourses.indexOf(chapterCode) > -1) {
         this.showLoading()
-        this.$nextTick(() => {
-          this.setCurrentChapter(chapterCode).then(() => {
-            this.updateCurChapterUrl(chapterCode)
-            this.updateCurChapter(chapterCode)
-            this.getChapterContent().then((res) => {
-              this.updateChapterContent(res)
-            })
-            this.getProgress(chapterCode).then((res) => {
-              if (res.state !== 0) {
-                this.updateCurChapterProgress(res.record.forms)
-              } else {
-                this.updateCurChapterProgress('')
-              }
-              this.homeworkContent(this.currentChapterCode + '-A8').then((res) => {
-                this.updateHomeworkContent(res.contents)
-                this.hideLoading()
-              })
-            })
-            this.getCourseTestRanking(chapterCode).then((res) => {
-              this.updateChapterTestResult(res.result.current_user)
-            })
-          })
-        })
+        await this.setCurrentChapter(chapterCode)
+
+        await this.getChapterContent()
+
+        await this.getProgress(chapterCode)
+
+        await this.getCourseTestRanking(chapterCode)
+
+        await this.homeworkContent(this.currentChapterCode + '-A8')
+
+        this.hideLoading()
       }
+    },
+    async initData (curCourseCode) {
+      console.log('courselist initData', curCourseCode)
+      await this.getLearnInfo(curCourseCode)
+      await this.getUnlockChapter(curCourseCode).then((res) => {
+        console.log('courselist ==> ', res)
+        this.updateUnlockCourseList(res)
+      })
+      await this.getCourseContent(this.contentUrl)
+      await this.getChapterContent()
+
+      await this.getRecord(this.currentChapterCode + '-A0')
+      await this.getProgress(this.currentChapterCode)
+      await this.homeworkContent(this.currentChapterCode + '-A8')
+      await this.getCourseTestRanking(this.currentChapterCode)
+      this.hideLoading()
     }
   }
 }

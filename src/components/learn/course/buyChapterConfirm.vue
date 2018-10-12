@@ -93,17 +93,17 @@ export default {
       this.updateCoverState(this.costAlert)
     },
     // 购买 课程 接口实现
-    buyChapter () {
+    async buyChapter () {
       var _this = this
-      _this.getBuyChapter({ chapter_code: _this.chapterCode }).then((res) => {
+      await _this.getBuyChapter({ chapter_code: _this.chapterCode }).then((res) => {
         _this.costAlert = false
         _this.updateCoverState(_this.costAlert)
         console.log(res)
-        var arr = _this.chapterCode.split('-')
-        let courseCode = arr[0] + '-' + arr[1]
-        _this.getUnlockChapter(courseCode).then((res) => {
-          _this.updateUnlockCourseList(res)
-        })
+      })
+      var arr = _this.chapterCode.split('-')
+      let courseCode = arr[0] + '-' + arr[1]
+      await _this.getUnlockChapter(courseCode).then((res) => {
+        _this.updateUnlockCourseList(res)
       })
     },
     close () {

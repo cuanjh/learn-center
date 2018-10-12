@@ -82,7 +82,7 @@
           <span v-show='!resendPhone' class='countDown'><em>{{ verPhoneSecond }}</em>秒后重新获取</span>
         </p>
         <p class='bindPhone-error-tips' v-show="isBindPhoneError"><i class='user error'></i><em>{{ alertMessage }}</em></p>
-        <p class='bindPhone-btn-phone' @click="resetAnonymous"><span>绑定手机</span></p>
+        <p class='bindPhone-btn-phone' @click="resetAnonymousPhone"><span>绑定手机</span></p>
         <p class='bindPhone-time-limited-tips'>您的验证码在5分钟内有效</p>
       </div>
     </section>
@@ -145,7 +145,8 @@ export default {
     ...mapMutations({
       updateCoverState: 'course/updateCoverState',
       updateAlertType: 'user/updateAlertType',
-      updateUserInfo: 'user/updateUserInfo'
+      updateUserInfo: 'user/updateUserInfo',
+      modefiyPhoneMemberInfo: 'user/modefiyPhoneMemberInfo'
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo',
@@ -162,8 +163,8 @@ export default {
     },
     jumpBind () {
       this.updateAlertType('')
-      this.$dispatch('anonymous')
-      this.$router.go('/v2/user/bind')
+      // this.$emit('anonymous')
+      this.$router.push({path: '/app/user/bind'})
     },
     closeViewJump () {
       this.updateAlertType('')
@@ -173,27 +174,25 @@ export default {
       this.$router.go('/v2/user/setting')
     },
     // 绑定手机号
-    bindPhone () {
+    async bindPhone () {
       var _this = this
       var params = {}
       params.phonenumber = this.bindPhoneNum
       params.verification_code = this.verificationCode
 
-      _this.bindPhoneNumber(params).then((res) => {
+      await _this.bindPhoneNumber(params).then((res) => {
         if (res.success) {
           _this.updateAlertType('bindSuccess')
           _this.$emit('updateAlertMessage', '恭喜您绑定手机成功！')
           _this.$emit('updateAlertButton', '确定')
-          _this.getUserInfo().then((res) => {
-            this.updateUserInfo(res)
-            _this.$emit('memberupdate')
-          })
         } else {
           this.showAlert(res)
         }
       })
+      await _this.getUserInfo()
+      _this.$emit('memberupdate')
     },
-    resetAnonymous () {
+    resetAnonymousPhone () {
       var _this = this
       var params = {}
       params.phonenumber = this.bindPhoneNum
@@ -204,7 +203,7 @@ export default {
           _this.updateAlertType('bindSuccessPhone')
           _this.$emit('updateAlertMessage', '恭喜您绑定手机成功！')
           _this.$emit('updateAlertButton', '确定')
-          _this.$store.dispatch('modefiyPhoneMemberInfo', {
+          _this.modefiyPhoneMemberInfo({
             phoneNumber: _this.bindPhoneNum
           })
         } else {
@@ -234,21 +233,19 @@ export default {
       }, 1000)
     },
     // 解绑信息
-    unbindIdentityFn () {
+    async unbindIdentityFn () {
       var params = {}
       params.identity_type = this.bindConfirmType
       var _this = this
-      _this.unbindIdentity(params).then((res) => {
+      await _this.unbindIdentity(params).then((res) => {
         if (res.success) {
-          _this.getUserInfo().then((res) => {
-            this.updateUserInfo(res)
-            _this.$emit('memberupdate')
-          })
           _this.closeView()
         } else {
           this.showAlertView(res)
         }
       })
+      await _this.getUserInfo()
+      _this.$emit('memberupdate')
     },
     showAlertView (res) {
       this.updateAlertType('showMessage')

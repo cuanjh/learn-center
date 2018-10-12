@@ -164,6 +164,12 @@
         <span class="goBackCore" @click="goBackLearn">继续学习</span>
       </p>
     </div>
+    <div class="nolock-test-check" v-show="anonymousCheckShow">
+      <p class="animated flipInX">快去注册，<br>开启全球说学习之旅吧！
+        <i></i>
+        <span class="goBackCore" @click="goToRegister">去注册</span>
+      </p>
+    </div>
     <buy-chapter ref='buyChapter' />
   </div>
 </template>
@@ -180,6 +186,7 @@ export default {
       chapterProgress: 0,
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
       nolockTestCheckShow: false,
+      anonymousCheckShow: false,
       isShow: false
     }
   },
@@ -336,22 +343,26 @@ export default {
       // 测试
       var that = this
       let retObj = {}
-      let srcTestArray = Object.keys(that.curChapterProgress).filter((item) => {
-        return item.indexOf('A7') > -1
-      }).map((el) => {
-        return that.curChapterProgress[el]
-      })
-      console.log(srcTestArray)
-      if (Object.keys(that.chapterTestResult).length > 0) {
+      // let srcTestArray = Object.keys(that.curChapterProgress).filter((item) => {
+      //   return item.indexOf('A7') > -1
+      // }).map((el) => {
+      //   return that.curChapterProgress[el]
+      // })
+      if (that.chapterTestResult.current_user && Object.keys(that.chapterTestResult.current_user).length > 0) {
         retObj['isTestCompleted'] = 1
         retObj['completedTestRate'] = '1'
-        let correctRate = Math.floor((this.chapterTestResult.correct_rate).toFixed(3))
+        console.log('correct_rate---->', this.chapterTestResult)
+        let correctRate = this.chapterTestResult.current_user.correct_rate
+        if (!correctRate) {
+          correctRate = 0
+        }
+        correctRate = Math.floor((correctRate).toFixed(3))
         retObj['starTestNum'] = this.starNum(correctRate)
         retObj['imgTestStyle'] = ''
       } else {
         retObj['isTestCompleted'] = 0
-        retObj['starTestNum'] = 0
         retObj['completedTestRate'] = ''
+        retObj['starTestNum'] = 0
         retObj['imgTestStyle'] = ''
       }
       this.$emit('draw', 'test', retObj)
@@ -392,6 +403,11 @@ export default {
   },
   methods: {
     jumpToCourse (chapterCode) {
+      let isAnonymous = this.userInfo['is_anonymous']
+      if (isAnonymous) {
+        this.anonymousCheckShow = true
+        return false
+      }
       if (this.unlockCourses.indexOf(chapterCode) === -1) {
         this.nolockTestCheckShow = true
         return false
@@ -510,6 +526,10 @@ export default {
     },
     switchShow () {
       this.isShow = true
+    },
+    goToRegister () {
+      let langCode = this.userInfo['current_course_code'].split('-')[0]
+      this.$router.push({ path: '/auth/register/' + langCode })
     }
   }
 }

@@ -37,9 +37,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCurLevel: 'course/updateCurLevel',
-      updateCurChapterUrl: 'course/updateCurChapterUrl',
-      updateCurChapter: 'course/updateCurChapter'
+      updateCurLevel: 'course/updateCurLevel'
     }),
     selLevel (level) {
       this.updateCurLevel(level)
