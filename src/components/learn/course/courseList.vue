@@ -8,12 +8,15 @@
         :levelDetail="levelDetail"
         :levelNum="levelNum"
         :curLevel="curLevel"
-        @loadChapterInfo="loadChapterInfo"
+        @selLevel="selLevel"
       />
-      <chapter-item
-        :currentCourseCode="currentCourseCode"
-        @loadChapterInfo="loadChapterInfo"
-      />
+      <transition name="fade">
+        <chapter-item
+          :currentCourseCode="currentCourseCode"
+          @loadChapterInfo="loadChapterInfo"
+          v-show="isShow"
+        />
+      </transition>
     </div>
     <pulse-loader :loading="loading" class="loading"/>
   </div>
@@ -29,7 +32,8 @@ import ChapterItem from './chapterItem.vue'
 export default {
   data () {
     return {
-      levels: []
+      levels: [],
+      isShow: true
     }
   },
   components: {
@@ -79,7 +83,8 @@ export default {
     ...mapMutations({
       updateUnlockCourseList: 'course/updateUnlockCourseList',
       showLoading: 'course/showLoading',
-      hideLoading: 'course/hideLoading'
+      hideLoading: 'course/hideLoading',
+      updateCurLevel: 'course/updateCurLevel'
     }),
     async loadChapterInfo (chapterCode) {
       if (this.unlockCourses.indexOf(chapterCode) > -1) {
@@ -112,6 +117,13 @@ export default {
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)
       this.hideLoading()
+    },
+    selLevel (level) {
+      this.isShow = false
+      setTimeout(() => {
+        this.updateCurLevel(level)
+        this.isShow = true
+      }, 100)
     }
   }
 }
@@ -137,5 +149,12 @@ export default {
   position: absolute;
   left: 55% ;
   top: 400px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
