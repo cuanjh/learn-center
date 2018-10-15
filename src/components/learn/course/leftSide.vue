@@ -2,7 +2,7 @@
   <div class="left-side">
     <div class="lang-overview">
       <dl>
-        <dt><img :src="courseBaseInfo.cover | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
+        <dt><img :src="courseBaseInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
           <p v-text='langDesc'></p>
           <p @click="switchCourse">{{$t('course.switchCourse')}}</p>

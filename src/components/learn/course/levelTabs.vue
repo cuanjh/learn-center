@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   props: ['levelDetail', 'levelNum', 'curLevel'],
   data () {
@@ -36,13 +36,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      updateCurLevel: 'course/updateCurLevel'
-    }),
     selLevel (level) {
-      this.updateCurLevel(level)
-      // let chapterCode = this.currentChapterCode
-      // this.$emit('loadChapterInfo', chapterCode)
+      this.$emit('selLevel', level)
     }
   }
 }
