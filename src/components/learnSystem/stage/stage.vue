@@ -459,7 +459,8 @@ export default {
       setFormScoresNull: 'learn/setFormScoresNull',
       updateProgressScore: 'course/updateProgressScore',
       updateUnlockCourseList: 'course/updateUnlockCourseList',
-      updateCurCourseCode: 'course/updateCurCourseCode'
+      updateCurCourseCode: 'course/updateCurCourseCode',
+      updateCurChapter: 'course/updateCurChapter'
     }),
     getTypeList (list) {
       console.log('typelist')
@@ -822,10 +823,9 @@ function changeData (_this, trunk) {
         _this.$nextTick(() => {
           common.resize(List, Type)
         })
-
+        _this.isShow = true
         // 预加载
         preLoad(_this)
-        _this.isShow = true
       }).catch((cb, err) => {
         console.log(err.stack)
       })

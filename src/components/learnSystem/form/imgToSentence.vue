@@ -30,7 +30,6 @@ export default {
     return {
       timeoutId_next: null,
       timeoutId_shake: null,
-      isShake: false,
       delay_next: 1000,
       delay_shake: 800,
       score: 0,
@@ -116,7 +115,7 @@ export default {
         `<transition name="fade">
             <div class="text-head" id='${id}' v-show="show">
               <div :class="{rtl:dirChild}"">
-                <a :class="{border:isTeacher, shake: isShake}" v-for='(itm, index) in sentences' :key="index" @click='checkChild(itm)' class="txt-box">
+                <a :class="{border:isTeacher}" v-for='(itm, index) in sentences' :key="index" @click='checkChild($event, itm)' class="txt-box">
                   <span>{{switch_state ?itm.phoneticize : itm.sentence}}</span>
                 </a>
               </div>
@@ -130,8 +129,9 @@ export default {
           isTeacher: 0
         },
         methods: {
-          checkChild (itm) {
-            _this.check(itm)
+          checkChild (evnet, itm) {
+            $(event.currentTarget).removeClass('shake')
+            _this.check(event, itm)
           }
         }
       })
@@ -185,7 +185,7 @@ export default {
       }
     },
     // 检查对错
-    check (itm) {
+    check (event, itm) {
       // 选择正确则屏蔽点击
       if (this.data.sentence_box_show) return
 
@@ -231,7 +231,7 @@ export default {
           this.finished = true
           this.score = 0
         }
-        this.shake(this)
+        this.shake(event.currentTarget)
 
         // add by david_li, 金币逻辑
         if (!this.has_dispatch_wrong) {
