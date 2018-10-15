@@ -412,20 +412,20 @@ export default {
   background-size:100% 100%;
 }
 .summary-star .summary-yellow-star i.active {
-  animation: scaleDraw 1s ease;
-  -webkit-animation: scaleDraw 1s ease;
-  -ms-animation: scaleDraw 1s ease;
-  -moz-animation: scaleDraw 1s ease;
-  -o-animation: scaleDraw 1s ease;
+  animation: scaleDraw 1.5s ease;
+  -webkit-animation: scaleDraw 1.5s ease;
+  -ms-animation: scaleDraw 1.5s ease;
+  -moz-animation: scaleDraw 1.5s ease;
+  -o-animation: scaleDraw 1.5s ease;
 }
 @keyframes scaleDraw {
   0%{
       transform: scale(5);
-      opacity: 0;
+      // opacity: 0;
   }
   100%{
     transform: scale(1);
-      opacity: 1;
+      // opacity: 1;
   }
 }
 .summary-yellow-star i.active:nth-child(1){
