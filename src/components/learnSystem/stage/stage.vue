@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="sentence-box"></div>
-    <div class="stage f-cb f-usn">
+    <transition name="fade">
+    <div class="stage f-cb f-usn" v-show="isShow">
+      <!-- <transition-group tag="div"> -->
       <div v-for='(type, index) in typeList' :key='index' class='f-cb'
         :class="[
           type,
@@ -12,13 +14,12 @@
             'layout-4': typeList.length == 7 || typeList.length == 8,
             'translation': 'sentencetoimg,imgtosentencew,speaktoimg'.indexOf(type) > -1
           }
-        ]"
-        v-show='show'>
-        <transition name="fade" mode="out-in">
+        ]">
           <component :is="'form-'+type" :data="list[index]" :ref="'comp'+index"></component>
-        </transition>
       </div>
+      <!-- </transition-group> -->
     </div>
+    </transition>
     <progress-bar :class="{TLY : isTeacher}" :slideList="progress" :curSlide="curSlide" />
     <coin-box :coin="coin" :total="totalCoin" v-if="!isTeacher"></coin-box>
     <pause-window ref='pauseWindow'></pause-window>
@@ -67,7 +68,6 @@ export default {
       last_time: 0, // 持续时间,
       isFirst: 0, // 是否第一次进入当前slide，0非首次，1为首次
       showGuide: false, // 用户引导层是否显示
-      show: true,
       micphoneTip: '', // 提示框文字
       cutdownTime: CUTDOWN_TIME,
       thunk: {}, // promise
@@ -75,7 +75,8 @@ export default {
       resultForms: {},
       forms: {},
       typeList: [],
-      list: []
+      list: [],
+      isShow: true
     }
   },
   components: {
@@ -316,10 +317,9 @@ export default {
       // 广播组件销毁
       $('.sentence-box').empty()
       this.component_destroy()
+      this.isShow = false
       this.cur = -1
-      this.show = false
       this.updateCurSlide(slide)
-
       // normal为正常下一个跳转，false时则重置状态重新加载
       if (normal) {
         /**
@@ -608,7 +608,8 @@ export default {
       console.log(5555)
       this.initData()
     },
-    initData () {
+    async initData () {
+      await this.getUserInfo()
       console.log(3333)
       this.totalCoin = this.userInfo.coins
       localStorage.setItem('userCoin', this.userInfo.coins)
@@ -657,7 +658,7 @@ export default {
           this.updatePause(true)
         }
       })
-      this.getCoinCalculationRule()
+      await this.getCoinCalculationRule()
       this.isFirst = Number(this.progress[0] === -1)
       // 判断是否是第一次进入，日志数据提交
       if (!onlyId.get()) {
@@ -801,32 +802,34 @@ function changeData (_this, trunk) {
     return false
   }
   _.delay(() => {
-    trunk.then((cb, data) => {
-      console.log(data)
-      var List = _this.getList(data)
-      var Type = _this.getTypeList(List)
-      _this.$set(_this, 'typeList', Type)
-      _this.$set(_this, 'list', List)
-      _this.show = true
-      _this.$nextTick(() => {
-        // 重置 cur 游标 否则会出现视图更新 cur未更新的状态
-        _this.cur = -1
-        _this.$emit('next-component')
-      })
-      // 重置
-      common.reset()
-      window.onresize = () => {
-        common.resize(List, Type)
-      }
-      _this.$nextTick(() => {
-        common.resize(List, Type)
-      })
+    setTimeout(() => {
+      trunk.then((cb, data) => {
+        console.log(data)
+        var List = _this.getList(data)
+        var Type = _this.getTypeList(List)
+        _this.$set(_this, 'typeList', Type)
+        _this.$set(_this, 'list', List)
+        _this.$nextTick(() => {
+          // 重置 cur 游标 否则会出现视图更新 cur未更新的状态
+          _this.cur = -1
+          _this.$emit('next-component')
+        })
+        // 重置
+        common.reset()
+        window.onresize = () => {
+          common.resize(List, Type)
+        }
+        _this.$nextTick(() => {
+          common.resize(List, Type)
+        })
 
-      // 预加载
-      preLoad(_this)
-    }).catch((cb, err) => {
-      console.log(err.stack)
-    })
+        // 预加载
+        preLoad(_this)
+        _this.isShow = true
+      }).catch((cb, err) => {
+        console.log(err.stack)
+      })
+    }, 100)
   }, TRANSALTE_TIME)
 }
 
@@ -837,5 +840,10 @@ function preLoad (_this) {
 </script>
 
 <style lang="less" scoped>
-
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>
