@@ -419,14 +419,10 @@ export default {
         console.log(chapterCode)
         this.$emit('loadChapterInfo', chapterCode)
       }
-
-      let top = $('#' + chapterCode)[0].offsetTop
-      console.log(top)
-      if (top > 3600) {
-        top = top - 850
-      }
-      console.log(top)
-      $('body,html').animate({ scrollTop: top - 10 }, 200)
+      setTimeout(() => {
+        let top = -$('body,html').scrollTop() + $('#' + chapterCode)[0].offsetTop
+        $('body,html').animate({ scrollTop: top - 100 }, 200)
+      }, 200)
     },
     starNum (correctRate) {
       let stars = 0
