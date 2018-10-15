@@ -130,7 +130,6 @@ export default {
         },
         methods: {
           checkChild (evnet, itm) {
-            $(event.currentTarget).removeClass('shake')
             _this.check(event, itm)
           }
         }

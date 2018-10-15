@@ -403,37 +403,27 @@ export default {
   margin-top: 55px;
 }
 
-.summary-star .summary-yellow-star {
-  display: inline-block;
-  width: 150px;
-  height: 26px;
-}
+// .summary-star .summary-yellow-star {
+//   display: inline-block;
+//   width: 150px;
+//   height: 26px;
+// }
 .summary-star .summary-yellow-star i{
   float:left;
   width:26px;
   height:26px;
   margin-left:4px;
-  // background:url(../../../static/images/learnSystem/summary-star.png) no-repeat;
-  // background-size:100% 100%;
-}
-
-.summary-star .summary-yellow-star .active {
-    animation: scaleDraw 1s ease;
-  -webkit-animation: scaleDraw 1s ease;
-  -ms-animation: scaleDraw 1s ease;
-  -moz-animation: scaleDraw 1s ease;
-  -o-animation: scaleDraw 1s ease;
   background:url(../../../static/images/learnSystem/summary-star.png) no-repeat;
   background-size:100% 100%;
 }
 
-// .summary-star .summary-yellow-star i.active {
-//   animation: scaleDraw 1s ease;
-//   -webkit-animation: scaleDraw 1s ease;
-//   -ms-animation: scaleDraw 1s ease;
-//   -moz-animation: scaleDraw 1s ease;
-//   -o-animation: scaleDraw 1s ease;
-// }
+.summary-star .summary-yellow-star i.active {
+  animation: scaleDraw 1s ease;
+  -webkit-animation: scaleDraw 1s ease;
+  -ms-animation: scaleDraw 1s ease;
+  -moz-animation: scaleDraw 1s ease;
+  -o-animation: scaleDraw 1s ease;
+}
 @keyframes scaleDraw {
   0%{
       transform: scale(5);
