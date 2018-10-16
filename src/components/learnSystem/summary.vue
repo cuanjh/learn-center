@@ -403,6 +403,11 @@ export default {
   margin-top: 55px;
 }
 
+// .summary-star .summary-yellow-star {
+//   display: inline-block;
+//   width: 150px;
+//   height: 26px;
+// }
 .summary-star .summary-yellow-star i{
   float:left;
   width:26px;
@@ -411,6 +416,7 @@ export default {
   background:url(../../../static/images/learnSystem/summary-star.png) no-repeat;
   background-size:100% 100%;
 }
+
 .summary-star .summary-yellow-star i.active {
   animation: scaleDraw 1s ease;
   -webkit-animation: scaleDraw 1s ease;
