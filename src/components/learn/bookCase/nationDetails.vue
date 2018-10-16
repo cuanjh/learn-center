@@ -18,7 +18,7 @@
       <div class="background-img"></div>
       <div class="nation-top">
         <div class="nation-title">
-          <p>世界地图语言</p>
+          <p>世界语言地图</p>
         </div>
         <div class="nation-content">
           <div class="containers">
@@ -247,6 +247,7 @@ export default {
         cursor: pointer;
         margin-left: 30px;
         padding: 0px 2px 12px;
+        border-bottom: 4px solid #ffffff;
         &.active {
           color: #2A9FE4;
           border-bottom: 4px solid #2A9FE4;
