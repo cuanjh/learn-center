@@ -17,7 +17,7 @@
     <div class="details-header">
       <div class="details-top">
         <div class="details-title">
-          <p>世界地图语言</p>
+          <p>世界语言地图</p>
         </div>
         <div class="details-content">
           <div class="container">
@@ -380,12 +380,11 @@ export default {
   }
   .tab-item span {
     float: left;
-    display: block;
     font-size: 16px;
     color: #333333;
     cursor: pointer;
     margin-right: 68px;
-    padding: 0px 2px 12px;
+    padding: 0px 0px 12px;
   }
   .tab-item .active {
     color: #0581D1;
