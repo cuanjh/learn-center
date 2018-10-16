@@ -239,7 +239,7 @@ export default {
         let coreForms = []
         element.Slides.forEach((slide) => {
           Object.keys(that.curChapterProgress).filter((item) => {
-            return item.indexOf('A0-' + slide) > -1
+            return item.indexOf('A0-' + slide + '-') > -1
           }).map((el) => {
             return that.curChapterProgress[el]
           }).forEach((i) => {

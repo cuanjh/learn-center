@@ -111,7 +111,7 @@ export default {
       }
 
       var resource = this.getResource(this.curSlide)
-      changeData(this, Loader(resource))
+      this.changeData(this, Loader(resource))
 
       next()
     } else {
@@ -329,10 +329,10 @@ export default {
          */
         if (END === this.thunk) {
           // 如果下一个课程已经没有了, 直接跳过, 而不是继续预加载
-          changeData(this)
+          this.changeData(this)
         } else {
           let resource1 = this.getResource(this.curSlide)
-          changeData(this, Loader(resource1))
+          this.changeData(this, Loader(resource1))
         }
       } else {
         let resource2 = this.getResource(this.curSlide)
@@ -340,7 +340,7 @@ export default {
          * pkLoad仅仅是借用之前的方法名而已
          * 这里的业务含义是在预加载失败后,会读条加载新的资源数据
          */
-        changeData(this, Loader(resource2))
+        this.changeData(this, Loader(resource2))
       }
     })
 
@@ -637,7 +637,7 @@ export default {
       this.timeCount()
 
       var resource = this.getResource(this.curSlide)
-      changeData(this, Loader(resource))
+      this.changeData(this, Loader(resource))
 
       // this.$emit('next-component')
       // 弹出提示、/////////////////////////////////////////////
@@ -667,175 +667,173 @@ export default {
         var whetherFirst = this.isFirst
         logCollect.learnStart(whetherFirst)
       }
-    }
-  }
-}
+    },
+    // 重设Data数据
+    changeData (_this, trunk) {
+      !trunk && (trunk = _this.thunk)
+      if (trunk === END) {
+        // // 核心课程结束则解锁其他的模块
+        // if (_this.data[3] == "A0") {
+        //   var open = Model.unlockProgress(_.take(_this.data, 4))
+        //   //解锁提示
+        //   if (open)
+        //     toaster.success(Config.tips.chapter_opened)
+        // } else {
+        //   Model.postProgress(_.take(_this.data, 4))
+        // }
+        _this.postProgress()
+        _this.stopCount() // 停止计时器
 
-// 重设Data数据
-function changeData (_this, trunk) {
-  !trunk && (trunk = _this.thunk)
-  if (trunk === END) {
-    // // 核心课程结束则解锁其他的模块
-    // if (_this.data[3] == "A0") {
-    //   var open = Model.unlockProgress(_.take(_this.data, 4))
-    //   //解锁提示
-    //   if (open)
-    //     toaster.success(Config.tips.chapter_opened)
-    // } else {
-    //   Model.postProgress(_.take(_this.data, 4))
-    // }
-    _this.postProgress()
-    _this.stopCount() // 停止计时器
+        _this.getProgress(_this.curChapterCode)
+        console.log(_this.coin)
+        _this.$emit('calCoin') // 结束前清算结果
+        console.log(_this.coin)
+        _this.postCoin(_this.coin)
 
-    _this.getProgress(_this.curChapterCode)
-    console.log(_this.coin)
-    _this.$emit('calCoin') // 结束前清算结果
-    console.log(_this.coin)
-    _this.postCoin(_this.coin)
+        // Model.postRecord(_this.coin, _this.last_time, _this.max_continue_correct, _.take(_this.data, 4))
+        // // 结束到总结页面
+        // _this.$emit("goto-summary")
 
-    // Model.postRecord(_this.coin, _this.last_time, _this.max_continue_correct, _.take(_this.data, 4))
-    // // 结束到总结页面
-    // _this.$emit("goto-summary")
+        // // 章节结束打点
+        // //<courseEnd>
+        // var code = _.values(Config.LANG).concat(_.take(_this.data, 4)).join("-")
+        // statistics.finish_activity(code)
+        // //</courseEnd>
+        // return
+        var arr = _.values(_this.formScores)
+        var correctArr = arr.filter((item) => {
+          return item === 1
+        })
 
-    // // 章节结束打点
-    // //<courseEnd>
-    // var code = _.values(Config.LANG).concat(_.take(_this.data, 4)).join("-")
-    // statistics.finish_activity(code)
-    // //</courseEnd>
-    // return
-    var arr = _.values(_this.formScores)
-    var correctArr = arr.filter((item) => {
-      return item === 1
-    })
-
-    let cr, ccr
-    if (_this.id.indexOf('A0') > -1) {
-      cr = (correctArr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
-      ccr = (arr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
-    } else {
-      let curChapterContent = {}
-      if (Object.keys(_this.curChapterContent).length === 0) {
-        curChapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
-      } else {
-        curChapterContent = _this.curChapterContent
-      }
-
-      let formsLength = 0
-      curChapterContent.improvement.parts.forEach((item) => {
-        if (item.slide_type_code.indexOf(_this.id) > -1) {
-          var slides = item.slides
-          slides.forEach((i) => {
-            formsLength += i.forms.length
-          })
-        }
-      })
-      cr = (correctArr.length / formsLength).toFixed(2)
-      ccr = (arr.length / formsLength).toFixed(2)
-    }
-
-    if (_this.id.indexOf('A05') > -1) {
-      let nextChapter
-      let arr = _this.curChapterCode.split('-')
-      if (arr[4].toLowerCase() === 'chapter6') {
-        if (arr[3] === 'Unit4') {
-          if (arr[2] === 'Level7') {
-            return
-          } else {
-            let level = 'Level' + parseInt(arr[2].replace('Level', '')) + 1
-            nextChapter = arr[0] + '-' + arr[1] + '-' + level + 'Unit1-Chapter1'
-          }
+        let cr, ccr
+        if (_this.id.indexOf('A0') > -1) {
+          cr = (correctArr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
+          ccr = (arr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
         } else {
-          let unit = 'Unit-' + (parseInt(arr[3].replace('Unit', '')) + 1)
-          nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + unit + '-Chapter1'
-        }
-      } else {
-        let chapter = 'Chapter' + (parseInt(arr[4].replace('Chapter', '')) + 1)
-        nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + arr[3] + '-' + chapter
-      }
-      var params = {
-        chapter_code: nextChapter,
-        core: 1,
-        homework: 0,
-        improvement: 0,
-        core_complete: 0,
-        homework_complete: 0,
-        improvement_complete: 0,
-        learn_time: 0,
-        correct_rate: 0,
-        group_id: ''
-      }
+          let curChapterContent = {}
+          if (Object.keys(_this.curChapterContent).length === 0) {
+            curChapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
+          } else {
+            curChapterContent = _this.curChapterContent
+          }
 
-      if (_this.unlockCourses.indexOf(nextChapter) === -1) {
-        _this.updateCurChapter(nextChapter)
-        _this.postUnlockChapter(params).then((r) => {
-          _this.getUnlockChapter(nextChapter).then((res) => {
-            _this.updateUnlockCourseList(res)
+          let formsLength = 0
+          curChapterContent.improvement.parts.forEach((item) => {
+            if (item.slide_type_code.indexOf(_this.id) > -1) {
+              var slides = item.slides
+              slides.forEach((i) => {
+                formsLength += i.forms.length
+              })
+            }
+          })
+          cr = (correctArr.length / formsLength).toFixed(2)
+          ccr = (arr.length / formsLength).toFixed(2)
+        }
+
+        if (_this.id.indexOf('A05') > -1) {
+          let nextChapter
+          let arr = _this.curChapterCode.split('-')
+          if (arr[4].toLowerCase() === 'chapter6') {
+            if (arr[3] === 'Unit4') {
+              if (arr[2] === 'Level7') {
+                return
+              } else {
+                let level = 'Level' + parseInt(arr[2].replace('Level', '')) + 1
+                nextChapter = arr[0] + '-' + arr[1] + '-' + level + 'Unit1-Chapter1'
+              }
+            } else {
+              let unit = 'Unit-' + (parseInt(arr[3].replace('Unit', '')) + 1)
+              nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + unit + '-Chapter1'
+            }
+          } else {
+            let chapter = 'Chapter' + (parseInt(arr[4].replace('Chapter', '')) + 1)
+            nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + arr[3] + '-' + chapter
+          }
+          var params = {
+            chapter_code: nextChapter,
+            core: 1,
+            homework: 0,
+            improvement: 0,
+            core_complete: 0,
+            homework_complete: 0,
+            improvement_complete: 0,
+            learn_time: 0,
+            correct_rate: 0,
+            group_id: ''
+          }
+
+          if (_this.unlockCourses.indexOf(nextChapter) === -1) {
+            _this.updateCurChapter(nextChapter)
+            _this.postUnlockChapter(params).then((r) => {
+              _this.getUnlockChapter(nextChapter).then((res) => {
+                _this.updateUnlockCourseList(res)
+              })
+            })
+          }
+        }
+        var payload = {
+          activityCode: _this.curChapterCode + '-' + _this.id,
+          coins: _this.coin,
+          correctHits: _this.continue_correct,
+          learnTime: _this.last_time,
+          correctRate: cr,
+          courseCompleteRate: ccr
+        }
+        _this.postActivityRecord(payload).then(() => {
+          var params = {
+            chapter_code: _this.curChapterCode,
+            core: (_this.core) ? 1 : 0,
+            homework: (_this.id.indexOf('A05') > -1) ? 1 : 0,
+            improvement: (_this.id.indexOf('A05') > -1) ? 1 : 0,
+            core_complete: (_this.id.indexOf('A05') > -1) ? 1 : 0,
+            homework_complete: (_this.homeworkComplete) ? 1 : 0,
+            improvement_complete: (_this.improvementComplete) ? 1 : 0,
+            learn_time: _this.last_time,
+            correct_rate: cr,
+            group_id: ''
+          }
+          _this.postUnlockChapter(params).then((res) => {
+            _this.$refs['summary'].$emit('coreSummary-show', _this.id)
+            _this.setFormScoresNull()
           })
         })
+        return false
       }
+      _.delay(() => {
+        setTimeout(() => {
+          trunk.then((cb, data) => {
+            console.log(data)
+            var List = _this.getList(data)
+            var Type = _this.getTypeList(List)
+            _this.$set(_this, 'typeList', Type)
+            _this.$set(_this, 'list', List)
+            _this.$nextTick(() => {
+              // 重置 cur 游标 否则会出现视图更新 cur未更新的状态
+              _this.cur = -1
+              _this.$emit('next-component')
+            })
+            // 重置
+            common.reset()
+            window.onresize = () => {
+              common.resize(List, Type)
+            }
+            _this.$nextTick(() => {
+              common.resize(List, Type)
+            })
+            _this.isShow = true
+            // 预加载
+            _this.preLoad(_this)
+          }).catch((cb, err) => {
+            console.log(err.stack)
+          })
+        }, 100)
+      }, TRANSALTE_TIME)
+    },
+    preLoad (_this) {
+      var resource = _this.getResource(_this.curSlide + 1)
+      _this.thunk = resource ? Loader(resource) : END
     }
-    var payload = {
-      activityCode: _this.curChapterCode + '-' + _this.id,
-      coins: _this.coin,
-      correctHits: _this.continue_correct,
-      learnTime: _this.last_time,
-      correctRate: cr,
-      courseCompleteRate: ccr
-    }
-    _this.postActivityRecord(payload).then(() => {
-      var params = {
-        chapter_code: _this.curChapterCode,
-        core: (_this.core) ? 1 : 0,
-        homework: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-        improvement: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-        core_complete: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-        homework_complete: (_this.homeworkComplete) ? 1 : 0,
-        improvement_complete: (_this.improvementComplete) ? 1 : 0,
-        learn_time: _this.last_time,
-        correct_rate: cr,
-        group_id: ''
-      }
-      _this.postUnlockChapter(params).then((res) => {
-        _this.$refs['summary'].$emit('coreSummary-show', _this.id)
-        _this.setFormScoresNull()
-      })
-    })
-    return false
   }
-  _.delay(() => {
-    setTimeout(() => {
-      trunk.then((cb, data) => {
-        console.log(data)
-        var List = _this.getList(data)
-        var Type = _this.getTypeList(List)
-        _this.$set(_this, 'typeList', Type)
-        _this.$set(_this, 'list', List)
-        _this.$nextTick(() => {
-          // 重置 cur 游标 否则会出现视图更新 cur未更新的状态
-          _this.cur = -1
-          _this.$emit('next-component')
-        })
-        // 重置
-        common.reset()
-        window.onresize = () => {
-          common.resize(List, Type)
-        }
-        _this.$nextTick(() => {
-          common.resize(List, Type)
-        })
-        _this.isShow = true
-        // 预加载
-        preLoad(_this)
-      }).catch((cb, err) => {
-        console.log(err.stack)
-      })
-    }, 100)
-  }, TRANSALTE_TIME)
-}
-
-function preLoad (_this) {
-  var resource = _this.getResource(_this.curSlide + 1)
-  _this.thunk = resource ? Loader(resource) : END
 }
 </script>
 
