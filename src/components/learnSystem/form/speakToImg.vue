@@ -2,17 +2,17 @@
   <div>
     <div v-for="(form, index) in data"
       :key="index"
+      :id="'image-box' + index"
       class="image-box"
       :class="{
         'layout-3': isLayout3,
         'layout-4': data.length == 7 || data.length == 8,
         current:index==repeat_len || (repeated && mouseover_form==form),
         right:sel_form==form && state_right,
-        error:sel_form==form && state_error,
-        shake: isShake
+        error:sel_form==form && state_error
       }"
       :style="{top:pos[index][0],left:pos[index][1]}"
-      @click="check(form)"
+      @click="check($event, form)"
       @mouseover="mouseover_form=form"
       @mouseout="mouseover_form=null">
       <div class="image-container">
@@ -46,7 +46,6 @@ export default {
     return {
       timeoutId_next: null,
       timeoutId_shake: null,
-      isShake: false,
       delay_next: 1000,
       delay_shake: 800,
       score: 100,
@@ -73,7 +72,7 @@ export default {
       isAutoSkip: false
     }
   },
-  mixins: [minx.formScore, minx.switchPhoneticize, minx.learnProgLog],
+  mixins: [minx.shake, minx.formScore, minx.switchPhoneticize, minx.learnProgLog],
   created () {
     // 下一步操作
     this.$on('start', () => {
@@ -287,7 +286,8 @@ export default {
       }
     },
     // 检查对错
-    check (itm) {
+    check (event, itm) {
+      let id = event.currentTarget.id
       // 选择正确则屏蔽点击
       if (
         !this.repeated ||
@@ -356,8 +356,11 @@ export default {
         this.sndctr.play(() => {
           _this.child.hornPlaying = false
         })
+        setTimeout(() => {
+          $('#' + id).addClass('shake')
+        }, 100)
 
-        this.shake(this)
+        this.shake($('#' + id))
 
         // add by david_li, 金币逻辑
         if (!this.has_dispatch_wrong) {
@@ -368,24 +371,6 @@ export default {
       }
 
       // console.log('sel_form:', this.sel_form)
-    },
-    // wrong effect
-    shake (itm) {
-      var _this = this
-      // 清除css和计时器
-      // $(itm.$el).removeClass('shake')
-      _this.isShake = false
-      clearTimeout(this.timeoutId_shake)
-      // 重新添加css和计时器
-      // $(itm.$el).addClass('shake')
-      _this.isShake = true
-      this.state_error = true
-      this.timeoutId_shake = setTimeout(() => {
-        _this.pos = common.randomItems(_this.pos)
-        // $(itm.$el).removeClass('shake')
-        _this.isShake = false
-        _this.state_error = false
-      }, this.delay_shake)
     },
     // 结束退出
     exit () {

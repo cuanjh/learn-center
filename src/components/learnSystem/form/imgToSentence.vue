@@ -37,7 +37,7 @@ export default {
       selected: false,
       state_right: false,
       state_error: false,
-      child: {},
+      child: null,
       sndctr: SoundCtrl,
       // locked: false,
       // switch_state: false,
@@ -179,10 +179,10 @@ export default {
       this.clear()
 
       // 清除
-      var Child = this.child
-      if (!_.isEmpty(Child)) {
-        // Child.$destroy(true)
-      }
+      // var Child = this.child
+      // if (!_.isEmpty(Child)) {
+      //   // Child.$destroy(true)
+      // }
     },
     // 检查对错
     check (event, itm) {
