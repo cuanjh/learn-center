@@ -102,9 +102,17 @@ export var getCourseStructure = (themes, unLockChapters) => {
         if (arr[i] === chapter.code) {
           console.log('chapter' + chapter)
           chapter.judge = true
-          chapter.progressTest = progressAgain(unLockChapters[arr[i]])
-          chapter.progress = progressAgain(unLockChapters[arr[i]])
-          chapter.purchased = chapterPurchased(unLockChapters[arr[i]])
+          let obj = unLockChapters[arr[i]]
+          if (obj.Core_complete || obj.A0) {
+            obj['A01'] = true
+            obj['A02'] = true
+            obj['A03'] = true
+            obj['A04'] = true
+            obj['A05'] = true
+          }
+          chapter.progressTest = progressAgain(obj)
+          chapter.progress = progressAgain(obj)
+          chapter.purchased = chapterPurchased(obj)
         }
       }
       var chapterArr = chapter.code.split('-')

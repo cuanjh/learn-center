@@ -790,7 +790,8 @@ export default {
           correctRate: cr,
           courseCompleteRate: ccr
         }
-        _this.postActivityRecord(payload).then(() => {
+        _this.postActivityRecord(payload).then((res) => {
+          console.log(res)
           var params = {
             chapter_code: _this.curChapterCode,
             core: (_this.core) ? 1 : 0,
