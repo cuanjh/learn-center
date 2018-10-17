@@ -7,7 +7,7 @@
       <p>{{ $t("courseList.pay.balan") }} <span v-text='ui.coins'></span></p>
       <p>
         <span class='learn-begin-study-warn-cancel' @click="btnCancel">{{ $t("button.cancel") }}</span>
-        <span class='learn-begin-study-warn-confirm active' @click='buyChapter'>{{ $t("button.confirm") }}</span>
+        <span class='learn-begin-study-warn-confirm active' @click='buyChapter()'>{{ $t("button.confirm") }}</span>
       </p>
       <p class='vip-bottom' @click='gotoVip'>{{ $t("courseList.pay.openvip") }}</p>
     </section>
@@ -83,10 +83,12 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState'
+      updateCoverState: 'course/updateCoverState',
+      updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     ...mapActions({
-      getBuyChapter: 'course/getBuyChapter'
+      getBuyChapter: 'course/getBuyChapter',
+      getUnlockChapter: 'course/getUnlockChapter'
     }),
     btnCancel () {
       this.costAlert = false
@@ -95,16 +97,17 @@ export default {
     // 购买 课程 接口实现
     async buyChapter () {
       var _this = this
-      await _this.getBuyChapter({ chapter_code: _this.chapterCode }).then((res) => {
-        _this.costAlert = false
-        _this.updateCoverState(_this.costAlert)
-        console.log(res)
-      })
+      await _this.getBuyChapter({ chapter_code: _this.chapterCode })
+
       var arr = _this.chapterCode.split('-')
+
       let courseCode = arr[0] + '-' + arr[1]
       await _this.getUnlockChapter(courseCode).then((res) => {
         _this.updateUnlockCourseList(res)
       })
+
+      _this.costAlert = false
+      _this.updateCoverState(_this.costAlert)
     },
     close () {
       this.updateCoverState(false)
