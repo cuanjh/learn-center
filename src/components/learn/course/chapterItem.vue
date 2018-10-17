@@ -409,17 +409,17 @@ export default {
         this.anonymousCheckShow = true
         return false
       }
+      if (this.buyChapters.indexOf(chapterCode) === -1 && this.isVip !== 1) {
+        this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
+        return false
+      }
       if (this.unlockCourses.indexOf(chapterCode) === -1) {
         this.nolockTestCheckShow = true
         return false
       }
-      if (this.buyChapters.indexOf(chapterCode) === -1 && this.isVip !== 1) {
-        this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
-      } else {
-        this.isShow = false
-        console.log(chapterCode)
-        this.$emit('loadChapterInfo', chapterCode)
-      }
+      this.isShow = false
+      console.log(chapterCode)
+      this.$emit('loadChapterInfo', chapterCode)
       setTimeout(() => {
         let top = -$('body,html').scrollTop() + $('#' + chapterCode)[0].offsetTop
         $('body,html').animate({ scrollTop: top - 100 }, 200)
@@ -427,7 +427,7 @@ export default {
     },
     starNum (correctRate) {
       let stars = 0
-      if (correctRate > 0 && correctRate <= 0.40) {
+      if (correctRate <= 0.40) {
         stars = 1
       } else if (correctRate <= 0.65) {
         stars = 2
