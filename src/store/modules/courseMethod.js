@@ -103,12 +103,25 @@ export var getCourseStructure = (themes, unLockChapters) => {
           console.log('chapter' + chapter)
           chapter.judge = true
           let obj = unLockChapters[arr[i]]
-          if (obj.Core_complete || obj.A0) {
+          if (obj['Core_complete'] || obj['A0']) {
             obj['A01'] = true
             obj['A02'] = true
             obj['A03'] = true
             obj['A04'] = true
             obj['A05'] = true
+          }
+
+          if (obj['Homework_complete']) {
+            obj['A8'] = true
+          }
+
+          if (obj['Improvement_complete']) {
+            obj['A1'] = true
+            obj['A2'] = true
+            obj['A3'] = true
+            obj['A4'] = true
+            obj['A5'] = true
+            obj['A6'] = true
           }
           chapter.progressTest = progressAgain(obj)
           chapter.progress = progressAgain(obj)
