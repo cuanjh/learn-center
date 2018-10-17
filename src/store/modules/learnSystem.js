@@ -112,7 +112,6 @@ const state = {
     }
   },
   sndEff: ['correct.mp3', 'wrong.mp3', 'recordPro.mp3', 'tip.mp3', 'kick.mp3'],
-  formScores: {},
   pkTime: 30,
   qiniuToken: ''
 }
@@ -122,9 +121,6 @@ const actions = {
     return httpLogin(config.coinRules).then((data) => {
       commit('updateCoinCalculationRule', data)
     })
-  },
-  postProgress ({ commit, state }) {
-    return httpLogin(config.postProgress, { forms: JSON.stringify(state.formScores) })
   },
   postCoin ({ commit, state }, coins) {
     // 老师进入数据不再更新
@@ -246,21 +242,6 @@ const mutations = {
   updateHiddenMicrophone (state, data) {
     state.hiddenMicrophone = data
   },
-  updateFormScore (state, preload) {
-    // 老师进入数据不再更新
-    // if (isTeacher) { return }
-    var id = preload.id
-    if (!id) {
-      return
-    }
-    let score = preload.score
-    var idArray = id.match(/(Level\d)-(Unit\d)-(Chapter\d)-(A\d)-(\d+-\d+)/)
-    idArray = idArray.slice(1)
-    state.formScores[id] = score
-    // console.log(id, score)
-    // 设置本地进度
-    _.set(state.recordForm, idArray, score)
-  },
   updateFinishedInfo (state, data) {
     state.finishedInfo = data.info
     localStorage.setItem('finishedInfo', JSON.stringify(data.info))
@@ -270,9 +251,6 @@ const mutations = {
   },
   updateSpeakWork (state, flag) {
     state.speakwork = flag
-  },
-  setFormScoresNull (state) {
-    state.formScores = {}
   }
 }
 

@@ -97,7 +97,7 @@ export default {
   methods: {
     ...mapMutations({
       updateLocked: 'learn/updateLocked',
-      updateFormScore: 'learn/updateFormScore',
+      updateFormScore: 'course/updateFormScore',
       updateSwitchState: 'learn/updateSwitchState'
     }),
     init () {

@@ -148,7 +148,7 @@ export default {
     ...mapMutations({
       updateRecordUrl: 'learn/updateRecordUrl',
       updateLocked: 'learn/updateLocked',
-      updateFormScore: 'learn/updateFormScore'
+      updateFormScore: 'course/updateFormScore'
     }),
     next () {
       console.log('next')

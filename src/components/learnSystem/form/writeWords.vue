@@ -103,7 +103,7 @@ export default {
   methods: {
     ...mapMutations({
       updateLocked: 'learn/updateLocked',
-      updateFormScore: 'learn/updateFormScore'
+      updateFormScore: 'course/updateFormScore'
     }),
     init () {
       var _this = this

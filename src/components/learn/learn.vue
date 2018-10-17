@@ -95,15 +95,16 @@ export default {
       that.updateCurCourseCode(courseCode)
       await that.getLearnInfo(courseCode)
       await that.getUnlockChapter(courseCode).then((res) => {
-        this.updateUnlockCourseList(res)
+        that.updateUnlockCourseList(res)
       })
       await that.getCourseContent(that.contentUrl)
 
       await that.getChapterContent()
       await that.getRecord(that.currentChapterCode + '-A0')
       await that.getProgress(that.currentChapterCode)
-      await this.getCourseTestRanking(that.currentChapterCode)
-      await this.homeworkContent(that.currentChapterCode + '-A8')
+      await that.getCourseTestRanking(that.currentChapterCode)
+      await that.homeworkContent(that.currentChapterCode + '-A8')
+      that.hideLoading()
     },
     coverHide () {
       this.updateCoverState(false)
