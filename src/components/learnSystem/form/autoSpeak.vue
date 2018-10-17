@@ -82,7 +82,7 @@ export default {
   methods: {
     ...mapMutations({
       updateLocked: 'learn/updateLocked',
-      updateFormScore: 'learn/updateFormScore'
+      updateFormScore: 'course/updateFormScore'
     }),
     // 下一步操作
     start () {

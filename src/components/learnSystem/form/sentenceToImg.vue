@@ -169,7 +169,7 @@ export default {
   methods: {
     ...mapMutations({
       updateLocked: 'learn/updateLocked',
-      updateFormScore: 'learn/updateFormScore'
+      updateFormScore: 'course/updateFormScore'
     }),
     init () {
       // 初始选项view

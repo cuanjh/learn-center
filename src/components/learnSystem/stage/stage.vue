@@ -392,7 +392,7 @@ export default {
       unlockCourses: state => state.course.unlockCourses,
       coinCalculationRule: state => state.learn.coinCalculationRule,
       tips: state => state.learn.tips,
-      formScores: state => state.learn.formScores,
+      formScores: state => state.course.formScores,
       canRecord: state => state.learn.canRecord,
       userInfo: state => state.user.userInfo,
       contentUrl: state => state.course.contentUrl
@@ -437,7 +437,7 @@ export default {
   methods: {
     ...mapActions({
       getCoinCalculationRule: 'learn/getCoinCalculationRule',
-      postProgress: 'learn/postProgress',
+      postProgress: 'course/postProgress',
       postActivityRecord: 'learn/postActivityRecord',
       postCoin: 'learn/postCoin',
       postUnlockChapter: 'course/postUnlockChapter',
@@ -455,8 +455,8 @@ export default {
       updateCurCoreParts: 'course/updateCurCoreParts',
       updateCurAssets: 'learn/updateCurAssets',
       updatePause: 'learn/updatePause',
-      updateFormScore: 'learn/updateFormScore',
-      setFormScoresNull: 'learn/setFormScoresNull',
+      updateFormScore: 'course/updateFormScore',
+      setFormScoresNull: 'course/setFormScoresNull',
       updateProgressScore: 'course/updateProgressScore',
       updateUnlockCourseList: 'course/updateUnlockCourseList',
       updateCurCourseCode: 'course/updateCurCourseCode',
@@ -700,15 +700,17 @@ export default {
         // statistics.finish_activity(code)
         // //</courseEnd>
         // return
-        var arr = _.values(_this.formScores)
-        var correctArr = arr.filter((item) => {
-          return item === 1
-        })
 
         let cr, ccr
         if (_this.id.indexOf('A0') > -1) {
+          // 截取数组当前核心部分
+          let arr = _.values(_this.formScores)
+          let formsRecord = arr.slice(_this.curCorePart.start_form - 1, _this.curCorePart.end_form)
+          let correctArr = formsRecord.filter((item) => {
+            return item === 1
+          })
           cr = (correctArr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
-          ccr = (arr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
+          ccr = (formsRecord.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
         } else {
           let curChapterContent = {}
           if (Object.keys(_this.curChapterContent).length === 0) {
@@ -726,8 +728,17 @@ export default {
               })
             }
           })
-          cr = (correctArr.length / formsLength).toFixed(2)
-          ccr = (arr.length / formsLength).toFixed(2)
+          let arr1 = []
+          _.forIn(_this.formScores, (value, key) => {
+            if (key.indexOf('-' + _this.id + '-') > -1) {
+              arr1.push(value)
+            }
+          })
+          let correctArr1 = arr1.filter((item) => {
+            return item === 1
+          })
+          cr = (correctArr1.length / formsLength).toFixed(2)
+          ccr = (arr1.length / formsLength).toFixed(2)
         }
 
         if (_this.id.indexOf('A05') > -1) {

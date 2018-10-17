@@ -47,6 +47,7 @@ const state = {
   progress: {},
   recordForm: {},
   levelActivity: 0,
+  formScores: {},
   core: false,
   homework: false,
   improvement: false,
@@ -96,6 +97,9 @@ const actions = {
   },
   getRecord ({ commit }, currentChapterCode) {
     return httpLogin(config.getRecord, { activity_code: currentChapterCode })
+  },
+  postProgress ({ commit, state }) {
+    return httpLogin(config.postProgress, { forms: JSON.stringify(state.formScores) })
   },
   getProgress ({ commit }, currentChapterCode) {
     return httpLogin(config.getProgress, { chapter_code: currentChapterCode, state: '' }).then((res) => {
@@ -388,15 +392,22 @@ const mutations = {
       }
     })
 
+    let currentChapterCode = state.currentChapterCode
+    if (!currentChapterCode) {
+      currentChapterCode = localStorage.getItem('currentChapterCode')
+    }
     var _pro = {}
+    var _formScores = {}
     _.each(record, function (form, key) {
       var keyArray = key.split('-')
       var activity = keyArray[0]
       var formID = keyArray.slice(1, 3).join('-')
-      var arr = state.currentChapterCode.split('-')
+      var arr = currentChapterCode.split('-')
       _.set(_pro, [arr[2], arr[3], arr[4], activity, formID], form)
+      _.set(_formScores, [currentChapterCode + '-' + key], form)
     })
     state.recordForm = _pro
+    state.formScores = _formScores
 
     let newGroup = {}
     if (id.indexOf('A0') > -1) {
@@ -423,6 +434,24 @@ const mutations = {
     }))
     state.curSlide = index === -1 ? 0 : index
     state.progress = progressBar
+  },
+  updateFormScore (state, preload) {
+    // 老师进入数据不再更新
+    // if (isTeacher) { return }
+    var id = preload.id
+    if (!id) {
+      return
+    }
+    let score = preload.score
+    var idArray = id.match(/(Level\d)-(Unit\d)-(Chapter\d)-(A\d)-(\d+-\d+)/)
+    idArray = idArray.slice(1)
+    state.formScores[id] = score
+    // console.log(id, score)
+    // 设置本地进度
+    _.set(state.recordForm, idArray, score)
+  },
+  setFormScoresNull (state) {
+    state.formScores = {}
   },
   updateChapterContent (state, data) {
     state.curChapterContent = data
