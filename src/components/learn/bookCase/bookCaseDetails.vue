@@ -22,7 +22,7 @@
         <div class="details-content">
           <div class="container">
             <div class="details-img">
-              <img :src="(courseInfo.flag ? courseInfo.flag : '/static/images/bookCase/img_default_maige.png') | urlFix('imageView2/0/w/200/h/200/format/jpg')" :alt="courseInfo.name + '图片'">
+              <img :src="(courseInfo.cover ? courseInfo.cover : '/static/images/bookCase/img_default_maige.png') | urlFix('imageView2/0/format/jpg')" :alt="courseInfo.name + '图片'">
             </div>
             <div class="details-resource">
               <p class="details-title">麦格</p>
