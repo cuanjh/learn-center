@@ -106,16 +106,16 @@ export default {
     this.$on('init', (recordCourseList, recordCourse) => {
       console.log('recordList ===>' + recordCourseList)
       console.log('recordList ===>' + recordCourse)
-      let own = recordCourse.own
+      // let own = recordCourse.own
       let courseId = recordCourse.course_id
-      let userId = ''
-      if (own) {
-        userId = Cookie.getCookie('user_id')
-        _this.myRecord = recordCourseList.filter((item) => {
-          return item.user_id === userId
-        })
-        courseId = this.myRecord[0].course_id
-      }
+      let userId = Cookie.getCookie('user_id')
+      // if (own) {
+      //   userId = Cookie.getCookie('user_id')
+      //   _this.myRecord = recordCourseList.filter((item) => {
+      //     return item.user_id === userId
+      //   })
+      //   courseId = this.myRecord[0].course_id
+      // }
 
       _this.nickname = recordCourse.nickname
       _this.photo = recordCourse.photo
