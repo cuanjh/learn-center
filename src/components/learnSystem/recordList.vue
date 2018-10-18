@@ -104,6 +104,8 @@ export default {
   created () {
     var _this = this
     this.$on('init', (recordCourseList, recordCourse) => {
+      console.log('recordList ===>' + recordCourseList)
+      console.log('recordList ===>' + recordCourse)
       let own = recordCourse.own
       let courseId = recordCourse.course_id
       let userId = ''
