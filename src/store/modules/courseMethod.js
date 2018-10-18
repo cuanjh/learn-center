@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Cookie from '../../tool/cookie'
 
 // 解锁课程的level实现方式
 function unlockArr (unLockChapters) {
@@ -122,6 +123,15 @@ export var getCourseStructure = (themes, unLockChapters) => {
             obj['A4'] = true
             obj['A5'] = true
             obj['A6'] = true
+          }
+          let isVip = Cookie.getCookie('isVip')
+          if (isVip !== 1) {
+            obj['A1'] = false
+            obj['A2'] = false
+            obj['A3'] = false
+            obj['A4'] = false
+            obj['A5'] = false
+            obj['A6'] = false
           }
           chapter.progressTest = progressAgain(obj)
           chapter.progress = progressAgain(obj)

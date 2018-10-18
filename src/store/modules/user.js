@@ -179,6 +179,7 @@ const mutations = {
       state.userInfo['is_anonymous'] = true
     }
     localStorage.setItem('userInfo', JSON.stringify(data))
+    Cookie.setCookieAuto('isVip', data.member_info.member_type)
   },
   updateIsLogin (state, isLogin) {
     state.isLogin = isLogin

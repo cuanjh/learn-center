@@ -324,9 +324,6 @@ export default {
           }
         }
 
-        if (this.isVip !== 1) {
-          obj['completedRate'] = ''
-        }
         obj['isActive'] = 0
         if (i === 1) {
           obj['isActive'] = 1
@@ -335,8 +332,11 @@ export default {
             obj['isActive'] = 1
           }
         }
-        if (!this.isVip) {
+        if (!this.isVip !== 1) {
           obj['isActive'] = 0
+          obj['completedRate'] = ''
+          obj['starNum'] = 0
+          obj['imgStyle'] = ''
         }
         retObj['A' + i] = obj
       }
