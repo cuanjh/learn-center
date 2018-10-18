@@ -333,6 +333,7 @@ export default {
           }
         }
         if (!this.isVip !== 1) {
+          obj['isCompleted'] = 0
           obj['isActive'] = 0
           obj['completedRate'] = ''
           obj['starNum'] = 0
