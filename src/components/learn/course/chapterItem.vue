@@ -160,7 +160,8 @@
       </transition>
     </div>
     <div class="nolock-test-check" v-show="nolockTestCheckShow">
-      <p class="animated flipInX" v-show="nolockTestCheckShow">学习需要循序渐进, <br>请先完成前面课程的学习哦！
+      <p class="animated flipInX" v-show="nolockTestCheckShow">
+        <span v-html="tips"></span>
         <i></i>
         <span class="goBackCore" @click="goBackLearn">继续学习</span>
       </p>
@@ -188,7 +189,8 @@ export default {
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
       nolockTestCheckShow: false,
       anonymousCheckShow: false,
-      isShow: false
+      isShow: false,
+      tips: ''
     }
   },
   components: {
@@ -415,12 +417,13 @@ export default {
         this.anonymousCheckShow = true
         return false
       }
-      if (this.buyChapters.indexOf(chapterCode) === -1 && this.isVip !== 1) {
-        this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
+      if (this.unlockCourses.indexOf(chapterCode) === -1) {
+        this.tips = '完成上一课“核心课程”, <br>才能开启本课程！'
+        this.nolockTestCheckShow = true
         return false
       }
-      if (this.unlockCourses.indexOf(chapterCode) === -1) {
-        this.nolockTestCheckShow = true
+      if (this.buyChapters.indexOf(chapterCode) === -1 && this.isVip !== 1) {
+        this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
         return false
       }
       this.isShow = false
@@ -450,11 +453,13 @@ export default {
       if (isActive) {
         this.$router.push({ name: 'stage', params: {id: id} })
       } else {
+        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         this.nolockTestCheckShow = true
       }
     },
     startTest (isCoreCompleted) {
       if (!isCoreCompleted) {
+        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         this.nolockTestCheckShow = true
       } else {
         this.$router.push({ path: '/learn/pk' })
@@ -462,6 +467,7 @@ export default {
     },
     startHomework (isCoreCompleted) {
       if (!isCoreCompleted) {
+        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         this.nolockTestCheckShow = true
       } else {
         this.$router.push({ path: '/app/homework' })
@@ -474,6 +480,7 @@ export default {
         if (isActive) {
           this.$router.push({ name: 'stage', params: {id: id} })
         } else {
+          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
           this.nolockTestCheckShow = true
         }
       }

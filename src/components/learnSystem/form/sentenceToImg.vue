@@ -96,14 +96,12 @@ export default {
       console.log('start')
       var _this = this
       var num = _this.data.length
-      if (num > 3) {
-        _this.$set(this, 'pos', _.fill(Array(9), _.fill(Array(2), '25%')))
-        setTimeout(() => {
-          _this.$set(this, 'pos', commonFn.getPos(num))
-        }, 10)
-      } else {
-        _this.$set(this, 'pos', commonFn.getPos(num))
-      }
+      _this.pos = _.fill(Array(9), _.fill(Array(2), '25%'))
+
+      setTimeout(() => {
+        _this.pos = commonFn.getPos(num)
+      }, 10)
+
       this.init()
       this.next(true)
 
@@ -154,12 +152,6 @@ export default {
       this.switchGroupPhoneticize()
     })
   },
-  mounted () {
-    if (this.data.length) {
-      this.$set(this, 'pos', commonFn.getPos(this.data.length))
-    }
-    // console.log(this.data)
-  },
   mixins: [
     minx.shake,
     minx.switchGroupPhoneticize,
@@ -176,7 +168,6 @@ export default {
       var _this = this
       var id = _.uniqueId('sentence-')
       $('.text-head').hide()
-      $('.sentence-box').empty()
       $('.sentence-box').append(
         `<div id='s-${id}'></div>`
       )

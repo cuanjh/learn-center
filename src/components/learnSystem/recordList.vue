@@ -104,8 +104,7 @@ export default {
   created () {
     var _this = this
     this.$on('init', (recordCourseList, recordCourse) => {
-      console.log('recordList ===>' + recordCourseList)
-      console.log('recordList ===>' + recordCourse)
+      this.resetData()
       // let own = recordCourse.own
       let courseId = recordCourse.course_id
       let userId = Cookie.getCookie('user_id')
@@ -160,6 +159,7 @@ export default {
     hide () {
       this.$emit('updateIsShow', false)
     },
+    // 上一个
     pre () {
       this.loading = false
       if (this.curNum > 0) {
@@ -168,6 +168,7 @@ export default {
         this.play()
       }
     },
+    // 下一个
     next () {
       this.loading = false
       if (this.curNum < this.myRecordList.length - 1) {
@@ -176,11 +177,11 @@ export default {
         this.play()
       }
     },
+    // 播放音频
     play () {
       let audio = document.getElementById('record-sound')
       audio.loop = false
       this.loading = true
-      audio.play()
       audio.onloadedmetadata = () => {
         audio.play()
       }
@@ -204,6 +205,20 @@ export default {
         _this.curNum = 0
         _this.play()
       })
+    },
+    // 初始化重置数据
+    resetData () {
+      this.activityCode = ''
+      this.nickname = ''
+      this.photo = ''
+      this.praiseCount = 0
+      this.myRecord = {}
+      this.myRecordList = []
+      this.curMyRecord = {}
+      this.curNum = 0
+      this.otherRecordList = []
+      this.isShowMyRecord = true
+      this.loading = false
     }
   }
 }

@@ -105,7 +105,6 @@ export default {
       var _this = this
       var id = _.uniqueId('sentence-')
       $('.text-head').hide()
-      $('.sentence-box').empty()
       $('.sentence-box').append(
         `<div id='s-${id}'></div>`
       )
