@@ -263,9 +263,7 @@ export default {
 
           coreNum++
         }
-        if (this.isVip !== 1) {
-          obj['completedRate'] = 0
-        }
+
         obj['isActive'] = 0
         if (element.part_num === 1) {
           obj['isActive'] = 1
@@ -324,6 +322,10 @@ export default {
             obj['starNum'] = this.starNum(correctRate)
             obj['imgStyle'] = ''
           }
+        }
+
+        if (this.isVip !== 1) {
+          obj['completedRate'] = 0
         }
         obj['isActive'] = 0
         if (i === 1) {
