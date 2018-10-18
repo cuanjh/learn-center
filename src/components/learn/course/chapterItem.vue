@@ -325,7 +325,7 @@ export default {
         }
 
         if (this.isVip !== 1) {
-          obj['completedRate'] = 0
+          obj['completedRate'] = ''
         }
         obj['isActive'] = 0
         if (i === 1) {
