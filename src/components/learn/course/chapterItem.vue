@@ -427,12 +427,11 @@ export default {
         return false
       }
       this.isShow = false
-      console.log(chapterCode)
+
+      let top = $('#' + chapterCode).offset().top - 90
+      $('body,html').animate({ scrollTop: top }, 10)
+
       this.$emit('loadChapterInfo', chapterCode)
-      setTimeout(() => {
-        let top = -$('body,html').scrollTop() + $('#' + chapterCode)[0].offsetTop
-        $('body,html').animate({ scrollTop: top - 100 }, 200)
-      }, 200)
     },
     starNum (correctRate) {
       let stars = 0

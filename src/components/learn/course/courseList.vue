@@ -24,6 +24,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import $ from 'jquery'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LeftSide from './leftSide.vue'
 import LevelTabs from './levelTabs.vue'
@@ -100,6 +101,9 @@ export default {
         await this.homeworkContent(this.currentChapterCode + '-A8')
 
         this.hideLoading()
+
+        let top = $('#' + chapterCode).offset().top - 90
+        $('body,html').animate({ scrollTop: top }, 200)
       }
     },
     async initData (curCourseCode) {
