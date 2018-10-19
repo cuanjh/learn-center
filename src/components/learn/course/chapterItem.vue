@@ -426,13 +426,13 @@ export default {
       }
 
       let top = $('#' + chapterCode).offset().top - 90
-      $('body,html').animate({ scrollTop: top }, 10)
+      $('body,html').animate({ scrollTop: top }, 500, 'linear')
       // $('body,html').scrollTop(top)
 
-      this.$emit('loadChapterInfo', chapterCode)
       setTimeout(() => {
         this.isShow = false
-      }, 200)
+        this.$emit('loadChapterInfo', chapterCode)
+      }, 500)
     },
     starNum (correctRate) {
       let stars = 0

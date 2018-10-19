@@ -103,7 +103,7 @@ export default {
         this.hideLoading()
 
         let top = $('#' + chapterCode).offset().top - 90
-        $('body,html').animate({ scrollTop: top }, 200)
+        $('body,html').animate({ scrollTop: top }, 100, 'linear')
         // $('body,html').scrollTop(top)
       }
     },
