@@ -19,14 +19,14 @@
         />
       </transition>
     </div>
-    <pulse-loader :loading="loading" class="loading"/>
+    <loading v-show="loading"></loading>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import $ from 'jquery'
-import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import Loading from '../../common/loading/loading.vue'
 import LeftSide from './leftSide.vue'
 import LevelTabs from './levelTabs.vue'
 import ChapterItem from './chapterItem.vue'
@@ -42,7 +42,7 @@ export default {
     LeftSide,
     LevelTabs,
     ChapterItem,
-    PulseLoader
+    Loading
   },
   mounted () {
     this.$parent.$emit('initLayout')

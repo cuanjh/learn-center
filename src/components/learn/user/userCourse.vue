@@ -25,13 +25,11 @@
         </dl>
       </div>
   </div>
-  <!-- <pulse-loader  :loading="showLoading" class='user-course-view'></pulse-loader> -->
   </section>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
 export default {
   data () {
@@ -41,9 +39,6 @@ export default {
       showIdx: '',
       judgeLoading: false
     }
-  },
-  components: {
-    PulseLoader
   },
   created () {
     this.$on('userItemDisappear', (e) => {
