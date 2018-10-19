@@ -140,7 +140,11 @@ export default {
         _this.coins = _this.finishedInfo.coins
         _this.imgCover = _this.finishedInfo.record_course.cover
         _this.recordPhoto = _this.finishedInfo.record_course.photo
-        _this.nickname = _this.finishedInfo.record_course.nickname
+        let nickname = _this.finishedInfo.record_course.nickname
+        if (!nickname) {
+          nickname = '用户' + _this.finishedInfo.record_course.talkmate_id
+        }
+        _this.nickname = nickname
         _this.recordCount = _this.finishedInfo.record_course.record_count
         _this.own = _this.finishedInfo.record_course.own
         _this.recordCourse = _this.finishedInfo.record_course
