@@ -430,6 +430,7 @@ export default {
 
       let top = $('#' + chapterCode).offset().top - 90
       $('body,html').animate({ scrollTop: top }, 10)
+      // $('body,html').scrollTop(top)
 
       this.$emit('loadChapterInfo', chapterCode)
     },
@@ -662,13 +663,10 @@ export default {
   }
 
   .fade-enter-active, .fade-leave-active {
-    transition: all .2s linear;
-    height: 950px;
-    overflow: hidden;
+    transition: all .3s linear;
   }
 
   .fade-enter, .fade-leave-to {
-    height: 0 !important;
     opacity: 0;
   }
 

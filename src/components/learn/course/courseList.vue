@@ -104,6 +104,7 @@ export default {
 
         let top = $('#' + chapterCode).offset().top - 90
         $('body,html').animate({ scrollTop: top }, 200)
+        // $('body,html').scrollTop(top)
       }
     },
     async initData (curCourseCode) {
