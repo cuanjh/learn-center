@@ -1,6 +1,9 @@
 <template>
   <div>
     <router-link class="banner" :to="{path: '/app/world-map'}">
+      <p>
+        <span>共收录</span>{{langMapNum}}<span>种语言</span>
+      </p>
       <input type="button" value="查看全部">
     </router-link>
     <div class="book-case">
@@ -63,7 +66,8 @@ export default {
       showDetailsChina: null,
       hotCourse: [], // 热门课程
       chinaLangMap: [], // 中国方言
-      langMapBanner: [] // 语言地图banner
+      langMapBanner: [], // 语言地图banner
+      langMapNum: 0 // 收录的语言种类数量
     }
   },
   mounted () {
@@ -73,6 +77,8 @@ export default {
       this.hotCourse = res.data.worldMapCourse.courses
       this.chinaLangMap = res.data.chinaMapCourse.courses
       this.langMapBanner = res.data.langMapBanner
+      this.langMapNum = res.data.langMapNum
+      localStorage.setItem('langMapNum', this.langMapNum)
     })
   },
   computed: {
@@ -127,11 +133,23 @@ export default {
     background-size: cover;
   }
 
+  .banner > p {
+    position: relative;
+    left: 555px;
+    top: 160px;
+    font-size: 28px;
+    color: #b9ec10;
+  }
+
+  .banner > p > span {
+    color: #6e7a95;
+  }
+
   .banner > input {
     position: relative;
     border: 1px solid #6E7A95;
     border-radius: 100px;
-    left: 550px;
+    left: 555px;
     top: 220px;
     font-size: 15px;
     color: #FFFFFF;

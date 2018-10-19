@@ -22,7 +22,7 @@
         <div class="content">
           <div class="text" v-show="'country' == tabCountry">
             <p class="title">世界语言地图</p>
-            <p class="details">查找，阅读和研究世界上已知的7,097种生活语言。</p>
+            <p class="details">查找，阅读和研究世界上已知的{{toThousands(langMapNum)}}种生活语言。</p>
             <p class="indicators">
               <span class="icon"></span>
               <span>在左侧地图选择大洲</span>
@@ -34,11 +34,11 @@
               <li class="title">美洲</li>
               <li class="number">
                 <span>所有人口</span>
-                <span>996212940</span>
+                <span>{{toThousands(996212940)}}</span>
               </li>
               <li class="language">
                 <span>拥有语言</span>
-                <span>1060</span>
+                <span>{{toThousands(1060)}}</span>
               </li>
               <li class="main-countries">
                   <span>主要国家</span>
@@ -58,7 +58,7 @@
               <li class="title">欧洲</li>
               <li class="number">
                 <span>所有人口</span>
-                <span>741002200</span>
+                <span>{{toThousands(741002200)}}</span>
               </li>
               <li class="language">
                 <span>拥有语言</span>
@@ -82,11 +82,11 @@
               <li class="title">亚洲</li>
               <li class="number">
                 <span>所有人口</span>
-                <span>437654678</span>
+                <span>{{toThousands(437654678)}}</span>
               </li>
               <li class="language">
                 <span>拥有语言</span>
-                <span>2300</span>
+                <span>{{toThousands(2300)}}</span>
               </li>
               <li class="main-countries">
                   <span>主要国家</span>
@@ -106,11 +106,11 @@
               <li class="title">非洲</li>
               <li class="number">
                 <span>所有人口</span>
-                <span>1195667795</span>
+                <span>{{toThousands(1195667795)}}</span>
               </li>
               <li class="language">
                 <span>拥有语言</span>
-                <span>2143</span>
+                <span>{{toThousands(2143)}}</span>
               </li>
               <li class="main-countries">
                   <span>主要国家</span>
@@ -130,11 +130,11 @@
               <li class="title">大洋洲</li>
               <li class="number">
                 <span>所有人口</span>
-                <span>39803720</span>
+                <span>{{toThousands(39803720)}}</span>
               </li>
               <li class="language">
                 <span>拥有语言</span>
-                <span>1306</span>
+                <span>{{toThousands(1306)}}</span>
               </li>
               <li class="main-countries">
                   <span>主要国家</span>
@@ -207,10 +207,12 @@ export default {
       isShow: false,
       allAreasInfos: [], // 全部
       arr: [],
-      defaultImg: 'this.src="/static/images/bookCase/default_course.png"'
+      defaultImg: 'this.src="/static/images/bookCase/default_course.png"',
+      langMapNum: 0
     }
   },
   mounted () {
+    this.langMapNum = localStorage.getItem('langMapNum')
     for (var i = 65; i < 91; i++) {
       this.A_Z += String.fromCharCode(i) + ''
     }
@@ -350,6 +352,10 @@ export default {
           }
         }
       })
+    },
+    // 数字每三位添加逗号
+    toThousands (num) {
+      return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
     }
   }
 }
