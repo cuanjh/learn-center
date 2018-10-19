@@ -66,7 +66,7 @@
                   <span></span>
                 </i>
               </div>
-              <span v-text="item.nickname"></span>
+              <span v-text="item.nickname ? item.nickname : ('用户' + item.talkmate_id) "></span>
               <p>
                 <span class="record-count">{{ item.record_count + '条录音' }}</span>
                 <span class="praise-count">{{ item.praise_count }}</span>
@@ -115,8 +115,11 @@ export default {
       //   })
       //   courseId = this.myRecord[0].course_id
       // }
-
-      _this.nickname = recordCourse.nickname
+      let nickname = recordCourse.nickname
+      if (!nickname) {
+        nickname = '用户' + recordCourse.talkmate_id
+      }
+      _this.nickname = nickname
       _this.photo = recordCourse.photo
       _this.getRecordCourse(courseId).then((res) => {
         _this.activityCode = res.course.activity_code
