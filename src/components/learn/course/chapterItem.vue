@@ -1,35 +1,33 @@
 <template>
   <div>
     <div v-for="(item, index) in curLevelChapters" :key="index" :id="item.code">
-      <transition name="fade" mode="out-in">
-        <div class="current-learn-course-info" v-show="isShow ? isShow : item.code !== currentChapterCode"
-            :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
-            @click="jumpToCourse(item.code)">
-          <div class="current-learn-course-flag">
-            <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'">
-            <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1"></div>
+      <div class="current-learn-course-info" v-show="isShow ? isShow : item.code !== currentChapterCode"
+          :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
+          @click="jumpToCourse(item.code)">
+        <div class="current-learn-course-flag">
+          <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'">
+          <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1"></div>
+        </div>
+        <div class="current-learn-course-word-info">
+          <div class="current-learn-course-title">
+            <span>课程</span>
+            <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
           </div>
-          <div class="current-learn-course-word-info">
-            <div class="current-learn-course-title">
-              <span>课程</span>
-              <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
-            </div>
-            <div class="current-learn-course-describe">{{ item['info']['zh-cn']['describe'] }}</div>
-            <div class="current-learn-course-gold"  :class="{'courseIsLock': (isVip === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
-              <i></i>
-              150金币
-            </div>
-          </div>
-          <div class="progress-area">
-            <div class="progress-bg">
-              <div class="progress" :style="{width: item.progress +'%'}"></div>
-            </div>
-            <div class="progress-val" :style="{color: item.progress ? '#0581d1' : '#cbcbcb'}">
-              {{ (item.progress ? item.progress : 0)+'%' }}
-            </div>
+          <div class="current-learn-course-describe">{{ item['info']['zh-cn']['describe'] }}</div>
+          <div class="current-learn-course-gold"  :class="{'courseIsLock': (isVip === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
+            <i></i>
+            150金币
           </div>
         </div>
-      </transition>
+        <div class="progress-area">
+          <div class="progress-bg">
+            <div class="progress" :style="{width: item.progress +'%'}"></div>
+          </div>
+          <div class="progress-val" :style="{color: item.progress ? '#0581d1' : '#cbcbcb'}">
+            {{ (item.progress ? item.progress : 0)+'%' }}
+          </div>
+        </div>
+      </div>
       <transition name="fade" mode="out-in">
         <div class="course-core-test-check" v-show="item.code === currentChapterCode && unlockCourses.indexOf(item.code) > -1 && (buyChapters.indexOf(item.code) !== -1 || isVip ===1) && !isShow">
           <ul>
@@ -426,13 +424,15 @@ export default {
         this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
         return false
       }
-      this.isShow = false
 
       let top = $('#' + chapterCode).offset().top - 90
       $('body,html').animate({ scrollTop: top }, 10)
       // $('body,html').scrollTop(top)
 
       this.$emit('loadChapterInfo', chapterCode)
+      setTimeout(() => {
+        this.isShow = false
+      }, 200)
     },
     starNum (correctRate) {
       let stars = 0
@@ -675,6 +675,7 @@ export default {
     margin-top: 15px;
     padding:15px;
     border-radius:4px;
+    /* transform: translateY(-140px); */
   }
 
   .course-brief{
