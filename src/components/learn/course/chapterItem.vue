@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-for="(item, index) in curLevelChapters" :key="index" :id="item.code">
+      <transition name="fade" mode="out-in">
       <div class="current-learn-course-info" v-show="isShow ? isShow : item.code !== currentChapterCode"
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
           @click="jumpToCourse(item.code)">
@@ -28,6 +29,7 @@
           </div>
         </div>
       </div>
+      </transition>
       <transition name="fade" mode="out-in">
         <div class="course-core-test-check" v-show="item.code === currentChapterCode && unlockCourses.indexOf(item.code) > -1 && (buyChapters.indexOf(item.code) !== -1 || isVip ===1) && !isShow">
           <ul>
@@ -196,6 +198,9 @@ export default {
   },
   created () {
     this.$on('draw', this.drawProgress)
+    this.$on('changeIsShow', (flag) => {
+      this.isShow = flag
+    })
   },
   computed: {
     ...mapState({
@@ -426,13 +431,12 @@ export default {
       }
 
       let top = $('#' + chapterCode).offset().top - 90
-      $('body,html').animate({ scrollTop: top }, 500, 'linear')
+      $('body,html').animate({ scrollTop: top }, 300, 'linear')
       // $('body,html').scrollTop(top)
 
       setTimeout(() => {
-        this.isShow = false
         this.$emit('loadChapterInfo', chapterCode)
-      }, 500)
+      }, 300)
     },
     starNum (correctRate) {
       let stars = 0

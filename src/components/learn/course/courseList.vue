@@ -15,6 +15,7 @@
           :currentCourseCode="currentCourseCode"
           @loadChapterInfo="loadChapterInfo"
           v-show="isShow"
+          ref="chapterItem"
         />
       </transition>
     </div>
@@ -101,7 +102,7 @@ export default {
         await this.homeworkContent(this.currentChapterCode + '-A8')
 
         this.hideLoading()
-
+        this.$refs['chapterItem'].$emit('changeIsShow', false)
         let top = $('#' + chapterCode).offset().top - 90
         $('body,html').animate({ scrollTop: top }, 100, 'linear')
         // $('body,html').scrollTop(top)
