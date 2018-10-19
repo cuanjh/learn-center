@@ -83,6 +83,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import Cookie from '../../tool/cookie'
+import $ from 'jquery'
 
 export default {
   props: ['isShow'],
@@ -207,6 +208,7 @@ export default {
         _this.curMyRecord = _this.myRecordList[0]
         _this.curNum = 0
         _this.play()
+        $('.learn-wrap').animate({ scrollTop: 0 }, 10)
       })
     },
     // 初始化重置数据
