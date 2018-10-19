@@ -70,6 +70,7 @@ export default {
         return false
       }
       this.loading = true
+      let flag = true
       await this.login({
         identity: this.userName,
         password: encrypt(this.userPwd)
@@ -97,19 +98,22 @@ export default {
         } else {
           this.loading = false
           this.errText = errCode[res.code]
+          flag = false
         }
       })
-      let lastCourseCode = localStorage.getItem('lastCourseCode')
-      if (!lastCourseCode) {
-        await this.getUserInfo()
-        this.updateCurCourseCode(this.userInfo.current_course_code)
-        localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
-        this.updateIsLogin('1')
-        this.$router.push({path: '/app/course-list'})
-      } else {
-        this.updateCurCourseCode(lastCourseCode)
-        this.updateIsLogin('1')
-        this.$router.push({path: '/app/course-list'})
+      if (flag) {
+        let lastCourseCode = localStorage.getItem('lastCourseCode')
+        if (!lastCourseCode) {
+          await this.getUserInfo()
+          this.updateCurCourseCode(this.userInfo.current_course_code)
+          localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
+          this.updateIsLogin('1')
+          this.$router.push({path: '/app/course-list'})
+        } else {
+          this.updateCurCourseCode(lastCourseCode)
+          this.updateIsLogin('1')
+          this.$router.push({path: '/app/course-list'})
+        }
       }
     }
   }

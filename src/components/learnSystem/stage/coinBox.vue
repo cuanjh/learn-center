@@ -15,6 +15,9 @@ export default {
   watch: {
     total: {
       handler (curVal, oldVal) {
+        if (oldVal === 0) {
+          return
+        }
         console.log('curVal:' + curVal)
         console.log('oldVal:' + oldVal)
         if (curVal > oldVal) {

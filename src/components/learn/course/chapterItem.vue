@@ -160,7 +160,8 @@
       </transition>
     </div>
     <div class="nolock-test-check" v-show="nolockTestCheckShow">
-      <p class="animated flipInX" v-show="nolockTestCheckShow">学习需要循序渐进, <br>请先完成前面课程的学习哦！
+      <p class="animated flipInX" v-show="nolockTestCheckShow">
+        <span v-html="tips"></span>
         <i></i>
         <span class="goBackCore" @click="goBackLearn">继续学习</span>
       </p>
@@ -188,7 +189,8 @@ export default {
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
       nolockTestCheckShow: false,
       anonymousCheckShow: false,
-      isShow: false
+      isShow: false,
+      tips: ''
     }
   },
   components: {
@@ -263,6 +265,7 @@ export default {
 
           coreNum++
         }
+
         obj['isActive'] = 0
         if (element.part_num === 1) {
           obj['isActive'] = 1
@@ -322,6 +325,7 @@ export default {
             obj['imgStyle'] = ''
           }
         }
+
         obj['isActive'] = 0
         if (i === 1) {
           obj['isActive'] = 1
@@ -330,8 +334,12 @@ export default {
             obj['isActive'] = 1
           }
         }
-        if (!this.isVip) {
+        if (!this.isVip !== 1) {
+          obj['isCompleted'] = 0
           obj['isActive'] = 0
+          obj['completedRate'] = ''
+          obj['starNum'] = 0
+          obj['imgStyle'] = ''
         }
         retObj['A' + i] = obj
       }
@@ -409,21 +417,21 @@ export default {
         this.anonymousCheckShow = true
         return false
       }
+      if (this.unlockCourses.indexOf(chapterCode) === -1) {
+        this.tips = '完成上一课“核心课程”, <br>才能开启本课程！'
+        this.nolockTestCheckShow = true
+        return false
+      }
       if (this.buyChapters.indexOf(chapterCode) === -1 && this.isVip !== 1) {
         this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
         return false
       }
-      if (this.unlockCourses.indexOf(chapterCode) === -1) {
-        this.nolockTestCheckShow = true
-        return false
-      }
       this.isShow = false
-      console.log(chapterCode)
+
+      let top = $('#' + chapterCode).offset().top - 90
+      $('body,html').animate({ scrollTop: top }, 10)
+
       this.$emit('loadChapterInfo', chapterCode)
-      setTimeout(() => {
-        let top = -$('body,html').scrollTop() + $('#' + chapterCode)[0].offsetTop
-        $('body,html').animate({ scrollTop: top - 100 }, 200)
-      }, 200)
     },
     starNum (correctRate) {
       let stars = 0
@@ -444,11 +452,13 @@ export default {
       if (isActive) {
         this.$router.push({ name: 'stage', params: {id: id} })
       } else {
+        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         this.nolockTestCheckShow = true
       }
     },
     startTest (isCoreCompleted) {
       if (!isCoreCompleted) {
+        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         this.nolockTestCheckShow = true
       } else {
         this.$router.push({ path: '/learn/pk' })
@@ -456,6 +466,7 @@ export default {
     },
     startHomework (isCoreCompleted) {
       if (!isCoreCompleted) {
+        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         this.nolockTestCheckShow = true
       } else {
         this.$router.push({ path: '/app/homework' })
@@ -468,6 +479,7 @@ export default {
         if (isActive) {
           this.$router.push({ name: 'stage', params: {id: id} })
         } else {
+          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
           this.nolockTestCheckShow = true
         }
       }

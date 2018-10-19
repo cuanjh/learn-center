@@ -25,6 +25,7 @@ const state = {
   languageHandler: 'zh-CN',
   userInfo: {},
   record: {}, // 金币的交易记录
+  totalCoin: 0, // 用户总共金币数
   num: 0, // 收支详细默认的数据分页
   payShow: false, // 支付数据请求成功后显示
   pay: {
@@ -174,11 +175,13 @@ const actions = {
 const mutations = {
   updateUserInfo: function (state, data) {
     state.userInfo = data
+    state.totalCoin = data.coins
     let isAnonymous = Cookie.getCookie('is_anonymous')
     if (isAnonymous) {
       state.userInfo['is_anonymous'] = true
     }
     localStorage.setItem('userInfo', JSON.stringify(data))
+    Cookie.setCookieAuto('isVip', data.member_info.member_type)
   },
   updateIsLogin (state, isLogin) {
     state.isLogin = isLogin
@@ -264,6 +267,9 @@ const mutations = {
     state.userInfo['email'] = ''
     state.userInfo['is_anonymous'] = false
     Cookie.delCookieTalkmate('is_anonymous')
+  },
+  updateTotalCoin (state, coins) {
+    state.totalCoin = coins
   }
 }
 

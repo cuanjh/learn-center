@@ -147,7 +147,6 @@ export default {
       // 初始选项view
       var _this = this
       var id = _.uniqueId('sentence-')
-      $('.sentence-box').empty()
       $('.sentence-box').append(
         `<div id='s-${id}'></div>`
       )

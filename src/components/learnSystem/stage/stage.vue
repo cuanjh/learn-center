@@ -60,7 +60,7 @@ export default {
     return {
       cur: -1, // 当前的子组件
       isTeacher: 0,
-      totalCoin: 0, // 所有的金币数
+      // totalCoin: 0, // 所有的金币数
       coin: 0, // 获取的金币数
       continue_correct: 0, // 连对数
       max_continue_correct: 0, // 最高连击数
@@ -107,7 +107,8 @@ export default {
         coinCache.set(that.completePath, that.coin)
       } else {
         that.coin = _coinCache
-        that.totalCoin = parseInt(this.totalCoin) + _coinCache
+        let coins = parseInt(this.totalCoin) + _coinCache
+        that.updateTotalCoin(coins)
       }
 
       var resource = this.getResource(this.curSlide)
@@ -153,11 +154,13 @@ export default {
         if ((that.continue_correct >= rules.base)) {
           // 连续正确
           that.coin += coin
-          that.totalCoin += coin
+          let coins = that.totalCoin + coin
+          that.updateTotalCoin(coins)
         } else if (that.continue_wrong >= minNum) {
           // 连续错误
           that.coin -= baseCoin
-          that.totalCoin = Math.max((that.totalCoin - baseCoin), 0)
+          let coins = Math.max((that.totalCoin - baseCoin), 0)
+          that.updateTotalCoin(coins)
         }
       })
     })
@@ -313,9 +316,9 @@ export default {
 
     // 切换slide
     this.$on('switch-slide', (slide, normal) => {
+      $('.text-head').hide()
       this.score = 0
       // 广播组件销毁
-      $('.sentence-box').empty()
       this.component_destroy()
       this.isShow = false
       this.cur = -1
@@ -395,6 +398,7 @@ export default {
       formScores: state => state.course.formScores,
       canRecord: state => state.learn.canRecord,
       userInfo: state => state.user.userInfo,
+      totalCoin: state => state.user.totalCoin,
       contentUrl: state => state.course.contentUrl
     }),
     comLength () {
@@ -460,7 +464,8 @@ export default {
       updateProgressScore: 'course/updateProgressScore',
       updateUnlockCourseList: 'course/updateUnlockCourseList',
       updateCurCourseCode: 'course/updateCurCourseCode',
-      updateCurChapter: 'course/updateCurChapter'
+      updateCurChapter: 'course/updateCurChapter',
+      updateTotalCoin: 'user/updateTotalCoin'
     }),
     getTypeList (list) {
       console.log('typelist')
@@ -612,7 +617,7 @@ export default {
     async initData () {
       await this.getUserInfo()
       console.log(3333)
-      this.totalCoin = this.userInfo.coins
+      // this.totalCoin = this.userInfo.coins
       localStorage.setItem('userCoin', this.userInfo.coins)
       // var that = this
       // let _coinCache = coinCache.get(that.completePath)
@@ -790,7 +795,8 @@ export default {
           correctRate: cr,
           courseCompleteRate: ccr
         }
-        _this.postActivityRecord(payload).then(() => {
+        _this.postActivityRecord(payload).then((res) => {
+          console.log(res)
           var params = {
             chapter_code: _this.curChapterCode,
             core: (_this.core) ? 1 : 0,
