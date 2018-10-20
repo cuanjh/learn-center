@@ -253,6 +253,9 @@ export default {
           border-bottom: 4px solid #2A9FE4;
         }
       }
+      span:nth-child(2) {
+        padding-top: 1px;
+      }
     }
   }
   .country-contents {
