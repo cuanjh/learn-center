@@ -155,6 +155,7 @@ export default {
         let cbi = this.$store.state.course.courseBaseInfo
         _this.courseBaseInfo = (Object.keys(cbi).length === 0) ? JSON.parse(localStorage.getItem('courseBaseInfo')) : cbi
 
+        // _this.show = true
         let content = document.querySelector('.core-summary-box')
         this.window = dialog({
           width: '652px',

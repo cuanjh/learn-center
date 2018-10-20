@@ -211,7 +211,7 @@ export default {
   position: fixed;
   bottom: 0;
   // line-height: 50px;
-  text-align: center;
+  // text-align: center;
   width: 100%;
   left: 0;
   z-index: 1;
@@ -254,16 +254,12 @@ export default {
   }
   .progress-bar {
     width: 312px;
-    height: 500x;
-    line-height: 45px;
+    height: 50px;
+    line-height: 5px;
     display: inline-block;
     transition-duration: 300ms;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
+    margin-top: 10px;
+    text-align: center;
     b {
       flex-shrink: 0;
       display: inline-block;
