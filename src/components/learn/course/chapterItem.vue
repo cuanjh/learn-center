@@ -15,7 +15,7 @@
             <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
           </div>
           <div class="current-learn-course-describe">{{ item['info']['zh-cn']['describe'] }}</div>
-          <div class="current-learn-course-gold"  :class="{'courseIsLock': (isVip === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
+          <div class="current-learn-course-gold"  :class="{'courseIsLock': (parseInt(userInfo.member_info.member_type) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
             <i></i>
             150金币
           </div>
@@ -31,7 +31,7 @@
       </div>
       </transition>
       <transition name="fade" mode="out-in">
-        <div class="course-core-test-check" v-show="item.code === currentChapterCode && unlockCourses.indexOf(item.code) > -1 && (buyChapters.indexOf(item.code) !== -1 || isVip ===1) && !isShow">
+        <div class="course-core-test-check" v-show="item.code === currentChapterCode && unlockCourses.indexOf(item.code) > -1 && (buyChapters.indexOf(item.code) !== -1 || parseInt(userInfo.member_info.member_type) ===1) && !isShow">
           <ul>
             <li class="course-brief" @click="switchShow()">
               <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
@@ -215,17 +215,6 @@ export default {
       'chapterTestResult': state => state.course.chapterTestResult,
       'homeworkContent': state => state.course.homeworkContent
     }),
-    ui () {
-      let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
-      }
-      return ui
-    },
-    isVip () {
-      // 个人/是否是会员 0--不是会员 1---会员 2--会员过期
-      return this.ui.member_info.member_type
-    },
     coreData () {
       var that = this
       console.log(that.curLevelChapters)
@@ -337,7 +326,7 @@ export default {
             obj['isActive'] = 1
           }
         }
-        if (!this.isVip !== 1) {
+        if (parseInt(this.userInfo.member_info.member_type) !== 1) {
           obj['isCompleted'] = 0
           obj['isActive'] = 0
           obj['completedRate'] = ''
@@ -425,7 +414,7 @@ export default {
         this.nolockTestCheckShow = true
         return false
       }
-      if (this.buyChapters.indexOf(chapterCode) === -1 && this.isVip !== 1) {
+      if (this.buyChapters.indexOf(chapterCode) === -1 && parseInt(this.userInfo.member_info.member_type) !== 1) {
         this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
         return false
       }
@@ -478,7 +467,7 @@ export default {
       }
     },
     jumpVipPage (isActive, id) {
-      if (this.isVip !== 1) {
+      if (parseInt(this.userInfo.member_info.member_type) !== 1) {
         this.$router.push({ path: '/app/user/vip' })
       } else {
         if (isActive) {

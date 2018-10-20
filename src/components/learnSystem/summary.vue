@@ -70,7 +70,6 @@
 </template>
 
 <script>
-import dialog from '../../plugins/dialog'
 import { mapState, mapActions } from 'vuex'
 import RecordList from './recordList.vue'
 
@@ -155,18 +154,11 @@ export default {
         let cbi = this.$store.state.course.courseBaseInfo
         _this.courseBaseInfo = (Object.keys(cbi).length === 0) ? JSON.parse(localStorage.getItem('courseBaseInfo')) : cbi
 
-        // _this.show = true
-        let content = document.querySelector('.core-summary-box')
-        this.window = dialog({
-          width: '652px',
-          content: content
-        }).showModal()
+        _this.show = true
       })
     })
     this.$on('coreSummary-hide', () => {
-      if (Object.keys(this.window).length > 0) {
-        this.window.close()
-      }
+      this.show = false
     })
   },
   mounted () {
@@ -193,15 +185,15 @@ export default {
       getRecordCourseList: 'learn/getRecordCourseList'
     }),
     review () {
-      this.window.close()
+      this.show = false
       this.$parent.$emit('switch-slide', 0)
     },
     back () {
-      this.window.close()
+      this.show = false
       this.$router.push({ path: '/app/course-list' })
     },
     continueLearn () {
-      this.window.close()
+      this.show = false
       let currentRoute = this.$router.currentRoute
       let id = currentRoute.params.id
       let core = parseInt(id.replace('A0', ''))
@@ -233,8 +225,7 @@ export default {
 
 <style lang="less" scoped>
 .summary-container {
-  opacity: 0.7;
-  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, .3);
   position: fixed;
   left: 0px;
   top: 0px;
@@ -247,9 +238,17 @@ export default {
 .core-summary-box {
   width: 652px;
   background-color: #ffffff;
+  height: 450px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -326px;
+  margin-top: -225px;
+  border-radius: 4px;
   .core-summary-header {
     height: 160px;
     background-color: #2A9FE4;
+    border-radius: 4px 4px 0 0;
     .header-left {
       float: left;
       dl>dt {

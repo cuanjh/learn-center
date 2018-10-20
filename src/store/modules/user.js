@@ -174,6 +174,7 @@ const actions = {
 
 const mutations = {
   updateUserInfo: function (state, data) {
+    console.log(data)
     state.userInfo = data
     state.totalCoin = data.coins
     let isAnonymous = Cookie.getCookie('is_anonymous')
@@ -181,7 +182,7 @@ const mutations = {
       state.userInfo['is_anonymous'] = true
     }
     localStorage.setItem('userInfo', JSON.stringify(data))
-    Cookie.setCookieAuto('isVip', data.member_info.member_type)
+    Cookie.setCookie('isVip', data.member_info.member_type)
   },
   updateIsLogin (state, isLogin) {
     state.isLogin = isLogin

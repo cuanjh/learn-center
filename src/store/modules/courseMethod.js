@@ -125,7 +125,7 @@ export var getCourseStructure = (themes, unLockChapters) => {
             obj['A6'] = true
           }
           let isVip = Cookie.getCookie('isVip')
-          if (isVip !== 1) {
+          if (parseInt(isVip) !== 1) {
             obj['A1'] = false
             obj['A2'] = false
             obj['A3'] = false
