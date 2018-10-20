@@ -102,6 +102,7 @@ export default {
         await this.homeworkContent(this.currentChapterCode + '-A8')
 
         this.hideLoading()
+
         this.$refs['chapterItem'].$emit('changeIsShow', false)
         let top = $('#' + chapterCode).offset().top - 90
         $('body,html').animate({ scrollTop: top }, 100, 'linear')
@@ -129,7 +130,7 @@ export default {
       setTimeout(() => {
         this.updateCurLevel(level)
         this.isShow = true
-      }, 100)
+      }, 200)
     }
   }
 }
@@ -158,9 +159,11 @@ export default {
 }
 
 .fade-enter-active, .fade-leave-active {
+  transition: all .3s cubic-bezier(1.0, 1.5, 1.8, 1.0);
   transition: opacity .5s;
 }
 .fade-enter, .fade-leave-to {
+  transform: translateY(-10px);
   opacity: 0;
 }
 </style>

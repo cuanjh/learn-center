@@ -436,7 +436,7 @@ export default {
 
       setTimeout(() => {
         this.$emit('loadChapterInfo', chapterCode)
-      }, 300)
+      }, 800)
     },
     starNum (correctRate) {
       let stars = 0
@@ -667,10 +667,11 @@ export default {
   }
 
   .fade-enter-active, .fade-leave-active {
-    transition: all .3s linear;
+    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
 
   .fade-enter, .fade-leave-to {
+    transform: translateY(-10px);
     opacity: 0;
   }
 
