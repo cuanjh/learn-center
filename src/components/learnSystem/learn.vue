@@ -40,15 +40,13 @@ Vue.component('form-makesentence', makeSentence)
 Vue.component('form-fillgap', fillGap)
 
 export default {
-  beforeCreate () {
+  created () {
     let browser = this.getOSAndBrowser().browser
     let reg = new RegExp('\\d+', 'g')
     let version = browser.match(reg)[0]
     if (!((browser.indexOf('Firefox') > -1 && version >= 21) || (browser.indexOf('Chrome') > -1 && version >= 17) || (browser.indexOf('Opera') > -1 && version >= 18))) {
-      location.href = 'update.html'
+      this.$router.replace({ path: '/download' })
     }
-  },
-  created () {
     Bus.$on('initAnonymousData', () => {
       this.initAnonymousData()
     })

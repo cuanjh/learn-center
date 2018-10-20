@@ -26,7 +26,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import $ from 'jquery'
-import Loading from '../../common/loading/loading.vue'
+import Loading from '../../common/loading.vue'
 import LeftSide from './leftSide.vue'
 import LevelTabs from './levelTabs.vue'
 import ChapterItem from './chapterItem.vue'

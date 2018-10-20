@@ -35,6 +35,10 @@ const pk = r => require.ensure([], () => r(require('@/components/learnSystem/pk/
 const gradeLevel = r => require.ensure([], () => r(require('@/components/learnSystem/gradeLevel/gradeLevel.vue')), 'grade-level')
 const envirionmentTest = r => require.ensure([], () => r(require('@/components/learnSystem/userGuide/environmentTest.vue')), 'envirionment-test')
 const userGuide = r => require.ensure([], () => r(require('@/components/learnSystem/userGuide/userGuide.vue')), 'user-guide')
+
+// 下载页面
+const download = r => require.ensure([], () => r(require('@/components/common/download.vue')), 'download')
+
 export default[
   {
     path: '/',
@@ -185,5 +189,9 @@ export default[
         component: userGuide
       }
     ]
+  },
+  {
+    path: '/download',
+    component: download
   }
 ]
