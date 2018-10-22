@@ -76,7 +76,8 @@ export default {
       forms: {},
       typeList: [],
       list: [],
-      isShow: true
+      isShow: true,
+      isPop: false
     }
   },
   components: {
@@ -369,9 +370,7 @@ export default {
     let isAnonymous = Cookie.getCookie('is_anonymous')
     console.log('isAnonymous--->', isAnonymous)
     if (isAnonymous) {
-      console.log(11111)
       this.initAnonymousData()
-      console.log(2222)
     } else {
       this.initData()
     }
@@ -646,20 +645,20 @@ export default {
 
       // this.$emit('next-component')
       // 弹出提示、/////////////////////////////////////////////
+
       this.$nextTick(() => {
-        var isPop
         if (
           Recorder.isActivity() !== true &&
           Recorder.refuseRecord !== true &&
           this.canRecord
         ) {
           this.micphoneTip = this.tips.micphone
-          isPop = true
+          this.isPop = true
         } else if (Recorder.refuseRecord) {
           this.micphoneTip = this.tips.micphone_failed
-          isPop = true
+          this.isPop = true
         }
-        if (isPop) {
+        if (this.isPop) {
           this.$refs.tipbox.$emit('tipbox-show')
           this.updatePause(true)
         }
@@ -709,8 +708,19 @@ export default {
         let cr, ccr
         if (_this.id.indexOf('A0') > -1) {
           // 截取数组当前核心部分
-          let arr = _.values(_this.formScores)
-          let formsRecord = arr.slice(_this.curCorePart.start_form - 1, _this.curCorePart.end_form)
+          // let arr = _.values(_this.formScores)
+          // let formsRecord = arr.slice(_this.curCorePart.start_form - 1, _this.curCorePart.end_form)
+          let formsRecord = []
+          _this.curCorePart.Slides.forEach((slide) => {
+            Object.keys(_this.formScores).filter((item) => {
+              return item.indexOf('A0-' + slide + '-') > -1
+            }).map((el) => {
+              return _this.formScores[el]
+            }).forEach((i) => {
+              formsRecord.push(i)
+            })
+          })
+
           let correctArr = formsRecord.filter((item) => {
             return item === 1
           })
