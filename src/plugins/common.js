@@ -198,7 +198,7 @@ function size(list, type) {
     var window_width = $(window).width();
     var window_height = $(window).height();
     var text_height = $(".sentence-box").height() + 30;
-    var stage = window_height - text_height - 10 - HEADER_HEIGHT;
+    var stage = window_height - text_height - 40 - HEADER_HEIGHT;
     var stage_width;
     switch (layout) {
         case 2:

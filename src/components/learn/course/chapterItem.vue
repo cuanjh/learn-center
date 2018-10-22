@@ -540,11 +540,26 @@ export default {
 
 <style scoped>
   .current-learn-course-info{
+    cursor: pointer;
     padding:15px;
     background-color:#fff;
     border-radius: 4px;
     margin-top:15px;
     overflow:hidden;
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -ms-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    border-radius: 5px 5px 0 0;
+  }
+  .current-learn-course-info:hover {
+    box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -ms-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
   }
 
   .current-learn-course-disabled{
