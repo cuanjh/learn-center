@@ -462,6 +462,9 @@ export default {
       height: 11px;
       margin-right: 5px;
     }
+    &:hover {
+      background: linear-gradient(0deg, #59b3ff 0%, #4e9ef6 100%);
+    }
   }
   .smenu {
     right: 40px;
@@ -505,6 +508,9 @@ export default {
       width: 10px;
       height: 12px;
       margin-right: 5px;
+    }
+    &:hover {
+      background: linear-gradient(0deg, #59b3ff 0%, #4e9ef6 100%);
     }
   }
 }

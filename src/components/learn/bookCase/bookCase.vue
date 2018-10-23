@@ -4,7 +4,7 @@
       <p>
         <span>共收录</span>{{langMapNum}}<span>种语言</span>
       </p>
-      <input type="button" value="查看全部">
+      <p class="button">查看全部</p>
     </router-link>
     <div class="book-case">
       <div class="course-box">
@@ -131,6 +131,7 @@ export default {
     background-image: url('../../../../static/images/course/book-case-banner.png');
     background-repeat: no-repeat;
     background-size: cover;
+    object-fit: cover;
   }
 
   .banner > p {
@@ -145,11 +146,11 @@ export default {
     color: #6e7a95;
   }
 
-  .banner > input {
+  .banner .button {
     position: relative;
     border: 1px solid #6E7A95;
     border-radius: 100px;
-    left: 555px;
+    left: 558px;
     top: 220px;
     font-size: 15px;
     color: #FFFFFF;
@@ -157,6 +158,7 @@ export default {
     text-align: center;
     width: 180px;
     height: 38px;
+    line-height: 38px;
     background: none;
   }
 
