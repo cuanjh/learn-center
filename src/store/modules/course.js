@@ -203,9 +203,7 @@ const mutations = {
     Object.keys(payload.data.unlock).map(key => {
       unlockCourses.push(key)
     })
-    var num = unlockCourses.findIndex((value, index, arr) => {
-      return value === course['current_chapter_code']
-    })
+    var num = unlockCourses.indexOf(course['current_chapter_code'])
     course['completeRate'] = (((num + 1) / payload.course.chapter_num) * 100).toFixed(0) + '%'
     state.learnCourses.push(course)
     let subscribeCoursesStr = localStorage.getItem('subscribeCoursesStr')

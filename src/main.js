@@ -11,6 +11,7 @@ import store from './store/index'
 import moreLanguage from './vueI18/locale.js'
 import {urlfix} from './filter/index'
 import Cookie from './tool/cookie'
+import {getOSAndBrowser} from './tool/browser'
 // import 'babel-polyfill'
 
 require('./../static/css/animate.css')
@@ -49,7 +50,18 @@ router.beforeEach((to, from, next) => {
       next({ path: '/auth/login' })
     }
   } else {
-    next()
+    let browser = getOSAndBrowser().browser
+    let reg = new RegExp('\\d+', 'g')
+    let version = browser.match(reg)[0]
+    if ((browser.indexOf('Edge') > -1) || !((browser.indexOf('Firefox') > -1 && version >= 21) || (browser.indexOf('Chrome') > -1 && version >= 17) || (browser.indexOf('Opera') > -1 && version >= 18))) {
+      if (to.path === '/download') {
+        next()
+      } else {
+        next({ path: '/download' })
+      }
+    } else {
+      next()
+    }
   }
 })
 
@@ -59,9 +71,6 @@ const i18n = new VueI18n({
   locale: Vue.config.lang,
   messages: moreLanguage
 })
-if (window.__webpack_public_path__) {
-  window.__webpack_public_path__ = 'http://www.baidu.com'
-}
 
 // store.subscribe((mutation, state) => {
 //   console.log(mutation.type)

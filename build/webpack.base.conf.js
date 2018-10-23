@@ -107,11 +107,11 @@ module.exports = {
     child_process: 'empty'
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      filename: 'update.html',
-      template: 'update.html',
-      inject: true,
-      chunks:['']
-    })
+    // new HtmlWebpackPlugin({
+    //   filename: 'update.html',
+    //   template: 'update.html',
+    //   inject: true,
+    //   chunks:['']
+    // })
   ]
 }

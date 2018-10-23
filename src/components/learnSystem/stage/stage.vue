@@ -857,8 +857,12 @@ export default {
       }, TRANSALTE_TIME)
     },
     preLoad (_this) {
-      var resource = _this.getResource(_this.curSlide + 1)
-      _this.thunk = resource ? Loader(resource) : END
+      try {
+        var resource = _this.getResource(_this.curSlide + 1)
+        _this.thunk = resource ? Loader(resource) : END
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
