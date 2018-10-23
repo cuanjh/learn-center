@@ -44,12 +44,12 @@
 .describe {
   font-size: 16px;
   color: #64aacc;
-      text-align: center;
-    margin-top: 20px;
+  text-align: center;
+  margin-top: 20px;
 }
 .dot {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   background: #3ac;
   border-radius: 100%;
   margin-left: 6px;

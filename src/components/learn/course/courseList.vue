@@ -20,6 +20,7 @@
       </transition>
     </div>
     <loading v-show="loading"></loading>
+    <rocket v-show="rocketShow"></rocket>
   </div>
 </template>
 
@@ -27,6 +28,7 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import $ from 'jquery'
 import Loading from '../../common/loading.vue'
+import Rocket from '../../common/rocket.vue'
 import LeftSide from './leftSide.vue'
 import LevelTabs from './levelTabs.vue'
 import ChapterItem from './chapterItem.vue'
@@ -35,14 +37,16 @@ export default {
   data () {
     return {
       levels: [],
-      isShow: true
+      isShow: true,
+      rocketShow: false
     }
   },
   components: {
     LeftSide,
     LevelTabs,
     ChapterItem,
-    Loading
+    Loading,
+    Rocket
   },
   mounted () {
     this.$parent.$emit('initLayout')
