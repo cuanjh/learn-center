@@ -201,7 +201,7 @@ export default {
         _this.activityCode = res.course.activity_code
         _this.updateChapterDes(_this.activityCode)
 
-        _this.nickname = res.course.nickname
+        _this.nickname = (res.course.nickname) ? res.course.nickname : ('用户' + res.course.talkmate_id)
         _this.photo = res.course.photo
         _this.praiseCount = res.course.praise_count
         _this.myRecordList = res.course.records
