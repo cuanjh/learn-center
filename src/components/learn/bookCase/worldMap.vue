@@ -416,7 +416,7 @@ a {
         &:hover {
           z-index: 99 !important;
           i {
-            transform: scale(1.2,1.2);
+            transform: scale(1.1,1.1);
           }
         }
         i {

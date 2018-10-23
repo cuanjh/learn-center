@@ -1,10 +1,12 @@
 <template>
   <div>
     <router-link class="banner" :to="{path: '/app/world-map'}">
+    <div class="describe">
       <p>
         <span>共收录</span>{{langMapNum}}<span>种语言</span>
       </p>
       <p class="button">查看全部</p>
+    </div>
     </router-link>
     <div class="book-case">
       <div class="course-box">
@@ -133,25 +135,31 @@ export default {
     background-size: cover;
     object-fit: cover;
   }
-
-  .banner > p {
+  .banner .describe {
     position: relative;
-    left: 555px;
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+  }
+  .banner .describe > p {
+    position: absolute;
+    left: 197px;
     top: 160px;
     font-size: 28px;
     color: #b9ec10;
   }
+  .banner .describe > p:nth-child(2) {
+    top: 234px;
+    margin-left: 3px;
+  }
 
-  .banner > p > span {
+  .banner .describe > p > span {
     color: #6e7a95;
   }
 
-  .banner .button {
-    position: relative;
+  .banner .describe .button {
     border: 1px solid #6E7A95;
     border-radius: 100px;
-    left: 558px;
-    top: 220px;
     font-size: 15px;
     color: #FFFFFF;
     letter-spacing: 1.05px;

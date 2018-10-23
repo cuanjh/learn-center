@@ -199,7 +199,7 @@ export default {
   background: #0581d1;
   position: fixed;
   top: 0px;
-  z-index: 10;
+  z-index: 99999;
 }
 .header-box .content {
   width: 1200px;
