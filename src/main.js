@@ -49,6 +49,8 @@ const router = new VueRouter({
           documentElem.scrollTop = scrollTop
         }
       }, 0)
+    } else {
+      return { x: 0, y: 0 }
     }
   }
 })
