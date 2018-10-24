@@ -139,7 +139,6 @@ export default {
     width: 100%;
     height: 100%;
     margin: 0 auto;
-    background: rgba(81,120,135,0.48)
   }
 
   .banner .describe > p {
