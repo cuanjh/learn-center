@@ -150,10 +150,11 @@ export default {
   }
   @media only screen and (min-width: 1900px) {
     .describe {
-      width: 1200px;
+      width: 1200px !important;
     }
     .describe > p {
-      /* left: 20px; */
+      left: 118px;
+      top: 177px
     }
   }
   .banner .describe > p:nth-child(2) {
