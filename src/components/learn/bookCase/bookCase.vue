@@ -157,7 +157,7 @@ export default {
     }
   }
   .banner .describe > p:nth-child(2) {
-    top: 234px;
+    top: 206px;
   }
 
   .banner .describe > p > span {
