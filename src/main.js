@@ -17,18 +17,12 @@ import {getOSAndBrowser} from './tool/browser'
 require('./../static/css/animate.css')
 require('./../static/css/reset.css')
 require('./../static/css/style.css')
-// import 'bootstrap/dist/css/bootstrap.css'
-// import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-// require('../static/jquery-1.10.2.js')
-// require('./../static/cropper.min.js')
-// require('./../static/sitelogo')
 require('./../static/bootstrap.min.js')
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VueI18n)
-// Vue.use(BootstrapVue)
 
 Vue.filter('urlFix', urlfix)
 
@@ -37,11 +31,35 @@ const router = new VueRouter({
   mode: 'history',
   routes,
   scrollBehavior (to, from, savedPosition) {
-    return { x: 0, y: 0 }
+    // savedPosition 当且仅当 popstate 导航 (通过浏览器的 前进/后退 按钮触发) 时才可用。
+    // if (savedPosition) {
+    //   return savedPosition
+    // } else {
+    //   return { x: 0, y: 0 }
+    // }
+    if (to.meta.keepAlive) {
+      let scrollTop = store.state.course.scrollPos[to.name] || 0
+      if (!scrollTop) {
+        return
+      }
+      // 对scroll元素进行设置
+      setTimeout(() => {
+        let documentElem = document.querySelector('html,body')
+        if (documentElem) {
+          documentElem.scrollTop = scrollTop
+        }
+      }, 0)
+    }
   }
 })
 
 router.beforeEach((to, from, next) => {
+  // 记录上一个页面的scroll位置
+  if (from.name) {
+    let contentElem = document.querySelector('html,body')
+    let scrollTop = contentElem ? contentElem.scrollTop : '0'
+    store.state.course.scrollPos[from.name] = scrollTop
+  }
   if (to.matched.some(m => m.meta.auth)) {
     let isLogin = Cookie.getCookie('isLogin')
     if (isLogin === '1') {

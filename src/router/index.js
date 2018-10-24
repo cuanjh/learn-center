@@ -84,6 +84,10 @@ export default[
     children: [
       {
         path: 'course-list',
+        name: 'courseList',
+        meta: {
+          keepAlive: true
+        },
         component: courseList
       },
       {

@@ -19,6 +19,7 @@ const state = {
   finishedChapter: 0,
   chapterNum: 0,
   curLevel: '',
+  scrollPos: {},
   levelNum: 6,
   levelDetail: [],
   levelDes: {
