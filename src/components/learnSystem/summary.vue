@@ -34,7 +34,7 @@
             </ul>
           </div>
         </div>
-        <div class="core-summary-content">
+        <div v-if="hasRecord" class="core-summary-content">
           <div class="tooltip">
             <i></i>
             <span v-if="own">系统已把你的录音自动生成了本节课程！</span>
@@ -54,6 +54,9 @@
               </dd>
             </dl>
           </div>
+        </div>
+        <div v-else  class="core-summary-content">
+          <div class="no-record"></div>
         </div>
         <div class="core-summary-footer">
           <a class="btn review" @click="back">返回</a>
@@ -114,6 +117,7 @@ export default {
       own: '1',
       recordCourse: {},
       recordCount: 0,
+      hasRecord: 0,
       userInfo: {},
       courseBaseInfo: {},
       recordCourseList: []
@@ -133,6 +137,7 @@ export default {
       let activityCode = curChapterCode + '-' + _this.core
 
       _this.getFinishedInfo(activityCode).then(() => {
+        console.log(_this.finishedInfo)
         _this.stars = _this.finishedInfo.stars
         _this.correctHits = _this.finishedInfo.correct_hits
         _this.correctRate = Math.round(parseFloat(_this.finishedInfo.correct_rate * 100)) + '%'
@@ -146,6 +151,7 @@ export default {
         _this.nickname = nickname
         _this.recordCount = _this.finishedInfo.record_course.record_count
         _this.own = _this.finishedInfo.record_course.own
+        _this.hasRecord = _this.finishedInfo.record_course.has_record
         _this.recordCourse = _this.finishedInfo.record_course
 
         let ui = this.$store.state.user.userInfo
@@ -481,5 +487,13 @@ export default {
   margin-left:4px;
   background:url(../../../static/images/learnSystem/summary-star-gray.png) no-repeat;
   background-size:100% 100%;
+}
+
+.no-record {
+  width: 169px;
+  height: 127px;
+  background: url(../../../static/images/learnSystem/summary-no-record.png) no-repeat;
+  background-size: 100% 100%;
+  margin: 20px auto 5px;
 }
 </style>
