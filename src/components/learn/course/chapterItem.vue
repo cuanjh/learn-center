@@ -24,8 +24,9 @@
           <div class="progress-bg">
             <div class="progress" :style="{width: item.progress +'%'}"></div>
           </div>
-          <div class="progress-val" :style="{color: item.progress ? '#0581d1' : '#cbcbcb'}">
-            {{ (item.progress ? item.progress : 0)+'%' }}
+          <div class="progress-val"
+            :style="{color: item.progress ? '#0581d1' : '#cbcbcb'}"
+            v-text="(parseFloat(item.progress) > 0 ? item.progress : 0)+'%'">
           </div>
         </div>
       </div>

@@ -99,6 +99,9 @@ export var getCourseStructure = (themes, unLockChapters) => {
         chapter.judge = true
         chapter.progress = 0
       }
+      chapter.progressTest = 0
+      chapter.progress = 0
+      chapter.purchased = false
       for (var i = 0; i < arr.length; i++) {
         if (arr[i] === chapter.code) {
           console.log('chapter' + chapter)
