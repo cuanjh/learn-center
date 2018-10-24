@@ -4,9 +4,7 @@
     <learn-header ref="header"></learn-header>
     <div class="learn-cover learn-all-hide-cover" v-show="coverShow" @click="coverHide"></div> <!-- 遮罩 -->
     <div class="learn-cover learn-all-hide-cover" v-show="anonymousCover"></div>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
+    <router-view></router-view>
     <!-- 底部 -->
     <learn-bottom></learn-bottom>
     <photo-uploader></photo-uploader>
