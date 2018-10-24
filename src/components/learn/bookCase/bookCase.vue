@@ -136,21 +136,29 @@ export default {
     object-fit: cover;
   }
   .banner .describe {
-    position: relative;
-    width: 1200px;
+    width: 100%;
     height: 100%;
     margin: 0 auto;
+    background: rgba(81,120,135,0.48)
   }
+
   .banner .describe > p {
-    position: absolute;
-    left: 197px;
+    position: relative;
+    left: 555px;
     top: 160px;
     font-size: 28px;
     color: #b9ec10;
   }
+  @media only screen and (min-width: 1900px) {
+    .describe {
+      width: 1200px;
+    }
+    .describe > p {
+      /* left: 20px; */
+    }
+  }
   .banner .describe > p:nth-child(2) {
     top: 234px;
-    margin-left: 3px;
   }
 
   .banner .describe > p > span {

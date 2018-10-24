@@ -409,12 +409,14 @@ a {
       border-right: 1px solid #EBEBEB;
       font-size: 14px;
       color: #ffffff;
+      i {
+        z-index: 9;
+      }
       .america { // 美洲
         width: 248px;
         height: 391px;
         display: inline-block;
         &:hover {
-          z-index: 99 !important;
           i {
             transform: scale(1.1,1.1);
           }
@@ -449,7 +451,7 @@ a {
         &:hover {
           z-index: 99 !important;
           i {
-            transform: scale(1.2,1.2);
+            transform: scale(1.1,1.1);
           }
         }
         i {
@@ -478,7 +480,7 @@ a {
       }
       .asia { // 亚洲
         width: 234px;
-        height: 186px;
+        height: 140px;
         display: inline-block;
         position: absolute;
         top: 126px;
@@ -486,13 +488,13 @@ a {
         &:hover {
           z-index: 99 !important;
           i {
-            transform: scale(1.2,1.2);
+            transform: scale(1.1,1.1);
           }
         }
         i {
           display: inline-block;
           width: 234px;
-          height: 186px;
+          height: 140px;
           background: url('../../../../static/images/bookCase/map/asia.png') no-repeat;
           background-size: 234px 186px;
         }
@@ -517,9 +519,9 @@ a {
         top: 173px;
         left: 294px;
         &:hover {
-          z-index: 99 !important;
+          // z-index: 99 !important;
           i {
-            transform: scale(1.2,1.2);
+            transform: scale(1.1,1.1);
           }
         }
         i {
@@ -552,7 +554,7 @@ a {
         &:hover {
           z-index: 99 !important;
           i {
-            transform: scale(1.2,1.2);
+            transform: scale(1.1,1.1);
           }
         }
         i {

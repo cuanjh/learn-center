@@ -156,7 +156,7 @@ export default {
   mounted () {
     console.log(this.$route)
     this.langInfo({lang_code: this.courseCode}).then(res => {
-      console.log('res', res)
+      console.log('resaaaa', res)
       for (var item in res.langInfo) {
         if (this.langInfoObj[item]) {
           this.langInfoObj[item]['info'] = res.langInfo[item]['info']

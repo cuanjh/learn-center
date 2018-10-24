@@ -319,10 +319,11 @@ export default {
         float:left;
         margin-right: 8px;
         width:13px;
-        height:17px;
+        height:25px;
         background:url(../../../static/images/learnSystem/icon-record.png) no-repeat;
-        background-size:100% 100%;
+        background-size:100% 17px;
         vertical-align: bottom;
+        background-position: center;
       }
       span {
         font-weight: bolder;

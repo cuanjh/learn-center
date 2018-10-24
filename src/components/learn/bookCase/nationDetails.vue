@@ -37,41 +37,9 @@
     </div>
     <div class="country-contents">
       <ul class="country-info" v-show="'info' == tabFlag">
-        <li v-if="nationInfo.DeafPopulation">
-          <p class="title">{{nationInfo.DeafPopulation.title}}</p>
-          <p class="desc">{{nationInfo.DeafPopulation.info}}</p>
-        </li>
-        <li v-if="nationInfo.GeneralReferences">
-          <p class="title">{{nationInfo.GeneralReferences.title}}</p>
-          <p class="desc">{{nationInfo.GeneralReferences.info}}</p>
-        </li>
-        <li v-if="nationInfo.GeneralRemarks">
-          <p class="title">{{nationInfo.GeneralRemarks.title}}</p>
-          <p class="desc">{{nationInfo.GeneralRemarks.info}}</p>
-        </li>
-        <li v-if="nationInfo.ImmigrantLanguages">
-          <p class="title">{{nationInfo.ImmigrantLanguages.title}}</p>
-          <p class="desc">{{nationInfo.ImmigrantLanguages.info}}%</p>
-        </li>
-        <li v-if="nationInfo.LanguageCounts">
-          <p class="title">{{nationInfo.LanguageCounts.title}}</p>
-          <p class="desc">{{nationInfo.LanguageCounts.info}}%</p>
-        </li>
-        <li v-if="nationInfo.LiteracyRate">
-          <p class="title">{{nationInfo.LiteracyRate.title}}</p>
-          <p class="desc">{{nationInfo.LiteracyRate.info}}</p>
-        </li>
-        <li v-if="nationInfo.OfficialName">
-          <p class="title">{{nationInfo.OfficialName.title}}</p>
-          <p class="desc">{{nationInfo.OfficialName.info}}</p>
-        </li>
-        <li v-if="nationInfo.Population">
-          <p class="title">{{nationInfo.Population.title}}</p>
-          <p class="desc">{{nationInfo.Population.info}}</p>
-        </li>
-        <li v-if="nationInfo.PrincipalLanguages">
-          <p class="title">{{nationInfo.PrincipalLanguages.title}}</p>
-          <p class="desc">{{nationInfo.PrincipalLanguages.info}}</p>
+        <li v-for="(item, key, index) in nationInfoObj" :key="index">
+          <p class="title">{{item.title}}</p>
+          <p class="desc">{{item.info}}</p>
         </li>
       </ul>
       <ul class="country-language" v-show="'language' == tabFlag">
@@ -95,8 +63,42 @@ export default {
   data () {
     return {
       tabFlag: 'info',
-      nationInfo: {},
-      langInfos: []
+      // nationInfo: {},
+      langInfos: [],
+      nationInfoObj: {
+        'OfficialName': {
+          title: '国家名称',
+          info: ''
+        },
+        'Population': {
+          title: '使用人口',
+          info: ''
+        },
+        'PrincipalLanguages': {
+          title: '主要语言',
+          info: ''
+        },
+        'LiteracyRate': {
+          title: '识字率',
+          info: ''
+        },
+        'ImmigrantLanguages': {
+          title: '移民语言',
+          info: ''
+        },
+        'GeneralReferences': {
+          title: '参考文献',
+          info: ''
+        },
+        'DeafPopulation': {
+          title: '听力丧失人口',
+          info: ''
+        },
+        'LanguageCounts': {
+          title: '语言数量',
+          info: ''
+        }
+      }
     }
   },
   computed: {
@@ -111,7 +113,12 @@ export default {
   mounted () {
     this.countryInfo({code: this.$route.params.countryCode}).then(res => {
       console.log('res====>', res)
-      this.nationInfo = res.country_info.info
+      for (var item in res.country_info.info) {
+        if (this.nationInfoObj[item]) {
+          this.nationInfoObj[item]['info'] = res.country_info.info[item]['info']
+        }
+      }
+      // this.nationInfo = res.country_info.info
       this.langInfos = res.country_info.langsInfo
       console.log('langInfos', this.langInfos)
     })
