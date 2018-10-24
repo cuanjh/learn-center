@@ -100,6 +100,10 @@ export default {
       await that.getCourseContent(that.contentUrl)
 
       await that.getChapterContent()
+
+      let top = $('#' + that.currentChapterCode).offset().top - 90
+      $('body,html').animate({ scrollTop: top }, 100, 'linear')
+
       await that.getRecord(that.currentChapterCode + '-A0')
       await that.getProgress(that.currentChapterCode)
       await that.getCourseTestRanking(that.currentChapterCode)
