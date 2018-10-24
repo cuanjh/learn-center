@@ -21,7 +21,7 @@
             <img src="../../../static/images/learnSystem/record-big-left.png" @click="pre()" alt="">
           </div>
           <div class="learn-myrecord-item">
-            <img :src="curMyRecord.image | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="">
+            <img :src="curMyRecord.image | urlFix('imageView2/0/w/434/h/243/format/jpg')" alt="">
             <div class="sentence">{{ curMyRecord.sentence }}</div>
             <div class="my-record-play" @click="play()">
               <audio id="record-sound" :src="curMyRecord.record_sound" />
@@ -53,7 +53,7 @@
         </div>
         <div class="learn-partner-list">
           <div class="learn-partner-item" v-for="(item, index) in otherRecordList" :key="index">
-            <img :src="item.cover | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="">
+            <img :src="item.cover | urlFix('imageView2/0/w/143/h/80/format/jpg')" alt="">
             <div class="learn-partner-info">
               <img :src="item.photo" alt="">
               <div class="partner-record-play" @click="playPartnerRecord(item.course_id)">
@@ -201,7 +201,7 @@ export default {
         _this.activityCode = res.course.activity_code
         _this.updateChapterDes(_this.activityCode)
 
-        _this.nickname = res.course.nickname
+        _this.nickname = (res.course.nickname) ? res.course.nickname : ('用户' + res.course.talkmate_id)
         _this.photo = res.course.photo
         _this.praiseCount = res.course.praise_count
         _this.myRecordList = res.course.records
@@ -337,6 +337,7 @@ export default {
     width: 22px;
     height: 48px;
     vertical-align: middle;
+    object-fit: cover;
   }
 
   .learn-myrecord-item {

@@ -60,7 +60,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import Bus from '../../../bus'
+// import Bus from '../../../bus'
 export default {
   data () {
     return {
@@ -107,14 +107,14 @@ export default {
     },
     goDetails (courseCode) {
       let langCode = courseCode.split('-')[0]
-      if (this.subscribeCoursesStr.length === 0) {
-        this.$router.push({path: '/app/book-details/' + langCode})
-        return
-      }
-      if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
-        Bus.$emit('changeCourseCode', courseCode)
-        return
-      }
+      // if (this.subscribeCoursesStr.length === 0) {
+      //   this.$router.push({path: '/app/book-details/' + langCode})
+      //   return
+      // }
+      // if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
+      //   Bus.$emit('changeCourseCode', courseCode)
+      //   return
+      // }
       this.$router.push({path: '/app/book-details/' + langCode})
     },
     // 数字每三位添加逗号

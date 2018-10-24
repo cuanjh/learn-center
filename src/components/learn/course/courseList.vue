@@ -123,10 +123,14 @@ export default {
       await this.getCourseContent(this.contentUrl)
       await this.getChapterContent()
 
+      let top = $('#' + this.currentChapterCode).offset().top - 90
+      $('body,html').animate({ scrollTop: top }, 100, 'linear')
+
       await this.getRecord(this.currentChapterCode + '-A0')
       await this.getProgress(this.currentChapterCode)
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)
+
       this.hideLoading()
     },
     selLevel (level) {

@@ -18,7 +18,9 @@
               <p>我订阅的课程</p>
               <section>
                 <ul>
-                  <li  v-for='(course, index) in learnCourse' :key="index" class='mycourse-container-gray disable' :class="{'mycourse-container-light': langCode === course['lan_code'] }">
+                  <li  v-for='(course, index) in learnCourse' :key="index"
+                    class='mycourse-container-gray disable'
+                    :class="{'mycourse-container-light': true }">
                     <dl>
                       <dt>
                         <a class='changeColor' @click="changeCourseCode(course['code'])">
@@ -29,8 +31,8 @@
                       <dd><span><a>全球说</a></span><span class='mycourse-lang'><a href="">{{ !course.name ? '' : course.name['zh-CN'] }}</a></span></dd>
                     </dl>
                   </li>
-                  <li class='learn-courseList-add-more' style="display:none">
-                    <router-link :to="{path: '/v2/find'}">
+                  <li class='learn-courseList-add-more'>
+                    <router-link :to="{path: '/app/book-case'}">
                       <img src="../../../static/images/course/learn-jiahao.png">
                     </router-link>
                   </li>

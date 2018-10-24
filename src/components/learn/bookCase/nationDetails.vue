@@ -58,7 +58,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import Bus from '../../../bus'
+// import Bus from '../../../bus'
 export default {
   data () {
     return {
@@ -132,15 +132,15 @@ export default {
     },
     routerGo (item) {
       let langCode = item['lang_code']
-      if (this.subscribeCoursesStr.length === 0) {
-        this.$router.push({path: '/app/book-details/' + langCode})
-        return
-      }
-      let courseCode = item['courseCode']
-      if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
-        Bus.$emit('changeCourseCode', courseCode)
-        return
-      }
+      // if (this.subscribeCoursesStr.length === 0) {
+      //   this.$router.push({path: '/app/book-details/' + langCode})
+      //   return
+      // }
+      // let courseCode = item['courseCode']
+      // if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
+      //   Bus.$emit('changeCourseCode', courseCode)
+      //   return
+      // }
       this.$router.push({path: '/app/book-details/' + langCode})
     }
   }

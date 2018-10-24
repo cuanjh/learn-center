@@ -51,7 +51,7 @@ import simplePinyin from 'simple-pinyin'
 import _ from 'lodash'
 import $ from 'jquery'
 
-import Bus from '../../../bus'
+// import Bus from '../../../bus'
 
 export default {
   data () {
@@ -149,15 +149,15 @@ export default {
     },
     routerGo (item) {
       let langCode = item['lan_code']
-      if (this.subscribeCoursesStr.length === 0) {
-        this.$router.push({path: '/app/book-details/' + langCode})
-        return
-      }
-      let courseCode = item['lan_code'] + '-Basic'
-      if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
-        Bus.$emit('changeCourseCode', courseCode)
-        return
-      }
+      // if (this.subscribeCoursesStr.length === 0) {
+      //   this.$router.push({path: '/app/book-details/' + langCode})
+      //   return
+      // }
+      // let courseCode = item['lan_code'] + '-Basic'
+      // if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
+      //   Bus.$emit('changeCourseCode', courseCode)
+      //   return
+      // }
       this.$router.push({path: '/app/book-details/' + langCode})
     }
   }

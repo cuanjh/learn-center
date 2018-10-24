@@ -66,7 +66,8 @@ export default {
   data () {
     return {
       activeItem: '',
-      judgeVip: false
+      judgeVip: false,
+      rocketShow: false
     }
   },
   components: {
