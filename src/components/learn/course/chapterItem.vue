@@ -845,6 +845,7 @@ export default {
     height:64px
   }
   .course-item-icon div{
+    cursor: pointer;
     width: 65px;
     height: 65px;
     position: relative;
