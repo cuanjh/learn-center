@@ -367,7 +367,11 @@ export default {
         retObj['starTestNum'] = 0
         retObj['imgTestStyle'] = ''
       }
-      this.$emit('draw', 'test', retObj)
+      if (this.coreData['isCoreCompleted']) {
+        this.$emit('draw', 'test', retObj)
+      } else {
+        retObj['isTestCompleted'] = 0
+      }
       return retObj
     },
     // 作业
@@ -399,7 +403,9 @@ export default {
         retObj['completedHomeworkRate'] = ''
         retObj['imgHomeworkStyle'] = ''
       }
-      this.$emit('draw', 'homework', retObj)
+      if (this.coreData['isCoreCompleted']) {
+        this.$emit('draw', 'homework', retObj)
+      }
       return retObj
     }
   },
