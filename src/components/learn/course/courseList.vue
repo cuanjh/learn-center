@@ -107,9 +107,11 @@ export default {
 
         this.hideLoading()
 
-        this.$refs['chapterItem'].$emit('changeIsShow', false)
-        let top = $('#' + chapterCode).offset().top - 90
-        $('body,html').animate({ scrollTop: top }, 100, 'linear')
+        setTimeout(() => {
+          this.$refs['chapterItem'].$emit('changeIsShow', false)
+          let top = $('#' + chapterCode).offset().top - 90
+          $('body,html').animate({ scrollTop: top }, 300, 'linear')
+        }, 400)
         // $('body,html').scrollTop(top)
       }
     },

@@ -22,7 +22,7 @@
         </div>
         <div class="progress-area">
           <div class="progress-bg">
-            <div class="progress" :style="{width: item.progress +'%'}"></div>
+            <div class="progress" :style="{width: (item.progress ? item.progress : 0) +'%'}"></div>
           </div>
           <div class="progress-val"
             :style="{color: item.progress ? '#0581d1' : '#cbcbcb'}"
@@ -426,7 +426,7 @@ export default {
 
       setTimeout(() => {
         this.$emit('loadChapterInfo', chapterCode)
-      }, 800)
+      }, 400)
     },
     starNum (correctRate) {
       let stars = 0
@@ -672,11 +672,11 @@ export default {
   }
 
   .fade-enter-active, .fade-leave-active {
-    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    transition: all .8s linear;
   }
 
   .fade-enter, .fade-leave-to {
-    transform: translateY(-10px);
+    /* transform: translateY(-10px); */
     opacity: 0;
   }
 
