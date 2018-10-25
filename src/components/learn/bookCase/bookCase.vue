@@ -106,7 +106,7 @@ export default {
       this.showDetailsHot = this.showDetailsChina = null
     },
     goDetails (courseCode) {
-      let langCode = courseCode.split('-')[0]
+      // let langCode = courseCode.split('-')[0]
       // if (this.subscribeCoursesStr.length === 0) {
       //   this.$router.push({path: '/app/book-details/' + langCode})
       //   return
@@ -115,7 +115,7 @@ export default {
       //   Bus.$emit('changeCourseCode', courseCode)
       //   return
       // }
-      this.$router.push({path: '/app/book-details/' + langCode})
+      this.$router.push({path: '/app/book-details/' + courseCode})
     },
     // 数字每三位添加逗号
     toThousands (num) {

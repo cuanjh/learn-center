@@ -155,7 +155,18 @@ export default {
   },
   mounted () {
     console.log(this.$route)
-    this.langInfo({lang_code: this.courseCode}).then(res => {
+    var params = {}
+    let arr = this.courseCode.split('-')
+    if (arr.length > 1) {
+      params = {
+        course_code: this.courseCode
+      }
+    } else {
+      params = {
+        lang_code: arr[0]
+      }
+    }
+    this.langInfo(params).then(res => {
       console.log('resaaaa', res)
       for (var item in res.langInfo) {
         if (this.langInfoObj[item]) {
@@ -214,14 +225,17 @@ export default {
       })
     },
     startLearn () {
-      let courseCode = this.courseCode + '-Basic'
+      let arr = this.courseCode.split('-')
+      let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
       Bus.$emit('changeCourseCode', courseCode)
       setTimeout(() => {
         this.$router.push({path: '/app/course-list'})
       }, 1000)
     },
     subscribeCourse () {
-      this.postPurchaseCourse({ code: this.courseCode.toUpperCase() + '-Basic' }).then((res) => {
+      let arr = this.courseCode.split('-')
+      let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
+      this.postPurchaseCourse({ code: courseCode }).then((res) => {
         this.getLearnCourses()
       })
     }
