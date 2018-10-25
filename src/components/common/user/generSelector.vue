@@ -17,7 +17,7 @@
 import Multiselect from 'vue-multiselect'
 import Constant from '../../../api/constant'
 export default {
-  // male or female
+  // male or femail
   props: ['value'],
   components: {
     Multiselect
@@ -35,7 +35,7 @@ export default {
       selected: this.value,
       options: [
         Constant.getGenderSelectorDataByCode('male'),
-        Constant.getGenderSelectorDataByCode('female')
+        Constant.getGenderSelectorDataByCode('femail')
       ]
     }
   },

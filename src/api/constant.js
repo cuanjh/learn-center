@@ -24,7 +24,7 @@ let getGenderSelectorDataByCode = (code) => {
 
 let generConfig = {
   male: '男',
-  female: '女'
+  femail: '女'
 }
 
 export default {
