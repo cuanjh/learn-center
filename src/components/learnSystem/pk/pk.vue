@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="sentence-box" v-if="pk"></div>
-    <transition mode="out-in">
+    <transition name="fade" mode="out-in">
       <component :is="state" :data="data" :path="path" :ref="state"></component>
     </transition>
     <component :is="'pk-progress'" :data="progressNum" :updateData="updateProgressNum" :idx="cur" v-if="showProgress" ref="pro"></component>
