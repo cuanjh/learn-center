@@ -94,7 +94,7 @@ export default {
     }),
     async loadChapterInfo (chapterCode) {
       if (this.unlockCourses.indexOf(chapterCode) > -1) {
-        this.showLoading()
+        // this.showLoading()
         await this.setCurrentChapter(chapterCode)
 
         await this.getChapterContent()
@@ -105,13 +105,13 @@ export default {
 
         await this.homeworkContent(this.currentChapterCode + '-A8')
 
-        this.hideLoading()
+        // this.hideLoading()
 
         setTimeout(() => {
-          this.$refs['chapterItem'].$emit('changeIsShow', false)
-          let top = $('#' + chapterCode).offset().top - 90
-          $('body,html').animate({ scrollTop: top }, 300, 'linear')
-        }, 400)
+          this.$refs['chapterItem'].$emit('changeIsShow', true)
+          // let top = $('#' + chapterCode).offset().top - 90
+          // $('body,html').animate({ scrollTop: top }, 300, 'linear')
+        }, 0)
         // $('body,html').scrollTop(top)
       }
     },
@@ -125,13 +125,13 @@ export default {
       await this.getCourseContent(this.contentUrl)
       await this.getChapterContent()
 
-      let top = $('#' + this.currentChapterCode).offset().top - 90
-      $('body,html').animate({ scrollTop: top }, 100, 'linear')
-
       await this.getRecord(this.currentChapterCode + '-A0')
       await this.getProgress(this.currentChapterCode)
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)
+
+      let top = $('#' + this.currentChapterCode).offset().top - 90
+      $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
       this.hideLoading()
     },

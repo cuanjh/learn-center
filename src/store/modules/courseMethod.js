@@ -136,6 +136,17 @@ export var getCourseStructure = (themes, unLockChapters) => {
             obj['A5'] = false
             obj['A6'] = false
           }
+
+          if (!(obj['Core_complete'] || obj['A0'])) {
+            obj['A1'] = false
+            obj['A2'] = false
+            obj['A3'] = false
+            obj['A4'] = false
+            obj['A5'] = false
+            obj['A6'] = false
+            obj['A7'] = false
+            obj['A8'] = false
+          }
           chapter.progressTest = progressAgain(obj)
           chapter.progress = progressAgain(obj)
           chapter.purchased = chapterPurchased(obj)

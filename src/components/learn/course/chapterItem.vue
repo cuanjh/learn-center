@@ -1,8 +1,7 @@
 <template>
   <div>
     <div v-for="(item, index) in curLevelChapters" :key="index" :id="item.code">
-      <transition name="fade" mode="out-in">
-      <div class="current-learn-course-info" v-show="isShow ? isShow : item.code !== currentChapterCode"
+      <div class="current-learn-course-info"
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
           @click="jumpToCourse(item.code)">
         <div class="current-learn-course-flag">
@@ -30,11 +29,11 @@
           </div>
         </div>
       </div>
-      </transition>
-      <transition name="fade" mode="out-in">
-        <div class="course-core-test-check" v-show="item.code === currentChapterCode && unlockCourses.indexOf(item.code) > -1 && (buyChapters.indexOf(item.code) !== -1 || parseInt(userInfo.member_info.member_type) ===1) && !isShow">
+      <!-- <transition name="fade" mode="out-in"> -->
+        <div :class="['course-core-test-check-locked',
+        {'course-core-test-check': isShow && item.code === currentChapterCode}]">
           <ul>
-            <li class="course-brief" @click="switchShow()">
+            <!-- <li class="course-brief" @click="switchShow()">
               <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
               <div class="course-brief-shade">
                 <div class="course-brief-title">
@@ -52,7 +51,7 @@
                   </div>
                 </div>
               </div>
-            </li>
+            </li> -->
             <li class="course-core">
               <div class="course-core-name">
                 <span>核心课程</span>
@@ -128,7 +127,7 @@
             </div>
           </li>
 
-          <li class="course-vip" v-show="item.code === currentChapterCode">
+          <li class="course-vip">
               <div class="course-vip-name">
                 <p>强化</p>
                 <p>(会员专享)</p>
@@ -158,7 +157,7 @@
             </li>
           </ul>
         </div>
-      </transition>
+      <!-- </transition> -->
     </div>
     <div class="nolock-test-check" v-show="nolockTestCheckShow">
       <p class="animated flipInX" v-show="nolockTestCheckShow">
@@ -190,7 +189,7 @@ export default {
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
       nolockTestCheckShow: false,
       anonymousCheckShow: false,
-      isShow: false,
+      isShow: true,
       tips: ''
     }
   },
@@ -367,6 +366,10 @@ export default {
         retObj['starTestNum'] = 0
         retObj['imgTestStyle'] = ''
       }
+      if (!this.coreData['isCoreCompleted']) {
+        retObj['completedTestRate'] = ''
+        retObj['isTestCompleted'] = 0
+      }
       this.$emit('draw', 'test', retObj)
       return retObj
     },
@@ -399,6 +402,9 @@ export default {
         retObj['completedHomeworkRate'] = ''
         retObj['imgHomeworkStyle'] = ''
       }
+      if (!this.coreData['isCoreCompleted']) {
+        retObj['completedHomeworkRate'] = ''
+      }
       this.$emit('draw', 'homework', retObj)
       return retObj
     }
@@ -420,13 +426,21 @@ export default {
         return false
       }
 
-      let top = $('#' + chapterCode).offset().top - 90
-      $('body,html').animate({ scrollTop: top }, 300, 'linear')
-      // $('body,html').scrollTop(top)
+      if (chapterCode === this.currentChapterCode) {
+        this.isShow = !this.isShow
+        return false
+      } else {
+        this.isShow = false
+        setTimeout(() => {
+          let top = $('#' + chapterCode).offset().top - 90
+          $('body,html').animate({ scrollTop: top }, 300, 'linear')
+        }, 0)
 
-      setTimeout(() => {
-        this.$emit('loadChapterInfo', chapterCode)
-      }, 400)
+        setTimeout(() => {
+          // this.isShow = true
+          this.$emit('loadChapterInfo', chapterCode)
+        }, 300)
+      }
     },
     starNum (correctRate) {
       let stars = 0
@@ -671,21 +685,88 @@ export default {
     font-weight: bold;
   }
 
-  .fade-enter-active, .fade-leave-active {
-    transition: all .8s linear;
+  /* .fade-enter-active, .fade-leave-active {
+    transition: all 1s linear;
   }
 
   .fade-enter, .fade-leave-to {
-    /* transform: translateY(-10px); */
+    transform: translateY(-10px);
     opacity: 0;
+  } */
+
+  .course-core-test-check-locked {
+    height: 0;
+    overflow: hidden;
   }
 
   .course-core-test-check{
     background-color:#fff;
-    margin-top: 15px;
+    height: 553px;
+    margin-top: 3px;
     padding:15px;
     border-radius:4px;
+    transition: height .5s linear;
     /* transform: translateY(-140px); */
+    /* animation: translateBigItem .4s linear; */
+    /* animation: heightSpread .4s ease; */
+  }
+
+  /* @keyframes translateBigItem {
+    0%{
+      transform: translateY(-340px);
+      opacity: 1;
+    }
+    100%{
+      transform: translateY(0);
+      opacity: 1;
+    }
+  } */
+
+  @keyframes heightSpread {
+    0%{
+      height: 50px;
+      opacity: 0;
+    }
+    10%{
+      height: 100px;
+      opacity: 0.1;
+    }
+    20%{
+      height: 150px;
+      opacity: 0.2;
+    }
+    30%{
+      height: 200px;
+      opacity: 0.3;
+    }
+    40%{
+      height: 250px;
+      opacity: 0.4;
+    }
+    50%{
+      height: 300px;
+      opacity: 0.5;
+    }
+    60%{
+      height: 350px;
+      opacity: 0.6;
+    }
+    70%{
+      height: 400px;
+      opacity: 1;
+    }
+    80%{
+      height: 450px;
+      opacity: 1;
+    }
+    90%{
+      height: 500px;
+      opacity: 1;
+    }
+    100%{
+      height: 533px;
+      opacity: 1;
+    }
   }
 
   .course-brief{
