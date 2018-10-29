@@ -273,6 +273,15 @@ export default {
   background: #ffffff;
   margin: 20px 0;
   border-radius: 6px;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -ms-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+  }
   .rtl {
     direction: rtl;
     text-align: left;
@@ -410,6 +419,7 @@ export default {
         width: 100%;
         height: 200px;
         .record-img {
+          cursor: pointer;
           position: absolute;
           left: 50%;
           top: 50%;
@@ -491,6 +501,7 @@ export default {
         width: 100%;
         height: 88px;
         .again-recording {
+          cursor: pointer;
           width: 58px;
           height: 78px;
           position: absolute;
@@ -510,6 +521,7 @@ export default {
           }
         }
         .audio-play-box {
+          cursor: pointer;
           width: 74px;
           height: 74px;
           position: absolute;
@@ -589,6 +601,7 @@ export default {
           }
         }
         .send {
+          cursor: pointer;
           width: 58px;
           height: 78px;
           position: absolute;

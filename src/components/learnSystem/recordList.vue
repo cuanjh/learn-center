@@ -52,11 +52,11 @@
           更多语伴录音
         </div>
         <div class="learn-partner-list">
-          <div class="learn-partner-item" v-for="(item, index) in otherRecordList" :key="index">
+          <div class="learn-partner-item" v-for="(item, index) in otherRecordList" :key="index" @click="playPartnerRecord(item.course_id)">
             <img :src="item.cover | urlFix('imageView2/0/w/143/h/80/format/jpg')" alt="">
             <div class="learn-partner-info">
               <img :src="item.photo" alt="">
-              <div class="partner-record-play" @click="playPartnerRecord(item.course_id)">
+              <div class="partner-record-play">
                 <i>
                   <span></span>
                   <span></span>
@@ -383,6 +383,7 @@ export default {
     margin-top: 10px;
   }
   .learn-partner-item {
+    cursor: pointer;
     padding: 10px 0;
     border-top: 1px solid #EAEAEA;
   }
