@@ -14,7 +14,7 @@
             <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
           </div>
           <div class="current-learn-course-describe">{{ item['info']['zh-cn']['describe'] }}</div>
-          <div class="current-learn-course-gold"  :class="{'courseIsLock': (parseInt(userInfo.member_info.member_type) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
+          <div class="current-learn-course-gold" v-show="(parseInt(userInfo.member_info.member_type) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)" :class="{'courseIsLock': (parseInt(userInfo.member_info.member_type) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
             <i></i>
             150金币
           </div>
