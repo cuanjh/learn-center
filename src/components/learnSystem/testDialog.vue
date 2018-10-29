@@ -74,8 +74,8 @@ export default {
     // 绑定麦克风回调
     bus.$on('record_setVolume', data => {
       var res = []
-      for (var i = 0; i < data.length; i = i + 186) {
-        var value = Math.abs(data[i]) * 6
+      for (var i = 0; i < data[0].length; i = i + 186) {
+        var value = Math.abs(data[0][i]) * 6
         value = value * value * 16
         value = value >= 50 ? 50 - _.random(3, 10) : value
         res.push(value)

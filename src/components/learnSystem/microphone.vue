@@ -94,8 +94,8 @@ export default {
 
       bus.$on('record_setVolume', data => {
         var res = []
-        for (var i = 0; i < data.length; i = i + 186) {
-          var value = Math.abs(data[i]) * 6
+        for (var i = 0; i < data[0].length; i = i + 186) {
+          var value = Math.abs(data[0][i]) * 6
           value = value * value * 16
           value = value >= 50 ? 50 - _.random(3, 10) : value
           res.push(value)
@@ -206,8 +206,8 @@ export default {
       this.value4Play += 1 / (this.fps * this.currentRecord) / this.time
       ctx.clearRect(0, 0, 100, 100)
       ctx.beginPath()
-      ctx.arc(50, 50, 46, 0, Math.PI * 2 * this.value4Play, false)
-      ctx.lineWidth = 6.0
+      ctx.arc(45, 45, 40, 0, Math.PI * 2 * this.value4Play, false)
+      ctx.lineWidth = 7.0
       ctx.strokeStyle = '#6ade80'
       ctx.stroke()
     },
@@ -412,8 +412,8 @@ export default {
   }
 }
 .mic-play-canvas {
-  margin-left: 3px;
-  margin-top: -48px;
+  margin-left: 5px;
+  margin-top: -55px;
   transform: rotateZ(-90deg);
   z-index: 3;
 }
