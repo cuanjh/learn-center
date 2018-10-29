@@ -230,6 +230,11 @@ export default {
         // return console.log(Config.index + url.join('/'))
         return (window.location.href = this.index + url.join('/'))
       }
+      // 保存学习进度
+      this.postProgress().then(() => {
+        coinCache.update(this.coin)
+      })
+      this.getProgress(this.curChapterCode)
       // 退出学习日志数据收集
       var whetherFirst = (this.progress[0] === -1) - 0
       var chapterCode = localStorage.getItem('currentChapterCode')

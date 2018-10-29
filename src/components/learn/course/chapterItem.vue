@@ -253,7 +253,9 @@ export default {
             }).map((el) => {
               return that.curChapterProgress[el]
             }).forEach((i) => {
-              coreForms.push(i)
+              if (i > -1) {
+                coreForms.push(i)
+              }
             })
           })
           let obj = {}
@@ -308,11 +310,17 @@ export default {
           obj['imgStyle'] = ''
 
           if (Object.keys(that.$store.state.course.curChapterContent).length > 0) {
-            srcVipArray[i] = Object.keys(that.$store.state.course.curChapterProgress).filter((item) => {
+            let vipForms = []
+            Object.keys(that.$store.state.course.curChapterProgress).filter((item) => {
               return item.indexOf('A' + i) > -1
             }).map((el) => {
               return that.curChapterProgress[el]
+            }).forEach((i) => {
+              if (i > -1) {
+                vipForms.push(i)
+              }
             })
+            srcVipArray[i] = vipForms
             let vipParts = that.curChapterContent.improvement.parts
             vipParts.forEach((item) => {
               if (item.slide_type_code.indexOf('A' + i) > -1) {

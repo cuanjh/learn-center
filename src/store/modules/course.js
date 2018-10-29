@@ -101,6 +101,13 @@ const actions = {
     return httpLogin(config.getRecord, { activity_code: currentChapterCode })
   },
   postProgress ({ commit, state }) {
+    let formScores = {}
+    _.forIn(state.formScores, (value, key) => {
+      if (value > -1) {
+        formScores[key] = value
+      }
+    })
+    state.formScores = formScores
     return httpLogin(config.postProgress, { forms: JSON.stringify(state.formScores) })
   },
   getProgress ({ commit }, currentChapterCode) {
@@ -365,11 +372,29 @@ const mutations = {
       slides = state.curCorePart.Slides
       startSlideNum = state.curCorePart.Slides[0]
       slideNumber = state.curCorePart.Slides.length
+      let formSlides = chapterContent.coreLessons.parts[0].slides
+      slides.forEach((slide) => {
+        let forms = formSlides[slide - 1].forms
+        forms.forEach((form, key) => {
+          if (record['A0-' + (slide + 1) + '-' + (key + 1)] !== 0 && record['A0-' + (slide + 1) + '-' + (key + 1)] !== 1) {
+            record['A0-' + (slide + 1) + '-' + (key + 1)] = -1
+          }
+        })
+      })
     } else {
       slides = chapterContent.improvement.parts.filter((item) => {
         return item.slide_type_code.indexOf(id) > -1
       })[0].slides
       slideNumber = slides.length
+      slides.forEach((slide, index) => {
+        let forms = slide.forms
+        forms.forEach((form, key) => {
+          let r = record[id + '-' + (index + 1) + '-' + (key + 1)]
+          if (r !== 0 && r !== 1) {
+            record[id + '-' + (index + 1) + '-' + (key + 1)] = -1
+          }
+        })
+      })
     }
     let progressBar = _.fill(Array(slideNumber), state.debug ? 1 : -1)
 
@@ -426,7 +451,11 @@ const mutations = {
 
     // 对分组数据进行计算,进项插入
     _.map(newGroup, function (val, key) {
-      progressBar[key] = _.sum(val) / val.length
+      if (val.indexOf(-1) > -1) {
+        progressBar[key] = -1
+      } else {
+        progressBar[key] = _.sum(val) / val.length
+      }
     })
 
     let index = (progressBar.findIndex((value, index, arr) => {
