@@ -56,7 +56,8 @@ const state = {
   homeworkComplete: false,
   improvementComplete: false,
   homeworkContent: {},
-  chapterTestResult: {} // 记录用户的课程测试结果
+  chapterTestResult: {}, // 记录用户的课程测试结果
+  historyCourseRecord: {} // 记录课程的历史数据
 }
 
 const actions = {
@@ -511,6 +512,9 @@ const mutations = {
   },
   updateHomeworkContent (state, data) {
     state.homeworkContent = data
+  },
+  updateHistoryCourseRecord (state, data) {
+    state.historyCourseRecord = data
   }
 }
 

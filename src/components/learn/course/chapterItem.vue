@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
 import BuyChapter from './buyChapterConfirm.vue'
 export default {
@@ -190,6 +190,7 @@ export default {
       nolockTestCheckShow: false,
       anonymousCheckShow: false,
       isShow: true,
+      isHistory: false,
       tips: ''
     }
   },
@@ -200,6 +201,19 @@ export default {
     this.$on('draw', this.drawProgress)
     this.$on('changeIsShow', (flag) => {
       this.isShow = flag
+    })
+    this.$on('changeIsHistory', (flag) => {
+      this.isHistory = flag
+    })
+    this.$on('saveHistoryCourseData', () => {
+      let obj = {}
+      obj['core'] = this.coreData
+      obj['test'] = this.testData
+      obj['homework'] = this.homeworkData
+      obj['vip'] = this.vipData
+      let hcr = this.historyCourseRecord
+      hcr[this.currentChapterCode] = obj
+      this.updateHistoryCourseRecord(hcr)
     })
   },
   computed: {
@@ -213,63 +227,68 @@ export default {
       'curChapterProgress': state => state.course.curChapterProgress,
       'curChapterContent': state => state.course.curChapterContent,
       'chapterTestResult': state => state.course.chapterTestResult,
-      'homeworkContent': state => state.course.homeworkContent
+      'homeworkContent': state => state.course.homeworkContent,
+      historyCourseRecord: state => state.course.historyCourseRecord
     }),
     coreData () {
       var that = this
       console.log(that.curLevelChapters)
-      // 核心课程
-
-      let curChapterCode = that.currentChapterCode
-      let corePartInfos = that.$store.state.course.courseBaseInfo.corePartInfos
-      let coreParts = corePartInfos.filter((item) => curChapterCode.indexOf(item.chapter_code) > 0)
-
       let retObj = {}
-      let partObj = coreParts[0].parts
-      let coreNum = 0
-      partObj.forEach(element => {
-        let startForm = element.start_form - 1
-        let endForm = element.end_form
-        let coreForms = []
-        element.Slides.forEach((slide) => {
-          Object.keys(that.curChapterProgress).filter((item) => {
-            return item.indexOf('A0-' + slide + '-') > -1
-          }).map((el) => {
-            return that.curChapterProgress[el]
-          }).forEach((i) => {
-            coreForms.push(i)
+      // 核心课程
+      if (!that.isHistory) {
+        let curChapterCode = that.currentChapterCode
+        let corePartInfos = that.$store.state.course.courseBaseInfo.corePartInfos
+        let coreParts = corePartInfos.filter((item) => curChapterCode.indexOf(item.chapter_code) > 0)
+
+        let partObj = coreParts[0].parts
+        let coreNum = 0
+        partObj.forEach(element => {
+          let startForm = element.start_form - 1
+          let endForm = element.end_form
+          let coreForms = []
+          element.Slides.forEach((slide) => {
+            Object.keys(that.curChapterProgress).filter((item) => {
+              return item.indexOf('A0-' + slide + '-') > -1
+            }).map((el) => {
+              return that.curChapterProgress[el]
+            }).forEach((i) => {
+              coreForms.push(i)
+            })
           })
-        })
-        let obj = {}
-        let len = endForm - startForm
-        if (coreForms.length < len) {
-          obj['isCompleted'] = 0
-          obj['starNum'] = 0
-          obj['completedRate'] = !coreForms.length ? '' : ((coreForms.length / len) * 100).toFixed(0) + '%'
-          obj['imgStyle'] = ''
-        } else {
-          obj['isCompleted'] = 1
-          obj['completedRate'] = '1'
-          let correctNum = coreForms.filter((item) => item === 1).length
-          let correctRate = (correctNum / coreForms.length).toFixed(2)
-          obj['starNum'] = this.starNum(correctRate)
-          obj['imgStyle'] = ''
+          let obj = {}
+          let len = endForm - startForm
+          if (coreForms.length < len) {
+            obj['isCompleted'] = 0
+            obj['starNum'] = 0
+            obj['completedRate'] = !coreForms.length ? '' : ((coreForms.length / len) * 100).toFixed(0) + '%'
+            obj['imgStyle'] = ''
+          } else {
+            obj['isCompleted'] = 1
+            obj['completedRate'] = '1'
+            let correctNum = coreForms.filter((item) => item === 1).length
+            let correctRate = (correctNum / coreForms.length).toFixed(2)
+            obj['starNum'] = this.starNum(correctRate)
+            obj['imgStyle'] = ''
 
-          coreNum++
-        }
-
-        obj['isActive'] = 0
-        if (element.part_num === 1) {
-          obj['isActive'] = 1
-        } else {
-          if (retObj[element.part_num - 1]['isCompleted'] === 1) {
-            obj['isActive'] = 1
+            coreNum++
           }
-        }
-        retObj[element.part_num] = obj
-      })
 
-      retObj['isCoreCompleted'] = (coreNum === 5) ? 1 : 0
+          obj['isActive'] = 0
+          if (element.part_num === 1) {
+            obj['isActive'] = 1
+          } else {
+            if (retObj[element.part_num - 1]['isCompleted'] === 1) {
+              obj['isActive'] = 1
+            }
+          }
+          retObj[element.part_num] = obj
+        })
+
+        retObj['isCoreCompleted'] = (coreNum === 5) ? 1 : 0
+      } else {
+        retObj = that.historyCourseRecord[that.currentChapterCode]['core']
+      }
+
       this.$emit('draw', 'core', retObj)
       return retObj
     },
@@ -277,66 +296,70 @@ export default {
     vipData () {
       let that = this
       let retObj = {}
-      let srcVipArray = []
-      let vipFormArray = []
-      for (let i = 1; i <= 6; i++) {
-        let obj = {}
-        obj['isCompleted'] = 0
-        obj['starNum'] = 0
-        obj['completedRate'] = '0'
-        obj['imgStyle'] = ''
-
-        if (Object.keys(that.$store.state.course.curChapterContent).length > 0) {
-          srcVipArray[i] = Object.keys(that.$store.state.course.curChapterProgress).filter((item) => {
-            return item.indexOf('A' + i) > -1
-          }).map((el) => {
-            return that.curChapterProgress[el]
-          })
-          let vipParts = that.curChapterContent.improvement.parts
-          vipParts.forEach((item) => {
-            if (item.slide_type_code.indexOf('A' + i) > -1) {
-              let formsLength = 0
-              item.slides.forEach((slide) => {
-                formsLength += slide.forms.length
-              })
-              vipFormArray[i] = formsLength
-            }
-          })
-
-          if (srcVipArray[i] && (srcVipArray[i].length < vipFormArray[i])) {
-            obj['isCompleted'] = 0
-            obj['starNum'] = 0
-            obj['completedRate'] = !srcVipArray[i].length ? '' : ((srcVipArray[i].length / vipFormArray[i]) * 100).toFixed(0) + '%'
-            obj['imgStyle'] = ''
-          } else {
-            obj['isCompleted'] = 1
-            obj['completedRate'] = '1'
-            let correctNum = srcVipArray[i].filter((item) => item === 1).length
-            let correctRate = (correctNum / vipFormArray[i]).toFixed(2)
-            obj['starNum'] = this.starNum(correctRate)
-            obj['imgStyle'] = ''
-          }
-        }
-
-        obj['isActive'] = 0
-        if (i === 1) {
-          obj['isActive'] = 1
-        } else {
-          if (retObj['A' + (i - 1)]['isCompleted'] === 1) {
-            obj['isActive'] = 1
-          }
-        }
-        if (parseInt(this.userInfo.member_info.member_type) !== 1) {
+      if (!that.isHistory) {
+        let srcVipArray = []
+        let vipFormArray = []
+        for (let i = 1; i <= 6; i++) {
+          let obj = {}
           obj['isCompleted'] = 0
-          obj['isActive'] = 0
-          obj['completedRate'] = ''
           obj['starNum'] = 0
+          obj['completedRate'] = '0'
           obj['imgStyle'] = ''
+
+          if (Object.keys(that.$store.state.course.curChapterContent).length > 0) {
+            srcVipArray[i] = Object.keys(that.$store.state.course.curChapterProgress).filter((item) => {
+              return item.indexOf('A' + i) > -1
+            }).map((el) => {
+              return that.curChapterProgress[el]
+            })
+            let vipParts = that.curChapterContent.improvement.parts
+            vipParts.forEach((item) => {
+              if (item.slide_type_code.indexOf('A' + i) > -1) {
+                let formsLength = 0
+                item.slides.forEach((slide) => {
+                  formsLength += slide.forms.length
+                })
+                vipFormArray[i] = formsLength
+              }
+            })
+
+            if (srcVipArray[i] && (srcVipArray[i].length < vipFormArray[i])) {
+              obj['isCompleted'] = 0
+              obj['starNum'] = 0
+              obj['completedRate'] = !srcVipArray[i].length ? '' : ((srcVipArray[i].length / vipFormArray[i]) * 100).toFixed(0) + '%'
+              obj['imgStyle'] = ''
+            } else {
+              obj['isCompleted'] = 1
+              obj['completedRate'] = '1'
+              let correctNum = srcVipArray[i].filter((item) => item === 1).length
+              let correctRate = (correctNum / vipFormArray[i]).toFixed(2)
+              obj['starNum'] = this.starNum(correctRate)
+              obj['imgStyle'] = ''
+            }
+          }
+
+          obj['isActive'] = 0
+          if (i === 1) {
+            obj['isActive'] = 1
+          } else {
+            if (retObj['A' + (i - 1)]['isCompleted'] === 1) {
+              obj['isActive'] = 1
+            }
+          }
+          if (parseInt(this.userInfo.member_info.member_type) !== 1) {
+            obj['isCompleted'] = 0
+            obj['isActive'] = 0
+            obj['completedRate'] = ''
+            obj['starNum'] = 0
+            obj['imgStyle'] = ''
+          }
+          retObj['A' + i] = obj
         }
-        retObj['A' + i] = obj
+        console.log(srcVipArray)
+        console.log(vipFormArray)
+      } else {
+        retObj = that.historyCourseRecord[that.currentChapterCode]['vip']
       }
-      console.log(srcVipArray)
-      console.log(vipFormArray)
       this.$emit('draw', 'vip', retObj)
       return retObj
     },
@@ -349,22 +372,26 @@ export default {
       // }).map((el) => {
       //   return that.curChapterProgress[el]
       // })
-      if (that.chapterTestResult.current_user && Object.keys(that.chapterTestResult.current_user).length > 0) {
-        retObj['isTestCompleted'] = 1
-        retObj['completedTestRate'] = '1'
-        console.log('correct_rate---->', this.chapterTestResult)
-        let correctRate = this.chapterTestResult.current_user.correct_rate
-        if (!correctRate) {
-          correctRate = 0
+      if (!that.isHistory) {
+        if (that.chapterTestResult.current_user && Object.keys(that.chapterTestResult.current_user).length > 0) {
+          retObj['isTestCompleted'] = 1
+          retObj['completedTestRate'] = '1'
+          console.log('correct_rate---->', this.chapterTestResult)
+          let correctRate = this.chapterTestResult.current_user.correct_rate
+          if (!correctRate) {
+            correctRate = 0
+          }
+          correctRate = Math.floor((correctRate).toFixed(3))
+          retObj['starTestNum'] = this.starNum(correctRate)
+          retObj['imgTestStyle'] = ''
+        } else {
+          retObj['isTestCompleted'] = 0
+          retObj['completedTestRate'] = ''
+          retObj['starTestNum'] = 0
+          retObj['imgTestStyle'] = ''
         }
-        correctRate = Math.floor((correctRate).toFixed(3))
-        retObj['starTestNum'] = this.starNum(correctRate)
-        retObj['imgTestStyle'] = ''
       } else {
-        retObj['isTestCompleted'] = 0
-        retObj['completedTestRate'] = ''
-        retObj['starTestNum'] = 0
-        retObj['imgTestStyle'] = ''
+        retObj = that.historyCourseRecord[that.currentChapterCode]['test']
       }
       if (!this.coreData['isCoreCompleted']) {
         retObj['completedTestRate'] = ''
@@ -377,30 +404,34 @@ export default {
     homeworkData () {
       let that = this
       let retObj = {}
-      if (that.homeworkContent && Object.keys(that.homeworkContent).length > 0) {
-        let homeworkNum = that.homeworkContent.length
-        let doneNum = 0
-        that.homeworkContent.forEach((item) => {
-          if (item.has_done) {
-            doneNum++
+      if (!that.isHistory) {
+        if (that.homeworkContent && Object.keys(that.homeworkContent).length > 0) {
+          let homeworkNum = that.homeworkContent.length
+          let doneNum = 0
+          that.homeworkContent.forEach((item) => {
+            if (item.has_done) {
+              doneNum++
+            }
+          })
+          if (homeworkNum === doneNum) {
+            retObj['isHomeworkCompleted'] = 1
+            retObj['starHomeworkNum'] = 5
+            retObj['completedHomeworkRate'] = '0'
+            retObj['imgHomeworkStyle'] = ''
+          } else {
+            retObj['isHomeworkCompleted'] = 0
+            retObj['starHomeworkNum'] = 0
+            retObj['completedHomeworkRate'] = (doneNum === 0) ? '' : (doneNum / homeworkNum * 100).toFixed(0) + '%'
+            retObj['imgHomeworkStyle'] = ''
           }
-        })
-        if (homeworkNum === doneNum) {
-          retObj['isHomeworkCompleted'] = 1
-          retObj['starHomeworkNum'] = 5
-          retObj['completedHomeworkRate'] = '0'
-          retObj['imgHomeworkStyle'] = ''
         } else {
           retObj['isHomeworkCompleted'] = 0
           retObj['starHomeworkNum'] = 0
-          retObj['completedHomeworkRate'] = (doneNum === 0) ? '' : (doneNum / homeworkNum * 100).toFixed(0) + '%'
+          retObj['completedHomeworkRate'] = ''
           retObj['imgHomeworkStyle'] = ''
         }
       } else {
-        retObj['isHomeworkCompleted'] = 0
-        retObj['starHomeworkNum'] = 0
-        retObj['completedHomeworkRate'] = ''
-        retObj['imgHomeworkStyle'] = ''
+        retObj = that.historyCourseRecord[that.currentChapterCode]['homework']
       }
       if (!this.coreData['isCoreCompleted']) {
         retObj['completedHomeworkRate'] = ''
@@ -410,6 +441,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      updateHistoryCourseRecord: 'course/updateHistoryCourseRecord'
+    }),
     jumpToCourse (chapterCode) {
       let isAnonymous = this.userInfo['is_anonymous']
       if (isAnonymous) {
@@ -437,7 +471,6 @@ export default {
         }, 0)
 
         setTimeout(() => {
-          // this.isShow = true
           this.$emit('loadChapterInfo', chapterCode)
         }, 300)
       }
