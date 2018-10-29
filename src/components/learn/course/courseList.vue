@@ -118,8 +118,8 @@ export default {
 
         setTimeout(() => {
           this.$refs['chapterItem'].$emit('changeIsShow', true)
-          // let top = $('#' + chapterCode).offset().top - 90
-          // $('body,html').animate({ scrollTop: top }, 300, 'linear')
+          let top = $('#' + chapterCode).offset().top - 90
+          $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, 0)
         // $('body,html').scrollTop(top)
       }

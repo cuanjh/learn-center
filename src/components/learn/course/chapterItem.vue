@@ -30,8 +30,9 @@
         </div>
       </div>
       <!-- <transition name="fade" mode="out-in"> -->
-        <div :class="['course-core-test-check-locked',
-        {'course-core-test-check': isShow && item.code === currentChapterCode}]">
+        <div :class="['course-item-detail',
+        {'show-course-item': isShow && item.code === currentChapterCode,
+        'hide-course-item': !(isShow && item.code === currentChapterCode)}]">
           <ul>
             <!-- <li class="course-brief" @click="switchShow()">
               <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
@@ -466,11 +467,15 @@ export default {
         $('body,html').animate({ scrollTop: top }, 300, 'linear')
         return false
       } else {
+        let time = 0
+        if (this.isShow) {
+          time = 300
+        }
         this.isShow = false
         setTimeout(() => {
           let top = $('#' + chapterCode).offset().top - 90
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
-        }, 0)
+        }, time)
 
         setTimeout(() => {
           this.$emit('loadChapterInfo', chapterCode)
@@ -729,21 +734,26 @@ export default {
     opacity: 0;
   } */
 
-  .course-core-test-check-locked {
+  .course-item-detail {
     height: 0;
+    background-color:#fff;
+    margin-top: 3px;
+    border-radius:4px;
     overflow: hidden;
   }
 
-  .course-core-test-check{
-    background-color:#fff;
-    height: 553px;
-    margin-top: 3px;
-    padding:15px;
-    border-radius:4px;
-    transition: height .5s linear;
-    /* transform: translateY(-140px); */
-    /* animation: translateBigItem .4s linear; */
-    /* animation: heightSpread .4s ease; */
+  .course-item-detail ul > li {
+    padding: 15px 15px 30px;
+  }
+
+  .show-course-item{
+    height: 510px;
+    transition: height .3s ease-out;
+  }
+
+  .hide-course-item {
+    height: 0;
+    transition: height .3s ease-out;
   }
 
   /* @keyframes translateBigItem {
