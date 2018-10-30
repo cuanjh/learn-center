@@ -2,6 +2,7 @@
   <div>
     <router-link class="banner" :to="{path: '/app/world-map'}">
     <div class="describe">
+      <div class="banner-title"></div>
       <p>
         <span>共收录</span>{{langMapNum}}<span>种语言</span>
       </p>
@@ -135,30 +136,32 @@ export default {
     background-size: cover;
     object-fit: cover;
   }
+
   .banner .describe {
-    width: 100%;
+    width: 500px;
     height: 100%;
-    margin: 0 auto;
+    margin-left: 30%;
+  }
+
+  .banner .describe .banner-title {
+    width: 244px;
+    height: 72px;
+    background-image: url('../../../../static/images/course/book-case-banner-title.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: cover;
+    margin-top: 70px;
   }
 
   .banner .describe > p {
     position: relative;
-    left: 555px;
-    top: 160px;
+    top: 60px;
     font-size: 28px;
     color: #b9ec10;
   }
-  @media only screen and (min-width: 1900px) {
-    .describe {
-      width: 1200px !important;
-    }
-    .describe > p {
-      left: 118px;
-      top: 177px
-    }
-  }
+
   .banner .describe > p:nth-child(2) {
-    top: 206px;
+    top: 10px;
   }
 
   .banner .describe > p > span {
