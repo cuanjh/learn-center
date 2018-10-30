@@ -582,6 +582,7 @@ a {
       display: inline-block;
       width: 24%;
       height: 100%;
+      font-weight: bold;
       .text {
         width: 100%;
         height: 100%;
@@ -702,7 +703,7 @@ a {
                 display: inline-block;
                 width: 40px;
                 height: 26px;
-                box-shadow: 0px 2px 4px 0px #000000;
+                box-shadow: 0px 2px 4px 0px rgba(0,0,0,.3);
                 margin-bottom: 10px;
                 border-radius: 2px;
                 &:nth-child(1){
@@ -815,7 +816,7 @@ a {
                 display: inline-block;
                 width: 40px;
                 height: 26px;
-                box-shadow: 0px 2px 4px 0px #000000;
+                box-shadow: 0px 2px 4px 0px rgba(0,0,0,.3);
                 margin-bottom: 10px;
                 border-radius: 4px;
                 &:nth-child(1){
@@ -928,7 +929,7 @@ a {
                 display: inline-block;
                 width: 40px;
                 height: 26px;
-                box-shadow: 0px 2px 4px 0px #000000;
+                box-shadow: 0px 2px 4px 0px rgba(0,0,0,.3);
                 margin-bottom: 10px;
                 border-radius: 4px;
                 &:nth-child(1){
@@ -1041,7 +1042,7 @@ a {
                 display: inline-block;
                 width: 40px;
                 height: 26px;
-                box-shadow: 0px 2px 4px 0px #000000;
+                box-shadow: 0px 2px 4px 0px rgba(0,0,0,.3);
                 margin-bottom: 10px;
                 border-radius: 4px;
                 &:nth-child(1){
@@ -1155,7 +1156,7 @@ a {
                 display: inline-block;
                 width: 40px;
                 height: 26px;
-                box-shadow: 0px 2px 4px 0px #000000;
+                box-shadow: 0px 2px 4px 0px rgba(0,0,0,.3);
                 margin-bottom: 10px;
                 border-radius: 4px;
                 &:nth-child(1){

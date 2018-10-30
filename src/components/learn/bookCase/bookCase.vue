@@ -187,12 +187,14 @@ export default {
 
   .course-box {
     margin-top: 45px;
+
   }
 
   .course-box .title {
     font-size: 30px;
     color: #333333;
     margin: 30px 0;
+    font-weight: bold;
   }
   .course-box .title a {
     text-decoration:none;
@@ -203,6 +205,7 @@ export default {
     padding-left: 20px;
     padding-right: 10px;
     vertical-align: initial;
+    font-weight: bold;
   }
   .course-item {
     overflow: hidden;
@@ -244,6 +247,7 @@ export default {
     color: #333333;
     position: absolute;
     bottom: 0px;
+    font-weight: bold;
   }
   .course-item li .number {
     font-size: 15px;

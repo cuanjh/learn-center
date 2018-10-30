@@ -470,9 +470,14 @@ export default {
       }
 
       if (chapterCode === this.currentChapterCode) {
-        this.isShow = !this.isShow
-        let top = $('#' + chapterCode).offset().top - 90
-        $('body,html').animate({ scrollTop: top }, 300, 'linear')
+        if (this.isShow) {
+          this.isShow = !this.isShow
+        } else {
+          this.isShow = !this.isShow
+          let top = $('#' + chapterCode).offset().top - 90
+          $('body,html').animate({ scrollTop: top }, 300, 'linear')
+        }
+
         return false
       } else {
         let time = 0

@@ -291,13 +291,13 @@ export default {
 }
 .right .vip-img {
   display: inline-block;
-  background: url('../../../static/images/user-guide/crown.png') no-repeat;
+  background: url('../../../static/images/user-guide/crown.svg') no-repeat;
   background-size: 33px 31px;
   width: 33px;
   height: 31px;
   position: absolute;
   right: 46px;
-  top: 26px;
+  top: 25px;
   margin: 0 16px;
 }
 .active {
@@ -379,7 +379,7 @@ export default {
   color: white;
   padding: 0 80px 0 20px;
   border-radius: 20px;
-  box-shadow: 0 2px 4px 0 rgba(255,255,255,.4);
+  /* box-shadow: 0 2px 4px 0 rgba(255,255,255,.4); */
   transition: all 1s;
   opacity: 0;
   z-index: 5;
