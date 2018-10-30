@@ -376,8 +376,12 @@ const mutations = {
       slides.forEach((slide) => {
         let forms = formSlides[slide - 1].forms
         forms.forEach((form, key) => {
-          if (record['A0-' + (slide + 1) + '-' + (key + 1)] !== 0 && record['A0-' + (slide + 1) + '-' + (key + 1)] !== 1) {
-            record['A0-' + (slide + 1) + '-' + (key + 1)] = -1
+          if (!record) {
+            return
+          }
+          let r = record['A0-' + (slide) + '-' + (key + 1)]
+          if (r !== 0 && r !== 1) {
+            record['A0-' + (slide) + '-' + (key + 1)] = -1
           }
         })
       })
@@ -389,6 +393,9 @@ const mutations = {
       slides.forEach((slide, index) => {
         let forms = slide.forms
         forms.forEach((form, key) => {
+          if (!record) {
+            return
+          }
           let r = record[id + '-' + (index + 1) + '-' + (key + 1)]
           if (r !== 0 && r !== 1) {
             record[id + '-' + (index + 1) + '-' + (key + 1)] = -1
