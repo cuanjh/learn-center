@@ -8,7 +8,7 @@
     <!-- 底部 -->
     <learn-bottom></learn-bottom>
     <photo-uploader></photo-uploader>
-    <rocket v-show="rocketShow"></rocket>
+    <rocket></rocket>
   </div>
 </template>
 <script>
@@ -22,7 +22,6 @@ import Rocket from '../common/rocket.vue'
 export default {
   data () {
     return {
-      rocketShow: false
     }
   },
   created () {

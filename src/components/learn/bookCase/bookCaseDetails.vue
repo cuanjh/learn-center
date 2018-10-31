@@ -16,8 +16,7 @@
     </div>
     <div class="details-header">
       <div class="details-top">
-        <div class="details-title">
-          <p>世界语言地图</p>
+        <div class="details-title-img">
         </div>
         <div class="details-content">
           <div class="container">
@@ -295,6 +294,13 @@ export default {
     width: 100%;
     height: 30px;
   }
+  .details-top .details-title-img {
+    width: 148px;
+    height: 24px;
+    background-image: url('../../../../static/images/bookCase/world-lang-map.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
   .details-top .details-title {
     /* width: 144px; */
     height: 30px;
@@ -427,6 +433,7 @@ export default {
     font-size: 16px;
     color: #333333;
     border-bottom: 1px solid #EBEBEB;
+    font-weight: bold;
     padding-bottom: 12px;
   }
   .book-info .desc {

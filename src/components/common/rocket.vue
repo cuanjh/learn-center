@@ -36,7 +36,7 @@ export default {
   .learn-back-to-top-btn-rocket{
     position: fixed;
     bottom: 100px;
-    right: 100px;
+    right: 20px;
     background-image: url('../../../static/images/home/back-top.png');
     background-repeat: no-repeat;
     background-size: cover;
