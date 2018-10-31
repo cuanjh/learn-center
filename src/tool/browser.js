@@ -53,8 +53,8 @@ export const getOSAndBrowser = () => {
       if (/[Cc]hrome\/\d+/.test(e)) {
         g = /([Cc]hrome)\/(\d+)/.exec(e)
       } else {
-        if (/[Vv]ersion\/\d+\.\d+\.\d+(\.\d)* *[Ss]afari/.test(e)) {
-          g = /[Vv]ersion\/(\d+\.\d+\.\d+)(\.\d)* *([Ss]afari)/.exec(e)
+        if (/[Ss]afari\/\d+/.test(e)) {
+          g = /([Ss]afari)\/(\d+)/.exec(e)
         } else {
           if (/[Oo]pera.+[Vv]ersion\/\d+\.\d+/.test(e)) {
             g = /([Oo]pera).+[Vv]ersion\/(\d+)\.\d+/.exec(e)

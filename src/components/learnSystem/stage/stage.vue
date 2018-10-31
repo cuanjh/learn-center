@@ -678,7 +678,7 @@ export default {
       }
     },
     // 重设Data数据
-    changeData (_this, trunk) {
+    async changeData (_this, trunk) {
       !trunk && (trunk = _this.thunk)
       if (trunk === END) {
         // // 核心课程结束则解锁其他的模块
@@ -690,10 +690,10 @@ export default {
         // } else {
         //   Model.postProgress(_.take(_this.data, 4))
         // }
-        _this.postProgress()
+        await _this.postProgress()
         _this.stopCount() // 停止计时器
 
-        _this.getProgress(_this.curChapterCode)
+        await _this.getProgress(_this.curChapterCode)
         console.log(_this.coin)
         _this.$emit('calCoin') // 结束前清算结果
         console.log(_this.coin)
@@ -761,8 +761,8 @@ export default {
           ccr = (arr1.length / formsLength).toFixed(2)
         }
 
+        let nextChapter
         if (_this.id.indexOf('A05') > -1) {
-          let nextChapter
           let arr = _this.curChapterCode.split('-')
           if (arr[4].toLowerCase() === 'chapter6') {
             if (arr[3] === 'Unit4') {
@@ -773,7 +773,7 @@ export default {
                 nextChapter = arr[0] + '-' + arr[1] + '-' + level + 'Unit1-Chapter1'
               }
             } else {
-              let unit = 'Unit-' + (parseInt(arr[3].replace('Unit', '')) + 1)
+              let unit = 'Unit' + (parseInt(arr[3].replace('Unit', '')) + 1)
               nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + unit + '-Chapter1'
             }
           } else {
@@ -794,11 +794,9 @@ export default {
           }
 
           if (_this.unlockCourses.indexOf(nextChapter) === -1) {
-            _this.updateCurChapter(nextChapter)
-            _this.postUnlockChapter(params).then((r) => {
-              _this.getUnlockChapter(nextChapter).then((res) => {
-                _this.updateUnlockCourseList(res)
-              })
+            await _this.postUnlockChapter(params)
+            await _this.getUnlockChapter(nextChapter).then((res) => {
+              _this.updateUnlockCourseList(res)
             })
           }
         }
@@ -810,25 +808,29 @@ export default {
           correctRate: cr,
           courseCompleteRate: ccr
         }
-        _this.postActivityRecord(payload).then((res) => {
+        await _this.postActivityRecord(payload).then((res) => {
           console.log(res)
-          var params = {
-            chapter_code: _this.curChapterCode,
-            core: (_this.core) ? 1 : 0,
-            homework: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-            improvement: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-            core_complete: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-            homework_complete: (_this.homeworkComplete) ? 1 : 0,
-            improvement_complete: (_this.improvementComplete) ? 1 : 0,
-            learn_time: _this.last_time,
-            correct_rate: cr,
-            group_id: ''
-          }
-          _this.postUnlockChapter(params).then((res) => {
-            _this.$refs['summary'].$emit('coreSummary-show', _this.id)
-            _this.setFormScoresNull()
-          })
         })
+        var params1 = {
+          chapter_code: _this.curChapterCode,
+          core: (_this.core) ? 1 : 0,
+          homework: (_this.id.indexOf('A05') > -1) ? 1 : 0,
+          improvement: (_this.id.indexOf('A05') > -1) ? 1 : 0,
+          core_complete: (_this.id.indexOf('A05') > -1) ? 1 : 0,
+          homework_complete: (_this.homeworkComplete) ? 1 : 0,
+          improvement_complete: (_this.improvementComplete) ? 1 : 0,
+          learn_time: _this.last_time,
+          correct_rate: cr,
+          group_id: ''
+        }
+        await _this.postUnlockChapter(params1).then((res) => {
+          console.log(res)
+        })
+        // if (nextChapter) {
+        //   _this.updateCurChapter(nextChapter)
+        // }
+        _this.$refs['summary'].$emit('coreSummary-show', _this.id)
+        _this.setFormScoresNull()
         return false
       }
       _.delay(() => {

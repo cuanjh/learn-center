@@ -717,6 +717,7 @@ export default {
   background-position: 21px center;
   padding-left: 27px;
   border-bottom: 1px solid #f2f2f2;
+  cursor: pointer;
 }
 .right .user-login-out span:nth-of-type(1){
   background-image: url(./../../../static/images/learn/learn-header-setting.svg);

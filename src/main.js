@@ -73,7 +73,8 @@ router.beforeEach((to, from, next) => {
     let browser = getOSAndBrowser().browser
     let reg = new RegExp('\\d+', 'g')
     let version = browser.match(reg)[0]
-    if ((browser.indexOf('Edge') > -1) || !((browser.indexOf('Firefox') > -1 && version >= 21) || (browser.indexOf('Chrome') > -1 && version >= 17) || (browser.indexOf('Opera') > -1 && version >= 18))) {
+    console.log(browser)
+    if ((browser.indexOf('Edge') > -1) || (browser.indexOf('Safari') > -1) || !((browser.indexOf('Firefox') > -1 && version >= 21) || (browser.indexOf('Chrome') > -1 && version >= 17) || (browser.indexOf('Opera') > -1 && version >= 18) || (browser.indexOf('Safari') > -1 && version >= 603))) {
       if (to.path === '/download') {
         next()
       } else {
