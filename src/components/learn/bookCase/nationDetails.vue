@@ -18,7 +18,6 @@
       <div class="background-img"></div>
       <div class="nation-top">
         <div class="nation-title">
-          <p>世界语言地图</p>
         </div>
         <div class="nation-content">
           <div class="containers">
@@ -193,10 +192,11 @@ export default {
       height: 100%;
       padding: 20px 30px;
       .nation-title {
-        width: 144px;
-        height: 29px;
-        color: #2A9FE4;
-        font-size: 24px;
+        width: 148px;
+        height: 24px;
+        background-image: url('../../../../static/images/bookCase/world-lang-map.png');
+        background-repeat: no-repeat;
+        background-size: cover;
       }
       .nation-content {
         height: 137px;
@@ -225,7 +225,7 @@ export default {
           padding: 3px;
           background-color: #ffffff;
           border-radius: 10px;
-          box-shadow: 0px 2px 4px 0px #999999;
+          box-shadow: 0px 4px 20px 0px rgba(0,0,0,0.2);
           img {
             width: 100%;
             height: 100%;
@@ -286,6 +286,7 @@ export default {
           border-bottom: 1px solid #EAEAEA;
           padding-bottom: 10px;
           margin-bottom: 10px;
+          font-weight: bold;
         }
         .desc {
           font-size: 16px;

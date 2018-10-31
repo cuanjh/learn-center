@@ -296,7 +296,7 @@ export default {
   width: 33px;
   height: 31px;
   position: absolute;
-  right: 46px;
+  right: 64px;
   top: 25px;
   margin: 0 16px;
 }
@@ -309,7 +309,7 @@ export default {
   position: absolute;
   margin: auto;
   top: 0;
-  left: -40px;
+  left: -100px;
   right: 0;
   bottom: 0;
   width: 238px;

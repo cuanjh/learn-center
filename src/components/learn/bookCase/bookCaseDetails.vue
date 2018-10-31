@@ -311,6 +311,8 @@ export default {
   }
   .details-top .details-content .container {
     /* width: 80%; */
+    display: inline-block;
+    width: 910px;
     height: 100%;
     border-bottom: 1px solid #EAEAEA;
     padding-left: 0px;
@@ -336,6 +338,7 @@ export default {
   }
   .details-top .details-content .details-title {
     margin-bottom: 5px;
+    font-weight: bold;
   }
   .details-top .details-content .details-resource .course-content {
     /* width: 500px; */
@@ -358,6 +361,7 @@ export default {
   .details-top .details-content .details-resource .course-content .course li .number{
     font-size: 16px;
     color: #2A9FE4;
+    font-weight: bold;
   }
    .details-top .details-content .button {
       width: 170px;
@@ -371,7 +375,7 @@ export default {
       right: 6%;
       top: 35%;
       border-radius: 30px;
-      box-shadow: 0px 5px 10px 0px #999999;
+      box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, .15);
    }
    .details-top .details-content .button:hover {
      background: rgba(11, 108, 224, .6)

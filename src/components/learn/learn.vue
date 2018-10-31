@@ -8,6 +8,7 @@
     <!-- 底部 -->
     <learn-bottom></learn-bottom>
     <photo-uploader></photo-uploader>
+    <rocket v-show="rocketShow"></rocket>
   </div>
 </template>
 <script>
@@ -16,10 +17,12 @@ import $ from 'jquery'
 import learnHeader from './learnHeader.vue'
 import learnBottom from './learnBottom.vue'
 import PhotoUploader from '../common/user/photoUploader.vue'
+import Rocket from '../common/rocket.vue'
 
 export default {
   data () {
     return {
+      rocketShow: false
     }
   },
   created () {
@@ -40,7 +43,8 @@ export default {
   components: {
     learnHeader,
     learnBottom,
-    PhotoUploader
+    PhotoUploader,
+    Rocket
   },
   computed: {
     ...mapState({

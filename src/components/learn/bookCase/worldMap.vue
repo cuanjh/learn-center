@@ -13,11 +13,11 @@
     <div class="world-container">
       <div class="world-header">
         <div class="five-continents">
-          <a class="america" v-bind:class="{'active': 'Americas' == tabCountry}" @click="tabChange('Americas')"  href="javascript:;"><i></i><span>美洲</span></a>
-          <a class="europe" v-bind:class="{'active': 'Europe' == tabCountry}" @click="tabChange('Europe')"  href="javascript:;"><i></i><span>欧洲</span></a>
-          <a class="asia" v-bind:class="{'active': 'Asia' == tabCountry}" @click="tabChange('Asia')"  href="javascript:;"><i></i><span>亚洲</span></a>
-          <a class="africa" v-bind:class="{'active': 'Africa' == tabCountry}" @click="tabChange('Africa')"  href="javascript:;"><i></i><span>非洲</span></a>
-          <a class="oceania" v-bind:class="{'active': 'Pacific' == tabCountry}" @click="tabChange('Pacific')"  href="javascript:;"><i></i><span>大洋洲</span></a>
+          <a class="america" v-bind:class="{'active': 'Americas' == tabCountry}" @click="tabChange('Americas')"  href="javascript:;"><i></i><span v-show="false">美洲</span></a>
+          <a class="europe" v-bind:class="{'active': 'Europe' == tabCountry}" @click="tabChange('Europe')"  href="javascript:;"><i></i><span v-show="false">欧洲</span></a>
+          <a class="asia" v-bind:class="{'active': 'Asia' == tabCountry}" @click="tabChange('Asia')"  href="javascript:;"><i></i><span v-show="false">亚洲</span></a>
+          <a class="africa" v-bind:class="{'active': 'Africa' == tabCountry}" @click="tabChange('Africa')"  href="javascript:;"><i></i><span v-show="false">非洲</span></a>
+          <a class="oceania" v-bind:class="{'active': 'Pacific' == tabCountry}" @click="tabChange('Pacific')"  href="javascript:;"><i></i><span v-show="false">大洋洲</span></a>
         </div>
         <div class="content">
           <div class="text" v-show="'country' == tabCountry">
@@ -602,6 +602,7 @@ a {
           text-align: left;
           padding-left: 30px;
           margin-bottom: 160px;
+          font-weight: normal;
         }
         .indicators {
           height: 28px;
@@ -610,6 +611,7 @@ a {
           line-height: 20px;
           padding-left: 30px;
           text-align: left;
+          font-weight: normal;
           .icon {
             display: inline-block;
             width: 13px;
@@ -649,7 +651,7 @@ a {
           .number {
             margin-bottom: 20px;
             margin-left: 10px;
-            margin-top: 250px;
+            margin-top: 220px;
             position: absolute;
             span:nth-child(1){
               width: 60px;
@@ -672,7 +674,7 @@ a {
           .language {
             margin-bottom: 20px;
             margin-left: 10px;
-            margin-top: 280px;
+            margin-top: 265px;
             position: absolute;
             span:nth-child(1){
               width: 60px;

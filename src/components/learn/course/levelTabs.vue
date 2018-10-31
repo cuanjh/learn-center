@@ -74,7 +74,7 @@ export default {
     font-weight: normal;
     font-style: normal;
     font-stretch: normal;
-    color: #4a4a4a;
+    color: #999999;
     width: 70px;
     cursor: pointer;
     font-weight: bold;

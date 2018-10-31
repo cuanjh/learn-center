@@ -161,7 +161,7 @@ export default {
   }
 
   .banner .describe > p:nth-child(2) {
-    top: 10px;
+    top: 20px;
   }
 
   .banner .describe > p > span {
@@ -263,11 +263,12 @@ export default {
     right: 0px;
     padding-top: 3px;
     text-align: left;
+    font-weight: bold;
   }
   .course-item li .details {
     width: 100%;
     height: 100%;
-    background-color: #fff;
+    background-color: rgba(255,255,255,.97);
     padding: 25px 20px 0px;
     cursor: pointer;
     position: absolute;
@@ -296,6 +297,7 @@ export default {
   .course-item li .details .home-work {
     font-size: 14px;
     color: #999999;
+    font-weight: bold;
   }
   .course-item li .details .btn {
     width: 106px;
