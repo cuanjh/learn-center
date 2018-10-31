@@ -229,7 +229,7 @@ export default {
     height: 35px;
     background: #0581D1;
     color: #ffffff !important;
-    box-shadow: 0px 2px 4px #000000;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, .3);
     border-radius: 3px;
   }
   .hot-container .hot-letter .letter .letter_list {
@@ -271,6 +271,7 @@ export default {
     width: 100%;
     height: 28px;
     font-size: 16px;
+    font-weight: bold;
     color: #333333;
   }
   .hot-container .hot-content .hot-list ul {

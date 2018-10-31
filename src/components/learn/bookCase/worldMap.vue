@@ -631,12 +631,11 @@ a {
           padding-left: 30px;
           .background {
             display: inline-block;
-            width: 100%;
-            height: 196px;
+            position: absolute;
+            width: 237px;
+            height: 312px;
             background: url('../../../../static/images/bookCase/map/americaBackground.png') no-repeat;
-            background-size: 216px 180px;
-            background-position-x: 36px;
-            background-position-y: 12px;
+            background-size: cover;
           }
           .title {
             width: 100%;
@@ -644,10 +643,14 @@ a {
             font-size: 32px;
             color: #444444;
             position: absolute;
-            top: 74px;
+            top: 124px;
+            margin-left: 10px;
           }
           .number {
             margin-bottom: 20px;
+            margin-left: 10px;
+            margin-top: 250px;
+            position: absolute;
             span:nth-child(1){
               width: 60px;
               height: 21px;
@@ -668,6 +671,9 @@ a {
           }
           .language {
             margin-bottom: 20px;
+            margin-left: 10px;
+            margin-top: 280px;
+            position: absolute;
             span:nth-child(1){
               width: 60px;
               height: 21px;
@@ -687,6 +693,9 @@ a {
             }
           }
           .main-countries {
+            position: absolute;
+            margin-left: 10px;
+            margin-top: 310px;
             span{
               width: 60px;
               height: 21px;
@@ -741,15 +750,14 @@ a {
         .europe-list {
           width: 100%;
           height: 100%;
-          padding-left: 30px;
+          padding-left: 20px;
           .background {
             display: inline-block;
             width: 100%;
-            height: 196px;
+            height: 100px;
             background: url('../../../../static/images/bookCase/map/europeBackground.png') no-repeat;
-            background-size: 216px 180px;
-            background-position-x: 36px;
-            background-position-y: 12px;
+            background-size: cover;
+            margin-top: 20px;
           }
           .title {
             width: 100%;
@@ -757,10 +765,13 @@ a {
             font-size: 32px;
             color: #444444;
             position: absolute;
-            top: 74px;
+            margin-top: -15px;
+            margin-left: 20px;
           }
           .number {
             margin-bottom: 20px;
+            margin-top: 90px;
+            margin-left: 20px;
             span:nth-child(1){
               width: 60px;
               height: 21px;
@@ -781,6 +792,7 @@ a {
           }
           .language {
             margin-bottom: 20px;
+            margin-left: 20px;
             span:nth-child(1){
               width: 60px;
               height: 21px;
@@ -800,6 +812,7 @@ a {
             }
           }
           .main-countries {
+            margin-left: 20px;
             span{
               width: 60px;
               height: 21px;
@@ -860,9 +873,8 @@ a {
             width: 100%;
             height: 196px;
             background: url('../../../../static/images/bookCase/map/asiaBackground.png') no-repeat;
-            background-size: 216px 180px;
-            background-position-x: 36px;
-            background-position-y: 12px;
+            background-size: cover;
+            margin-top: 15px;
           }
           .title {
             width: 100%;
@@ -870,10 +882,12 @@ a {
             font-size: 32px;
             color: #444444;
             position: absolute;
-            top: 74px;
+            margin-top: -105px;
+            margin-left: 10px;
           }
           .number {
             margin-bottom: 20px;
+            margin-left: 10px;
             span:nth-child(1){
               width: 60px;
               height: 21px;
@@ -893,6 +907,7 @@ a {
             }
           }
           .language {
+            margin-left: 10px;
             margin-bottom: 20px;
             span:nth-child(1){
               width: 60px;
@@ -913,6 +928,7 @@ a {
             }
           }
           .main-countries {
+            margin-left: 10px;
             span{
               width: 60px;
               height: 21px;
@@ -964,18 +980,17 @@ a {
         position: relative;
         width: 100%;
         height: 100%;
+        padding-left: 30px;
         .africa-list {
           width: 100%;
           height: 100%;
-          padding-left: 30px;
           .background {
             display: inline-block;
-            width: 100%;
-            height: 196px;
+            width: 170px;
+            height: 184px;
             background: url('../../../../static/images/bookCase/map/africaBackground.png') no-repeat;
-            background-size: 216px 180px;
-            background-position-x: 36px;
-            background-position-y: 12px;
+            background-size: cover;
+            margin-left: 20px;
           }
           .title {
             width: 100%;
@@ -983,10 +998,13 @@ a {
             font-size: 32px;
             color: #444444;
             position: absolute;
-            top: 74px;
+            top: 100px;
+            margin-left: 10px;
           }
           .number {
+            margin-top: 20px;
             margin-bottom: 20px;
+            margin-left: 10px;
             span:nth-child(1){
               width: 60px;
               height: 21px;
@@ -1007,6 +1025,7 @@ a {
           }
           .language {
             margin-bottom: 20px;
+            margin-left: 10px;
             span:nth-child(1){
               width: 60px;
               height: 21px;
@@ -1026,6 +1045,8 @@ a {
             }
           }
           .main-countries {
+            display: inline-flex;
+            margin-left: 10px;
             span{
               width: 60px;
               height: 21px;
@@ -1084,12 +1105,12 @@ a {
           padding-left: 30px;
           .background {
             display: inline-block;
-            width: 100%;
-            height: 196px;
+            width: 222px;
+            height: 198px;
             background: url('../../../../static/images/bookCase/map/oceaniaBackground.png') no-repeat;
-            background-size: 216px 180px;
-            background-position-x: 36px;
-            background-position-y: 12px;
+            background-size: cover;
+            margin-top: -31px;
+            margin-left: 10px;
           }
           .title {
             width: 100%;
@@ -1097,10 +1118,13 @@ a {
             font-size: 32px;
             color: #444444;
             position: absolute;
-            top: 74px;
+            margin-left: 10px;
+            top: 94px;
           }
           .number {
             margin-bottom: 20px;
+            margin-left: 10px;
+            margin-top: 30px;
             span:nth-child(1){
               width: 60px;
               height: 21px;
@@ -1120,6 +1144,7 @@ a {
             }
           }
           .language {
+            margin-left: 10px;
             margin-bottom: 20px;
             span:nth-child(1){
               width: 60px;
@@ -1140,6 +1165,7 @@ a {
             }
           }
           .main-countries {
+            margin-left: 10px;
             span{
               width: 60px;
               height: 21px;
@@ -1214,6 +1240,7 @@ a {
   .country-container .country-letter {
     width: 100%;
     height: 65px;
+    font-weight: bold;
     border-bottom: 1px solid #EBEBEB;
   }
   .country-container .country-letter .letter {
@@ -1236,7 +1263,7 @@ a {
       width: 26px;
       height: 35px;
       font-size: 16px;
-      box-shadow: 0px 2px 4px #000000;
+      box-shadow: 0px 2px 4px rgba(0,0,0,.3);
       border-radius: 3px;
       text-align: center;
       line-height: 35px;
@@ -1274,6 +1301,7 @@ a {
     width: 100%;
     height: 28px;
     font-size: 16px;
+    font-weight: bold;
     color: #333333;
   }
   .country-container .country-content .country-list ul {

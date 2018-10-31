@@ -209,7 +209,7 @@ export default {
       width: 26px;
       height: 35px;
       font-size: 16px;
-      box-shadow: 0px 2px 4px #000000;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, .3);
       border-radius: 3px;
       text-align: center;
       line-height: 35px;
@@ -247,6 +247,7 @@ export default {
     width: 100%;
     height: 28px;
     font-size: 16px;
+    font-weight: bold;
     color: #333333;
   }
   .country-container .country-content .country-list ul {

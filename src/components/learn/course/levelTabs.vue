@@ -75,8 +75,9 @@ export default {
     font-style: normal;
     font-stretch: normal;
     color: #4a4a4a;
-    width: 80%;
+    width: 70px;
     cursor: pointer;
+    font-weight: bold;
   }
 
   .learn-footer-course-nav > ul > li > span {
