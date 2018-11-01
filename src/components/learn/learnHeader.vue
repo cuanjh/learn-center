@@ -45,7 +45,7 @@
       <div class="right" @mouseleave="hideExit" v-if="userInfo.member_info">
         <div class="container">
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
-          <div class="search"></div>
+          <div class="search" @click="enterSearch"></div>
         </div>
         <router-link :to="{path: '/app/user/vip'}"  class="vip-img" v-if="userInfo.member_info.member_type !== 1"></router-link>
         <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
@@ -188,6 +188,7 @@ export default {
       this.$refs['search'].$emit('enterSearch')
     },
     hideLangList () {
+      this.searchUserCourse = ''
       this.courseDetailShow = false
     }
   }
