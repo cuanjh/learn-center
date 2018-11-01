@@ -2,7 +2,7 @@
   <section class='learn-search-head-courseList'>
     <ul>
       <li class='learn-search-head-courseList-hover' v-for="(item, index) in filterCourseList" :key="index">
-        <span></span><span @click='routerGo(item)'>{{ item['name']}}</span>
+        <span :class="{'hover': item.isMatch}"></span><span @click='routerGo(item)'>{{ item['name']}}</span>
       </li>
     </ul>
   </section>
@@ -33,8 +33,17 @@ export default {
   },
   created () {
     this.$on('enterSearch', () => {
+      let course = ''
+      this.filterCourseList.forEach((item) => {
+        if (item.isMatch) {
+          course = item
+        }
+      })
       if (this.filterCourseList.length === 1) {
-        this.routerGo(this.filterCourseList[0])
+        course = this.filterCourseList[0]
+      }
+      if (course) {
+        this.routerGo(course)
       }
     })
   },
@@ -46,10 +55,20 @@ export default {
   },
   watch: {
     searchUserCourse (newVal, oldVal) {
+      this.filterCourseList = []
       if (newVal) {
         this.shelfSearch({key_word: newVal}).then((res) => {
-          if (res.data.courses.length > 0) {
-            this.filterCourseList = res.data.courses
+          let courses = res.data.courses
+          if (courses.length > 0) {
+            courses.forEach((item) => {
+              let obj = item
+              if (item.name === newVal) {
+                obj['isMatch'] = true
+              } else {
+                obj['isMatch'] = false
+              }
+              this.filterCourseList.push(obj)
+            })
           }
         })
       }
@@ -60,18 +79,19 @@ export default {
       shelfSearch: 'course/shelfSearch'
     }),
     routerGo (item) {
-      let langCode = item['code'].split('-')[0]
-      if (this.subscribeCoursesStr.length === 0) {
-        this.$router.push({path: '/app/book-details/' + langCode})
-        this.$emit('hideLangList')
-        return
-      }
-      if (this.subscribeCoursesStr.indexOf(item['code']) > -1) {
-        Bus.$emit('changeCourseCode', item['code'])
-        this.$emit('hideLangList')
-        return
-      }
-      this.$router.push({path: '/app/book-details/' + langCode})
+      let langCode = item['code']
+      // if (this.subscribeCoursesStr.length === 0) {
+      //   this.$router.push({path: '/app/book-details/' + langCode})
+      //   this.$emit('hideLangList')
+      //   return
+      // }
+      // if (this.subscribeCoursesStr.indexOf(item['code']) > -1) {
+      //   Bus.$emit('changeCourseCode', item['code'])
+      //   this.$emit('hideLangList')
+      //   return
+      // }
+      this.$router.replace({path: '/app/book-details/' + langCode})
+      Bus.$emit('initLangData')
       this.$emit('hideLangList')
     }
   }
@@ -81,7 +101,7 @@ export default {
 <style scoped>
 .learn-search-head-courseList {
   position: absolute;
-  right: 126px;
+  right: 159px;
   top: 59px;
   z-index: 1000;
 }
@@ -135,6 +155,9 @@ export default {
 }
 .learn-search-head-courseList > ul > li:hover span:first-child {
   cursor: pointer;
+  background-color: #3c9bbe;
+}
+.hover {
   background-color: #3c9bbe;
 }
 .learn-search-head-courseList > ul > li:last-child span:last-child {

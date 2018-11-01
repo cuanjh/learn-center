@@ -282,16 +282,17 @@ export default {
   .learn-record-header p:nth-of-type(2) {
     text-align: center;
     position: absolute;
-    margin-top: 80px;
+    margin-top: 88px;
     width: 720px;
     color: #000;
     font-size: 20px;
+    font-weight: bold;
   }
 
   .learn-record-header p:nth-of-type(3) {
     text-align: center;
     position: absolute;
-    margin-top: 110px;
+    margin-top: 112px;
     margin-left: 295px;
     font-size: 18px;
     color: #AFAFAF;
@@ -302,7 +303,7 @@ export default {
   }
 
   .learn-myrecord {
-    padding: 150px 25px 20px;
+    padding: 165px 25px 20px;
   }
 
   .title {
@@ -364,6 +365,7 @@ export default {
   }
 
   .learn-myrecord-bottom {
+    font-weight: bold;
     text-align: center;
   }
 
@@ -469,6 +471,7 @@ export default {
     margin-top: 17px;
     color: #444444;
     text-align: center;
+    font-weight: bold;
   }
 
   .my-record-play {

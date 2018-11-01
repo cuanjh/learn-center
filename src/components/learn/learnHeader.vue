@@ -391,6 +391,7 @@ export default {
   cursor: pointer;
 }
 .container input:focus {
+  cursor: text;
   width: 238px;
   opacity: 1;
 }
@@ -428,7 +429,7 @@ export default {
   transition: all .5s;
 }
 .container input::placeholder {
-  color: #2A9FE4;
+  color: #B4DFFC;
   font-size: 14px;
   font-weight: bolder;
 }
@@ -732,19 +733,6 @@ export default {
 .right .user-login-out span:nth-of-type(1):hover{
   color:#3c9bbe;
   background-image: url(./../../../static/images/learn/learn-header-setting-blue.svg);
-}
-
-input::-webkit-input-placeholder { /* WebKit browsers */
-    color:    #2A9FE4;
-}
-input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color:    #2A9FE4;
-}
-input::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color:    #2A9FE4;
-}
-input:-ms-input-placeholder { /* Internet Explorer 10+ */
-    color:    #2A9FE4;
 }
 
 .learn-login-right-tips-probation{

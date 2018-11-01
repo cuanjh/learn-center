@@ -152,33 +152,14 @@ export default {
       defaultImg: 'this.src="/static/images/bookCase/default_course.png"'
     }
   },
+  created () {
+    Bus.$on('initLangData', () => {
+      this.initData()
+    })
+  },
   mounted () {
     console.log(this.$route)
-    var params = {}
-    let arr = this.courseCode.split('-')
-    if (arr.length > 1) {
-      params = {
-        course_code: this.courseCode
-      }
-    } else {
-      params = {
-        lang_code: arr[0]
-      }
-    }
-    this.langInfo(params).then(res => {
-      console.log('resaaaa', res)
-      for (var item in res.langInfo) {
-        if (this.langInfoObj[item]) {
-          this.langInfoObj[item]['info'] = res.langInfo[item]['info']
-        }
-      }
-      this.courseInfo = res.courseInfo
-      console.log('courseInfo', this.courseInfo)
-      this.countryInfo = res.countryInfo
-      this.resourceInfoRadios = res.resourceInfo.radios
-      this.resPage = res.resourceInfo.page
-      console.log(res)
-    })
+    this.initData()
   },
   computed: {
     ...mapState({
@@ -236,6 +217,33 @@ export default {
       let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
       this.postPurchaseCourse({ code: courseCode }).then((res) => {
         this.getLearnCourses()
+      })
+    },
+    initData () {
+      var params = {}
+      let arr = this.courseCode.split('-')
+      if (arr.length > 1) {
+        params = {
+          course_code: this.courseCode
+        }
+      } else {
+        params = {
+          lang_code: arr[0]
+        }
+      }
+      this.langInfo(params).then(res => {
+        console.log('resaaaa', res)
+        for (var item in res.langInfo) {
+          if (this.langInfoObj[item]) {
+            this.langInfoObj[item]['info'] = res.langInfo[item]['info']
+          }
+        }
+        this.courseInfo = res.courseInfo
+        console.log('courseInfo', this.courseInfo)
+        this.countryInfo = res.countryInfo
+        this.resourceInfoRadios = res.resourceInfo.radios
+        this.resPage = res.resourceInfo.page
+        console.log(res)
       })
     }
   }

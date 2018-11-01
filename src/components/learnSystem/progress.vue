@@ -8,6 +8,7 @@
           :key="index"
           :class="{great:value>=0&&value<1,perfect:value==1,current:index==curSlide}"
           @click="switch_slide(value, index)"
+          :style="{transform: 'translateX('+ computedOffset +'px)'}"
         >{{ index+1 }}</b>
       </div>
       <span class="next" v-if="slideList.length>12" @click="tab(1)"></span>
@@ -57,23 +58,20 @@ export default {
   },
   computed: {
     ...mapState(['p_switch', 'switch_text', 'apiPath', 'switch_state']),
-    currentSlide () {
-      return this.$parent.$data.cur_slide
-    },
     maxOffset () {
       // 允许的最大偏移量
-      return (this.data.length - this.viewNum) * this.width
+      return (this.slideList.length - this.viewNum) * this.width
     },
     autoOffset () {
       var num = this.viewNum
       var width = this.width
       var max = this.maxOffset
 
-      if (this.data.length <= num) {
-        return (num - this.data.length) / 2 * width
+      if (this.slideList.length <= num) {
+        return (num - this.slideList.length) / 2 * width
       } else {
-        if (this.currentSlide > num / 2) {
-          return -Math.min((this.currentSlide - num / 2) * width, max)
+        if (this.curSlide > num / 2) {
+          return -Math.min((this.curSlide - num / 2) * width, max)
         } else {
           return 0
         }
@@ -86,7 +84,7 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      this.width = $('.progress b').outerWidth(true)
+      this.width = $('.progress b').outerWidth(true) * 2
     })
     // 菜单，返回等按钮的点击以及hover效果   css无法添加，用js手动添加
     $('.progress.TLY .btn').mousedown((event) => {
@@ -220,11 +218,9 @@ export default {
     width: 312px;
     height: 100%;
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
+    left: 50%;
     bottom: 0;
-    margin: auto;
+    margin-left: -156px;
     & > span {
       display: block;
       width: 20px;
@@ -253,15 +249,18 @@ export default {
     color: #54a3fc;
   }
   .progress-bar {
-    width: 312px;
-    height: 50px;
-    line-height: 5px;
-    display: inline-block;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
     transition-duration: 300ms;
-    margin-top: 10px;
-    text-align: center;
+    position: relative;
+    overflow: hidden;
     b {
       flex-shrink: 0;
+      text-align: center;
       display: inline-block;
       border-radius: 50%;
       background-color: #c8cdde;

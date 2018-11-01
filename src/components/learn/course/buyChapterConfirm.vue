@@ -88,7 +88,8 @@ export default {
     }),
     ...mapActions({
       getBuyChapter: 'course/getBuyChapter',
-      getUnlockChapter: 'course/getUnlockChapter'
+      getUnlockChapter: 'course/getUnlockChapter',
+      getUserInfo: 'user/getUserInfo'
     }),
     btnCancel () {
       this.costAlert = false
@@ -97,14 +98,19 @@ export default {
     // 购买 课程 接口实现
     async buyChapter () {
       var _this = this
+      // 购买金币
       await _this.getBuyChapter({ chapter_code: _this.chapterCode })
 
       var arr = _this.chapterCode.split('-')
 
       let courseCode = arr[0] + '-' + arr[1]
+      // 获取解锁课程
       await _this.getUnlockChapter(courseCode).then((res) => {
         _this.updateUnlockCourseList(res)
       })
+
+      // 更新用户金币信息
+      await _this.getUserInfo()
 
       _this.costAlert = false
       _this.updateCoverState(_this.costAlert)
