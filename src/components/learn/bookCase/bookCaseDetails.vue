@@ -321,7 +321,7 @@ export default {
   .details-top .details-content {
     height: 180px;
     /* border-bottom: 1px solid #EAEAEA; */
-    margin: 10px 10px;
+    margin: 18px 10px 10px 10px;
   }
   .details-top .details-content .container {
     /* width: 80%; */

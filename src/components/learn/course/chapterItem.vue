@@ -73,6 +73,9 @@
                       <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate'] && !coreData[i]['isActive']" class="icon-course-lock"></i>
                     </div>
                     <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] &&  !coreData[i]['isActive']}">核心{{i}}</p>
+                    <div v-show="coreData[i]['completedRate'] && coreData[i]['completedRate'] !== '1'" class="continue-learn-core">
+                      <span>继续学习</span>
+                    </div>
                   </div>
                 </a>
                 <div class="course-circle-box" v-if="i<5">
@@ -101,6 +104,9 @@
                       <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                     </div>
                     <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">测试</p>
+                    <div v-show="testData['completedTestRate'] && testData['completedTestRate'] !== '1'" class="continue-learn-test">
+                      <span>继续学习</span>
+                    </div>
                   </div>
                 </a>
                 <div class="course-circle-box">
@@ -109,7 +115,7 @@
               </div>
             <div class="course-item-box">
               <a href="javascript:void(0)" @click="startHomework(coreData['isCoreCompleted'])">
-                <div class="course-item">
+                <div class="course-item" style="margin-left:3px;">
                   <p class="course-item-star"  v-show="coreData['isCoreCompleted']  && homeworkData['isHomeworkCompleted']">
                     <span class="course-yellow-star"><i v-for="index in homeworkData['starHomeworkNum']" :key="index"></i></span>
                     <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - homeworkData['starHomeworkNum'])" :key="index"></i></span>
@@ -123,6 +129,9 @@
                     <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                   </div>
                   <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">作业</p>
+                  <div v-show="homeworkData['completedHomeworkRate'] && homeworkData['completedHomeworkRate'] !== '1'" class="continue-learn-test">
+                    <span>继续学习</span>
+                  </div>
                 </div>
               </a>
             </div>
@@ -148,12 +157,16 @@
                       <div :class="'vip'+ (i + 1)"></div>
                       <i v-show="!(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'])" class="icon-vip-lock"></i>
                     </div>
+                    <div v-show="vipData['A' + (i + 1)]['completedRate'] &&  vipData['A' + (i + 1)]['completedRate'] !== '1'" class="continue-learn-vip">
+                      <span>继续学习</span>
+                    </div>
                     <p class="course-item-title" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
                   </div>
-                  <div class="course-circle-box" v-if="i<(vipItemList.length-1)">
+                </a>
+
+                 <div class="course-circle-box" v-if="i<(vipItemList.length-1)">
                     <div class="course-vip-circle" :class="{'course-vip-circle-locked': !vipData['A' + (i + 1)]['completedRate'] }" v-for="index in 3" :key="index"></div>
                   </div>
-                </a>
               </div>
             </li>
           </ul>
@@ -306,7 +319,7 @@ export default {
           let obj = {}
           obj['isCompleted'] = 0
           obj['starNum'] = 0
-          obj['completedRate'] = '0'
+          obj['completedRate'] = ''
           obj['imgStyle'] = ''
 
           if (Object.keys(that.$store.state.course.curChapterContent).length > 0) {
@@ -928,7 +941,7 @@ export default {
 
   .course-core-circle {
     display: inline-block;
-    margin: 54px 2px;
+    margin: 54px 1px;
     border-radius: 50%;
   }
 
@@ -1132,7 +1145,7 @@ export default {
   .course-review-circle {
     display: inline-block;
     position: relative;
-    margin: 54px 2px;
+    margin: 54px 1px;
     border-radius: 50%;
   }
 
@@ -1173,7 +1186,7 @@ export default {
 
   .course-vip-circle {
     display: inline-block;
-    margin: 54px 2px;
+    margin: 54px 1px;
     border-radius: 50%;
   }
 
@@ -1261,5 +1274,56 @@ export default {
     margin-left: -12px;
     margin-top: -17px;
     z-index: 1;
+  }
+
+  .continue-learn-vip {
+    width: 84px;
+    height: 34px;
+    background-image: url('../../../../static/images/course/continue-learn-vip.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position:absolute;
+    left: 52px;
+    top: 13px;
+  }
+
+  .continue-learn-vip span{
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .continue-learn-test {
+    width: 84px;
+    height: 34px;
+    background-image: url('../../../../static/images/course/continue-learn-test.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position:absolute;
+    left: 52px;
+    top: 13px;
+  }
+
+  .continue-learn-test span{
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .continue-learn-core {
+    width: 84px;
+    height: 34px;
+    background-image: url('../../../../static/images/course/continue-learn-core.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position:absolute;
+    left: 52px;
+    top: 13px;
+  }
+
+  .continue-learn-core span{
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
   }
 </style>

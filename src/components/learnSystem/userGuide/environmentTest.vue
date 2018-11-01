@@ -157,6 +157,10 @@ export default {
   components: {
     TestDialog
   },
+  beforeRouteLeave (to, from, next) {
+    $('html').css({'overflow': 'auto'})
+    next()
+  },
   mounted () {
     this.softwareCheck()
     // this.checkUpload()
