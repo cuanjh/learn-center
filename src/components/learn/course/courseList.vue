@@ -47,7 +47,7 @@ export default {
   mounted () {
     this.$parent.$emit('initLayout')
     this.$parent.$emit('navItem', 'course')
-    this.showLoading()
+    // this.showLoading()
     let curCourseCode = this.currentCourseCode
     if (!curCourseCode) {
       curCourseCode = localStorage.getItem('currentCourseCode')
@@ -139,7 +139,7 @@ export default {
       let top = $('#' + this.currentChapterCode).offset().top - 90
       $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
-      this.hideLoading()
+      // this.hideLoading()
       this.$refs['chapterItem'].$emit('saveHistoryCourseData')
     },
     selLevel (level) {

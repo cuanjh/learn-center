@@ -10,7 +10,7 @@ const state = {
   languagueHander: 'zh-CN', // 默认不同的level的实现方式
   learnCourses: [], // 已订阅的课程
   subscribeCoursesStr: '',
-  loading: true, // 用来判断加载状态程序
+  loading: false, // 用来判断加载状态程序
   currentCourseCode: '',
   currentChapterCode: '',
   courseBaseInfo: {},
@@ -146,7 +146,7 @@ const actions = {
   },
   // 删除已订阅的课程的接口实现
   getDeletePurchase ({ commit, dispatch }, code) {
-    commit('showLoading')
+    // commit('showLoading')
     httpLogin(config.getStudyDelCourse, { code: code }).then((res) => {
       dispatch('getLearnCourses')
     })

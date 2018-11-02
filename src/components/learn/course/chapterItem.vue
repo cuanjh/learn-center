@@ -160,7 +160,7 @@
                     <div v-show="vipData['A' + (i + 1)]['completedRate'] &&  vipData['A' + (i + 1)]['completedRate'] !== '1'" class="continue-learn-vip">
                       <span>继续学习</span>
                     </div>
-                    <p class="course-item-title" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
+                    <p class="course-item-title" style="margin-left: 23px;" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
                   </div>
                 </a>
 
