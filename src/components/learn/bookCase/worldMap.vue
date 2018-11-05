@@ -154,6 +154,7 @@
           <div class="letter">
             <a
               :class="['letter_list', { 'active': activeLetter == item.letter, 'locked': item.lists.length === 0 }]"
+              v-show="item.lists.length"
               v-for="(item, index) in arr"
               :key="index"
               @click="navScroll(item.letter)">
@@ -1246,14 +1247,17 @@ a {
     border-bottom: 1px solid #EBEBEB;
   }
   .country-container .country-letter .letter {
-    width: 820px;
+    // width: 820px;
+    width: 100%;
     height: 65px;
-    display: flex;
-    justify-content: space-between;
-    margin-left: 20px;
+    // display: flex;
+    float: left;
+    // justify-content: space-between;
+    margin-left: 12px;
   }
   .country-container .country-letter .letter .letter_list {
     display: inline-block;
+    margin-right: 20px;
     width: 16px;
     height: 35px;
     font-size: 18px;
@@ -1278,9 +1282,11 @@ a {
     height: 26px;
     font-size: 18px;
     color: #0581D1;
+    float: right;
     position: relative;
-    left: 236px;
-    top: 10px;
+    margin-right: 10px;
+    // left: 236px;
+    top: 5px;
   }
   .country-container .country-scroll {
     width: 1130px;
