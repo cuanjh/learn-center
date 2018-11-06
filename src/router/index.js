@@ -27,6 +27,9 @@ const userVip = r => require.ensure([], () => r(require('@/components/learn/user
 const userSetting = r => require.ensure([], () => r(require('@/components/learn/user/userSetting.vue')), 'user-setting')
 const userAnonymous = r => require.ensure([], () => r(require('@/components/learn/user/userAnonymous.vue')), 'user-anonymous')
 
+// 学习 --- 发现
+const discovery = r => require.ensure([], () => r(require('@/components/learn/discovery/discovery.vue')), 'discovery')
+
 // 学习系统
 const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue')), 'learn-system')
 const stage = r => require.ensure([], () => r(require('@/components/learnSystem/stage/stage.vue')), 'stage')
@@ -157,6 +160,11 @@ export default[
             component: userAnonymous
           }
         ]
+      },
+      // 发现
+      {
+        path: 'discovery',
+        component: discovery
       }
     ]
   },
