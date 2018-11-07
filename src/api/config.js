@@ -67,6 +67,9 @@ export default {
   shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
   chinaLangMapApi: '/studyv1/shelf/china_lang_map', // 中国方言课程地图接口
 
+  // 发现
+  disvHomeApi: '/disv1/home', // 发现首页接口
+
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token
   coinRules: '/study/coin_rules',

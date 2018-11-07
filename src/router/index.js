@@ -29,7 +29,7 @@ const userAnonymous = r => require.ensure([], () => r(require('@/components/lear
 
 // 学习 --- 发现
 const discovery = r => require.ensure([], () => r(require('@/components/learn/discovery/discovery.vue')), 'discovery')
-
+const radioHome = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioHome.vue')), 'radio-home')
 // 学习系统
 const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue')), 'learn-system')
 const stage = r => require.ensure([], () => r(require('@/components/learnSystem/stage/stage.vue')), 'stage')
@@ -165,6 +165,10 @@ export default[
       {
         path: 'discovery',
         component: discovery
+      },
+      {
+        path: 'radio-home',
+        component: radioHome
       }
     ]
   },
