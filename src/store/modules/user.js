@@ -174,7 +174,7 @@ const actions = {
 
 const mutations = {
   updateUserInfo: function (state, data) {
-    console.log(data)
+    // console.log(data)
     state.userInfo = data
     state.totalCoin = data.coins
     let isAnonymous = Cookie.getCookie('is_anonymous')

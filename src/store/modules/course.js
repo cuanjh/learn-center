@@ -198,6 +198,15 @@ const actions = {
   // 中国方言地图课程列表
   getChinaLangMap ({commit}) {
     return httpLogin(config.chinaLangMapApi)
+  },
+  /**
+   * 发现相关
+   */
+  headlineHome ({ commit }) {
+    return httpLogin(config.headlineHome)
+  },
+  headlineList ({ commit }, params) {
+    return httpLogin(config.headlineList, params)
   }
 }
 

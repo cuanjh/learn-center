@@ -103,7 +103,7 @@ export default {
     })
   },
   mounted () {
-    console.log('====>', this.userInfo)
+    // console.log('====>', this.userInfo)
     this.getLearnCourses()
   },
   computed: {
