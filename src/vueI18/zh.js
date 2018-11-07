@@ -6,6 +6,8 @@ export default {
   level4: '中级B2',
   level5: '高级C1',
   level6: '高级C2',
+  coins: '金币',
+  free: '免费',
   course: {
     switchCourse: '切换课程',
     finished: '已完成',

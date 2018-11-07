@@ -202,6 +202,9 @@ const actions = {
   /**
    * 发现相关
    */
+  postDisvHome ({commit}) {
+    return httpLogin(config.disvHomeApi)
+  },
   headlineHome ({ commit }) {
     return httpLogin(config.headlineHome)
   },
