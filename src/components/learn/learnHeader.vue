@@ -7,6 +7,12 @@
           学习
           <i class='' :class="{ 'animate-down': navArrowDown, 'animate-up':navArrowUp }"></i>
         </p>
+        <router-link :class="{ 'header-box-left-active': activeItem === 'bookcase' }" tag="p" class="nav-find-btn" :to="{path: '/app/book-case'}">
+          书架
+        </router-link>
+        <!-- <router-link :class="{ 'header-box-left-active': activeItem === 'discovery' }" tag="p" class="nav-find-btn" :to="{path: '/app/discovery'}">
+          发现
+        </router-link> -->
         <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
             我的
         </router-link>
@@ -49,13 +55,11 @@
         </div>
         <router-link :to="{path: '/app/user/vip'}"  class="vip-img" v-if="userInfo.member_info.member_type !== 1"></router-link>
         <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
-        <div class="vip" style="display:none"></div>
-        <div class="head-nation" style="display:none">
+        <!-- <div class="head-nation" style="display:none">
           <img class="head" src="https://course-assets1.talkmate.com/course/icons/FRE-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="头像">
           <img class="nation" src="https://course-assets1.talkmate.com/course/icons/IND-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="国籍">
-        </div>
-        <div class="notice" style="display:none"><i></i></div>
-        <p class='learn-user' @mouseenter="showExit" >
+        </div> -->
+        <div class='learn-user' @mouseenter="showExit" >
           <a><img :src='userInfo.photo'></a>
           <transition name="fade">
             <span class='user-login-out mycourse-loginout animated' v-show="showExitState">
@@ -64,7 +68,8 @@
               <span @click='jumpSystem()'>退出</span>
             </span>
           </transition>
-        </p>
+        </div>
+        <!-- <div class="notice"><i></i></div> -->
       </div>
 
     </div>
@@ -198,39 +203,42 @@ export default {
 <style scoped>
 .header-box {
   width: 100%;
-  height: 80px;
-  background: #0581d1;
+  height: 68px;
+  background: #2A9FE4;
   position: fixed;
   top: 0px;
   z-index: 99999;
 }
 .header-box .content {
   width: 1200px;
-  height: 80px;
+  height: 68px;
   margin: 0px auto;
   position: relative;
 }
 
 .header-box .left{
   display: inline-block;
-  height: 80px;
+  height: 68px;
 }
 .header-box .right{
   display: inline-block;
-  width:480px;
-  height: 80px;
+  width: 133px;
+  height: 68px;
+  margin-right: 18px;
 }
 .header-box .left>p{
   float: left;
   cursor: pointer;
 }
 .header-box .left>p:nth-of-type(1){
-  width:135px!important;
-  min-width:135px!important;
-  margin-top: 23px;
+  width:172px!important;
+  min-width:172px!important;
+  height: 24px;
+  margin-top: 22px;
 }
 .header-box .left>p:nth-of-type(1)>img{
-  max-width: 200% !important;
+  max-width: 100%!important;
+  max-height: 100%!important;
 }
 .header-box .left>p:nth-of-type(2) {
   width:63px!important;
@@ -244,14 +252,12 @@ export default {
 .header-box .left>p:nth-of-type(3),
 .header-box .left>p:nth-of-type(4),
 .header-box .left>p:nth-of-type(5){
-  margin: 18px 0 15px 24px;
   text-align: center;
-  line-height: 30px;
-  padding:4px 31px 0 0px;
+  padding:22px 28px 0 0;
   color:#87D0FF;
+  /* color: #fff; */
   font-size: 16px;
   position: relative;
-  top:3px;
   font-weight: bold;
 }
 .header-box .left>p:hover{
@@ -263,7 +269,7 @@ export default {
   color:#fff !important;
 }
 .header-box .left>p:nth-of-type(2){
-  margin-left: 175px!important;
+  margin-left: 66px!important;
 }
 .header-box .left>p:nth-of-type(2) i,.header-box .left>p:nth-of-type(5) i{
   display: inline-block;
@@ -285,21 +291,22 @@ export default {
 }
 .right {
   position: absolute;
-  right: 15px;
+  top: 0;
+  right: 0;
 }
 .right div {
   float: left;
 }
 .right .vip-img {
   display: inline-block;
-  background: url('../../../static/images/user-guide/crown.svg') no-repeat;
-  background-size: 33px 31px;
-  width: 33px;
-  height: 31px;
   position: absolute;
-  right: 64px;
-  top: 25px;
-  margin: 0 16px;
+  top: 23px;
+  right: 32px;
+  background: url('../../../static/images/user-guide/crown.svg') no-repeat;
+  background-size: cover;
+  width: 24px;
+  height: 22px;
+  margin-right: 20px;
 }
 .active {
   animation: widthAdd 1s ease-in-out;
@@ -309,9 +316,8 @@ export default {
 .container {
   position: absolute;
   margin: auto;
-  top: 0;
-  left: -100px;
-  right: 0;
+  top: 6px;
+  right: 84px;
   bottom: 0;
   width: 238px;
   height: 36px;
@@ -319,13 +325,12 @@ export default {
 .container .search {
   position: absolute;
   margin-left: 200px;
-  top: 0;
-  right: 0;
+  top: 7px;
+  right: 6px;
   bottom: 0;
-  left: 63px;
-  width: 36px;
-  height: 36px;
-  background: rgba(255,255,255,.4);
+  width: 24px;
+  height: 22px;
+  /* background: rgba(255,255,255,.4); */
   border-radius: 50%;
   transition: all 1s;
   z-index: 4;
@@ -397,7 +402,7 @@ export default {
   opacity: 1;
 }
 .container input:focus ~ .search {
-  right: -200px;
+  /* right: -200px; */
   z-index: 6;
   background: rgba(255,255,255,0);
 }
@@ -443,7 +448,7 @@ export default {
   background-size: 100%;
   margin-top: 25px;
 }
-.head-nation {
+/* .head-nation {
   width: 50px;
   height: 50px;
   border-radius: 25px;
@@ -461,23 +466,28 @@ export default {
   left: 0px;
 }
 .head-nation .nation {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 22px;
   border-radius: 10px;
   border: 1px solid #fff;
   position: absolute;
   top: 30px;
   right: -2px;
   z-index: 2;
-}
+} */
 .right .notice {
-  width: 20px;
-  height: 24px;
-  background: url("./../../../static/images/learn/notice.png");
-  background-size: 100%;
-  margin-top: 28px;
+  width: 24px;
+  height: 22px;
+  margin-left: 20px;
 }
 .right .notice i {
+  display: inline-block;
+  width: 24px;
+  height: 22px;
+  background: url("./../../../static/images/learn/notice.png")  no-repeat center;
+  background-size: cover;
+}
+/* .right .notice i {
   display: block;
   width: 8px;
   height: 8px;
@@ -485,7 +495,7 @@ export default {
   background: #d02d02;
   margin-left: 12px;
   margin-top: 2px;
-}
+} */
 
 .mycourse-wrap {
   position: absolute;
@@ -493,8 +503,8 @@ export default {
   border-radius: 4px;
   background-color: #ffffff;
   box-shadow: 0 2px 9px 0 rgba(112, 112, 112, 0.5);
-  top: 65px;
-  left: 298px;
+  top: 56px;
+  left: 226px;
   z-index: 9999999;
 }
 
@@ -660,25 +670,21 @@ export default {
 }
 
 .right .learn-user{
+  width: 34px;
+  height: 34px;
   position: absolute;
-  top: 12px;
-  right: 6px;
-  width:45px;
-  height: 45px;
-  padding: 5px;
+  right: 0;
+  top: 17px;
 }
 
 .right .learn-user img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50% 50%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  margin-top: 3px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
 }
 .right p.learn-user a {
-  width: 45px;
-  height: 45px;
+  width: 34px;
+  height: 34px;
   display: inline-block;
   border-radius: 100px;
   overflow: hidden;
@@ -687,7 +693,7 @@ export default {
 .right .user-login-out {
   position: absolute;
   top: 100%;
-  left: -35px;
+  left: -44px;
   width: 110px;
   border-radius: 4px;
   margin-top: 15px;

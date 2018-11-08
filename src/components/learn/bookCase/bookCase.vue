@@ -74,6 +74,7 @@ export default {
     }
   },
   mounted () {
+    this.$parent.$emit('navItem', 'bookcase')
     // 书架首页接口 热门课程、中国方言地图
     this.bookCaseIndex().then(res => {
       console.log(res)
@@ -135,6 +136,7 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     object-fit: cover;
+    margin-top: -12px;
   }
 
   .banner .describe {
@@ -184,19 +186,18 @@ export default {
   .book-case {
     width: 1200px;
     margin: 0px auto;
-    padding-top: 4px;
     padding-bottom: 144px;
   }
 
-  .course-box {
+  /* .course-box {
     margin-top: 45px;
 
-  }
+  } */
 
   .course-box .title {
-    font-size: 30px;
+    font-size: 20px;
     color: #333333;
-    margin: 30px 0;
+    margin: 50px 20px 24px 0;
     font-weight: bold;
   }
   .course-box .title a {
@@ -214,14 +215,14 @@ export default {
     overflow: hidden;
   }
   .course-item li {
-    float: left;
-    width: 220px;
-    height: 265px;
+    display: inline-block;
+    width: 200px;
+    height: 240px;
     overflow: hidden;
     border-radius: 3px;
     cursor: pointer;
     background: #FFFFFF;
-    padding: 0px 20px;
+    /* padding: 0px 20px; */
     margin-right: 24px;
     margin-bottom: 30px;
     position: relative;
@@ -230,38 +231,43 @@ export default {
     margin-right: 0px;
   }
   .course-item li img {
-    float: right;
-    width: 100px;
-    height: 100px;
-    box-shadow: 0 5px 12px rgba(81,120,135,0.18);
-    border-radius: 8px;
-    margin-top: 18px;
+    position: absolute;
+    top: 22px;
+    right: 18px;
+    width:90px;
+    height:90px;
+    box-shadow:0px 3px 6px 0px rgba(81,120,135,0.18);
+    border-radius:8px;
   }
   .course-item li .name-number {
-    width: 180px;
+    width: 164px;
     height: 28px;
     line-height: 28px;
     position: absolute;
-    top: 170px;
+    left: 18px;
+    right: 18px;
+    bottom: 36px;
+    display: flex;
+    justify-content: space-between;
   }
   .course-item li .name {
     width: 80px;
-    font-size: 20px;
+    font-size: 18px;
     color: #333333;
-    position: absolute;
-    bottom: 0px;
+    /* position: absolute;
+    bottom: 0px; */
     font-weight: bold;
   }
   .course-item li .number {
-    font-size: 15px;
+    font-size: 14px;
     color: #999999;
     overflow: hidden;
     background: url('./../../../../static/images/learn/person.png') no-repeat left center;
     background-size: 18px 15px;
     padding-left: 22px;
-    position: absolute;
+    /* position: absolute;
     right: 0px;
-    padding-top: 3px;
+    padding-top: 3px; */
     text-align: left;
     font-weight: bold;
   }
@@ -269,7 +275,7 @@ export default {
     width: 100%;
     height: 100%;
     background-color: rgba(255,255,255,.97);
-    padding: 25px 20px 0px;
+    padding: 22px 18px 0px;
     cursor: pointer;
     position: absolute;
     top: 0px;
@@ -277,40 +283,53 @@ export default {
     left: 0px;
   }
   .course-item li .details .desc {
-    height: 100px;
-    font-size: 14px;
+    height: 86px;
+    font-size: 12px;
+    line-height: 18px;
     color: #333333;
     overflow: hidden;
-    margin-bottom: 15px;
+    margin-bottom: 28px;
     position: relative;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
   }
 
-  .course-item li .details .desc::after {
+  /* .course-item li .details .desc::after {
     content:"...";
     font-weight:bold;
     position:absolute;
     bottom:0;
     right:0;
-    /* padding:0 0px 1px 30px; */
-  }
+    padding:0 0px 1px 30px;
+  } */
   .course-item li .details .time,
   .course-item li .details .home-work {
-    font-size: 14px;
+    /* font-size: 14px;
     color: #999999;
-    font-weight: bold;
+    font-weight: bold; */
+    width:88px;
+    height:18px;
+    font-size:12px;
+    font-family:'PingFang-SC-Medium';
+    font-weight:500;
+    color:rgba(153,153,153,1);
+    line-height:18px;
   }
   .course-item li .details .btn {
-    width: 106px;
-    height: 30px;
-    font-size: 14px;
-    line-height: 30px;
+    width: 96px;
+    height: 28px;
+    font-size: 12px;
+    line-height: 28px;
     text-align: center;
     color: #FFFFFF;
-    border-radius: 15px;
-    background: #2A9FE4;
+    border-radius: 16px;
+    background:rgba(42,159,228,1);
     position: absolute;
-    right: 22px;
-    bottom: 24px;
+    right: 20px;
+    bottom: 22px;
   }
 
   .fade-enter-active, .fade-leave-active {

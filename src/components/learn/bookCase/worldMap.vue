@@ -1209,6 +1209,7 @@ a {
     text-decoration:none;
   }
   .country-courses {
+    position: relative;
     width: 1180px;
     margin-top: 20px;
   }
@@ -1238,7 +1239,7 @@ a {
   .country-container {
     width: 1180px;
     background: #ffffff;
-    padding: 30px;
+    padding: 46px 50px;
   }
   .country-container .country-letter {
     width: 100%;
@@ -1257,36 +1258,37 @@ a {
   }
   .country-container .country-letter .letter .letter_list {
     display: inline-block;
-    margin-right: 20px;
-    width: 16px;
-    height: 35px;
-    font-size: 18px;
+    width: 28px;
+    height: 28px;
+    margin-right: 10px;
+    /* padding: 0 12px; */
+    font-size: 16px;
     color: #2A9FE4;
+    font-weight: bold;
     text-align: center;
-    line-height: 35px;
+    height: 28px;
+    line-height: 28px;
     &.active {
-      display: inline-block;
-      width: 26px;
-      height: 35px;
-      font-size: 16px;
-      box-shadow: 0px 2px 4px rgba(0,0,0,.3);
-      border-radius: 3px;
-      text-align: center;
-      line-height: 35px;
-      background: #0581D1;
-      color: #ffffff;
+      height: 28px;
+    background: #0581D1;
+    color: #ffffff !important;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, .3);
+    border-radius: 18px;
     }
   }
   .country-container .country-letter .letter .countries {
-    width: 54px;
+    width: 56px;
     height: 26px;
-    font-size: 18px;
-    color: #0581D1;
+    font-size: 14px;
+    border: 1px solid #2A9FE4;
+    color: #2A9FE4;
     float: right;
-    position: relative;
-    margin-right: 10px;
-    // left: 236px;
-    top: 5px;
+    position: absolute;
+    text-align: center;
+    line-height: 26px;
+    border-radius: 14px;
+    top: 56px;
+    right: 92px;
   }
   .country-container .country-scroll {
     width: 1130px;
