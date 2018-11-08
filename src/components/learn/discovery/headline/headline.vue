@@ -18,144 +18,125 @@
           <div class="category-name">
             <span class="name">{{item.catname}}</span>
             <div class="more">
-              <a href="javascript:;">
+              <router-link :to="{ path: '/app/headlineDetails', query: { catid: item.catid}}">
                 <span>查看更多</span>
                 <i></i>
-              </a>
+              </router-link>
             </div>
           </div>
-          <div class="wrapper">
-            <ul>
+          <!--
+            v-if="headlineList[index]"
+            v-for="(item, index) in headlineList[index].list.slice(0, 1)" :key="item.id + index"
+           -->
+          <div class="wrapper-list" v-if="headlineList[index]">
+            <div class="wrapper" v-for="(item, index) in headlineList[index].list.slice(0, 1)" :key="item.id + index">
               <!-- 左右布局 -->
-              <li class="news_link big">
+              <div class="news_link big">
                 <div class="thumb_little fl">
-                  <img src="" alt="长方形图片">
+                  <img :src="item.thumbs" alt="长方形图片">
                 </div>
-                <div class="news_item_right">
+                <div class="news-read fl">
                   <div class="news_item_right_row1 weight">
-                    <span class="news_item_title">日本怎么怎么了</span>
+                    <span class="news_item_title">{{item.title}}</span>
                   </div>
-                  <div class="news_item_right_row2">
-                    <span class="news_item_type">日本 &nbsp;&nbsp;&nbsp;&nbsp; 阅读&nbsp;3345</span>
-                  </div>
-                </div>
-              </li>
-              <!-- 上下布局 -->
-              <li class="news_link">
-                <div class="thumb_little">
-                  <img src="../../../../../static/images/headline/lang-img.png" alt="长方形图片">
-                </div>
-                <div class="news_item_right">
-                  <div class="news_item_right_row1">
-                    <span class="news_item_title">日本怎么怎么了</span>
-                  </div>
-                  <div class="news_item_right_row2">
-                    <span class="news_item_type">日本 &nbsp;&nbsp;&nbsp;&nbsp; 阅读&nbsp;3345</span>
+                  <div class="news_item_right_row2 weight-text">
+                    <span class="news_item_type">{{item.tag_title}}</span>
+                    <span class="reading">阅读&nbsp;{{item.hits}}</span>
                   </div>
                 </div>
-              </li>
-              <!-- 没有图片 -->
-              <li class="news_link noImg">
-                <div class="news_item_right small">
-                  <div class="news_item_right_row1">
-                    <span class="news_item_title">日本怎么怎么了,日本怎么怎么了,日本怎么怎么了?</span>
+              </div>
+              <!-- v-for="(item, index) in headlineList[index].list.slice(1)" :key="index"
+               v-if="item.show_type === 'single_pic'"-->
+              <div class="news_else" v-for="(item, index) in headlineList[index].list.slice(1)" :key="index">
+                <!-- 上下布局 -->
+                <div class="news_link" v-if="item.show_type === 'single_pic'">
+                  <div class="thumb_little">
+                    <img :src="item.thumbs" alt="长方形图片">
                   </div>
-                  <div class="news_item_right_row2">
-                    <span class="news_item_type">日本 &nbsp;&nbsp;&nbsp;&nbsp; 阅读&nbsp;3345</span>
+                  <div class="news-read">
+                    <div class="news_item_right_row1">
+                      <span class="news_item_title">{{item.title}}</span>
+                    </div>
+                    <div class="news_item_right_row2">
+                      <span class="news_item_type">{{item.tag_title}}</span>
+                      <span class="reading">阅读&nbsp;{{item.hits}}</span>
+                    </div>
                   </div>
                 </div>
-              </li>
-            </ul>
+                <!-- 没有图片v-if="item.show_type === 'no_pic'" -->
+                <div class="news_link noImg" v-if="item.show_type === 'no_pic'">
+                  <div class="news-read small">
+                    <div class="news_item_right_row1">
+                      <span class="news_item_title">{{item.title}}</span>
+                    </div>
+                    <div class="news_item_right_row2">
+                      <span class="news_item_type">{{item.tag_title}}</span>
+                      <span class="reading">阅读&nbsp;{{item.hits}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- 最新新闻
-        <div class="wrapper">
-          <ul>
-            左右布局
-            <li class="news_link big">
-              <div class="thumb_little fl">
-                <img src="../../../../../static/images/headline/lang-img.png" alt="长方形图片">
-              </div>
-              <div class="news_item_right">
-                <div class="news_item_right_row1 weight">
-                  <span class="news_item_title">日本怎么怎么了</span>
-                </div>
-                <div class="news_item_right_row2">
-                  <span class="news_item_type">日本 &nbsp;&nbsp;&nbsp;&nbsp; 阅读&nbsp;3345</span>
-                </div>
-              </div>
-            </li>
-            上下布局
-            <li class="news_link">
-              <div class="thumb_little">
-                <img src="../../../../../static/images/headline/lang-img.png" alt="长方形图片">
-              </div>
-              <div class="news_item_right">
-                <div class="news_item_right_row1">
-                  <span class="news_item_title">日本怎么怎么了</span>
-                </div>
-                <div class="news_item_right_row2">
-                  <span class="news_item_type">日本 &nbsp;&nbsp;&nbsp;&nbsp; 阅读&nbsp;3345</span>
-                </div>
-              </div>
-            </li>
-            没有图片
-            <li class="news_link noImg">
-              <div class="news_item_right small">
-                <div class="news_item_right_row1">
-                  <span class="news_item_title">日本怎么怎么了,日本怎么怎么了,日本怎么怎么了?</span>
-                </div>
-                <div class="news_item_right_row2">
-                  <span class="news_item_type">日本 &nbsp;&nbsp;&nbsp;&nbsp; 阅读&nbsp;3345</span>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div> -->
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
       banners: [], // 轮播图列表
-      categories: [], // 导航列表
-      page: 1, // 加载页数
-      list: [] // 新闻列表
+      // categories: [], // 导航列表
+      page: 1 // 加载页数
+      // list: {} // 新闻列表
       // oneList: [] // 第一张图片
       // listImg: [], // 有图片列表
       // noImg: [] // 没有图片列表
     }
   },
   mounted () {
-    let _this = this
-    _this.headlineHome().then((data) => {
-      _this.banners = data.banners
-      _this.categories = data.categories
-      console.log('headlineHome', data)
-      _this.categories.forEach(item => {
-        console.log('item.catid', item.catid)
-        _this.headlineList({page: _this.page, catid: item.catid}).then((data) => {
-          if (data.headlines.page === _this.page) {
-            return false
-          } else {
-            _this.page = data.headlines.page
-          }
-          _this.list = data.headlines.list
-          _this.oneList = data.headlines.list[0]
-          console.log('_this.list', _this.oneList)
-        })
-      })
+    // this.initData()
+    this.headlineHome()
+    // console.log('headlineList', this.headlineList)
+  },
+  computed: {
+    ...mapState({
+      headlineList: state => state.course.headlineList,
+      categories: state => state.course.categories
     })
   },
   methods: {
     ...mapActions({
-      headlineHome: 'course/headlineHome',
-      headlineList: 'course/headlineList'
+      headlineHome: 'course/headlineHome'
     })
+    // async initData () {
+    // let _this = this
+    // await _this.headlineHome().then((data) => {
+    // _this.banners = data.banners
+    // _this.categories = data.categories
+    // console.log('headlineHome', data)
+    // })
+    // for (let i = 0; i < _this.categories.length; i++) {
+    // await _this.headlineList({page: _this.page, catid: _this.categories[i].catid}).then((data) => {
+    // if (data.headlines.list.length > 0) {
+    // _this.list[_this.categories[i].catid] = data.headlines.list
+    // }
+    // console.log('_this.list', _this.list)
+    // })
+    // }
+    // _this.categories.forEach(item => {
+    // console.log('item.catid', item.catid)
+    // await _this.headlineList({page: _this.page, catid: item.catid}).then((data) => {
+    // if (data.headlines.list.length > 0) {
+    // _this.list[item.catid] = data.headlines.list
+    // }
+    // console.log('_this.list', _this.list)
+    // })
+    // })
+    // }
   }
 
 }
@@ -166,13 +147,13 @@ a {
   text-decoration: none;
 }
 ul,li {
+  display: inline-block;
   list-style:none;
   text-decoration: none;
 }
 .fl {
   float:left;
 }
-
 .fr {
   float: right;
 }
@@ -223,77 +204,81 @@ ul,li {
     }
   }
 }
-.wrapper {
-  ul {
-    li {
-      display: inline-block;
-      background: #fff;
-      margin-right: 20px;
-    }
+// 正常照片
+.wrapper-list {
+  background: pink;
+  .wrapper {
+    margin-right: 10px;
+    display: inline-block;
+    margin-bottom: 10px;
   }
 }
-// 正常图片
 .news_link {
-  height: 200px;
-  display: block;
-  text-decoration: none;
+  display: inline-block;
   font-size: 0;
   border-radius: 3px;
+  background: #ffffff;
+  margin: 0 10px 10px 0;
 }
-
 .thumb_little {
   width: 162px;
   height: 90px;
-  /* overflow: hidden; */
+  img {
+    width:100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 3px 3px 0 0;
+  }
 }
-
-.thumb_little img {
-  width:100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  border-radius: 3px 3px 0 0;
-}
-
-.news_item_right {
+.news-read {
   width: 162px;
   height: 110px;
-  padding: 17px 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  .news_item_right_row1 {
+    width: 134px;
+    margin: auto;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    margin: 16px 0 0 14px;
+    overflow:hidden;
+  }
+  .news_item_right_row2 {
+    width: 100%;
+    padding: 0 0 0 14px;
+    margin-bottom: 17px;
+    .news_item_type {
+      font-size: 12px;
+      color: #B8B8B8;
+      margin-right: 22px;
+    }
+    .reading {
+      font-size: 14px;
+      color: #999999;
+    }
+  }
+  .news_item_title {
+    font-size: 14px;
+    color: #444444;
+    text-decoration: none;
+    font-weight: bold;
+  }
 }
-
-.news_item_right_row1 {
-  width: 100%;
+.news_else {
   display: inline-block;
+  font-size: 0;
+  border-radius: 3px;
 }
-
-.news_item_right_row2 {
-  width: 100%;
-}
-
-.news_item_type {
-  font-size: 12px;
-  color: #B8B8B8;
-}
-
-.news_item_title {
-  font-size: 14px;
-  color: #444444;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.news_item_title:hover {
-  text-decoration: none;
-  color: black;
-}
-
 // 第一个大图
 .big {
-  width: 483px;
+  position: relative;
+  width: 482px;
   height: 200px;
   .thumb_little {
     width: 292px;
@@ -305,16 +290,24 @@ ul,li {
       border-radius: 3px 0 0 3px;
     }
   }
-  .news_item_right {
+  .news-read {
     background: #2A9FE4;
-    width: 191px;
+    width: 190px;
     height: 200px;
-    .weight>span {
-      font-size: 20px;
-      color: #fff;
+    margin: 0;
+    .weight {
+      width: 158px;
+      span {
+        font-size: 20px;
+        color: #fff;
+      }
     }
-    .news_item_right_row2>span {
+    .weight-text {
+      height: auto;
       color: #fff;
+      span {
+        color: #fff;
+      }
     }
   }
 }

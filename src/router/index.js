@@ -31,6 +31,7 @@ const userAnonymous = r => require.ensure([], () => r(require('@/components/lear
 const discovery = r => require.ensure([], () => r(require('@/components/learn/discovery/discovery.vue')), 'discovery')
 const radioHome = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioHome.vue')), 'radio-home')
 const headline = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headline.vue')), 'headline')
+const headlineDetails = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headlineDetails.vue')), 'headlineDetails')
 
 // 学习系统
 const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue')), 'learn-system')
@@ -172,6 +173,11 @@ export default[
       {
         path: 'headline',
         component: headline
+      },
+      // 头条每个栏目
+      {
+        path: 'headlineDetails',
+        component: headlineDetails
       },
       // 电台
       {

@@ -57,7 +57,9 @@ const state = {
   improvementComplete: false,
   homeworkContent: {},
   chapterTestResult: {}, // 记录用户的课程测试结果
-  historyCourseRecord: {} // 记录课程的历史数据
+  historyCourseRecord: {}, // 记录课程的历史数据
+  headlineList: [],
+  categories: []
 }
 
 const actions = {
@@ -205,8 +207,25 @@ const actions = {
   postDisvHome ({commit}) {
     return httpLogin(config.disvHomeApi)
   },
-  headlineHome ({ commit }) {
-    return httpLogin(config.headlineHome)
+  headlineHome ({ commit, state, dispatch }) {
+    return httpLogin(config.headlineHome).then((res) => {
+      commit('updateCategories', res.categories)
+      console.log('res.categories', res.categories)
+      res.categories.forEach((item) => {
+        let catid = item.catid
+        dispatch('headlineList', {page: 1, catid: catid}).then((data) => {
+          let obj = {
+            'catid': '',
+            'list': []
+          }
+          // obj[catid] = data.headlines.list
+          obj.catid = catid
+          obj.list = data.headlines.list
+          commit('updateHeadlineHome', obj)
+          // page: item.headlines.page
+        })
+      })
+    })
   },
   headlineList ({ commit }, params) {
     return httpLogin(config.headlineList, params)
@@ -563,6 +582,14 @@ const mutations = {
   },
   updateHistoryCourseRecord (state, data) {
     state.historyCourseRecord = data
+  },
+  // 头条
+  updateHeadlineHome (state, data) {
+    state.headlineList.push(data)
+    console.log('headlineList', state.headlineList)
+  },
+  updateCategories (state, data) {
+    state.categories = data
   }
 }
 
