@@ -23,12 +23,12 @@ const state = {
   levelNum: 6,
   levelDetail: [],
   levelDes: {
-    'Level1': '初级A1',
-    'Level2': '初级A2',
-    'Level3': '中级B1',
-    'Level4': '中级B2',
-    'Level5': '高级C1',
-    'Level6': '高级C1'
+    'Level1': '初级 A1',
+    'Level2': '初级 A2',
+    'Level3': '中级 B1',
+    'Level4': '中级 B2',
+    'Level5': '高级 C1',
+    'Level6': '高级 C1'
   },
   chapterDes: '',
   contentUrl: '',

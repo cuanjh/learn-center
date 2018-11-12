@@ -310,7 +310,7 @@ export default {
       .line {
         width: 1px;
         height: 32px;
-        top: 8px;
+        top: 35px;
         display: inline-block;
         position: relative;
         background-color: #9DDAFF;
@@ -371,13 +371,13 @@ export default {
           };
           span {
             color: #333333;
-            vertical-align: top;
+            line-height: 20px;
             font-size: 16px;
             font-weight: bold;
           };
         };
         p:nth-of-type(2) {
-          margin-top: 20px;
+          margin-top: 30px;
           color: #333333;
           font-size: 14px;
         }
