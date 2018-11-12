@@ -205,6 +205,13 @@ const actions = {
   postDisvHome ({commit}) {
     return httpLogin(config.disvHomeApi)
   },
+  postDisvRadio ({commit}) {
+    return httpLogin(config.disvRadioApi)
+  },
+  postRadioDetail ({commit}, code) {
+    let api = config.radioDetailApi.replace('<course_code>', code)
+    return httpLogin(api)
+  },
   headlineHome ({ commit }) {
     return httpLogin(config.headlineHome)
   },
