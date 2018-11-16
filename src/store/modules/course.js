@@ -212,6 +212,13 @@ const actions = {
     let api = config.radioDetailApi.replace('<course_code>', code)
     return httpLogin(api)
   },
+  getRadioCardList ({commit}, params) {
+    let api = config.radioCardListApi.replace('{course_code}', params.code)
+      .replace('{list_order}', params.listOrder)
+      .replace('{page}', params.page)
+      .replace('{pagesize}', params.pageSize)
+    return httpLogin(api)
+  },
   headlineHome ({ commit }) {
     return httpLogin(config.headlineHome)
   },
