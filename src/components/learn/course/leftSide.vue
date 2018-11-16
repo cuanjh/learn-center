@@ -71,6 +71,8 @@ export default {
     border-radius: 4px;
     box-shadow: 0 1px 2px 0 rgba(218,230,243,0.30);
     display: inline-block;
+    margin-top: 8px;
+    position: fixed;
   }
 
   .lang-overview{

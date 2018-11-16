@@ -1,9 +1,9 @@
 <template>
-  <div class='learn-footer-course-nav'>
+  <div class='learn-course-nav'>
     <ul>
       <li v-for='(level, index) in levelDetail' :key="index" :style="{'width': levelWidth}">
-        <p class='learn-footer-course-nav-blue'
-            v-bind:class="{'learn-footer-course-nav-active':curLevel.toLowerCase() === level}"
+        <p class='learn-course-nav-blue'
+            v-bind:class="{'learn-course-nav-active':curLevel.toLowerCase() === level}"
             v-on:click='selLevel(level)'>{{ $t(level) }}</p>
       </li>
     </ul>
@@ -44,43 +44,47 @@ export default {
 </script>
 
 <style scoped>
-  .learn-footer-course-nav {
+  .learn-course-nav {
     text-align: center;
-    width: 100%;
+    width: 900px;
     height: 60px;
-    border-radius: 4px;
-    background-color: #fff;
+    /* border-radius: 4px; */
+    background-color: rgb(241,245,248);
+    margin-top: -16px;
+    margin-left: 285px;
+    padding: 0 20px;
+    position: fixed;
+    z-index: 99;
   }
 
-  .learn-footer-course-nav > ul {
+  .learn-course-nav > ul {
     list-style: none;
     padding: 0px 0px !important;
     height: 60px;
     display: flex;
   }
 
-  .learn-footer-course-nav > ul > li {
+  .learn-course-nav > ul > li {
     float: left;
     /* padding: 0 20px; */
   }
 
-  .learn-footer-course-nav > ul > li > p {
+  .learn-course-nav > ul > li > p {
     display: inline-block;
     text-align: center;
     height: 60px;
-    line-height: 60px;
+    line-height: 75px;
     font-family: ".AppleSystemUIFont";
-    font-size: 16px;
-    font-weight: normal;
+    font-size: 14px;
+    font-weight:500;
     font-style: normal;
     font-stretch: normal;
-    color: #999999;
+    color: #555555;
     width: 70px;
     cursor: pointer;
-    font-weight: bold;
   }
 
-  .learn-footer-course-nav > ul > li > span {
+  .learn-course-nav > ul > li > span {
     display: inline-block;
     height: 50px;
     line-height: 50px;
@@ -88,15 +92,15 @@ export default {
     color: #dcdbdb;
   }
 
-  .learn-footer-course-nav-active {
-    color: #0581D1 !important;
-    border-bottom: 4px solid #0581D1;
+  .learn-course-nav-active {
+    color: rgb(42,159,228) !important;
+    border-bottom: 2px solid rgba(42,159,228,1);
   }
 
-  .learn-footer-course-nav-detail {
-    color: #0581D1 !important;
+  .learn-course-nav-detail {
+    color: rgb(42,159,228) !important;
   }
-  .learn-footer-course-nav-blue:hover {
-    color: #0581D1 !important;
+  .learn-course-nav-blue:hover {
+    color: rgb(42,159,228) !important;
   }
 </style>

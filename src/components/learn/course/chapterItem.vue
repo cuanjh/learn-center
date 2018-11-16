@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="course-list">
     <div v-for="(item, index) in curLevelChapters" :key="index" :id="item.code">
       <div class="current-learn-course-info"
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
@@ -499,7 +499,7 @@ export default {
         }
         this.isShow = false
         setTimeout(() => {
-          let top = $('#' + chapterCode).offset().top - 90
+          let top = $('#' + chapterCode).offset().top - 140
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, time)
 
@@ -620,6 +620,10 @@ export default {
 </script>
 
 <style scoped>
+  .course-list {
+    margin-top: 60px;
+  }
+
   .current-learn-course-info{
     cursor: pointer;
     padding:15px;
@@ -635,7 +639,7 @@ export default {
     border-radius: 5px 5px 0 0;
   }
   .current-learn-course-info:hover {
-    box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
+    box-shadow: 0 0 26px 0 rgba(0, 0, 0, 0.2);
     -webkit-transition: all .3s ease-in-out;
     -moz-transition: all .3s ease-in-out;
     -ms-transition: all .3s ease-in-out;
