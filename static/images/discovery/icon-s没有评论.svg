@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="19px" height="16px" viewBox="0 0 19 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-s没有评论</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="发现" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="底部操作栏" transform="translate(-1260.000000, -2162.000000)">
+            <g id="Group" transform="translate(0.000000, 2145.000000)">
+                <g id="底部播放">
+                    <g id="icon-s没有评论" transform="translate(1261.000000, 16.000000)">
+                        <circle id="Oval-2" fill="#FFFFFF" cx="3.57894737" cy="8.21052632" r="1.05263158"></circle>
+                        <circle id="Oval-2-Copy" fill="#FFFFFF" cx="7.15789474" cy="8.21052632" r="1.05263158"></circle>
+                        <circle id="Oval-2-Copy-2" fill="#FFFFFF" cx="10.7368421" cy="8.21052632" r="1.05263158"></circle>
+                        <path d="M16.8421053,9.26315789 L16.8421053,11.5087719 C16.8421053,12.5009466 16.0483719,13.3052632 15.0692521,13.3052632 L10.1939058,13.3052632 L7.97783934,16 L5.76177285,13.3052632 L1.77285319,13.3052632 C0.793733408,13.3052632 3.93652485e-16,12.5009466 3.93652485e-16,11.5087719 L0,3.48070175 C-5.90478728e-16,2.48852705 0.793733408,1.68421053 1.77285319,1.68421053 L9.75069252,1.68421053" id="Rectangle" stroke="#FFFFFF" stroke-width="1.26315789" stroke-linecap="round"></path>
+                        <text id="0" font-family="PingFangSC-Regular, PingFang SC" font-size="6.73684211" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="13.7894737" y="7">0</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -32,12 +32,17 @@
         </div>
         <div class="radio-list">
           <div class="radio-item" v-for="item in radios.slice(0, 3)" :key="item.code">
-            <img :src="item.cover" alt="">
-            <div class="subscribe">
-              <i></i>
-              <span v-text="item.buy_num"></span>
-            </div>
-            <div class="title" v-text="item.title"></div>
+            <a @mouseenter="radioMouseEnter($event)" @mouseleave="radioMouseLeave($event)">
+              <img :src="item.cover" alt="">
+              <div class="gradient-layer-play" @click="loadRadioList($event, item.code)" style="display: none">
+                <i class="play"></i>
+              </div>
+              <div class="subscribe">
+                <i></i>
+                <span v-text="item.buy_num"></span>
+              </div>
+            </a>
+            <router-link tag="div" :to="{path: '/app/radio-detail/' + item.code}" class="title" v-text="item.title"></router-link>
             <div class="author" v-text="item.author_name"></div>
             <div class="money" v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' +item.money : $t('coins') + ' ' + item.money"></div>
           </div>
@@ -68,19 +73,31 @@
         </div>
       </div>
     </div>
+    <voice-player></voice-player>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import $ from 'jquery'
+
+import VoicePlayer from '../../common/voicePlayer.vue'
+import Bus from '../../../bus'
+
 export default {
   data () {
     return {
       authors: [],
       headlines: [],
       radios: [],
-      games: []
+      games: [],
+      isShowGradientLayer: false,
+      isPlay: false,
+      lastCode: ''
     }
+  },
+  components: {
+    VoicePlayer
   },
   mounted () {
     this.$parent.$emit('initLayout')
@@ -96,7 +113,35 @@ export default {
   methods: {
     ...mapActions({
       postDisvHome: 'course/postDisvHome'
-    })
+    }),
+    loadRadioList (e, code) {
+      if (this.isPlay && code === this.lastCode) {
+        $('.gradient-layer-play i').removeClass('pause')
+        $(e.target).addClass('play')
+        Bus.$emit('radioPause')
+      } else {
+        $('.gradient-layer-play i').removeClass('pause')
+        $('.gradient-layer-play i').addClass('play')
+        $(e.target).removeClass('play')
+        $(e.target).addClass('pause')
+        $('.gradient-layer-play').not($(e.target).parent()).hide()
+        if (code !== this.lastCode) {
+          Bus.$emit('getRadioCardList', code)
+          this.lastCode = code
+        } else {
+          Bus.$emit('radioPlay')
+        }
+      }
+      this.isPlay = !this.isPlay
+    },
+    radioMouseEnter (e) {
+      $('.gradient-layer-play', $(e.target)).show()
+    },
+    radioMouseLeave (e) {
+      if ($('.gradient-layer-play i', $(e.target)).hasClass('play')) {
+        $('.gradient-layer-play', $(e.target)).hide()
+      }
+    }
   }
 }
 </script>
@@ -256,12 +301,46 @@ export default {
   object-fit: cover;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
+  z-index: 1;
+}
+
+.radio-item .gradient-layer-play {
+  width: 220px;
+  height: 117px;
+  position: absolute;
+  background-image: url('../../../../static/images/discovery/radio-gradient-layer.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-top: -117px;
+  text-align:  center;
+  z-index: 2;
+}
+
+.radio-item .gradient-layer-play .play {
+  width: 52px;
+  height: 52px;
+  background-image: url('../../../../static/images/discovery/radio-list-play.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-block;
+  margin-top: 30px;
+}
+
+.radio-item .gradient-layer-play .pause {
+  width: 52px;
+  height: 52px;
+  background-image: url('../../../../static/images/discovery/radio-list-pause.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-block;
+  margin-top: 30px;
 }
 
 .radio-item .subscribe {
   position: relative;
   display: -webkit-box;
   margin-top: -25px;
+  z-index: 3;
 }
 
 .radio-item .subscribe i {
@@ -286,6 +365,7 @@ export default {
   margin: 15px 10px;
   color: #333333;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .radio-item .author {

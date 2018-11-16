@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="18px" height="16px" viewBox="0 0 18 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 12</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="发现" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="底部操作栏" transform="translate(-1360.000000, -2162.000000)" stroke="#FFFFFF" stroke-width="1.5">
+            <g id="Group" transform="translate(0.000000, 2121.000000)">
+                <g id="Group-12" transform="translate(1360.000000, 41.000000)">
+                    <polygon id="Rectangle-11" stroke-linejoin="round" points="0.769042969 3.96923828 4.33996582 3.96923828 9.42712402 0.787841797 9.42712402 15.2797852 4.33996582 12.0783691 0.769042969 12.0783691"></polygon>
+                    <path d="M18.6568542,12 C18.6568542,9.62458252 17.6215555,7.49097203 15.9775663,6.02577685 C14.5637346,4.76570808 12.6997148,4 10.6568542,4" id="Oval-8" transform="translate(14.656854, 8.000000) rotate(45.000000) translate(-14.656854, -8.000000) "></path>
+                    <path d="M14.8284271,10.1715729 C14.8284271,8.98386414 14.3107777,7.91705889 13.4887832,7.1844613 C12.7818673,6.55442692 11.8498574,6.17157288 10.8284271,6.17157288" id="Oval-8" transform="translate(12.828427, 8.171573) rotate(45.000000) translate(-12.828427, -8.171573) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

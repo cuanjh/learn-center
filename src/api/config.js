@@ -69,6 +69,9 @@ export default {
 
   // 发现
   disvHomeApi: '/disv1/home', // 发现首页接口
+  disvRadioApi: '/disv1/radio', // 发现电台首页接口
+  radioDetailApi: '/topic_course/detail/<course_code>/', // 用户电台明细
+  radioCardListApi: '/user_course/card_list/{course_code}/{list_order}/{page}/{pagesize}', // 课程卡片列表接口
   // 头条
   headlineHome: '/disv1/headline/home', // 头条首页接口
   headlineList: '/disv1/headline/list', // 头条列表接口
