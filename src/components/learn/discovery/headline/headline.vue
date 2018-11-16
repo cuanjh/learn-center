@@ -290,7 +290,7 @@ ul,li {
       font-size: 24px;
       color: #333333;
       margin-bottom: 44px;
-      :hover {
+      &:hover {
         background: #D8D8D8;
       }
       &.active {
@@ -444,20 +444,20 @@ ul,li {
         text-decoration: none;
         font-size: 0;
         background: #ffffff;
-        -webkit-transition: all .3s ease-in-out;
-        -moz-transition: all .3s ease-in-out;
-        -ms-transition: all .3s ease-in-out;
-        -o-transition: all .3s ease-in-out;
-        transition: all .3s ease-in-out;
-        border-radius: 5px 5px 0 0;
-        &:hover {
-          box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
-          -webkit-transition: all .3s ease-in-out;
-          -moz-transition: all .3s ease-in-out;
-          -ms-transition: all .3s ease-in-out;
-          -o-transition: all .3s ease-in-out;
-          transition: all .3s ease-in-out;
-        }
+        // -webkit-transition: all .3s ease-in-out;
+        // -moz-transition: all .3s ease-in-out;
+        // -ms-transition: all .3s ease-in-out;
+        // -o-transition: all .3s ease-in-out;
+        // transition: all .3s ease-in-out;
+        // border-radius: 5px 5px 0 0;
+        // &:hover {
+        //   box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
+        //   -webkit-transition: all .3s ease-in-out;
+        //   -moz-transition: all .3s ease-in-out;
+        //   -ms-transition: all .3s ease-in-out;
+        //   -o-transition: all .3s ease-in-out;
+        //   transition: all .3s ease-in-out;
+        // }
         .thumb_little {
           display: inline-block;
           width: 264px;

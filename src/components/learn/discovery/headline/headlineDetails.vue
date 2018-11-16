@@ -56,7 +56,7 @@
             <ul>
               <li v-for="(item, index) in relatedNews" :key="index">
                 <div class="img">
-                  <img :src="item.thumb" alt="推荐图片">
+                  <img :src="item.banner_img" alt="推荐图片">
                 </div>
                 <div class="news_item">
                   <div class="news_item_row1">
@@ -213,6 +213,12 @@ export default {
       }
       this.commentLists = res.data.comments
     })
+    this.$nextTick(() => {
+      this.removeStyle()
+    })
+  },
+  updated () {
+    this.resetStyle()
   },
   computed: {
     ...mapState({
@@ -316,6 +322,22 @@ export default {
         this.commentLists = this.commentLists.concat(res.data.comments)
         console.log('commentLists', this.commentLists)
       })
+    },
+    removeStyle () {
+      $('.news-content').find('img').removeAttr('style')
+    },
+    resetStyle () {
+      $('.news-content').find('p,span').css({
+        'font-size': '16px',
+        'color': '#333333',
+        'line-height': '28px',
+        'font-family': "'Microsoft YaHei','PingFang SC','Hiragino Sans GB',Helvetica,Tahoma,Arial,SimSun,Heiti,sans-serif",
+        'word-wrap': 'break-word'
+      })
+      $('.news-content').find('img').css({
+        'width': '100%',
+        'margin': '10px 0 10px'
+      })
     }
   }
 }
@@ -382,24 +404,15 @@ ul,li {
       }
       .news-content {
         width: 100%;
-        .hdpPic {
-          width: 770px !important;
-          .picTxt {
-            width: 770px !important;
-          }
-          ul {
-            width: 770px !important;
-          }
-        }
-        .topAd {
-          width: 770px !important;
-          .tuiControl {
-            width: 770px !important;
-            img {
-              max-width: 100% !important;
-              object-fit: cover;
-            }
-          }
+        word-wrap: break-word;
+        font-size: 16px;
+        color: #333;
+        line-height: 28px;
+        margin-bottom: 20px;
+        img {
+          margin: 10px 0;
+          width: 97.5%;
+          margin: - auto;
         }
       }
       .key-bottom {
