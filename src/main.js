@@ -4,6 +4,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import VueI18n from 'vue-i18n'
+import moment from 'moment'
+
 // import BootstrapVue from 'bootstrap-vue'
 
 import routes from './router/index'
@@ -25,6 +27,15 @@ Vue.use(VueResource)
 Vue.use(VueI18n)
 
 Vue.filter('urlFix', urlfix)
+
+// 全局过滤器
+Vue.filter('dateFmt', (input, formatString = 'YYYY-MM-DD') => {
+  // es5函数参数设置默认值
+  // const lastFormatString = formatString || ''
+  // moment(input) 把时间字符串转成时间对象
+  // format(formatString) 把时间对象，按照指定格式，格式化成符合条件的字符串
+  return moment(input).format(formatString)
+})
 
 Vue.config.productionTip = false
 const router = new VueRouter({

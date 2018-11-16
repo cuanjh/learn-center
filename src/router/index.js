@@ -32,6 +32,8 @@ const discovery = r => require.ensure([], () => r(require('@/components/learn/di
 const radioHome = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioHome.vue')), 'radio-home')
 const radioDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioDetail.vue')), 'radio-detail')
 const headline = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headline.vue')), 'headline')
+const headlineDetails = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headlineDetails.vue')), 'headline-details')
+const headlineSearch = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headlineSearch.vue')), 'headline-search')
 
 // 学习系统
 const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue')), 'learn-system')
@@ -173,6 +175,17 @@ export default[
       {
         path: 'headline',
         component: headline
+      },
+      // 头条每个栏目
+      {
+        path: 'headline-details/:id',
+        name: 'headlineDetails',
+        component: headlineDetails
+      },
+      {
+        path: 'headline-search',
+        name: 'headlineSearch',
+        component: headlineSearch
       },
       // 电台
       {

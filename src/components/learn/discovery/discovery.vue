@@ -4,7 +4,7 @@
       <div class="discovery-category">
         <div class="name">
           <span>全球头条</span>
-          <span>查看更多<i></i></span>
+          <router-link tag="span" :to="{path: '/app/headline'}">查看更多<i></i></router-link>
         </div>
         <div class="headline-list">
           <div class="headline-item1" v-for="(item, index) in headlines.slice(0, 1)" :key="'headline-item1' + index">

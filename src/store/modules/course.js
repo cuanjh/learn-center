@@ -58,6 +58,8 @@ const state = {
   homeworkContent: {},
   chapterTestResult: {}, // 记录用户的课程测试结果
   historyCourseRecord: {} // 记录课程的历史数据
+  // headlineHome: [],
+  // headlineList: []
 }
 
 const actions = {
@@ -222,8 +224,43 @@ const actions = {
   headlineHome ({ commit }) {
     return httpLogin(config.headlineHome)
   },
+  /* headlineHome ({ commit, state, dispatch }) {
+    return httpLogin(config.headlineHome).then((res) => {
+      commit('updateCategories', res.categories)
+      console.log('res.categories', res.categories)
+      res.categories.forEach((item) => {
+        let catid = item.catid
+        dispatch('headlineList', {page: 1, catid: catid}).then((data) => {
+          let obj = {
+            'catid': '',
+            'list': []
+          }
+          // obj[catid] = data.headlines.list
+          obj.catid = catid
+          obj.list = data.headlines.list
+          commit('updateHeadlineHome', obj)
+          // page: item.headlines.page
+        })
+      })
+    })
+  }, */
   headlineList ({ commit }, params) {
     return httpLogin(config.headlineList, params)
+  },
+  headlineDetail ({ commit }, params) {
+    return httpLogin(config.headlineDetail, params)
+  },
+  commentList ({ commit }, params) {
+    return httpLogin(config.commentList, params)
+  },
+  comments ({ commit }, params) {
+    return httpLogin(config.comments, params)
+  },
+  reportList ({ commit }, params) {
+    return httpLogin(config.reportList, params)
+  },
+  searchList ({ commit }, params) {
+    return httpLogin(config.searchList, params)
   }
 }
 
@@ -577,6 +614,17 @@ const mutations = {
   },
   updateHistoryCourseRecord (state, data) {
     state.historyCourseRecord = data
+  },
+  // 头条
+
+  updateHeadlineHome (state, data) {
+    state.headlineHome = data
+    console.log('HeadlineHome', state.headlineHome)
+  },
+  updateHeadlinelist (state, data) {
+    // state.headlineList.push(data)
+    state.headlineList = data
+    console.log('headlineList', state.headlineList)
   }
 }
 

@@ -75,6 +75,11 @@ export default {
   // 头条
   headlineHome: '/disv1/headline/home', // 头条首页接口
   headlineList: '/disv1/headline/list', // 头条列表接口
+  headlineDetail: '/disv1/headline/detail', // 头条详情接口
+  commentList: '/disv1/headline/comment_list', // 评论列表接口
+  comments: '/disv1/headline/comment', // 头条评论接口
+  reportList: '/feedv1/dynamic/report', // 头条投诉接口
+  searchList: '/disv1/headline/search', // 头条搜索接口
 
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token
