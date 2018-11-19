@@ -16,7 +16,7 @@
           <span>更多<i></i></span>
         </div>
         <div class="radio-list">
-          <router-link tag="div" :to="{path: '/app/radio-detail/' + radio.code}" class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
+          <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
             <img :src="radio.cover" alt="">
             <div class="subscribe">
               <i></i>

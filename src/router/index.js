@@ -29,6 +29,7 @@ const userAnonymous = r => require.ensure([], () => r(require('@/components/lear
 
 // 学习 --- 发现
 const discovery = r => require.ensure([], () => r(require('@/components/learn/discovery/discovery.vue')), 'discovery')
+const discoveryHome = r => require.ensure([], () => r(require('@/components/learn/discovery/home.vue')), 'discovery-home')
 const radioHome = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioHome.vue')), 'radio-home')
 const radioDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioDetail.vue')), 'radio-detail')
 const headline = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headline.vue')), 'headline')
@@ -169,7 +170,23 @@ export default[
       // 发现
       {
         path: 'discovery',
-        component: discovery
+        component: discovery,
+        redirect: 'discovery/home',
+        children: [
+          {
+            path: 'home',
+            component: discoveryHome
+          },
+          // 电台
+          {
+            path: 'radio-home',
+            component: radioHome
+          },
+          {
+            path: 'radio-detail/:code',
+            component: radioDetail
+          }
+        ]
       },
       // 头条
       {
@@ -186,15 +203,6 @@ export default[
         path: 'headline-search',
         name: 'headlineSearch',
         component: headlineSearch
-      },
-      // 电台
-      {
-        path: 'radio-home',
-        component: radioHome
-      },
-      {
-        path: 'radio-detail/:code',
-        component: radioDetail
       }
     ]
   },

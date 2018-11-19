@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="voice-player-wrapper">
-        <a href="javascript:;" class="voice-player-cover">
+        <a class="voice-player-cover">
           <img :src="curRadio.cover_url" alt="">
         </a>
         <div class="btns">
@@ -102,7 +102,7 @@
             <span v-text="curRadio.title"></span>
           </div>
           <div class="play-body-progress">
-            <div class="progress">
+            <div class="progress" @mousedown="downProgress($event)">
               <i class="progress-load" style="width: 0%;"></i>
               <i class="progress-cur" :style="{'width': curProgress}">
                 <span class="progress-btn">
@@ -153,7 +153,7 @@
       </div>
       <div class="voice-player-list-content">
         <ul>
-          <li class="clearfix" v-for="(card, index) in radioList" :key="index">
+          <li class="clearfix" v-for="(card, index) in radioList" :key="index" @click="selectRadio(index)">
             <div class="col1" v-text="index + 1"></div>
             <div class="col2" :class="{'current': index === curIndex}" v-text="card.title"></div>
             <div class="col3" v-text="toParseTime(card.sound_time)"></div>
@@ -295,6 +295,10 @@ export default {
       this.isPlay = false
       clearInterval(this.interval)
     },
+    selectRadio (index) {
+      this.curIndex = index
+      this.playRadio()
+    },
     playRadio () {
       this.curRadio = this.radioList[this.curIndex]
       this.curTime = 0
@@ -331,6 +335,15 @@ export default {
       this.volumeHeight = (height * 1.0 / 90 * 100).toFixed(2) + '%'
       this.sndctr.setVolume(height * 1.0 / 90)
       console.log(height)
+    },
+    downProgress (e) {
+      let width = e.pageX - $('.progress').offset().left
+      if (width > 540 || width < 0) {
+        return
+      }
+      this.curProgress = (width * 1.0 / 540 * 100).toFixed(2) + '%'
+      this.curTime = Math.round((width * 1.0 / 540) * this.duration)
+      this.sndctr.setCurrentTime(this.curTime)
     }
   }
 }

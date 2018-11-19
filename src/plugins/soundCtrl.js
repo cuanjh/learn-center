@@ -74,6 +74,10 @@ function setVolume (val = 0.5) {
   audio.volume = val;
 }
 
+function setCurrentTime (time) {
+  audio.currentTime = time;
+}
+
 
 export default {
   getDuration: getDuration,
@@ -82,5 +86,6 @@ export default {
   pause: pause,
   stop: stop,
   setSnd: setSnd,
-  setVolume: setVolume
+  setVolume: setVolume,
+  setCurrentTime: setCurrentTime
 };
