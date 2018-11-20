@@ -59,11 +59,11 @@
       </symbol>
     </svg>
 
-    <div class="voice-player" :style="{'bottom': isLock ? '0' : '-50px'}">
+    <div class="voice-player" :class="{'is-locked': isLock, 'is-unlocked': !isLock}" :style="{'bottom': isHand ? '0' : '-50px'}">
       <div class="voice-player-hand"></div>
       <div class="box-shadow-wrapper">
         <div class="voice-player-lock">
-          <a class="lock" @click="isLock = !isLock">
+          <a class="lock" @click="setLock()">
             <svg v-if="isLock">
               <use xlink:href="#icon-locked"></use>
             </svg>
@@ -192,6 +192,7 @@ export default {
       tagVolume: false,
       thunk: null, // 拖拽DOM元素
       volumeHeight: '50%',
+      isHand: true,
       sndctr: SoundCtrl
     }
   },
@@ -232,6 +233,18 @@ export default {
       }
       return false
     }
+    let that = this
+    $('.voice-player').mouseenter(() => {
+      if (!that.isLock) {
+        that.isHand = true
+      }
+    })
+
+    $('.voice-player').mouseleave(() => {
+      if (!that.isLock) {
+        that.isHand = false
+      }
+    })
   },
   methods: {
     ...mapActions({
@@ -307,8 +320,8 @@ export default {
       this.sndctr.setSndCallback(this.curRadio.sound_url, () => {
         this.duration = Math.round(this.sndctr.getDuration())
         this.interval = setInterval(() => {
-          this.curTime++
           this.curProgress = (this.curTime / this.duration).toFixed(4) * 100 + '%'
+          this.curTime++
           console.log(this.curProgress)
         }, 1000)
       })
@@ -344,6 +357,14 @@ export default {
       this.curProgress = (width * 1.0 / 540 * 100).toFixed(2) + '%'
       this.curTime = Math.round((width * 1.0 / 540) * this.duration)
       this.sndctr.setCurrentTime(this.curTime)
+    },
+    setLock () {
+      this.isLock = !this.isLock
+      if (!this.isLock) {
+        this.isHand = false
+      } else {
+        this.isHand = true
+      }
     }
   }
 }
@@ -352,6 +373,15 @@ export default {
 <style lang="less" scoped>
 .voice-player-container {
   .voice-player {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    transition: all .2s;
+    background-color: rgba(0, 57, 91, .8);
+    z-index: 99;
     .voice-player-hand {
       position: absolute;
       left: 0;
@@ -395,14 +425,6 @@ export default {
         }
       }
     }
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
-    line-height: 50px;
-    background-color: rgba(0, 57, 91, .8);
-    z-index: 99;
     .voice-player-wrapper {
       width: 1200px;
       height: 100%;
@@ -708,6 +730,12 @@ export default {
         }
       }
     }
+  }
+  .is-locked {
+    bottom: 0;
+  }
+  .is-unlocked {
+    bottom: -50px;
   }
 }
 </style>
