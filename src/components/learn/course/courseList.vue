@@ -161,9 +161,8 @@ export default {
 }
 
 .course-content {
-  min-width: 879px;
   display: inline-block;
-  margin-left: 300px;
+  margin-left: 290px;
   vertical-align: top;
 }
 
@@ -181,5 +180,14 @@ export default {
 .fade-enter, .fade-leave-to {
   transform: translateY(-10px);
   opacity: 0;
+}
+@media screen and (max-width: 1024px) {
+  .current-course {
+    width: 960px;
+  }
+
+  .course-content {
+    margin-left: 255px;
+  }
 }
 </style>

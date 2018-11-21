@@ -52,7 +52,6 @@ export default {
     background-color: rgb(241,245,248);
     margin-top: -16px;
     margin-left: 285px;
-    padding: 0 20px;
     position: fixed;
     z-index: 99;
   }
@@ -102,5 +101,12 @@ export default {
   }
   .learn-course-nav-blue:hover {
     color: rgb(42,159,228) !important;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .learn-course-nav {
+      width: 750px;
+      margin-left: 242px;
+    }
   }
 </style>

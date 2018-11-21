@@ -774,4 +774,10 @@ export default {
   margin-top: 25px;
   margin-right:5px;
 }
+
+@media screen and (max-width: 1024px) {
+  .header-box .content {
+    width: 960px;
+  }
+}
 </style>

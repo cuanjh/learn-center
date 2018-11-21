@@ -4,13 +4,13 @@
     padding-top: 50px;
   }
   .link-lists {
-    width: 1000px;
+    width: 1200px;
     overflow: hidden;
     margin: 0px auto;
   }
   .link-lists dl {
     float: left;
-    width: 250px;
+    width: 25%;
     font-size: 14px;
   }
   .link-lists dl dt {
@@ -32,9 +32,11 @@
     border-bottom: 1px solid #1a466e;
     padding-top: 25px;
     padding-bottom: 10px;
+    width: 1200px;
+    margin: 0 auto;
   }
   .contact-our p {
-    width: 1000px;
+    width: 1200px;
     overflow: hidden;
     margin: 0px auto;
   }
@@ -51,13 +53,29 @@
     background-image: url('./../../../static/images/home/e.svg');
   }
   .icp-record {
-    width: 1000px;
+    width: 1200px;
     overflow: hidden;
     font-size: 12px;
     color: #8098ae;
     line-height: 20px;
     margin: 0px auto;
-    padding: 15px 0;
+    padding: 16px 0;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .link-lists {
+      width: 960px;
+    }
+    .contact-our {
+      width: 960px;
+    }
+    .contact-our p {
+      width: 960px;
+    }
+
+    .icp-record {
+      width: 960px;
+    }
   }
 </style>
 <template>

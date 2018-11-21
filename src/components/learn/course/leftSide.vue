@@ -66,8 +66,8 @@ export default {
 
 <style scoped>
   .left-side{
-    min-width: 280px;
-    width: 280px;
+    width: 24%;
+    max-width: 270px;
     border-radius: 4px;
     box-shadow: 0 1px 2px 0 rgba(218,230,243,0.30);
     display: inline-block;

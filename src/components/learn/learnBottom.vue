@@ -59,4 +59,10 @@ export default {
     margin-top: 30px;
     margin-left: 30px;
   }
+
+  @media screen and (max-width: 1024px) {
+    .content {
+      width: 960px;
+    }
+  }
 </style>
