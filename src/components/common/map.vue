@@ -21,7 +21,11 @@ export default {
     },
     baiduMap () {
       // 创建地图实例
-      this.map = new BMap.Map('allmap')
+      this.map = new BMap.Map('allmap', {
+        enableMapClick: false,
+        minZoom: 1,
+        maxZoom: 8
+      })
       // 开启鼠标滚轮缩放
       this.map.enableScrollWheelZoom(true)
       // 创建点坐标
@@ -30,6 +34,10 @@ export default {
       this.map.centerAndZoom(point, 1)
       // 创建标注
       var marker = new BMap.Marker(point)
+      // marker.enableDragging()
+      // marker.addEventListener('dragend', (e) => {
+      //   console.log('当前位置：' + e.point.lng + ', ' + e.point.lat)
+      // })
       // 将标注添加到地图中
       this.map.addOverlay(marker)
       /* eslint-disable */
@@ -64,13 +72,65 @@ export default {
       this.setMapStyle()
 
       // 随机向地图添加10个标注
-      var bounds = this.map.getBounds()
-      var lngSpan = bounds.maxX - bounds.minX
-      var latSpan = bounds.maxY - bounds.minY
-      for (var i = 0; i < 10; i++) {
-        var point1 = new BMap.Point(bounds.minX + lngSpan * (Math.random() * 0.7 + 0.15), bounds.minY + latSpan * (Math.random() * 0.7 + 0.15))
-        this.addMarker(point1, i)
-      }
+      // var bounds = this.map.getBounds()
+      // var lngSpan = bounds.maxX - bounds.minX
+      // var latSpan = bounds.maxY - bounds.minY
+      // for (var i = 0; i < 10; i++) {
+      //   var point1 = new BMap.Point(bounds.minX + lngSpan * (Math.random() * 0.7 + 0.15), bounds.minY + latSpan * (Math.random() * 0.7 + 0.15))
+      //   this.addMarker(point1, i)
+      // }
+
+      // var optsWin = {
+      //   width: 250, // 信息窗口宽度
+      //   height: 100, // 信息窗口高度
+      //   title: 'Hello', // 信息窗口标题
+      //   enableMessage: true, // 设置允许信息窗发送短息
+      //   message: '亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~'
+      // }
+      // var infoWindow = new BMap.InfoWindow('World', optsWin) // 创建信息窗口对象
+      // // this.map.openInfoWindow(infoWindow, this.map.getCenter()) // 打开信息窗口
+      // marker.addEventListener('click', () => {
+      //   this.map.openInfoWindow(infoWindow, point) // 开启信息窗口
+      // })
+
+      // var tilelayer = new BMap.TileLayer() // 创建地图层实例
+      // tilelayer.getTilesUrl = () => {
+      //   // 设置图块路径
+      //   return '../../../static/images/home/back-top.png'
+      // }
+      // this.map.addTileLayer(tilelayer) // 将图层添加到地图上
+
+      // var geoc = new BMap.Geocoder()
+      // this.map.addEventListener('click', (e) => {
+      //   var pt = e.point
+      //   geoc.getLocation(pt, (rs) => {
+      //     var addComp = rs.addressComponents
+      //     alert(addComp.province + ', ' + addComp.city + ', ' + addComp.district + ', ' + addComp.street + ', ' + addComp.streetNumber)
+      //   })
+      // })
+
+      // var geolocation = new BMap.Geolocation()
+      // geolocation.getCurrentPosition((r) => {
+      //   /* eslint-disable */
+      //   if(this.getStatus() === BMAP_STATUS_SUCCESS) {
+      //     /* eslint-enable */
+      //     var mk = new BMap.Marker(r.point)
+      //     this.map.addOverlay(mk)
+      //     this.map.panTo(r.point)
+      //     alert('您的位置：' + r.point.lng + ',' + r.point.lat)
+      //   } else {
+      //     alert('failed' + this.getStatus())
+      //   }
+      // })
+
+      // var myCity = new BMap.LocalCity()
+      // myCity.get((result) => {
+      //   var cityName = result.name
+      //   this.map.setCenter(cityName)
+      //   alert('当前定位城市:' + cityName)
+      // })
+
+      this.map.clearOverlays()
     },
     // 设置地图样式
     setMapStyle () {
@@ -490,13 +550,29 @@ export default {
       })
       // 创建标注对象并添加到地图
       var marker = new BMap.Marker(point, { icon: myIcon })
+      marker.addEventListener('click', () => {
+        alert('您点击了标注')
+      })
       this.map.addOverlay(marker)
+    },
+    // 定义自定义覆盖物的构造函数
+    SquareOverlay (center, length, color) {
+      // this._center = center
+      // his._length = length
+      // this._color = color
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
 .baidumap {
+}
+
+.BMap_cpyCtrl {
+  display: none;
+}
+.anchorBL{
+  display: none;
 }
 </style>
