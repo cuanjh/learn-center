@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>核心2</title>
+    <desc>Created with Sketch.</desc>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="核心2">
+            <circle id="Oval-8-Copy" fill="#DBF2FF" cx="28" cy="28" r="28"></circle>
+            <g transform="translate(18.000000, 14.000000)">
+                <path d="M1.78125,0 L19.21875,0 C20.2025072,-1.80713268e-16 21,0.797492789 21,1.78125 L21,26.21875 C21,27.2025072 20.2025072,28 19.21875,28 L1.78125,28 C0.797492789,28 1.20475512e-16,27.2025072 0,26.21875 L0,1.78125 C-1.20475512e-16,0.797492789 0.797492789,1.80713268e-16 1.78125,0 Z" id="Rectangle-3" fill="#2A9FE4"></path>
+                <g id="Group-20" transform="translate(2.000000, 4.000000)">
+                    <path d="M1,0 L16,0 C16.5522847,-1.01453063e-16 17,0.44771525 17,1 L17,21 C17,21.5522847 16.5522847,22 16,22 L1,22 C0.44771525,22 6.76353751e-17,21.5522847 0,21 L0,1 C-6.76353751e-17,0.44771525 0.44771525,1.01453063e-16 1,0 Z" id="Rectangle-3" fill="#FFFFFF"></path>
+                    <g id="Group-25" transform="translate(1.000000, 2.000000)" fill="#E9F9FF">
+                        <rect id="Rectangle-20" x="0" y="0" width="15" height="2"></rect>
+                        <rect id="Rectangle-20-Copy" x="13" y="4" width="2" height="2"></rect>
+                        <rect id="Rectangle-20-Copy-4" x="0" y="4" width="2" height="2"></rect>
+                        <rect id="Rectangle-20-Copy-2" x="13" y="8" width="2" height="2"></rect>
+                        <rect id="Rectangle-20-Copy-5" x="0" y="8" width="2" height="2"></rect>
+                        <rect id="Rectangle-20-Copy-3" x="13" y="12" width="2" height="2"></rect>
+                        <rect id="Rectangle-20-Copy-6" x="0" y="12" width="2" height="2"></rect>
+                        <rect id="Rectangle-20" x="0" y="16" width="15" height="2"></rect>
+                    </g>
+                </g>
+                <path d="M6.5,1 L14.5,1 C14.7761424,1 15,1.22385763 15,1.5 L15,1.5 C15,1.77614237 14.7761424,2 14.5,2 L6.5,2 C6.22385763,2 6,1.77614237 6,1.5 L6,1.5 C6,1.22385763 6.22385763,1 6.5,1 Z" id="Rectangle-4-Copy" fill="#07669D"></path>
+                <text id="II" font-family="Arial-Black, Arial Black" font-size="14" font-weight="700" line-spacing="17" letter-spacing="-0.0500000007" fill="#C7EAFF">
+                    <tspan x="2.43964844" y="19.8310547">I</tspan>
+                    <tspan x="7.83789062" y="19.8310547">I</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

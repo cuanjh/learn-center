@@ -43,6 +43,6 @@ export default {
     width: 60px;
     height: 60px;
     cursor: pointer;
-    z-index:9999999;
+    z-index:90;
   }
 </style>

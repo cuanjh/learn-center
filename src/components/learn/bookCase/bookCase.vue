@@ -17,7 +17,6 @@
         <ul class="course-item">
           <li v-for="(item, index) in hotCourse"
             :key="index"
-            :class="{'no-margin':(index+1)%5 === 0}"
             @mouseenter="showDetails('hot', index)"
             @mouseleave="hideDetails">
             <img :src="qnUrl(item.flag)" alt="">
@@ -40,7 +39,6 @@
         <ul class="course-item">
           <li v-for="(item, index) in chinaLangMap"
             :key="index"
-            :class="{'no-margin':(index+1)%5 === 0}"
             @mouseenter="showDetails('china', index)"
             @mouseleave="hideDetails">
             <img :src="qnUrl(item.flag)" alt="">
@@ -215,7 +213,7 @@ export default {
     overflow: hidden;
   }
   .course-item li {
-    display: inline-block;
+    display: inline-flex;
     width: 200px;
     height: 240px;
     overflow: hidden;
@@ -227,9 +225,7 @@ export default {
     margin-bottom: 30px;
     position: relative;
   }
-  .course-item .no-margin {
-    margin-right: 0px;
-  }
+
   .course-item li img {
     position: absolute;
     top: 22px;
@@ -338,5 +334,11 @@ export default {
   .fade-enter, .fade-leave-to {
     transform: translateY(100px);
     opacity: 0;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .book-case {
+      width: 960px;
+    }
   }
 </style>

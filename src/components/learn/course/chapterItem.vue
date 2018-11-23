@@ -3,7 +3,7 @@
     <div class="course-item" v-for="(item, index) in curLevelChapters" :key="index" :id="item.code">
       <div class="current-learn-course-info"
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
-          @click="jumpToCourse(item.code)"  v-if="currentChapterCode !== item.code">
+          @click="jumpToCourse(item.code)"  v-if="isShow ? currentChapterCode !== item.code : !isShow">
         <div class="current-learn-course-flag">
           <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'">
           <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1"></div>
@@ -30,9 +30,9 @@
         </div>
       </div>
       <!-- <transition name="fade" mode="out-in"> -->
-        <div class="course-item-detail" v-else>
+        <div class="course-item-detail" v-if="isShow && currentChapterCode === item.code">
           <ul>
-            <li class="course-brief" @click="switchShow()">
+            <li class="course-brief">
               <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
               <div class="course-brief-shade">
                 <div class="course-brief-title">
@@ -48,6 +48,9 @@
                   <div class="course-brief-progress-val">
                     {{ (item.progress ? item.progress : 0)+'%'}}
                   </div>
+                </div>
+                <div class="course-brief-shrink">
+                  <i class="shrink" @click="switchShow()"></i>
                 </div>
               </div>
             </li>
@@ -486,7 +489,7 @@ export default {
           this.isShow = !this.isShow
         } else {
           this.isShow = !this.isShow
-          let top = $('#' + chapterCode).offset().top - 90
+          let top = $('#' + chapterCode).offset().top - 138
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }
 
@@ -498,7 +501,7 @@ export default {
         }
         this.isShow = false
         setTimeout(() => {
-          let top = $('#' + chapterCode).offset().top - 140
+          let top = $('#' + chapterCode).offset().top - 138
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, time)
 
@@ -591,6 +594,9 @@ export default {
       }
     },
     draw (id, rate, color) {
+      if (rate === 1) {
+        return
+      }
       if (this.$el && this.$el.querySelector(id)) {
         rate = (rate === 1) ? 100 : rate
         let canvas = this.$el.querySelector(id)
@@ -608,7 +614,7 @@ export default {
       }
     },
     switchShow () {
-      this.isShow = true
+      this.isShow = false
     },
     goToRegister () {
       let langCode = this.userInfo['current_course_code'].split('-')[0]
@@ -634,21 +640,21 @@ export default {
   .current-learn-course-info{
     cursor: pointer;
     overflow:hidden;
-    -webkit-transition: all .3s ease-in-out;
+    /* -webkit-transition: all .3s ease-in-out;
     -moz-transition: all .3s ease-in-out;
     -ms-transition: all .3s ease-in-out;
     -o-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
-    border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0; */
   }
-  .current-learn-course-info:hover {
+  /* .current-learn-course-info:hover {
     box-shadow: 0 0 26px 0 rgba(0, 0, 0, 0.2);
     -webkit-transition: all .3s ease-in-out;
     -moz-transition: all .3s ease-in-out;
     -ms-transition: all .3s ease-in-out;
     -o-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
-  }
+  } */
 
   .current-learn-course-disabled{
     cursor: not-allowed;
@@ -656,8 +662,8 @@ export default {
 
   .current-learn-course-flag{
     float:left;
-    width:213px;
-    height:100px;
+    width:168px;
+    height:80px;
     border-radius: 2.73px;
     overflow:hidden;
     position:relative;
@@ -732,7 +738,7 @@ export default {
     float: right;
     margin-right: 10px;
     display: inline-flex;
-    line-height: 100px;
+    line-height: 80px;
     width: 190px;
   }
 
@@ -851,7 +857,7 @@ export default {
 
   .course-brief img{
     position: absolute;
-    height: 300px;
+    height: 100%;
     width: 100%;
     object-fit: cover;
     border-radius: 5px;
@@ -919,6 +925,22 @@ export default {
     font-weight: bold;
   }
 
+  .course-brief-shrink {
+    background: red;
+    margin-top: 30px;
+  }
+
+  .course-brief-shrink .shrink {
+    width: 20px;
+    height: 20px;
+    float: right;
+    background-image: url('../../../../static/images/course/course-shrink.svg');
+    background-repeat: no-repeat;
+    object-fit: cover;
+    margin-right: 13px;
+    cursor: pointer;
+  }
+
   .course-core{
     width: 100%;
     border-bottom: 1px solid rgba(233,234,235,0.50);
@@ -931,8 +953,9 @@ export default {
     color:#2a9fe4;
     display: inline-block;
     position: relative;
+    margin-left: 6px;
     margin-top: 15px;
-    margin-right: 25px;
+    margin-right: 19px;
     vertical-align: top;
   }
 
@@ -1013,50 +1036,50 @@ export default {
   }
 
   .course-item-icon .core1{
-    background-image: url('../../../../static/images/course/course-core1.png');
+    background-image: url('../../../../static/images/course/course-core1.svg');
   }
 
   .course-item-icon .core2{
-    background-image: url('../../../../static/images/course/course-core2.png');
+    background-image: url('../../../../static/images/course/course-core2.svg');
   }
 
   .course-item-icon .core3{
-    background-image: url('../../../../static/images/course/course-core3.png');
+    background-image: url('../../../../static/images/course/course-core3.svg');
   }
 
   .course-item-icon .core4{
-    background-image: url('../../../../static/images/course/course-core4.png');
+    background-image: url('../../../../static/images/course/course-core4.svg');
   }
 
   .course-item-icon .core5{
-    background-image: url('../../../../static/images/course/course-core5.png');
+    background-image: url('../../../../static/images/course/course-core5.svg');
   }
 
   .course-item-icon .review-test {
-    background-image: url('../../../../static/images/course/course-review-test.png')
+    background-image: url('../../../../static/images/course/course-review-test.svg')
   }
 
   .course-item-icon .review-homework {
-    background-image: url('../../../../static/images/course/course-review-homework.png')
+    background-image: url('../../../../static/images/course/course-review-homework.svg')
   }
 
   .course-item-icon .vip1 {
-    background-image: url('../../../../static/images/course/course-vip-listen.png')
+    background-image: url('../../../../static/images/course/course-vip-listen.svg')
   }
   .course-item-icon .vip2 {
-    background-image: url('../../../../static/images/course/course-vip-oral.png')
+    background-image: url('../../../../static/images/course/course-vip-oral.svg')
   }
   .course-item-icon .vip3 {
-    background-image: url('../../../../static/images/course/course-vip-reading.png')
+    background-image: url('../../../../static/images/course/course-vip-reading.svg')
   }
   .course-item-icon .vip4 {
-    background-image: url('../../../../static/images/course/course-vip-writing.png')
+    background-image: url('../../../../static/images/course/course-vip-writing.svg')
   }
   .course-item-icon .vip5 {
-    background-image: url('../../../../static/images/course/course-vip-grammar.png')
+    background-image: url('../../../../static/images/course/course-vip-grammar.svg')
   }
   .course-item-icon .vip6 {
-    background-image: url('../../../../static/images/course/course-vip-speaking.png')
+    background-image: url('../../../../static/images/course/course-vip-speaking.svg')
   }
 
   .course-item-icon .core-canvas {
@@ -1067,38 +1090,38 @@ export default {
   }
 
   .icon-course-lock {
-    background-image: url('../../../../static/images/course/icon-course-lock.png');
+    background-image: url('../../../../static/images/course/icon-course-lock.svg');
     background-repeat: no-repeat;
     background-size: cover;
     height: 25px;
     width: 25px;
     display: inline-block;
-    margin-top: -26px;
-    margin-left: 35px;
+    margin-top: -21px;
+    margin-left: 39px;
     position: relative;
   }
 
   .icon-review-lock {
-    background-image: url('../../../../static/images/course/icon-review-lock.png');
+    background-image: url('../../../../static/images/course/icon-review-lock.svg');
     background-repeat: no-repeat;
     background-size: cover;
     height: 25px;
     width: 25px;
     display: inline-block;
-    margin-top: -26px;
-    margin-left: 35px;
+    margin-top: -21px;
+    margin-left: 39px;
     position: relative;
   }
 
   .icon-vip-lock {
-    background-image: url('../../../../static/images/course/icon-vip-lock.png');
+    background-image: url('../../../../static/images/course/icon-vip-lock.svg');
     background-repeat: no-repeat;
     background-size: cover;
     height: 25px;
     width: 25px;
     display: inline-block;
-    margin-top: -26px;
-    margin-left: 35px;
+    margin-top: -21px;
+    margin-left: 39px;
     position: relative;
   }
   .course-item-title{
@@ -1326,5 +1349,28 @@ export default {
     color: #fff;
     font-size: 12px;
     font-weight: bold;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .course-list {
+      width: 715px;
+      /*margin-left: 242px; */
+    }
+
+    .course-item-box {
+      margin-right: 21px;
+    }
+
+    .course-brief {
+      height: 260px;
+    }
+
+    .course-brief-title {
+      padding-top: 20px;
+    }
+
+    .course-brief-progress-title {
+      margin-top: 55px;
+    }
   }
 </style>

@@ -53,7 +53,7 @@
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <div class="search" @click="enterSearch"></div>
         </div>
-        <router-link :to="{path: '/app/user/vip'}"  class="vip-img" v-if="userInfo.member_info.member_type !== 1"></router-link>
+        <router-link :to="{path: '/app/user/vip'}"  :class="{'vip-img': userInfo.member_info.member_type === 1, 'unvip-img': userInfo.member_info.member_type !== 1}"></router-link>
         <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
         <!-- <div class="head-nation" style="display:none">
           <img class="head" src="https://course-assets1.talkmate.com/course/icons/FRE-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="头像">
@@ -300,12 +300,24 @@ export default {
 .right .vip-img {
   display: inline-block;
   position: absolute;
-  top: 23px;
-  right: 32px;
-  background: url('../../../static/images/user-guide/crown.svg') no-repeat;
+  top: 20px;
+  right: 42px;
+  background: url('../../../static/images/course/course-vip-big.svg') no-repeat;
   background-size: cover;
-  width: 24px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
+  margin-right: 20px;
+}
+
+.right .unvip-img {
+  display: inline-block;
+  position: absolute;
+  top: 20px;
+  right: 42px;
+  background: url('../../../static/images/course/course-unvip-big.svg') no-repeat;
+  background-size: cover;
+  width: 26px;
+  height: 26px;
   margin-right: 20px;
 }
 .active {
@@ -316,8 +328,8 @@ export default {
 .container {
   position: absolute;
   margin: auto;
-  top: 6px;
-  right: 84px;
+  top: 2px;
+  right: 113px;
   bottom: 0;
   width: 238px;
   height: 36px;

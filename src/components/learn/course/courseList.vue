@@ -1,8 +1,6 @@
 <template>
   <div class="current-course">
-    <left-side
-      :user-info="userInfo"
-    />
+    <left-side />
     <level-tabs
       :levelDetail="levelDetail"
       :levelNum="levelNum"
@@ -114,7 +112,7 @@ export default {
 
         setTimeout(() => {
           this.$refs['chapterItem'].$emit('changeIsShow', true)
-          let top = $('#' + chapterCode).offset().top - 140
+          let top = $('#' + chapterCode).offset().top - 138
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, 0)
         // $('body,html').scrollTop(top)
@@ -136,7 +134,7 @@ export default {
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)
 
-      let top = $('#' + this.currentChapterCode).offset().top - 140
+      let top = $('#' + this.currentChapterCode).offset().top - 138
       $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
       // this.hideLoading()

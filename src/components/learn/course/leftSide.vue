@@ -4,17 +4,33 @@
       <dl>
         <dt><img :src="courseBaseInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
-          <p v-text='langDesc'></p>
-          <p v-show="false" @click="switchCourse">{{$t('course.switchCourse')}}</p>
+          <p v-text='courseBaseInfo.name'></p>
+          <p>{{$t('course.finished')}}&nbsp;<span v-text="finishedChapter + '/' + chapterNum"></span>&nbsp;{{$t('course.classHour')}}</p>
+          <p class="vip" v-if="isVip === 1"><span><i></i>{{ vipEndDate }}到期</span><router-link tag="span" :to="{path: '/app/user/vip'}">会员续费</router-link></p>
+          <p class="no-vip" v-else><span><i></i>你还不是会员</span><router-link tag="span" :to="{path: '/app/user/vip'}">成为会员</router-link></p>
         </dd>
       </dl>
-      <div class="finished-course">
+      <!-- <div class="finished-course">
         <p>{{$t('course.finished')}}</p>
         <p><span v-text="finishedChapter + '/' + chapterNum"></span>{{$t('course.classHour')}}</p>
-      </div>
+      </div> -->
+      <ul>
+        <li class="course-test-level" @click="jumpToPage('/app/grade-level-show')">
+          <p></p>
+          <p>测评定级</p>
+        </li>
+        <li class="course-learn-test" @click="jumpToPage('/learn/testing')">
+          <p></p>
+          <p>学习环境测试</p>
+        </li>
+        <li class="course-learn-guide" @click="jumpToPage('/learn/user-guide')">
+          <p></p>
+          <p>学习指南</p>
+        </li>
+      </ul>
     </div>
 
-    <ul class="level-test-guide">
+    <!-- <ul class="level-test-guide">
       <li class="learn-test-guide learn-level" @click="jumpToPage('/app/grade-level-show')">
         <i></i>
         <span>测评定级</span>
@@ -27,16 +43,15 @@
         <i></i>
         <span>学习指南</span>
       </li>
-    </ul>
+    </ul> -->
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-
+import moment from 'moment'
 export default {
-  props: ['userInfo'],
   name: 'leftSide',
   data () {
     return {}
@@ -46,11 +61,25 @@ export default {
       courseBaseInfo: state => state.course.courseBaseInfo,
       chapterNum: state => state.course.chapterNum + '',
       finishedChapter: state => state.course.finishedChapter + '',
-      curLevel: state => state.course.curLevel
+      curLevel: state => state.course.curLevel,
+      userInfo: state => state.user.userInfo
     }),
     langDesc () {
       let des = '全球说 《' + this.courseBaseInfo.name + '》'
       return des
+    },
+    vipEndDate () {
+      if (!this.userInfo.member_info) {
+        return
+      }
+      let endTime = this.userInfo.member_info.end_time * 1000
+      return moment(endTime).format('YYYY.MM.DD')
+    },
+    isVip () {
+      if (!this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
     }
   },
   methods: {
@@ -76,12 +105,11 @@ export default {
   }
 
   .lang-overview{
-    border-radius: 4px 4px 0 0;
   }
 
   .lang-overview dl{
-    padding: 40px 0 0 20px;
-    height: 169px;
+    padding: 30px 0px 0 20px;
+    height: 170px;
     background-image: url('../../../../static/images/learn/learn-lang-bg.png');
     background-size: cover;
     background-repeat: no-repeat;
@@ -94,8 +122,8 @@ export default {
 
   .lang-overview dt img {
     display: inline-block;
-    width: 80px;
-    height: 80px;
+    width: 62px;
+    height: 62px;
     border: #ffffff solid 2px;
     border-radius: 4px;
     box-shadow: #3179A3 0 2px 7px;
@@ -114,22 +142,135 @@ export default {
   }
 
   .lang-overview dd p:nth-of-type(1) {
-    padding-top: 10px;
+    font-size: 19px;
+    line-height:26px;
+    font-weight: 600px;
     color: #ffffff;
+    /* word-break: break-all; */
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
   }
 
   .lang-overview dd p:nth-of-type(2) {
-    background-image: url('../../../../static/images/learn/switch-course.svg');
+    height:20px;
+    font-size:14px;
+    font-weight:500;
+    color:#ffffff;
+    line-height:20px;
+    display: inline-block;
+    margin-top: 15px
+  }
+
+  .lang-overview dd p:nth-of-type(3) {
+    width: 100%;
+    display: inline-block;
+    margin-top: 30px;
+  }
+
+  .lang-overview dd .vip span:first-child i {
+    width: 17px;
+    height: 16px;
+    line-height: 22px;
+    background-image: url('../../../../static/images/course/course-vip-small.svg');
+    background-size: cover;
     background-repeat: no-repeat;
-    background-position: 90% 50%;
-    cursor:pointer;
-    position: absolute;
-    bottom: 0;
-    right: 16px;
+    display: inline-block;
+    margin-top: 1px;
+    margin-right: 6px;
+  }
+
+  .lang-overview dd .vip span:first-child {
+    height:18px;
+    font-size:12px;
+    font-weight:500;
+    color:#ffffff;
+    line-height:22px;
+    float: left;
+  }
+
+  .lang-overview dd p:nth-of-type(3) span:last-child {
+    width:66px;
+    height:22px;
+    border-radius:11px;
+    border:1px solid #ffbe29;
+    font-size:12px;
+    font-weight:600;
+    color:#ffbe29;
+    padding: 2px 8px;
+    line-height:17px;
     float: right;
-    color: #fff;
-    font-size: 12px;
-    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .lang-overview dd .no-vip span:first-child i {
+    width: 17px;
+    height: 16px;
+    line-height: 22px;
+    background-image: url('../../../../static/images/course/course-unvip-small.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: inline-block;
+    margin-top: 1px;
+    margin-right: 6px;
+  }
+
+  .lang-overview dd .no-vip span:first-child {
+    height:18px;
+    font-size:12px;
+    font-weight:500;
+    color:#ffffff;
+    line-height:22px;
+    float: left;
+  }
+
+  .lang-overview ul {
+    width: 100%;
+    background: #ffffff;
+    padding: 0 50px;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .lang-overview ul li {
+    border-bottom: 1px solid #f5f5f5;
+    padding: 28px 0;
+    cursor: pointer;
+  }
+
+  .lang-overview ul li:last-child {
+    border-bottom: 0;
+  }
+
+  .lang-overview ul li p {
+    margin: 0 auto;
+    text-align: center;
+    font-size: 14px;
+    color: #333333;
+    font-weight: 400px;
+  }
+
+  .lang-overview .course-test-level p:first-child {
+    width: 32px;
+    height: 42px;
+    background-image: url('../../../../static/images/course/course-test-level.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .lang-overview .course-learn-test p:first-child {
+    width: 32px;
+    height: 42px;
+    background-image: url('../../../../static/images/course/course-learn-test.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .lang-overview .course-learn-guide p:first-child {
+    width: 32px;
+    height: 42px;
+    background-image: url('../../../../static/images/course/course-learn-guide.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
   }
 
   .finished-course {

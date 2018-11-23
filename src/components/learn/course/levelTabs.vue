@@ -53,7 +53,7 @@ export default {
     margin-top: -16px;
     margin-left: 285px;
     position: fixed;
-    z-index: 99;
+    z-index: 9;
   }
 
   .learn-course-nav > ul {
