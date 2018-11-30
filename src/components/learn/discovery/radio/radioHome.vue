@@ -17,7 +17,7 @@
         </div>
         <div class="radio-list">
           <router-link tag="div" :to="{path: '/app/radio-detail/' + radio.code}" class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
-            <img :src="radio.cover" alt="">
+            <img v-lazy="radio.cover" alt="">
             <div class="subscribe">
               <i></i>
               <span v-text="radio.buy_num"></span>
@@ -44,7 +44,7 @@ export default {
   },
   mounted () {
     this.postDisvRadio().then((res) => {
-      console.log(res)
+      console.log('电台首页', res)
       this.menus = res.data.menuInfos
       this.menuRadios = res.data.menuRadios
     })
@@ -99,7 +99,11 @@ export default {
 }
 
 .radio-container .radio-menu .radio-menu-item span {
+  cursor: pointer;
   margin-right: 15px;
+}
+.radio-container .radio-menu .radio-menu-item span:hover {
+  color: #2A9FE4;
 }
 .radio-container .radio-menu .radio-menu-item span:last-child {
   display: inline-block;
@@ -156,12 +160,13 @@ export default {
 }
 
 .radio-type .radio-list {
-  float: left;
+  /* float: left; */
   width: 100%
 }
 
 .radio-type .radio-list .radio-item {
-  float: left;
+  /* float: left; */
+  display: inline-block;
   margin-top: 20px;
   margin-right: 15px;
   width: 152px;
@@ -220,7 +225,7 @@ export default {
   display: inline-block;
   position: relative;
   margin-top: 10px;
-  width: 90px;
+  width: 70px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

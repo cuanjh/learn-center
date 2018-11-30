@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import VueI18n from 'vue-i18n'
 import moment from 'moment'
+import VueLazyLoad from 'vue-lazyload'
 
 // import BootstrapVue from 'bootstrap-vue'
 
@@ -14,6 +15,7 @@ import moreLanguage from './vueI18/locale.js'
 import {urlfix} from './filter/index'
 import Cookie from './tool/cookie'
 import {getOSAndBrowser} from './tool/browser'
+import emoji from './tool/emoji.js'
 // import 'babel-polyfill'
 
 require('./../static/css/animate.css')
@@ -25,6 +27,12 @@ require('./../static/bootstrap.min.js')
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VueI18n)
+Vue.prototype.$emoji = emoji
+Vue.use(VueLazyLoad, {
+  error: require('../static/images/lazyimg/error.gif'),
+  loading: require('../static/images/lazyimg/loading.gif'),
+  listenEvents: ['scroll'] // 你想要监听的事件,我个人喜欢全部监听，方便
+})
 
 Vue.filter('urlFix', urlfix)
 

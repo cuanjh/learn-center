@@ -8,7 +8,6 @@
                 :placeholder="holder"
                 @focus.prevent="focusFn"
                 @blur.prevent="blurFn"
-                :autocomplete="off"
                 >
         <a href="javascript:void(0)" @click="search()" class="searchbar_cancel"><span>搜索</span></a>
         <!-- v-show="showHistory" -->
@@ -41,7 +40,7 @@
               <div @click="get(item.id)" class="list_li" v-if="item.show_type === 'single_pic'">
                 <div class="item-inner">
                   <div class="thumb_little">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[0]" alt="列表图片"/>
                   </div>
                   <div class="news_item_right">
                     <div class="news_item_right_row1">
@@ -75,7 +74,7 @@
                       <span class="news_item_title">{{item.title}}</span>
                     </div>
                   <div class="thumb_little big_img">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[0]" alt="列表图片"/>
                   </div>
                   <div class="news_item_right_row2 big_reading">
                     <span class="news_item_type">{{item.tag_title}}</span>
@@ -91,7 +90,7 @@
                       <span class="news_item_title">{{item.title}}</span>
                     </div>
                   <div class="thumb_little big_img">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[0]" alt="列表图片"/>
                   </div>
                   <div class="news_item_right_row2 big_reading">
                     <span class="news_item_type">{{item.tag_title}}</span>
@@ -104,8 +103,8 @@
                       <span class="news_item_title">{{item.title}}</span>
                     </div>
                   <div class="thumb_little two_img">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
-                    <img :src="item.thumbs[1]" alt="列表图片">
+                    <img v-lazy="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[1]" alt="列表图片">
                   </div>
                   <div class="news_item_right_row2">
                     <span class="news_item_type">{{item.tag_title}}</span>
@@ -118,9 +117,9 @@
                       <span class="news_item_title">{{item.title}}</span>
                     </div>
                   <div class="thumb_little more_img">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
-                    <img :src="item.thumbs[1]" alt="列表图片">
-                    <img :src="item.thumbs[2]" alt="列表图片">
+                    <img v-lazy="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[1]" alt="列表图片">
+                    <img v-lazy="item.thumbs[2]" alt="列表图片">
                   </div>
                   <div class="news_item_right_row2">
                     <span class="news_item_type">{{item.tag_title}}</span>
@@ -258,7 +257,7 @@ export default {
         if (data.headlines.page === -1) {
           this.page--
           this.flag = true
-          this.btnText = '没有更多内容了'
+          this.btnText = '已显示全部内容~'
           return false
         }
         this.searchLists = this.searchLists.concat(data.headlines.list)

@@ -31,6 +31,7 @@ const userAnonymous = r => require.ensure([], () => r(require('@/components/lear
 const discovery = r => require.ensure([], () => r(require('@/components/learn/discovery/discovery.vue')), 'discovery')
 const radioHome = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioHome.vue')), 'radio-home')
 const radioDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioDetail.vue')), 'radio-detail')
+const radioAuthorDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/authorDetail.vue')), 'author-detail')
 const headline = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headline.vue')), 'headline')
 const headlineDetails = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headlineDetails.vue')), 'headline-details')
 const headlineSearch = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headlineSearch.vue')), 'headline-search')
@@ -169,7 +170,18 @@ export default[
       // 发现
       {
         path: 'discovery',
-        component: discovery
+        component: discovery,
+        children: [
+          {
+            path: 'radio-home',
+            component: radioHome
+          },
+          {
+            path: 'radio-detail/:code',
+            name: 'radioDetail',
+            component: radioDetail
+          }
+        ]
       },
       // 头条
       {
@@ -188,13 +200,18 @@ export default[
         component: headlineSearch
       },
       // 电台
+      // {
+      //   path: 'radio-home',
+      //   component: radioHome
+      // },
+      // {
+      //   path: 'radio-detail/:code',
+      //   name: 'radioDetail',
+      //   component: radioDetail
+      // },
       {
-        path: 'radio-home',
-        component: radioHome
-      },
-      {
-        path: 'radio-detail/:code',
-        component: radioDetail
+        path: 'author-detail/:userId',
+        component: radioAuthorDetail
       }
     ]
   },

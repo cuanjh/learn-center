@@ -71,7 +71,7 @@
         <div class="btns">
           <a class="pre" @click="pre()">
             <svg width="20" height="20">
-              <use xlink:href="#icon-pre"></use>
+              <!-- <use xlink:href="#icon-pre"></use> -->
             </svg>
           </a>
           <a :class="{'play': !isPlay, 'pause': isPlay}" @click="play()"></a>
@@ -90,8 +90,10 @@
               </i>
             </div>
             <div class="playtime">
-              00:{{toParseTime(curTime)}}
-              <span> / 00:{{toParseTime(duration)}}</span>
+              <span>00:{{toParseTime(curTime)}}</span>
+              <!-- 00:{{toParseTime(curTime)}} -->
+              <span>/</span>
+              <span>00:{{toParseTime(duration)}}</span>
             </div>
           </div>
         </div>
@@ -116,15 +118,26 @@
       <div class="voice-player-list-head clearfix">
         <h4>播放列表({{radioList.length}})</h4>
       </div>
-      <div class="voice-player-list-content">
+      <div class="voice-overflow">
+        <div class="voice-player-list-content">
+          <ul>
+            <li class="clearfix" v-for="(card, index) in radioList" :key="index" @click="goPlay(index)">
+              <div class="col1" v-text="index + 1"></div>
+              <div class="col2" :class="{'current': index === curIndex}" v-text="card.title"></div>
+              <div class="col3" v-text="toParseTime(card.sound_time)"></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- <div class="voice-player-list-content">
         <ul>
-          <li class="clearfix" v-for="(card, index) in radioList" :key="index">
+          <li class="clearfix" v-for="(card, index) in radioList" :key="index" @click="goPlay(index)">
             <div class="col1" v-text="index + 1"></div>
             <div class="col2" :class="{'current': index === curIndex}" v-text="card.title"></div>
             <div class="col3" v-text="toParseTime(card.sound_time)"></div>
           </li>
         </ul>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -270,20 +283,27 @@ export default {
         this.interval = setInterval(() => {
           this.curTime++
           this.curProgress = (this.curTime / this.duration).toFixed(4) * 100 + '%'
-          console.log(this.curProgress)
+          // console.log(this.curProgress)
         }, 1000)
       })
       this.isPlay = true
       this.sndctr.play(() => {
         this.end()
         console.log('end')
+        if (this.isLoop === false) {
+          this.playRadio()
+        }
       })
+    },
+    goPlay (index) {
+      this.curIndex = index
+      this.playRadio()
     },
     loopPlay () {
       this.isLoop = !this.isLoop
-      if (this.isEnd) {
-        this.next()
-      }
+      // if (this.isEnd) {
+      //   this.next()
+      // }
     },
     moveVolume (e) {
       this.downVolume(e)
@@ -361,6 +381,10 @@ export default {
       height: 100%;
       margin: 0 auto;
       padding: 0 40px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
       .voice-player-cover {
         width: 30px;
         height: 30px;
@@ -437,6 +461,8 @@ export default {
           color: #ffffff;
         }
         .play-body-progress {
+          display: flex;
+          justify-content: space-between;
           .progress {
             display: inline-block;
             position: relative;
@@ -472,9 +498,9 @@ export default {
             }
           }
           .playtime {
+            display: flex;
             line-height: 3px;
             font-size: 12px;
-            display: inline-block;
             color: #ffffff;
             margin-left: 10px;
             span {
@@ -590,8 +616,13 @@ export default {
     box-shadow: 0 -2px 4px 0 rgba(0,0,0,.2);
     border-radius: 3px 3px 0 0;
     z-index: 90;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     .voice-player-list-head {
-      margin: 0 20px;
+      width: 1080px;
+      padding: 0 20px;
       height: 55px;
       line-height: 55px;
       color: #fff;
@@ -606,9 +637,14 @@ export default {
     .clearfix {
       zoom: 1;
     }
+    .voice-overflow {
+      width: 1080px;
+      overflow: hidden;
+    }
     .voice-player-list-content {
-      overflow-y: auto;
       height: 260px;
+      width: 1100px;
+      overflow-y: auto;
       ul {
         overflow: hidden;
         li {

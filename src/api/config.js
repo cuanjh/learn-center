@@ -72,6 +72,15 @@ export default {
   disvRadioApi: '/disv1/radio', // 发现电台首页接口
   radioDetailApi: '/topic_course/detail/<course_code>/', // 用户电台明细
   radioCardListApi: '/user_course/card_list/{course_code}/{list_order}/{page}/{pagesize}', // 课程卡片列表接口
+  radioAuthorDetailApi: '/feedv1/partner/detail', // 电台作者详情接口
+  radioRelationFollow: '/relation/follow', // 关注接口
+  radioRelationCancel: '/relation/cancel', // 取消关注接口
+  radioAuthorListApi: '/feedv1/partner/radios', // 作者电台列表
+  radioAuthorDynamic: '/feedv1/partner/v3/dynamics', // 作者动态
+  radioAuthorCommentList: '/feedv1/comment/list', // 加载更多评论列表接口
+  radioAuthorCommentPub: '/feedv1/comment/pub', // 发表动态评论、批改作业接口
+  radioAuthorCommentRewardList: '/feedv1/dynamic/detail', // 动态、作业详情接口 动态打赏列表rewards取出
+  radioAuthorCommentReward: '/feedv1/dynamic/reward', // 动态奖励接口
   // 头条
   headlineHome: '/disv1/headline/home', // 头条首页接口
   headlineList: '/disv1/headline/list', // 头条列表接口

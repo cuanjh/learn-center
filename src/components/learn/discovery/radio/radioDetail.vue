@@ -3,7 +3,7 @@
     <div class="radio-container">
       <div class="radio-left">
         <div class="course">
-          <img :src="courseInfo.cover" alt="">
+          <img v-lazy="courseInfo.cover" :key="courseInfo.cover" alt="">
           <div class="tags">
             <span v-for="tag in courseInfo.tags" :key="tag.tag_id" v-text="tag.tag_name[languagueHander]"></span>
           </div>
@@ -36,15 +36,15 @@
         </div>
         <div class="apply-vip">
           <span><i></i>开通全球说会员，立享免费课程</span>
-          <span>成为VIP会员</span>
+          <span @click="toVip()">成为VIP会员</span>
         </div>
         <div class="author-brief">
           <div class="title">
             作者简介
           </div>
           <div class="author-info">
-            <div class="author-info-left">
-              <img :src="authorInfo.photo" alt="">
+            <div @click="goTo(authorInfo.user_id)" class="author-info-left">
+              <img v-lazy="authorInfo.photo" :key="authorInfo.photo" alt="">
             </div>
             <div class="author-info-right">
               <div class="nickname" v-text="authorInfo.nickname"></div>
@@ -63,7 +63,7 @@
         <div class="course-list">
           <div class="title">课程列表</div>
           <div class="course-item" v-for="card in cards" :key="card.card_id">
-            <img :src="card.cover_url" alt="">
+            <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
             <div class="course-title" v-text="card.title"></div>
             <div class="course-desc" v-text="card.description"></div>
             <div class="course-bottom">
@@ -75,18 +75,43 @@
         </div>
         <div class="comments">
           <div class="title">学生评论</div>
-          <div class="comment-item" v-for="(item, index) in comments" :key="'comment' + index">
-            <img :src="item.user.photo" alt="">
-            <div class="nickname" v-text="item.user.nickname"></div>
-            <div class="date">{{item.created_on | formatDate}}</div>
-            <div class="comment" v-text="item.comment"></div>
+          <div v-if="comments">
+            <div class="comment-list" v-if="comments.length>0">
+              <div class="comment-item" v-for="(item, index) in comments" :key="'comment' + index">
+                <img v-lazy="item.user.photo" :key="item.user.photo" alt="">
+                <div class="nickname" v-text="item.user.nickname"></div>
+                <div class="date">{{item.created_on | formatDate}}</div>
+                <div class="comment" v-text="item.comment"></div>
+              </div>
+            </div>
+            <div v-else>
+              <div class="comment-item">
+                <span>暂时没有评论~~~</span>
+              </div>
+            </div>
           </div>
+          <!-- <div v-if="comments.length>0">
+            <div class="comment-item" v-for="(item, index) in comments" :key="'comment' + index">
+              <img v-lazy="item.user.photo" alt="">
+              <div class="nickname" v-text="item.user.nickname"></div>
+              <div class="date">{{item.created_on | formatDate}}</div>
+              <div class="comment" v-text="item.comment"></div>
+            </div>
+          </div>
+          <div v-else>
+            <div class="comment-item">
+              <span>暂时没有评论~~~</span>
+            </div>
+          </div> -->
         </div>
       </div>
       <div class="radio-right">
         <div class="other-radio"><span></span>其他电台<span></span></div>
-        <div class="other-radio-item" v-for="(radio, index) in otherRadios" :key="'other-radio' + index">
-          <img :src="radio.cover" alt="">
+        <router-link tag="div"  class="other-radio-item"
+              v-for="(radio, index) in otherRadios" :key="'other-radio' + index"
+              :to="{path: '/app/radio-detail/' + radio.code}"
+              >
+          <img v-lazy="radio.cover" :key="radio.cover" alt="">
           <div class="subscribe">
             <i></i>
             <span v-text="radio.buy_num"></span>
@@ -94,7 +119,7 @@
           <div class="title" v-text="radio.module_name"></div>
           <div class="author" v-text="radio.author_info.nickname"></div>
           <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
-        </div>
+        </router-link>
       </div>
     </div>
   </div>
@@ -121,16 +146,16 @@ export default {
       return formatDate(date, 'yyyy.MM.dd')
     }
   },
+  beforeRouteUpdate (to, from, next) {
+    if (to.name === 'radioDetail') {
+      next()
+      this.loadData()
+    } else {
+      next()
+    }
+  },
   mounted () {
-    let code = this.$route.params.code
-    this.postRadioDetail(code).then((res) => {
-      console.log(res)
-      this.courseInfo = res.result.course_info
-      this.authorInfo = res.result.course_info.author_info
-      this.cards = res.result.course_info.cards
-      this.comments = res.result.course_info.comments
-      this.otherRadios = res.result.realated_courses
-    })
+    this.loadData()
   },
   computed: {
     ...mapState({
@@ -151,6 +176,28 @@ export default {
         s = '0' + s
       }
       return m + ':' + s
+    },
+    goTo (userId) {
+      this.$router.push({
+        path: `/app/author-detail/${userId}`
+      })
+    },
+    toVip () {
+      this.$router.push({
+        path: '/app/user/vip'
+      })
+    },
+    async loadData () {
+      let _this = this
+      let code = _this.$route.params.code
+      await _this.postRadioDetail(code).then((res) => {
+        console.log(res)
+        _this.courseInfo = res.result.course_info
+        _this.authorInfo = res.result.course_info.author_info
+        _this.cards = res.result.course_info.cards
+        _this.comments = res.result.course_info.comments
+        _this.otherRadios = res.result.realated_courses
+      })
     }
   }
 }
@@ -322,6 +369,7 @@ export default {
 }
 
 .radio-left .apply-vip span:last-child {
+  cursor: pointer;
   width: 140px;
   height: 30px;
   color: #2A9FE4;
@@ -351,6 +399,7 @@ export default {
 }
 
 .author-brief .author-info .author-info-left {
+  cursor: pointer;
   display: inline-block;
   margin-right: 20px;
   height: 100%;
@@ -453,6 +502,7 @@ export default {
 }
 
 .radio-left .course-list .course-item {
+  cursor: pointer;
   height: 120px;
   width: 100%;
   padding: 20px 0;
@@ -479,14 +529,18 @@ export default {
 }
 
 .radio-left .course-list .course-item .course-desc {
+  width: 70%;
   color: #B8B8B8;
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .radio-left .course-list .course-item .course-bottom {
   position: relative;
   margin-left: 100px;
-  margin-top: 35px;
+  margin-top: 18px;
   font-size: 14px;
   color: #999999;
 }
@@ -605,6 +659,7 @@ export default {
 }
 
 .radio-right .other-radio-item {
+  cursor: pointer;
   width: 100%;
   height: 241px;
   margin-top: 20px;

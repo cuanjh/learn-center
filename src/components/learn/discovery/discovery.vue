@@ -7,16 +7,16 @@
           <router-link tag="span" :to="{path: '/app/headline'}">查看更多<i></i></router-link>
         </div>
         <div class="headline-list">
-          <div class="headline-item1" v-for="(item, index) in headlines.slice(0, 1)" :key="'headline-item1' + index">
-            <img :src="item.thumb" alt="">
+          <div class="headline-item1" v-for="(item, index) in headlines.slice(0, 1)" :key="'headline-item1' + index" @click="get(item.id)">
+            <img v-lazy="item.thumb" :key="item.thumb" alt="">
             <div class="title" v-text="item.title"></div>
             <div class="headline-item1-bottom">
               <span v-text="item.tag_title"></span>
               <span v-text="'阅读 ' + item.hits"></span>
             </div>
           </div>
-          <div class="headline-item2" v-for="(item, index) in headlines.slice(1)" :key="'headline-item2' + index">
-            <img :src="item.thumb" alt="">
+          <div class="headline-item2" v-for="(item, index) in headlines.slice(1)" :key="'headline-item2' + index" @click="get(item.id)">
+            <img v-lazy="item.thumb" :key="item.thumb" alt="">
             <div class="title" v-text="item.title"></div>
             <div class="headline-item2-bottom">
               <span v-text="item.tag_title"></span>
@@ -33,7 +33,7 @@
         <div class="radio-list">
           <div class="radio-item" v-for="item in radios.slice(0, 3)" :key="item.code">
             <a @mouseenter="radioMouseEnter($event)" @mouseleave="radioMouseLeave($event)">
-              <img :src="item.cover" alt="">
+              <img v-lazy="item.cover" :key="item.cover" alt="">
               <div class="gradient-layer-play" @click="loadRadioList($event, item.code)" style="display: none">
                 <i class="play"></i>
               </div>
@@ -46,18 +46,18 @@
             <div class="author" v-text="item.author_name"></div>
             <div class="money" v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' +item.money : $t('coins') + ' ' + item.money"></div>
           </div>
-          <div class="author-item" v-for="item in authors.slice(0, 3)" :key="item.user_id">
-            <img :src="item.photo" alt="">
+          <div class="author-item" v-for="item in authors.slice(0, 3)" :key="item.user_id" @click="goTo(item.user_id)">
+            <img v-lazy="item.photo" :key="item.photo" alt="">
             <div class="author-name" v-text="item.author_name"></div>
             <div class="title" v-text="'《' + item.title + '》'"></div>
           </div>
           <div class="radio-item" v-for="item in radios.slice(3)" :key="item.code">
-            <img :src="item.cover" alt="">
+            <img v-lazy="item.cover" :key="item.cover" alt="">
             <div class="subscribe">
               <i></i>
               <span v-text="item.buy_num"></span>
             </div>
-            <div class="title" v-text="item.title"></div>
+            <router-link tag="div" :to="{path: '/app/radio-detail/' + item.code}" class="title" v-text="item.title"></router-link>
             <div class="author" v-text="item.author_name"></div>
             <div class="money" v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' +item.money : $t('coins') + ' ' + item.money"></div>
           </div>
@@ -67,7 +67,7 @@
         <div class="name">热门游戏</div>
         <div class="game-list">
           <div class="game-item" v-for="(item, index) in games" :key="'game' + index">
-            <img :src="item.image_url" alt="">
+            <img v-lazy="item.image_url" :key="item.image_url" alt="">
             <div class="name" v-text="item.name"></div>
           </div>
         </div>
@@ -103,12 +103,14 @@ export default {
     this.$parent.$emit('initLayout')
     this.$parent.$emit('navItem', 'discovery')
     this.postDisvHome().then((res) => {
-      console.log(res)
+      console.log('发现首页', res)
       this.authors = res.data.authors
       this.headlines = res.data.headlines
       this.radios = res.data.radios
       this.games = res.data.games
     })
+  },
+  beforeRouterLeave (to, from, next) { // 在组件内
   },
   methods: {
     ...mapActions({
@@ -141,6 +143,16 @@ export default {
       if ($('.gradient-layer-play i', $(e.target)).hasClass('play')) {
         $('.gradient-layer-play', $(e.target)).hide()
       }
+    },
+    get (id) {
+      this.$router.push({
+        path: `/app/headline-details/${id}`
+      })
+    },
+    goTo (userId) {
+      this.$router.push({
+        path: `/app/author-detail/${userId}`
+      })
     }
   }
 }
@@ -207,6 +219,7 @@ export default {
 }
 
 .headline-list .headline-item1 {
+  cursor: pointer;
   float: left;
   width: 460px;
   height: 236px;
@@ -241,6 +254,7 @@ export default {
 }
 
 .headline-list .headline-item2 {
+  cursor: pointer;
   float: left;
   width: 220px;
   height: 236px;
@@ -262,9 +276,13 @@ export default {
 .headline-list .headline-item2 .title {
   color: #333333;
   font-size: 14px;
-  margin-left: 10px;
+  margin: 0 10px;
   margin-top: 15px;
   line-height: 20px;
+  height: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .headline-list .headline-item2 .headline-item2-bottom {
@@ -370,11 +388,15 @@ export default {
 
 .radio-item .author {
   color: #B8B8B8;
+  width: 120px;
   font-size: 12px;
   display: inline-block;
   position: relative;
   margin-left: 10px;
   margin-top: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .radio-item .money {
@@ -388,6 +410,7 @@ export default {
 }
 
 .author-item {
+  cursor: pointer;
   float: left;
   width: 140px;
   min-width: 140px;

@@ -47,7 +47,7 @@
               <div @click="get(item.id)" class="list_li" v-if="item.show_type === 'single_pic'" >
                 <div class="item-inner">
                   <div class="thumb_little">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[0]" :key="item.thumbs[0]" alt="列表图片"/>
                   </div>
                   <div class="news_item_right">
                     <div class="news_item_right_row1">
@@ -81,7 +81,7 @@
                       <span class="news_item_title">{{item.title}}</span>
                     </div>
                   <div class="thumb_little big_img">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[0]" :key="item.thumbs[0]" alt="列表图片"/>
                   </div>
                   <div class="news_item_right_row2 big_reading">
                     <span class="news_item_type">{{item.tag_title}}</span>
@@ -97,7 +97,7 @@
                       <span class="news_item_title">{{item.title}}</span>
                     </div>
                   <div class="thumb_little big_img">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[0]" :key="item.thumbs[0]" alt="列表图片"/>
                   </div>
                   <div class="news_item_right_row2 big_reading">
                     <span class="news_item_type">{{item.tag_title}}</span>
@@ -110,8 +110,8 @@
                       <span class="news_item_title">{{item.title}}</span>
                     </div>
                   <div class="thumb_little two_img">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
-                    <img :src="item.thumbs[1]" alt="列表图片">
+                    <img v-lazy="item.thumbs[0]" :class="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[1]" :class="item.thumbs[1]" alt="列表图片">
                   </div>
                   <div class="news_item_right_row2">
                     <span class="news_item_type">{{item.tag_title}}</span>
@@ -124,9 +124,9 @@
                       <span class="news_item_title">{{item.title}}</span>
                     </div>
                   <div class="thumb_little more_img">
-                    <img :src="item.thumbs[0]" alt="列表图片"/>
-                    <img :src="item.thumbs[1]" alt="列表图片">
-                    <img :src="item.thumbs[2]" alt="列表图片">
+                    <img v-lazy="item.thumbs[0]" :key="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[1]" :key="item.thumbs[1]" alt="列表图片">
+                    <img v-lazy="item.thumbs[2]" :key="item.thumbs[2]" alt="列表图片">
                   </div>
                   <div class="news_item_right_row2">
                     <span class="news_item_type">{{item.tag_title}}</span>
@@ -145,7 +145,7 @@
       </div>
     </div>
     <!--  <rou :to="{ path: '/app/headline-search'}">搜索搜索搜索</rou> -->
-    <router-link :to="{ name: 'headlineSearch'}">搜索搜索搜索</router-link>
+    <!-- <router-link :to="{ name: 'headlineSearch'}">搜索搜索搜索</router-link> -->
   </div>
 </template>
 <script>
@@ -180,7 +180,7 @@ export default {
     async initData () {
       let _this = this
       await _this.headlineHome().then((data) => {
-        console.log('homedata', data)
+        console.log('头条首页', data)
         _this.banners = data.banners
         _this.categories = data.categories
         _this.headlinesLists = data.headlines.list
@@ -220,7 +220,7 @@ export default {
       _this.btnText = '点击加载更多'
       _this.isactive = catid
       _this.headlineList({page: _this.page, catid: catid}).then((data) => {
-        console.log('headlineList', data)
+        console.log('头条列表', data)
         if (data.headlines.page === -1) {
           return false
         }
@@ -240,7 +240,7 @@ export default {
         if (data.headlines.page === -1) {
           this.page--
           this.flag = false
-          this.btnText = '没有更多内容了'
+          this.btnText = '已显示全部内容~'
           return false
         }
         this.lists = this.lists.concat(data.headlines.list)

@@ -10,7 +10,7 @@
           <div class="user">
             <div class="user-img">
               <!-- <img src="https://gw.alicdn.com/tfs/TB1yopEdgoQMeJjy1XaXXcSsFXa-640-302.png" alt=""> -->
-              <img :src="author.photo" alt="头像">
+              <img v-lazy="author.photo" alt="头像">
             </div>
             <div class="user-name">
               <span class="new-type">{{author.nickname}}</span>
@@ -56,7 +56,7 @@
             <ul>
               <li v-for="(item, index) in relatedNews" :key="index">
                 <div class="img">
-                  <img :src="item.banner_img" alt="推荐图片">
+                  <img v-lazy="item.banner_img" alt="推荐图片">
                 </div>
                 <div class="news_item">
                   <div class="news_item_row1">
@@ -77,12 +77,12 @@
     <div class="left-comment">
       <div class="comment-contents">
         <div class="comment-top">
-          <span>3条评论</span>
+          <span>{{commentLists.length}}条评论</span>
         </div>
         <div class="comment-list">
           <div class="comment-item">
             <div class="comment-pic">
-              <img :src="userInfo.photo" alt="当前用户头像">
+              <img v-lazy="userInfo.photo" alt="当前用户头像">
             </div>
             <div class="text">
               <!-- 说点什么吧... -->
@@ -100,7 +100,7 @@
           <div class="comment-item" >
             <div class="item" v-for="(item, index) in commentLists" :key="index">
               <div class="comment-pic">
-                <img :src="item.photo" alt="当前用户头像">
+                <img v-lazy="item.photo" alt="当前用户头像">
               </div>
               <div class="text">
                 <div class="comment-name">
@@ -121,7 +121,6 @@
         <span v-text="btnText" v-show="flag == false"></span>
       </div>
     </div>
-    <!-- <headlineReport v-show="isShow" @UpdateHidePanel="UpdateHidePanel" :id="id"/> -->
     <!-- 举报内容 -->
     <div class="report" v-show="isShow">
       <div class="report-content">
@@ -204,15 +203,14 @@ export default {
     })
     // 评论列表
     this.commentList({hid: this.id, page: this.page}).then((res) => {
+      console.log('commentList评论列表', res)
       if (res.data.comments.length === 0) {
         this.flag = false
         this.btnText = '暂时没有评论内容'
       }
-      if (res.data.page === -1) {
-        return
-      }
       this.commentLists = res.data.comments
     })
+    // this.initComments()
     this.$nextTick(() => {
       this.removeStyle()
     })
@@ -253,20 +251,19 @@ export default {
         return
       }
       this.comments({hid: this.id, content: this.introduct}).then((data) => {
-        console.log('comments', data)
+        console.log('comments评论的内容', data)
         data['content'] = this.introduct
         this.commentLists.unshift(data)
         // console.log('this.commentLists', this.commentLists)
         this.commentList({hid: this.id, page: 1}).then((res) => {
-          console.log('res', res)
-          if (res.data.page === this.page) {
+          this.introduct = ''
+          console.log('res评论后返回的', res)
+          if (res.data.page === -1) {
             return
-          } else {
-            this.page = res.data.page
           }
           console.log('res', res)
           this.commentLists = res.data.comments
-          console.log('commentLists', this.commentLists)
+          console.log('commentLists评论后返回的列表', this.commentLists)
         })
       })
     },
@@ -309,18 +306,19 @@ export default {
       }
     },
     loadMore () { // 评论加载更多
+      if (!this.flag) {
+        return false
+      }
       this.page++
       console.log('this.page', this.page)
       this.commentList({hid: this.id, page: this.page}).then((res) => {
-        if (res.data.page === -1) {
-          this.page--
-          this.flag = false
-          this.btnText = '没有更多内容了'
-          return false
-        }
         console.log('res', res)
         this.commentLists = this.commentLists.concat(res.data.comments)
         console.log('commentLists', this.commentLists)
+        if (res.data.page === -1) {
+          this.btnText = '已显示全部内容~'
+          this.flag = false
+        }
       })
     },
     removeStyle () {
@@ -384,7 +382,6 @@ ul,li {
           display: inline-block;
           width: 48px;
           height: 48px;
-          background: pink;
           border-radius: 50%;
           img {
             width: 100%;
