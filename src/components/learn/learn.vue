@@ -76,8 +76,7 @@ export default {
       updateAlertType: 'user/updateAlertType',
       showLoading: 'course/showLoading',
       hideLoading: 'course/hideLoading',
-      updateUnlockCourseList: 'course/updateUnlockCourseList',
-      updateUserInfo: 'user/updateUserInfo'
+      updateUnlockCourseList: 'course/updateUnlockCourseList'
 
     }),
     changeWrapHeight () {

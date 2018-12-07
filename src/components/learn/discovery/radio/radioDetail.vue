@@ -29,7 +29,7 @@
               <span><i></i>立即收听</span>
               <div class="button-group">
                 <span>订阅</span>
-                <span>分享</span>
+                <span @click="showBox()">分享</span>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
             作者简介
           </div>
           <div class="author-info">
-            <div @click="goTo(authorInfo.user_id)" class="author-info-left">
+            <div @click="goToUser(authorInfo.user_id)" class="author-info-left">
               <img v-lazy="authorInfo.photo" :key="authorInfo.photo" alt="">
             </div>
             <div class="author-info-right">
@@ -55,7 +55,7 @@
               <div class="line"></div>
               <div class="desc" v-text="authorInfo.tech_desc ? authorInfo.tech_desc : '暂无数据'"></div>
               <div class="bottom">
-                <span>详情<i></i></span>
+                <span  @click="goToUser(authorInfo.user_id)">详情<i></i></span>
               </div>
             </div>
           </div>
@@ -76,21 +76,6 @@
         <div class="comments">
           <div class="title">学生评论</div>
           <div v-if="comments">
-            <div class="comment-list" v-if="comments.length>0">
-              <div class="comment-item" v-for="(item, index) in comments" :key="'comment' + index">
-                <img v-lazy="item.user.photo" :key="item.user.photo" alt="">
-                <div class="nickname" v-text="item.user.nickname"></div>
-                <div class="date">{{item.created_on | formatDate}}</div>
-                <div class="comment" v-text="item.comment"></div>
-              </div>
-            </div>
-            <div v-else>
-              <div class="comment-item">
-                <span>暂时没有评论~~~</span>
-              </div>
-            </div>
-          </div>
-          <!-- <div v-if="comments.length>0">
             <div class="comment-item" v-for="(item, index) in comments" :key="'comment' + index">
               <img v-lazy="item.user.photo" alt="">
               <div class="nickname" v-text="item.user.nickname"></div>
@@ -98,18 +83,16 @@
               <div class="comment" v-text="item.comment"></div>
             </div>
           </div>
-          <div v-else>
-            <div class="comment-item">
-              <span>暂时没有评论~~~</span>
-            </div>
-          </div> -->
+          <div class="comment-item" v-else>
+            <span>暂时没有评论~~~</span>
+          </div>
         </div>
       </div>
       <div class="radio-right">
         <div class="other-radio"><span></span>其他电台<span></span></div>
         <router-link tag="div"  class="other-radio-item"
               v-for="(radio, index) in otherRadios" :key="'other-radio' + index"
-              :to="{path: '/app/radio-detail/' + radio.code}"
+              :to="{path: '/app/discovery/radio-detail/' + radio.code}"
               >
           <img v-lazy="radio.cover" :key="radio.cover" alt="">
           <div class="subscribe">
@@ -121,24 +104,29 @@
           <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
         </router-link>
       </div>
+      <bounceBox @hidden="hiddenShow" v-show="isShowBox"></bounceBox>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
+import bounceBox from '../bounceBox'
 import { formatDate } from '../../../../tool/date.js'
 
 export default {
   data () {
     return {
+      isShowBox: false,
       courseInfo: {},
       authorInfo: {},
       cards: [],
       comments: [],
       otherRadios: []
     }
+  },
+  components: {
+    bounceBox
   },
   filters: {
     formatDate (time) {
@@ -166,6 +154,7 @@ export default {
     ...mapActions({
       postRadioDetail: 'course/postRadioDetail'
     }),
+    // 处理radio的时间
     toParseTime (data) {
       let m = parseInt(data / 60)
       if (m < 10) {
@@ -177,16 +166,19 @@ export default {
       }
       return m + ':' + s
     },
-    goTo (userId) {
+    // 作者详情页面
+    goToUser (userId) {
       this.$router.push({
-        path: `/app/author-detail/${userId}`
+        path: `/app/discovery/author-detail/${userId}`
       })
     },
+    // 跳转vip
     toVip () {
       this.$router.push({
         path: '/app/user/vip'
       })
     },
+    // 发请求获取radio的详情页面
     async loadData () {
       let _this = this
       let code = _this.$route.params.code
@@ -198,6 +190,14 @@ export default {
         _this.comments = res.result.course_info.comments
         _this.otherRadios = res.result.realated_courses
       })
+    },
+    // 分享弹框
+    showBox () {
+      this.isShowBox = true
+    },
+    hiddenShow () {
+      let that = this
+      that.isShowBox = false
     }
   }
 }
@@ -469,6 +469,7 @@ export default {
 }
 
 .author-info .author-info-right .bottom span{
+  cursor: pointer;
   float: right;
   color: #999999;
   font-size: 16px;

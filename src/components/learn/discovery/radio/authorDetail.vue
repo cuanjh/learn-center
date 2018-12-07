@@ -80,26 +80,41 @@
           <!-- 电台 -->
           <div class="radio-list" v-show="'radio' == tabFlag">
             <div v-if="radios.length>0" class="out-list">
-              <router-link  tag="div" class="radio-item"
-                            v-for="(item, index) in radios" :key="index"
-                            :to="{path: '/app/radio-detail/' + item.code}">
-                  <img v-lazy="item.cover" alt="背景图片">
-                  <div class="subscribe">
-                    <i></i>
-                    <span >{{item.buy_num}}</span>
-                  </div>
-                <div class="title" v-text="item.title"></div>
-                <div class="author" v-text="item.author_name ? item.author_name : '用户' + item.talkmate_id"></div>
-                <div class="money" v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' +item.money : $t('coins') + ' ' + item   .money"></div>
-              </router-link>
+              <div class="radio-item" v-for="(item, index) in radios" :key="index">
+                <div class="item">
+                  <a @mouseenter="radioMouseEnter($event, item, index)" @mouseleave="radioMouseLeave($event, item, index)">
+                    <img v-lazy="item.cover" :key="item.cover" alt="背景图片">
+                    <!-- 判断不免费并且不是会员的时候 -->
+                    <div  class="gradient-layer-play-no"
+                          v-if="item.money !== 0 && parseInt(isVip) !== 1"
+                          @click="loadNoRadioList($event, item)">
+                      <i class="play-no" v-if="index>number"></i>
+                    </div>
+                    <!-- <div class="gradient-layer-play-no" style="display: none">
+                      <i class="play-no"></i>
+                    </div> -->
+                    <div  class="gradient-layer-play"
+                          style="display: none"
+                          @click="loadRadioList($event, item)">
+                      <i class="play"></i>
+                    </div>
+                    <div class="subscribe">
+                      <i></i>
+                      <span >{{item.buy_num}}</span>
+                    </div>
+                  </a>
+                  <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + item.code}" class="title" v-text="item.title"></router-link>
+                  <div class="author" v-text="item.author_name ? item.author_name : '用户' + item.talkmate_id"></div>
+                  <div class="money" v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' +item.money : $t('coins') + ' ' + item.money"></div>
+                </div>
+              </div>
             </div>
-            <div v-else>
+            <!-- <div v-else>
               <div class="no-dynamic">
                 <div class="noradio-img"></div>
                 <div class="text">这个人很懒没有录制电台~~</div>
-                <!-- 作者暂时没有动态~~~ -->
               </div>
-            </div>
+            </div> -->
           </div>
           <!-- 动态 -->
           <div class="dynamic-list" v-show="'dynamic' == tabFlag">
@@ -112,11 +127,41 @@
               <div class="no-dynamic">
                 <div class="no-img"></div>
                 <div class="text">Ta学习太忙了，稍后会来分享动态~~~</div>
-                <!-- 作者暂时没有动态~~~ -->
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <!-- <transition name='fade'>
+      <div class="alert" v-if="showAlert">
+        <div class="wrap">
+        <div class="head">{{title}}</div>
+        <div class="body">
+          <slot>
+          <p>{{message}}</p>
+          </slot>
+        </div>
+        <div class="foot">
+          <div v-if="type === 'confirm'">
+          <button class="btn-base" @click="sure">确定</button>
+          <button class="btn-gray" @click="cancel">取消</button>
+          </div>
+          <div v-else-if="type === 'inform'">
+          <button class="btn-base" @click="cancel">知道了</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </transition> -->
+    <div class="nolock-test-check" v-show="nolockTestCheckShow">
+      <div class="animated flipInX" v-show="nolockTestCheckShow">
+        <span v-html="tips"></span>
+        <i></i>
+        <p class="buttons">
+          <span class="goBackCore" @click="goBack">取消</span>
+          <span class="goBackCore">购买</span>
+        </p>
       </div>
     </div>
   </div>
@@ -124,29 +169,46 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-// import Cookie from '../../../../tool/cookie.js'
+import Cookie from '../../../../tool/cookie.js'
 import authorItem from './authorItem'
+import Bus from '../../../../bus'
+import $ from 'jquery'
 
 export default {
   data () {
     return {
       // text: '关注',
+      // showAlert: false,
+      nolockTestCheckShow: false,
       flag: true,
       type: 0, // 正常 1回复
       tabFlag: 'radio', // true Ta的电台 false 动态
       authorInfo: {}, // 作者信息
       language: '', // 精通语言
       userId: '',
-      radios: [] // 电台列表
+      radios: [], // 电台列表
+      page: 1,
+      tips: '',
+      number: 2,
+      isVip: Cookie.getCookie('isVip')
     }
   },
   components: {authorItem},
   computed: {
     ...mapState({
-      feedInfos: state => state.course.feedInfos // 动态列表
+      feedInfos: state => state.course.feedInfos, // 动态列表
+      userInfo: state => state.user.userInfo
     })
+    // memberInfo () {
+    //   let ui = this.userInfo
+    //   if (!ui) {
+    //     ui = localStorage.getItem('userInfo')
+    //   }
+    //   return ui
+    // }
   },
   mounted () {
+    console.log('111', this.isVip)
     let _this = this
     _this.userId = _this.$route.params.userId
     console.log('userId', _this.userId)
@@ -162,7 +224,6 @@ export default {
     _this.getRadioAuthorList({ partner_user_id: _this.userId, page: _this.page }).then((data) => {
       console.log('电台列表', data)
       _this.radios = data.data.radios
-      console.log('电台列表', _this.radios)
     })
     // 动态列表
     _this.getRadioAuthorDynamic({ partner_user_id: _this.userId, page: _this.page, has_homework: 'Y' })
@@ -202,6 +263,55 @@ export default {
     // 电台和动态的bunner切换
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
+    },
+    // 能播放的列表点击播放
+    loadRadioList (e, item) {
+      if (this.isPlay && item.code === this.lastCode) {
+        $('.gradient-layer-play i').removeClass('pause')
+        $(e.target).addClass('play')
+        Bus.$emit('radioPause')
+      } else {
+        $('.gradient-layer-play i').removeClass('pause')
+        $('.gradient-layer-play i').addClass('play')
+        $(e.target).removeClass('play')
+        $(e.target).addClass('pause')
+        $('.gradient-layer-play').not($(e.target).parent()).hide()
+        if (item.code !== this.lastCode) {
+          Bus.$emit('getRadioCardList', item)
+          this.lastCode = item.code
+        } else {
+          Bus.$emit('radioPlay')
+        }
+      }
+      this.isPlay = !this.isPlay
+    },
+    // 不能播放的列表点击提示购买课程
+    loadNoRadioList (e, item) {
+      this.tips = '收费课程需要购买才能听哦(升级为会员免费)'
+      this.nolockTestCheckShow = true
+    },
+    goBack () {
+      this.nolockTestCheckShow = false
+    },
+    radioMouseEnter (e, item, index) {
+      console.log('item', item)
+      console.log('itemindex', index)
+      if (item.money !== 0 && parseInt(this.isVip) !== 1) {
+        // 不免费不是会员
+        if (index > this.number) {
+          $('.gradient-layer-play-no', $(e.target)).show()
+        } else {
+          $('.gradient-layer-play', $(e.target)).show()
+        }
+      } else {
+        // $('.gradient-layer-play-no', $(e.target)).hide()
+        $('.gradient-layer-play', $(e.target)).show()
+      }
+    },
+    radioMouseLeave (e) {
+      if ($('.gradient-layer-play i', $(e.target)).hasClass('play')) {
+        $('.gradient-layer-play', $(e.target)).hide()
+      }
     }
   }
 }
@@ -377,6 +487,75 @@ export default {
     }
   }
 }
+// 弹框提示
+.nolock-test-check{
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 61, 90, .9);
+  z-index:99999999;
+  overflow: hidden;
+}
+
+.nolock-test-check .animated {
+  width:354px;
+  height:250px;
+  padding:80px 30px 0px;
+  text-align:center;
+  font-size:14px;
+  color:#4a4a4a;
+  word-wrap:break-word;
+  word-break:normal;
+  background-color:#fff;
+  border-radius:4px;
+  position:absolute;
+  top:0px;
+  left:0px;
+  right:0px;
+  bottom:0px;
+  margin:auto;
+}
+
+.nolock-test-check .animated i{
+  position:absolute;
+  width:110px;
+  height:110px;
+  padding:26px;
+  border-radius:55px;
+  top:0px;
+  left:50%;
+  margin-left:-55px;
+  margin-top:-55px;
+  background:url('../../../../../static/images/learn/learn-vip-warn.png') #fff center center no-repeat;
+  background-size:86%;
+}
+.nolock-test-check .animated span {
+  display: inline-block;
+  width: 200px;
+}
+.nolock-test-check .animated .goBackCore {
+  width: 100px;
+  height: 40px;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 20px;
+  line-height: 40px;
+  text-align: center;
+  background-color: #fd8469;
+}
+.nolock-test-check .animated .buttons {
+  width: 300px;
+  height: 40px;
+  position: absolute;
+  bottom: 30px;
+  display: flex;
+  justify-content: space-around;
+}
 // 电台动态
 .autor-radio {
   width: 100%;
@@ -399,39 +578,189 @@ export default {
         height: 223px;
         background-color: #ffffff;
         margin-right: 16px;
-        cursor: pointer;
-        // a {
-        //   display: inline-block;
-        //   width: 100%;
-        //   height: 120px;
-        img {
-          width: 100%;
-          height: 120px;
-          object-fit: cover;
-          border-radius: 4px;
-        }
-        .subscribe {
-          position: relative;
-          display: -webkit-box;
-          margin-top: -25px;
-          i {
+        .item {
+          width: 220px;
+          height: 223px;
+          background-color: #ffffff;
+          margin-right: 16px;
+          a {
             display: inline-block;
-            margin: 0 8px;
-            width: 14px;
-            height: 14px;
-            background-image: url('../../../../../static/images/discovery/home-radio.png');
-            background-repeat: no-repeat;
-            background-size: cover;
+            width: 100%;
+            height: 120px;
+            img {
+              width: 100%;
+              height: 120px;
+              object-fit: cover;
+              border-radius: 4px;
+            }
+            .gradient-layer-play {
+              width: 220px;
+              height: 120px;
+              position: absolute;
+              background-image: url('../../../../../static/images/discovery/radio-gradient-layer.png');
+              background-repeat: no-repeat;
+              background-size: cover;
+              margin-top: -120px;
+              text-align:  center;
+              z-index: 2;
+              .play {
+                width: 52px;
+                height: 52px;
+                background-image: url('../../../../../static/images/discovery/radio-list-play.svg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                display: inline-block;
+                margin-top: 30px;
+              }
+              .pause {
+                width: 52px;
+                height: 52px;
+                background-image: url('../../../../../static/images/discovery/radio-list-pause.svg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                display: inline-block;
+                margin-top: 30px;
+              }
+            }
+            .gradient-layer-play-no {
+              width: 220px;
+              height: 120px;
+              position: absolute;
+              margin-top: -120px;
+              text-align:  center;
+              z-index: 2;
+              .play-no {
+                width: 100%;
+                height: 100%;
+                background-image: url('../../../../../static/images/learn/learn-course-little-bg.png');
+                background-repeat: no-repeat;
+                background-size: cover;
+                display: inline-block;
+              }
+            }
+            .subscribe {
+              position: relative;
+              display: -webkit-box;
+              margin-top: -25px;
+              i {
+                display: inline-block;
+                margin: 0 8px;
+                width: 14px;
+                height: 14px;
+                background-image: url('../../../../../static/images/discovery/home-radio.png');
+                background-repeat: no-repeat;
+                background-size: cover;
+              }
+              span {
+                color: #ffffff;
+                font-size: 12px;
+                display: inline-block;
+                margin-top: -5px;
+                margin-left: -3px;
+              }
+            }
           }
-          span {
-            color: #ffffff;
+          .item-disabled {
+            cursor: not-allowed;
+          }
+          .title {
+            cursor: pointer;
+            color: #444444;
+            font-size: 14px;
+            margin-top: 15px;
+            height: 41px;
+            line-height: 20px;
+            word-break: break-all;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            padding: 0 10px;
+            font-weight: bold;
+          }
+          .author {
+            color: #B8B8B8;
             font-size: 12px;
             display: inline-block;
-            margin-top: -5px;
-            margin-left: -3px;
+            position: relative;
+            margin-top: 10px;
+            width: 110px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-left: 10px;
+          }
+          .money {
+            color: #B8B8B8;
+            font-size: 12px;
+            float: right;
+            /* display: inline-block; */
+            position: relative;
+            margin-top: 10px;
+            padding-right: 10px;
           }
         }
-        // }
+        /* a {
+          display: inline-block;
+          width: 100%;
+          height: 120px;
+          img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+          }
+          .gradient-layer-play {
+            width: 220px;
+            height: 120px;
+            position: absolute;
+            background-image: url('../../../../../static/images/discovery/radio-gradient-layer.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin-top: -120px;
+            text-align:  center;
+            z-index: 2;
+            .play {
+              width: 52px;
+              height: 52px;
+              background-image: url('../../../../../static/images/discovery/radio-list-play.svg');
+              background-repeat: no-repeat;
+              background-size: cover;
+              display: inline-block;
+              margin-top: 30px;
+            }
+            .pause {
+              width: 52px;
+              height: 52px;
+              background-image: url('../../../../../static/images/discovery/radio-list-pause.svg');
+              background-repeat: no-repeat;
+              background-size: cover;
+              display: inline-block;
+              margin-top: 30px;
+            }
+          }
+          .subscribe {
+            position: relative;
+            display: -webkit-box;
+            margin-top: -25px;
+            i {
+              display: inline-block;
+              margin: 0 8px;
+              width: 14px;
+              height: 14px;
+              background-image: url('../../../../../static/images/discovery/home-radio.png');
+              background-repeat: no-repeat;
+              background-size: cover;
+            }
+            span {
+              color: #ffffff;
+              font-size: 12px;
+              display: inline-block;
+              margin-top: -5px;
+              margin-left: -3px;
+            }
+          }
+        }
         .title {
           color: #444444;
           font-size: 14px;
@@ -462,11 +791,11 @@ export default {
           color: #B8B8B8;
           font-size: 12px;
           float: right;
-          /* display: inline-block; */
+          //display: inline-block;
           position: relative;
           margin-top: 10px;
           padding-right: 10px;
-        }
+        } */
       }
       .noradio-img {
         width: 300px;

@@ -168,9 +168,14 @@ export default {
   },
   // components: { headlineReport },
   mounted () {
+    console.log('mounted===>')
     this.initData()
   },
-  computed: {
+  updated () {
+    console.log('updated===>')
+    if (this.isactive === 0) {
+      this.swiperInit()
+    }
   },
   methods: {
     ...mapActions({
@@ -185,8 +190,8 @@ export default {
         _this.categories = data.categories
         _this.headlinesLists = data.headlines.list
         _this.tabNav(_this.categories[0].catid)
-        this.$nextTick(() => {
-          /* eslint-disable no-new */
+        /* this.$nextTick(() => {
+          // eslint-disable no-new
           new Swiper('.swiper-container', {
             loop: true,
             initialSlide: 0,
@@ -211,6 +216,36 @@ export default {
               clickable: true
             }
           })
+        }) */
+        _this.swiperInit()
+      })
+    },
+    swiperInit () {
+      this.$nextTick(() => {
+        /* eslint-disable no-new */
+        new Swiper('.swiper-container', {
+          loop: true,
+          initialSlide: 0,
+          observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+          observeParents: true, // 修改swiper的父元素时，自动初始化swiper
+          notNextTick: true,
+          // speed: 1000,
+          autoplayStopOnLast: true,
+          autoplay: {
+            delay: 3000, // 3秒切换一次
+            stopOnLastSlide: false,
+            disableOnInteraction: false
+          },
+          paginationClickable: true,
+          mousewheelControl: true,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+          },
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true
+          }
         })
       })
     },
@@ -430,7 +465,6 @@ ul,li {
   padding: 0 25px 0 25px;
   .list_ul {
     .list_li {
-      cursor: pointer;
       padding: 20px 0;
       border-bottom: 1px solid #EAEAEA;
       border-radius: 3px;
@@ -444,30 +478,23 @@ ul,li {
         text-decoration: none;
         font-size: 0;
         background: #ffffff;
-        // -webkit-transition: all .3s ease-in-out;
-        // -moz-transition: all .3s ease-in-out;
-        // -ms-transition: all .3s ease-in-out;
-        // -o-transition: all .3s ease-in-out;
-        // transition: all .3s ease-in-out;
-        // border-radius: 5px 5px 0 0;
-        // &:hover {
-        //   box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
-        //   -webkit-transition: all .3s ease-in-out;
-        //   -moz-transition: all .3s ease-in-out;
-        //   -ms-transition: all .3s ease-in-out;
-        //   -o-transition: all .3s ease-in-out;
-        //   transition: all .3s ease-in-out;
-        // }
         .thumb_little {
           display: inline-block;
           width: 264px;
           height: 140px;
+          overflow: hidden;
+          transform-style: preserve-3d;
           img {
             width:100%;
             height: 100%;
             max-width: 100%;
             max-height: 100%;
             object-fit: cover;
+            &:hover {
+              cursor: pointer;
+              transform: scale(1.1);
+              transition: all .5s ease-in-out .1s;
+            }
           }
         }
         .news_item_right {
@@ -488,6 +515,10 @@ ul,li {
             color: #444444;
             text-decoration: none;
             font-weight: bold;
+            &:hover {
+              cursor: pointer;
+              color: #064ce2;
+            }
           }
         }
         .news_item_right_row2 {

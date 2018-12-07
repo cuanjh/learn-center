@@ -16,16 +16,21 @@
           <span>更多<i></i></span>
         </div>
         <div class="radio-list">
-          <router-link tag="div" :to="{path: '/app/radio-detail/' + radio.code}" class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
-            <img v-lazy="radio.cover" alt="">
-            <div class="subscribe">
-              <i></i>
-              <span v-text="radio.buy_num"></span>
-            </div>
-            <div class="title" v-text="radio.title"></div>
+          <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
+            <a @mouseenter="radioMouseEnter($event)" @mouseleave="radioMouseLeave($event)">
+              <img v-lazy="radio.cover" :key="radio.cover" alt="">
+              <div class="gradient-layer-play" @click="loadRadioList($event, radio)" style="display: none">
+                <i class="play"></i>
+              </div>
+              <div class="subscribe">
+                <i></i>
+                <span v-text="radio.buy_num"></span>
+              </div>
+            </a>
+            <router-link tag="div" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
             <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
             <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
-          </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -34,6 +39,8 @@
 
 <script>
 import { mapActions } from 'vuex'
+import Bus from '../../../../bus'
+import $ from 'jquery'
 
 export default {
   data () {
@@ -52,7 +59,35 @@ export default {
   methods: {
     ...mapActions({
       postDisvRadio: 'course/postDisvRadio'
-    })
+    }),
+    loadRadioList (e, radio) {
+      if (this.isPlay && radio.code === this.lastCode) {
+        $('.gradient-layer-play i').removeClass('pause')
+        $(e.target).addClass('play')
+        Bus.$emit('radioPause')
+      } else {
+        $('.gradient-layer-play i').removeClass('pause')
+        $('.gradient-layer-play i').addClass('play')
+        $(e.target).removeClass('play')
+        $(e.target).addClass('pause')
+        $('.gradient-layer-play').not($(e.target).parent()).hide()
+        if (radio.code !== this.lastCode) {
+          Bus.$emit('getRadioCardList', radio)
+          this.lastCode = radio.code
+        } else {
+          Bus.$emit('radioPlay')
+        }
+      }
+      this.isPlay = !this.isPlay
+    },
+    radioMouseEnter (e) {
+      $('.gradient-layer-play', $(e.target)).show()
+    },
+    radioMouseLeave (e) {
+      if ($('.gradient-layer-play i', $(e.target)).hasClass('play')) {
+        $('.gradient-layer-play', $(e.target)).hide()
+      }
+    }
   }
 }
 </script>
@@ -173,6 +208,37 @@ export default {
   height: 159px;
   background-color: #ffffff;
   cursor: pointer;
+}
+.radio-item .gradient-layer-play {
+  width: 152px;
+  height: 80px;
+  position: absolute;
+  background-image: url('../../../../../static/images/discovery/radio-gradient-layer.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-top: -80px;
+  text-align:  center;
+  z-index: 2;
+}
+
+.radio-item .gradient-layer-play .play {
+  width: 52px;
+  height: 52px;
+  background-image: url('../../../../../static/images/discovery/radio-list-play.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-block;
+  margin-top: 16px;
+}
+
+.radio-item .gradient-layer-play .pause {
+  width: 52px;
+  height: 52px;
+  background-image: url('../../../../../static/images/discovery/radio-list-pause.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-block;
+  margin-top: 16px;
 }
 
 .radio-type .radio-list .radio-item img {

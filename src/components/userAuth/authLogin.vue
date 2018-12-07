@@ -49,8 +49,7 @@ export default {
   methods: {
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
-      updateIsLogin: 'user/updateIsLogin',
-      updateUserInfo: 'user/updateUserInfo'
+      updateIsLogin: 'user/updateIsLogin'
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo',
