@@ -145,7 +145,6 @@ export default {
     ...mapMutations({
       updateCoverState: 'course/updateCoverState',
       updateAlertType: 'user/updateAlertType',
-      updateUserInfo: 'user/updateUserInfo',
       modefiyPhoneMemberInfo: 'user/modefiyPhoneMemberInfo'
     }),
     ...mapActions({

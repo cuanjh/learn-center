@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>右箭头</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="发现" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="底部操作栏" transform="translate(-516.000000, -2163.000000)" fill="#FFFFFF">
+            <g id="Group" transform="translate(0.000000, 2130.000000)">
+                <g id="底部播放">
+                    <g id="右箭头" transform="translate(512.000000, 33.000000)">
+                        <path d="M3.33360989,3.41145465 L11.3805836,2.10706879 C11.8684479,2.02798773 12.3280479,2.35937199 12.407129,2.84723626 C12.4230393,2.94538963 12.4224798,3.04550838 12.4054735,3.14347781 L11.0145832,11.1560769 C10.9300545,11.6430269 10.4667796,11.9692538 9.97982964,11.8847252 C9.79691364,11.8529732 9.62840093,11.7651179 9.49763861,11.6333314 L2.84155517,4.92511821 C2.49344614,4.57428282 2.49565629,4.00767643 2.84649167,3.6595674 C2.97901021,3.52807868 3.14933241,3.44132538 3.33360989,3.41145465 Z" id="Rectangle-2-Copy" transform="translate(7.500207, 6.996471) rotate(-315.000000) translate(-7.500207, -6.996471) "></path>
+                        <rect id="Rectangle-Copy" x="14.4083601" y="2.22727273" width="1.59163987" height="9.54545455" rx="0.795819936"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

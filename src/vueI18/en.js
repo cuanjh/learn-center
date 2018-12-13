@@ -6,6 +6,8 @@ export default {
   level4: 'Intermediate B2',
   level5: 'Senior C1',
   level6: 'Senior C2',
+  coins: 'Coins',
+  free: 'Free',
   courseList: {
     finish: '完成率',
     correct: '正确率',

@@ -71,7 +71,6 @@ export default {
       getProgress: 'course/getProgress'
     }),
     ...mapMutations({
-      updateUserInfo: 'user/updateUserInfo',
       updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     async initAnonymousData () {

@@ -229,8 +229,7 @@ export default {
   methods: {
     ...mapMutations({
       updateUserAnonymous: 'user/updateUserAnonymous',
-      updateAlertType: 'user/updateAlertType',
-      updateUserInfo: 'user/updateUserInfo'
+      updateAlertType: 'user/updateAlertType'
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo',

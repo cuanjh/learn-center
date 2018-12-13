@@ -57,7 +57,9 @@ const state = {
   improvementComplete: false,
   homeworkContent: {},
   chapterTestResult: {}, // 记录用户的课程测试结果
-  historyCourseRecord: {} // 记录课程的历史数据
+  historyCourseRecord: {}, // 记录课程的历史数据
+  feedInfos: [], // 动态列表
+  radioRewardList: []
 }
 
 const actions = {
@@ -198,6 +200,92 @@ const actions = {
   // 中国方言地图课程列表
   getChinaLangMap ({commit}) {
     return httpLogin(config.chinaLangMapApi)
+  },
+  /**
+   * 发现相关
+   */
+  postDisvHome ({commit}) {
+    return httpLogin(config.disvHomeApi)
+  },
+  postDisvRadio ({commit}) {
+    return httpLogin(config.disvRadioApi)
+  },
+  postRadioDetail ({commit}, code) {
+    let api = config.radioDetailApi.replace('<course_code>', code)
+    return httpLogin(api)
+  },
+  getRadioCardList ({commit}, params) {
+    let api = config.radioCardListApi.replace('{course_code}', params.code)
+      .replace('{list_order}', params.listOrder)
+      .replace('{page}', params.page)
+      .replace('{pagesize}', params.pageSize)
+    return httpLogin(api)
+  },
+  // 作者详情
+  getAuthorDetail ({ commit }, params) {
+    return httpLogin(config.radioAuthorDetailApi, params)
+  },
+  // 作者电台列表
+  getRadioAuthorList ({ commit }, params) {
+    return httpLogin(config.radioAuthorListApi, params)
+  },
+  // 关注
+  getRadioRelationFollow ({ commit }, params) {
+    return httpLogin(config.radioRelationFollow, params)
+  },
+  remRadioRelationCancel ({ commit }, params) {
+    return httpLogin(config.radioRelationCancel, params)
+  },
+  // 作者动态
+  getRadioAuthorDynamic ({ commit, state, dispatch }, params) {
+    return httpLogin(config.radioAuthorDynamic, params).then((data) => {
+      commit('updateRadioDynamic', data.dynamics.feedInfos)
+      data.dynamics.feedInfos.forEach((item) => {
+        let id = item.info.id
+        dispatch('radioAuthorCommentRewardList', {id: id}).then((data) => {
+          item.rewardLists = data.detail.rewards
+        })
+      })
+    })
+  },
+  // 动态详情打赏列表接口
+  radioAuthorCommentRewardList ({ commit }, params) {
+    return httpLogin(config.radioAuthorCommentRewardList, params)
+  },
+  // 动态奖励接口
+  radioAuthorCommentReward ({ commit, dispatch }, params) {
+    return httpLogin(config.radioAuthorCommentReward, params)
+  },
+  // 加载更多评论列表接口
+  getAuthorCommentList ({ commit }, params) {
+    return httpLogin(config.radioAuthorCommentList, params)
+  },
+  // 发表动态评论、批改作业接口
+  radioAuthorCommentPub ({ commit }, params) {
+    return httpLogin(config.radioAuthorCommentPub, params)
+  },
+
+  // 头条首页
+  headlineHome ({ commit }) {
+    return httpLogin(config.headlineHome)
+  },
+  headlineList ({ commit }, params) {
+    return httpLogin(config.headlineList, params)
+  },
+  headlineDetail ({ commit }, params) {
+    return httpLogin(config.headlineDetail, params)
+  },
+  commentList ({ commit }, params) {
+    return httpLogin(config.commentList, params)
+  },
+  comments ({ commit }, params) {
+    return httpLogin(config.comments, params)
+  },
+  reportList ({ commit }, params) {
+    return httpLogin(config.reportList, params)
+  },
+  searchList ({ commit }, params) {
+    return httpLogin(config.searchList, params)
   }
 }
 
@@ -551,6 +639,11 @@ const mutations = {
   },
   updateHistoryCourseRecord (state, data) {
     state.historyCourseRecord = data
+  },
+  // 电台动态
+  updateRadioDynamic (state, data) {
+    state.feedInfos = data
+    console.log('动态列表=>', state.feedInfos)
   }
 }
 

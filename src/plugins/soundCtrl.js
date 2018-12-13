@@ -1,17 +1,25 @@
 /* eslint-disable */
 var audio = new Audio();
 var endedHandler = null;
+var loadHandler = null
 var sndLoaded = false;
 var interval_sndLoaded;
 
 audio.onloadedmetadata = function () {
   sndLoaded = true;
+  loaded();
 };
 
 audio.addEventListener("ended", ended, false);
 
 function getDuration() {
   return audio.duration;
+}
+
+function loaded () {
+  if (loadHandler) {
+    loadHandler();
+  }
 }
 
 function ended(e) {
@@ -56,11 +64,28 @@ function setSnd(curaudio) {
 
 }
 
+function setSndCallback(curaudio, cb) {
+  sndLoaded = false;
+  audio.setAttribute("src", curaudio);
+  loadHandler = cb;
+}
+
+function setVolume (val = 0.5) {
+  audio.volume = val;
+}
+
+function setCurrentTime (time) {
+  audio.currentTime = time;
+}
+
 
 export default {
   getDuration: getDuration,
+  setSndCallback: setSndCallback,
   play: play,
   pause: pause,
   stop: stop,
-  setSnd: setSnd
+  setSnd: setSnd,
+  setVolume: setVolume,
+  setCurrentTime: setCurrentTime
 };
