@@ -21,7 +21,7 @@ const state = {
   alertType: false,
   uploadPhotoUrl: '',
   codeNum: '',
-  isLogin: '0',
+  isLogin: '0', // 0是没登录 1是登陆状态
   languageHandler: 'zh-CN',
   userInfo: {},
   record: {}, // 金币的交易记录
@@ -184,6 +184,7 @@ const mutations = {
     localStorage.setItem('userInfo', JSON.stringify(data))
     Cookie.setCookie('isVip', data.member_info.member_type)
   },
+  // 更新登录的状态
   updateIsLogin (state, isLogin) {
     state.isLogin = isLogin
     Cookie.setCookie('isLogin', isLogin)
