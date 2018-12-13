@@ -7,12 +7,9 @@
           学习
           <i class='' :class="{ 'animate-down': navArrowDown, 'animate-up':navArrowUp }"></i>
         </p>
-        <router-link :class="{ 'header-box-left-active': activeItem === 'bookcase' }" tag="p" class="nav-find-btn" :to="{path: '/app/book-case'}">
-          书架
+        <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'discovery'  }"  :to="{path: '/app/discovery'}">
+            发现
         </router-link>
-        <!-- <router-link :class="{ 'header-box-left-active': activeItem === 'discovery' }" tag="p" class="nav-find-btn" :to="{path: '/app/discovery'}">
-          发现
-        </router-link> -->
         <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
             我的
         </router-link>
@@ -105,7 +102,7 @@ export default {
     })
   },
   mounted () {
-    console.log('====>', this.userInfo)
+    // console.log('====>', this.userInfo)
     this.getLearnCourses()
   },
   computed: {

@@ -67,6 +67,29 @@ export default {
   shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
   chinaLangMapApi: '/studyv1/shelf/china_lang_map', // 中国方言课程地图接口
 
+  // 发现
+  disvHomeApi: '/disv1/home', // 发现首页接口
+  disvRadioApi: '/disv1/radio', // 发现电台首页接口
+  radioDetailApi: '/topic_course/detail/<course_code>/', // 用户电台明细
+  radioCardListApi: '/user_course/card_list/{course_code}/{list_order}/{page}/{pagesize}', // 课程卡片列表接口
+  radioAuthorDetailApi: '/feedv1/partner/detail', // 电台作者详情接口
+  radioRelationFollow: '/relation/follow', // 关注接口
+  radioRelationCancel: '/relation/cancel', // 取消关注接口
+  radioAuthorListApi: '/feedv1/partner/radios', // 作者电台列表
+  radioAuthorDynamic: '/feedv1/partner/v3/dynamics', // 作者动态
+  radioAuthorCommentList: '/feedv1/comment/list', // 加载更多评论列表接口
+  radioAuthorCommentPub: '/feedv1/comment/pub', // 发表动态评论、批改作业接口
+  radioAuthorCommentRewardList: '/feedv1/dynamic/detail', // 动态、作业详情接口 动态打赏列表rewards取出
+  radioAuthorCommentReward: '/feedv1/dynamic/reward', // 动态奖励接口
+  // 头条
+  headlineHome: '/disv1/headline/home', // 头条首页接口
+  headlineList: '/disv1/headline/list', // 头条列表接口
+  headlineDetail: '/disv1/headline/detail', // 头条详情接口
+  commentList: '/disv1/headline/comment_list', // 评论列表接口
+  comments: '/disv1/headline/comment', // 头条评论接口
+  reportList: '/feedv1/dynamic/report', // 头条投诉接口
+  searchList: '/disv1/headline/search', // 头条搜索接口
+
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token
   coinRules: '/study/coin_rules',

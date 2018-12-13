@@ -97,8 +97,7 @@ export default {
       updateConfirmAlert: 'user/updateConfirmAlert',
       updateErrorTip: 'user/updateErrorTip',
       updateSuccessAlert: 'user/updateSuccessAlert',
-      updatePurchaseSuccess: 'user/updatePurchaseSuccess',
-      updateUserInfo: 'user/updateUserInfo'
+      updatePurchaseSuccess: 'user/updatePurchaseSuccess'
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo',

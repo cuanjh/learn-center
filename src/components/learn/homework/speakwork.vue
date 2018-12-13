@@ -240,6 +240,7 @@ export default {
           let recorderUrl = Recorder.recorderUrl
           // 请求后端接口
           this.homeworkPub({ code, sound_url: recorderUrl, sound_time: time }).then(res => {
+            console.log('res', res)
             // 返回成功之后再处理 返回失败具体提示
             this.homework.has_done = true
             this.isShow = false

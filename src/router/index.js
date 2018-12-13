@@ -28,6 +28,16 @@ const userVip = r => require.ensure([], () => r(require('@/components/learn/user
 const userSetting = r => require.ensure([], () => r(require('@/components/learn/user/userSetting.vue')), 'user-setting')
 const userAnonymous = r => require.ensure([], () => r(require('@/components/learn/user/userAnonymous.vue')), 'user-anonymous')
 
+// 学习 --- 发现
+const discovery = r => require.ensure([], () => r(require('@/components/learn/discovery/discovery.vue')), 'discovery')
+const discoveryHome = r => require.ensure([], () => r(require('@/components/learn/discovery/home.vue')), 'discovery-home')
+const radioHome = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioHome.vue')), 'radio-home')
+const radioDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioDetail.vue')), 'radio-detail')
+const radioAuthorDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/authorDetail.vue')), 'author-detail')
+const headline = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headline.vue')), 'headline')
+const headlineDetails = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headlineDetails.vue')), 'headline-details')
+const headlineSearch = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headlineSearch.vue')), 'headline-search')
+
 // 学习系统
 const learnSystem = r => require.ensure([], () => r(require('@/components/learnSystem/learn.vue')), 'learn-system')
 const stage = r => require.ensure([], () => r(require('@/components/learnSystem/stage/stage.vue')), 'stage')
@@ -162,6 +172,48 @@ export default[
             component: userAnonymous
           }
         ]
+      },
+      // 发现
+      {
+        path: 'discovery',
+        component: discovery,
+        redirect: 'discovery/home',
+        children: [
+          {
+            path: 'home',
+            component: discoveryHome
+          },
+          // 电台
+          {
+            path: 'radio-home',
+            component: radioHome
+          },
+          {
+            path: 'radio-detail/:code',
+            name: 'radioDetail',
+            component: radioDetail
+          },
+          {
+            path: 'author-detail/:userId',
+            component: radioAuthorDetail
+          }
+        ]
+      },
+      // 头条
+      {
+        path: 'headline',
+        component: headline
+      },
+      // 头条每个栏目
+      {
+        path: 'headline-details/:id',
+        name: 'headlineDetails',
+        component: headlineDetails
+      },
+      {
+        path: 'headline-search',
+        name: 'headlineSearch',
+        component: headlineSearch
       }
     ]
   },

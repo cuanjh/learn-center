@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>解锁</title>
+    <desc>Created with Sketch.</desc>
+    <g id="发现" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="底部操作栏" transform="translate(-1440.000000, -2134.000000)">
+            <g id="Group" transform="translate(0.000000, 2121.000000)">
+                <g id="底部播放">
+                    <g id="解锁" transform="translate(1440.000000, 14.000000)">
+                        <path d="M4.9201278,5 L12.0798722,5 C12.5880448,5 13,5.41195525 13,5.9201278 L13,11.0798722 C13,11.5880448 12.5880448,12 12.0798722,12 L4.9201278,12 C4.41195525,12 4,11.5880448 4,11.0798722 L4,5.9201278 C4,5.41195525 4.41195525,5 4.9201278,5 Z" id="Rectangle-6" fill="#FFFFFF"></path>
+                        <path d="M0.597900391,6 L0.597900391,3 C0.597900391,1.34314575 1.94104614,0 3.59790039,0 C4.98923582,0 6.15935279,0.947148813 6.49865476,2.2318499" id="Rectangle-7" stroke="#FFFFFF" stroke-width="0.920127796" stroke-linecap="round" stroke-linejoin="round" transform="translate(3.548278, 3.000000) scale(-1, 1) translate(-3.548278, -3.000000) "></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
