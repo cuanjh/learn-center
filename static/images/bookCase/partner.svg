@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="28px" viewBox="0 0 17 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>Oval 2@3x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="27.4121094%" x2="50%" y2="84.21875%" id="linearGradient-1">
+            <stop stop-color="#53CDF3" offset="0%"></stop>
+            <stop stop-color="#00588C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="世界语言地图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="世界地图语言-默认" transform="translate(-909.000000, -93.000000)" fill="url(#linearGradient-1)">
+            <path d="M917.5,121 C923.166667,110.883808 926,104.304632 926,101.262473 C926,96.6992353 922.19442,93 917.5,93 C912.80558,93 909,96.6992353 909,101.262473 C909,104.304632 911.833333,110.883808 917.5,121 Z" id="Oval-2"></path>
+        </g>
+    </g>
+</svg>

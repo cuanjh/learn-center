@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="20px" viewBox="0 0 12 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>濒危-小</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="26.2890625%" x2="50%" y2="76.7431641%" id="linearGradient-1">
+            <stop stop-color="#EC0000" offset="0%"></stop>
+            <stop stop-color="#900000" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-350.000000, -991.000000)" fill="url(#linearGradient-1)">
+            <path d="M356,1011 C360,1004.03969 362,999.425813 362,997.158365 C362,993.757194 359.313708,991 356,991 C352.686292,991 350,993.757194 350,997.158365 C350,999.425813 352,1004.03969 356,1011 Z" id="濒危-小"></path>
+        </g>
+    </g>
+</svg>

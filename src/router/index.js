@@ -8,6 +8,7 @@ const authResetEmail = r => require.ensure([], () => r(require('@/components/use
 const selectLang = r => require.ensure([], () => r(require('@/components/userAuth/userSelectLang.vue')), 'select-lang')
 // 学习
 const learn = r => require.ensure([], () => r(require('@/components/learn/learn.vue')), 'learn')
+const learnIndex = r => require.ensure([], () => r(require('@/components/learn/home/index.vue')), 'learn-index')
 const courseList = r => require.ensure([], () => r(require('@/components/learn/course/courseList.vue')), 'course-list')
 const bookCase = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCase.vue')), 'book-case')
 const bookCaseDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCaseDetails.vue')), 'book-case-details')
@@ -94,6 +95,10 @@ export default[
           keepAlive: true
         },
         component: courseList
+      },
+      {
+        path: 'index',
+        component: learnIndex
       },
       {
         path: 'book-case',

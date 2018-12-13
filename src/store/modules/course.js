@@ -57,7 +57,9 @@ const state = {
   improvementComplete: false,
   homeworkContent: {},
   chapterTestResult: {}, // 记录用户的课程测试结果
-  historyCourseRecord: {} // 记录课程的历史数据
+  historyCourseRecord: {}, // 记录课程的历史数据
+  courseLangs: {}, // 官方课程
+  partnerList: {} // 语伴列表
 }
 
 const actions = {
@@ -197,7 +199,28 @@ const actions = {
   // 中国方言地图课程列表
   getChinaLangMap ({commit}) {
     return httpLogin(config.chinaLangMapApi)
+  },
+  // 获取所有的课程语言
+  getCourseListV2 ({commit}) {
+    return httpLogin(config.courseList_v2).then(res => {
+      commit('updateCourseLangs', res.course_langs)
+    })
+  },
+  // 语伴列表接口
+  getPartnerList ({commit}) {
+    let pageTime = new Date().getTime()
+    return httpLogin(config.partnerListApi, {page_time: pageTime, page_size: 100}).then((res) => {
+      commit('updatePartnerList', res.partners.userInfos)
+    })
+  },
+  // 语伴搜索
+  searchPartnerList ({commit}) {
+    let pageTime = new Date().getTime()
+    return httpLogin(config.partnerSearchApi, {page_time: pageTime}).then((res) => {
+      commit('updatePartnerList', res.partners.partnersInfo)
+    })
   }
+
 }
 
 const mutations = {
@@ -550,6 +573,14 @@ const mutations = {
   },
   updateHistoryCourseRecord (state, data) {
     state.historyCourseRecord = data
+  },
+  // 更新官方语言
+  updateCourseLangs (state, data) {
+    state.courseLangs = data
+  },
+  // 更新语伴列表
+  updatePartnerList (state, data) {
+    state.partnerList = data
   }
 }
 
