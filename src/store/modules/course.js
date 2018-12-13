@@ -59,7 +59,9 @@ const state = {
   chapterTestResult: {}, // 记录用户的课程测试结果
   historyCourseRecord: {}, // 记录课程的历史数据
   feedInfos: [], // 动态列表
-  radioRewardList: []
+  radioRewardList: [],
+  courseLangs: {}, // 官方课程
+  partnerList: {} // 语伴列表
 }
 
 const actions = {
@@ -286,7 +288,28 @@ const actions = {
   },
   searchList ({ commit }, params) {
     return httpLogin(config.searchList, params)
+  },
+  // 获取所有的课程语言
+  getCourseListV2 ({commit}) {
+    return httpLogin(config.courseList_v2).then(res => {
+      commit('updateCourseLangs', res.course_langs)
+    })
+  },
+  // 语伴列表接口
+  getPartnerList ({commit}) {
+    let pageTime = new Date().getTime()
+    return httpLogin(config.partnerListApi, {page_time: pageTime, page_size: 100}).then((res) => {
+      commit('updatePartnerList', res.partners.userInfos)
+    })
+  },
+  // 语伴搜索
+  searchPartnerList ({commit}) {
+    let pageTime = new Date().getTime()
+    return httpLogin(config.partnerSearchApi, {page_time: pageTime}).then((res) => {
+      commit('updatePartnerList', res.partners.partnersInfo)
+    })
   }
+
 }
 
 const mutations = {
@@ -644,6 +667,14 @@ const mutations = {
   updateRadioDynamic (state, data) {
     state.feedInfos = data
     console.log('动态列表=>', state.feedInfos)
+  },
+  // 更新官方语言
+  updateCourseLangs (state, data) {
+    state.courseLangs = data
+  },
+  // 更新语伴列表
+  updatePartnerList (state, data) {
+    state.partnerList = data
   }
 }
 

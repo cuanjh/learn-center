@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="19px" viewBox="0 0 16 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>直线 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="-2.48949813e-15%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FAD961" offset="0%"></stop>
+            <stop stop-color="#F76B1C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="画板" transform="translate(-578.000000, -996.000000)" fill-rule="nonzero" stroke="url(#linearGradient-1)" stroke-width="2">
+            <path d="M592.581615,997 C592.692096,999.337355 594.135724,1000.40983 585,1002.71835 C575.864276,1005.02688 585.167692,1005.50512 589.167692,1007.50579 C593.167692,1009.50647 583.473291,1012.55406 579,1013.12097" id="直线-3" transform="translate(585.864390, 1005.060487) scale(-1, 1) translate(-585.864390, -1005.060487) "></path>
+        </g>
+    </g>
+</svg>

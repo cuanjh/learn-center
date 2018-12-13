@@ -89,6 +89,12 @@ export default {
   comments: '/disv1/headline/comment', // 头条评论接口
   reportList: '/feedv1/dynamic/report', // 头条投诉接口
   searchList: '/disv1/headline/search', // 头条搜索接口
+  /**
+   * 世界语言地图
+   * 语伴
+   */
+  partnerListApi: '/feedv1/partner/list', // 语伴列表接口
+  partnerSearchApi: '/feedv1/partner/search', // 语伴搜索接口
 
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token

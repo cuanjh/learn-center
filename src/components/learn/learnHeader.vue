@@ -50,7 +50,7 @@
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <div class="search" @click="enterSearch"></div>
         </div>
-        <router-link :to="{path: '/app/user/vip'}"  :class="{'vip-img': userInfo.member_info.member_type === 1, 'unvip-img': userInfo.member_info.member_type !== 1}"></router-link>
+        <router-link :to="{path: '/app/user/vip'}"  :class="{'vip-img': isVip === 1, 'unvip-img': isVip !== 1}"></router-link>
         <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
         <!-- <div class="head-nation" style="display:none">
           <img class="head" src="https://course-assets1.talkmate.com/course/icons/FRE-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="头像">
@@ -115,6 +115,13 @@ export default {
     }),
     languagueHander () {
       return this.userInfo.sys_lang
+    },
+    isVip () {
+      if (!this.userInfo.member_info) {
+        return 0
+      }
+      console.log('header', this.userInfo.member_info.member_type)
+      return this.userInfo.member_info.member_type
     }
   },
   watch: {
