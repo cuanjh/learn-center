@@ -3,7 +3,9 @@
 </template>
 
 <script>
-import $ from 'jquery'
+// import $ from 'jquery'
+// import _ from 'lodash'
+
 import BMap from 'BMap'
 import Bus from '../../bus'
 import mapData from '../../api/mapData'
@@ -19,7 +21,11 @@ export default {
         width: 0, // 信息窗口宽度
         height: 0, // 信息窗口高度
         title: '' // 信息窗口标题
-      }
+      },
+      myGeo: null,
+      copyrightText: '联合国教科文组织-全球说世界语言地图',
+      partnerIndex: 0,
+      partnerList: []
     }
   },
   created () {
@@ -29,6 +35,7 @@ export default {
 
     // 加载官方语言数据
     this.$on('loadCourseLangs', (courseLangs) => {
+      this.removeMarks()
       console.log('courseLangs', courseLangs)
       courseLangs.forEach(item => {
         let langInfos = item.lang_infos
@@ -38,6 +45,17 @@ export default {
       })
       console.log('langlist', this.langList)
       this.courseLangsMap()
+    })
+
+    this.$on('removeMarks', () => {
+      this.removeMarks()
+    })
+
+    this.$on('loadPartner', (data) => {
+      console.log(data)
+      this.removeMarks()
+      this.partnerList = data
+      this.loadPartner()
     })
   },
   mounted () {
@@ -73,7 +91,23 @@ export default {
 
       // var localSearch = new BMap.LocalSearch(this.map, options)
       this.map.addEventListener('load', () => {
-        console.log('map_langlist', this.langList)
+        // 设置版权控件位置
+        /* eslint-disable */
+        var cr = new BMap.CopyrightControl({
+          anchor: BMAP_ANCHOR_TOP_LEFT
+        })
+        /* eslint-enable */
+
+        // 添加版权控件
+        this.map.addControl(cr)
+
+        // 返回地图可视区域
+        var bs = this.map.getBounds()
+        cr.addCopyright({
+          id: 1,
+          content: '<span style="font-size:20px;background:;margin-left: 50px; line-height:80px;">' + this.copyrightText + '</span>',
+          bounds: bs
+        })
         // this.addPosition()
       //   alert(0)
       //   var circle = new BMap.Circle(point, 500000, {
@@ -124,7 +158,7 @@ export default {
       // })
       // 将标注添加到地图中
       // this.map.addOverlay(marker)
-
+      // this.myGeo = new BMap.Geocoder()
       /* eslint-disable */
       var opts = {
         // offset: new BMap.Size(150, 5),
@@ -155,6 +189,7 @@ export default {
       // ]
       // map.setMapStyle({ styleJson: myStyleJson })
       this.setMapStyle()
+
       // var local = new BMap.LocalSearch(this.map, {
       //   renderOptions:{map: this.map}
       // })
@@ -213,7 +248,9 @@ export default {
       // })
 
       var myCity = new BMap.LocalCity()
+
       myCity.get((result) => {
+        console.log(result)
         var cityName = result.name
         this.map.setCenter(cityName)
         this.map.centerAndZoom(cityName, 4)
@@ -234,433 +271,7 @@ export default {
     // 设置地图样式
     setMapStyle () {
       /* eslint-disable */
-      let styleJson = [
-        {
-            "featureType": "land",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "on",
-                "color": "#c1c9cbff"
-            }
-        }, {
-            "featureType": "water",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "on",
-                "color": "#f2f4edff"
-            }
-        }, {
-            "featureType": "green",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "on",
-                "color": "#abbbc0ff"
-            }
-        }, {
-            "featureType": "building",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "building",
-            "elementType": "geometry.fill",
-            "stylers": {
-                "color": "#ffffffb3"
-            }
-        }, {
-            "featureType": "building",
-            "elementType": "geometry.stroke",
-            "stylers": {
-                "color": "#dadadab3"
-            }
-        }, {
-            "featureType": "subwaystation",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "color": "#b15454B2"
-            }
-        }, {
-            "featureType": "education",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "color": "#e4f1f1ff"
-            }
-        }, {
-            "featureType": "medical",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "color": "#f0dedeff"
-            }
-        }, {
-            "featureType": "scenicspots",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "color": "#e2efe5ff"
-            }
-        }, {
-            "featureType": "highway",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "weight": 4
-            }
-        }, {
-            "featureType": "highway",
-            "elementType": "geometry.fill",
-            "stylers": {
-                "color": "#f7c54dff"
-            }
-        }, {
-            "featureType": "highway",
-            "elementType": "geometry.stroke",
-            "stylers": {
-                "color": "#fed669ff"
-            }
-        }, {
-            "featureType": "highway",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "highway",
-            "elementType": "labels.text.fill",
-            "stylers": {
-                "color": "#8f5a33ff"
-            }
-        }, {
-            "featureType": "highway",
-            "elementType": "labels.text.stroke",
-            "stylers": {
-                "color": "#ffffffff"
-            }
-        }, {
-            "featureType": "highway",
-            "elementType": "labels.icon",
-            "stylers": {
-                "visibility": "on"
-            }
-        }, {
-            "featureType": "arterial",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "weight": 2
-            }
-        }, {
-            "featureType": "arterial",
-            "elementType": "geometry.fill",
-            "stylers": {
-                "color": "#d8d8d8ff"
-            }
-        }, {
-            "featureType": "arterial",
-            "elementType": "geometry.stroke",
-            "stylers": {
-                "color": "#ffeebbff"
-            }
-        }, {
-            "featureType": "arterial",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "arterial",
-            "elementType": "labels.text.fill",
-            "stylers": {
-                "color": "#525355ff"
-            }
-        }, {
-            "featureType": "arterial",
-            "elementType": "labels.text.stroke",
-            "stylers": {
-                "color": "#ffffffff"
-            }
-        }, {
-            "featureType": "local",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "weight": 1
-            }
-        }, {
-            "featureType": "local",
-            "elementType": "geometry.fill",
-            "stylers": {
-                "color": "#d8d8d8ff"
-            }
-        }, {
-            "featureType": "local",
-            "elementType": "geometry.stroke",
-            "stylers": {
-                "color": "#ffffffff"
-            }
-        }, {
-            "featureType": "local",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "local",
-            "elementType": "labels.text.fill",
-            "stylers": {
-                "color": "#979c9aff"
-            }
-        }, {
-            "featureType": "local",
-            "elementType": "labels.text.stroke",
-            "stylers": {
-                "color": "#ffffffff"
-            }
-        }, {
-            "featureType": "railway",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "weight": 1
-            }
-        }, {
-            "featureType": "railway",
-            "elementType": "geometry.fill",
-            "stylers": {
-                "color": "#123c52ff"
-            }
-        }, {
-            "featureType": "railway",
-            "elementType": "geometry.stroke",
-            "stylers": {
-                "color": "#12223dff"
-            }
-        }, {
-            "featureType": "subway",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "weight": 1
-            }
-        }, {
-            "featureType": "subway",
-            "elementType": "geometry.fill",
-            "stylers": {
-                "color": "#d8d8d8ff"
-            }
-        }, {
-            "featureType": "subway",
-            "elementType": "geometry.stroke",
-            "stylers": {
-                "color": "#ffffff00"
-            }
-        }, {
-            "featureType": "subway",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "subway",
-            "elementType": "labels.text.fill",
-            "stylers": {
-                "color": "#979c9aff"
-            }
-        }, {
-            "featureType": "subway",
-            "elementType": "labels.text.stroke",
-            "stylers": {
-                "color": "#ffffffff"
-            }
-        }, {
-            "featureType": "continent",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "on"
-            }
-        }, {
-            "featureType": "continent",
-            "elementType": "labels.icon",
-            "stylers": {
-                "visibility": "on"
-            }
-        }, {
-            "featureType": "continent",
-            "elementType": "labels.text.fill",
-            "stylers": {
-                "color": "#333333ff"
-            }
-        }, {
-            "featureType": "continent",
-            "elementType": "labels.text.stroke",
-            "stylers": {
-                "color": "#ffffffff"
-            }
-        }, {
-            "featureType": "city",
-            "elementType": "labels.icon",
-            "stylers": {
-                "visibility": "on"
-            }
-        }, {
-            "featureType": "city",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "on"
-            }
-        }, {
-            "featureType": "city",
-            "elementType": "labels.text.fill",
-            "stylers": {
-                "color": "#1e2d33ff"
-            }
-        }, {
-            "featureType": "city",
-            "elementType": "labels.text.stroke",
-            "stylers": {
-                "color": "#ffffffff"
-            }
-        }, {
-            "featureType": "town",
-            "elementType": "labels.icon",
-            "stylers": {
-                "visibility": "on"
-            }
-        }, {
-            "featureType": "town",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "town",
-            "elementType": "labels.text.fill",
-            "stylers": {
-                "color": "#454d50ff"
-            }
-        }, {
-            "featureType": "town",
-            "elementType": "labels.text.stroke",
-            "stylers": {
-                "color": "#ffffffff"
-            }
-        }, {
-            "featureType": "road",
-            "elementType": "geometry.fill",
-            "stylers": {
-                "color": "#12223dff"
-            }
-        }, {
-            "featureType": "poilabel",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "on"
-            }
-        }, {
-            "featureType": "districtlabel",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "on"
-            }
-        }, {
-            "featureType": "road",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off",
-                "weight": 3
-            }
-        }, {
-            "featureType": "road",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "road",
-            "elementType": "geometry.stroke",
-            "stylers": {
-                "color": "#ffffff00"
-            }
-        }, {
-            "featureType": "district",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "poilabel",
-            "elementType": "labels.icon",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "poilabel",
-            "elementType": "labels.text.fill",
-            "stylers": {
-                "color": "#2dc4bbff"
-            }
-        }, {
-            "featureType": "poilabel",
-            "elementType": "labels.text.stroke",
-            "stylers": {
-                "color": "#ffffff00"
-            }
-        }, {
-            "featureType": "manmade",
-            "elementType": "geometry",
-            "stylers": {
-                "color": "#12223dff",
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "districtlabel",
-            "elementType": "labels.text.stroke",
-            "stylers": {
-                "color": "#ffffffff"
-            }
-        }, {
-            "featureType": "entertainment",
-            "elementType": "geometry",
-            "stylers": {
-                "color": "#ffffffff",
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "shopping",
-            "elementType": "geometry",
-            "stylers": {
-                "color": "#12223dff",
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "village",
-            "elementType": "labels",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "estate",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "transportation",
-            "elementType": "geometry",
-            "stylers": {
-                "visibility": "off"
-            }
-        }, {
-            "featureType": "districtlabel",
-            "elementType": "labels.icon",
-            "stylers": {
-                "visibility": "off"
-            }
-        }
-      ]
+      let styleJson = mapData.mapStyle
       /* eslint-enable */
       this.map.setMapStyle({styleJson: styleJson})
     },
@@ -690,70 +301,70 @@ export default {
       // his._length = length
       // this._color = color
     },
-    addPosition () {
-      let marker
-      let label
-      let pt = null
-      console.log(this.map.getBounds())
-      $.ajax({
-        type: 'GET',
-        dataType: 'JSONP',
-        url: 'http://api.map.baidu.com/geosearch/v3/bound?ak=8oTo926ag3Q4L76hGg3QIYeFieYphvOC&geotable_id=196965&bounds=' + this.map.getBounds().getSouthWest().lng + ',' + this.map.getBounds().getSouthWest().lat + ';' + this.map.getBounds().getNorthEast().lng + ',' + this.map.getBounds().getNorthEast().lat,
-        success: (data) => {
-          console.log(data)
-          for (var j = 0; j < data.size; j++) {
-            // 点聚合
-            pt = new BMap.Point(data.contents[j].location[0], data.contents[j].location[1])
-            var myIcon = new BMap.Icon('https://course-assets1.talkmate.com/course/icons/ENG-3x.webp?v=3', new BMap.Size(30, 30))
-            if (data.contents[j].lang_code) {
-              // myIcon = new BMap.Icon(data.contents[j].lang_type_icon['big'], new BMap.Size(50, 50))
-              marker = new BMap.Marker(pt, {icon: myIcon})
-            } else {
-              marker = new BMap.Marker(pt)
-            }
+    // addPosition () {
+    //   let marker
+    //   let label
+    //   let pt = null
+    //   console.log(this.map.getBounds())
+    //   $.ajax({
+    //     type: 'GET',
+    //     dataType: 'JSONP',
+    //     url: 'http://api.map.baidu.com/geosearch/v3/bound?ak=8oTo926ag3Q4L76hGg3QIYeFieYphvOC&geotable_id=196965&bounds=' + this.map.getBounds().getSouthWest().lng + ',' + this.map.getBounds().getSouthWest().lat + ';' + this.map.getBounds().getNorthEast().lng + ',' + this.map.getBounds().getNorthEast().lat,
+    //     success: (data) => {
+    //       console.log(data)
+    //       for (var j = 0; j < data.size; j++) {
+    //         // 点聚合
+    //         pt = new BMap.Point(data.contents[j].location[0], data.contents[j].location[1])
+    //         var myIcon = new BMap.Icon('https://course-assets1.talkmate.com/course/icons/ENG-3x.webp?v=3', new BMap.Size(30, 30))
+    //         if (data.contents[j].lang_code) {
+    //           // myIcon = new BMap.Icon(data.contents[j].lang_type_icon['big'], new BMap.Size(50, 50))
+    //           marker = new BMap.Marker(pt, {icon: myIcon})
+    //         } else {
+    //           marker = new BMap.Marker(pt)
+    //         }
 
-            label = new BMap.Label(data.contents[j].name, {offset: new BMap.Size(12, 0)}) // 创建marker点的标记
+    //         label = new BMap.Label(data.contents[j].name, {offset: new BMap.Size(12, 0)}) // 创建marker点的标记
 
-            // 对label 样式隐藏
-            // label.setStyle({display: 'none'})
-            // 把label设置到maker上
-            marker.setLabel(label)
-            this.map.addOverlay(marker)
-            // 添加点击事件
-            var sContent =
-              '<div>' +
-                '<p>' +
-                  '<img style="float:left;margin:4px" src="' + data.contents[j].flag.big + '" width="40" height="40" title=""/>' +
-                  '<span style="font-size:13px; font-weight:bold; color:#333333; line-height: 20px; margin-left: 5px;">' +
-                    data.contents[j].name +
-                  '</span>' +
-                '</p>' +
-                '<p style="margin:0;line-height:1.5;font-size:13px;text-indent:2em">天安门坐落在中国北京市中心,故宫的南侧,与天安门广场隔长安街相望,是清朝皇城的大门...</p>' +
-              '</div>'
-            // sContent = ''
-            this.addClickHandler(sContent, marker)
-            // var infoWindow = new BMap.InfoWindow(sContent)
-            // var optsWin = {
-            //   width: 250, // 信息窗口宽度
-            //   height: 100, // 信息窗口高度
-            //   title: 'Hello', // 信息窗口标题
-            //   enableMessage: true, // 设置允许信息窗发送短息
-            //   // offset: {
-            //   //   width: -40,
-            //   //   height: -40
-            //   // },
-            //   message: '亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~'
-            // }
-            // var infoWindow = new BMap.InfoWindow(sContent, this.winOpts) // 创建信息窗口对象
-            // marker.addEventListener('click', (e) => {
-            //   console.log(e)
-            //   let curPoint = new BMap.Point(e.currentTarget.point['lng'], e.currentTarget.point['lat'])
-            //   this.map.openInfoWindow(infoWindow, curPoint) // 开启信息窗口
-            // })
-          }
-        }
-      })
-    },
+    //         // 对label 样式隐藏
+    //         // label.setStyle({display: 'none'})
+    //         // 把label设置到maker上
+    //         marker.setLabel(label)
+    //         this.map.addOverlay(marker)
+    //         // 添加点击事件
+    //         var sContent =
+    //           '<div>' +
+    //             '<p>' +
+    //               '<img style="float:left;margin:4px" src="' + data.contents[j].flag.big + '" width="40" height="40" title=""/>' +
+    //               '<span style="font-size:13px; font-weight:bold; color:#333333; line-height: 20px; margin-left: 5px;">' +
+    //                 data.contents[j].name +
+    //               '</span>' +
+    //             '</p>' +
+    //             '<p style="margin:0;line-height:1.5;font-size:13px;text-indent:2em">天安门坐落在中国北京市中心,故宫的南侧,与天安门广场隔长安街相望,是清朝皇城的大门...</p>' +
+    //           '</div>'
+    //         // sContent = ''
+    //         this.addClickHandler(sContent, marker)
+    //         // var infoWindow = new BMap.InfoWindow(sContent)
+    //         // var optsWin = {
+    //         //   width: 250, // 信息窗口宽度
+    //         //   height: 100, // 信息窗口高度
+    //         //   title: 'Hello', // 信息窗口标题
+    //         //   enableMessage: true, // 设置允许信息窗发送短息
+    //         //   // offset: {
+    //         //   //   width: -40,
+    //         //   //   height: -40
+    //         //   // },
+    //         //   message: '亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~'
+    //         // }
+    //         // var infoWindow = new BMap.InfoWindow(sContent, this.winOpts) // 创建信息窗口对象
+    //         // marker.addEventListener('click', (e) => {
+    //         //   console.log(e)
+    //         //   let curPoint = new BMap.Point(e.currentTarget.point['lng'], e.currentTarget.point['lat'])
+    //         //   this.map.openInfoWindow(infoWindow, curPoint) // 开启信息窗口
+    //         // })
+    //       }
+    //     }
+    //   })
+    // },
     addClickHandler (content, marker) {
       marker.addEventListener('click', (e) => {
         this.openInfo(content, e)
@@ -788,16 +399,17 @@ export default {
         }
       }
       var localSearch = new BMap.LocalSearch(this.map, options)
-      let swLng = this.map.getBounds().getSouthWest().lng
-      let swLat = this.map.getBounds().getSouthWest().lat
-      let neLng = this.map.getBounds().getNorthEast().lng
-      let neLat = this.map.getBounds().getNorthEast().lat
-      var b = new BMap.Bounds(new BMap.Point(swLng, swLat), new BMap.Point(neLng, neLat)) // 范围 左下角，右上角的点位置
-      localSearch.searchInBounds(key, b, {
-        customData: {
-          geotableId: 196965
-        }
-      })
+      // let swLng = this.map.getBounds().getSouthWest().lng
+      // let swLat = this.map.getBounds().getSouthWest().lat
+      // let neLng = this.map.getBounds().getNorthEast().lng
+      // let neLat = this.map.getBounds().getNorthEast().lat
+      // var b = new BMap.Bounds(new BMap.Point(swLng, swLat), new BMap.Point(neLng, neLat)) // 范围 左下角，右上角的点位置
+      // localSearch.searchInBounds(key, b, {
+      //   customData: {
+      //     geotableId: 196965
+      //   }
+      // })
+      localSearch.search('北京')
     },
     // 官方语言地图
     courseLangsMap () {
@@ -830,18 +442,83 @@ export default {
           '</div>'
         this.addMouseoverHandler(sContent, marker)
       })
+    },
+    // 删除覆盖物
+    removeMarks () {
+      this.map.clearOverlays()
+    },
+    // 加载语伴
+    loadPartner () {
+      // let partner = this.partnerList[this.partnerIndex]
+      this.partnerList.forEach(partner => {
+        this.setPartnerPoint(partner)
+      })
+    },
+    setPartnerPoint (item) {
+      // console.log(this.partnerIndex + ' , ' + this.partnerList.length)
+      // if (this.partnerIndex < this.partnerList.length) {
+      //   setTimeout(this.loadPartner, 400)
+      //   this.partnerIndex++
+      // }
+
+      // let capital = _.get(mapData.countryCaptial, item.country_name)
+      let point = {}
+      mapData.countryCaptial.forEach(countryItem => {
+        if (countryItem.country === item.country_name) {
+          point['lng'] = parseFloat(countryItem.lng)
+          point['lat'] = parseFloat(countryItem.lat)
+        }
+      })
+
+      let arr = [-1, 1]
+      let pt = new BMap.Point(point.lng + Math.random() * 10 * arr[parseInt(Math.random() * 2)], point.lat + Math.random() * 10 * arr[parseInt(Math.random() * 2)])
+      var myIcon = new BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/fox.gif', new BMap.Size(100, 100))
+
+      let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(0, 15)})
+      // let obj = this.langList.find((x) => {
+      //   return x.lan_code === lang.lang_code
+      // })
+      // let label = new BMap.Label(capital + ' ' + point.lng + ' , ' + point.lat, {offset: new BMap.Size(60, 15)}) // 创建marker点的标记
+
+      // 对label 样式隐藏
+      // label.setStyle({display: 'none'})
+      // 把label设置到maker上
+      // marker.setLabel(label)
+      this.map.addOverlay(marker)
+      // this.myGeo.getPoint(capital, (point) => {
+      //   if (point) {
+      //     console.log(Math.random())
+      //     let arr = [-1, 1]
+      //     let pt = new BMap.Point(point.lng + Math.random() * 10 * arr[parseInt(Math.random() * 2)], point.lat + Math.random() * 10 * arr[parseInt(Math.random() * 2)])
+      //     var myIcon = new BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/fox.gif', new BMap.Size(100, 100))
+
+      //     let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(0, 15)})
+      //     // let obj = this.langList.find((x) => {
+      //     //   return x.lan_code === lang.lang_code
+      //     // })
+      //     // let label = new BMap.Label(capital + ' ' + point.lng + ' , ' + point.lat, {offset: new BMap.Size(60, 15)}) // 创建marker点的标记
+
+      //     // 对label 样式隐藏
+      //     // label.setStyle({display: 'none'})
+      //     // 把label设置到maker上
+      //     // marker.setLabel(label)
+      //     this.map.addOverlay(marker)
+      //   } else {
+      //     console.log('您选择地址没有解析到结果! ' + capital)
+      //   }
+      // }, capital)
     }
   }
 }
 </script>
 
 <style>
-.baidumap {
-}
+/* .baidumap {
+} */
 
-.BMap_cpyCtrl {
+/*.BMap_cpyCtrl {
   display: none;
-}
+}*/
 .anchorBL{
   display: none;
 }
