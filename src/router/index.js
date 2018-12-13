@@ -65,8 +65,12 @@ export default[
         path: 'login',
         component: authLogin
       },
+      // {
+      //   path: 'register/:code',
+      //   component: authRegister
+      // },
       {
-        path: 'register/:code',
+        path: 'register',
         component: authRegister
       },
       {

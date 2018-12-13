@@ -14,6 +14,7 @@
             我的
         </router-link>
         <router-link tag="span"  :to="{ path: '/auth/register/' + langCode }" class='learn-login-right-tips-probation learn-login-right-tips-probation-modify' v-show="userInfo.is_anonymous">您是试用账号<span>去注册</span></router-link>
+        <!-- 课程列表 -->
         <transition name="fade">
           <section class='mycourse-wrap mycourse-loginout animated' v-show="navCourse">
             <img class='mycourse-wrap-arrow' src="../../../static/images/course/learn-big-arrow.png">
@@ -97,13 +98,13 @@ export default {
     this.$on('activeNavItem', (item) => {
       this.activeItem = item
     })
-    Bus.$on('changeCourseCode', (courseCode) => {
-      this.changeCourseCode(courseCode)
-    })
+    // Bus.$on('changeCourseCode', (courseCode) => {
+    //   this.changeCourseCode(courseCode)
+    // })
   },
   mounted () {
-    // console.log('====>', this.userInfo)
     this.getLearnCourses()
+    console.log('订阅课程======', this.learnCourses)
   },
   computed: {
     ...mapState({
@@ -136,6 +137,7 @@ export default {
         }
         this.learnCourse = _object
       } else {
+        console.log('learnCourse', this.learnCourse)
         this.learnCourse = newData
       }
     },
@@ -188,7 +190,7 @@ export default {
     changeCourseCode (courseCode) {
       localStorage.setItem('lastCourseCode', courseCode)
       this.updateCurCourseCode(courseCode)
-      this.$parent.$emit('changeCourseCode', courseCode)
+      Bus.$emit('changeCourseCode', courseCode)
     },
     jumpCourse () {
       this.$router.push({ path: '/app/course-list' })
@@ -612,6 +614,9 @@ export default {
   color: #003d5a;
   height: 14px;
   line-height: 14px;
+}
+.mycourse-container > section ul > li dl dd span:nth-child(1) {
+  margin-bottom: 6px;
 }
 .mycourse-container > section ul > li dl a dd span a {
   cursor: pointer;

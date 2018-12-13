@@ -76,7 +76,6 @@ const actions = {
       _.map(res.learn_courses, (course) => {
         if (course['course_type'] === 0) {
           dispatch('getUnlockChapter', course['code']).then((data) => {
-            // console.log(data)
             commit('updateLearnCourses', { course, data })
           })
         }
@@ -337,7 +336,7 @@ const mutations = {
     localStorage.setItem('currentCourseCode', state.currentCourseCode)
   },
   updateCourseInfo (state, data) {
-    console.log('updateCourseInfo', data)
+    // console.log('updateCourseInfo', data)
     state.courseBaseInfo = data.info.courseBaseInfo
     localStorage.setItem('courseBaseInfo', JSON.stringify(state.courseBaseInfo))
     state.learnInfo = data.info.learnInfo

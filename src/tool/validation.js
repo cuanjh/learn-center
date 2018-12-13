@@ -1,3 +1,4 @@
+// 验证手机号邮箱密码等
 export default {
   phoneNumber (number) {
     var phoneReg = /^((1[3-9]{1})+\d{9})$/

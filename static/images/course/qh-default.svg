@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="10px" viewBox="0 0 14 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>下拉切换学习语种@3x</title>
+    <desc>Created with Sketch.</desc>
+    <g id="课程_学习" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="课程学习列表" transform="translate(-608.000000, -120.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Oval-3" transform="translate(485.000000, 82.000000)">
+                <g id="下拉切换学习语种" transform="translate(122.000000, 33.000000)">
+                    <path d="M5.00438751,2.60628668 L12.6715323,10.2734315 C13.0620566,10.6639557 13.0620566,11.2971207 12.6715323,11.687645 C12.5039091,11.8552683 12.2821888,11.9578926 12.0459223,11.9772118 L3.69601586,12.6599735 C3.14556822,12.7049829 2.6628549,12.2952443 2.61784547,11.7447967 C2.61341027,11.690556 2.61341027,11.6360438 2.61784547,11.5818031 L3.30060712,3.23189668 C3.34561655,2.68144905 3.82832988,2.27171043 4.37877751,2.31671986 C4.61504403,2.33603909 4.83676427,2.43866345 5.00438751,2.60628668 Z" id="矩形" transform="translate(7.638902, 7.638917) rotate(-45.000000) translate(-7.638902, -7.638917) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

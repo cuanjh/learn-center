@@ -190,7 +190,7 @@ export default {
         for (let areaKey in this.allCourse) {
           this.allCourse[areaKey].forEach((element, index) => {
             for (let key in element.name) {
-              if (element.name[key].indexOf(this.searchCourse) !== -1) {
+              if (element.name[key].indexOf(this.searchCourse) !== -1) { // 如果要检索的字符串值没有出现，则该方法返回 -1。
                 list.push(element)
                 break
               }

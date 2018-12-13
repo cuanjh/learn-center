@@ -18,6 +18,7 @@ import learnHeader from './learnHeader.vue'
 import learnBottom from './learnBottom.vue'
 import PhotoUploader from '../common/user/photoUploader.vue'
 import Rocket from '../common/rocket.vue'
+import Bus from '../../bus'
 
 export default {
   data () {
@@ -32,7 +33,7 @@ export default {
     this.$on('navItem', (item) => {
       this.$refs.header.$emit('activeNavItem', item)
     })
-    this.$on('changeCourseCode', (courseCode) => {
+    Bus.$on('changeCourseCode', (courseCode) => {
       this.$router.push({ path: '/app/course-list' })
       this.$nextTick(() => {
         this.changeCourseCode(courseCode)

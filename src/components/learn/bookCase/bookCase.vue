@@ -75,7 +75,7 @@ export default {
     this.$parent.$emit('navItem', 'bookcase')
     // 书架首页接口 热门课程、中国方言地图
     this.bookCaseIndex().then(res => {
-      console.log(res)
+      console.log('课程列表', res)
       this.hotCourse = res.data.worldMapCourse.courses
       this.chinaLangMap = res.data.chinaMapCourse.courses
       this.langMapBanner = res.data.langMapBanner
