@@ -9,6 +9,11 @@
         <img :src="photo" alt="">
         <p v-text="nickname"></p>
         <p v-text="chapterDes"></p>
+        <div class="head-praise-count">
+          <p>
+            <span v-text="praiseCount"></span>
+          </p>
+        </div>
       </div>
       <div class="learn-myrecord" v-if="isShowMyRecord">
         <div class="title">
@@ -298,12 +303,42 @@ export default {
     color: #AFAFAF;
   }
 
+  .learn-record-header .head-praise-count {
+    width: 740px;
+    margin-top: 155px;
+    position: absolute;
+    text-align: center;
+  }
+
+  .learn-record-header .head-praise-count p{
+    display: inline-block;
+    width:78px;
+    height:30px;
+    line-height: 30px;
+    border-radius:15px;
+    border:1px solid #2A9FE4;
+    color: #2A9FE4;
+    font-size: 14px;
+  }
+
+  .head-praise-count p > span::before {
+    content: '';
+    width: 15px;
+    height: 13px;
+    display: inline-block;
+    margin-top: 9px;
+    margin-right: 6px;
+    background-image: url('../../../static/images/learnSystem/record-like-head.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
   .learn-no-myrecord {
     padding: 150px 25px 20px;
   }
 
   .learn-myrecord {
-    padding: 165px 25px 20px;
+    padding: 235px 25px 20px;
   }
 
   .title {
@@ -414,6 +449,7 @@ export default {
   .learn-partner-info > p {
     font-size: 14px;
     margin-top: 25px;
+    margin-left: 35px;
     width: 100%;
   }
 

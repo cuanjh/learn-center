@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="42px" viewBox="0 0 32 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>学习环境测试</title>
+    <desc>Created with Sketch.</desc>
+    <g id="课程_学习" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1200" transform="translate(-489.000000, -407.000000)">
+            <g id="Group-4" transform="translate(463.000000, 407.000000)">
+                <g id="学习环境测试" transform="translate(28.000000, 4.000000)">
+                    <path d="M0,24 L7,24 L7,29.5 C7,31.4329966 5.43299662,33 3.5,33 L3.5,33 C1.56700338,33 2.36723813e-16,31.4329966 0,29.5 L0,24 Z" id="矩形" fill="#87CDF5"></path>
+                    <polygon id="矩形" fill="#C8EAFD" points="0 10 7 10 7 23 0 23"></polygon>
+                    <polygon id="三角形" fill="#87CDF5" points="3.5 0 7 9 0 9"></polygon>
+                    <rect id="矩形" fill="#C8EAFD" x="9" y="0" width="20" height="34" rx="2"></rect>
+                    <rect id="矩形" fill="#87CDF5" x="12" y="5" width="14" height="3" rx="1.5"></rect>
+                    <rect id="矩形" fill="#87CDF5" x="12" y="10" width="14" height="3" rx="1.5"></rect>
+                    <rect id="矩形" fill="#87CDF5" x="12" y="15" width="14" height="3" rx="1.5"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

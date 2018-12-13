@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <div v-for="(item, index) in curLevelChapters" :key="index" :id="item.code">
+  <div class="course-list">
+    <div class="course-item" v-for="(item, index) in curLevelChapters" :key="index" :id="item.code">
       <div class="current-learn-course-info"
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
-          @click="jumpToCourse(item.code)">
+          @click="jumpToCourse(item.code)"  v-if="isShow ? currentChapterCode !== item.code : !isShow">
         <div class="current-learn-course-flag">
           <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'">
           <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1"></div>
@@ -30,11 +30,9 @@
         </div>
       </div>
       <!-- <transition name="fade" mode="out-in"> -->
-        <div :class="['course-item-detail',
-        {'show-course-item': isShow && item.code === currentChapterCode,
-        'hide-course-item': !(isShow && item.code === currentChapterCode)}]">
+        <div class="course-item-detail" v-if="isShow && currentChapterCode === item.code">
           <ul>
-            <!-- <li class="course-brief" @click="switchShow()">
+            <li class="course-brief">
               <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
               <div class="course-brief-shade">
                 <div class="course-brief-title">
@@ -51,15 +49,24 @@
                     {{ (item.progress ? item.progress : 0)+'%'}}
                   </div>
                 </div>
+                <div class="course-brief-shrink">
+                  <i class="shrink" @click="switchShow()"></i>
+                </div>
               </div>
-            </li> -->
+            </li>
             <li class="course-core">
               <div class="course-core-name">
                 <span>核心课程</span>
               </div>
               <div class="course-item-box" v-for="i in 5" :key="i">
                 <a href="javascript:void(0)" @click="startCore('A0' + i, coreData[i]['isActive'])" :to="{ name: 'stage', params: {id: 'A0' + i}}">
-                  <div class="course-item">
+                  <div class="current-course-item">
+                    <div class="course-item-icon">
+                      <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
+                      <div :class="'core' + i"></div>
+                      <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate'] && !coreData[i]['isActive']" class="icon-course-lock"></i>
+                    </div>
+                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] &&  !coreData[i]['isActive']}">核心{{i}}</p>
                     <p class="course-item-star" v-if="coreData[i]['isCompleted']">
                       <span class="course-yellow-star"><i v-for="index in coreData[i]['starNum']" :key="index"></i></span>
                       <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - coreData[i]['starNum'])" :key="index"></i></span>
@@ -67,12 +74,6 @@
                     <p class="course-item-progress" v-else>
                       <span v-text="coreData[i]['completedRate']"></span>
                     </p>
-                    <div class="course-item-icon">
-                      <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
-                      <div :class="'core' + i"></div>
-                      <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate'] && !coreData[i]['isActive']" class="icon-course-lock"></i>
-                    </div>
-                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] &&  !coreData[i]['isActive']}">核心{{i}}</p>
                     <div v-show="coreData[i]['completedRate'] && coreData[i]['completedRate'] !== '1'" class="continue-learn-core">
                       <span>继续学习</span>
                     </div>
@@ -90,20 +91,20 @@
               </div>
               <div class="course-item-box">
                 <a href="javascript:void(0);" @click="startTest(coreData['isCoreCompleted'])">
-                  <div class="course-item">
-                    <p class="course-item-star" v-show="coreData['isCoreCompleted'] && testData['isTestCompleted']">
-                      <span class="course-yellow-star"><i v-for="index in testData['starTestNum']" :key="index"></i></span>
-                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - testData['starTestNum'])" :key="index"></i></span>
-                    </p>
-                    <p class="course-item-progress" v-show="!testData['isTestCompleted']">
-                      <span v-show="coreData['isCoreCompleted'] && !testData['isTestCompleted']" v-text="testData['completedTestRate']"></span>
-                    </p>
+                  <div class="current-course-item">
                     <div class="course-item-icon">
                       <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
                       <div class="review-test"></div>
                       <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                     </div>
                     <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">测试</p>
+                     <p class="course-item-star" v-show="coreData['isCoreCompleted'] && testData['isTestCompleted']">
+                      <span class="course-yellow-star"><i v-for="index in testData['starTestNum']" :key="index"></i></span>
+                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - testData['starTestNum'])" :key="index"></i></span>
+                    </p>
+                    <p class="course-item-progress" v-show="!testData['isTestCompleted']">
+                      <span v-show="coreData['isCoreCompleted'] && !testData['isTestCompleted']" v-text="testData['completedTestRate']"></span>
+                    </p>
                     <div v-show="testData['completedTestRate'] && testData['completedTestRate'] !== '1'" class="continue-learn-test">
                       <span>继续学习</span>
                     </div>
@@ -113,9 +114,15 @@
                   <div class="course-review-circle" :class="{'course-review-circle-locked': !testData['isTestCompleted'] }" v-for="index in 3" :key="index"></div>
                 </div>
               </div>
-            <div class="course-item-box">
+            <div class="course-item-box" style="margin-left: -4px;">
               <a href="javascript:void(0)" @click="startHomework(coreData['isCoreCompleted'])">
-                <div class="course-item" style="margin-left:3px;">
+                <div class="current-course-item">
+                  <div class="course-item-icon">
+                    <canvas width="300" height="300" :id="item.code + '-canvas-A8'"></canvas>
+                    <div class="review-homework"></div>
+                    <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
+                  </div>
+                  <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">作业</p>
                   <p class="course-item-star"  v-show="coreData['isCoreCompleted']  && homeworkData['isHomeworkCompleted']">
                     <span class="course-yellow-star"><i v-for="index in homeworkData['starHomeworkNum']" :key="index"></i></span>
                     <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - homeworkData['starHomeworkNum'])" :key="index"></i></span>
@@ -123,12 +130,6 @@
                   <p class="course-item-progress" v-show="!homeworkData['isHomeworkCompleted']">
                     <span v-show="coreData['isCoreCompleted'] && !homeworkData['isHomeworkCompleted']" v-text="homeworkData['completedHomeworkRate']"></span>
                   </p>
-                  <div class="course-item-icon">
-                    <canvas width="300" height="300" :id="item.code + '-canvas-A8'"></canvas>
-                    <div class="review-homework"></div>
-                    <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
-                  </div>
-                  <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">作业</p>
                   <div v-show="homeworkData['completedHomeworkRate'] && homeworkData['completedHomeworkRate'] !== '1'" class="continue-learn-test">
                     <span>继续学习</span>
                   </div>
@@ -144,14 +145,8 @@
               </div>
               <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
                 <a href="javascript:void(0);" @click="jumpVipPage(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'], 'A' + (i + 1))">
-                  <div class="course-item">
-                    <p class="course-item-star" v-if="vipData['A' + (i + 1)]['isCompleted']">
-                      <span class="course-yellow-star"><i v-for="index in vipData['A' + (i + 1)]['starNum']" :key="index"></i></span>
-                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - vipData['A' + (i + 1)]['starNum'])" :key="index"></i></span>
-                    </p>
-                    <p class="course-item-progress" v-else>
-                      <span v-text="vipData['A' + (i + 1)]['completedRate']"></span>
-                    </p>
+                  <div class="current-course-item">
+
                     <div class="course-item-icon">
                       <canvas width="300" height="300" :id="item.code + '-canvas-A' + (i + 1)"></canvas>
                       <div :class="'vip'+ (i + 1)"></div>
@@ -160,7 +155,14 @@
                     <div v-show="vipData['A' + (i + 1)]['completedRate'] &&  vipData['A' + (i + 1)]['completedRate'] !== '1'" class="continue-learn-vip">
                       <span>继续学习</span>
                     </div>
-                    <p class="course-item-title" style="margin-left: 23px;" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
+                    <p class="course-item-title" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
+                    <p class="course-item-star" v-if="vipData['A' + (i + 1)]['isCompleted']">
+                      <span class="course-yellow-star"><i v-for="index in vipData['A' + (i + 1)]['starNum']" :key="index"></i></span>
+                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - vipData['A' + (i + 1)]['starNum'])" :key="index"></i></span>
+                    </p>
+                    <p class="course-item-progress" v-else>
+                      <span v-text="vipData['A' + (i + 1)]['completedRate']"></span>
+                    </p>
                   </div>
                 </a>
 
@@ -487,7 +489,7 @@ export default {
           this.isShow = !this.isShow
         } else {
           this.isShow = !this.isShow
-          let top = $('#' + chapterCode).offset().top - 90
+          let top = $('#' + chapterCode).offset().top - 138
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }
 
@@ -499,7 +501,7 @@ export default {
         }
         this.isShow = false
         setTimeout(() => {
-          let top = $('#' + chapterCode).offset().top - 90
+          let top = $('#' + chapterCode).offset().top - 138
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, time)
 
@@ -592,6 +594,9 @@ export default {
       }
     },
     draw (id, rate, color) {
+      if (rate === 1) {
+        return
+      }
       if (this.$el && this.$el.querySelector(id)) {
         rate = (rate === 1) ? 100 : rate
         let canvas = this.$el.querySelector(id)
@@ -609,7 +614,7 @@ export default {
       }
     },
     switchShow () {
-      this.isShow = true
+      this.isShow = false
     },
     goToRegister () {
       let langCode = this.userInfo['current_course_code'].split('-')[0]
@@ -620,28 +625,36 @@ export default {
 </script>
 
 <style scoped>
+  .course-list {
+    margin-top: 60px;
+    width: 890px;
+  }
+
+  .course-item {
+    background-color:#fff;
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 5px;
+  }
+
   .current-learn-course-info{
     cursor: pointer;
-    padding:15px;
-    background-color:#fff;
-    border-radius: 4px;
-    margin-top:15px;
     overflow:hidden;
+    /* -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -ms-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    border-radius: 5px 5px 0 0; */
+  }
+  /* .current-learn-course-info:hover {
+    box-shadow: 0 0 26px 0 rgba(0, 0, 0, 0.2);
     -webkit-transition: all .3s ease-in-out;
     -moz-transition: all .3s ease-in-out;
     -ms-transition: all .3s ease-in-out;
     -o-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
-    border-radius: 5px 5px 0 0;
-  }
-  .current-learn-course-info:hover {
-    box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
-    -webkit-transition: all .3s ease-in-out;
-    -moz-transition: all .3s ease-in-out;
-    -ms-transition: all .3s ease-in-out;
-    -o-transition: all .3s ease-in-out;
-    transition: all .3s ease-in-out;
-  }
+  } */
 
   .current-learn-course-disabled{
     cursor: not-allowed;
@@ -649,8 +662,8 @@ export default {
 
   .current-learn-course-flag{
     float:left;
-    width:213px;
-    height:100px;
+    width:168px;
+    height:80px;
     border-radius: 2.73px;
     overflow:hidden;
     position:relative;
@@ -725,7 +738,7 @@ export default {
     float: right;
     margin-right: 10px;
     display: inline-flex;
-    line-height: 100px;
+    line-height: 80px;
     width: 190px;
   }
 
@@ -761,15 +774,11 @@ export default {
   } */
 
   .course-item-detail {
-    height: 0;
-    background-color:#fff;
-    margin-top: 3px;
-    border-radius:4px;
-    overflow: hidden;
+
   }
 
-  .course-item-detail ul > li {
-    padding: 15px 15px 30px;
+  .course-item-detail ul > li:not(:first-child) {
+    padding: 24px 24px 0;
   }
 
   .show-course-item{
@@ -843,15 +852,15 @@ export default {
   .course-brief{
     position: relative;
     border-radius: 2.73px;
-    height: 322px;
+    height: 300px;
   }
 
   .course-brief img{
     position: absolute;
-    height: 322px;
+    height: 100%;
     width: 100%;
     object-fit: cover;
-    border-radius: 2.73px;
+    border-radius: 5px;
   }
 
   .course-brief-shade{
@@ -859,25 +868,25 @@ export default {
     height: 100%;
     width: 100%;
     background: rgba(0,0,0,0.40);
-    border-radius: 2.73px;
+    border-radius: 5px;
     z-index: 2;
   }
 
   .course-brief-title{
-    font-size: 48px;
+    font-size: 30px;
     color: #ffffff;
     line-height: 48px;
-    font-weight: bold;
-    padding-top: 55px;
-    padding-left: 80px;
+    font-weight: 500;
+    padding-top: 54px;
+    padding-left: 36px;
   }
 
   .course-brief-describe{
-    font-size: 24px;
+    font-size: 18px;
     color: #ffffff;
     line-height: 24px;
-    font-weight: bold;
-    margin: 17px 0 0 80px;
+    font-weight: 500;
+    margin: 2px 0 0 36px;
   }
 
   .course-brief-progress-title{
@@ -885,11 +894,11 @@ export default {
     color: #ffffff;
     line-height: 24px;
     font-weight: bold;
-    margin: 62px 0 0 80px;
+    margin: 62px 0 0 36px;
   }
 
   .course-brief-progress-area {
-    margin: 10px 0 0 80px;
+    margin: 10px 0 0 36px;
     display: inline-flex;
     line-height: 10px;
   }
@@ -916,6 +925,22 @@ export default {
     font-weight: bold;
   }
 
+  .course-brief-shrink {
+    background: red;
+    margin-top: 30px;
+  }
+
+  .course-brief-shrink .shrink {
+    width: 20px;
+    height: 20px;
+    float: right;
+    background-image: url('../../../../static/images/course/course-shrink.svg');
+    background-repeat: no-repeat;
+    object-fit: cover;
+    margin-right: 13px;
+    cursor: pointer;
+  }
+
   .course-core{
     width: 100%;
     border-bottom: 1px solid rgba(233,234,235,0.50);
@@ -923,18 +948,19 @@ export default {
   }
 
   .course-core-name{
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     color:#2a9fe4;
     display: inline-block;
     position: relative;
-    margin-top: 50px;
-    margin-right: 25px;
+    margin-left: 6px;
+    margin-top: 15px;
+    margin-right: 19px;
     vertical-align: top;
   }
 
   .course-circle-box{
-    display: inline-block;
+    display: none;
     position: relative;
     margin-top: 4px;
   }
@@ -961,23 +987,19 @@ export default {
 
   .course-item-box{
     display: inline-block;
-    position: relative;
-    vertical-align: top;
+    margin-right: 40px;
+    width: 70px;
+    height: 111px;
+    text-align: center;
   }
 
-  .course-item {
+  .current-course-item {
     position: relative;
     display: inline-block;
-    vertical-align: top;
     text-align: center;
-    margin-left: 8px;
-    height: 120px;
-    width: 75px;
   }
 
   .course-item-star{
-    margin-top: 8px;
-    height: 10px;
     display: inline-flex;
   }
   .course-item-star span{
@@ -985,6 +1007,7 @@ export default {
   }
 
   .course-item-progress {
+    display: none;
     height: 18px;
     width: 75px;
     font-size: 12px;
@@ -993,14 +1016,15 @@ export default {
   }
 
   .course-item-icon{
-    margin: 10px 0 0 5px;
-    position: absolute;
-    height:64px
+    width: 56px;
+    height: 56px;
+    margin: 0 auto;
+    /* position: absolute; */
   }
   .course-item-icon div{
     cursor: pointer;
-    width: 65px;
-    height: 65px;
+    width: 56px;
+    height: 56px;
     position: relative;
     border-radius: 50%;
     background-repeat: no-repeat;
@@ -1012,98 +1036,95 @@ export default {
   }
 
   .course-item-icon .core1{
-    background-image: url('../../../../static/images/course/course-core1.png');
+    background-image: url('../../../../static/images/course/course-core1.svg');
   }
 
   .course-item-icon .core2{
-    background-image: url('../../../../static/images/course/course-core2.png');
+    background-image: url('../../../../static/images/course/course-core2.svg');
   }
 
   .course-item-icon .core3{
-    background-image: url('../../../../static/images/course/course-core3.png');
+    background-image: url('../../../../static/images/course/course-core3.svg');
   }
 
   .course-item-icon .core4{
-    background-image: url('../../../../static/images/course/course-core4.png');
+    background-image: url('../../../../static/images/course/course-core4.svg');
   }
 
   .course-item-icon .core5{
-    background-image: url('../../../../static/images/course/course-core5.png');
+    background-image: url('../../../../static/images/course/course-core5.svg');
   }
 
   .course-item-icon .review-test {
-    background-image: url('../../../../static/images/course/course-review-test.png')
+    background-image: url('../../../../static/images/course/course-review-test.svg')
   }
 
   .course-item-icon .review-homework {
-    background-image: url('../../../../static/images/course/course-review-homework.png')
+    background-image: url('../../../../static/images/course/course-review-homework.svg')
   }
 
   .course-item-icon .vip1 {
-    background-image: url('../../../../static/images/course/course-vip-listen.png')
+    background-image: url('../../../../static/images/course/course-vip-listen.svg')
   }
   .course-item-icon .vip2 {
-    background-image: url('../../../../static/images/course/course-vip-oral.png')
+    background-image: url('../../../../static/images/course/course-vip-oral.svg')
   }
   .course-item-icon .vip3 {
-    background-image: url('../../../../static/images/course/course-vip-reading.png')
+    background-image: url('../../../../static/images/course/course-vip-reading.svg')
   }
   .course-item-icon .vip4 {
-    background-image: url('../../../../static/images/course/course-vip-writing.png')
+    background-image: url('../../../../static/images/course/course-vip-writing.svg')
   }
   .course-item-icon .vip5 {
-    background-image: url('../../../../static/images/course/course-vip-grammar.png')
+    background-image: url('../../../../static/images/course/course-vip-grammar.svg')
   }
   .course-item-icon .vip6 {
-    background-image: url('../../../../static/images/course/course-vip-speaking.png')
+    background-image: url('../../../../static/images/course/course-vip-speaking.svg')
   }
 
   .course-item-icon .core-canvas {
     width: 64px;
     height: 64px;
-    background-color: red;
     position: absolute;
     z-index: -1;
   }
 
   .icon-course-lock {
-    background-image: url('../../../../static/images/course/icon-course-lock.png');
+    background-image: url('../../../../static/images/course/icon-course-lock.svg');
     background-repeat: no-repeat;
     background-size: cover;
     height: 25px;
     width: 25px;
     display: inline-block;
-    margin-top: -30px;
-    margin-left: 40px;
+    margin-top: -21px;
+    margin-left: 39px;
     position: relative;
   }
 
   .icon-review-lock {
-    background-image: url('../../../../static/images/course/icon-review-lock.png');
+    background-image: url('../../../../static/images/course/icon-review-lock.svg');
     background-repeat: no-repeat;
     background-size: cover;
     height: 25px;
     width: 25px;
     display: inline-block;
-    margin-top: -30px;
-    margin-left: 40px;
+    margin-top: -21px;
+    margin-left: 39px;
     position: relative;
   }
 
   .icon-vip-lock {
-    background-image: url('../../../../static/images/course/icon-vip-lock.png');
+    background-image: url('../../../../static/images/course/icon-vip-lock.svg');
     background-repeat: no-repeat;
     background-size: cover;
     height: 25px;
     width: 25px;
     display: inline-block;
-    margin-top: -30px;
-    margin-left: 40px;
+    margin-top: -21px;
+    margin-left: 39px;
     position: relative;
   }
   .course-item-title{
-    position: absolute;
-    margin: 90px 0 0 20px;
     line-height: 30px;
     font-size: 14px;
     color: #444444;
@@ -1118,7 +1139,7 @@ export default {
     float:left;
     width:10px;
     height:10px;
-    margin-left:4px;
+    margin:0 2px;
     background:url(../../../../static/images/course/course-yellow-star.png) no-repeat;
     background-size:100% 100%;
   }
@@ -1137,8 +1158,8 @@ export default {
     color: #7FB926;
     display: inline-block;
     position: relative;
-    margin-right: 18px;
-    margin-top: 50px;
+    margin-right: 13px;
+    margin-top: 15px;
     vertical-align: top;
   }
 
@@ -1177,7 +1198,7 @@ export default {
     vertical-align: top;
     height: 80px;
     line-height: 20px;
-    margin: 40px 15px 0 0;
+    margin: 10px 12px 0 0;
   }
 
   .course-vip-name p{
@@ -1267,16 +1288,17 @@ export default {
   }
 
   canvas {
-    width: 95px;
-    height: 95px;
+    width: 84px;
+    height: 84px;
     position: absolute;
     display: block;
-    margin-left: -12px;
-    margin-top: -17px;
+    margin-left: -11px;
+    margin-top: -16px;
     z-index: 1;
   }
 
   .continue-learn-vip {
+    display: none;
     width: 84px;
     height: 34px;
     background-image: url('../../../../static/images/course/continue-learn-vip.png');
@@ -1294,6 +1316,7 @@ export default {
   }
 
   .continue-learn-test {
+    display: none;
     width: 84px;
     height: 34px;
     background-image: url('../../../../static/images/course/continue-learn-test.png');
@@ -1311,6 +1334,7 @@ export default {
   }
 
   .continue-learn-core {
+    display: none;
     width: 84px;
     height: 34px;
     background-image: url('../../../../static/images/course/continue-learn-core.png');
@@ -1325,5 +1349,28 @@ export default {
     color: #fff;
     font-size: 12px;
     font-weight: bold;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .course-list {
+      width: 715px;
+      /*margin-left: 242px; */
+    }
+
+    .course-item-box {
+      margin-right: 21px;
+    }
+
+    .course-brief {
+      height: 260px;
+    }
+
+    .course-brief-title {
+      padding-top: 20px;
+    }
+
+    .course-brief-progress-title {
+      margin-top: 55px;
+    }
   }
 </style>

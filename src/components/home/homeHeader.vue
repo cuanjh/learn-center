@@ -4,11 +4,13 @@
     height: 80px;
     background-color: #299fe4;
   }
+
   .home-head .content {
     width: 1200px;
     margin: 0px auto;
     overflow: hidden;
   }
+
   .home-head .content h1 {
     float: left;
     width: 244px;
@@ -36,6 +38,12 @@
     line-height: 80px;
     font-weight: 600;
     color: #fff;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .home-head .content {
+      width: 960px;
+    }
   }
 </style>
 <template>

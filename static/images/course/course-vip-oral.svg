@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>口语@0.5x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M1.08612295,14.1833452 L26.2194326,14.1833452 C26.7349049,14.1833452 27.1527778,14.601218 27.1527778,15.1166903 L27.1527778,15.1166903 C27.1527778,15.6321626 26.7349049,16.0500355 26.2194326,16.0500355 L1.08612295,16.0500355 C0.570650644,16.0500355 0.152777778,15.6321626 0.152777778,15.1166903 L0.152777778,15.1166903 C0.152777778,14.601218 0.570650644,14.1833452 1.08612295,14.1833452 Z" id="path-1"></path>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="口语">
+            <rect id="Mask" fill="#FFF5E3" x="0" y="0" width="56" height="56" rx="28"></rect>
+            <g transform="translate(14.000000, 12.000000)">
+                <polygon id="Rectangle-15" fill="#F5A623" points="13.5 27 15.5 27 16.5 31.8651634 12.5 31.8651634"></polygon>
+                <rect id="Rectangle-15-Copy" fill="#F5A623" transform="translate(14.164003, 31.550000) rotate(-90.000000) translate(-14.164003, -31.550000) " x="13.4791667" y="24.9" width="1.3696733" height="13.3" rx="0.684836648"></rect>
+                <g id="Rectangle-34">
+                    <g transform="translate(0.793857, 0.000000)">
+                        <rect id="Mask" fill="#FFFFFF" x="6" y="0" width="15.3055556" height="23" rx="7.65277778"></rect>
+                        <path d="M6,15 L21.3055556,15 L21.3055556,15.3472222 C21.3055556,19.5737347 17.8792902,23 13.6527778,23 L13.6527778,23 C9.42626532,23 6,19.5737347 6,15.3472222 L6,15 Z" id="Mask" fill="#F5A623"></path>
+                        <path d="M24.1527778,11.5 L24.1527778,15.7333807 C24.1527778,21.5323706 19.4517677,26.2333807 13.6527778,26.2333807 C7.8537879,26.2333807 3.15277778,21.5323706 3.15277778,15.7333807 L3.15277778,11" id="Mask" stroke="#F5A623" stroke-width="2.01099992" stroke-linecap="round"></path>
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Mask" fill="#F5A623" xlink:href="#path-1"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

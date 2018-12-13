@@ -1,15 +1,13 @@
 <template>
   <div class="current-course">
-    <left-side
-      :user-info="userInfo"
+    <left-side />
+    <level-tabs
+      :levelDetail="levelDetail"
+      :levelNum="levelNum"
+      :curLevel="curLevel"
+      @selLevel="selLevel"
     />
-    <div class="course-list">
-      <level-tabs
-        :levelDetail="levelDetail"
-        :levelNum="levelNum"
-        :curLevel="curLevel"
-        @selLevel="selLevel"
-      />
+    <div class="course-content">
       <transition name="fade">
         <chapter-item
           :currentCourseCode="currentCourseCode"
@@ -114,7 +112,7 @@ export default {
 
         setTimeout(() => {
           this.$refs['chapterItem'].$emit('changeIsShow', true)
-          let top = $('#' + chapterCode).offset().top - 90
+          let top = $('#' + chapterCode).offset().top - 138
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, 0)
         // $('body,html').scrollTop(top)
@@ -136,7 +134,7 @@ export default {
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)
 
-      let top = $('#' + this.currentChapterCode).offset().top - 90
+      let top = $('#' + this.currentChapterCode).offset().top - 138
       $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
       // this.hideLoading()
@@ -157,14 +155,12 @@ export default {
 .current-course {
   width: 1200px;
   margin: 0 auto;
-  padding-top: 20px;
   padding-bottom: 40px;
 }
 
-.course-list {
-  min-width: 879px;
+.course-content {
   display: inline-block;
-  margin-left: 20px;
+  margin-left: 290px;
   vertical-align: top;
 }
 
@@ -182,5 +178,14 @@ export default {
 .fade-enter, .fade-leave-to {
   transform: translateY(-10px);
   opacity: 0;
+}
+@media screen and (max-width: 1024px) {
+  .current-course {
+    width: 960px;
+  }
+
+  .course-content {
+    margin-left: 255px;
+  }
 }
 </style>

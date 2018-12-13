@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>绿色锁 @2x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="14" cy="12" r="9"></circle>
+        <filter x="-47.2%" y="-36.1%" width="194.4%" height="194.4%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.81273977   0 0 0 0 0.88627451   0 0 0 0 0.741176471  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="课程_学习" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="960版" transform="translate(-1069.000000, -591.000000)">
+            <g id="课程展开" transform="translate(703.000000, 120.000000)">
+                <g transform="translate(12.000000, 298.000000)" id="绿色锁-">
+                    <g transform="translate(354.000000, 173.000000)">
+                        <g id="Oval-7">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        </g>
+                        <g id="锁--copy" transform="translate(10.000000, 7.000000)">
+                            <path d="M3.53246753,6.63274065 L3.53246753,8.01499098 C3.53246753,8.27320203 3.74178895,8.48252344 4,8.48252344 C4.25821105,8.48252344 4.46753247,8.27320203 4.46753247,8.01499098 L4.46753247,6.63117585 C4.61050934,6.50007578 4.70044262,6.30985805 4.70044262,6.09819157 C4.70044262,5.70269354 4.3864605,5.38207904 3.99914392,5.38207904 C3.61182734,5.38207904 3.29784522,5.70269354 3.29784522,6.09819157 C3.29784522,6.3107017 3.38849684,6.50159178 3.53246753,6.63274065 Z M1.21455697,4.18584825 L6.78544303,4.18584825 C7.31277374,4.18584825 7.74025974,4.61333425 7.74025974,5.14066496 L7.74025974,8.48252344 C7.74025974,9.00985415 7.31277374,9.43734015 6.78544303,9.43734015 L1.21455697,9.43734015 C0.687226262,9.43734015 0.25974026,9.00985415 0.25974026,8.48252344 L0.25974026,5.14066496 C0.25974026,4.61333425 0.687226262,4.18584825 1.21455697,4.18584825 Z" id="Combined-Shape" fill="#7FB926"></path>
+                            <path d="M1.66233766,5.14066496 L1.66233766,2.75362319 C1.66233766,1.43529642 2.70894474,0.366581415 4,0.366581415 C5.29105526,0.366581415 6.33766234,1.43529642 6.33766234,2.75362319 L6.33766234,5.14066496" id="Rectangle-2-Copy" stroke="#7FB926" stroke-width="0.954816709"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

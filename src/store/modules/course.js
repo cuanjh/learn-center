@@ -23,12 +23,12 @@ const state = {
   levelNum: 6,
   levelDetail: [],
   levelDes: {
-    'Level1': '初级A1',
-    'Level2': '初级A2',
-    'Level3': '中级B1',
-    'Level4': '中级B2',
-    'Level5': '高级C1',
-    'Level6': '高级C1'
+    'Level1': '初级 A1',
+    'Level2': '初级 A2',
+    'Level3': '中级 B1',
+    'Level4': '中级 B2',
+    'Level5': '高级 C1',
+    'Level6': '高级 C1'
   },
   chapterDes: '',
   contentUrl: '',
@@ -59,7 +59,9 @@ const state = {
   chapterTestResult: {}, // 记录用户的课程测试结果
   historyCourseRecord: {}, // 记录课程的历史数据
   feedInfos: [], // 动态列表
-  radioRewardList: []
+  radioRewardList: [],
+  courseLangs: {}, // 官方课程
+  partnerList: {} // 语伴列表
 }
 
 const actions = {
@@ -74,7 +76,6 @@ const actions = {
       _.map(res.learn_courses, (course) => {
         if (course['course_type'] === 0) {
           dispatch('getUnlockChapter', course['code']).then((data) => {
-            // console.log(data)
             commit('updateLearnCourses', { course, data })
           })
         }
@@ -286,7 +287,28 @@ const actions = {
   },
   searchList ({ commit }, params) {
     return httpLogin(config.searchList, params)
+  },
+  // 获取所有的课程语言
+  getCourseListV2 ({commit}) {
+    return httpLogin(config.courseList_v2).then(res => {
+      commit('updateCourseLangs', res.course_langs)
+    })
+  },
+  // 语伴列表接口
+  getPartnerList ({commit}) {
+    let pageTime = new Date().getTime()
+    return httpLogin(config.partnerListApi, {page_time: pageTime, page_size: 100}).then((res) => {
+      commit('updatePartnerList', res.partners.userInfos)
+    })
+  },
+  // 语伴搜索
+  searchPartnerList ({commit}) {
+    let pageTime = new Date().getTime()
+    return httpLogin(config.partnerSearchApi, {page_time: pageTime}).then((res) => {
+      commit('updatePartnerList', res.partners.partnersInfo)
+    })
   }
+
 }
 
 const mutations = {
@@ -314,7 +336,7 @@ const mutations = {
     localStorage.setItem('currentCourseCode', state.currentCourseCode)
   },
   updateCourseInfo (state, data) {
-    console.log('updateCourseInfo', data)
+    // console.log('updateCourseInfo', data)
     state.courseBaseInfo = data.info.courseBaseInfo
     localStorage.setItem('courseBaseInfo', JSON.stringify(state.courseBaseInfo))
     state.learnInfo = data.info.learnInfo
@@ -644,6 +666,14 @@ const mutations = {
   updateRadioDynamic (state, data) {
     state.feedInfos = data
     console.log('动态列表=>', state.feedInfos)
+  },
+  // 更新官方语言
+  updateCourseLangs (state, data) {
+    state.courseLangs = data
+  },
+  // 更新语伴列表
+  updatePartnerList (state, data) {
+    state.partnerList = data
   }
 }
 

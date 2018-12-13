@@ -15,6 +15,7 @@
         <div class="letter">
           <a
             @click="scrollPosition(item.letter)"
+            v-show="item.list.length"
             :class="['letter_list', { 'active': activeLetter == item.letter, 'locked': item.list.length === 0 }]"
             v-for="(item , index) in groupCourseLangs"
             :key="index">
@@ -219,28 +220,34 @@ export default {
     border-bottom: 1px solid #EBEBEB;
   }
   .hot-container .hot-letter .letter {
-    width: 880px;
+    width: 100%;
     height: 65px;
-    display: flex;
-    justify-content: space-between;
-    margin-left: 20px;
+    float: left;
+    margin-left: 12px;
   }
   .active {
-    height: 35px;
+    height: 28px;
     background: #0581D1;
     color: #ffffff !important;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, .3);
-    border-radius: 3px;
+    border-radius: 18px;
   }
   .hot-container .hot-letter .letter .letter_list {
     display: inline-block;
-    padding: 0 8px;
+    width: 28px;
+    height: 28px;
+    margin-right: 10px;
+    /* padding: 0 12px; */
     font-size: 16px;
     color: #2A9FE4;
     font-weight: bold;
     text-align: center;
-    height: 35px;
-    line-height: 35px;
+    height: 28px;
+    line-height: 28px;
+  }
+  .hot-container .hot-letter .letter .letter_list:nth-child(1) {
+    width: 54px;
+    height: 28px;
   }
   .hot-container .hot-scroll {
     width: 1150px;
@@ -292,7 +299,7 @@ export default {
   .hot-container .hot-content .hot-list ul li .hot-img img{
     width: 100%;
     height: 100%;
-    border-radius: 4px;
+    border-radius: 6px;
     object-fit: cover;
   }
   .hot-container .hot-content .hot-list ul li .hot-title {

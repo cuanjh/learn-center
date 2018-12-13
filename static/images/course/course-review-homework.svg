@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>作业@1x</title>
+    <desc>Created with Sketch.</desc>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="作业">
+            <circle id="Oval-8" fill="#E2F5B3" cx="28" cy="28" r="28"></circle>
+            <g transform="translate(14.000000, 14.000000)">
+                <path d="M3.26555803,17.3169938 C5.54079441,17.8307803 7.11310013,18.3077431 7.98247519,18.7478822 C9.28653777,19.4080909 -1.07587612,20.8369617 0.725679562,21.9673812 C1.75994901,22.6163527 22.7587552,22.1644256 26.8501438,23.2194086 C29.8640695,23.9965629 25.7518853,25.9640345 14.5135912,29.1218233" id="Line-3" stroke="#7FB926" stroke-width="0.999350649" stroke-linecap="round"></path>
+                <path d="M11.5969501,0 L18.4832931,2.22044605e-16 C19.5871453,1.92702368e-17 20.4819944,0.894849052 20.4819944,1.9987013 C20.4819944,2.00467623 20.4819676,2.01065113 20.481914,2.01662583 L20.3190277,20.1787707 L9.43383431,20.1787707 L9.59703053,1.98206383 C9.60687364,0.884536582 10.4993787,-1.57473625e-15 11.5969501,-1.77635684e-15 Z" id="Rectangle-5" fill="#7FB926"></path>
+                <polygon id="Rectangle-5-Copy" fill="#FFFFFF" points="9.43383431 20.1787707 20.3190277 20.1787707 14.876431 29.4795455 12.4055175 25.257037"></polygon>
+                <polygon id="Rectangle-5-Copy" fill="#426300" points="11.610873 23.7559917 17.4163095 25.1868802 14.876431 29.4795455 12.3365526 25.161204"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

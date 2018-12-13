@@ -15,6 +15,7 @@
         <div class="letter">
           <a
             @click="scrollPosition(item.letter)"
+            v-show="item.list.length"
             :class="['letter_list', { 'active': activeLetter == item.letter, 'locked': item.list.length === 0 }]"
             v-for="(item , index) in groupCourseLangs"
             :key="index">
@@ -203,8 +204,8 @@ export default {
     width: 880px;
     height: 65px;
     display: flex;
-    justify-content: space-between;
-    margin-left: 20px;
+    /* justify-content: space-between; */
+    margin-left: 10px;
   }
   .active {
     height: 35px;
@@ -215,6 +216,7 @@ export default {
   }
   .china-lang-container .hot-letter .letter .letter_list {
     display: inline-block;
+    margin-right: 20px;
     padding: 0 8px;
     font-size: 16px;
     color: #2A9FE4;

@@ -105,6 +105,21 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+/* eslint-disable */
+router.afterEach((to, from, next) => {
+  setTimeout(() => {
+    var _hmt = _hmt || [];
+    (function() {
+      // 每次执行前，先移除上次插入的代码
+      document.getElementById('baidu_tj') && document.getElementById('baidu_tj').remove();
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?63f5cae7e57f0bf60c94cc92a03d2ed3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })()
+  }, 0)
+})
+
 Vue.config.lang = 'cn'
 
 const i18n = new VueI18n({

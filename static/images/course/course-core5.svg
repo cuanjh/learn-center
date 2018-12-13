@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>核心5</title>
+    <desc>Created with Sketch.</desc>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="核心5">
+            <circle id="Oval-13" fill="#DBF2FF" cx="28" cy="28" r="28"></circle>
+            <g id="课程5" transform="translate(18.000000, 14.000000)">
+                <path d="M1.78125,0 L19.21875,0 C20.2025072,-1.80713268e-16 21,0.797492789 21,1.78125 L21,26.21875 C21,27.2025072 20.2025072,28 19.21875,28 L1.78125,28 C0.797492789,28 1.20475512e-16,27.2025072 0,26.21875 L0,1.78125 C-1.20475512e-16,0.797492789 0.797492789,1.80713268e-16 1.78125,0 Z" id="Rectangle-3" fill="#2A9FE4"></path>
+                <g id="Group-20" transform="translate(2.000000, 4.000000)">
+                    <path d="M0.916666667,0 L16.0833333,0 C16.5895944,-9.29986408e-17 17,0.410405646 17,0.916666667 L17,21.0833333 C17,21.5895944 16.5895944,22 16.0833333,22 L0.916666667,22 C0.410405646,22 -6.04134721e-16,21.5895944 -6.66133815e-16,21.0833333 L0,0.916666667 C-6.19990939e-17,0.410405646 0.410405646,1.31424397e-15 0.916666667,1.22124533e-15 Z" id="Rectangle-3" fill="#FFFFFF"></path>
+                    <rect id="Rectangle-20" fill="#E9F9FF" x="1" y="2" width="15" height="2"></rect>
+                    <rect id="Rectangle-20" fill="#E9F9FF" x="1" y="18" width="15" height="2"></rect>
+                </g>
+                <path d="M6.5,1 L14.40625,1 C14.6823924,1 14.90625,1.22385763 14.90625,1.5 L14.90625,1.5 C14.90625,1.77614237 14.6823924,2 14.40625,2 L6.5,2 C6.22385763,2 6,1.77614237 6,1.5 L6,1.5 C6,1.22385763 6.22385763,1 6.5,1 Z" id="Rectangle-4-Copy" fill="#07669D"></path>
+                <text id="V" font-family="Arial-Black, Arial Black" font-size="14" font-weight="700" line-spacing="14.25" fill="#C7EAFF">
+                    <tspan x="5" y="23.03125">V</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

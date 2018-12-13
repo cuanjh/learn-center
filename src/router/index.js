@@ -8,11 +8,13 @@ const authResetEmail = r => require.ensure([], () => r(require('@/components/use
 const selectLang = r => require.ensure([], () => r(require('@/components/userAuth/userSelectLang.vue')), 'select-lang')
 // 学习
 const learn = r => require.ensure([], () => r(require('@/components/learn/learn.vue')), 'learn')
+const learnIndex = r => require.ensure([], () => r(require('@/components/learn/home/index.vue')), 'learn-index')
 const courseList = r => require.ensure([], () => r(require('@/components/learn/course/courseList.vue')), 'course-list')
 const bookCase = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCase.vue')), 'book-case')
 const bookCaseDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookCaseDetails.vue')), 'book-case-details')
 const hotCourses = r => require.ensure([], () => r(require('@/components/learn/bookCase/hotCourses.vue')), 'hot-courses')
 const worldMap = r => require.ensure([], () => r(require('@/components/learn/bookCase/worldMap.vue')), 'world-map')
+const worldLangMap = r => require.ensure([], () => r(require('@/components/learn/bookCase/worldLangMap.vue')), 'world-lang-map')
 const chinaLangMap = r => require.ensure([], () => r(require('@/components/learn/bookCase/chinaLangMap.vue')), 'china-lang-map')
 const nationDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/nationDetails.vue')), 'nation-details')
 const gradeLevelShow = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelShow.vue')), 'grade-level-show')
@@ -63,8 +65,12 @@ export default[
         path: 'login',
         component: authLogin
       },
+      // {
+      //   path: 'register/:code',
+      //   component: authRegister
+      // },
       {
-        path: 'register/:code',
+        path: 'register',
         component: authRegister
       },
       {
@@ -101,6 +107,10 @@ export default[
         component: courseList
       },
       {
+        path: 'index',
+        component: learnIndex
+      },
+      {
         path: 'book-case',
         component: bookCase
       },
@@ -115,6 +125,10 @@ export default[
       {
         path: 'world-map',
         component: worldMap
+      },
+      {
+        path: 'world-lang-map',
+        component: worldLangMap
       },
       {
         path: 'china-lang-map',

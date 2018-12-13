@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="20px" viewBox="0 0 12 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>安全-小</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="27.4121094%" x2="50%" y2="84.21875%" id="linearGradient-1">
+            <stop stop-color="#53CDF3" offset="0%"></stop>
+            <stop stop-color="#00588C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-455.000000, -995.000000)" fill="url(#linearGradient-1)">
+            <path d="M461,1015 C465,1007.77415 467,1003.07474 467,1000.90177 C467,997.642311 464.313708,995 461,995 C457.686292,995 455,997.642311 455,1000.90177 C455,1003.07474 457,1007.77415 461,1015 Z" id="安全-小"></path>
+        </g>
+    </g>
+</svg>

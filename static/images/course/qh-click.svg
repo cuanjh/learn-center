@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="10px" viewBox="0 0 14 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>点击矩形</title>
+    <desc>Created with Sketch.</desc>
+    <g id="课程_学习" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.5">
+        <g id="课程学习-选择多语种" transform="translate(-518.000000, -120.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Oval-3" transform="translate(370.000000, 82.000000)">
+                <path d="M152.004388,35.6062867 L159.671532,43.2734315 C160.062057,43.6639557 160.062057,44.2971207 159.671532,44.687645 C159.503909,44.8552683 159.282189,44.9578926 159.045922,44.9772118 L150.696016,45.6599735 C150.145568,45.7049829 149.662855,45.2952443 149.617845,44.7447967 C149.61341,44.690556 149.61341,44.6360438 149.617845,44.5818031 L150.300607,36.2318967 C150.345617,35.681449 150.82833,35.2717104 151.378778,35.3167199 C151.615044,35.3360391 151.836764,35.4386634 152.004388,35.6062867 Z" id="点击矩形" transform="translate(154.638902, 40.638917) rotate(-45.000000) translate(-154.638902, -40.638917) "></path>
+            </g>
+        </g>
+    </g>
+</svg>
