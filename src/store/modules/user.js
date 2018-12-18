@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 import { httpLogin, httpNoLogin, httpLoginUrl } from '../../api/api'
 import config from '../../api/config'
 import * as useMethod from './userMethod'

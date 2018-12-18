@@ -5,6 +5,7 @@
  * 4:一带一路语言
  * 5:语伴
  */
+/* jshint esversion: 6 */
 const courseLangMap = [
   // 欧洲
   { lang_code: 'SER', lon: 20.479038, lat: 44.781025, type: ',1,2,' },

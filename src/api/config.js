@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 export default {
   // apiUrl: 'http://api.200h.com:81',
   URL: {

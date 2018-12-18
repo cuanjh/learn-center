@@ -188,9 +188,6 @@ export default {
   z-index: 9;
 }
 
-.lang-overview{
-}
-
 .lang-overview dl{
   padding: 30px 0px 0 20px;
   height: 170px;
@@ -409,6 +406,7 @@ export default {
   -o-filter: grayscale(0%) !important;
   filter: grayscale(0%) !important;
   filter: white !important;
+  transform:scale(1.2);
   -webkit-transform:scale(1.2);
 }
 

@@ -223,7 +223,9 @@ export default {
     // 电台列表
     _this.getRadioAuthorList({ partner_user_id: _this.userId, page: _this.page }).then((data) => {
       console.log('电台列表', data)
-      _this.radios = data.data.radios
+      if (data.data.radios) {
+        _this.radios = data.data.radios
+      }
     })
     // 动态列表
     _this.getRadioAuthorDynamic({ partner_user_id: _this.userId, page: _this.page, has_homework: 'Y' })

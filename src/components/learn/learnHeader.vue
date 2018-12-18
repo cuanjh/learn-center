@@ -686,6 +686,7 @@ export default {
   -o-filter: grayscale(0%) !important;
   filter: grayscale(0%) !important;
   filter: white !important;
+  transform:scale(1.2);
   -webkit-transform:scale(1.2);
 }
 

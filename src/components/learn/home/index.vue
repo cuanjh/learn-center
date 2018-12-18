@@ -19,14 +19,20 @@
       </div>
     </div>
     <my-course />
+    <my-radio />
+    <my-partner />
+    <recommend-topic />
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 import BMap from '../../common/map.vue'
-import MyCourse from './myCourse.vue'
 import Bus from '../../../bus'
+import MyCourse from './myCourse.vue'
+import MyRadio from './myRadio.vue'
+import MyPartner from './myPartner.vue'
+import RecommendTopic from './recommendTopic.vue'
 
 export default {
   data () {
@@ -37,7 +43,10 @@ export default {
   },
   components: {
     BMap,
-    MyCourse
+    MyCourse,
+    MyRadio,
+    MyPartner,
+    RecommendTopic
   },
   created () {
     this.initData()
@@ -88,6 +97,7 @@ export default {
 <style scoped>
   .learn-index {
     margin: -13px 0 100px 0;
+    background-color: #F6F8F9;
   }
 
   .b-map {

@@ -8,7 +8,7 @@
         </p>
         <img :src="photo" alt="">
         <p v-text="nickname"></p>
-        <p v-text="chapterDes"></p>
+        <p v-text="chapterDes.join('·')"></p>
         <div class="head-praise-count">
           <p>
             <span v-text="praiseCount"></span>
