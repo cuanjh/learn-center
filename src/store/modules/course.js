@@ -61,7 +61,45 @@ const state = {
   feedInfos: [], // 动态列表
   radioRewardList: [],
   courseLangs: {}, // 官方课程
-  partnerList: {} // 语伴列表
+  partnerList: {}, // 语伴列表
+  courseDetails: {}, // 课程详情
+  courseInfo: {}, // 课程介绍
+  resourceInfoRadios: [], // 课程详情的电台
+  langInfoObj: { // 目前只显示这几项 info为空代表后端没有这个信息
+    'AlternateNames': {
+      title: '别称',
+      info: ''
+    },
+    'ISO_639_3': {
+      title: 'ISO 639-3',
+      info: ''
+    },
+    'Population': {
+      title: '使用人口',
+      info: ''
+    },
+    'Location': {
+      title: '使用地区',
+      info: ''
+    },
+    'Dialects': {
+      title: '方言',
+      info: ''
+    },
+    'LanguageUse': {
+      title: '使用范围',
+      info: ''
+    },
+    'LanguageDevelopment': {
+      title: '语言发展情况',
+      info: ''
+    },
+    'LanguageResources': {
+      title: 'OLAC资源',
+      info: ''
+    }
+  },
+  countrysInfo: [] // 课程详情的国家
 }
 
 const actions = {
@@ -173,8 +211,17 @@ const actions = {
     return httpLogin(config.bookCaseIndex)
   },
   // 语言课程信息接口
-  langInfo ({ commit }, params) {
-    return httpLogin(config.langInfo, params)
+  langInfo ({ commit, dispatch }, params) {
+    return httpLogin(config.langInfo, params).then((res) => {
+      // courseDetails
+      commit('updateCourseDetails', res)
+      res.countryInfo.forEach(item => {
+        dispatch('countryInfo', {code: item.code}).then((res) => {
+          item.countryInfos = res
+        })
+      })
+    })
+    // return httpLogin(config.langInfo, params)
   },
   // 获取课程资源列表
   getShelfResList ({ commit }, params) {
@@ -187,6 +234,7 @@ const actions = {
   worldLanguageMap ({ commit }, params) {
     return httpLogin(config.languageMap, params)
   },
+  // 国家详情接口
   countryInfo ({ commit }, params) {
     return httpLogin(config.countryInfo, params)
   },
@@ -312,6 +360,25 @@ const actions = {
 }
 
 const mutations = {
+  // 更新课程列表
+  updateCourseDetails (state, data) {
+    console.log('data', data)
+    state.courseDetails = data
+    state.courseInfo = data.courseInfo
+    // 处理信息
+    for (var item in data.langInfo) {
+      if (state.langInfoObj[item]) {
+        state.langInfoObj[item]['info'] = data.langInfo[item]['info']
+      }
+    }
+    state.resourceInfoRadios = data.resourceInfo.radios // 电台
+    state.countrysInfo = data.countryInfo // 国家
+    sessionStorage.setItem('countrysInfo', JSON.stringify(state.countrysInfo))
+    console.log('课程详情mutations', state.courseDetails)
+    console.log('1', state.resourceInfoRadios)
+    console.log('2', state.countrysInfo)
+    console.log('3', state.langInfoObj)
+  },
   // 更新更多订阅课程
   updateLearnCourses (state, payload) {
     let course = payload.course
@@ -336,7 +403,7 @@ const mutations = {
     localStorage.setItem('currentCourseCode', state.currentCourseCode)
   },
   updateCourseInfo (state, data) {
-    // console.log('updateCourseInfo', data)
+    console.log('updateCourseInfo', data)
     state.courseBaseInfo = data.info.courseBaseInfo
     localStorage.setItem('courseBaseInfo', JSON.stringify(state.courseBaseInfo))
     state.learnInfo = data.info.learnInfo

@@ -1,7 +1,7 @@
 <template>
   <div class="book-details">
     <div class="nav">
-      <router-link :to="{path: '/app/book-case'}">
+      <router-link :to="{path: '/app/user/course'}">
         <span>我的学习账户</span>
       </router-link>
       >
@@ -148,16 +148,16 @@
                 </li>
               </ul>
               <div class="up-all">
-                <span @click="loadMore()">全部展开</span>
+                <span >全部展开</span>
               </div>
             </div>
             <div class="resource-list" v-show="'resource' == tabFlag">
               <ul class="book-resource">
                 <li v-for="(item, index) in resourceInfoRadios" :key="index">
                   <div class="book-img">
-                    <img :src="item.cover" alt="资源图片">
+                    <img v-lazy="item.cover" :key="item.cover" alt="资源图片">
                   </div>
-                  <div class="book-title">
+                  <router-link tag="div" class="book-title" :to="{path: '/app/discovery/radio-detail/' + item.code}">
                     <p class="share-title">{{ item.title }}</p>
                     <p class="share">
                       <span>BY:</span>
@@ -165,7 +165,7 @@
                       <i></i>
                       <span>128 W</span>
                     </p>
-                  </div>
+                  </router-link>
                   <div class="icon"></div>
                 </li>
                 <!-- <li v-if="resPage > 1" @click="loadMore()">
@@ -173,22 +173,24 @@
                 </li> -->
               </ul>
               <div class="up-all">
-                <span @click="loadMore()">全部展开</span>
+                <span  @click="loadMoreRadio()" v-text="showMore?'全部展开':'收起'" ></span>
               </div>
             </div>
             <div class="nation-list" v-show="'nation' == tabFlag">
               <ul class="book-nation">
-                <li v-for="(item, index) in countryInfo" :key="index"  @click="nationDetail(item.code, item.flag, item.name)">
+                <li v-for="(item, index) in countryLists" :key="index">
                   <div class="nation-title">
                     <p>{{ item.name }}</p>
                   </div>
-                  <div class="nation-img">
-                    <img :src="item.flag" :onerror="defaultImg" alt="资源图片">
+                  <div class="nation-img" @click="nationDetail(item.code, item.flag, item.name)">
+                    <img v-lazy="item.flag" :key="item.flag" :onerror="defaultImg" alt="资源图片">
                   </div>
                   <div class="nation-languages">
                     <div class="languages">
                       <p>Principal Languages:</p>
-                      <span></span>
+                      <p v-if="item.countryInfos">
+                        <span v-for="(el, index) in item.countryInfos.country_info.langsInfo.slice(0, 16)" v-if="el.flag" :key="index">{{el.name}},</span>
+                      </p>
                     </div>
                   </div>
                   <!-- <router-link :to="{ path: '/app/nation-details/' + item.code }" class="nation-icon"></router-link> -->
@@ -196,13 +198,10 @@
                 </li>
               </ul>
               <div class="up-all">
-                <span @click="loadMore()">全部展开</span>
+                <span @click="loadMoreNation()" v-text="showMore?'全部展开':'收起'"></span>
               </div>
             </div>
           </div>
-          <!-- <div class="up-all">
-            <span @click="loadMore()">全部展开</span>
-          </div> -->
         </div>
         <!-- 登录 -->
         <div class="login-box">
@@ -228,15 +227,7 @@
           </div>
         </div>
         <!-- vip提示 -->
-        <div class="vip-content">
-          <div class="vip-img"></div>
-          <div class="prompt">
-            <span>现在成为会员，12月圣诞好礼，新用户8折！！！</span>
-          </div>
-          <div class="vip-btn">
-            <span>立即成为会员</span>
-          </div>
-        </div>
+        <VipPrompt></VipPrompt>
       </div>
     </div>
   </div>
@@ -244,64 +235,57 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import Bus from '../../../bus'
+import VipPrompt from '../../../components/common/vipPrompt'
+// import $ from 'jquery'
 
 export default {
   data () {
     return {
       tabFlag: 'info', // true 语言信息 false 资源 电台
-      langInfoObj: { // 目前只显示这几项 info为空代表后端没有这个信息
-        'AlternateNames': {
-          title: '别称',
-          info: ''
-        },
-        'ISO_639_3': {
-          title: 'ISO 639-3',
-          info: ''
-        },
-        'Population': {
-          title: '使用人口',
-          info: ''
-        },
-        'Location': {
-          title: '使用地区',
-          info: ''
-        },
-        'Dialects': {
-          title: '方言',
-          info: ''
-        },
-        'LanguageUse': {
-          title: '使用范围',
-          info: ''
-        },
-        'LanguageDevelopment': {
-          title: '语言发展情况',
-          info: ''
-        },
-        'LanguageResources': {
-          title: 'OLAC资源',
-          info: ''
-        }
-      },
-      courseInfo: {},
-      countryInfo: {},
-      resourceInfoRadios: [],
-      resPage: 1,
-      defaultImg: 'this.src="/static/images/bookCase/default_course.png"'
+      defaultImg: 'this.src="/static/images/bookCase/default_course.png"',
+      allCountryLists: [], // 接收后端的所有数据
+      countryLists: [], // 页面刚加载的时候只显示9条数据
+      pageindex: 1, // 当前页
+      countryListsNew: [], // 前端模拟后每一页显示的数据
+      showMore: true // true是展开，false是收起
+      // params: {}
     }
   },
+  components: {
+    VipPrompt
+  },
   created () {
-    Bus.$on('initLangData', () => {
-      this.initData()
-    })
+    // Bus.$on('initLangData', () => {
+    //   this.langInfo()
+    // })
   },
   mounted () {
-    console.log(this.$route)
-    this.initData()
+    var params = {}
+    let _this = this
+    console.log('_this.courseCode', _this.courseCode)
+    let arr = _this.courseCode.split('-')
+    if (arr.length > 1) {
+      params = {
+        course_code: _this.courseCode
+      }
+    } else {
+      params = {
+        lang_code: arr[0]
+      }
+    }
+    _this.langInfo(params)
+    _this.allCountryLists = JSON.parse(sessionStorage.getItem('countrysInfo'))
+    console.log('======', _this.allCountryLists)
+    _this.countryLists = _this.allCountryLists.slice(0, 9)
   },
   computed: {
     ...mapState({
-      subscribeCoursesStr: state => state.course.subscribeCoursesStr
+      subscribeCoursesStr: state => state.course.subscribeCoursesStr,
+      courseDetails: state => state.course.courseDetails,
+      courseInfo: state => state.course.courseInfo,
+      resourceInfoRadios: state => state.course.resourceInfoRadios,
+      countrysInfo: state => state.course.countrysInfo,
+      langInfoObj: state => state.course.langInfoObj
     }),
     courseCode () {
       return this.$route.params.courseCode
@@ -327,21 +311,36 @@ export default {
     nationDetail (code, flag, name) {
       let OBJ = {
         'flag': flag,
-        'name': name
+        'name': name,
+        'params': this.courseCode
       }
       let jsonStr = JSON.stringify(OBJ)
       localStorage.setItem('nationInfos', jsonStr)
       this.$router.push({ path: `/app/nation-details/${code}` })
     },
-    loadMore () {
+    // 点击展开电台的时候加载电台
+    loadMoreRadio () {
       let _this = this
-      _this.getShelfResList({ page: _this.resPage }).then((res) => {
-        console.log('资源列表', res)
+      _this.getShelfResList({ page: _this.pageindex }).then((res) => {
+        if (res.resourceInfo.page === -1) {
+          this.showMore = !this.showMore
+          return false
+        }
+        console.log('resradio', res)
         res.resourceInfo.radios.forEach((item) => {
           _this.resourceInfoRadios.push(item)
         })
         _this.resPage = res.page
       })
+    },
+    // 点击展开，国家全部展开
+    loadMoreNation () {
+      if (this.showMore) {
+        this.countryLists = this.allCountryLists
+      } else {
+        this.countryLists = this.allCountryLists.slice(0, 9)
+      }
+      this.showMore = !this.showMore
     },
     startLearn () {
       let arr = this.courseCode.split('-')
@@ -357,34 +356,34 @@ export default {
       this.postPurchaseCourse({ code: courseCode }).then((res) => {
         this.getLearnCourses()
       })
-    },
-    async initData () {
-      var params = {}
-      let arr = this.courseCode.split('-')
-      if (arr.length > 1) {
-        params = {
-          course_code: this.courseCode
-        }
-      } else {
-        params = {
-          lang_code: arr[0]
-        }
-      }
-      this.langInfo(params).then(res => {
-        console.log('课程详情', res)
-        for (var item in res.langInfo) {
-          if (this.langInfoObj[item]) {
-            this.langInfoObj[item]['info'] = res.langInfo[item]['info']
-          }
-        }
-        this.courseInfo = res.courseInfo
-        console.log('courseInfo', this.courseInfo)
-        this.countryInfo = res.countryInfo
-        this.resourceInfoRadios = res.resourceInfo.radios
-        this.resPage = res.resourceInfo.page
-        console.log(res)
-      })
     }
+    // initData () {
+    //   var params = {}
+    //   let arr = this.courseCode.split('-')
+    //   if (arr.length > 1) {
+    //     params = {
+    //       course_code: this.courseCode
+    //     }
+    //   } else {
+    //     params = {
+    //       lang_code: arr[0]
+    //     }
+    //   }
+    //   this.langInfo(params).then(res => {
+    //     console.log('课程详情', res)
+    //     for (var item in res.langInfo) {
+    //       if (this.langInfoObj[item]) {
+    //         this.langInfoObj[item]['info'] = res.langInfo[item]['info']
+    //       }
+    //     }
+    //     this.courseInfo = res.courseInfo
+    //     console.log('courseInfo', this.courseInfo)
+    //     this.countryInfo = res.countryInfo
+    //     this.resourceInfoRadios = res.resourceInfo.radios
+    //     this.resPage = res.resourceInfo.page
+    //     console.log(res)
+    //   })
+    // }
   }
 
 }
@@ -460,12 +459,13 @@ export default {
           }
         }
         .left-bottom {
+          position: relative;
           .left-bottom-content {
             ul {
               li {
                 width: 70%;
                 padding: 10px 0;
-                border-bottom: 1px solid red;
+                border-bottom: 1px solid #EBEBEB;
                 .item {
                   display: inline-block;
                   overflow: hidden;
@@ -526,8 +526,8 @@ export default {
             text-align: center;
             line-height: 50px;
             position: absolute;
-            right: 31%;
-            top: 43%;
+            right: 20px;
+            top: 130px;
             border-radius: 30px;
             box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, .15);
           }
@@ -849,38 +849,6 @@ input[type="text"] {
         }
       }
     }
-    // vip
-    .vip-content {
-      margin-top: 10px;
-      position: relative;
-      display: flex;
-      width: 100%;
-      padding: 20px 50px;
-      background: rgb(230, 223, 131);
-      .vip-img {
-        width: 46px;
-        height: 46px;
-        background: url('../../../../static/images/course/course-vip-big.svg') no-repeat center;
-        background-size: cover;
-      }
-      .prompt {
-        font-size: 20px;
-        color: #fff;
-        line-height: 46px;
-        margin-left: 16px;
-      }
-      .vip-btn {
-        background: #2A9FE4;
-        font-size: 20px;
-        color: #fff;
-        line-height: 46px;
-        border-radius: 40px;
-        text-align: center;
-        padding: 0 20px;
-        position: absolute;
-        right: 20px;
-      }
-    }
   }
 }
 .info-list .up-all {
@@ -944,6 +912,7 @@ input[type="text"] {
   object-fit: cover;
 }
 .book-resource li .book-title {
+  cursor: pointer;
   display: inline-block;
   font-size: 14px;
   padding-left: 15px;
@@ -1000,15 +969,19 @@ input[type="text"] {
 }
 .book-nation {
   width: 100%;
-  min-height: 630px;
+  // min-height: 630px;
   padding: 50px 100px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
+.book-nation:after {
+  content: "";
+  flex: auto;
+}
 
 .book-nation li {
-  width: 30%;
+  width: 33.33333333%;
   padding: 25px 0;
   border-bottom: 1px solid #EBEBEB;
   cursor: pointer;
@@ -1030,9 +1003,19 @@ input[type="text"] {
   padding-left: 15px;
   line-height: 50px;
 }
-.book-nation li .nation-languages .languages {
-  font-size: 18px;
+.book-nation li .nation-languages .languages p:nth-child(1){
+  font-size: 20px;
+  color: #333333;
   font-weight: bold;
+  margin-top: 10px;
+}
+.book-nation li .nation-languages .languages p:nth-child(2){
+  display: inline-block;
+  word-wrap: break-word;
+  word-break: normal;
+  width: 200px;
+  font-size: 18px;
+  color: #333333;
 }
 // .book-nation li .nation-icon {
 //   position: absolute;
@@ -1044,10 +1027,6 @@ input[type="text"] {
 //   background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
 //   background-size: 10px 18px;
 // }
-
-.book-nation li:last-child {
-  border: 0px;
-}
 
 .more {
   text-align: center;

@@ -1,19 +1,183 @@
-<style scoped>
+<template>
+  <div class="bg-box">
+    <div class="reset-box">
+      <h2>密码重置</h2>
+      <p class="tip">请在下方输入你手机收到的验证码</p>
+      <div class="item phone-code">
+        <input type="text" placeholder="手机验证码" v-model="phoneCode">
+        <button v-bind:disabled="!isGetCode" @click="getCode">{{isGetCode?'重新获取':time+'s'}}</button>
+      </div>
+      <div class="item">
+        <input type="password" placeholder="请输入新密码" v-model="pwd1">
+      </div>
+      <div class="item">
+        <input type="password" placeholder="再次输入新密码" v-model="pwd2">
+      </div>
+      <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
+      <button class="ok-btn" v-bind:disabled="!isGoOkLogin" @click="goReset">完成<p></p></button>
+    </div>
+  </div>
+</template>
+<script>
+import { mapState, mapMutations, mapActions } from 'vuex'
+import validation from './../../tool/validation.js'
+import errCode from './../../api/code.js'
+import http from './../../api/userAuth.js'
+import Cookie from '../../tool/cookie'
+import { encrypt } from './../../tool/untils.js'
+export default {
+  data () {
+    return {
+      loading: false,
+      phoneCode: '',
+      pwd1: '', // 第一次输入
+      pwd2: '', // 第二次输入
+      errText: '',
+      time: 60, // 60s重新发送
+      timer: null // 定时器
+    }
+  },
+  computed: {
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    }),
+    isGetCode () {
+      return this.time === 60
+    },
+    isGoOkLogin () {
+      return this.phoneCode && this.pwd1 && this.pwd2
+    }
+  },
+  mounted () {
+    if (validation.phoneNumber(this.$route.params.phone)) {
+      this.getCode()
+    } else {
+      this.$router.push('/auth/forget')
+    }
+  },
+  methods: {
+    ...mapMutations({
+      updateCurCourseCode: 'course/updateCurCourseCode',
+      updateIsLogin: 'user/updateIsLogin'
+    }),
+    ...mapActions({
+      // resetPwdPhone: 'user/resetPwdPhone',
+      // sendCodeReset: 'user/sendCodeReset',
+      getUserInfo: 'user/getUserInfo'
+    }),
+    getCode () {
+      if (this.timer) return
+      http.sendCodeReset({
+        phonenumber: this.$route.params.phone,
+        type: 'reset_password'
+      }).then(res => {
+        if (res.success) {
+          this.timer = setInterval(() => {
+            --this.time
+            if (this.time === 0) {
+              this.time = 60
+              clearInterval(this.timer)
+              this.timer = null
+            }
+          }, 1000)
+        } else {
+          this.errText = errCode[res.code]
+        }
+      })
+    },
+    async goReset () {
+      this.errText = ''
+      if (!validation.verfiyCode(this.phoneCode)) {
+        this.errText = errCode['e03']
+        return false
+      }
+      if (!validation.pwd(this.pwd1) || !validation.pwd(this.pwd2)) {
+        this.errText = errCode['e02']
+        return false
+      }
+      if (this.pwd1 !== this.pwd2) {
+        this.errText = errCode['e08']
+        return false
+      }
+      this.loading = true
+      // let flag = true
+      await http.resetPwdPhone({
+        phonenumber: this.$route.params.phone,
+        new_pwd: encrypt(this.pwd1),
+        re_pwd: encrypt(this.pwd2),
+        verification_code: this.phoneCode
+      }).then(res => {
+        if (res.success) {
+          console.log('改成功了')
+          localStorage.removeItem('userInfo')
+          Cookie.delCookieTalkmate('is_anonymous')
+          Cookie.delCookie('user_id')
+          Cookie.delCookie('verify')
+          Cookie.setCookie('user_id', res.user_id)
+          Cookie.setCookie('verify', res.verify)
+          let UserId = Cookie.getCookie('user_id')
+          let lastUserId = localStorage.getItem('last_user_id')
+          if (lastUserId !== UserId) {
+            localStorage.setItem('lastUserId', UserId)
+            localStorage.removeItem('lastCourseCode')
+          }
+          // let lastCourseCode = localStorage.getItem('lastCourseCode')
+          // this.updateCurCourseCode(lastCourseCode)
+          // this.updateIsLogin('1')
+          // this.$router.push({path: '/app/course-list'})
+          let lastCourseCode = localStorage.getItem('lastCourseCode')
+          if (!lastCourseCode) {
+            this.getUserInfo()
+            this.updateCurCourseCode(this.userInfo.current_course_code)
+            localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
+            localStorage.setItem('userInfo', this.userInfo)
+            this.updateIsLogin('1')
+            this.$router.push({path: '/app/course-list'})
+          } else {
+            this.updateCurCourseCode(lastCourseCode)
+            this.updateIsLogin('1')
+            this.$router.push({path: '/app/course-list'})
+          }
+        } else {
+          this.loading = false
+          this.errText = errCode[res.code]
+          // flag = false
+        }
+      })
+      // if (flag) {
+      // let lastCourseCode = localStorage.getItem('lastCourseCode')
+      // if (!lastCourseCode) {
+      //   await this.getUserInfo()
+      //   this.updateCurCourseCode(this.userInfo.current_course_code)
+      //   localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
+      //   this.updateIsLogin('1')
+      //   this.$router.push({path: '/app/course-list'})
+      // } else {
+      //   this.updateCurCourseCode(lastCourseCode)
+      //   this.updateIsLogin('1')
+      //   this.$router.push({path: '/app/course-list'})
+      // }
+      // }
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
   input::-webkit-input-placeholder {
     font-size: 14px;
-    color: #b8b8b8;
+    color: #D6DFE4;
   }
   input::-moz-placeholder {
     font-size: 14px;
-    color: #b8b8b8;
+    color: #D6DFE4;
   }
   input:-moz-placeholder {
     font-size: 14px;
-    color: #b8b8b8;
+    color: #D6DFE4;
   }
   input:-ms-placeholder {
     font-size: 14px;
-    color: #b8b8b8;
+    color: #D6DFE4;
   }
   .bg-box {
     padding: 80px 0px;
@@ -35,8 +199,8 @@
     height: 40px;
     line-height: 20px;
     font-size: 14px;
-    color: #000;
-    border: 1px solid #ececec;
+    color: #333333;
+    border: 1px solid #E6EBEE;
     border-radius: 20px;
     background-color: #fff;
     padding: 10px 0 10px 24px;
@@ -68,7 +232,7 @@
   }
   .reset-box .tip {
     font-size: 16px;
-    color: #f6a623;
+    color: #666;
     text-align: center;
     padding: 10px 0 20px;
   }
@@ -80,11 +244,38 @@
     font-size: 16px;
     border: none;
     border-radius: 20px;
-    background-color: #299fe4;
+  }
+  .reset-box .ok-btn {
+    position: relative;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 84px;
+    background-color: #74C105;
+    &:hover p {
+      display: block;
+    }
+    p {
+      display: none;
+      width: 20px;
+      height: 20px;
+      background: url('../../../static/images/authLogin/going.svg') no-repeat center;
+      background-size: cover;
+      position: absolute;
+      top: 26%;
+      left: 60%;
+    }
   }
   .reset-box .ok-btn:disabled {
-    background-color: #cacaca;
-    cursor: default;
+    background-color: #D6DFE4;
+    cursor: not-allowed;
+    &:hover p {
+      display: none;
+    }
   }
   .err-tip {
     height: 40px;
@@ -103,108 +294,6 @@
     position: absolute;
     left: 15px;
     top: 20px;
-    background: url('./../../../static/images/home/error.svg') no-repeat center;
+    background: url('./../../../static/images/authLogin/mark.svg') no-repeat center;
   }
 </style>
-<template>
-  <div class="bg-box">
-    <div class="reset-box">
-      <h2>密码重置</h2>
-      <p class="tip">信息已经发送至手机</p>
-      <div class="item phone-code">
-        <input type="text" placeholder="手机验证码" v-model="phoneCode">
-        <button v-bind:disabled="!isGetCode" @click="getCode">{{isGetCode?'重新获取':time+'s'}}</button>
-      </div>
-      <div class="item">
-        <input type="password" placeholder="请输入新密码" v-model="pwd1">
-      </div>
-      <div class="item">
-        <input type="password" placeholder="再次输入新密码" v-model="pwd2">
-      </div>
-      <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
-      <button class="ok-btn" v-bind:disabled="loading" @click="goReset">{{loading?'loading':'确定'}}</button>
-    </div>
-  </div>
-</template>
-<script>
-import validation from './../../tool/validation.js'
-import errCode from './../../api/code.js'
-import http from './../../api/userAuth.js'
-import { encrypt } from './../../tool/untils.js'
-export default {
-  data () {
-    return {
-      loading: false,
-      phoneCode: '',
-      pwd1: '', // 第一次输入
-      pwd2: '', // 第二次输入
-      errText: '',
-      time: 6, // 60s重新发送
-      timer: null // 定时器
-    }
-  },
-  computed: {
-    isGetCode () {
-      return this.time === 6
-    }
-  },
-  mounted () {
-    if (validation.phoneNumber(this.$route.params.phone)) {
-      this.getCode()
-    } else {
-      this.$router.push('/auth/forget')
-    }
-  },
-  methods: {
-    getCode () {
-      if (this.timer) return
-      http.sendCodeReset({
-        phonenumber: this.$route.params.phone,
-        type: 'reset_password'
-      }).then(res => {
-        if (res.success) {
-          this.timer = setInterval(() => {
-            --this.time
-            if (this.time === 0) {
-              this.time = 6
-              clearInterval(this.timer)
-              this.timer = null
-            }
-          }, 1000)
-        } else {
-          this.errText = errCode[res.code]
-        }
-      })
-    },
-    goReset () {
-      this.errText = ''
-      if (!validation.verfiyCode(this.phoneCode)) {
-        this.errText = errCode['e03']
-        return false
-      }
-      if (!validation.pwd(this.pwd1) || !validation.pwd(this.pwd2)) {
-        this.errText = errCode['e02']
-        return false
-      }
-      if (this.pwd1 !== this.pwd2) {
-        this.errText = errCode['e08']
-        return false
-      }
-      this.loading = true
-      http.resetPwdPhone({
-        phonenumber: this.$route.params.phone,
-        new_pwd: encrypt(this.pwd1),
-        re_pwd: encrypt(this.pwd2),
-        verification_code: this.phoneCode
-      }).then(res => {
-        if (res.success) {
-          console.log('改成功了')
-        } else {
-          this.loading = false
-          this.errText = errCode[res.code]
-        }
-      })
-    }
-  }
-}
-</script>

@@ -54,9 +54,12 @@
           </p>
           <div class="recommend-list">
             <ul>
-              <li v-for="(item, index) in relatedNews" :key="index">
+              <router-link  tag="li"
+                            v-for="(item, index) in relatedNews"
+                            :key="index"
+                            :to="{path: '/app/headline-details/' + item.id}">
                 <div class="img">
-                  <img v-lazy="item.banner_img" alt="推荐图片">
+                  <img :src="item.banner_img ? item.banner_img : item.thumbs[0]" alt="推荐图片">
                 </div>
                 <div class="news_item">
                   <div class="news_item_row1">
@@ -67,7 +70,7 @@
                     <span class="reading">阅读&nbsp;{{item.hits}}</span>
                   </div>
                 </div>
-              </li>
+              </router-link>
             </ul>
           </div>
         </div>
@@ -188,8 +191,18 @@ export default {
     }
   },
   components: {},
+  beforeRouteUpdate (to, from, next) {
+    if (to.name === 'headlineDetails') {
+      next()
+      this.initHeadDetail()
+    } else {
+      next()
+    }
+  },
   mounted () {
-    this.id = this.$route.params.id
+    this.initHeadDetail()
+    this.initCommLists()
+    /* this.id = this.$route.params.id
     console.log('id', this.id)
     // 头条详情页面
     this.headlineDetail({id: this.id}).then((data) => {
@@ -210,7 +223,7 @@ export default {
       }
       this.commentLists = res.data.comments
     })
-    // this.initComments()
+    this.initComments() */
     this.$nextTick(() => {
       this.removeStyle()
     })
@@ -230,6 +243,15 @@ export default {
       comments: 'course/comments',
       reportList: 'course/reportList'
     }),
+    // getStatus (urlStr) {
+    //   let urlStrArr = urlStr.split('/')
+    //   return urlStrArr[urlStrArr.length - 1]
+    // },
+    // watch: {
+    //   '$route' (to, from) {
+    //     this.getStatus(this.$route.path)
+    //   }
+    // },
     showReport () {
       this.isShow = true
     },
@@ -239,6 +261,35 @@ export default {
       this.reportContents = ''
       this.isShow = false
       this.showTextSuccess = false
+    },
+    // 头条详情页面
+    async initHeadDetail () {
+      let _this = this
+      _this.id = _this.$route.params.id
+      console.log('id', _this.id)
+      // 头条详情页面
+      await _this.headlineDetail({id: _this.id}).then((data) => {
+        console.log('data', data)
+        _this.detail = data.detail
+        _this.author = data.detail.author
+        _this.html = data.detail.content
+        _this.tags_info = data.detail.tags_info
+        _this.relatedNews = data.detail.related_news
+        // this.initComment(id)
+      })
+    },
+    // 评论列表
+    async initCommLists () {
+      let _this = this
+      _this.id = _this.$route.params.id
+      await _this.commentList({hid: _this.id, page: _this.page}).then((res) => {
+        console.log('commentList评论列表', res)
+        if (res.data.comments.length === 0) {
+          _this.flag = false
+          _this.btnText = '暂时没有评论内容'
+        }
+        _this.commentLists = res.data.comments
+      })
     },
     // 评论
     review () {
@@ -592,6 +643,7 @@ ul,li {
       margin-top: 17px;
       ul {
         li {
+          cursor: pointer;
           border-bottom: 1px dashed #EAEAEA;
           margin-top: 20px;
           .img {

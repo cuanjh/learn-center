@@ -149,6 +149,7 @@ export default {
       })
     },
     routerGo (item) {
+      console.log('item', item)
       let langCode = item['lan_code']
       // if (this.subscribeCoursesStr.length === 0) {
       //   this.$router.push({path: '/app/book-details/' + langCode})
