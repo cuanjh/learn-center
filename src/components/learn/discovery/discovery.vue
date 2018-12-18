@@ -27,5 +27,6 @@ export default {
   background: #ecf4f7;
   width: 100%;
   min-height: 1000px;
+  margin-top: -12px;
 }
 </style>

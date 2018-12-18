@@ -109,7 +109,7 @@ export default {
     // })
   },
   mounted () {
-    this.getLearnCourses()
+    // this.getLearnCourses()
     console.log('订阅课程======', this.learnCourses)
   },
   computed: {

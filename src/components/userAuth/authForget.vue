@@ -1,104 +1,13 @@
-<style scoped>
-  .forget-box {
-    width: 420px;
-    border-radius: 5px;
-    background-color: #fff;
-    margin: 0 auto;
-    padding: 40px 50px;
-  }
-  .bg-box {
-    padding: 80px 0px;
-  }
-  input::-webkit-input-placeholder {
-    font-size: 14px;
-    color: #b8b8b8;
-  }
-  input::-moz-placeholder {
-    font-size: 14px;
-    color: #b8b8b8;
-  }
-  input:-moz-placeholder {
-    font-size: 14px;
-    color: #b8b8b8;
-  }
-  input:-ms-placeholder {
-    font-size: 14px;
-    color: #b8b8b8;
-  }
-  .forget-box .item {
-    margin-top: 10px;
-  }
-  .forget-box .item input {
-    display: block;
-    width: 100%;
-    height: 40px;
-    line-height: 20px;
-    font-size: 14px;
-    color: #000;
-    border: 1px solid #ececec;
-    border-radius: 20px;
-    background-color: #fff;
-    padding: 10px 0 10px 24px;
-    position: relative;
-  }
-  .forget-box h2 {
-    line-height: 36px;
-    font-size: 26px;
-    font-weight: 400;
-    text-align: center;
-    color: #333;
-    padding: 20px 0px;
-  }
-  .forget-box .tip {
-    font-size: 12px;
-    text-align: center;
-    color: #d8d8d8;
-    padding-top: 10px;
-  }
-  .forget-box button {
-    display: block;
-    width: 100%;
-    height: 40px;
-    color: #fff;
-    font-size: 16px;
-    border: none;
-    border-radius: 20px;
-    background-color: #299fe4;
-  }
-  .forget-box button:disabled {
-    background-color: #cacaca;
-    cursor: default;
-  }
-  .err-tip {
-    height: 40px;
-    font-size: 14px;
-    line-height: 20px;
-    color: #dd2b2b;
-    padding-left: 40px;
-    padding-top: 20px;
-    position: relative;
-  }
-  .err-tip p:before {
-    content: "";
-    display: block;
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    left: 15px;
-    top: 20px;
-    background: url('./../../../static/images/home/error.svg') no-repeat center;
-  }
-</style>
 <template>
   <div class="bg-box">
     <div class="forget-box" v-show="showFlag === 0">
-      <h2>忘记密码</h2>
+      <h2>找回密码</h2>
+      <p class="tip">请在下方输入你的手机号或输入注册全球说(talkmate)账号时填写的邮箱</p>
       <div class="item">
         <input type="text" placeholder="输入手机号/邮箱" v-model="userName">
       </div>
-      <p class="tip">输入注册全球说(talkmate)账号时填写的邮箱或手机号码</p>
       <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
-      <button v-bind:disabled="loading" @click="goVerify">{{loading?'loading':'获取验证信息'}}</button>
+      <button v-bind:disabled="!isGoLogin" @click="goVerify">获取验证信息<p></p></button>
     </div>
     <send-success v-if="showFlag === 1" v-bind:email="userName"></send-success>
   </div>
@@ -120,6 +29,21 @@ export default {
   components: {
     sendSuccess
   },
+  computed: {
+    usernameType () {
+      // 用户输入的账号类型两种，分别是  phone  email, 返回fasle说明二者验证均不通过
+      if (validation.email(this.username)) {
+        return 'email'
+      } else if (validation.phoneNumber(this.username)) {
+        return 'phone'
+      } else {
+        return false
+      }
+    },
+    isGoLogin () {
+      return this.userName
+    }
+  },
   methods: {
     goVerify () {
       this.errText = ''
@@ -128,7 +52,10 @@ export default {
         return false
       }
       var forgetType = validation.phoneNumber(this.userName) ? 'phone' : 'email'
-      this.loading = true
+      var type = this.usernameType
+      if (!type) {
+        this.errorTips = '邮箱/手机号码输入错误'
+      }
       if (forgetType === 'phone') {
         http.checkPhone({identity: this.userName}).then(res => {
           if (res.success) {
@@ -175,3 +102,111 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+  .forget-box {
+    width: 420px;
+    border-radius: 5px;
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 40px 43px 70px;
+  }
+  .bg-box {
+    padding: 80px 0px;
+  }
+  input::-webkit-input-placeholder {
+    font-size: 14px;
+    color: #b8b8b8;
+  }
+  input::-moz-placeholder {
+    font-size: 14px;
+    color: #b8b8b8;
+  }
+  input:-moz-placeholder {
+    font-size: 14px;
+    color: #b8b8b8;
+  }
+  input:-ms-placeholder {
+    font-size: 14px;
+    color: #b8b8b8;
+  }
+  .forget-box .item {
+    margin: 20px 0 50px;
+  }
+  .forget-box .item input {
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 20px;
+    font-size: 14px;
+    color: #000;
+    border: 1px solid #ececec;
+    border-radius: 20px;
+    background-color: #fff;
+    padding: 10px 0 10px 24px;
+    position: relative;
+  }
+  .forget-box h2 {
+    line-height: 36px;
+    font-size: 26px;
+    font-weight: 400;
+    text-align: center;
+    color: #333;
+    margin-top: 10px;
+  }
+  .forget-box .tip {
+    font-size: 12px;
+    text-align: center;
+    color: #666;
+  }
+  .forget-box button {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 40px;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 20px;
+    background-color: #299fe4;
+    &:hover p {
+      display: block;
+    }
+    p {
+      display: none;
+      width: 20px;
+      height: 20px;
+      background: url('../../../static/images/authLogin/going.svg') no-repeat center;
+      background-size: cover;
+      position: absolute;
+      top: 26%;
+      left: 70%;
+    }
+  }
+  .forget-box button:disabled {
+    background-color: #cacaca;
+    cursor: not-allowed;
+    &:hover p {
+      display: none;
+    }
+  }
+  .err-tip {
+    height: 40px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #dd2b2b;
+    padding-left: 40px;
+    padding-top: 20px;
+    position: relative;
+  }
+  .err-tip p:before {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 15px;
+    top: 20px;
+    background: url('./../../../static/images/authLogin/mark.svg') no-repeat center;
+  }
+</style>
