@@ -547,7 +547,7 @@ export default {
 .mycourse-wrap .mycourse-wrap-arrow {
   position: absolute;
   top: -10px;
-  left: 2.1%;
+  left: 6%;
 }
 
 .mycourse-wrap > img{

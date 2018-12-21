@@ -4,12 +4,17 @@
       <dl>
         <dt><img :src="courseBaseInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
-          <p>
-            <span v-text='courseBaseInfo.name'></span>
-            <!-- :class="{active:isActive}" -->
-            <i :class="{active:isActive}" @click="showMyCourse()"></i>
-          </p>
-          <p>{{$t('course.finished')}}&nbsp;<span v-text="finishedChapter + '/' + chapterNum"></span>&nbsp;{{$t('course.classHour')}}</p>
+          <div class="triangle">
+              <span v-text='courseBaseInfo.name'></span>
+            <p>
+              <!-- :class="{active:isActive}" -->
+              <i :class="{active:isActive}" @click="showMyCourse()"></i>
+              <transition name="fade">
+                <img v-show="trigangleShow" src="../../../../static/images/course/learn-big-arrow.png" alt="dddd">
+              </transition>
+            </p>
+          </div>
+          <p class="course-old">{{$t('course.finished')}}&nbsp;<span v-text="finishedChapter + '/' + chapterNum"></span>&nbsp;{{$t('course.classHour')}}</p>
           <p class="vip" v-if="isVip === 1"><span><i></i>{{ vipEndDate }}到期</span><router-link tag="span" :to="{path: '/app/user/vip'}">会员续费</router-link></p>
           <p class="no-vip" v-else><span><i></i>你还不是会员</span><router-link tag="span" :to="{path: '/app/user/vip'}">成为会员</router-link></p>
         </dd>
@@ -48,72 +53,38 @@
         <span>学习指南</span>
       </li>
     </ul> -->
-    <transition name="fade">
-      <section class='mycourse-wrap mycourse-loginout animated' v-show="navCourse">
-        <img class="mycourse-wrap-arrow" src="../../../../static/images/course/learn-big-arrow.png" alt="">
-        <div class="mycourse-container">
-          <p class="my-course">我订阅的课程</p>
-          <section>
-            <ul>
-              <li  v-for='(course, index) in learnCourse' :key="index"
-                class='mycourse-container-gray disable'
-                :class="{'mycourse-container-light': true }">
-                <dl>
-                  <dt>
-                    <a class='changeColor' @click="changeCourseCodes(course['code'])">
-                      <img :src="course.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')">
-                      <div class='fix-ie-filter-bug'></div>
-                    </a>
-                  </dt>
-                  <dd>
-                    <span>
-                      <!-- <a>全球说</a> -->
-                    </span>
-                    <span class='mycourse-lang'>
-                      <a href="">{{ !course.name ? '' : course.name['zh-CN'] }}</a>
-                    </span>
-                  </dd>
-                </dl>
-              </li>
-              <li class='learn-courseList-add-more'>
-                <router-link :to="{path: '/app/book-case'}">
-                  <img src="../../../../static/images/course/learn-jiahao.png">
-                </router-link>
-              </li>
-            </ul>
-          </section>
-        </div>
-      </section>
-    </transition>
+    <learn-course-list  v-show="navCourse"></learn-course-list>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import moment from 'moment'
 import Bus from '../../../bus'
+import LearnCourseList from '../../common/learnCourseList.vue'
 
 export default {
   name: 'leftSide',
   data () {
     return {
+      trigangleShow: false,
       isActive: false,
       navCourse: false,
       learnCourse: []
     }
   },
-  mounted () {
-    this.getLearnCourses()
+  components: {
+    LearnCourseList
   },
+  mounted () {},
   computed: {
     ...mapState({
       courseBaseInfo: state => state.course.courseBaseInfo,
       chapterNum: state => state.course.chapterNum + '',
       finishedChapter: state => state.course.finishedChapter + '',
       curLevel: state => state.course.curLevel,
-      userInfo: state => state.user.userInfo,
-      learnCourses: state => state.course.learnCourses
+      userInfo: state => state.user.userInfo
     }),
     langDesc () {
       let des = '全球说 《' + this.courseBaseInfo.name + '》'
@@ -136,9 +107,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      getLearnCourses: 'course/getLearnCourses'
-    }),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode'
     }),
@@ -155,22 +123,7 @@ export default {
     showMyCourse () {
       this.isActive = !this.isActive
       this.navCourse = !this.navCourse
-    }
-  },
-  watch: {
-    // 后订阅的在前显示
-    learnCourses (newData, oldData) {
-      if (newData !== oldData) {
-        var _object = []
-        for (var i in newData) {
-          if (newData[i].code) {
-            _object.unshift(newData[i])
-          }
-        }
-        this.learnCourse = _object
-      } else {
-        this.learnCourse = oldData
-      }
+      this.trigangleShow = !this.trigangleShow
     }
   }
 }
@@ -219,18 +172,77 @@ export default {
 .lang-overview dd p {
   font-size: 16px;
   font-weight: bold;
-  padding-right: 20px;
 }
-
-.lang-overview dd p:nth-of-type(1) {
+.lang-overview dd .triangle {
+  display: inline-block;
+}
+.lang-overview dd .triangle span {
+  display: inline-block;
+  font-size: 19px;
+  line-height:26px;
+  font-weight: bold;
+  color: #ffffff;
+  word-break: break-all;
+  max-width: 76px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lang-overview dd .triangle p {
+  position: relative;
+  display: inline-block;
+}
+.lang-overview dd .triangle p img {
+  position: absolute;
+  top: 22px;
+  left: 3px;
+  width: 22px;
+  height: 14px;
+}
+.fade-enter-active {
+  transition: opacity .5s;
+}
+.fade-leave-active {
+  transition: opacity .1s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+.lang-overview dd .triangle p i {
+  cursor: pointer;
+  display: inline-block;
+  width: 27px;
+  height: 27px;
+  background: url('../../../../static/images/course/qh-default.svg') no-repeat center;
+  block-size: cover;
+}
+.lang-overview dd .triangle p i.active {
+  display: inline-block;
+  width: 27px;
+  height: 27px;
+  background: url('../../../../static/images/course/qh-click.svg') no-repeat center;
+  block-size: cover;
+}
+/* .lang-overview dd p:nth-of-type(1) {
   font-size: 19px;
   line-height:26px;
   font-weight: 600px;
   color: #ffffff;
-  /* word-break: break-all; */
+  word-break: break-all;
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
+}
+.lang-overview dd p:nth-of-type(1) span{
+  display: inline-block;
+  max-width: 76px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lang-overview dd p:nth-of-type(1) img {
+  width: 22px;
+  height: 22px;
 }
 .lang-overview dd p:nth-of-type(1) i {
   cursor: pointer;
@@ -246,193 +258,23 @@ export default {
   height: 27px;
   background: url('../../../../static/images/course/qh-click.svg') no-repeat center;
   block-size: cover;
-}
-.mycourse-wrap {
-  position: absolute;
-  width: 442px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 9px 0 rgba(112, 112, 112, 0.5);
-  top: 65px;
-  left: 19px;
-  z-index: 9999999;
-}
-
-.mycourse-loginout {
-  animation-duration: 0.4s;
-}
-
-.animated {
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  opacity: 1;
-}
-
-.mycourse-wrap .mycourse-wrap-arrow {
-  width: 22px;
-  height: 22px;
-  position: absolute;
-  top: -10px;
-  left: 124px;
-}
-.mycourse-container {
-  padding: 12px 30px;
-  overflow: hidden;
-}
-.mycourse-container > p {
-  width: 100%;
-  height: 32px;
-  line-height: 32px;
-  font-size: 14px;
-  color: #003d5a;
-  border-bottom: 1px solid #ededed;
-  font-weight: bold;
-}
-
-.mycourse-container > section ul > li {
-  float: left;
-  width: 110px;
-  border-bottom: 1px solid #ededed;
-  padding: 16px 0;
-  cursor: pointer;
-}
-.mycourse-container > section ul > li.disable dl dt img {
-  -webkit-filter: grayscale(100%);
-  -moz-filter: grayscale(100%);
-  -ms-filter: grayscale(100%);
-  -o-filter: grayscale(100%);
-  filter: grayscale(100%);
-  filter: gray;
-}
-.mycourse-container > section ul > li.disable dl dd span a {
-  cursor: default;
-  color: #4a4a4a;
-}
-.mycourse-container > section ul > li.learn-courseList-add-more {
-  text-align: center;
-  cursor: pointer;
-  border: none;
-  height: 100px;
-}
-.mycourse-container > section ul > li.learn-courseList-add-more a img {
-  width: 24px;
-  height: 36px;
-  padding-top: 12px;
-}
-.mycourse-container > section ul > li dl dt {
-  text-align: center;
-}
-.mycourse-container > section ul > li dl dt a {
-  margin: 0 auto;
-  width: 50px;
-  height: 50px;
-  display: inline-block;
-  object-fit: contain;
-  cursor: pointer;
-}
-.mycourse-container > section ul > li dl dd {
-  font-size: 12px;
-  padding-top: 8px;
-}
-.mycourse-container > section ul > li dl dd span {
-  text-align: center;
-  display: block;
-  font-size: 12px;
-  color: #003d5a;
-  height: 14px;
-  line-height: 14px;
-}
-/* .mycourse-container > section ul > li dl a dd span a {
-  cursor: pointer;
-  color: #003d5a;
 } */
-.mycourse-container > section ul > li dl dt a img {
-  margin: 0 auto;
-  width: 50px;
-  height: 50px;
-  display: inline-block;
-  object-fit: contain;
-  cursor: pointer;
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
-  border-radius: 5px;
-}
-.mycourse-container > section ul > li dl dt a img:hover {
-  box-shadow: 0 0 13px 0 rgba(112, 112, 112, 0.5);
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
-}
-.mycourse-container-gray img {
-  -webkit-filter: grayscale(100%);
-  -moz-filter: grayscale(100%);
-  -ms-filter: grayscale(100%);
-  -o-filter: grayscale(100%);
-  filter: grayscale(100%);
-  filter: gray;
-}
 
-.mycourse-container-gray .fix-ie-filter-bug{
-  width: 100%;
-}
-
-.mycourse-container .disable dd span a {
-  color: #4a4a4a;
-}
-
-.mycourse-container-light img {
-  -webkit-filter: grayscale(0%) !important;
-  -moz-filter: grayscale(0%) !important;
-  -ms-filter: grayscale(0%) !important;
-  -o-filter: grayscale(0%) !important;
-  filter: grayscale(0%) !important;
-  filter: white !important;
-}
-.mycourse-container-light dl dd span a{
-  color:#003d5a !important;
-}
-
-.changeColor > img:hover{
-  -webkit-filter: grayscale(0%) !important;
-  -moz-filter: grayscale(0%) !important;
-  -ms-filter: grayscale(0%) !important;
-  -o-filter: grayscale(0%) !important;
-  filter: grayscale(0%) !important;
-  filter: white !important;
-  transform:scale(1.2);
-  -webkit-transform:scale(1.2);
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-
-.lang-overview dd p:nth-of-type(2) {
+.lang-overview dd .course-old {
   height:20px;
   font-size:14px;
   font-weight:500;
   color:#ffffff;
   line-height:20px;
   display: inline-block;
-  margin-top: 15px
+  position: absolute;
+  bottom: 38px;
+  left: 77px;
 }
-
-.lang-overview dd p:nth-of-type(3) {
-  width: 100%;
-  display: inline-block;
-  margin-top: 30px;
+.lang-overview dd .vip {
+  position: absolute;
+  bottom: -10px;
 }
-
 .lang-overview dd .vip span:first-child i {
   width: 17px;
   height: 16px;
@@ -451,23 +293,23 @@ export default {
   font-weight:500;
   color:#ffffff;
   line-height:22px;
-  float: left;
+  margin-right: 16px;
 }
 
-.lang-overview dd p:nth-of-type(3) span:last-child {
+.lang-overview dd .vip span:last-child {
   /* width:66px; */
-  height:22px;
-  border-radius:11px;
+  border-radius:20px;
   border:1px solid #ffbe29;
   font-size:12px;
   font-weight:600;
   color:#ffbe29;
   padding: 2px 8px;
-  line-height:17px;
-  float: right;
   cursor: pointer;
 }
-
+.lang-overview dd .no-vip {
+  position: absolute;
+  bottom: -10px;
+}
 .lang-overview dd .no-vip span:first-child i {
   width: 17px;
   height: 16px;
@@ -486,9 +328,18 @@ export default {
   font-weight:500;
   color:#ffffff;
   line-height:22px;
-  float: left;
+  margin-right: 16px;
 }
-
+.lang-overview dd .no-vip span:last-child {
+  /* width:66px; */
+  border-radius:20px;
+  border:1px solid #ffbe29;
+  font-size:12px;
+  font-weight:600;
+  color:#ffbe29;
+  padding: 2px 8px;
+  cursor: pointer;
+}
 .lang-overview ul {
   width: 100%;
   background: #ffffff;

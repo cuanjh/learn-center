@@ -1,33 +1,43 @@
 <template>
-  <div class="bg-box">
-    <div class="user-login">
-      <h2 v-text="title?'密码登录!':'邮箱登录!'"></h2>
-      <input class="input_text" type="text" :placeholder="reminder" v-model="userName" @keyup.enter="goLogin">
-      <input class="input_text" type="password" placeholder="输入密码" v-model="userPwd" @keyup.enter="goLogin">
-      <div class="auto-forget">
-        <!-- <p class="go-registered">
-          <router-link to="/auth/register"><span>没有账号！去注册</span></router-link>
-        </p> -->
+  <div class="user-login-pwd">
+    <div class="go-phone-login" v-show="type == 2">
+      <div class="bg-img" @click="goAuthLogin()"></div>
+    </div>
+    <h2 v-text="type == 2 ?'邮箱登录!':'密码登录!'"></h2>
+    <input  class="input_text" type="text"
+            :placeholder="type == 2 ?'请输入正确的邮箱':'请输入手机号'"
+            v-model="userName"
+            @blur.prevent="blurPEFn()"
+            @keyup.enter="goLogin">
+    <input  class="input_text"
+            type="password"
+            @blur.prevent="blurPwdFn()"
+            placeholder="输入密码"
+            v-model="userPwd"
+            @keyup.enter="goLogin">
+    <div class="auto-forget">
+      <!-- <p class="go-registered">
+        <router-link to="/auth/register"><span>没有账号！去注册</span></router-link>
+      </p> -->
+      <div class="auto-content">
         <div class="auto-login" :class="{'checked': isSaveLoginState}" @click="isSaveLoginState = !isSaveLoginState">
           <i></i>
           <span :class="{'checked':isSaveLoginState}">记住密码</span>
-          <!-- <input type="checkbox" v-model="checked" name="check" id="checkb" class="input_check" value="itemDes">
-          <label class="labell" for="checkb">记住密码</label> -->
         </div>
-        <!-- <div class="check">
-           @change="savePwd"
-          <label><input type="checkbox" id="rememberPwd" v-model="pwdChecked" value="" name="fruit">记住密码</label>
-        </div> -->
-        <!-- <input type="checkbox" id="rememberPwd" v-model="pwdCheched" @change="savePwd">记住密码 -->
-        <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
-        <button @click="goLogin" v-bind:disabled="!isGoLogin">登录<p></p></button>
         <p class="forget">
-          <router-link to="/auth/forget"><span>忘记密码了!</span></router-link>
+          <router-link :to="{path: '/auth/forget/' + type}"><span>忘记密码了!</span></router-link>
         </p>
       </div>
-      <div class="email-login">
-        <p v-text="loginText?'邮箱登录':'手机登录'" @click="goEmailLogin"></p>
-      </div>
+      <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
+      <button @click="goLogin()" v-bind:disabled="!isGoLogin">
+        <p>
+          登录
+          <i></i>
+        </p>
+      </button>
+    </div>
+    <div class="email-login">
+      <p v-show="type == 1" @click="goAuthLogin()">验证码登录</p>
     </div>
   </div>
 </template>
@@ -37,25 +47,21 @@ import validation from './../../tool/validation.js'
 import { encrypt } from './../../tool/untils.js'
 import Cookie from '../../tool/cookie'
 import errCode from './../../api/code.js'
-
+import $ from 'jquery'
 // import Cookies from 'js-cookie'
 
 export default {
+  props: ['type'], // 1手机密码登录 2邮箱登录
   data () {
     return {
       userName: '', // 输入的用户手机或邮箱
       userPwd: '', // 输入的密码
       errText: '', // 错误信息提示
-      title: true, // true是密码登录，false是邮箱登录
-      reminder: '', // input里面的提示，手机号还是邮箱
-      loginText: true, // 下面是邮箱登录还是手机登录
       isSaveLoginState: false // 记住密码
     }
   },
   mounted () {
-    if (this.title) {
-      this.reminder = '请输入手机号'
-    }
+    console.log('type', this.type)
     let userNameOld = Cookie.getCookie('userName')
     let userPwdOld = Cookie.getCookie('userPwd')
     if (userNameOld !== '' && userPwdOld !== '') {
@@ -82,24 +88,53 @@ export default {
       getUserInfo: 'user/getUserInfo',
       login: 'user/login'
     }),
-    // 切换密码邮箱登录
-    goEmailLogin () {
-      this.reminder = '请输入正确的邮箱'
-      this.title = !this.title
-      this.loginText = !this.loginText
-      if (this.title) {
-        this.reminder = '请输入手机号'
+    // 失去焦点
+    blurPEFn () {
+      if (validation.phoneNumber(this.userName)) {
+        $('input[type="text"]').css('border-color', '#E6EBEE')
+        this.errText = ''
+        return false
       }
+      if (validation.email(this.userName)) {
+        $('input[type="text"]').css('border-color', '#E6EBEE')
+        this.errText = ''
+        return false
+      }
+    },
+    blurPwdFn () {
+      if (validation.pwd(this.userPwd)) {
+        $("input[type='password']").css('border-color', '#E6EBEE')
+        this.errText = ''
+        return false
+      }
+    },
+    // 切换到手机验证码登录
+    goAuthLogin () {
+      this.$emit('updateType', 0)
     },
     async goLogin () {
       let _this = this
       _this.errText = ''
-      if (!validation.phoneNumber(_this.userName) && !validation.email(_this.userName)) {
+      if (this.type === 1) {
+        if (!validation.phoneNumber(_this.userName)) {
+          _this.errText = errCode['er01']
+          $('input[type="text"]').css('border-color', '#D0021B')
+          return false
+        }
+      } else {
+        if (!validation.email(_this.userName)) {
+          _this.errText = errCode['er05']
+          $('input[type="text"]').css('border-color', '#D0021B')
+          return false
+        }
+      }
+      /* if (!validation.phoneNumber(_this.userName) && !validation.email(_this.userName)) {
         _this.errText = errCode['e06']
         return false
-      }
+      } */
       if (!validation.pwd(_this.userPwd)) {
-        _this.errText = errCode['e02']
+        _this.errText = errCode['er04']
+        $('input[type="password"]').css('border-color', '#D0021B')
         return false
       }
       let flag = true
@@ -107,7 +142,9 @@ export default {
         identity: _this.userName,
         password: encrypt(_this.userPwd)
       }).then(res => {
+        console.log('res', res)
         if (res.success) {
+          $('input').css('border-color', '#E6EBEE')
           localStorage.removeItem('userInfo')
           Cookie.delCookieTalkmate('is_anonymous')
           Cookie.delCookie('user_id')
@@ -131,6 +168,7 @@ export default {
           }
         } else {
           _this.errText = errCode[res.code]
+          $('input[type="password"]').css('border-color', '#D0021B')
           flag = false
         }
       })
@@ -154,25 +192,53 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .bg-box {
-    padding: 80px 0px;
+  a {
+    text-decoration: none;
   }
-  .user-login {
-    width: 420px;
+  .user-login-pwd {
+    position: relative;
+    width: 380px;
     /* height: 376px; */
     border-radius: 5px;
     background-color: #fff;
     margin: 0px auto;
-    padding: 40px 50px 0px;
+    padding: 40px 40px 0px;
+  }
+  .user-login-pwd .go-phone-login {
+    width: 42px;
+    height: 42px;
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    cursor: pointer;
+    .bg-img {
+      width: 42px;
+      height: 42px;
+      background: url('../../../static/images/authLogin/phone.svg') no-repeat center;
+      background-size: cover;
+    }
+    .bg-img:hover {
+      width: 42px;
+      height: 42px;
+      background: url('../../../static/images/authLogin/phoneHover.svg') no-repeat center;
+      background-size: cover;
+      animation: seconddiv 1.5s ease-in-out;
+    }
+  }
+  @keyframes seconddiv{
+    0% {transform: scale(1.1,1.1);}
+    30% {transform: scale(1,1);}
+    60% {transform: scale(1.1,1.1);}
+    100% {transform: scale(1,1);}
   }
   h2 {
     line-height: 36px;
     font-size: 26px;
     font-weight: 600;
     text-align: center;
-    color: #299fe4;
+    color: #333;
   }
-  .user-login .input_text {
+  .user-login-pwd .input_text {
     display: block;
     width: 100%;
     height: 40px;
@@ -201,11 +267,11 @@ export default {
     color: #D6DFE4;
   }
   input[type="text"] {
-    margin-top: 30px;
-    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
   input[type="password"] {
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
   button {
     position: relative;
@@ -213,28 +279,32 @@ export default {
     height: 40px;
     color: #fff;
     font-size: 16px;
+    font-weight: bold;
     border: none;
     border-radius: 84px;
     background-color: #74C105;
-    margin-top: 50px;
-    &:hover p {
-      display: block;
-    }
+    margin-top: 52px;
     p {
-      display: none;
-      width: 20px;
-      height: 20px;
-      background: url('../../../static/images/authLogin/going.svg') no-repeat center;
-      background-size: cover;
-      position: absolute;
-      top: 26%;
-      left: 60%;
+      width: 80px;
+      margin: 0 auto;
+      i {
+        display: none;
+        width: 20px;
+        height: 20px;
+        background: url('../../../static/images/authLogin/going.svg') no-repeat center;
+        background-size: cover;
+        float: right;
+        margin-top: 2px;
+      }
+    }
+    &:hover i {
+      display: block;
     }
   }
   button:disabled {
     background-color: #D6DFE4;
     cursor: not-allowed;
-    &:hover p {
+    &:hover i {
       display: none;
     }
   }
@@ -244,7 +314,9 @@ export default {
     overflow: hidden;
   }
   .auto-forget .auto-login {
+    width: 110px;
     color: #B2C0C9;
+    font-size: 14px;
     overflow: hidden;
     user-select: none;
     display: flex;
@@ -293,21 +365,24 @@ export default {
     color: #2A9FE4;
     user-select: none;
   }
+  .auto-forget .auto-content {
+    display: flex;
+    justify-content: space-between;
+  }
   .auto-forget .forget {
     display: inline-block;
-    width: 100%;
     font-size: 14px;
     font-family: PingFang-SC-Medium;
     font-weight: 500;
     line-height: 20px;
-    margin-top: 10px;
+    margin-right: 10px;
   }
-  .auto-forget a {
+  .auto-forget .forget a {
     display: block;
     float: right;
   }
   .auto-forget span {
-    color: #B2C0C9;
+    color: #90A2AE;
   }
   .auto-forget span:hover {
     color: #2A9FE4;
@@ -320,7 +395,7 @@ export default {
     padding-left: 40px;
     padding-top: 20px;
     position: absolute;
-    bottom: 78px;
+    bottom: 42px;
   }
   .err-tip p:before {
     content: "";
@@ -349,10 +424,11 @@ export default {
     color: #2A9FE4;
   }
   .email-login {
-    padding: 40px 0 54px 0;
+    padding: 30px 0 72px;
     text-align: center;
   }
   .email-login p {
+    display: inline-block;
     cursor: pointer;
     height: 14px;
     font-size: 14px;

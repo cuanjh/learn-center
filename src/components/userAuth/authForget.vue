@@ -2,12 +2,19 @@
   <div class="bg-box">
     <div class="forget-box" v-show="showFlag === 0">
       <h2>找回密码</h2>
-      <p class="tip">请在下方输入你的手机号或输入注册全球说(talkmate)账号时填写的邮箱</p>
+      <p  class="tip"
+          v-text="currentType == 2 ? '请在下方输入框里输入你的电子邮箱，以获取验证链接。':'请在下方输入框里输入你的电话号码，以手机便获取验证码。'"></p>
       <div class="item">
-        <input type="text" placeholder="输入手机号/邮箱" v-model="userName">
+        <input  type="text"
+                :placeholder="currentType == 2?'请输入你的电子邮箱':'请输入你的手机号码'" v-model="userName">
       </div>
       <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
-      <button v-bind:disabled="!isGoLogin" @click="goVerify">获取验证信息<p></p></button>
+      <button v-bind:disabled="!isGoLogin" @click="goVerify">
+        <p>
+          获取验证信息
+          <i></i>
+        </p>
+      </button>
     </div>
     <send-success v-if="showFlag === 1" v-bind:email="userName"></send-success>
   </div>
@@ -29,7 +36,14 @@ export default {
   components: {
     sendSuccess
   },
+  mounted () {
+  },
   computed: {
+    currentType () {
+      let urlarr = this.$route.path.split('/')
+      let type = Number(urlarr[urlarr.length - 1])
+      return type
+    },
     usernameType () {
       // 用户输入的账号类型两种，分别是  phone  email, 返回fasle说明二者验证均不通过
       if (validation.email(this.username)) {
@@ -105,13 +119,15 @@ export default {
 
 <style lang="less" scoped>
   .forget-box {
-    width: 420px;
+    position: relative;
+    width: 380px;
     border-radius: 5px;
     background-color: #fff;
     margin: 0 auto;
     padding: 40px 43px 70px;
   }
   .bg-box {
+    min-height: 765px;
     padding: 80px 0px;
   }
   input::-webkit-input-placeholder {
@@ -155,7 +171,8 @@ export default {
     margin-top: 10px;
   }
   .forget-box .tip {
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 20px;
     text-align: center;
     color: #666;
   }
@@ -169,24 +186,28 @@ export default {
     border: none;
     border-radius: 20px;
     background-color: #299fe4;
-    &:hover p {
-      display: block;
-    }
     p {
-      display: none;
-      width: 20px;
-      height: 20px;
-      background: url('../../../static/images/authLogin/going.svg') no-repeat center;
-      background-size: cover;
-      position: absolute;
-      top: 26%;
-      left: 70%;
+      width: 150px;
+      margin: 0 auto;
+      i {
+        display: none;
+        width: 20px;
+        height: 20px;
+        background: url('../../../static/images/authLogin/going.svg') no-repeat center;
+        background-size: cover;
+        float: right;
+        margin-top: 2px;
+      }
+    }
+    &:hover i {
+      transition: padding-right 218ms ease;
+      display: block;
     }
   }
   .forget-box button:disabled {
     background-color: #cacaca;
     cursor: not-allowed;
-    &:hover p {
+    &:hover i {
       display: none;
     }
   }
@@ -197,7 +218,8 @@ export default {
     color: #dd2b2b;
     padding-left: 40px;
     padding-top: 20px;
-    position: relative;
+    position: absolute;
+    bottom: 110px;
   }
   .err-tip p:before {
     content: "";

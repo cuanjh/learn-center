@@ -2,7 +2,7 @@
   <div class="bg-box">
     <div class="resigter-box">
       <div class="mail-resigter">
-        <h2>邮箱注册!</h2>
+        <h2>邮箱登录!</h2>
         <div class="item">
           <input type="text" placeholder="邮箱账号" v-model="registerInfo.email">
         </div>
@@ -44,6 +44,7 @@ export default {
 
 <style lang="less" scoped>
 .bg-box {
+    min-height: 765px;
     /* background-color: #fcf1d5; */
     background-size: cover;
     padding: 80px 0;
@@ -174,5 +175,9 @@ export default {
     float: right;
     margin-right: 10px;
     padding: 10px 0 25px 0;
+    user-select:none;
+    &:hover {
+      color: #2A9FE4;
+    }
   }
 </style>

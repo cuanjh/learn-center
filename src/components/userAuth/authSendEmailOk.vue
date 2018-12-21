@@ -2,7 +2,12 @@
   <div class="forget-email">
     <img src="./../../../static/images/authLogin/send.svg" alt="检查邮箱">
     <p>已发送!</p>
-    <a :href="'https://' + emailUrl" v-show="emailUrl">立即前往</a>
+    <a :href="'https://' + emailUrl" v-show="emailUrl">
+      <p>
+        立即前往
+        <router-link tag="i" :to="{path:'reset_password/8187c17d31e6626d578b38ed140f961be820ba4f'}"></router-link>
+      </p>
+    </a>
   </div>
 </template>
 <script>
@@ -21,7 +26,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="less" scoped>
   .forget-email {
     width: 420px;
     border-radius: 5px;
@@ -59,5 +64,23 @@ export default {
     text-align: center;
     background-color: #299fe4;
     margin: 40px auto 0;
+    p {
+      width: 100px;
+      margin: 0 auto;
+      color: #fff;
+      i {
+        display: none;
+        width: 20px;
+        height: 20px;
+        background: url('../../../static/images/authLogin/going.svg') no-repeat center;
+        background-size: cover;
+        float: right;
+        margin-top: 10px;
+      }
+    }
+    &:hover i {
+      transition: padding-right 218ms ease;
+      display: block
+    }
   }
 </style>

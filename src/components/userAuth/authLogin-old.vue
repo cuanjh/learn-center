@@ -135,6 +135,7 @@ export default {
 
 <style scoped>
   .bg-box {
+    min-height: 765px;
     padding: 80px 0px;
   }
   .user-login {

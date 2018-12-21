@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <div class="container-block">
-      <div class="back" @click="close"><span>返回</span></div>
       <h4>使用条款与隐私政策</h4>
       <p class="nopadding2">鉴于：“全球说“为北京酷语时代教育科技有限公司经营的一款线上语言学习平台，请在注册账户前仔细阅读《全球说使用条款及隐私政策》（以下简称“本协议”）中的各项条款内容，若您按照注册程序成功注册，即表示您同意并签署了本协议，并在您和北京酷语时代教育科技有限公司（以下简称“酷语”）之间产生法律约束力，如果您是代表您的雇主或其他企业签订本协议，您在此陈述并保证您已获得充分的授权有权签署本协议。如您希望与我们讨论本协议相关事宜，请通过电邮info@talkmate.com与我们联络。</p>
     </div>
@@ -137,9 +136,6 @@ export default {
     return {}
   },
   methods: {
-    close () {
-      this.$emit('hidden')
-    }
   }
 }
 </script>
@@ -149,31 +145,14 @@ export default {
   padding: 0;
   font-family: Microsoft YaHei;
 }
-.container .back {
-  cursor: pointer;
-  display: inline-block;
-  width: 80px;
-  height: 40px;
-  background: #0581D1;
-  text-decoration:none;
-  border-radius: 10px;
-}
-.container .back span{
-  color: #ffffff;
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-  line-height: 40px;
-  text-align: center;
-}
 body, html {
   width: 100%;
   height: 100%;
 }
 .container {
   background: #ffffff;
-  margin: 0 auto;
-  padding: 100px;
+  padding: 50px 100px;
+  margin: 50px auto;
 }
 .container .container-block h4{
   font-size:18px;
@@ -182,7 +161,7 @@ body, html {
   color:rgba(16,48,68,1);
   line-height:25px;
   text-align: center;
-  margin: 25px 0;
+  margin: 0  0 25px 0;
 }
 .container .container-block .nopadding2 {
   font-size: 14px;

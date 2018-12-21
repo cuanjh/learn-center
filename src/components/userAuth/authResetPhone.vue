@@ -14,7 +14,12 @@
         <input type="password" placeholder="再次输入新密码" v-model="pwd2">
       </div>
       <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
-      <button class="ok-btn" v-bind:disabled="!isGoOkLogin" @click="goReset">完成<p></p></button>
+      <button class="ok-btn" v-bind:disabled="!isGoOkLogin" @click="goReset">
+        <p>
+          完成
+          <i></i>
+        </p>
+      </button>
     </div>
   </div>
 </template>
@@ -180,14 +185,16 @@ export default {
     color: #D6DFE4;
   }
   .bg-box {
+    min-height: 765px;
     padding: 80px 0px;
   }
   .reset-box {
-    width: 420px;
+    position: relative;
+    width: 380px;
     border-radius: 5px;
     background-color: #fff;
     margin: 0 auto;
-    padding: 40px 50px;
+    padding: 40px 40px 70px;
   }
   .reset-box .item {
     margin-top: 10px;
@@ -231,19 +238,10 @@ export default {
     color: #333;
   }
   .reset-box .tip {
-    font-size: 16px;
+    font-size: 14px;
     color: #666;
     text-align: center;
     padding: 10px 0 20px;
-  }
-  .reset-box .ok-btn {
-    display: block;
-    width: 100%;
-    height: 40px;
-    color: #fff;
-    font-size: 16px;
-    border: none;
-    border-radius: 20px;
   }
   .reset-box .ok-btn {
     position: relative;
@@ -256,24 +254,29 @@ export default {
     border: none;
     border-radius: 84px;
     background-color: #74C105;
-    &:hover p {
-      display: block;
-    }
+    margin: 50px 0 0;
     p {
-      display: none;
-      width: 20px;
-      height: 20px;
-      background: url('../../../static/images/authLogin/going.svg') no-repeat center;
-      background-size: cover;
-      position: absolute;
-      top: 26%;
-      left: 60%;
+      width: 80px;
+      margin: 0 auto;
+      i {
+        display: none;
+        width: 20px;
+        height: 20px;
+        background: url('../../../static/images/authLogin/going.svg') no-repeat center;
+        background-size: cover;
+        float: right;
+        margin-top: 2px;
+      }
+    }
+    &:hover i {
+      transition: padding-right 218ms ease;
+      display: block
     }
   }
   .reset-box .ok-btn:disabled {
     background-color: #D6DFE4;
     cursor: not-allowed;
-    &:hover p {
+    &:hover i {
       display: none;
     }
   }
@@ -284,7 +287,8 @@ export default {
     color: #dd2b2b;
     padding-left: 40px;
     padding-top: 20px;
-    position: relative;
+    position: absolute;
+    bottom: 110px;
   }
   .err-tip p:before {
     content: "";
