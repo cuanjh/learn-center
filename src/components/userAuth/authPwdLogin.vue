@@ -62,12 +62,20 @@ export default {
   },
   mounted () {
     console.log('type', this.type)
-    let userNameOld = Cookie.getCookie('userName')
-    let userPwdOld = Cookie.getCookie('userPwd')
-    if (userNameOld !== '' && userPwdOld !== '') {
-      this.isSaveLoginState = true
+    let checked = JSON.parse(Cookie.getCookie('isChecked'))
+    console.log('checked', checked)
+    if (checked === true) {
+      let userNameOld = Cookie.getCookie('userName')
+      let userPwdOld = Cookie.getCookie('userPwd')
       this.userName = userNameOld
       this.userPwd = userPwdOld
+      this.isSaveLoginState = true
+    } else {
+      Cookie.delCookie('userName')
+      Cookie.delCookie('userPwd')
+      this.userName = ''
+      this.userPwd = ''
+      this.isSaveLoginState = false
     }
   },
   computed: {
@@ -144,7 +152,17 @@ export default {
       }).then(res => {
         console.log('res', res)
         if (res.success) {
-          $('input').css('border-color', '#E6EBEE')
+          if (_this.isSaveLoginState) {
+            Cookie.setCookie('user_id', res.user_id)
+            Cookie.setCookie('verify', res.verify)
+            Cookie.setCookie('userName', _this.userName)
+            Cookie.setCookie('userPwd', _this.userPwd)
+          } else {
+            Cookie.delCookie('user_id', res.user_id)
+            Cookie.delCookie('verify', res.verify)
+            Cookie.delCookie('userName', _this.userName)
+            Cookie.delCookie('userPwd', _this.userPwd)
+          }
           localStorage.removeItem('userInfo')
           Cookie.delCookieTalkmate('is_anonymous')
           Cookie.delCookie('user_id')
@@ -156,10 +174,11 @@ export default {
             Cookie.setCookieSession('user_id', res.user_id)
             Cookie.setCookieSession('verify', res.verify)
           } */
+          Cookie.setCookie('isChecked', _this.isSaveLoginState)
           Cookie.setCookie('user_id', res.user_id)
           Cookie.setCookie('verify', res.verify)
-          Cookie.setCookie('userName', _this.userName)
-          Cookie.setCookie('userPwd', _this.userPwd)
+          // Cookie.setCookie('userName', _this.userName)
+          // Cookie.setCookie('userPwd', _this.userPwd)
           let UserId = Cookie.getCookie('user_id')
           let lastUserId = localStorage.getItem('last_user_id')
           if (lastUserId !== UserId) {
@@ -168,7 +187,6 @@ export default {
           }
         } else {
           _this.errText = errCode[res.code]
-          $('input[type="password"]').css('border-color', '#D0021B')
           flag = false
         }
       })

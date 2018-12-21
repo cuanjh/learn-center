@@ -4,7 +4,7 @@
       <div class="go-email-login">
         <div class="bg-img" @click="goEmail()"></div>
       </div>
-      <h2 v-text="type == 1 ? '你好!' : 'Hi, 欢迎回来'"></h2>
+      <h2 v-text="headerTitle"></h2>
       <div class="phone-resigter">
         <div class="item">
           <div class="areacode" @click="areaCode()">
@@ -15,7 +15,7 @@
           <input  id="phoneNumber"
                   type="text"
                   placeholder="输入手机号码"
-                  v-model="registerInfo.phone"
+                  v-model="phone"
                   @blur.prevent="blurPhoneFn()"
                   @keyup.enter="goLogin">
         </div>
@@ -23,22 +23,22 @@
           <input  id="phoneCode"
                   type="text"
                   placeholder="手机验证码"
-                  v-model="registerInfo.phoneCode"
+                  v-model="phoneCode"
                   @keyup.enter="goLogin">
-          <button v-bind:disabled="!isGetCode" @click="getCode">{{ time === 60?'获取':time+'s' }}</button>
+          <button v-bind:disabled="!isGetCode" @click="getCode">{{ time === 60 ? message :time+'s' }}</button>
         </div>
-        <div class="item verify-code">
+        <div class="item verify-code" v-show="false">
           <input  id="imgCode"
                   type="text"
                   placeholder="输入验证码"
-                  v-model="registerInfo.imgCode"
+                  v-model="imgCode"
                   @keyup.enter="goLogin">
           <img :src="imgCodeUrl" alt="图片验证码" @click="getCodeUrl">
         </div>
       </div>
       <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
       <!-- <button class="register-btn" v-bind:disabled="!isGoLogin" >登录<p></p></button> -->
-      <button class="register-btn" v-bind:disabled="!isGoLogin">
+      <button class="register-btn" v-bind:disabled="!isGoLogin" @click="goLogin()">
         <p>
           登录
           <i></i>
@@ -128,7 +128,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import validation from './../../tool/validation.js'
 // import http from './../../api/userAuth.js'
 // import { encrypt } from './../../tool/untils.js'
-// import Cookie from '../../tool/cookie'
+import Cookie from '../../tool/cookie'
 import errCode from './../../api/code.js'
 import AuthPwdLogin from './authPwdLogin'
 import $ from 'jquery'
@@ -138,15 +138,15 @@ import $ from 'jquery'
 export default {
   data () {
     return {
+      message: '获取',
+      headerTitle: '',
       shoeAreaCode: false, // 显示区域编码
       goPhone: true, // true 手机号 false 邮箱
-      registerInfo: {
-        phone: '',
-        phoneCode: '',
-        imgCode: '',
-        email: '',
-        emailPwd: ''
-      },
+      phone: '',
+      phoneCode: '',
+      imgCode: '',
+      // email: '',
+      // emailPwd: ''
       loading: false,
       errText: '',
       imgCodeUrl: '', // 图片验证码
@@ -160,6 +160,12 @@ export default {
   },
   mounted () {
     this.getCodeUrl()
+    let userId = Cookie.getCookie('user_id')
+    if (!userId) {
+      this.headerTitle = '你好!'
+    } else {
+      this.headerTitle = 'Hi，欢迎回来!'
+    }
   },
   computed: {
     ...mapState({
@@ -167,10 +173,10 @@ export default {
     }),
     // 手机验证码获取
     isGetCode () {
-      return this.registerInfo.phone && this.time === 60
+      return this.phone && this.time === 60
     },
     isGoLogin () {
-      return validation.phoneNumber(this.registerInfo.phone) && this.registerInfo.imgCode && this.registerInfo.phoneCode
+      return validation.phoneNumber(this.phone) && this.phoneCode
     }
   },
   methods: {
@@ -186,7 +192,7 @@ export default {
       sendCode: 'getSendCode'
     }),
     blurPhoneFn () {
-      if (validation.phoneNumber(this.registerInfo.phone)) {
+      if (validation.phoneNumber(this.phone)) {
         $('input[type="text"]').css('border-color', '#E6EBEE')
         this.errText = ''
         return false
@@ -225,12 +231,12 @@ export default {
     },
     // 点击获取验证码
     getCode () {
-      if (!validation.phoneNumber(this.registerInfo.phone)) {
+      if (!validation.phoneNumber(this.phone)) {
         this.errText = errCode['er01']
         $('#phoneNumber').css('border-color', '#D0021B')
         return false
       }
-      // http.sendCode({phonenumber: this.registerInfo.phone}).then(res => {
+      // http.sendCode({phonenumber: this.phone}).then(res => {
       //   console.log('res', res)
       //   if (res.success) {
       //     this.timer = setInterval(() => {
@@ -243,14 +249,41 @@ export default {
       //     }, 1000)
       //   }
       // })
-      this.sendCode({phonenumber: this.registerInfo.phone, codeLen: '6'}).then(res => {
+      this.sendCode({phonenumber: this.phone, codeLen: '6'}).then(res => {
         console.log('发送验证码', res)
+        if (res.success) {
+          this.timer = setInterval(() => {
+            --this.time
+            if (this.time === 0) {
+              this.time = 60
+              this.message = '重新获取'
+              clearInterval(this.timer)
+              this.tim = null
+            }
+          }, 1000)
+        } else {
+          this.errText = errCode[res.code]
+        }
+      })
+    },
+    // 点击登录按钮去登陆
+    async goLogin () {
+      this.errText = ''
+      if (!validation.phoneNumber(this.phone)) {
+        this.errText = errCode['er01'] // 'er01': '请输入正确的手机号'
+        return false
+      }
+      if (!validation.verfiyCode(this.phoneCode)) {
+        this.errText = errCode['er02'] // 'er02': '验证码错误'
+      }
+      console.log('===', this.phoneCode)
+      await this.userLogin({phonenumber: this.phone, code: this.phoneCode}).then((res) => {
+        console.log('登录接口返回', res)
       })
     }
-    // 点击登录按钮去登陆
     /* async goLogin () {
       this.errText = ''
-      if (!validation.phoneNumber(this.registerInfo.phone)) {
+      if (!validation.phoneNumber(this.phone)) {
         this.errText = errCode['e09'] // 'e06': '手机号或邮箱格式错误'
         return false
       }
@@ -431,7 +464,7 @@ html,body{-webkit-text-size-adjust:none;}
     padding: 4px 0px;
   }
   .phone-resigter .phone-code button {
-    width: 56px;
+    padding: 0 10px;
     height: 26px;
     font-size: 13px;
     color: #fff;
@@ -511,7 +544,7 @@ html,body{-webkit-text-size-adjust:none;}
     padding-left: 40px;
     padding-top: 20px;
     position: absolute;
-    bottom: 234px;
+    bottom: 250px;
   }
   .err-tip p:before {
     content: "";
@@ -545,9 +578,10 @@ html,body{-webkit-text-size-adjust:none;}
       height:30px;
     }
     i {
+      cursor: pointer;
       display: inline-block;
-      width:30px;
-      height:30px;
+      width:40px;
+      height:40px;
     }
     .weixin i{
       background: url('../../../static/images/authLogin/weixin.svg') no-repeat center;
