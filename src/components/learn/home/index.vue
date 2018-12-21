@@ -51,9 +51,10 @@ export default {
   created () {
     this.initData()
   },
-  // mounted () {
-  //   this.initData()
-  // },
+  mounted () {
+    // this.initData()
+    this.getUserInfo()
+  },
   computed: {
     ...mapState({
       courseLangs: state => state.course.courseLangs,
@@ -63,7 +64,8 @@ export default {
   methods: {
     ...mapActions({
       getCourseListV2: 'course/getCourseListV2',
-      searchPartnerList: 'course/searchPartnerList'
+      searchPartnerList: 'course/searchPartnerList',
+      getUserInfo: 'getUserInfo'
     }),
     async initData () {
       // 加载官方语言数据

@@ -18,7 +18,7 @@ export const httpLogin = (_url, _params) => { // 已经登录
   if (!_params) { // 无参数请求情况
     _params = {}
   }
-  let key = process.env.APP_KEY
+  _params.appKey = process.env.APP_KEY
   let secret = process.env.APP_SECRET
   _params.timeStamp = Moment().format('YYYYMMDDHHmmss')
   _params.reqId = randomString(16)
@@ -33,7 +33,7 @@ export const httpLogin = (_url, _params) => { // 已经登录
   })
   let sign = MD5(secret + paramsStr).toUpperCase()
 
-  return Vue.http.jsonp(process.env.API_HOST + _url + '?appKey=' + key + '&sign=' + sign, {params: _params})
+  return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign, {params: _params})
     .then(res => {
       if (res['data']['success']) {
         return new Promise((resolve, reject) => {
@@ -88,7 +88,7 @@ export const httpNoLogin = (_url, _params) => { // 未登录
   if (!_params) { // 无参数请求情况
     _params = {}
   }
-  let key = process.env.APP_KEY
+  _params.appKey = process.env.APP_KEY
   let secret = process.env.APP_SECRET
   _params.timeStamp = Moment().format('YYYYMMDDHHmmss')
   _params.reqId = randomString(16)
@@ -106,7 +106,7 @@ export const httpNoLogin = (_url, _params) => { // 未登录
     paramsStr += key + _params[key]
   })
   let sign = MD5(secret + paramsStr).toUpperCase()
-  return Vue.http.jsonp(process.env.API_HOST + _url + '?appKey=' + key + '&sign=' + sign, {params: _params})
+  return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign, {params: _params})
     .then(res => {
       // return res['data']
       if (res['data']['success']) {
