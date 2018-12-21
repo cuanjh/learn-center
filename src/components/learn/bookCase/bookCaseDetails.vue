@@ -227,7 +227,7 @@
           </div>
         </div>
         <!-- vip提示 -->
-        <VipPrompt></VipPrompt>
+        <vip-prompt></vip-prompt>
       </div>
     </div>
   </div>

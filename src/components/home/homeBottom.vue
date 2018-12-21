@@ -1,7 +1,10 @@
 <style scoped>
   .bottom-box {
+    position: absolute;
     background-color: #00315e;
     padding-top: 50px;
+    bottom: 0;
+    width: 100%;
   }
   .link-lists {
     width: 1200px;

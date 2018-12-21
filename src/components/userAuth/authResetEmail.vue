@@ -2,6 +2,7 @@
   <div class="bg-box">
     <div class="reset-box">
       <h2>密码重置</h2>
+      <p class="tip">请在下方输入框里输入新的登录密码！</p>
       <div class="item">
         <input type="text" placeholder="输入新密码" v-model="pwd1">
       </div>
@@ -9,7 +10,12 @@
         <input type="text" placeholder="再次输入新密码" v-model="pwd2">
       </div>
       <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
-      <button class="ok-btn" v-bind:disabled="!isGoLogin" @click="goReset">完成<p></p></button>
+      <button class="ok-btn" v-bind:disabled="!isGoLogin" @click="goReset">
+        <p>
+          完成
+          <i></i>
+        </p>
+      </button>
     </div>
   </div>
 </template>
@@ -78,11 +84,12 @@ export default {
     padding: 80px 0px;
   }
   .reset-box {
-    width: 420px;
+    position: relative;
+    width: 380px;
     border-radius: 5px;
     background-color: #fff;
     margin: 0 auto;
-    padding: 40px 50px;
+    padding: 40px 40px 70px;
   }
   .reset-box h2 {
     line-height: 36px;
@@ -90,7 +97,12 @@ export default {
     font-weight: 400;
     text-align: center;
     color: #333;
-    margin-bottom: 50px;
+  }
+  .reset-box .tip {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    padding: 10px 0 20px;
   }
   .reset-box .item {
     margin-top: 10px;
@@ -117,24 +129,29 @@ export default {
     border: none;
     border-radius: 20px;
     background-color: #299fe4;
-    &:hover p {
-      display: block;
-    }
+    margin-top: 50px;
     p {
-      display: none;
-      width: 20px;
-      height: 20px;
-      background: url('../../../static/images/authLogin/going.svg') no-repeat center;
-      background-size: cover;
-      position: absolute;
-      top: 26%;
-      left: 60%;
+      width: 80px;
+      margin: 0 auto;
+      i {
+        display: none;
+        width: 20px;
+        height: 20px;
+        background: url('../../../static/images/authLogin/going.svg') no-repeat center;
+        background-size: cover;
+        float: right;
+        margin-top: 3px;
+      }
+    }
+    &:hover i {
+      transition: padding-right 218ms ease;
+      display: block
     }
   }
   .reset-box .ok-btn:disabled {
     background-color: #cacaca;
     cursor: not-allowed;
-    &:hover p {
+    &:hover i {
       display: none;
     }
   }
@@ -145,7 +162,8 @@ export default {
     color: #dd2b2b;
     padding-left: 40px;
     padding-top: 20px;
-    position: relative;
+    position: absolute;
+    bottom: 110px;
   }
   .err-tip p:before {
     content: "";

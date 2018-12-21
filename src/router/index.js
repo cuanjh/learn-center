@@ -6,6 +6,7 @@ const authForget = r => require.ensure([], () => r(require('@/components/userAut
 const authResetPhone = r => require.ensure([], () => r(require('@/components/userAuth/authResetPhone.vue')), 'auth-reset-phone')
 const authResetEmail = r => require.ensure([], () => r(require('@/components/userAuth/authResetEmail.vue')), 'auth-reset-email')
 const selectLang = r => require.ensure([], () => r(require('@/components/userAuth/userSelectLang.vue')), 'select-lang')
+const authAgreement = r => require.ensure([], () => r(require('@/components/userAuth/authAgreement.vue')), 'auth-agreement')
 // 学习
 const learn = r => require.ensure([], () => r(require('@/components/learn/learn.vue')), 'learn')
 const learnIndex = r => require.ensure([], () => r(require('@/components/learn/home/index.vue')), 'learn-index')
@@ -69,6 +70,12 @@ export default[
       //   path: 'register/:code',
       //   component: authRegister
       // },
+      // 跳转隐私政策
+      {
+        path: 'auth-agreement',
+        name: 'authAgreement',
+        component: authAgreement
+      },
       {
         path: 'register',
         component: authRegister
@@ -78,7 +85,7 @@ export default[
         component: selectLang
       },
       {
-        path: 'forget',
+        path: 'forget/:type',
         component: authForget
       },
       {

@@ -1,31 +1,50 @@
 <template>
   <div class="bg-box">
-    <div class="user-login" v-show="goPhone">
-      <h2 v-text="headerTitle"></h2>
+    <div class="user-login" v-show="type == 0">
+      <div class="go-email-login">
+        <div class="bg-img" @click="goEmail()"></div>
+      </div>
+      <h2 v-text="type == 1 ? '你好!' : 'Hi, 欢迎回来'"></h2>
       <div class="phone-resigter">
         <div class="item">
-          <div class="areacode" @click="areaCode">
+          <div class="areacode" @click="areaCode()">
             +
             <span>86</span>
             <i class="arrow"></i>
           </div>
-          <input id="phoneNumber" type="text" placeholder="输入手机号码" v-model="registerInfo.phone" @keyup.enter="goLogin">
+          <input  id="phoneNumber"
+                  type="text"
+                  placeholder="输入手机号码"
+                  v-model="registerInfo.phone"
+                  @blur.prevent="blurPhoneFn()"
+                  @keyup.enter="goLogin">
         </div>
         <div class="item phone-code">
-          <input type="text" placeholder="手机验证码" v-model="registerInfo.phoneCode" @keyup.enter="goLogin">
+          <input  id="phoneCode"
+                  type="text"
+                  placeholder="手机验证码"
+                  v-model="registerInfo.phoneCode"
+                  @keyup.enter="goLogin">
           <button v-bind:disabled="!isGetCode" @click="getCode">{{ time === 60?'获取':time+'s' }}</button>
         </div>
         <div class="item verify-code">
-          <input type="text" placeholder="输入验证码" v-model="registerInfo.imgCode" @keyup.enter="goLogin">
+          <input  id="imgCode"
+                  type="text"
+                  placeholder="输入验证码"
+                  v-model="registerInfo.imgCode"
+                  @keyup.enter="goLogin">
           <img :src="imgCodeUrl" alt="图片验证码" @click="getCodeUrl">
         </div>
       </div>
       <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
-      <!-- <button class="register-btn" v-bind:disabled="loading">{{loading?'loading':'注册'}}</button> -->
-      <!-- 新用户登录 老用户注册 -->
-      <button class="register-btn" v-bind:disabled="!isGoLogin" >登录<p></p></button>
+      <!-- <button class="register-btn" v-bind:disabled="!isGoLogin" >登录<p></p></button> -->
+      <button class="register-btn">
+        <p>
+          登录
+          <i></i>
+        </p></button>
       <div class="login-pwd">
-        <p @click="goPwdLogin">密码登录</p>
+        <p @click="goPwdLogin()">手机密码登录</p>
       </div>
       <div class="divider">
         <span class="line"></span>
@@ -45,13 +64,13 @@
         </div>
       </div>
       <!-- 新用户邮箱注册 老用户邮箱登录  @click="changeTypeEmail" -->
-      <div class="go-email-register">
-        <router-link tag="span" to="/auth/register">邮箱登录</router-link>
-      </div>
+      <!-- <div class="go-email-register">
+        <span @click="goEmail()">邮箱登录</span>
+      </div> -->
       <div class="privacy">
         <p>
           <span>我声明,我已经阅读并接受</span>
-          <span @click="showAreement">使用条款及隐私政策</span>
+          <a @click="showAreement()">使用条款及隐私政策</a>
         </p>
       </div>
       <div class="areacode-box" v-show="shoeAreaCode">
@@ -101,32 +120,26 @@
         </div>
       </div>
     </div>
-    <authPwdLogin v-show="goPwd"></authPwdLogin>
-    <authAgreement v-show="panelShow" @hidden="hiddenShow"></authAgreement>
+    <auth-pwd-login v-show="type == 1 || type == 2" :type='type' @updateType='updateType'></auth-pwd-login>
   </div>
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import validation from './../../tool/validation.js'
 import http from './../../api/userAuth.js'
-// import { encrypt } from './../../tool/untils.js'
-// import Cookie from '../../tool/cookie'
-// import errCode from './../../api/code.js'
-import authPwdLogin from './authPwdLogin'
-import authAgreement from './authAgreement'
+import { encrypt } from './../../tool/untils.js'
+import Cookie from '../../tool/cookie'
+import errCode from './../../api/code.js'
+import AuthPwdLogin from './authPwdLogin'
+import $ from 'jquery'
 
 // import Cookies from 'js-cookie'
 
 export default {
   data () {
     return {
-      panelShow: false, // 隐私政策
       shoeAreaCode: false, // 显示区域编码
-      isNew: 1, // 0 是新用户 1 是老用户
-      goPwd: false,
-      headerTitle: '', // Hi，欢迎回来
       goPhone: true, // true 手机号 false 邮箱
-      // registerFlagEmail: false, // 邮箱
       registerInfo: {
         phone: '',
         phoneCode: '',
@@ -138,22 +151,15 @@ export default {
       errText: '',
       imgCodeUrl: '', // 图片验证码
       time: 60,
-      timer: null // 定时器
+      timer: null, // 定时器
+      type: 0 // 0验证码登录 1手机密码登录 2邮箱登录
     }
   },
   components: {
-    authPwdLogin,
-    authAgreement
+    AuthPwdLogin
   },
   mounted () {
     this.getCodeUrl()
-    // let userId = Cookie.getCookie('user_id')
-    // 把userId变成isNew
-    if (this.isNew === 1) {
-      this.headerTitle = 'Hi，欢迎回来'
-    } else {
-      this.headerTitle = '你好!'
-    }
   },
   computed: {
     ...mapState({
@@ -161,7 +167,7 @@ export default {
     }),
     // 手机验证码获取
     isGetCode () {
-      return validation.phoneNumber(this.registerInfo.phone) && this.time === 60
+      return this.registerInfo.phone && this.time === 60
     },
     isGoLogin () {
       return validation.phoneNumber(this.registerInfo.phone) && this.registerInfo.imgCode && this.registerInfo.phoneCode
@@ -177,14 +183,33 @@ export default {
       getCaptchaUrl: 'user/getCaptchaUrl',
       login: 'user/login'
     }),
+    blurPhoneFn () {
+      if (validation.phoneNumber(this.registerInfo.phone)) {
+        $('input[type="text"]').css('border-color', '#E6EBEE')
+        this.errText = ''
+        return false
+      }
+    },
+    // 更新type
+    updateType (type) {
+      this.type = type
+    },
+    // 邮箱登录
+    goEmail () {
+      this.type = 2
+      console.log('type', this.type)
+    },
+    // 手机密码登录
+    goPwdLogin () {
+      this.type = 1
+      console.log('type', this.type)
+    },
     // 控制隐私的显示隐藏
     showAreement () {
-      this.panelShow = true
-      this.goPhone = false
-    },
-    hiddenShow () {
-      this.panelShow = false
-      this.goPhone = true
+      let routeDate = this.$router.resolve({
+        name: 'authAgreement'
+      })
+      window.open(routeDate.href)
     },
     // 显示区域编码
     areaCode () {
@@ -196,117 +221,133 @@ export default {
         this.imgCodeUrl = res
       })
     },
-    // 邮箱注册
-    // changeTypeEmail () {
-    //   // let userId = Cookie.getCookie('user_id')
-    //   if (this.isNew === 1) {
-    //     this.goPwd = true
-    //   } else {
-    //     this.registerFlagEmail = true
-    //   }
-    //   this.goPhone = false
-    // },
-    // changeTypePhone () {
-    //   this.goPhone = true
-    //   this.registerFlagEmail = false
-    // },
-    // 密码登录
-    goPwdLogin () {
-      this.goPwd = true
-      this.goPhone = false
-    },
     // 点击获取验证码
     getCode () {
+      if (!validation.phoneNumber(this.registerInfo.phone)) {
+        this.errText = errCode['er01']
+        $('#phoneNumber').css('border-color', '#D0021B')
+        return false
+      }
       http.sendCode({phonenumber: this.registerInfo.phone}).then(res => {
+        console.log('res', res)
         if (res.success) {
           this.timer = setInterval(() => {
             --this.time
             if (this.time === 0) {
-              this.time = 10
+              this.time = 60
               clearInterval(this.timer)
               this.timer = null
             }
           }, 1000)
         }
       })
-    }
+    },
     // 点击登录按钮去登陆
-    // async goLogin () {
-    //   this.errText = ''
-    //   if (!validation.phoneNumber(this.registerInfo.phone)) {
-    //     this.errText = errCode['e09'] // 'e06': '手机号或邮箱格式错误'
-    //     return false
-    //   }
-    //   if (!validation.pwd(this.userPwd)) {
-    //     this.errText = errCode['e02'] // 'e02': '密码格式错误'
-    //     return false
-    //   }
-    //   this.loading = true
-    //   let flag = true
-    //   await this.login({
-    //     identity: this.userName,
-    //     password: encrypt(this.userPwd)
-    //   }).then(res => {
-    //     if (res.success) {
-    //       // 先把localStorage里面的用户的信息和cookie里面的用户信息都清除了
-    //       localStorage.removeItem('userInfo')
-    //       Cookie.delCookieTalkmate('is_anonymous')
-    //       Cookie.delCookie('user_id')
-    //       Cookie.delCookie('verify')
-    //       // if (this.autoFlag) {
-    //       //   Cookie.setCookieAuto('user_id', res.user_id)
-    //       //   Cookie.setCookieAuto('verify', res.verify)
-    //       // } else {
-    //       //   Cookie.setCookieSession('user_id', res.user_id)
-    //       //   Cookie.setCookieSession('verify', res.verify)
-    //       // }
-    //       Cookie.setCookie('user_id', res.user_id)
-    //       Cookie.setCookie('verify', res.verify)
-    //       let UserId = Cookie.getCookie('user_id')
-    //       let lastUserId = localStorage.getItem('last_user_id')
-    //       if (lastUserId !== UserId) {
-    //         localStorage.setItem('lastUserId', UserId)
-    //         localStorage.removeItem('lastCourseCode')
-    //       }
-    //     } else {
-    //       this.loading = false
-    //       this.errText = errCode[res.code]
-    //       flag = false
-    //     }
-    //   })
-    //   // 如果是登陆状态的操作
-    //   if (flag) {
-    //     let lastCourseCode = localStorage.getItem('lastCourseCode')
-    //     if (!lastCourseCode) {
-    //       await this.getUserInfo()
-    //       this.updateCurCourseCode(this.userInfo.current_course_code)
-    //       localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
-    //       // cookie里面有一个isLogin判断是否登陆，0是没登录 1是登陆状态
-    //       this.updateIsLogin('1')
-    //       this.$router.push({path: '/app/course-list'})
-    //     } else {
-    //       this.updateCurCourseCode(lastCourseCode)
-    //       this.updateIsLogin('1')
-    //       this.$router.push({path: '/app/course-list'})
-    //     }
-    //   }
-    // }
+    async goLogin () {
+      this.errText = ''
+      if (!validation.phoneNumber(this.registerInfo.phone)) {
+        this.errText = errCode['e09'] // 'e06': '手机号或邮箱格式错误'
+        return false
+      }
+      if (!validation.pwd(this.userPwd)) {
+        this.errText = errCode['e02'] // 'e02': '密码格式错误'
+        return false
+      }
+      this.loading = true
+      let flag = true
+      await this.login({
+        identity: this.userName,
+        password: encrypt(this.userPwd)
+      }).then(res => {
+        if (res.success) {
+          // 先把localStorage里面的用户的信息和cookie里面的用户信息都清除了
+          localStorage.removeItem('userInfo')
+          Cookie.delCookieTalkmate('is_anonymous')
+          Cookie.delCookie('user_id')
+          Cookie.delCookie('verify')
+          // if (this.autoFlag) {
+          //   Cookie.setCookieAuto('user_id', res.user_id)
+          //   Cookie.setCookieAuto('verify', res.verify)
+          // } else {
+          //   Cookie.setCookieSession('user_id', res.user_id)
+          //   Cookie.setCookieSession('verify', res.verify)
+          // }
+          Cookie.setCookie('user_id', res.user_id)
+          Cookie.setCookie('verify', res.verify)
+          let UserId = Cookie.getCookie('user_id')
+          let lastUserId = localStorage.getItem('last_user_id')
+          if (lastUserId !== UserId) {
+            localStorage.setItem('lastUserId', UserId)
+            localStorage.removeItem('lastCourseCode')
+          }
+        } else {
+          this.loading = false
+          this.errText = errCode[res.code]
+          flag = false
+        }
+      })
+      // 如果是登陆状态的操作
+      if (flag) {
+        let lastCourseCode = localStorage.getItem('lastCourseCode')
+        if (!lastCourseCode) {
+          await this.getUserInfo()
+          this.updateCurCourseCode(this.userInfo.current_course_code)
+          localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
+          // cookie里面有一个isLogin判断是否登陆，0是没登录 1是登陆状态
+          this.updateIsLogin('1')
+          this.$router.push({path: '/app/course-list'})
+        } else {
+          this.updateCurCourseCode(lastCourseCode)
+          this.updateIsLogin('1')
+          this.$router.push({path: '/app/course-list'})
+        }
+      }
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
+html,body{-webkit-text-size-adjust:none;}
+.pcss5{-webkit-text-size-adjust:none;}
   .bg-box {
     padding: 80px 0px;
   }
-  .user-login,.mail-resigter {
+  .user-login .go-email-login {
+    width: 42px;
+    height: 42px;
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    cursor: pointer;
+    .bg-img {
+      width: 42px;
+      height: 42px;
+      background: url('../../../static/images/authLogin/email.svg') no-repeat center;
+      background-size: cover;
+    }
+    .bg-img:hover {
+      width: 42px;
+      height: 42px;
+      background: url('../../../static/images/authLogin/emailHover.svg') no-repeat center;
+      background-size: cover;
+      animation: seconddiv 1.5s ease-in-out;
+    }
+  }
+  @keyframes seconddiv{
+    0% {transform: scale(1.1,1.1);}
+    30% {transform: scale(1,1);}
+    60% {transform: scale(1.1,1.1);}
+    100% {transform: scale(1,1);}
+  }
+  .user-login {
     position: relative;
-    width: 440px;
+    width: 380px;
     // height: 520px;
     border-radius: 5px;
     background-color: #fff;
     margin: 0px auto;
-    padding: 40px 50px 0px;
+    padding: 40px 40px 0px;
   }
   h2 {
     line-height: 36px;
@@ -331,8 +372,8 @@ export default {
     font-size: 14px;
     color: #D6DFE4;
   }
-  .phone-resigter .item, .mail-resigter .item {
-    margin-top: 15px;
+  .phone-resigter .item {
+    margin-top: 10px;
     overflow: hidden;
     position: relative;
     .areacode {
@@ -353,7 +394,7 @@ export default {
       background-size: 100%;
     }
   }
-  .phone-resigter .item input, .mail-resigter .item input {
+  .phone-resigter .item input {
     width: 100%;
     height: 38px;
     border-radius: 84px;
@@ -370,27 +411,25 @@ export default {
   .phone-resigter .item #phoneNumber {
     padding-left: 82px;
   }
-  .phone-resigter .verify-code input,
-  .mail-resigter .verify-code input {
+  .phone-resigter .verify-code input {
     float: left;
     width: 180px;
   }
-  .phone-resigter .verify-code img,
-  .mail-resigter .verify-code img {
+  .phone-resigter .verify-code img {
     float: right;
-    width: 120px;
-    height: 40px;
+    width: 108px;
+    height: 38px;
     border-radius: 20px;
     cursor: pointer;
     background-color: #f2f2f2;
     padding: 4px 0px;
   }
   .phone-resigter .phone-code button {
-    width: 58px;
-    height: 28px;
-    font-size: 12px;
+    width: 56px;
+    height: 26px;
+    font-size: 13px;
     color: #fff;
-    border-radius: 14px;
+    border-radius: 84px;
     border: none;
     background-color: #299fe4;
     position: absolute;
@@ -410,28 +449,33 @@ export default {
     height: 40px;
     font-size: 16px;
     color: #fff;
+    font-weight: bold;
     border: none;
     border-radius: 84px;
     background-color: #74C105;
-    margin-top: 49px;
-    &:hover p {
-      display: block;
-    }
+    margin-top: 50px;
     p {
-      display: none;
-      width: 20px;
-      height: 20px;
-      background: url('../../../static/images/authLogin/going.svg') no-repeat center;
-      background-size: cover;
-      position: absolute;
-      top: 26%;
-      left: 60%;
+      width: 80px;
+      margin: 0 auto;
+      i {
+        display: none;
+        width: 20px;
+        height: 20px;
+        background: url('../../../static/images/authLogin/going.svg') no-repeat center;
+        background-size: cover;
+        float: right;
+        margin-top: 2px;
+      }
+    }
+    &:hover i {
+      display: block;
+      transition: padding-right 218ms ease;
     }
   }
   .register-btn:disabled {
     background-color: #D6DFE4;
     cursor: not-allowed;
-    &:hover p {
+    &:hover i {
       display: none;
     }
   }
@@ -444,7 +488,7 @@ export default {
     font-size:14px;
     font-family:PingFang-SC-Medium;
     font-weight:500;
-    color:#B2C0C9;
+    color:#3C5B6F;
     line-height:14px;
     float: right;
     margin-right: 10px;
@@ -461,7 +505,7 @@ export default {
     padding-left: 40px;
     padding-top: 20px;
     position: absolute;
-    bottom: 116px;
+    bottom: 234px;
   }
   .err-tip p:before {
     content: "";
@@ -473,12 +517,10 @@ export default {
     top: 20px;
     background: url('./../../../static/images/authLogin/mark.svg') no-repeat center;
   }
-  .user-login .err-tip {
-    bottom: 232px;
-  }
   .divider {
     text-align: center;
     line-height: 24px;
+    font-size: 13px;
     color: #D6DFE4;
     span:nth-child(1), span:nth-child(3) {
       display: inline-block;
@@ -514,21 +556,21 @@ export default {
       background-size: cover;
     }
   }
-  .go-email-register {
-    padding: 31px 0 21px 0;
-    text-align: center;
-    span {
-      cursor: pointer;
-      width: 56px;
-      height: 14px;
-      font-size: 14px;
-      font-family: PingFang-SC-Medium;
-      font-weight: 500;
-      color:rgba(42,159,228,1);
-      line-height: 14px;
-      text-decoration: underline;
-    }
-  }
+  // .go-email-register {
+  //   padding: 31px 0 21px 0;
+  //   text-align: center;
+  //   span {
+  //     cursor: pointer;
+  //     width: 56px;
+  //     height: 14px;
+  //     font-size: 14px;
+  //     font-family: PingFang-SC-Medium;
+  //     font-weight: 500;
+  //     color:rgba(42,159,228,1);
+  //     line-height: 14px;
+  //     text-decoration: underline;
+  //   }
+  // }
   .privacy {
     width: 100%;
     display: inline-block;
@@ -536,8 +578,10 @@ export default {
     font-weight: 400;
     color: #A5B2BA;
     line-height: 18px;
-    padding-bottom: 10px;
-    span:nth-child(2) {
+    padding: 38px 0 20px;
+    text-align: center;
+    a {
+      text-decoration: none;
       &:hover {
         cursor: pointer;
         color: #2A9FE4;
