@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 import { httpLogin, httpNoLogin, httpLoginUrl } from '../../api/api'
 import config from '../../api/config'
 import * as useMethod from './userMethod'
@@ -80,6 +81,14 @@ const actions = {
   getCourseArchives ({commit}) {
     return httpLogin(config.getCourseArchives)
   },
+  // 新登录接口手机快速登录
+  userLogin ({commit}, params) {
+    return httpNoLogin(config.umUserLoginApi, params)
+  },
+  getSendCode ({commit}, params) {
+    return httpNoLogin(config.umSendCodeApi, params)
+  },
+
   getTradeRecord ({commit, dispatch, state}) {
     commit('dataPageing') // 用于分页展示使用
     commit('showLoading')

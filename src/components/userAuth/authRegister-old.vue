@@ -283,6 +283,7 @@ export default {
 
 <style scoped>
   .bg-box {
+    min-height: 765px;
     /* background-color: #fcf1d5; */
     background-size: cover;
     padding: 80px 0;

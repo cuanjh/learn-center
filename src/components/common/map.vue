@@ -7,8 +7,11 @@
 // import _ from 'lodash'
 
 import BMap from 'BMap'
+import BMapLib from 'BMapLib'
 import Bus from '../../bus'
 import mapData from '../../api/mapData'
+
+var mp = null
 // import BMapSymbolSHAPEPOINT from 'BMap_Symbol_SHAPE_POINT'
 export default {
   props: ['data'],
@@ -44,7 +47,7 @@ export default {
         })
       })
       console.log('langlist', this.langList)
-      this.courseLangsMap()
+      // this.courseLangsMap()
     })
 
     this.$on('removeMarks', () => {
@@ -69,13 +72,14 @@ export default {
     },
     baiduMap () {
       // 创建地图实例
-      this.map = new BMap.Map('allmap', {
+      mp = new BMap.Map('allmap', {
         enableMapClick: false,
         minZoom: 1,
         maxZoom: 6
       })
       // 开启鼠标滚轮缩放
-      this.map.enableScrollWheelZoom(true)
+      mp.enableScrollWheelZoom(true)
+      console.log('bmaplib', BMapLib)
       // 创建点坐标
       // var point = new BMap.Point(-3.658035, 40.467359)
 
@@ -90,7 +94,7 @@ export default {
       // }
 
       // var localSearch = new BMap.LocalSearch(this.map, options)
-      this.map.addEventListener('load', () => {
+      mp.addEventListener('load', () => {
         // 设置版权控件位置
         /* eslint-disable */
         var cr = new BMap.CopyrightControl({
@@ -99,15 +103,17 @@ export default {
         /* eslint-enable */
 
         // 添加版权控件
-        this.map.addControl(cr)
+        mp.addControl(cr)
 
         // 返回地图可视区域
-        var bs = this.map.getBounds()
+        var bs = mp.getBounds()
+        console.log('bs', bs)
         cr.addCopyright({
           id: 1,
-          content: '<span style="font-size:20px;background:;margin-left: 50px; line-height:80px;">' + this.copyrightText + '</span>',
+          content: '<span style="font-size:14px; font-weight: 500; color:#4c4c4c ;background:;margin-left: 50px; line-height:40px;">' + this.copyrightText + '</span>',
           bounds: bs
         })
+        this.courseLangsMap()
         // this.addPosition()
       //   alert(0)
       //   var circle = new BMap.Circle(point, 500000, {
@@ -166,7 +172,7 @@ export default {
         type: BMAP_NAVIGATION_CONTROL_SMALL
       }
       /* eslint-enable */
-      this.map.addControl(new BMap.NavigationControl(opts))
+      mp.addControl(new BMap.NavigationControl(opts))
       // map.addControl(new BMap.ScaleControl(opts))
       // map.addControl(new BMap.OverviewMapControl())
       // map.addControl(new BMap.MapTypeControl())
@@ -252,10 +258,17 @@ export default {
       myCity.get((result) => {
         console.log(result)
         var cityName = result.name
-        this.map.setCenter(cityName)
-        this.map.centerAndZoom(cityName, 4)
+        mp.setCenter(cityName)
+        mp.centerAndZoom(cityName, 4)
         // alert('当前定位城市:' + cityName)
       })
+
+      // setTimeout(() => {
+      //   let txt = '银湖海岸城'
+      //   let mouseoverTxt = txt + ' ' + parseInt(Math.random() * 1000, 10) + '套'
+      //   var myCompOverlay = new ComplexCustomOverlay(new BMap.Point(116.407845, 39.914101), 'https://uploadfile1.talkmate.com/uploadfiles/avatar/5a901c662152c7c305b8d6db?v=1', mouseoverTxt)
+      //   mp.addOverlay(myCompOverlay)
+      // }, 1000)
 
       // this.map.clearOverlays()
 
@@ -273,7 +286,7 @@ export default {
       /* eslint-disable */
       let styleJson = mapData.mapStyle
       /* eslint-enable */
-      this.map.setMapStyle({styleJson: styleJson})
+      mp.setMapStyle({styleJson: styleJson})
     },
     addMarker (point, index) {
       // 创建图标对象
@@ -293,7 +306,7 @@ export default {
       marker.addEventListener('click', () => {
         alert('您点击了标注')
       })
-      this.map.addOverlay(marker)
+      mp.addOverlay(marker)
     },
     // 定义自定义覆盖物的构造函数
     SquareOverlay (center, length, color) {
@@ -380,29 +393,28 @@ export default {
       var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat)
       // 创建信息窗口对象
       var infoWindow = new BMap.InfoWindow(content, {
-        width: 50,
-        height: 30
+        offset: new BMap.Size(0, -25)
       })
       // 开启信息窗口
-      this.map.openInfoWindow(infoWindow, point)
+      mp.openInfoWindow(infoWindow, point)
     },
     mapSearch (key) {
       console.log(key)
-      console.log(this.map)
+      console.log(mp)
       var options = {
         renderOptions: {
-          map: this.map
+          map: mp
         },
         onSearchComplete: (results) => {
           console.log('Search Completed', results)
           // 可添加自定义回调函数
         }
       }
-      var localSearch = new BMap.LocalSearch(this.map, options)
-      // let swLng = this.map.getBounds().getSouthWest().lng
-      // let swLat = this.map.getBounds().getSouthWest().lat
-      // let neLng = this.map.getBounds().getNorthEast().lng
-      // let neLat = this.map.getBounds().getNorthEast().lat
+      var localSearch = new BMap.LocalSearch(mp, options)
+      // let swLng = mp.getBounds().getSouthWest().lng
+      // let swLat = mp.getBounds().getSouthWest().lat
+      // let neLng = mp.getBounds().getNorthEast().lng
+      // let neLat = mp.getBounds().getNorthEast().lat
       // var b = new BMap.Bounds(new BMap.Point(swLng, swLat), new BMap.Point(neLng, neLat)) // 范围 左下角，右上角的点位置
       // localSearch.searchInBounds(key, b, {
       //   customData: {
@@ -414,38 +426,51 @@ export default {
     // 官方语言地图
     courseLangsMap () {
       // let courseLangsData = mapData.courseLangsMap
+      let markers = []
       mapData.courseLangMap.forEach(lang => {
-        let pt = new BMap.Point(lang.lon, lang.lat)
-        var myIcon = new BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/fox.gif', new BMap.Size(100, 100))
+        if (!lang.lng) {
+          console.log('lang', lang)
+        }
+        let pt = new BMap.Point(lang.lng, lang.lat)
+        // var myIcon = new BMap.Icon('../../../static/images/bookCase/endangered-big.svg', new BMap.Size(150, 150))
 
-        let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(0, 15)})
+        // let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(65, 40)})
         let obj = this.langList.find((x) => {
           return x.lan_code === lang.lang_code
         })
-        let label = new BMap.Label(obj.name['zh-CN'], {offset: new BMap.Size(60, 15)}) // 创建marker点的标记
+        // let label = new BMap.Label(obj.name['zh-CN'], {offset: new BMap.Size(60, 15)}) // 创建marker点的标记
 
         // 对label 样式隐藏
         // label.setStyle({display: 'none'})
         // 把label设置到maker上
-        marker.setLabel(label)
-        this.map.addOverlay(marker)
-        var sContent =
-          '<div>' +
-            '<p>' +
-              '<img style="float:left;margin:4px" src="' + obj.flag + '" width="50" height="50" title=""/>' +
-              '<a href="./book-details/' + obj.lan_code + '-Basic">' +
-                '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
-                  obj.name['zh-CN'] +
-                '</span>' +
-              '</a>' +
-            '</p>' +
-          '</div>'
-        this.addMouseoverHandler(sContent, marker)
+        // marker.setLabel(label)
+        // mp.addOverlay(marker)
+        // var sContent =
+        //   '<div>' +
+        //     '<p>' +
+        //       '<img style="float:left;margin:4px" src="' + obj.flag + '" width="50" height="50" title=""/>' +
+        //       '<a href="./book-details/' + obj.lan_code + '-Basic">' +
+        //         '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
+        //           obj.name['zh-CN'] +
+        //         '</span>' +
+        //       '</a>' +
+        //     '</p>' +
+        //   '</div>'
+        // this.addMouseoverHandler(sContent, marker)
+
+        var myCompOverlay = new ComplexCustomOverlay(pt, obj, 'course')
+        // console.log(myCompOverlay)
+        mp.addOverlay(myCompOverlay)
+        // console.log('marker.getPosition()', marker.getPosition())
+        markers.push(myCompOverlay)
       })
+      /* eslint-disable */
+      // var markerClusterer = new BMapLib.MarkerClusterer(mp, {markers:markers})
+       /* eslint-enable */
     },
     // 删除覆盖物
     removeMarks () {
-      this.map.clearOverlays()
+      mp.clearOverlays()
     },
     // 加载语伴
     loadPartner () {
@@ -472,9 +497,9 @@ export default {
 
       let arr = [-1, 1]
       let pt = new BMap.Point(point.lng + Math.random() * 10 * arr[parseInt(Math.random() * 2)], point.lat + Math.random() * 10 * arr[parseInt(Math.random() * 2)])
-      var myIcon = new BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/fox.gif', new BMap.Size(100, 100))
+      // var myIcon = new BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/fox.gif', new BMap.Size(100, 100))
 
-      let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(0, 15)})
+      // let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(0, 15)})
       // let obj = this.langList.find((x) => {
       //   return x.lan_code === lang.lang_code
       // })
@@ -484,7 +509,13 @@ export default {
       // label.setStyle({display: 'none'})
       // 把label设置到maker上
       // marker.setLabel(label)
-      this.map.addOverlay(marker)
+      // mp.addOverlay(marker)
+
+      var myCompOverlay = new ComplexCustomOverlay(pt, item, 'partner')
+      mp.addOverlay(myCompOverlay)
+      /* eslint-disable */
+      // myCompOverlay.setAnimation(BMAP_ANIMATION_BOUNCE) // 跳动的动画
+      /* eslint-enable */
       // this.myGeo.getPoint(capital, (point) => {
       //   if (point) {
       //     console.log(Math.random())
@@ -502,13 +533,137 @@ export default {
       //     // label.setStyle({display: 'none'})
       //     // 把label设置到maker上
       //     // marker.setLabel(label)
-      //     this.map.addOverlay(marker)
+      //     mp.addOverlay(marker)
       //   } else {
       //     console.log('您选择地址没有解析到结果! ' + capital)
       //   }
       // }, capital)
     }
   }
+}
+
+function ComplexCustomOverlay (point, data, type) {
+  this._point = point
+  this._data = data
+  this._type = type
+}
+
+ComplexCustomOverlay.prototype = new BMap.Overlay()
+
+ComplexCustomOverlay.prototype.initialize = function (map) {
+  var that = this
+  this._map = map
+  var div = this._div = document.createElement('div')
+  div.style.position = 'absolute'
+  div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat)
+  div.style.whiteSpace = 'nowrap'
+  div.style.MozUserSelect = 'none'
+  // div.style.animation = 'myfirst 2s infinite'
+
+  var divPhoto = this._divPhoto = document.createElement('div')
+  if (this._type === 'partner') {
+    divPhoto.style.background = 'url(' + this._data.photo + ') no-repeat'
+    divPhoto.style.height = '22px'
+    divPhoto.style.width = '22px'
+    divPhoto.style.borderRadius = '50%'
+    divPhoto.style.top = '3px'
+    divPhoto.style.left = '4px'
+  } else {
+    divPhoto.style.background = 'url(' + this._data.flag + ') no-repeat'
+    divPhoto.style.height = '22px'
+    divPhoto.style.width = '22px'
+    divPhoto.style.borderRadius = '2px'
+    divPhoto.style.top = '3px'
+    divPhoto.style.left = '3px'
+  }
+  divPhoto.style.position = 'absolute'
+  divPhoto.style.backgroundSize = 'cover'
+  divPhoto.style.zIndex = 2
+  // var span = this._span = document.createElement('span')
+  div.appendChild(divPhoto)
+  // span.appendChild(document.createTextNode(this._text))
+  // var that = this
+
+  var arrow = this._arrow = document.createElement('div')
+
+  if (this._type === 'partner') {
+    arrow.style.background = 'url(../../../static/images/bookCase/map-partner.svg) no-repeat'
+    arrow.style.width = '30px'
+    arrow.style.height = '43px'
+  } else {
+    arrow.style.background = 'url(../../../static/images/bookCase/map-course.svg) no-repeat'
+    arrow.style.width = '28px'
+    arrow.style.height = '35px'
+  }
+
+  arrow.style.position = 'absolute'
+  arrow.style.backgroundSize = 'cover'
+  arrow.style.top = '0px'
+  arrow.style.left = '0px'
+  arrow.style.overflow = 'hidden'
+  arrow.style.zIndex = 1
+  div.appendChild(arrow)
+
+  div.onmouseover = function () {
+    div.style.transform = 'translateY(-5px)'
+    // 创建信息窗口对象
+    var sContent = ''
+    if (that._type === 'partner') {
+      sContent =
+        '<div>' +
+          '<p>' +
+            '<img style="float:left;margin:4px" src="' + that._data.photo + '" width="50" height="50" title=""/>' +
+            '<a href="./discovery/author-detail/' + that._data.user_id + '">' +
+              '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
+                that._data.nickname +
+              '</span>' +
+            '</a>' +
+          '</p>' +
+        '</div>'
+    } else {
+      sContent =
+        '<div>' +
+          '<p>' +
+            '<img style="float:left;margin:4px" src="' + that._data.flag + '" width="50" height="50" title=""/>' +
+            '<a href="./book-details/' + that._data.lan_code + '-Basic">' +
+              '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
+                that._data.name['zh-CN'] +
+              '</span>' +
+            '</a>' +
+          '</p>' +
+        '</div>'
+    }
+    var infoWindow = new BMap.InfoWindow(sContent, {
+      offset: new BMap.Size(15, -15)
+    })
+    // 开启信息窗口
+    mp.openInfoWindow(infoWindow, that._point)
+  }
+
+  div.onmouseout = function () {
+    div.style.transform = 'translateY(0)'
+    arrow.style.backgroundPosition = '0px 0px'
+  }
+
+  mp.getPanes().labelPane.appendChild(div)
+
+  return div
+}
+ComplexCustomOverlay.prototype.draw = function () {
+  var map = this._map
+  var pixel = map.pointToOverlayPixel(this._point)
+  this._div.style.left = pixel.x - parseInt(this._arrow.style.left) + 'px'
+  this._div.style.top = pixel.y - 30 + 'px'
+}
+ComplexCustomOverlay.prototype.getPosition = function () {
+  return this._point
+}
+ComplexCustomOverlay.prototype.getLabel = function () {
+}
+ComplexCustomOverlay.prototype.getMap = function () {
+  return mp
+}
+ComplexCustomOverlay.prototype.setLabel = function () {
 }
 </script>
 
@@ -519,7 +674,19 @@ export default {
 /*.BMap_cpyCtrl {
   display: none;
 }*/
-.anchorBL{
-  display: none;
-}
+  .anchorBL{
+    display: none;
+  }
+
+  /* @keyframes myfirst {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    50% {
+      transform: translate(0px, -10px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  } */
 </style>

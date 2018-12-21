@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 import _ from 'lodash'
 import Cookie from 'js-cookie'
 
@@ -30,7 +32,7 @@ const state = {
     'Level5': '高级 C1',
     'Level6': '高级 C1'
   },
-  chapterDes: '',
+  chapterDes: [],
   contentUrl: '',
   assetsUrl: '',
   chapters: {},
@@ -112,8 +114,8 @@ const actions = {
     return httpLogin(config.getMoreLearnCourses).then((res) => {
       commit('clearMoreCourses')
       _.map(res.learn_courses, (course) => {
-        if (course['course_type'] === 0) {
-          dispatch('getUnlockChapter', course['code']).then((data) => {
+        if (course.course_type === 0) {
+          dispatch('getUnlockChapter', course.code).then((data) => {
             commit('updateLearnCourses', { course, data })
           })
         }
@@ -721,7 +723,11 @@ const mutations = {
     let course = learnMoreCourse.filter((item) => {
       return item.lan_code === arr[0]
     })
-    state.chapterDes = course[0].name['zh-CN'] + '.' + state.levelDes[arr[2]] + '.' + arr[4].replace('Chapter', '课程')
+    state.chapterDes.push(course[0].name['zh-CN'])
+    state.chapterDes.push(state.levelDes[arr[2]])
+    let unitNum = parseInt(arr[3].replace('Unit', ''))
+    let chapterNum = parseInt(arr[4].replace('Chapter', ''))
+    state.chapterDes.push('课程' + ((unitNum - 1) * 6 + chapterNum))
   },
   updateHomeworkContent (state, data) {
     state.homeworkContent = data

@@ -773,10 +773,6 @@ export default {
     opacity: 0;
   } */
 
-  .course-item-detail {
-
-  }
-
   .course-item-detail ul > li:not(:first-child) {
     padding: 24px 24px 0;
   }

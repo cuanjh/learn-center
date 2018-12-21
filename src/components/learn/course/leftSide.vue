@@ -141,9 +141,6 @@ export default {
   z-index: 9;
 }
 
-.lang-overview{
-}
-
 .lang-overview dl{
   padding: 30px 0px 0 20px;
   height: 170px;

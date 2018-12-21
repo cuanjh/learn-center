@@ -7,7 +7,7 @@
       </router-link>
       <div class="homework-content">
         <div class="homework-title">
-          <p>{{chapterDes}}</p>
+          <p>{{chapterDes.join('·')}}</p>
         </div>
         <div class="my-work">
           <p class="line"></p>

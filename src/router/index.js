@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 // 首页&&用户验证模块
 const home = r => require.ensure([], () => r(require('@/components/home/home.vue')), 'home')
 const authLogin = r => require.ensure([], () => r(require('@/components/userAuth/authLogin.vue')), 'auth-login')

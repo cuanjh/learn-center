@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="33px" viewBox="0 0 26 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>课程</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="50%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#A3B2C2" offset="49.3954363%"></stop>
+            <stop stop-color="#052E59" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-844.000000, -1082.000000)" fill="url(#linearGradient-1)" fill-rule="nonzero">
+            <path d="M847.840664,1082 L866.159336,1082 C868.280476,1082 870,1083.71952 870,1085.84066 L870,1104.15934 C870,1106.28048 868.280476,1108 866.159336,1108 L857,1108 L850.035714,1114.88122 L850.035714,1108 L847.840664,1108 C845.719524,1108 844,1106.28048 844,1104.15934 L844,1085.84066 C844,1083.71952 845.719524,1082 847.840664,1082 Z" id="课程"></path>
+        </g>
+    </g>
+</svg>

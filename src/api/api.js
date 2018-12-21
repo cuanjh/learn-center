@@ -1,19 +1,39 @@
+/* jshint esversion: 6 */
 import Vue from 'vue'
+import MD5 from 'md5'
+import Moment from 'moment'
+import $ from 'jquery'
+
 import config from './config'
 import Cookie from '../tool/cookie'
 import errorCode from './errorCode'
-import { deviceId } from './../tool/untils.js'
-import $ from 'jquery'
+import { deviceId, randomString } from './../tool/untils.js'
+
+/**
+ * 新登录流程接口加密说明文档
+ * http://wiki.200h.com/pages/viewpage.action?pageId=5636098
+ */
 
 export const httpLogin = (_url, _params) => { // 已经登录
   if (!_params) { // 无参数请求情况
     _params = {}
   }
+  let key = process.env.APP_KEY
+  let secret = process.env.APP_SECRET
+  _params.timeStamp = Moment().format('YYYYMMDDHHmmss')
+  _params.reqId = randomString(16)
   _params.HTTP_API_VERSION = config.API_VERSION
   _params.device_id = Cookie.getCookie('device_id')
   _params.user_id = Cookie.getCookie('user_id')
   _params.verify = Cookie.getCookie('verify')
-  return Vue.http.jsonp(process.env.API_HOST + _url, {params: _params})
+  let paramsStr = ''
+  let keys = Object.keys(_params).sort()
+  keys.forEach(key => {
+    paramsStr += key + _params[key]
+  })
+  let sign = MD5(secret + paramsStr).toUpperCase()
+
+  return Vue.http.jsonp(process.env.API_HOST + _url + '?appKey=' + key + '&sign=' + sign, {params: _params})
     .then(res => {
       if (res['data']['success']) {
         return new Promise((resolve, reject) => {
@@ -37,6 +57,7 @@ export const httpLogin = (_url, _params) => { // 已经登录
       console.log(error)
     })
 }
+
 export const httpGetToken = (_url) => { // 已经登录
   var data = {
     HTTP_API_VERSION: config.API_VERSION,
@@ -67,6 +88,10 @@ export const httpNoLogin = (_url, _params) => { // 未登录
   if (!_params) { // 无参数请求情况
     _params = {}
   }
+  let key = process.env.APP_KEY
+  let secret = process.env.APP_SECRET
+  _params.timeStamp = Moment().format('YYYYMMDDHHmmss')
+  _params.reqId = randomString(16)
   _params.HTTP_API_VERSION = config.API_VERSION
   if (Cookie.getCookie('device_id')) {
     _params.device_id = Cookie.getCookie('device_id')
@@ -75,7 +100,13 @@ export const httpNoLogin = (_url, _params) => { // 未登录
     _params.device_id = _deviceId
     Cookie.setCookie('device_id', _deviceId)
   }
-  return Vue.http.jsonp(process.env.API_HOST + _url, {params: _params})
+  let paramsStr = ''
+  let keys = Object.keys(_params).sort()
+  keys.forEach(key => {
+    paramsStr += key + _params[key]
+  })
+  let sign = MD5(secret + paramsStr).toUpperCase()
+  return Vue.http.jsonp(process.env.API_HOST + _url + '?appKey=' + key + '&sign=' + sign, {params: _params})
     .then(res => {
       // return res['data']
       if (res['data']['success']) {
@@ -100,6 +131,7 @@ export const httpNoLogin = (_url, _params) => { // 未登录
       console.log(error)
     })
 }
+
 export const httpAssets = (_url) => { // 请求资源
   return Vue.http.get(_url)
     .then(res => {

@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 export default {
   // apiUrl: 'http://api.200h.com:81',
   URL: {
@@ -33,6 +34,7 @@ export default {
   resetAnonymous: '/user/reset_password_anonymous', // 匿名账号重置
   unbindIdentity: '/user/unbind_identity', // 解除邮箱或者手机号绑定
   uploadUserPhoto: '/user/upload_user_photo', // 上传用户头像(需要登录)
+  // 登录新的接口
 
   // 课程
   getMoreLearnCourses: '/study/more_learn_courses', // 获取更多的订阅课程
@@ -109,5 +111,10 @@ export default {
   getGradeContent: '/level_grade/get_content', // 用来获取课程定级的内容
   postGradeResult: '/level_grade/grade_result', // 用来接收用户在定级的过程中学习的结果
   getRecordCourseList: '/study_info/record_course_list', // 获取用户录音课程
-  getRecordCourse: '/study_info/record_course' // 获取用户录音课程
+  getRecordCourse: '/study_info/record_course', // 获取用户录音课程
+  /**
+   * 新登录接口
+   */
+  umUserLoginApi: '/umv1/user/login', // 快速登录接口
+  umSendCodeApi: '/umv1/sms/send' // 发送验证码接口
 }

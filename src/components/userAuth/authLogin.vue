@@ -38,7 +38,7 @@
       </div>
       <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
       <!-- <button class="register-btn" v-bind:disabled="!isGoLogin" >登录<p></p></button> -->
-      <button class="register-btn">
+      <button class="register-btn" v-bind:disabled="!isGoLogin">
         <p>
           登录
           <i></i>
@@ -126,9 +126,9 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import validation from './../../tool/validation.js'
-import http from './../../api/userAuth.js'
-import { encrypt } from './../../tool/untils.js'
-import Cookie from '../../tool/cookie'
+// import http from './../../api/userAuth.js'
+// import { encrypt } from './../../tool/untils.js'
+// import Cookie from '../../tool/cookie'
 import errCode from './../../api/code.js'
 import AuthPwdLogin from './authPwdLogin'
 import $ from 'jquery'
@@ -181,7 +181,9 @@ export default {
     ...mapActions({
       getUserInfo: 'user/getUserInfo',
       getCaptchaUrl: 'user/getCaptchaUrl',
-      login: 'user/login'
+      login: 'user/login',
+      userLogin: 'user/userLogin',
+      sendCode: 'user/getSendCode'
     }),
     blurPhoneFn () {
       if (validation.phoneNumber(this.registerInfo.phone)) {
@@ -228,22 +230,25 @@ export default {
         $('#phoneNumber').css('border-color', '#D0021B')
         return false
       }
-      http.sendCode({phonenumber: this.registerInfo.phone}).then(res => {
-        console.log('res', res)
-        if (res.success) {
-          this.timer = setInterval(() => {
-            --this.time
-            if (this.time === 0) {
-              this.time = 60
-              clearInterval(this.timer)
-              this.timer = null
-            }
-          }, 1000)
-        }
+      // http.sendCode({phonenumber: this.registerInfo.phone}).then(res => {
+      //   console.log('res', res)
+      //   if (res.success) {
+      //     this.timer = setInterval(() => {
+      //       --this.time
+      //       if (this.time === 0) {
+      //         this.time = 60
+      //         clearInterval(this.timer)
+      //         this.timer = null
+      //       }
+      //     }, 1000)
+      //   }
+      // })
+      this.sendCode({phonenumber: this.registerInfo.phone, codeLen: '6'}).then(res => {
+        console.log('发送验证码', res)
       })
-    },
+    }
     // 点击登录按钮去登陆
-    async goLogin () {
+    /* async goLogin () {
       this.errText = ''
       if (!validation.phoneNumber(this.registerInfo.phone)) {
         this.errText = errCode['e09'] // 'e06': '手机号或邮箱格式错误'
@@ -302,7 +307,7 @@ export default {
           this.$router.push({path: '/app/course-list'})
         }
       }
-    }
+    } */
   }
 }
 </script>
@@ -311,6 +316,7 @@ export default {
 html,body{-webkit-text-size-adjust:none;}
 .pcss5{-webkit-text-size-adjust:none;}
   .bg-box {
+    min-height: 765px;
     padding: 80px 0px;
   }
   .user-login .go-email-login {
