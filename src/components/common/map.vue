@@ -7,6 +7,7 @@
 // import _ from 'lodash'
 
 import BMap from 'BMap'
+import BMapLib from 'BMapLib'
 import Bus from '../../bus'
 import mapData from '../../api/mapData'
 
@@ -46,7 +47,7 @@ export default {
         })
       })
       console.log('langlist', this.langList)
-      this.courseLangsMap()
+      // this.courseLangsMap()
     })
 
     this.$on('removeMarks', () => {
@@ -78,6 +79,7 @@ export default {
       })
       // 开启鼠标滚轮缩放
       mp.enableScrollWheelZoom(true)
+      console.log('bmaplib', BMapLib)
       // 创建点坐标
       // var point = new BMap.Point(-3.658035, 40.467359)
 
@@ -105,11 +107,13 @@ export default {
 
         // 返回地图可视区域
         var bs = mp.getBounds()
+        console.log('bs', bs)
         cr.addCopyright({
           id: 1,
           content: '<span style="font-size:14px; font-weight: 500; color:#4c4c4c ;background:;margin-left: 50px; line-height:40px;">' + this.copyrightText + '</span>',
           bounds: bs
         })
+        this.courseLangsMap()
         // this.addPosition()
       //   alert(0)
       //   var circle = new BMap.Circle(point, 500000, {
@@ -422,11 +426,15 @@ export default {
     // 官方语言地图
     courseLangsMap () {
       // let courseLangsData = mapData.courseLangsMap
+      let markers = []
       mapData.courseLangMap.forEach(lang => {
-        let pt = new BMap.Point(lang.lon, lang.lat)
-        var myIcon = new BMap.Icon('../../../static/images/bookCase/endangered-big.svg', new BMap.Size(150, 150))
+        if (!lang.lng) {
+          console.log('lang', lang)
+        }
+        let pt = new BMap.Point(lang.lng, lang.lat)
+        // var myIcon = new BMap.Icon('../../../static/images/bookCase/endangered-big.svg', new BMap.Size(150, 150))
 
-        let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(65, 40)})
+        // let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(65, 40)})
         let obj = this.langList.find((x) => {
           return x.lan_code === lang.lang_code
         })
@@ -436,20 +444,29 @@ export default {
         // label.setStyle({display: 'none'})
         // 把label设置到maker上
         // marker.setLabel(label)
-        mp.addOverlay(marker)
-        var sContent =
-          '<div>' +
-            '<p>' +
-              '<img style="float:left;margin:4px" src="' + obj.flag + '" width="50" height="50" title=""/>' +
-              '<a href="./book-details/' + obj.lan_code + '-Basic">' +
-                '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
-                  obj.name['zh-CN'] +
-                '</span>' +
-              '</a>' +
-            '</p>' +
-          '</div>'
-        this.addMouseoverHandler(sContent, marker)
+        // mp.addOverlay(marker)
+        // var sContent =
+        //   '<div>' +
+        //     '<p>' +
+        //       '<img style="float:left;margin:4px" src="' + obj.flag + '" width="50" height="50" title=""/>' +
+        //       '<a href="./book-details/' + obj.lan_code + '-Basic">' +
+        //         '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
+        //           obj.name['zh-CN'] +
+        //         '</span>' +
+        //       '</a>' +
+        //     '</p>' +
+        //   '</div>'
+        // this.addMouseoverHandler(sContent, marker)
+
+        var myCompOverlay = new ComplexCustomOverlay(pt, obj, 'course')
+        // console.log(myCompOverlay)
+        mp.addOverlay(myCompOverlay)
+        // console.log('marker.getPosition()', marker.getPosition())
+        markers.push(myCompOverlay)
       })
+      /* eslint-disable */
+      // var markerClusterer = new BMapLib.MarkerClusterer(mp, {markers:markers})
+       /* eslint-enable */
     },
     // 删除覆盖物
     removeMarks () {
@@ -494,7 +511,7 @@ export default {
       // marker.setLabel(label)
       // mp.addOverlay(marker)
 
-      var myCompOverlay = new ComplexCustomOverlay(pt, item, 'aaa')
+      var myCompOverlay = new ComplexCustomOverlay(pt, item, 'partner')
       mp.addOverlay(myCompOverlay)
       /* eslint-disable */
       // myCompOverlay.setAnimation(BMAP_ANIMATION_BOUNCE) // 跳动的动画
@@ -525,10 +542,10 @@ export default {
   }
 }
 
-function ComplexCustomOverlay (point, data, mouseoverText) {
+function ComplexCustomOverlay (point, data, type) {
   this._point = point
   this._data = data
-  this._overText = mouseoverText
+  this._type = type
 }
 
 ComplexCustomOverlay.prototype = new BMap.Overlay()
@@ -544,14 +561,23 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
   // div.style.animation = 'myfirst 2s infinite'
 
   var divPhoto = this._divPhoto = document.createElement('div')
+  if (this._type === 'partner') {
+    divPhoto.style.background = 'url(' + this._data.photo + ') no-repeat'
+    divPhoto.style.height = '22px'
+    divPhoto.style.width = '22px'
+    divPhoto.style.borderRadius = '50%'
+    divPhoto.style.top = '3px'
+    divPhoto.style.left = '4px'
+  } else {
+    divPhoto.style.background = 'url(' + this._data.flag + ') no-repeat'
+    divPhoto.style.height = '22px'
+    divPhoto.style.width = '22px'
+    divPhoto.style.borderRadius = '2px'
+    divPhoto.style.top = '3px'
+    divPhoto.style.left = '3px'
+  }
   divPhoto.style.position = 'absolute'
-  divPhoto.style.background = 'url(' + this._data.photo + ') no-repeat'
   divPhoto.style.backgroundSize = 'cover'
-  divPhoto.style.height = '22px'
-  divPhoto.style.width = '22px'
-  divPhoto.style.borderRadius = '50%'
-  divPhoto.style.top = '4px'
-  divPhoto.style.left = '4px'
   divPhoto.style.zIndex = 2
   // var span = this._span = document.createElement('span')
   div.appendChild(divPhoto)
@@ -559,10 +585,18 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
   // var that = this
 
   var arrow = this._arrow = document.createElement('div')
-  arrow.style.background = 'url(../../../static/images/bookCase/endangered-small.svg) no-repeat'
+
+  if (this._type === 'partner') {
+    arrow.style.background = 'url(../../../static/images/bookCase/map-partner.svg) no-repeat'
+    arrow.style.width = '30px'
+    arrow.style.height = '43px'
+  } else {
+    arrow.style.background = 'url(../../../static/images/bookCase/map-course.svg) no-repeat'
+    arrow.style.width = '28px'
+    arrow.style.height = '35px'
+  }
+
   arrow.style.position = 'absolute'
-  arrow.style.width = '30px'
-  arrow.style.height = '50px'
   arrow.style.backgroundSize = 'cover'
   arrow.style.top = '0px'
   arrow.style.left = '0px'
@@ -573,17 +607,32 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
   div.onmouseover = function () {
     div.style.transform = 'translateY(-5px)'
     // 创建信息窗口对象
-    var sContent =
-      '<div>' +
-        '<p>' +
-          '<img style="float:left;margin:4px" src="' + that._data.photo + '" width="50" height="50" title=""/>' +
-          '<a href="./discovery/author-detail/' + that._data.user_id + '">' +
-            '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
-              that._data.nickname +
-            '</span>' +
-          '</a>' +
-        '</p>' +
-      '</div>'
+    var sContent = ''
+    if (that._type === 'partner') {
+      sContent =
+        '<div>' +
+          '<p>' +
+            '<img style="float:left;margin:4px" src="' + that._data.photo + '" width="50" height="50" title=""/>' +
+            '<a href="./discovery/author-detail/' + that._data.user_id + '">' +
+              '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
+                that._data.nickname +
+              '</span>' +
+            '</a>' +
+          '</p>' +
+        '</div>'
+    } else {
+      sContent =
+        '<div>' +
+          '<p>' +
+            '<img style="float:left;margin:4px" src="' + that._data.flag + '" width="50" height="50" title=""/>' +
+            '<a href="./book-details/' + that._data.lan_code + '-Basic">' +
+              '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
+                that._data.name['zh-CN'] +
+              '</span>' +
+            '</a>' +
+          '</p>' +
+        '</div>'
+    }
     var infoWindow = new BMap.InfoWindow(sContent, {
       offset: new BMap.Size(15, -15)
     })
@@ -605,6 +654,16 @@ ComplexCustomOverlay.prototype.draw = function () {
   var pixel = map.pointToOverlayPixel(this._point)
   this._div.style.left = pixel.x - parseInt(this._arrow.style.left) + 'px'
   this._div.style.top = pixel.y - 30 + 'px'
+}
+ComplexCustomOverlay.prototype.getPosition = function () {
+  return this._point
+}
+ComplexCustomOverlay.prototype.getLabel = function () {
+}
+ComplexCustomOverlay.prototype.getMap = function () {
+  return mp
+}
+ComplexCustomOverlay.prototype.setLabel = function () {
 }
 </script>
 
