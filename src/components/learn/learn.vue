@@ -26,7 +26,6 @@ export default {
     }
   },
   created () {
-    this.getUserInfo()
     this.$on('initLayout', () => {
       this.changeWrapHeight()
     })
@@ -48,7 +47,6 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
       currentChapterCode: state => state.course.currentChapterCode,
       contentUrl: state => state.course.contentUrl,
       coverShow: state => state.course.coverShow,
@@ -57,7 +55,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      getUserInfo: 'user/getUserInfo',
       getLearnInfo: 'course/getLearnInfo',
       getUnlockChapter: 'course/getUnlockChapter',
       getCourseContent: 'course/getCourseContent',

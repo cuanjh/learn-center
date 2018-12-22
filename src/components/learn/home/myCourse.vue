@@ -69,8 +69,7 @@ export default {
       learnInfo: state => state.course.learnInfo,
       currentChapterCode: state => state.course.currentChapterCode,
       chapterDes: state => state.course.chapterDes,
-      userInfo: state => state.user.userInfo
-
+      userInfo: state => state.userInfo
     })
   },
   methods: {
@@ -80,12 +79,9 @@ export default {
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
       getLearnCourses: 'course/getLearnCourses',
-      getUserInfo: 'user/getUserInfo',
       getCourseArchives: 'user/getCourseArchives'
     }),
     async initData () {
-      // await this.getUserInfo()
-      await this.getUserInfo()
       await this.getLearnCourses()
       console.log('userInfo', this.userInfo)
       await this.getLearnInfo().then(() => {

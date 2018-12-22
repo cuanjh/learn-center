@@ -169,7 +169,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
+      loginInfo: state => state.loginInfo
     }),
     // 手机验证码获取
     isGetCode () {
@@ -182,11 +182,9 @@ export default {
   methods: {
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
-      updateIsLogin: 'user/updateIsLogin',
-      updateUserInfo: 'user/updateUserInfo'
+      updateIsLogin: 'user/updateIsLogin'
     }),
     ...mapActions({
-      getUserInfo: 'user/getUserInfo',
       getCaptchaUrl: 'user/getCaptchaUrl',
       login: 'user/login',
       userLogin: 'userLogin',
@@ -266,62 +264,22 @@ export default {
       if (!validation.verfiyCode(_this.phoneCode)) {
         _this.errText = errCode['er02'] // 'er02': '验证码错误'
       }
-      let flag = true
+
       // 快速登录，有手机号就正常登录没有就相当于注册登录
-      await _this.userLogin({phonenumber: _this.phone, code: _this.phoneCode}).then((res) => {
-        console.log('登录接口返回', res)
-        if (res.success) {
-          // 先把localStorage里面的用户的信息和cookie里面的用户信息都清除了
-          localStorage.removeItem('userInfo')
-          Cookie.delCookieTalkmate('is_anonymous')
-          Cookie.delCookie('user_id')
-          Cookie.delCookie('verify')
-          // 把后台返回的用户信息存进去
-          Cookie.setCookie('user_id', res.result.user_id)
-          Cookie.setCookie('verify', res.result.verify)
-          // 取出Cookie UserId和最后存的localStorage UserId做对比
-          let UserId = Cookie.getCookie('user_id')
-          let lastUserId = localStorage.getItem('last_user_id')
-          if (lastUserId !== UserId) {
-            localStorage.setItem('lastUserId', UserId)
-            localStorage.removeItem('lastCourseCode')
-          }
-          // let lastCourseCode = localStorage.getItem('lastCourseCode')
-          // // let lastCourseCode = JSON.parse(localStorage.getItem('lastCourseCode'))
-          // console.log('lastCourseCode', lastCourseCode)
-          // if (!lastCourseCode) {
-          //   _this.getUserInfo()
-          //   _this.updateCurCourseCode(_this.userInfo.current_course_code)
-          //   localStorage.setItem('lastCourseCode', _this.userInfo.current_course_code)
-          //   localStorage.setItem('userInfo', _this.userInfo)
-          //   _this.updateIsLogin('1')
-          //   _this.$router.push({path: '/app/course-list'})
-          // } else {
-          //   _this.updateCurCourseCode(lastCourseCode)
-          //   _this.updateIsLogin('1')
-          //   _this.$router.push({path: '/app/course-list'})
-          // }
-        } else {
-          _this.errText = errCode[res.code]
-          flag = false
-        }
-      })
-      // 如果是登陆状态的操作
-      if (flag) {
-        let lastCourseCode = localStorage.getItem('lastCourseCode')
-        if (!lastCourseCode) {
-          await _this.getUserInfo()
-          _this.updateCurCourseCode(_this.userInfo.current_course_code)
-          localStorage.setItem('lastCourseCode', _this.userInfo.current_course_code)
-          localStorage.setItem('userInfo', _this.userInfo)
-          // cookie里面有一个isLogin判断是否登陆，0是没登录 1是登陆状态
-          _this.updateIsLogin('1')
-          _this.$router.push({path: '/app/course-list'})
-        } else {
-          _this.updateCurCourseCode(lastCourseCode)
-          _this.updateIsLogin('1')
-          _this.$router.push({path: '/app/course-list'})
-        }
+      await _this.userLogin({phonenumber: _this.phone, code: _this.phoneCode})
+      if (_this.loginInfo.success) {
+        // 先把localStorage里面的用户的信息和cookie里面的用户信息都清除了
+        localStorage.removeItem('userInfo')
+        Cookie.delCookieTalkmate('is_anonymous')
+        Cookie.delCookie('user_id')
+        Cookie.delCookie('verify')
+        let info = _this.loginInfo.result
+        // 把后台返回的用户信息存进去
+        Cookie.setCookie('user_id', info.user_id)
+        Cookie.setCookie('verify', info.verify)
+        _this.$router.push({path: '/app/index'})
+      } else {
+        _this.errText = errCode[_this.loginInfo.code]
       }
     }
   }

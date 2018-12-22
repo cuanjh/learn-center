@@ -102,9 +102,6 @@ export default[
   {
     path: '/app',
     component: learn,
-    meta: {
-      auth: true
-    },
     children: [
       {
         path: 'course-list',

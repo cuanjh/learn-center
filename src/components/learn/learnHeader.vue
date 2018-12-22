@@ -110,12 +110,13 @@ export default {
   },
   mounted () {
     // this.getLearnCourses()
+    this.getUserInfo()
     console.log('订阅课程======', this.learnCourses)
   },
   computed: {
     ...mapState({
       learnCourses: state => state.course.learnCourses,
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo
     }),
     ...mapGetters({
       langCode: 'user/langCode'
@@ -159,7 +160,8 @@ export default {
     ...mapActions({
       getLearnCourses: 'course/getLearnCourses',
       getCurrentCourse: 'course/getCurrentCourse',
-      logout: 'user/logout'
+      logout: 'user/logout',
+      getUserInfo: 'getUserInfo'
     }),
     ...mapMutations({
       updateIsLogin: 'user/updateIsLogin',
