@@ -53,7 +53,6 @@ export default {
   },
   mounted () {
     // this.initData()
-    // this.getUserInfo()
   },
   computed: {
     ...mapState({
@@ -64,7 +63,6 @@ export default {
   methods: {
     ...mapActions({
       searchPartnerList: 'course/searchPartnerList',
-      getUserInfo: 'getUserInfo',
       getLangsList: 'getLangsList'
     }),
     async initData () {

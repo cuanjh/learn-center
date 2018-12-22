@@ -118,6 +118,6 @@ export default {
    */
   umUserLoginApi: '/umv1/user/login', // 快速登录接口
   umSendCodeApi: '/umv1/sms/send', // 发送验证码接口
-  umUserGetInfoApi: '/umv1/user/get_info', // 获取用户信息接口
+  umUserInfoApi: '/umv1/user/info', // 获取用户信息接口
   umLangsListApi: '/umv1/langs/lists' // 语言列表接口
 }
