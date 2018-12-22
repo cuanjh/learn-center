@@ -5,7 +5,7 @@
 <script>
 // import $ from 'jquery'
 // import _ from 'lodash'
-
+import { mapState } from 'vuex'
 import BMap from 'BMap'
 import BMapLib from 'BMapLib'
 import Bus from '../../bus'
@@ -39,15 +39,7 @@ export default {
     // 加载官方语言数据
     this.$on('loadCourseLangs', (courseLangs) => {
       this.removeMarks()
-      console.log('courseLangs', courseLangs)
-      courseLangs.forEach(item => {
-        let langInfos = item.lang_infos
-        langInfos.forEach(lang => {
-          this.langList.push(lang)
-        })
-      })
-      console.log('langlist', this.langList)
-      // this.courseLangsMap()
+      this.courseLangsMap()
     })
 
     this.$on('removeMarks', () => {
@@ -64,6 +56,11 @@ export default {
   mounted () {
     console.log('mapData', mapData)
     this.baiduMap()
+  },
+  computed: {
+    ...mapState({
+      courseLangsList: state => state.courseLangsList
+    })
   },
   methods: {
     // 返回
@@ -426,7 +423,6 @@ export default {
     // 官方语言地图
     courseLangsMap () {
       // let courseLangsData = mapData.courseLangsMap
-      let markers = []
       mapData.courseLangMap.forEach(lang => {
         if (!lang.lng) {
           console.log('lang', lang)
@@ -435,7 +431,7 @@ export default {
         // var myIcon = new BMap.Icon('../../../static/images/bookCase/endangered-big.svg', new BMap.Size(150, 150))
 
         // let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(65, 40)})
-        let obj = this.langList.find((x) => {
+        let obj = this.courseLangsList.find((x) => {
           return x.lan_code === lang.lang_code
         })
         // let label = new BMap.Label(obj.name['zh-CN'], {offset: new BMap.Size(60, 15)}) // 创建marker点的标记
@@ -457,12 +453,12 @@ export default {
         //     '</p>' +
         //   '</div>'
         // this.addMouseoverHandler(sContent, marker)
-
-        var myCompOverlay = new ComplexCustomOverlay(pt, obj, 'course')
-        // console.log(myCompOverlay)
-        mp.addOverlay(myCompOverlay)
-        // console.log('marker.getPosition()', marker.getPosition())
-        markers.push(myCompOverlay)
+        if (obj) {
+          var myCompOverlay = new ComplexCustomOverlay(pt, obj, 'course')
+          mp.addOverlay(myCompOverlay)
+        } else {
+          console.log(lang.lang_code)
+        }
       })
       /* eslint-disable */
       // var markerClusterer = new BMapLib.MarkerClusterer(mp, {markers:markers})
@@ -627,7 +623,7 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
             '<img style="float:left;margin:4px" src="' + that._data.flag + '" width="50" height="50" title=""/>' +
             '<a href="./book-details/' + that._data.lan_code + '-Basic">' +
               '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
-                that._data.name['zh-CN'] +
+                that._data.name +
               '</span>' +
             '</a>' +
           '</p>' +

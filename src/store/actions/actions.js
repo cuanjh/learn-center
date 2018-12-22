@@ -15,5 +15,11 @@ export default {
     newHttpLogin(config.umUserGetInfoApi).then((res) => {
       console.log(res)
     })
+  },
+  // 获取语言列表
+  getLangsList ({commit}) {
+    newHttpNoLogin(config.umLangsListApi).then(res => {
+      commit('updateCourseLangsList', res.langsInfo)
+    })
   }
 }

@@ -53,25 +53,23 @@ export default {
   },
   mounted () {
     // this.initData()
-    this.getUserInfo()
+    // this.getUserInfo()
   },
   computed: {
     ...mapState({
-      courseLangs: state => state.course.courseLangs,
-      partnerList: state => state.course.partnerList
+      partnerList: state => state.course.partnerList,
+      courseLangsList: state => state.courseLangsList
     })
   },
   methods: {
     ...mapActions({
-      getCourseListV2: 'course/getCourseListV2',
       searchPartnerList: 'course/searchPartnerList',
-      getUserInfo: 'getUserInfo'
+      getUserInfo: 'getUserInfo',
+      getLangsList: 'getLangsList'
     }),
     async initData () {
       // 加载官方语言数据
-      await this.getCourseListV2()
-      this.loadCourses()
-
+      await this.getLangsList()
       // 加载语伴数据
       await this.searchPartnerList()
     },
@@ -90,7 +88,7 @@ export default {
       Bus.$emit('mapSearch', key)
     },
     loadCourses () {
-      this.$refs.map.$emit('loadCourseLangs', this.courseLangs)
+      this.$refs.map.$emit('loadCourseLangs', this.courseLangsList)
     }
   }
 }
