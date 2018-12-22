@@ -94,7 +94,8 @@ export default {
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo',
-      login: 'user/login'
+      login: 'user/login',
+      userPwdLogin: 'userPwdLogin'
     }),
     // 失去焦点
     blurPEFn () {
@@ -145,65 +146,65 @@ export default {
         $('input[type="password"]').css('border-color', '#D0021B')
         return false
       }
-      let flag = true
-      await _this.login({
+      // let flag = true
+      await _this.userPwdLogin({
         identity: _this.userName,
         password: encrypt(_this.userPwd)
       }).then(res => {
         console.log('res', res)
-        if (res.success) {
-          if (_this.isSaveLoginState) {
-            Cookie.setCookie('user_id', res.user_id)
-            Cookie.setCookie('verify', res.verify)
-            Cookie.setCookie('userName', _this.userName)
-            Cookie.setCookie('userPwd', _this.userPwd)
-          } else {
-            Cookie.delCookie('user_id', res.user_id)
-            Cookie.delCookie('verify', res.verify)
-            Cookie.delCookie('userName', _this.userName)
-            Cookie.delCookie('userPwd', _this.userPwd)
-          }
-          localStorage.removeItem('userInfo')
-          Cookie.delCookieTalkmate('is_anonymous')
-          Cookie.delCookie('user_id')
-          Cookie.delCookie('verify')
-          /* if (_this.isSaveLoginState) {
-            Cookie.setCookieAuto('user_id', res.user_id)
-            Cookie.setCookieAuto('verify', res.verify)
-          } else {
-            Cookie.setCookieSession('user_id', res.user_id)
-            Cookie.setCookieSession('verify', res.verify)
-          } */
-          Cookie.setCookie('isChecked', _this.isSaveLoginState)
-          Cookie.setCookie('user_id', res.user_id)
-          Cookie.setCookie('verify', res.verify)
-          // Cookie.setCookie('userName', _this.userName)
-          // Cookie.setCookie('userPwd', _this.userPwd)
-          let UserId = Cookie.getCookie('user_id')
-          let lastUserId = localStorage.getItem('last_user_id')
-          if (lastUserId !== UserId) {
-            localStorage.setItem('lastUserId', UserId)
-            localStorage.removeItem('lastCourseCode')
-          }
-        } else {
-          _this.errText = errCode[res.code]
-          flag = false
-        }
+        // if (res.success) {
+        //   if (_this.isSaveLoginState) {
+        //     Cookie.setCookie('user_id', res.user_id)
+        //     Cookie.setCookie('verify', res.verify)
+        //     Cookie.setCookie('userName', _this.userName)
+        //     Cookie.setCookie('userPwd', _this.userPwd)
+        //   } else {
+        //     Cookie.delCookie('user_id', res.user_id)
+        //     Cookie.delCookie('verify', res.verify)
+        //     Cookie.delCookie('userName', _this.userName)
+        //     Cookie.delCookie('userPwd', _this.userPwd)
+        //   }
+        //   localStorage.removeItem('userInfo')
+        //   Cookie.delCookieTalkmate('is_anonymous')
+        //   Cookie.delCookie('user_id')
+        //   Cookie.delCookie('verify')
+        //   /* if (_this.isSaveLoginState) {
+        //     Cookie.setCookieAuto('user_id', res.user_id)
+        //     Cookie.setCookieAuto('verify', res.verify)
+        //   } else {
+        //     Cookie.setCookieSession('user_id', res.user_id)
+        //     Cookie.setCookieSession('verify', res.verify)
+        //   } */
+        //   Cookie.setCookie('isChecked', _this.isSaveLoginState)
+        //   Cookie.setCookie('user_id', res.user_id)
+        //   Cookie.setCookie('verify', res.verify)
+        //   // Cookie.setCookie('userName', _this.userName)
+        //   // Cookie.setCookie('userPwd', _this.userPwd)
+        //   let UserId = Cookie.getCookie('user_id')
+        //   let lastUserId = localStorage.getItem('last_user_id')
+        //   if (lastUserId !== UserId) {
+        //     localStorage.setItem('lastUserId', UserId)
+        //     localStorage.removeItem('lastCourseCode')
+        //   }
+        // } else {
+        //   _this.errText = errCode[res.code]
+        //   flag = false
+        // }
       })
-      if (flag) {
-        let lastCourseCode = localStorage.getItem('lastCourseCode')
-        if (!lastCourseCode) {
-          await _this.getUserInfo()
-          _this.updateCurCourseCode(_this.userInfo.current_course_code)
-          localStorage.setItem('lastCourseCode', _this.userInfo.current_course_code)
-          _this.updateIsLogin('1')
-          _this.$router.push({path: '/app/course-list'})
-        } else {
-          _this.updateCurCourseCode(lastCourseCode)
-          _this.updateIsLogin('1')
-          _this.$router.push({path: '/app/course-list'})
-        }
-      }
+      // if (flag) {
+      //   let lastCourseCode = localStorage.getItem('lastCourseCode')
+      //   if (!lastCourseCode) {
+      //     await _this.getUserInfo()
+      //     _this.updateCurCourseCode(_this.userInfo.current_course_code)
+      //     localStorage.setItem('lastCourseCode', _this.userInfo.current_course_code)
+      //     _this.updateIsLogin('1')
+      //     _this.$router.push({path: '/app/course-list'})
+      //   } else {
+      //     _this.updateCurCourseCode(lastCourseCode)
+      //     _this.updateIsLogin('1')
+      //     _this.$router.push({path: '/app/course-list'})
+      //   }
+      // }
     }
   }
 }
