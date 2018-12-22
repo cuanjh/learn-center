@@ -182,7 +182,8 @@ export default {
   methods: {
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
-      updateIsLogin: 'user/updateIsLogin'
+      updateIsLogin: 'user/updateIsLogin',
+      updateUserInfo: 'user/updateUserInfo'
     }),
     ...mapActions({
       getUserInfo: 'user/getUserInfo',
@@ -236,19 +237,7 @@ export default {
         $('#phoneNumber').css('border-color', '#D0021B')
         return false
       }
-      // http.sendCode({phonenumber: this.phone}).then(res => {
-      //   console.log('res', res)
-      //   if (res.success) {
-      //     this.timer = setInterval(() => {
-      //       --this.time
-      //       if (this.time === 0) {
-      //         this.time = 60
-      //         clearInterval(this.timer)
-      //         this.timer = null
-      //       }
-      //     }, 1000)
-      //   }
-      // })
+      // 发送验证码
       this.sendCode({phonenumber: this.phone, codeLen: '6'}).then(res => {
         console.log('发送验证码', res)
         if (res.success) {
@@ -268,59 +257,52 @@ export default {
     },
     // 点击登录按钮去登陆
     async goLogin () {
-      this.errText = ''
-      if (!validation.phoneNumber(this.phone)) {
-        this.errText = errCode['er01'] // 'er01': '请输入正确的手机号'
+      let _this = this
+      _this.errText = ''
+      if (!validation.phoneNumber(_this.phone)) {
+        _this.errText = errCode['er01'] // 'er01': '请输入正确的手机号'
         return false
       }
-      if (!validation.verfiyCode(this.phoneCode)) {
-        this.errText = errCode['er02'] // 'er02': '验证码错误'
+      if (!validation.verfiyCode(_this.phoneCode)) {
+        _this.errText = errCode['er02'] // 'er02': '验证码错误'
       }
-      console.log('===', this.phoneCode)
-      await this.userLogin({phonenumber: this.phone, code: this.phoneCode}).then((res) => {
-        console.log('登录接口返回', res)
-      })
-    }
-    /* async goLogin () {
-      this.errText = ''
-      if (!validation.phoneNumber(this.phone)) {
-        this.errText = errCode['e09'] // 'e06': '手机号或邮箱格式错误'
-        return false
-      }
-      if (!validation.pwd(this.userPwd)) {
-        this.errText = errCode['e02'] // 'e02': '密码格式错误'
-        return false
-      }
-      this.loading = true
       let flag = true
-      await this.login({
-        identity: this.userName,
-        password: encrypt(this.userPwd)
-      }).then(res => {
+      // 快速登录，有手机号就正常登录没有就相当于注册登录
+      await _this.userLogin({phonenumber: _this.phone, code: _this.phoneCode}).then((res) => {
+        console.log('登录接口返回', res)
         if (res.success) {
           // 先把localStorage里面的用户的信息和cookie里面的用户信息都清除了
           localStorage.removeItem('userInfo')
           Cookie.delCookieTalkmate('is_anonymous')
           Cookie.delCookie('user_id')
           Cookie.delCookie('verify')
-          // if (this.autoFlag) {
-          //   Cookie.setCookieAuto('user_id', res.user_id)
-          //   Cookie.setCookieAuto('verify', res.verify)
-          // } else {
-          //   Cookie.setCookieSession('user_id', res.user_id)
-          //   Cookie.setCookieSession('verify', res.verify)
-          // }
-          Cookie.setCookie('user_id', res.user_id)
-          Cookie.setCookie('verify', res.verify)
+          // 把后台返回的用户信息存进去
+          Cookie.setCookie('user_id', res.result.user_id)
+          Cookie.setCookie('verify', res.result.verify)
+          // 取出Cookie UserId和最后存的localStorage UserId做对比
           let UserId = Cookie.getCookie('user_id')
           let lastUserId = localStorage.getItem('last_user_id')
           if (lastUserId !== UserId) {
             localStorage.setItem('lastUserId', UserId)
             localStorage.removeItem('lastCourseCode')
           }
+          // let lastCourseCode = localStorage.getItem('lastCourseCode')
+          // // let lastCourseCode = JSON.parse(localStorage.getItem('lastCourseCode'))
+          // console.log('lastCourseCode', lastCourseCode)
+          // if (!lastCourseCode) {
+          //   _this.getUserInfo()
+          //   _this.updateCurCourseCode(_this.userInfo.current_course_code)
+          //   localStorage.setItem('lastCourseCode', _this.userInfo.current_course_code)
+          //   localStorage.setItem('userInfo', _this.userInfo)
+          //   _this.updateIsLogin('1')
+          //   _this.$router.push({path: '/app/course-list'})
+          // } else {
+          //   _this.updateCurCourseCode(lastCourseCode)
+          //   _this.updateIsLogin('1')
+          //   _this.$router.push({path: '/app/course-list'})
+          // }
         } else {
-          this.loading = false
-          this.errText = errCode[res.code]
+          _this.errText = errCode[res.code]
           flag = false
         }
       })
@@ -328,19 +310,20 @@ export default {
       if (flag) {
         let lastCourseCode = localStorage.getItem('lastCourseCode')
         if (!lastCourseCode) {
-          await this.getUserInfo()
-          this.updateCurCourseCode(this.userInfo.current_course_code)
-          localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
+          await _this.getUserInfo()
+          _this.updateCurCourseCode(_this.userInfo.current_course_code)
+          localStorage.setItem('lastCourseCode', _this.userInfo.current_course_code)
+          localStorage.setItem('userInfo', _this.userInfo)
           // cookie里面有一个isLogin判断是否登陆，0是没登录 1是登陆状态
-          this.updateIsLogin('1')
-          this.$router.push({path: '/app/course-list'})
+          _this.updateIsLogin('1')
+          _this.$router.push({path: '/app/course-list'})
         } else {
-          this.updateCurCourseCode(lastCourseCode)
-          this.updateIsLogin('1')
-          this.$router.push({path: '/app/course-list'})
+          _this.updateCurCourseCode(lastCourseCode)
+          _this.updateIsLogin('1')
+          _this.$router.push({path: '/app/course-list'})
         }
       }
-    } */
+    }
   }
 }
 </script>
@@ -420,8 +403,10 @@ html,body{-webkit-text-size-adjust:none;}
       cursor: pointer;
       left: 21px;
       top: 6px;
-      font-size: 16px;
-      color: #1c1f21;
+      font-size: 14px;
+      font-family:PingFang-SC-Medium;
+      font-weight:500;
+      color: #103044;
       text-align: left;
       line-height: 24px;
     }
@@ -648,7 +633,9 @@ html,body{-webkit-text-size-adjust:none;}
   }
   .areacode-box .code-tab li {
     display: inline-block;
-    font-size: 13px;
+    font-size:13px;
+    font-family:PingFangSC-Semibold;
+    font-weight:600;
     color: #90A2AE;
     margin-right: 6px;
     cursor: pointer;
@@ -683,8 +670,10 @@ html,body{-webkit-text-size-adjust:none;}
   }
   .areacode-box .code-list li {
     width: 100%;
-    font-size: 16px;
-    color: #545c63;
+    font-size:13px;
+    font-family:PingFang-SC-Medium;
+    font-weight:500;
+    color: #103044;
     text-align: left;
     line-height: 36px;
     cursor: pointer;
