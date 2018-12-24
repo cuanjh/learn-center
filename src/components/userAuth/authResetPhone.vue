@@ -68,14 +68,12 @@ export default {
     ...mapActions({
       // resetPwdPhone: 'user/resetPwdPhone',
       // sendCodeReset: 'user/sendCodeReset',
-      getUserInfo: 'user/getUserInfo'
+      getUserInfo: 'user/getUserInfo',
+      sendCode: 'getSendCode'
     }),
     getCode () {
       if (this.timer) return
-      http.sendCodeReset({
-        phonenumber: this.$route.params.phone,
-        type: 'reset_password'
-      }).then(res => {
+      this.sendCode({phonenumber: this.$route.params.phone, codeLen: '6'}).then(res => {
         if (res.success) {
           this.timer = setInterval(() => {
             --this.time
