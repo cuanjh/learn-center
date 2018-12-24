@@ -44,7 +44,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import validation from './../../tool/validation.js'
-import { encrypt } from './../../tool/untils.js'
+// import { encrypt } from './../../tool/untils.js'
 import Cookie from '../../tool/cookie'
 import errCode from './../../api/code.js'
 import $ from 'jquery'
@@ -142,7 +142,7 @@ export default {
       }
       await _this.userPwdLogin({
         identity: _this.userName,
-        password: encrypt(_this.userPwd)
+        password: _this.userPwd
       }).then(res => {
         console.log('密码登录接口返回', res)
         if (res.success) {
