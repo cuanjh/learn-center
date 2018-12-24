@@ -99,15 +99,13 @@ export default {
     }),
     // 失去焦点
     blurPEFn () {
-      if (validation.phoneNumber(this.userName)) {
-        $('input[type="text"]').css('border-color', '#E6EBEE')
-        this.errText = ''
-        return false
-      }
-      if (validation.email(this.userName)) {
-        $('input[type="text"]').css('border-color', '#E6EBEE')
-        this.errText = ''
-        return false
+      let _this = this
+      if (_this.type === 1) {
+        if (validation.phoneNumber(_this.userName) || _this.userName === '') {
+          $('input[type="text"]').css('border-color', '#E6EBEE')
+          _this.errText = ''
+          return false
+        }
       }
     },
     blurPwdFn () {
@@ -137,74 +135,42 @@ export default {
           return false
         }
       }
-      /* if (!validation.phoneNumber(_this.userName) && !validation.email(_this.userName)) {
-        _this.errText = errCode['e06']
-        return false
-      } */
       if (!validation.pwd(_this.userPwd)) {
         _this.errText = errCode['er04']
         $('input[type="password"]').css('border-color', '#D0021B')
         return false
       }
-      // let flag = true
       await _this.userPwdLogin({
         identity: _this.userName,
         password: encrypt(_this.userPwd)
       }).then(res => {
-        console.log('res', res)
-        // if (res.success) {
-        //   if (_this.isSaveLoginState) {
-        //     Cookie.setCookie('user_id', res.user_id)
-        //     Cookie.setCookie('verify', res.verify)
-        //     Cookie.setCookie('userName', _this.userName)
-        //     Cookie.setCookie('userPwd', _this.userPwd)
-        //   } else {
-        //     Cookie.delCookie('user_id', res.user_id)
-        //     Cookie.delCookie('verify', res.verify)
-        //     Cookie.delCookie('userName', _this.userName)
-        //     Cookie.delCookie('userPwd', _this.userPwd)
-        //   }
-        //   localStorage.removeItem('userInfo')
-        //   Cookie.delCookieTalkmate('is_anonymous')
-        //   Cookie.delCookie('user_id')
-        //   Cookie.delCookie('verify')
-        //   /* if (_this.isSaveLoginState) {
-        //     Cookie.setCookieAuto('user_id', res.user_id)
-        //     Cookie.setCookieAuto('verify', res.verify)
-        //   } else {
-        //     Cookie.setCookieSession('user_id', res.user_id)
-        //     Cookie.setCookieSession('verify', res.verify)
-        //   } */
-        //   Cookie.setCookie('isChecked', _this.isSaveLoginState)
-        //   Cookie.setCookie('user_id', res.user_id)
-        //   Cookie.setCookie('verify', res.verify)
-        //   // Cookie.setCookie('userName', _this.userName)
-        //   // Cookie.setCookie('userPwd', _this.userPwd)
-        //   let UserId = Cookie.getCookie('user_id')
-        //   let lastUserId = localStorage.getItem('last_user_id')
-        //   if (lastUserId !== UserId) {
-        //     localStorage.setItem('lastUserId', UserId)
-        //     localStorage.removeItem('lastCourseCode')
-        //   }
-        // } else {
-        //   _this.errText = errCode[res.code]
-        //   flag = false
-        // }
+        console.log('密码登录接口返回', res)
+        if (res.success) {
+          if (_this.isSaveLoginState) {
+            Cookie.setCookie('user_id', res.user_id)
+            Cookie.setCookie('verify', res.verify)
+            Cookie.setCookie('userName', _this.userName)
+            Cookie.setCookie('userPwd', _this.userPwd)
+          } else {
+            Cookie.delCookie('user_id', res.user_id)
+            Cookie.delCookie('verify', res.verify)
+            Cookie.delCookie('userName', _this.userName)
+            Cookie.delCookie('userPwd', _this.userPwd)
+          }
+          localStorage.removeItem('userInfo')
+          Cookie.delCookieTalkmate('is_anonymous')
+          Cookie.delCookie('user_id')
+          Cookie.delCookie('verify')
+          // 存后台传来的user的信息
+          let info = res.result
+          Cookie.setCookie('isChecked', _this.isSaveLoginState)
+          Cookie.setCookie('user_id', info.user_id)
+          Cookie.setCookie('verify', info.verify)
+          _this.$router.push({path: '/app/index'})
+        } else {
+          _this.errText = errCode[res.code]
+        }
       })
-      // if (flag) {
-      //   let lastCourseCode = localStorage.getItem('lastCourseCode')
-      //   if (!lastCourseCode) {
-      //     await _this.getUserInfo()
-      //     _this.updateCurCourseCode(_this.userInfo.current_course_code)
-      //     localStorage.setItem('lastCourseCode', _this.userInfo.current_course_code)
-      //     _this.updateIsLogin('1')
-      //     _this.$router.push({path: '/app/course-list'})
-      //   } else {
-      //     _this.updateCurCourseCode(lastCourseCode)
-      //     _this.updateIsLogin('1')
-      //     _this.$router.push({path: '/app/course-list'})
-      //   }
-      // }
     }
   }
 }

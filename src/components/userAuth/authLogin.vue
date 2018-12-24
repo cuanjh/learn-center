@@ -56,7 +56,7 @@
         <div class="third weixin">
           <i></i>
         </div>
-        <div class="third weibo">
+        <div class="third weibo" @click="weiboGoLogin()">
           <i></i>
         </div>
         <div class="third qq">
@@ -125,6 +125,7 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import { deviceId } from './../../tool/untils'
 import validation from './../../tool/validation.js'
 // import http from './../../api/userAuth.js'
 // import { encrypt } from './../../tool/untils.js'
@@ -281,6 +282,18 @@ export default {
       } else {
         _this.errText = errCode[_this.loginInfo.code]
       }
+    },
+    // 第三方登录
+    weiboGoLogin () {
+      // http://talkmate.com/umv1/user-web/sns-login
+      // 登录：deviceid
+      // 回调：loginurl
+      // 类型：ty:wb、wx、qq
+      // http://beat-study.talkmate.com/app/index
+      let _deviceId = deviceId()
+      console.log('deviceid', _deviceId)
+      let url = 'http://talkmate.com/umv1/user-web/sns-login?ty=wb' + 'deviceid=' + _deviceId + 'loginurl=http://beat-study.talkmate.com/app/index'
+      window.open(url)
     }
   }
 }
@@ -517,8 +530,8 @@ html,body{-webkit-text-size-adjust:none;}
     justify-content: space-around;
     margin-top: 14px;
     .third {
-      width:30px;
-      height:30px;
+      width:40px;
+      height:40px;
     }
     i {
       cursor: pointer;
