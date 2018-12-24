@@ -7,5 +7,6 @@ export default {
   },
   updateUserInfo (state, data) {
     state.userInfo = data.info
+    console.log('userInfo', state.userInfo)
   }
 }
