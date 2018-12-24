@@ -117,6 +117,7 @@ export default {
    * 新登录接口
    */
   umUserLoginApi: '/umv1/user/login', // 快速登录接口
+  umUserPwdLoginApi: '/umv1/user/login/pwd', // 密码登录接口
   umSendCodeApi: '/umv1/sms/send', // 发送验证码接口
   umUserInfoApi: '/umv1/user/info', // 获取用户信息接口
   umLangsListApi: '/umv1/langs/lists' // 语言列表接口
