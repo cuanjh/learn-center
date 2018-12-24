@@ -292,8 +292,9 @@ export default {
       // http://beat-study.talkmate.com/app/index
       let _deviceId = deviceId()
       console.log('deviceid', _deviceId)
-      let url = 'http://talkmate.com/umv1/user-web/sns-login?ty=wb' + 'deviceid=' + _deviceId + 'loginurl=http://beat-study.talkmate.com/app/index'
-      window.open(url)
+      let url = 'http://talkmate.com/umv1/user-web/sns-login?ty=wb' + '&deviceid=' + _deviceId + '&loginurl=http://beat-study.talkmate.com/app/index'
+      // window.open(url)
+      window.location.href = url
     }
   }
 }

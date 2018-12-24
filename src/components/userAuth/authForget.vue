@@ -25,6 +25,8 @@ import validation from './../../tool/validation.js'
 import errCode from './../../api/code.js'
 import http from './../../api/userAuth.js'
 import sendSuccess from './authSendEmailOk.vue'
+import $ from 'jquery'
+
 export default {
   data () {
     return {
@@ -47,20 +49,9 @@ export default {
     },
     usernameType () {
       // 用户输入的账号类型两种，分别是  phone  email, 返回fasle说明二者验证均不通过
-      // if (this.currentType === 2) {
-      //   if (validation.email(this.username)) {
-      //     return 'email'
-      //   }
-      // }else if (this.currentType === 1) {
-      //   if (validation.phoneNumber(this.username)) {
-      //     return 'phone'
-      //   }
-      // } else {
-      //   return false
-      // }
-      if (validation.email(this.username)) {
+      if (this.currentType === 2) {
         return 'email'
-      } else if (validation.phoneNumber(this.username)) {
+      } else if (this.currentType === 1) {
         return 'phone'
       } else {
         return false
@@ -76,17 +67,26 @@ export default {
     }),
     goVerify () {
       this.errText = ''
-      if (!validation.phoneNumber(this.userName) && !validation.email(this.userName)) {
-        this.errText = errCode['e06']
-        return false
+      var type = this.usernameType
+      console.log('type', type)
+      if (type === 'phone') {
+        if (!validation.phoneNumber(this.userName)) {
+          this.errText = errCode['er01']
+          $('input[type="text"]').css('border-color', '#D0021B')
+          return false
+        }
+      }
+      if (type === 'email') {
+        if (!validation.email(this.userName)) {
+          this.errText = errCode['er05']
+          $('input[type="text"]').css('border-color', '#D0021B')
+          return false
+        }
       }
       var forgetType = validation.phoneNumber(this.userName) ? 'phone' : 'email'
-      var type = this.usernameType
-      if (!type) {
-        this.errorTips = '邮箱/手机号码输入错误'
-      }
       if (forgetType === 'phone') {
         http.checkPhone({identity: this.userName}).then(res => {
+          console.log('忘记手机密码', res)
           if (res.success) {
             if (res.exists) {
               this.$router.push({path: `/auth/reset-phone/${this.userName}`})
@@ -101,6 +101,7 @@ export default {
         })
       } else {
         http.checkEmail({identity: this.userName}).then(res => {
+          console.log('忘记邮箱密码', res)
           if (res.success) {
             if (res.exists) {
               this.sendMail()
