@@ -94,7 +94,7 @@
     </div>
     <div class="user-fixpassword" v-show="activeTab === false">
       <form action="" style='padding-bottom: 20px;'>
-        <p v-if="!ui['is_anonymous']">
+        <p v-if="!isAnonymous">
           <span>原密码</span>
           <input type="password" placeholder='请输入原始密码' v-model="oldPsw" />
           <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
@@ -187,16 +187,16 @@ export default {
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'setting')
     this.$parent.$emit('navItem', 'user')
-    this.loadData()
-    console.log(this.ui)
-    if (this.ui['is_anonymous']) {
+    let ui = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.loadData(ui)
+    if (ui.member_info['is_anonymous']) {
       this.updateUserAnonymous(true)
       this.updateAlertType('bindAccount')
     }
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       alertType: state => state.user.alertType
     }),
     nicknameError () {
@@ -215,15 +215,14 @@ export default {
     passowrdValidator (pwd) {
       return /^(\w){6,15}$/.test(pwd) // 字母数字下划线 6-15位
     },
-    ui () {
-      let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
-      }
-      return ui
-    },
     languageHandler () {
       return this.$store.state.user.languageHandler
+    },
+    isAnonymous () {
+      if (!this.userInfo.member_info) {
+        return
+      }
+      return this.userInfo.member_info.is_anonymous
     }
   },
   methods: {
@@ -232,16 +231,16 @@ export default {
       updateAlertType: 'user/updateAlertType'
     }),
     ...mapActions({
-      getUserInfo: 'user/getUserInfo',
+      getUserInfo: 'getUserInfo',
       sendCode: 'user/sendCode',
       bindEmail: 'user/bindEmail',
       updateInfo: 'user/updateInfo',
       resetPwd: 'user/resetPwd',
       changePwd: 'user/changePwd'
     }),
-    loadData () {
+    loadData (ui) {
       var _this = this
-      var result = _this.ui
+      var result = ui
       if (result.nickname === undefined) {
         _this.nickname = ''
       } else {
@@ -492,7 +491,7 @@ export default {
     modifyPsw () {
       var _this = this
       var _params = {}
-      if (this.ui['is_anonymous']) {
+      if (this.isAnonymous) {
         if (this.newPsw1.length === 0 || this.newPsw2.length === 0) {
           this.noticePsw = true
           return

@@ -7,7 +7,7 @@
       <p></p>
       <p></p>
       <span >
-        <a @click="goAli" v-show="payShow" :href="aliPayUrl" target="_blank">去支付宝</a>
+        <a @click="goAli()" v-show="payShow" :href="aliPayUrl" target="_blank">去支付宝</a>
         <a  v-show='!payShow' class='pay-alert-order-creating'>订单创建中...</a></span>
       <em @click='close'></em>
     </section>
@@ -50,7 +50,7 @@ export default {
     ...mapState({
       pay: state => state.user.pay,
       payShow: state => state.user.payShow,
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       purchaseIconPay: state => state.user.purchaseIconPay
     }),
     aliPayUrl () {
@@ -69,9 +69,6 @@ export default {
     },
     goAli () {
       let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
-      }
       var _memberType = ui.member_info.member_type
       var _productId = this.pay.productId
       var _orderNo = this.pay.tradeNo

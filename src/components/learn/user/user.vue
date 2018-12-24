@@ -5,13 +5,13 @@
         <div class='user-left-userDetail'>
           <ol>
             <li id="crop-avatar">
-              <img :src="memberInfo.photo" class="avatar-view" id='defaultUserImg' @click='uploadPicBtn' >
+              <img :src="userInfo.photo" class="avatar-view" id='defaultUserImg' @click='uploadPicBtn' >
             </li>
-            <li v-text='memberInfo.nickname'></li>
-            <li>全球说ID:<span v-text='memberInfo.talkmate_id'></span></li>
+            <li v-text='userInfo.nickname'></li>
+            <li>全球说ID:<span v-text='userInfo.talkmate_id'></span></li>
             <li>
-              <span>{{ memberInfo.following_count }}<em> 关注</em></span>
-              <span>{{ memberInfo.followed_count }}<em> 粉丝</em></span>
+              <span>{{ userInfo.following_count }}<em> 关注</em></span>
+              <span>{{ userInfo.followed_count }}<em> 粉丝</em></span>
               <i></i>
             </li>
           </ol>
@@ -91,19 +91,8 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
-    }),
-    memberInfo () {
-      // if (this.$store.state.course.memberInfo.member_info !== undefined) {
-      //   this.judgeVip =
-      //     this.$store.state.course.memberInfo.member_info.member_type === 1
-      // }
-      let ui = this.userInfo
-      if (!ui) {
-        ui = localStorage.getItem('userInfo')
-      }
-      return ui
-    }
+      userInfo: state => state.userInfo
+    })
   },
   methods: {
     ...mapMutations({

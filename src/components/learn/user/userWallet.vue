@@ -76,10 +76,8 @@ export default {
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'wallet')
     this.$parent.$emit('navItem', 'user')
-    let ui = this.userInfo
-    if (Object.keys(ui).length === 0) {
-      ui = JSON.parse(localStorage.getItem('userInfo'))
-    }
+    let ui = JSON.parse(sessionStorage.getItem('userInfo'))
+
     var _memberType = ui.member_info.member_type
     var _entryPage = this.$router.currentRoute.fullPath
     LogCollect.payCoinEnter(_memberType, _entryPage)
@@ -121,7 +119,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       record: state => state.user.record,
       coinsProduct: state => state.user.coinsProduct,
       showLoading: state => state.user.showLoading,
