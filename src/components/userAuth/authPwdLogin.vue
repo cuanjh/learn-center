@@ -11,9 +11,9 @@
             @keyup.enter="goLogin">
     <input  class="input_text"
             type="password"
-            @blur.prevent="blurPwdFn()"
             placeholder="输入密码"
             v-model="userPwd"
+            @blur.prevent="blurPwdFn()"
             @keyup.enter="goLogin">
     <div class="auto-forget">
       <!-- <p class="go-registered">
@@ -146,6 +146,8 @@ export default {
       }).then(res => {
         console.log('密码登录接口返回', res)
         if (res.success) {
+          $('input').css('border-color', '#E6EBEE')
+          _this.errText = ''
           if (_this.isSaveLoginState) {
             Cookie.setCookie('user_id', res.user_id)
             Cookie.setCookie('verify', res.verify)

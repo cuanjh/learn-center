@@ -27,9 +27,10 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import validation from './../../tool/validation.js'
 import errCode from './../../api/code.js'
-import http from './../../api/userAuth.js'
-import Cookie from '../../tool/cookie'
-import { encrypt } from './../../tool/untils.js'
+// import http from './../../api/userAuth.js'
+// import Cookie from '../../tool/cookie'
+// import { encrypt } from './../../tool/untils.js'
+
 export default {
   data () {
     return {
@@ -69,12 +70,15 @@ export default {
       // resetPwdPhone: 'user/resetPwdPhone',
       // sendCodeReset: 'user/sendCodeReset',
       getUserInfo: 'user/getUserInfo',
-      sendCode: 'getSendCode'
+      sendCode: 'getSendCode',
+      userEditPwd: 'userEditPwd'
     }),
+    // 获取验证码
     getCode () {
       if (this.timer) return
       this.sendCode({phonenumber: this.$route.params.phone, codeLen: '6'}).then(res => {
         if (res.success) {
+          console.log('发送验证码成功', res)
           this.timer = setInterval(() => {
             --this.time
             if (this.time === 0) {
@@ -89,6 +93,29 @@ export default {
       })
     },
     async goReset () {
+      this.errText = ''
+      if (!validation.verfiyCode(this.phoneCode)) {
+        this.errText = errCode['e03']
+        return false
+      }
+      if (!validation.pwd(this.pwd1) || !validation.pwd(this.pwd2)) {
+        this.errText = errCode['e02']
+        return false
+      }
+      if (this.pwd1 !== this.pwd2) {
+        this.errText = errCode['e08']
+        return false
+      }
+      await this.userEditPwd({phonenumber: this.$route.params.phone, code: this.phoneCode, password: this.pwd2}).then((res) => {
+        console.log('修改密码成功', res)
+        if (res.success) {
+          this.$router.push({path: '/app/index'})
+        } else {
+          this.errText = errCode[res.code]
+        }
+      })
+    }
+    /* async goReset () {
       this.errText = ''
       if (!validation.verfiyCode(this.phoneCode)) {
         this.errText = errCode['e03']
@@ -161,7 +188,7 @@ export default {
       //   this.$router.push({path: '/app/course-list'})
       // }
       // }
-    }
+    } */
   }
 }
 </script>

@@ -16,8 +16,7 @@
                   type="text"
                   placeholder="输入手机号码"
                   v-model="phone"
-                  @blur.prevent="blurPhoneFn()"
-                  @keyup.enter="goLogin">
+                  @keyup.enter="getCode">
         </div>
         <div class="item phone-code">
           <input  id="phoneCode"
@@ -191,13 +190,6 @@ export default {
       userLogin: 'userLogin',
       sendCode: 'getSendCode'
     }),
-    blurPhoneFn () {
-      if (validation.phoneNumber(this.phone)) {
-        $('input[type="text"]').css('border-color', '#E6EBEE')
-        this.errText = ''
-        return false
-      }
-    },
     // 更新type
     updateType (type) {
       this.type = type
@@ -240,6 +232,8 @@ export default {
       this.sendCode({phonenumber: this.phone, codeLen: '6'}).then(res => {
         console.log('发送验证码', res)
         if (res.success) {
+          $('input[type="text"]').css('border-color', '#E6EBEE')
+          this.errText = ''
           this.timer = setInterval(() => {
             --this.time
             if (this.time === 0) {
@@ -269,6 +263,8 @@ export default {
       // 快速登录，有手机号就正常登录没有就相当于注册登录
       await _this.userLogin({phonenumber: _this.phone, code: _this.phoneCode})
       if (_this.loginInfo.success) {
+        $('input[type="text"]').css('border-color', '#E6EBEE')
+        this.errText = ''
         // 先把localStorage里面的用户的信息和cookie里面的用户信息都清除了
         localStorage.removeItem('userInfo')
         Cookie.delCookieTalkmate('is_anonymous')

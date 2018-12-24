@@ -6,10 +6,13 @@
           v-text="currentType == 2 ? '请在下方输入框里输入你的电子邮箱，以获取验证链接。':'请在下方输入框里输入你的电话号码，以手机便获取验证码。'"></p>
       <div class="item">
         <input  type="text"
-                :placeholder="currentType == 2?'请输入你的电子邮箱':'请输入你的手机号码'" v-model="userName">
+                :placeholder="currentType == 2?'请输入你的电子邮箱':'请输入你的手机号码'"
+                v-model="userName"
+                @blur.prevent="blurPhoneFn()"
+                @keyup.enter="goVerify">
       </div>
       <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
-      <button v-bind:disabled="!isGoLogin" @click="goVerify">
+      <button v-bind:disabled="!isGoLogin" @click="goVerify()">
         <p>
           获取验证信息
           <i></i>
@@ -39,8 +42,7 @@ export default {
   components: {
     sendSuccess
   },
-  mounted () {
-  },
+  mounted () {},
   computed: {
     currentType () {
       let urlarr = this.$route.path.split('/')
@@ -65,6 +67,15 @@ export default {
     ...mapActions({
       userEditPwd: 'userEditPwd'
     }),
+    // 失去焦点
+    blurPhoneFn () {
+      if (validation.phoneNumber(this.userName) || validation.email(this.userName)) {
+        $('input[type="text"]').css('border-color', '#E6EBEE')
+        this.errText = ''
+        return false
+      }
+    },
+    // 获取验证信息
     goVerify () {
       this.errText = ''
       var type = this.usernameType
