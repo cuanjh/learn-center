@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 import validation from './../../tool/validation.js'
 import errCode from './../../api/code.js'
 import http from './../../api/userAuth.js'
@@ -46,6 +47,17 @@ export default {
     },
     usernameType () {
       // 用户输入的账号类型两种，分别是  phone  email, 返回fasle说明二者验证均不通过
+      // if (this.currentType === 2) {
+      //   if (validation.email(this.username)) {
+      //     return 'email'
+      //   }
+      // }else if (this.currentType === 1) {
+      //   if (validation.phoneNumber(this.username)) {
+      //     return 'phone'
+      //   }
+      // } else {
+      //   return false
+      // }
       if (validation.email(this.username)) {
         return 'email'
       } else if (validation.phoneNumber(this.username)) {
@@ -59,6 +71,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      userEditPwd: 'userEditPwd'
+    }),
     goVerify () {
       this.errText = ''
       if (!validation.phoneNumber(this.userName) && !validation.email(this.userName)) {

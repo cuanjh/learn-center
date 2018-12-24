@@ -12,6 +12,10 @@ export default {
   userPwdLogin ({commit}, params) {
     return newHttpNoLogin(config.umUserPwdLoginApi, params)
   },
+  // 修改密码
+  userEditPwd ({commit}, params) {
+    return newHttpNoLogin(config.umUserEditPwdApi, params)
+  },
   // 获取手机验证码
   getSendCode ({commit}, params) {
     return newHttpNoLogin(config.umSendCodeApi, params)
