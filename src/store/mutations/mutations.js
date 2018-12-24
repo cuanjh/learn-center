@@ -10,5 +10,7 @@ export default {
   // 更新用户信息
   updateUserInfo (state, data) {
     state.userInfo = data.info
+    sessionStorage.setItem('userInfo', JSON.stringify(state.userInfo))
+    console.log('userInfo', state.userInfo)
   }
 }

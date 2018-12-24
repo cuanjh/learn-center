@@ -98,27 +98,21 @@ export default {
     this.$parent.$emit('activeNavUserItem', 'vip')
     this.$parent.$emit('navItem', 'user')
 
-    var _memberType = this.ui.member_info.member_type
+    let ui = JSON.parse(sessionStorage.getItem('userInfo'))
+    var _memberType = ui.member_info.member_type
     var _entryPage = this.$router.currentRoute.fullPath
     LogCollect.payMemberEnter(_memberType, _entryPage)
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       productList: state => state.user.productList
     }),
-    ui () {
-      let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
-      }
-      return ui
-    },
     vipJudge () {
-      var tempJunge = 0
-      if (this.ui.member_info !== undefined) {
-        tempJunge = this.ui.member_info.member_type || 0
+      if (!this.userInfo.member_info) {
+        return
       }
+      var tempJunge = this.userInfo.member_info.member_type || 0
       if (tempJunge === 0) {
         return 'no-Vip'
       } else if (tempJunge === 1) {
@@ -128,10 +122,10 @@ export default {
       }
     },
     startTime () {
-      var startTime = 0
-      if (this.ui.member_info !== undefined) {
-        startTime = this.ui.member_info.start_time * 1000 || 0
+      if (!this.userInfo.member_info) {
+        return
       }
+      var startTime = this.userInfo.member_info.start_time * 1000 || 0
       var date = new Date(startTime)
       var Y = date.getFullYear() + '-'
       var M = date.getMonth() + 1 + '-'
@@ -139,10 +133,10 @@ export default {
       return Y + M + D
     },
     endTime () {
-      var endTime = 0
-      if (this.ui.member_info !== undefined) {
-        endTime = this.ui.member_info.end_time * 1000 || 0
+      if (!this.userInfo.member_info) {
+        return
       }
+      var endTime = this.userInfo.member_info.end_time * 1000 || 0
       var date = new Date(endTime)
       var Y = date.getFullYear() + '-'
       var M = date.getMonth() + 1 + '-'
@@ -150,17 +144,18 @@ export default {
       return Y + M + D
     },
     cardKind () {
-      if (this.ui.member_info) {
-        var month = this.ui.member_info['month_num']
-        if (month === 1) {
-          return '(月卡)'
-        } else if (month === 3) {
-          return '(季卡)'
-        } else if (month === 6) {
-          return '(半年卡)'
-        } else if (month === 12) {
-          return '(年卡)'
-        }
+      if (!this.userInfo.member_info) {
+        return
+      }
+      var month = this.userInfo.member_info['month_num']
+      if (month === 1) {
+        return '(月卡)'
+      } else if (month === 3) {
+        return '(季卡)'
+      } else if (month === 6) {
+        return '(半年卡)'
+      } else if (month === 12) {
+        return '(年卡)'
       }
     }
   },
