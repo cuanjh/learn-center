@@ -29,7 +29,7 @@ export default {
   // 获取语言列表
   getLangsList ({commit}) {
     httpNoLogin(config.umLangsListApi).then(res => {
-      commit('updateCourseLangsList', res.langsInfo)
+      commit('updateCourseLangsList', res.hotLangsInfo.concat(res.langsInfo))
     })
   }
 }

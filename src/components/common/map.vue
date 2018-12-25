@@ -423,6 +423,8 @@ export default {
     // 官方语言地图
     courseLangsMap () {
       // let courseLangsData = mapData.courseLangsMap
+      let _this = this
+      console.log('courseLangsList', _this.courseLangsList)
       mapData.courseLangMap.forEach(lang => {
         if (!lang.lng) {
           console.log('lang', lang)
@@ -431,7 +433,7 @@ export default {
         // var myIcon = new BMap.Icon('../../../static/images/bookCase/endangered-big.svg', new BMap.Size(150, 150))
 
         // let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(65, 40)})
-        let obj = this.courseLangsList.find((x) => {
+        let obj = _this.courseLangsList.find((x) => {
           return x.lan_code === lang.lang_code
         })
         // let label = new BMap.Label(obj.name['zh-CN'], {offset: new BMap.Size(60, 15)}) // 创建marker点的标记

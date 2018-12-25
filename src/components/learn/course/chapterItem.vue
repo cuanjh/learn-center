@@ -14,7 +14,7 @@
             <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
           </div>
           <div class="current-learn-course-describe">{{ item['info']['zh-cn']['describe'] }}</div>
-          <div class="current-learn-course-gold" v-show="(parseInt(userInfo.member_info.member_type) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)" :class="{'courseIsLock': (parseInt(userInfo.member_info.member_type) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
+          <div class="current-learn-course-gold" v-show="(parseInt(isVip) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)" :class="{'courseIsLock': (parseInt(isVip) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
             <i></i>
             150金币
           </div>
@@ -370,7 +370,7 @@ export default {
               obj['isActive'] = 1
             }
           }
-          if (parseInt(this.userInfo.member_info.member_type) !== 1) {
+          if (parseInt(this.isVip) !== 1) {
             obj['isCompleted'] = 0
             obj['isActive'] = 0
             obj['completedRate'] = ''
@@ -462,6 +462,12 @@ export default {
       }
       this.$emit('draw', 'homework', retObj)
       return retObj
+    },
+    isVip () {
+      if (!this.userInfo.member_info) {
+        return
+      }
+      return this.userInfo.member_info['member_type']
     }
   },
   methods: {
@@ -479,7 +485,7 @@ export default {
         this.nolockTestCheckShow = true
         return false
       }
-      if (this.buyChapters.indexOf(chapterCode) === -1 && parseInt(this.userInfo.member_info.member_type) !== 1) {
+      if (this.buyChapters.indexOf(chapterCode) === -1 && parseInt(this.isVip) !== 1) {
         this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
         return false
       }
@@ -550,7 +556,7 @@ export default {
       }
     },
     jumpVipPage (isActive, id) {
-      if (parseInt(this.userInfo.member_info.member_type) !== 1) {
+      if (parseInt(this.isVip) !== 1) {
         this.$router.push({ path: '/app/user/vip' })
       } else {
         if (isActive) {

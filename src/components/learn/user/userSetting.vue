@@ -102,16 +102,16 @@
         <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码输入错误，请重新输入</div>
         <p :class="{'error':false}">
           <span>新密码</span>
-          <input type="password" placeholder='请输入新密码' v-model="newPsw1">
+          <input type="password" placeholder='请输入新密码' v-on:input="comparePwd()" v-model="newPsw1">
           <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
         </p>
         <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码不符合规范，请重新输入</div>
         <p>
           <span>确认密码</span>
-          <input type="password" placeholder='请确认新密码' v-model="newPsw2">
+          <input type="password" placeholder='请确认新密码' v-on:input="comparePwd()" v-model="newPsw2">
           <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
         </p>
-        <div class='learn-setting-error-tips-settingpage' v-show="newPsw1!=newPsw2"><i></i>您两次输入的密码不同，请重新输入</div>
+        <div class='learn-setting-error-tips-settingpage' v-show="!isSame"><i></i>您两次输入的密码不同，请重新输入</div>
         <div class='submit' @click="modifyPsw">保存修改</div>
         <p class='bindPhone-error-tips' style='bottom:-1px;top:initial;left:28px;' v-show='noticePsw'><i class='user error psw-user-error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p>
       </form>
@@ -174,6 +174,7 @@ export default {
       oldPsw: '', // 原密码
       newPsw1: '', // 新密码1
       newPsw2: '', // 新密码2
+      isSame: true, // 判断新密码两次输入是否一致
       noticePsw: false, // 密码没填全提示信息
       end: 'not use', // 没用
       noticeSetting: false
@@ -539,6 +540,17 @@ export default {
     },
     updateAlertButton (text) {
       this.alertButton = text
+    },
+    comparePwd () {
+      if (!this.newPsw2) {
+        this.isSame = true
+        return
+      }
+      if (this.newPsw1 && this.newPsw2 && this.newPsw1 === this.newPsw2) {
+        this.isSame = true
+      } else {
+        this.isSame = false
+      }
     }
   }
 }
