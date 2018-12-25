@@ -52,13 +52,13 @@ export default {
   computed: {
     ...mapState({
       coverShow: state => state.course.coverShow,
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       buyHide: state => state.course.buyHide
     }),
     ui () {
       let ui = this.userInfo
       if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
       }
       return ui
     }
@@ -89,7 +89,7 @@ export default {
     ...mapActions({
       getBuyChapter: 'course/getBuyChapter',
       getUnlockChapter: 'course/getUnlockChapter',
-      getUserInfo: 'user/getUserInfo'
+      getUserInfo: 'getUserInfo'
     }),
     btnCancel () {
       this.costAlert = false

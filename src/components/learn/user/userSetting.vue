@@ -102,17 +102,16 @@
         <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码输入错误，请重新输入</div>
         <p :class="{'error':false}">
           <span>新密码</span>
-          <input type="password" placeholder='请输入新密码' v-model="newPsw1">
+          <input type="password" placeholder='请输入新密码' v-on:input="comparePwd()" v-model="newPsw1">
           <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
         </p>
         <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码不符合规范，请重新输入</div>
         <p>
           <span>确认密码</span>
-          <input type="password" placeholder='请确认新密码' v-model="newPsw2">
+          <input type="password" placeholder='请确认新密码' v-on:input="comparePwd()" v-model="newPsw2">
           <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
         </p>
-        <!-- v-show="newPsw1!=newPsw2" -->
-        <div class='learn-setting-error-tips-settingpage' v-show="newPsw1!=newPsw2"><i></i>您两次输入的密码不同，请重新输入</div>
+        <div class='learn-setting-error-tips-settingpage' v-show="!isSame"><i></i>您两次输入的密码不同，请重新输入</div>
         <div class='submit' @click="modifyPsw">保存修改</div>
         <p class='bindPhone-error-tips' style='bottom:-1px;top:initial;left:28px;' v-show='noticePsw'><i class='user error psw-user-error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p>
       </form>
@@ -176,6 +175,7 @@ export default {
       oldPsw: '', // 原密码
       newPsw1: '', // 新密码1
       newPsw2: '', // 新密码2
+      isSame: true, // 判断新密码两次输入是否一致
       noticePsw: false, // 密码没填全提示信息
       end: 'not use', // 没用
       noticeSetting: false
@@ -237,7 +237,7 @@ export default {
       getUserInfo: 'getUserInfo',
       sendCode: 'user/sendCode',
       bindEmail: 'user/bindEmail',
-      // updateInfos: 'user/updateInfo',
+      // updateInfo: 'user/updateInfo',
       updateInfo: 'updateUserInfo',
       resetPwd: 'user/resetPwd',
       changePwd: 'user/changePwd'
@@ -282,13 +282,14 @@ export default {
       if (result.birthday === undefined || result.birthday < 1000) {
         _this.birthday = ''
       } else {
-        var _date = new Date(result.birthday * 1000)
-        _this.birthday =
-          _date.getFullYear() +
-          '-0' +
-          (_date.getMonth() + 1) +
-          '-0' +
-          _date.getDate()
+        // var _date = new Date(result.birthday * 1000)
+        // _this.birthday =
+        //   _date.getFullYear() +
+        //   '-0' +
+        //   (_date.getMonth() + 1) +
+        //   '-0' +
+        //   _date.getDate()
+        _this.birthday = result.birthday
       }
 
       this.$refs['datePicker'].$emit('initDate', _this.birthday)
@@ -296,17 +297,17 @@ export default {
       if (result.country) {
         var _tmp = {}
         _tmp.language = result.country.country_code
-        _tmp.name = result.country.country_name[_this.languageHandler]
+        _tmp.name = result.country.country_name
         _this.country = _tmp
       }
 
       _this.$refs['country'].$emit('init', _this.country)
 
       _this.languageSkill = []
-      if (result.mother_tongue === undefined) {
+      if (result.skillLangs === undefined) {
         _this.languageSkill = []
       } else {
-        result.mother_tongue.forEach((value, index, array) => {
+        result.skillLangs.forEach((value, index, array) => {
           var _tmp = {}
           _tmp.language = value.lan_code
           _tmp.name = value.name[_this.languageHandler]
@@ -395,20 +396,20 @@ export default {
     motherTogue () {
       if (
         (this.languageSkill.length ===
-          this.ui['mother_tongue'].length) &
-        (this.ui['mother_tongue'].length === 0)
+          this.ui['skillLangs'].length) &
+        (this.ui['skillLangs'].length === 0)
       ) {
         return 1
       }
       if (
-        this.languageSkill.length === this.ui['mother_tongue'].length
+        this.languageSkill.length === this.ui['skillLangs'].length
       ) {
         var num = 0
         for (var i = 0; i < this.languageSkill.length; i++) {
-          for (var j = 0; j < this.ui['mother_tongue'].length; j++) {
+          for (var j = 0; j < this.ui['skillLangs'].length; j++) {
             if (
               this.languageSkill[i].language ===
-              this.ui['mother_tongue'][j]['lan_code']
+              this.ui['skillLangs'][j]['lan_code']
             ) {
               num = num + 1
             }
@@ -467,9 +468,9 @@ export default {
       }
       // 精通语言
       if (this.languageSkill.length > 0) {
-        _params.mother_tongue = []
+        _params.skillLangs = []
         this.languageSkill.forEach((value, index, array) => {
-          _params.mother_tongue.push(value.language)
+          _params.skillLangs.push(value.language)
         })
       } else {
         return this.alertMessageNotFull()
@@ -544,6 +545,17 @@ export default {
     },
     updateAlertButton (text) {
       this.alertButton = text
+    },
+    comparePwd () {
+      if (!this.newPsw2) {
+        this.isSame = true
+        return
+      }
+      if (this.newPsw1 && this.newPsw2 && this.newPsw1 === this.newPsw2) {
+        this.isSame = true
+      } else {
+        this.isSame = false
+      }
     }
   }
 }

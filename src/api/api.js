@@ -29,8 +29,16 @@ export const httpLogin = (_url, _params) => { // 已经登录
   let paramsStr = ''
   let keys = Object.keys(_params).sort()
   keys.forEach(key => {
-    paramsStr += key + _params[key]
+    let val = _params[key]
+    if ((typeof val === 'object') && val.constructor === Array) {
+      val.forEach(item => {
+        paramsStr += key + item
+      })
+    } else {
+      paramsStr += key + val
+    }
   })
+  console.log('paramsStr', paramsStr)
   let sign = MD5(secret + paramsStr).toUpperCase()
 
   return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign, {params: _params})
@@ -103,7 +111,14 @@ export const httpNoLogin = (_url, _params) => { // 未登录
   let paramsStr = ''
   let keys = Object.keys(_params).sort()
   keys.forEach(key => {
-    paramsStr += key + _params[key]
+    let val = _params[key]
+    if ((typeof val === 'object') && val.constructor === Array) {
+      val.forEach(item => {
+        paramsStr += key + item
+      })
+    } else {
+      paramsStr += key + val
+    }
   })
   let sign = MD5(secret + paramsStr).toUpperCase()
   return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign, {params: _params})

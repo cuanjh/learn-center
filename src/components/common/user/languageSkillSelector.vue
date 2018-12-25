@@ -52,6 +52,7 @@ export default {
     // 加载语言列表数据
     var _this = this
     this.getLanguages({}).then((res) => {
+      console.log('=====', res)
       if (res.success) {
         _this.options = []
         res.mother_tongue.forEach((value, index, array) => {

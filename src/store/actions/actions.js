@@ -28,12 +28,12 @@ export default {
   },
   // 修改用户信息
   updateUserInfo ({commit}, params) {
-    httpLogin(config.umUpdateUserInfoApi, params)
+    return httpLogin(config.umUpdateUserInfoApi, params)
   },
   // 获取语言列表
   getLangsList ({commit}) {
     httpNoLogin(config.umLangsListApi).then(res => {
-      commit('updateCourseLangsList', res.langsInfo)
+      commit('updateCourseLangsList', res.hotLangsInfo.concat(res.langsInfo))
     })
   }
 }
