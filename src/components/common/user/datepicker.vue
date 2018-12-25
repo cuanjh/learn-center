@@ -76,7 +76,7 @@ export default {
     })
   },
   mounted () {
-    console.log('--date--' + this.value)
+    // console.log('--date--' + this.value)
   },
   watch: {
     startTime (newValue, oldValue) {

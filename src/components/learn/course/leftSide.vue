@@ -9,9 +9,9 @@
             <p>
               <!-- :class="{active:isActive}" -->
               <i :class="{active:isActive}" @click="showMyCourse()"></i>
-              <transition name="fade">
+              <!-- <transition name="fade">
                 <img v-show="trigangleShow" src="../../../../static/images/course/learn-big-arrow.png" alt="dddd">
-              </transition>
+              </transition> -->
             </p>
           </div>
           <p class="course-old">{{$t('course.finished')}}&nbsp;<span v-text="finishedChapter + '/' + chapterNum"></span>&nbsp;{{$t('course.classHour')}}</p>
@@ -183,7 +183,7 @@ export default {
   font-weight: bold;
   color: #ffffff;
   word-break: break-all;
-  max-width: 76px;
+  width: 46px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -211,17 +211,19 @@ export default {
 .lang-overview dd .triangle p i {
   cursor: pointer;
   display: inline-block;
-  width: 27px;
-  height: 27px;
+  width: 17px;
+  height: 17px;
   background: url('../../../../static/images/course/qh-default.svg') no-repeat center;
   block-size: cover;
+  margin-top: 5px;
 }
 .lang-overview dd .triangle p i.active {
   display: inline-block;
-  width: 27px;
-  height: 27px;
+  width: 17px;
+  height: 17px;
   background: url('../../../../static/images/course/qh-click.svg') no-repeat center;
   block-size: cover;
+  margin-top: 5px;
 }
 /* .lang-overview dd p:nth-of-type(1) {
   font-size: 19px;

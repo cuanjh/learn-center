@@ -47,6 +47,7 @@ export default {
     })
   },
   mounted () {
+    this.getLearnCourses()
     this.$parent.$emit('activeNavUserItem', 'course')
     this.$parent.$emit('navItem', 'user')
   },
@@ -63,6 +64,7 @@ export default {
     courseRander () {
       var _object = []
       var obj = this.learnCourses
+      console.log('订阅课程我的页面===', obj)
       if (Object.keys(obj).length > 0) {
         for (var i in obj) {
           _object.unshift(obj[i])
@@ -76,7 +78,8 @@ export default {
       updateCurCourseCode: 'course/updateCurCourseCode'
     }),
     ...mapActions({
-      getDeletePurchase: 'course/getDeletePurchase'
+      getDeletePurchase: 'course/getDeletePurchase',
+      getLearnCourses: 'course/getLearnCourses'
     }),
     showDel (e) {
       this.showIdx = e

@@ -377,9 +377,9 @@ const mutations = {
     state.countrysInfo = data.countryInfo // 国家
     sessionStorage.setItem('countrysInfo', JSON.stringify(state.countrysInfo))
     console.log('课程详情mutations', state.courseDetails)
-    console.log('1', state.resourceInfoRadios)
-    console.log('2', state.countrysInfo)
-    console.log('3', state.langInfoObj)
+    console.log('电台', state.resourceInfoRadios)
+    console.log('国家', state.countrysInfo)
+    console.log('国家信息描述', state.langInfoObj)
   },
   // 更新更多订阅课程
   updateLearnCourses (state, payload) {

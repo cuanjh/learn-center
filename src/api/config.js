@@ -121,5 +121,6 @@ export default {
   umUserEditPwdApi: '/umv1/user/edit/pwd', // 用户信息里面修改密码
   umSendCodeApi: '/umv1/sms/send', // 发送验证码接口
   umUserInfoApi: '/umv1/user/info', // 获取用户信息接口
+  umUpdateUserInfoApi: '/umv1/user/edit/info', // 修改用户信息
   umLangsListApi: '/umv1/langs/lists' // 语言列表接口
 }

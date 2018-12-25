@@ -109,7 +109,7 @@ export default {
       await this.userEditPwd({phonenumber: this.$route.params.phone, code: this.phoneCode, password: this.pwd2}).then((res) => {
         console.log('修改密码成功', res)
         if (res.success) {
-          this.$router.push({path: '/app/index'})
+          this.$router.push({path: '/auth/login'})
         } else {
           this.errText = errCode[res.code]
         }

@@ -174,8 +174,8 @@ const actions = {
 }
 
 const mutations = {
-  updateUserInfo: function (state, data) {
-    // console.log(data)
+  updateUserInfo (state, data) {
+    console.log('=======旧的userInfo', data)
     state.userInfo = data
     state.totalCoin = data.coins
     let isAnonymous = Cookie.getCookie('is_anonymous')

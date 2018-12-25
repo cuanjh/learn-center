@@ -172,8 +172,11 @@
                   <p class="more">加载更多...</p>
                 </li> -->
               </ul>
-              <div class="up-all">
+              <div class="up-all" v-if="resourceInfoRadios.length>0">
                 <span  @click="loadMoreRadio()" v-text="showMore?'全部展开':'收起'" ></span>
+              </div>
+              <div class="up-all" v-else>
+                <span >暂时没有课程相关资源</span>
               </div>
             </div>
             <div class="nation-list" v-show="'nation' == tabFlag">

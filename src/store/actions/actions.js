@@ -26,6 +26,10 @@ export default {
       commit('updateUserInfo', res)
     })
   },
+  // 修改用户信息
+  updateUserInfo ({commit}, params) {
+    httpLogin(config.umUpdateUserInfoApi, params)
+  },
   // 获取语言列表
   getLangsList ({commit}) {
     httpNoLogin(config.umLangsListApi).then(res => {

@@ -52,7 +52,7 @@
       </div>
       <!-- 第三方登录 -->
       <div class="third-party">
-        <div class="third weixin">
+        <div class="third weixin" @click="weixinGoLogin()">
           <i></i>
         </div>
         <div class="third weibo" @click="weiboGoLogin()">
@@ -280,6 +280,14 @@ export default {
       }
     },
     // 第三方登录
+
+    weixinGoLogin () {
+      let _deviceId = deviceId()
+      console.log('deviceid', _deviceId)
+      let url = 'http://talkmate.com/umv1/user-web/sns-login?ty=wx' + '&deviceid=' + _deviceId + '&loginurl=http://beat-study.talkmate.com/app/index'
+      // window.open(url)
+      window.location.href = url
+    },
     weiboGoLogin () {
       // http://talkmate.com/umv1/user-web/sns-login
       // 登录：deviceid

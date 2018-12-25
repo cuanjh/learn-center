@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <section class='mycourse-wrap mycourse-loginout animated'>
-      <!-- <img class="mycourse-wrap-arrow" src="../../../static/images/course/learn-big-arrow.png" alt=""> -->
+      <img class="mycourse-wrap-arrow" src="../../../static/images/course/learn-big-arrow.png" alt="">
       <div class="mycourse-container">
         <!-- <p class="my-course">我订阅的课程</p> -->
         <section>
@@ -114,8 +114,8 @@ export default {
   width: 22px;
   height: 22px;
   position: absolute;
-  top: -10px;
-  left: 162px;
+  top: -12px;
+  left: 127px;
 }
 .mycourse-container {
   padding: 30px 30px 0;

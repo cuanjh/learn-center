@@ -35,7 +35,7 @@ export default {
       selected: this.value,
       options: [
         Constant.getGenderSelectorDataByCode('male'),
-        Constant.getGenderSelectorDataByCode('femail')
+        Constant.getGenderSelectorDataByCode('female')
       ]
     }
   },

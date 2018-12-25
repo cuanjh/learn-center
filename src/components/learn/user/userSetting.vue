@@ -111,6 +111,7 @@
           <input type="password" placeholder='请确认新密码' v-model="newPsw2">
           <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
         </p>
+        <!-- v-show="newPsw1!=newPsw2" -->
         <div class='learn-setting-error-tips-settingpage' v-show="newPsw1!=newPsw2"><i></i>您两次输入的密码不同，请重新输入</div>
         <div class='submit' @click="modifyPsw">保存修改</div>
         <p class='bindPhone-error-tips' style='bottom:-1px;top:initial;left:28px;' v-show='noticePsw'><i class='user error psw-user-error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p>
@@ -163,6 +164,7 @@ export default {
       country: {}, // 用户的国籍信息
       languageSkill: [], // 精通语言
       desc: '', // 用户的描述信息
+      // description: '',
       descMaxLeng: 30, // 描述的最大长度
       /**
        * 弹出框类型,详见UserSettingAlertView.vue
@@ -197,7 +199,8 @@ export default {
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
-      alertType: state => state.user.alertType
+      alertType: state => state.user.alertType,
+      userInfos: state => state.user.userInfo
     }),
     nicknameError () {
       if (this.nickname.length === 0 || this.nickname.length > 50) {
@@ -207,7 +210,7 @@ export default {
       }
     },
     phoneNumberValidator () {
-      return /^1(3|4|5|7|8)\d{9}$/.test(this.phone)
+      return /^1(3|4|5|6|7|8)\d{9}$/.test(this.phone)
     },
     mailValidator () {
       return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.email)
@@ -234,13 +237,16 @@ export default {
       getUserInfo: 'getUserInfo',
       sendCode: 'user/sendCode',
       bindEmail: 'user/bindEmail',
-      updateInfo: 'user/updateInfo',
+      // updateInfos: 'user/updateInfo',
+      updateInfo: 'updateUserInfo',
       resetPwd: 'user/resetPwd',
       changePwd: 'user/changePwd'
+      // getUserInfos: 'user/getUserInfo'
     }),
     loadData (ui) {
       var _this = this
       var result = ui
+      console.log('result', result)
       if (result.nickname === undefined) {
         _this.nickname = ''
       } else {
@@ -265,7 +271,6 @@ export default {
         _this.emailConfirmedStatus = 2
         _this.email = result.email
       }
-
       if (result.gender === undefined || result.gender === '') {
         _this.gender = Constant.getGenderSelectorDataByCode('')
       } else {
@@ -437,6 +442,7 @@ export default {
     saveNotice () {
       this.updateAlertType('saveNotice')
     },
+    // 保存修改用户信息
     async saveUserInfo () {
       var _params = {}
       if (this.nickname !== '') {
@@ -459,6 +465,7 @@ export default {
       } else {
         return this.alertMessageNotFull()
       }
+      // 精通语言
       if (this.languageSkill.length > 0) {
         _params.mother_tongue = []
         this.languageSkill.forEach((value, index, array) => {
@@ -477,6 +484,7 @@ export default {
       // console.log(JSON.stringify(this.$data))
       var _this = this
       await _this.updateInfo(_params).then((res) => {
+        console.log('修改用户信息', res)
         if (res.success) {
           _this.updateAlertType('showMessage')
           _this.alertMessage = '信息修改成功'
@@ -497,6 +505,7 @@ export default {
           return
         }
         _params.password = this.newPsw2
+        console.log('=====', _params)
         _this.resetPwd(_params).then((res) => {
           if (res.success) {
             _this.updateAlertType('showMessage')
@@ -508,11 +517,7 @@ export default {
           }
         })
       } else {
-        if (
-          this.oldPsw.length === 0 ||
-          this.newPsw1.length === 0 ||
-          this.newPsw2.length === 0
-        ) {
+        if (this.oldPsw.length === 0 || this.newPsw1.length === 0 || this.newPsw2.length === 0) {
           this.noticePsw = true
           return
         }
@@ -940,7 +945,7 @@ input {
 }
 .user-fixpassword p.error > input {
   border-color: #e46773;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 .user-setting-wrap .user-setting-form .multiselect__input,
 .user-setting-wrap .user-setting-form .multiselect__single {
