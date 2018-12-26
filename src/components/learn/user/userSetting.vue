@@ -310,7 +310,7 @@ export default {
         result.skill_langs.forEach((value, index, array) => {
           var _tmp = {}
           _tmp.language = value.lan_code
-          _tmp.name = value.name[_this.languageHandler]
+          _tmp.name = value.name
           _this.languageSkill.push(_tmp)
         })
       }
@@ -472,7 +472,7 @@ export default {
         this.languageSkill.forEach((value, index, array) => {
           _params.skillLangs.push(value.language)
         })
-        _params.skillLangs = _params.skillLangs.join(',')
+        // _params.skillLangs = _params.skillLangs.join(',')
       } else {
         return this.alertMessageNotFull()
       }
@@ -481,9 +481,9 @@ export default {
       }
       var photoUrl = $('#defaultUserImg').attr('src')
       if (photoUrl) {
-        _params.photo_url = photoUrl
+        _params.photo_url = photoUrl.split('/').slice(3).join('/')
       }
-      // console.log(JSON.stringify(this.$data))
+      
       var _this = this
       await _this.updateInfo(_params).then((res) => {
         console.log('修改用户信息', res)
