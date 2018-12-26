@@ -58,7 +58,7 @@
         <div class="third weibo" @click="weiboGoLogin()">
           <i></i>
         </div>
-        <div class="third qq">
+        <div class="third qq" @click="qqGoLogin()">
           <i></i>
         </div>
       </div>
@@ -297,6 +297,18 @@ export default {
       let _deviceId = deviceId()
       console.log('deviceid', _deviceId)
       let url = 'http://talkmate.com/umv1/user-web/sns-login?ty=wb' + '&deviceid=' + _deviceId + '&loginurl=http://beat-study.talkmate.com/app/index'
+      // window.open(url)
+      window.location.href = url
+    },
+    qqGoLogin () {
+      // http://talkmate.com/umv1/user-web/sns-login
+      // 登录：deviceid
+      // 回调：loginurl
+      // 类型：ty:wb、wx、qq
+      // http://beat-study.talkmate.com/app/index
+      let _deviceId = deviceId()
+      console.log('deviceid', _deviceId)
+      let url = 'http://talkmate.com/umv1/user-web/sns-login?ty=qq' + '&deviceid=' + _deviceId + '&loginurl=http://beat-study.talkmate.com/app/index'
       // window.open(url)
       window.location.href = url
     }

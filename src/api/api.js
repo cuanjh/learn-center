@@ -30,13 +30,14 @@ export const httpLogin = (_url, _params) => { // 已经登录
   let keys = Object.keys(_params).sort()
   keys.forEach(key => {
     let val = _params[key]
-    if ((typeof val === 'object') && val.constructor === Array) {
-      val.forEach(item => {
-        paramsStr += key + item
-      })
-    } else {
-      paramsStr += key + val
-    }
+    // if ((typeof val === 'object') && val.constructor === Array) {
+    //   val.forEach(item => {
+    //     paramsStr += key + '[]' + item
+    //   })
+    // } else {
+    //   paramsStr += key + val
+    // }
+    paramsStr += key + val
   })
   console.log('paramsStr', paramsStr)
   let sign = MD5(secret + paramsStr).toUpperCase()

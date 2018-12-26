@@ -304,10 +304,10 @@ export default {
       _this.$refs['country'].$emit('init', _this.country)
 
       _this.languageSkill = []
-      if (result.skillLangs === undefined) {
+      if (result.skill_langs === undefined) {
         _this.languageSkill = []
       } else {
-        result.skillLangs.forEach((value, index, array) => {
+        result.skill_langs.forEach((value, index, array) => {
           var _tmp = {}
           _tmp.language = value.lan_code
           _tmp.name = value.name[_this.languageHandler]
@@ -472,6 +472,7 @@ export default {
         this.languageSkill.forEach((value, index, array) => {
           _params.skillLangs.push(value.language)
         })
+        _params.skillLangs = _params.skillLangs.join(',')
       } else {
         return this.alertMessageNotFull()
       }
