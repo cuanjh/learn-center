@@ -45,6 +45,7 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import validation from './../../tool/validation.js'
 // import { encrypt } from './../../tool/untils.js'
+// import CryptoJS from 'crypto-js'
 import Cookie from '../../tool/cookie'
 import errCode from './../../api/code.js'
 import $ from 'jquery'
@@ -148,21 +149,18 @@ export default {
         if (res.success) {
           $('input').css('border-color', '#E6EBEE')
           _this.errText = ''
-          if (_this.isSaveLoginState) {
-            Cookie.setCookie('user_id', res.user_id)
-            Cookie.setCookie('verify', res.verify)
-            Cookie.setCookie('userName', _this.userName)
-            Cookie.setCookie('userPwd', _this.userPwd)
-          } else {
-            Cookie.delCookie('user_id', res.user_id)
-            Cookie.delCookie('verify', res.verify)
-            Cookie.delCookie('userName', _this.userName)
-            Cookie.delCookie('userPwd', _this.userPwd)
-          }
           localStorage.removeItem('userInfo')
           Cookie.delCookieTalkmate('is_anonymous')
           Cookie.delCookie('user_id')
           Cookie.delCookie('verify')
+          Cookie.delCookie('device_id')
+          if (_this.isSaveLoginState) {
+            Cookie.setCookie('userName', _this.userName)
+            Cookie.setCookie('userPwd', _this.userPwd)
+          } else {
+            Cookie.delCookie('userName', _this.userName)
+            Cookie.delCookie('userPwd', _this.userPwd)
+          }
           // 存后台传来的user的信息
           let info = res.result
           Cookie.setCookie('isChecked', _this.isSaveLoginState)

@@ -47,9 +47,9 @@ export default {
     })
   },
   mounted () {
-    this.getLearnCourses()
     this.$parent.$emit('activeNavUserItem', 'course')
     this.$parent.$emit('navItem', 'user')
+    // this.getLearnCourses()
   },
   computed: {
     ...mapState({

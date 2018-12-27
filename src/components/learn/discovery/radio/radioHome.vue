@@ -13,7 +13,7 @@
         <div class="radio-type-top">
           <span></span>
           <span v-text="item.menu_title"></span>
-          <span>更多<i></i></span>
+          <span @click="goRadioList()">更多<i></i></span>
         </div>
         <div class="radio-list">
           <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
@@ -87,6 +87,10 @@ export default {
       if ($('.gradient-layer-play i', $(e.target)).hasClass('play')) {
         $('.gradient-layer-play', $(e.target)).hide()
       }
+    },
+    // 查看更多
+    goRadioList () {
+      this.$router.push({path: '/app/discovery/radio-list'})
     }
   }
 }
@@ -178,9 +182,13 @@ export default {
 }
 
 .radio-type .radio-type-top span:last-child{
+  cursor: pointer;
   float:right;
   color: #b8b8b8;
   font-size: 15px;
+}
+.radio-type .radio-type-top span:last-child:hover {
+  color: #2A9FE4;
 }
 
 .radio-type .radio-type-top span:last-child i{
