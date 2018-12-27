@@ -35,6 +35,7 @@ const userAnonymous = r => require.ensure([], () => r(require('@/components/lear
 const discovery = r => require.ensure([], () => r(require('@/components/learn/discovery/discovery.vue')), 'discovery')
 const discoveryHome = r => require.ensure([], () => r(require('@/components/learn/discovery/home.vue')), 'discovery-home')
 const radioHome = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioHome.vue')), 'radio-home')
+const radioList = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioList.vue')), 'radio-list')
 const radioDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioDetail.vue')), 'radio-detail')
 const radioAuthorDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/authorDetail.vue')), 'author-detail')
 const headline = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headline.vue')), 'headline')
@@ -201,6 +202,11 @@ export default[
           {
             path: 'radio-home',
             component: radioHome
+          },
+          {
+            path: 'radio-list',
+            name: 'radioList',
+            component: radioList
           },
           {
             path: 'radio-detail/:code',

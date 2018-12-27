@@ -132,6 +132,7 @@ import Cookie from '../../tool/cookie'
 import errCode from './../../api/code.js'
 import AuthPwdLogin from './authPwdLogin'
 import $ from 'jquery'
+import Config from '../../api/config'
 
 // import Cookies from 'js-cookie'
 
@@ -152,13 +153,15 @@ export default {
       imgCodeUrl: '', // 图片验证码
       time: 60,
       timer: null, // 定时器
-      type: 0 // 0验证码登录 1手机密码登录 2邮箱登录
+      type: 0, // 0验证码登录 1手机密码登录 2邮箱登录
+      UsrdeviceId: ''
     }
   },
   components: {
     AuthPwdLogin
   },
   mounted () {
+    this.UsrdeviceId = deviceId()
     this.getCodeUrl()
     let userId = Cookie.getCookie('user_id')
     if (!userId) {
@@ -270,6 +273,9 @@ export default {
         Cookie.delCookieTalkmate('is_anonymous')
         Cookie.delCookie('user_id')
         Cookie.delCookie('verify')
+        Cookie.delCookie('device_id')
+        Cookie.delCookie('userName')
+        Cookie.delCookie('userPwd')
         let info = _this.loginInfo.result
         // 把后台返回的用户信息存进去
         Cookie.setCookie('user_id', info.user_id)
@@ -280,35 +286,18 @@ export default {
       }
     },
     // 第三方登录
-
     weixinGoLogin () {
-      let _deviceId = deviceId()
-      console.log('deviceid', _deviceId)
-      let url = 'http://talkmate.com/umv1/user-web/sns-login?ty=wx' + '&deviceid=' + _deviceId + '&loginurl=http://beat-study.talkmate.com/app/index'
+      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=wx&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
       // window.open(url)
       window.location.href = url
     },
     weiboGoLogin () {
-      // http://talkmate.com/umv1/user-web/sns-login
-      // 登录：deviceid
-      // 回调：loginurl
-      // 类型：ty:wb、wx、qq
-      // http://beat-study.talkmate.com/app/index
-      let _deviceId = deviceId()
-      console.log('deviceid', _deviceId)
-      let url = 'http://talkmate.com/umv1/user-web/sns-login?ty=wb' + '&deviceid=' + _deviceId + '&loginurl=http://beat-study.talkmate.com/app/index'
+      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=wb&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
       // window.open(url)
       window.location.href = url
     },
     qqGoLogin () {
-      // http://talkmate.com/umv1/user-web/sns-login
-      // 登录：deviceid
-      // 回调：loginurl
-      // 类型：ty:wb、wx、qq
-      // http://beat-study.talkmate.com/app/index
-      let _deviceId = deviceId()
-      console.log('deviceid', _deviceId)
-      let url = 'http://talkmate.com/umv1/user-web/sns-login?ty=qq' + '&deviceid=' + _deviceId + '&loginurl=http://beat-study.talkmate.com/app/index'
+      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=qq&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
       // window.open(url)
       window.location.href = url
     }
