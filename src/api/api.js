@@ -111,19 +111,23 @@ export const httpNoLogin = (_url, _params) => { // 未登录
     Cookie.setCookie('device_id', _deviceId)
   }
   let paramsStr = ''
+  let str = ''
   let keys = Object.keys(_params).sort()
   keys.forEach(key => {
     let val = _params[key]
     if ((typeof val === 'object') && val.constructor === Array) {
       val.forEach(item => {
-        paramsStr += key + item
+        paramsStr += '&' + key + '=' + item
+        str += key + item
       })
     } else {
-      paramsStr += key + val
+      paramsStr += '&' + key + '=' + val
+      str += key + val
     }
   })
-  let sign = MD5(secret + paramsStr).toUpperCase()
-  return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign, {params: _params})
+  let sign = MD5(secret + str).toUpperCase()
+
+  return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign + paramsStr)
     .then(res => {
       // return res['data']
       if (res['data']['success']) {

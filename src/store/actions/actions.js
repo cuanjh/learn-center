@@ -30,6 +30,14 @@ export default {
   updateUserInfo ({commit}, params) {
     return httpLogin(config.umUpdateUserInfoApi, params)
   },
+  // 绑定手机号
+  userBindPhone ({commit}, params) {
+    return httpLogin(config.umUserBindPhoneApi, params)
+  },
+  // 验证手机号是否存在接口
+  userExistsPhone ({commit}, params) {
+    return httpLogin(config.umUserExistsPhoneApi, params)
+  },
   // 获取语言列表
   getLangsList ({commit}) {
     httpNoLogin(config.umLangsListApi).then(res => {

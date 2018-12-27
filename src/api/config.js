@@ -122,5 +122,7 @@ export default {
   umSendCodeApi: '/umv1/sms/send', // 发送验证码接口
   umUserInfoApi: '/umv1/user/info', // 获取用户信息接口
   umUpdateUserInfoApi: '/umv1/user/edit/info', // 修改用户信息
+  umUserBindPhoneApi: '/umv1/user/sns/bind/phone', // 绑定手机号码
+  umUserExistsPhoneApi: '/umv1/user/exists/phone', // 验证手机号是否存在接口
   umLangsListApi: '/umv1/langs/lists' // 语言列表接口
 }
