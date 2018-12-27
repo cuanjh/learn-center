@@ -37,7 +37,7 @@
             <input type="text" placeholder='请填写邮箱账号' :class="['reg-input', {'error':!mailValidator}]" v-model="email">
             <template v-if="emailConfirmedStatus == 0">
               <em class='bind-logical-textState adjust'>未绑定</em>
-              <span class='bind-logical-btnState adjust' @click="bindEmail(email)" v-show="!mailValidator&&email">绑定邮箱</span>
+              <span class='bind-logical-btnState adjust bindEmail' @click="bindEmail(email)" v-show="mailValidator&&email">绑定邮箱</span>
             </template>
             <template v-if="emailConfirmedStatus == 1">
               <em class='bind-logical-textState adjust'>未验证</em>
@@ -189,12 +189,12 @@ export default {
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'setting')
     this.$parent.$emit('navItem', 'user')
-    let ui = JSON.parse(sessionStorage.getItem('userInfo'))
-    this.loadData(ui)
-    if (ui.member_info['is_anonymous']) {
-      this.updateUserAnonymous(true)
-      this.updateAlertType('bindAccount')
-    }
+    // let ui = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.loadData()
+    // if (ui.member_info['is_anonymous']) {
+    //   this.updateUserAnonymous(true)
+    //   this.updateAlertType('bindAccount')
+    // }
   },
   computed: {
     ...mapState({
@@ -234,8 +234,10 @@ export default {
       updateAlertType: 'user/updateAlertType'
     }),
     ...mapActions({
-      getUserInfo: 'getUserInfo',
-      sendCode: 'user/sendCode',
+      getUserInfo: 'getUserInfo', // 获取用户信息
+      // sendCode: 'user/sendCode',
+      sendCode: 'getSendCode', // 发送验证码
+      userExistsPhone: 'userExistsPhone', // 验证手机号是否存在
       bindEmail: 'user/bindEmail',
       // updateInfo: 'user/updateInfo',
       updateInfo: 'updateUserInfo',
@@ -243,9 +245,13 @@ export default {
       changePwd: 'user/changePwd'
       // getUserInfos: 'user/getUserInfo'
     }),
-    loadData (ui) {
+    loadData () {
       var _this = this
-      var result = ui
+      var result = JSON.parse(sessionStorage.getItem('userInfo'))
+      if (result.member_info['is_anonymous']) {
+        _this.updateUserAnonymous(true)
+        _this.updateAlertType('bindAccount')
+      }
       console.log('result', result)
       if (result.nickname === undefined) {
         _this.nickname = ''
@@ -335,22 +341,49 @@ export default {
       // this.learnDoc = false
       // this.setUpSuccess = false
     },
+    // 解除绑定
     unbindIdentity (type) {
       this.updateAlertType('bindConfirm')
       this.bindConfirmType = type
     },
-    bindPhoneNumber (phonenumber) {
+    // 绑定手机号
+    async bindPhoneNumber (phonenumber) {
       var _this = this
       var params = {}
       params.phonenumber = phonenumber
       params.type = 'bind_phonenumber'
-      this.sendCode(params).then((res) => {
+      params.codeLen = '6'
+      await _this.sendCode(params).then((res) => {
         if (res.success) {
           _this.updateAlertType('bindPhone')
         } else {
           _this.showAlertView(res)
         }
       })
+      await _this.getUserInfo()
+      // {phonenumber: this.phone, codeLen: '6'}
+      // await _this.userExistsPhone(params).then((data) => {
+      //   console.log('data', data)
+      //   if (data.success) {
+      //     if (!data.exists) {
+      //       // 手机号存在
+      //       _this.showAlertView(data)
+      //       _this.alertMessage = '该手机号已经存在'
+      //       _this.alertButton = '确定'
+      //     } else {
+      //       // 手机号不存在
+      //       _this.sendCode(params).then((res) => {
+      //         if (res.success) {
+      //           _this.updateAlertType('bindPhone')
+      //         } else {
+      //           _this.showAlertView(res)
+      //         }
+      //       })
+      //     }
+      //   } else {
+      //     _this.showAlertView(data)
+      //   }
+      // })
     },
     showAlertView (errorinfo) {
       this.updateAlertType('showMessage')
@@ -496,6 +529,7 @@ export default {
         }
       })
       await _this.getUserInfo()
+      _this.loadData()
     },
     modifyPsw () {
       var _this = this
@@ -902,6 +936,9 @@ input {
   position: relative;
   right: 56px;
   line-height: 40px;
+}
+.user-setting-form form .bindEmail {
+  line-height: 30px;
 }
 .user-right-wrap {
   position: relative;

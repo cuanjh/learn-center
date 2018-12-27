@@ -148,17 +148,21 @@ export default {
       modefiyPhoneMemberInfo: 'user/modefiyPhoneMemberInfo'
     }),
     ...mapActions({
-      getUserInfo: 'user/getUserInfo',
-      bindPhoneNumber: 'user/bindPhoneNumber',
+      // getUserInfo: 'user/getUserInfo',
+      getUserInfo: 'getUserInfo', // 获取用户信息
+      // bindPhoneNumber: 'user/bindPhoneNumber',
+      userBindPhone: 'userBindPhone', // 绑定手机号
       resetAnonymous: 'user/resetAnonymous',
-      sendCode: 'user/sendCode',
+      // sendCode: 'user/sendCode',
+      sendCode: 'getSendCode', // 发送手机验证码
       unbindIdentity: 'user/unbindIdentity'
     }),
     // 关闭本页面
     closeView () {
+      this.updateAlertType('')
       this.updateCoverState(false)
       // 告诉父组件,自己需要关闭
-      this.$emit('close', '')
+      this.$emit('close')
     },
     jumpBind () {
       this.updateAlertType('')
@@ -177,9 +181,8 @@ export default {
       var _this = this
       var params = {}
       params.phonenumber = this.bindPhoneNum
-      params.verification_code = this.verificationCode
-
-      await _this.bindPhoneNumber(params).then((res) => {
+      params.code = this.verificationCode
+      await _this.userBindPhone(params).then((res) => {
         if (res.success) {
           _this.updateAlertType('bindSuccess')
           _this.$emit('updateAlertMessage', '恭喜您绑定手机成功！')
@@ -215,6 +218,7 @@ export default {
       var params = {}
       params.phonenumber = this.bindPhoneNum
       params.type = 'bind_phonenumber'
+      params.codeLen = '6'
       this.sendCode(params)
       this.sixtyPhoneReveres()
     },
@@ -237,10 +241,11 @@ export default {
       params.identity_type = this.bindConfirmType
       var _this = this
       await _this.unbindIdentity(params).then((res) => {
+        console.log('解绑信息', res)
         if (res.success) {
           _this.closeView()
         } else {
-          this.showAlertView(res)
+          _this.showAlertView(res)
         }
       })
       await _this.getUserInfo()
