@@ -57,7 +57,7 @@ export default {
       curArchiveCourse: {}
     }
   },
-  created () {
+  mounted () {
     this.initData()
   },
   components: {
@@ -84,7 +84,8 @@ export default {
     async initData () {
       await this.getLearnCourses()
       console.log('userInfo', this.userInfo)
-      await this.getLearnInfo().then(() => {
+      let curCourseCode = this.userInfo.current_course_code
+      await this.getLearnInfo(curCourseCode).then(() => {
         console.log('learnInfo', this.learnInfo)
         console.log('courseBaseInfo', this.courseBaseInfo)
         this.curCourseCode = this.courseBaseInfo.code
