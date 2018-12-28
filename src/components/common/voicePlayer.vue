@@ -415,10 +415,12 @@ export default {
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 50px;
-    line-height: 50px;
+    height: 56px;
+    line-height: 56px;
     transition: all .2s;
-    background-color: rgba(0, 57, 91, .8);
+    // background-color: rgba(0, 57, 91, .8);
+    background:linear-gradient(90deg,rgba(0,145,209,1) 0%,rgba(65,196,255,1) 100%);
+    opacity:0.95;
     z-index: 999;
     .voice-player-hand {
       position: absolute;
@@ -565,7 +567,8 @@ export default {
             position: relative;
             width: 540px;
             height: 2px;
-            background: transparent linear-gradient(to right,rgba(0,0,0,.85),rgba(0,0,0,.95));
+            // background: transparent linear-gradient(to right,rgba(0,0,0,.85),rgba(0,0,0,.95));
+            background-color: #FFFFFF;
             .progress-load {
               height: 100%;
               width: 0%;
@@ -579,7 +582,8 @@ export default {
               display: block;
               height: 100%;
               width: 0%;
-              background-color: #FFD343;
+              // background-color: #FFD343;
+              background-color: #49B5E5;
               z-index: 1;
               .progress-btn{
                 position: absolute;
@@ -716,12 +720,16 @@ export default {
   .voice-player-list {
     position: fixed;
     left: 50%;
-    bottom: 50px;
+    bottom: 56px;
     width: 1080px;
     margin-left: -540px;
-    background: rgba(0,17,26,.8);
-    box-shadow: 0 -2px 4px 0 rgba(0,0,0,.2);
-    border-radius: 3px 3px 0 0;
+    // background: rgba(0,17,26,.8);
+    // box-shadow: 0 -2px 4px 0 rgba(0,0,0,.2);
+    // border-radius: 3px 3px 0 0;
+    // width:1180px;
+    height:427px;
+    background:linear-gradient(180deg,rgba(0,22,55,0.8) 0%,rgba(0,164,202,0.8) 100%);
+    border-radius:8px 8px 0px 0px;
     z-index: 90;
     -webkit-user-select: none;
     -moz-user-select: none;

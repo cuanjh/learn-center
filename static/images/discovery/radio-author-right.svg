@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="44px" viewBox="0 0 36 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>默认右</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M5,0 L28,0 L28,36 L5,36 C2.23857625,36 3.38176876e-16,33.7614237 0,31 L0,5 C-3.38176876e-16,2.23857625 2.23857625,5.07265313e-16 5,0 Z" id="path-1"></path>
+        <filter x="-37.5%" y="-18.1%" width="153.6%" height="141.7%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="-3" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.236700325   0 0 0 0 0.35749502   0 0 0 0 0.435905612  0 0 0 0.0542062953 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-196.000000, -1407.000000)" fill-rule="nonzero">
+            <g id="默认右" transform="translate(203.000000, 1410.000000)">
+                <g id="矩形">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" xlink:href="#path-1"></use>
+                </g>
+                <path d="M12,12 L17.7294311,18.0344392 C18.1061106,18.4311713 18.094073,19.056951 17.7024146,19.4389032 L12,25" id="直线" stroke="#C8D4DB" stroke-width="2" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>
