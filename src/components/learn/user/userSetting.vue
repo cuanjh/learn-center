@@ -516,7 +516,6 @@ export default {
       if (photoUrl) {
         _params.photo_url = photoUrl.split('/').slice(3).join('/')
       }
-
       var _this = this
       await _this.updateInfo(_params).then((res) => {
         console.log('修改用户信息', res)
