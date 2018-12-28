@@ -265,6 +265,9 @@ const actions = {
     let api = config.radioDetailApi.replace('<course_code>', code)
     return httpLogin(api)
   },
+  getRadioList ({commit}, params) {
+    return httpLogin(config.radioListsApi, params)
+  },
   getRadioCardList ({commit}, params) {
     let api = config.radioCardListApi.replace('{course_code}', params.code)
       .replace('{list_order}', params.listOrder)

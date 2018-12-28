@@ -161,6 +161,7 @@ export default {
     AuthPwdLogin
   },
   mounted () {
+    // Cookie.delCookie('device_id')
     this.UsrdeviceId = deviceId()
     this.getCodeUrl()
     let userId = Cookie.getCookie('user_id')
@@ -287,19 +288,20 @@ export default {
     },
     // 第三方登录
     weixinGoLogin () {
-      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=wx&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
+      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?appKey=talkmateVersion&ty=wx&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
+      console.log('url', url)
       // window.open(url)
       window.location.href = url
     },
     weiboGoLogin () {
-      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=wb&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
+      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?appKey=talkmateVersion&ty=wb&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
       // window.open(url)
       window.location.href = url
     },
     qqGoLogin () {
-      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=qq&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
+      // let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=qq&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
       // window.open(url)
-      window.location.href = url
+      // window.location.href = url
     }
   }
 }
@@ -506,7 +508,7 @@ html,body{-webkit-text-size-adjust:none;}
     padding-left: 40px;
     padding-top: 20px;
     position: absolute;
-    bottom: 250px;
+    bottom: 260px;
   }
   .err-tip p:before {
     content: "";
