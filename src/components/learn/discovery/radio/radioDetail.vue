@@ -46,7 +46,10 @@
             <div class="author-info-right">
               <div class="nickname">
                 <span v-text="authorInfo.nickname"></span>
-                <span>+关注</span>
+                <p @click="relation()">
+                  <span v-if="authorInfo.has_followed === 0">+关注</span>
+                  <span v-else>取消关注</span>
+                </p>
               </div>
               <div class="passed">
                 <span><i></i>认证用户</span>
@@ -115,7 +118,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import bounceBox from '../bounceBox'
+import bounceBox from '../../../common/bounceBox'
 import { formatDate } from '../../../../tool/date.js'
 
 export default {
@@ -156,7 +159,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      postRadioDetail: 'course/postRadioDetail'
+      postRadioDetail: 'course/postRadioDetail',
+      getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
+      remRadioRelationCancel: 'course/remRadioRelationCancel' // 取消关注
     }),
     // 处理radio的时间
     toParseTime (data) {
@@ -169,6 +174,30 @@ export default {
         s = '0' + s
       }
       return m + ':' + s
+    },
+    // 关注
+    relation () {
+      let _this = this
+      let followId = _this.authorInfo.user_id
+      if (_this.authorInfo.has_followed === 1) { // 关注了
+        console.log('关注了')
+        _this.remRadioRelationCancel({following_id: followId}).then((data) => {
+          console.log('取消关注', data)
+          if (data.success === true) {
+            // _this.text = '关注'
+            _this.authorInfo.has_followed = 0
+          }
+        })
+      } else if (_this.authorInfo.has_followed === 0) { // 没关注
+        console.log('没关注')
+        _this.getRadioRelationFollow({following_id: followId}).then((data) => {
+          console.log('关注', data)
+          if (data.success === true) {
+            // _this.text = '取消关注'
+            _this.authorInfo.has_followed = 1
+          }
+        })
+      }
     },
     // 作者详情页面
     goToUser (userId) {
@@ -187,7 +216,7 @@ export default {
       let _this = this
       let code = _this.$route.params.code
       await _this.postRadioDetail(code).then((res) => {
-        console.log(res)
+        console.log('电台详情返回', res)
         _this.courseInfo = res.result.course_info
         _this.authorInfo = res.result.course_info.author_info
         _this.cards = res.result.course_info.cards
@@ -336,13 +365,14 @@ export default {
   margin-left: 185px;
 }
 .course-right .bottom .button-group span {
+  font-size: 16px;
   width: 81px;
   height: 30px;
   line-height: 30px;
-  color: #2A9FE4;
+  color: #3C5B6F;
   font-size: 15px;
   border: 1px solid #CDCDCD;
-  border-radius: 5px;
+  border-radius: 16px;
   display: inline-block;
   text-align: center;
   margin-left: 10px;
@@ -432,16 +462,19 @@ export default {
   color: #333333;
   font-size: 20px;
 }
-.author-info .author-info-right .nickname span:nth-child(2) {
+.author-info .author-info-right .nickname p {
+  display: inline-block;
+  position: absolute;
+  top: 16px;
+  right: 0;
+}
+.author-info .author-info-right .nickname p span {
   cursor: pointer;
   background: #F7F7F7;
   color: #2A9FE4;
   font-size: 20px;
   padding: 0 12px;
   border-radius: 4px;
-  position: absolute;
-  top: 16px;
-  right: 0;
 }
 .author-info .author-info-right .passed {
   margin-top: 10px;

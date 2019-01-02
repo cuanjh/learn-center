@@ -5,12 +5,16 @@
         <span>我的学习账户</span>
       </router-link>
       >
-      <router-link :to="{path: '/app/hot-courses'}">
+      <router-link :to="{path: '/app/discovery/home'}">
         <span>电台</span>
       </router-link>
       >
+      <router-link :to="{path: '/app/discovery/radio-home'}">
+        <span>分类</span>
+      </router-link>
+      >
       <div class="nav-current">
-        分类
+        课程详情
       </div>
     </div>
     <div class="classification">
@@ -32,43 +36,63 @@
         <div class="radio-in-content">
           <!-- 头部描述 -->
           <div class="header-describe">
+            <div class="top">
+              <p class="title">电台节目</p>
+              <p class="tab">
+                <span>日语相关</span>
+                <span>母语相关</span>
+              </p>
+            </div>
             <div class="header-content">
               <span class="column">共975档节目</span>
               <div class="new">
-                <p class="left">
+                <!-- <p class="left">
                   <span>日语优先</span>
                   <i></i>
-                </p>
+                </p> -->
                 <span>最新</span>
               </div>
             </div>
           </div>
           <!-- 下面的内容区 -->
-          <div class="describe-content">
+          <div class="describe-content" v-if="lists.length > 0">
             <div class="describe-lists">
               <ul>
-                <li v-for="(item, index) in lists" :key="index">
+                <li v-for="(radio, index) in lists" :key="index">
                   <div class="item-img">
-                    <img :src="item.cover" alt="电台的图片">
-                    <div class="gradient-layer-play">
+                    <img v-lazy="radio.cover" :key="radio.cover" alt="电台的图片">
+                    <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                       <i class="play"></i>
                     </div>
                   </div>
                   <div class="right-describe">
-                    <p class="name">{{item.author_name}}</p>
+                    <p class="name">{{radio.title}}</p>
                     <p class="num">
-                      <span>{{item.buy_num}}次试听</span>
-                      <span>4个月前更新</span>
+                      <span>{{radio.buy_num}}次试听</span>
+                      <span v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></span>
+                    </p>
+                    <p class="author">
+                      <span>主播：</span>
+                      <span v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></span>
                     </p>
                   </div>
                 </li>
               </ul>
             </div>
+            <!-- 点击加载更多 -->
+            <div class="load-more" @click="loadMore()" v-show="lists.length > 0">
+              <span v-show="flag == true">点击加载更多</span>
+              <span v-show="flag == false">已显示全部内容~</span>
+            </div>
           </div>
           <!-- 点击加载更多 -->
-          <div class="load-more" @click="loadMore()">
+          <!-- <div class="load-more" @click="loadMore()" v-show="lists.length > 0">
             <span v-show="flag == true">点击加载更多</span>
             <span v-show="flag == false">已显示全部内容~</span>
+          </div> -->
+          <!-- 没有内容 -->
+          <div class="no-content" v-show="lists.length === 0">
+            <span>没有相关电台的课程···</span>
           </div>
         </div>
       </div>
@@ -77,12 +101,14 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
+import Bus from '../../../../bus'
+import $ from 'jquery'
 
 export default {
   data () {
     return {
       flag: true,
-      isActive: 505,
+      isActive: 410,
       menuRadioNavs: [], // 电台导航
       lists: [], // 更多电台列表
       page: 1, // 页码
@@ -120,9 +146,11 @@ export default {
       postDisvRadio: 'course/postDisvRadio',
       getRadioList: 'course/getRadioList'
     }),
+    // 导航切换
     tabChange (item) {
       console.log('item', item)
       let _this = this
+      _this.page = 1
       _this.flag = true
       _this.isActive = item.list_order
       _this.menu_type = item.menu_type
@@ -160,6 +188,28 @@ export default {
           this.flag = false
         }
       })
+    },
+    // 点击播放电台
+    loadRadioList (e, radio) {
+      console.log('e', e)
+      console.log('radio', radio)
+      if (this.isPlay && radio.code === this.lastCode) {
+        $('.gradient-layer-play i').removeClass('pause')
+        $(e.target).addClass('play')
+        Bus.$emit('radioPause')
+      } else {
+        $('.gradient-layer-play i').removeClass('pause')
+        $('.gradient-layer-play i').addClass('play')
+        $(e.target).removeClass('play')
+        $(e.target).addClass('pause')
+        if (radio.code !== this.lastCode) {
+          Bus.$emit('getRadioCardList', radio)
+          this.lastCode = radio.code
+        } else {
+          Bus.$emit('radioPlay')
+        }
+      }
+      this.isPlay = !this.isPlay
     }
   }
 }
@@ -171,17 +221,18 @@ a {
 .radio-classification {
   width: 1200px;
   margin: 0px auto 144px;
-  background: rgb(245, 201, 208);
   .nav {
-    background: rgb(173, 190, 201);
     margin: 20px 0;
-    font-weight: bold;
     display: inline-block;
-    font-size: 16px;
+    font-size:14px;
+    font-family:PingFang-SC-Medium;
+    font-weight:500;
+    color:rgba(60,91,111,1);
+    line-height:20px;
     a {
       text-decoration:none;
       span {
-        color: #999999;
+        color: #3C5B6F;
       }
     }
     .nav-current {
@@ -195,7 +246,7 @@ a {
     // 左边导航
     .radio-nav {
       display: inline-block;
-      width: 180px;
+      width: 220px;
       background: #ffffff;
       .nav-list {
         width: 100%;
@@ -204,14 +255,18 @@ a {
           width: 100%;
           height: 100%;
           li {
-            width: 100%;
-            height: 44px;
-            padding: 6px 8px;
-            font-size: 7px;
-            color: #4A4A4A;
-            border-bottom: 1px solid #E6EBEE;
-            background: rgb(235, 188, 188);
+            font-size:14px;
+            font-family:PingFang-SC-Medium;
+            font-weight:500;
+            color:rgba(60,91,111,1);
+            line-height:20px;
+            padding: 16px 26px;
+            border-bottom: 1px solid rgba(230,235,238,1);
             &.active {
+              background: #2A9FE4;
+              color: #ffffff;
+            }
+            &:hover {
               background: #2A9FE4;
               color: #ffffff;
             }
@@ -220,7 +275,6 @@ a {
               display: block;
               width: 100%;
               height: 100%;
-              line-height: 31px;
               i {
                 position: absolute;
                 right: 0;
@@ -239,59 +293,94 @@ a {
     // 右边内容区
     .radio-content {
       display: inline-block;
-      width: 1000px;
       margin-left: 14px;
+      width: 960px;
+      padding-bottom: 50px;
       background: #ffffff;
       .radio-in-content {
         width: 100%;
         height: 100%;
-        padding: 25px 10px;
-        background: rgb(231, 187, 132);
         .header-describe {
-          background: #ffffff;
+          padding: 19px 43px 23px;
+          .top {
+            width: 100%;
+            .title {
+              font-size:20px;
+              font-family:PingFang-SC-Bold;
+              font-weight:bold;
+              color:rgba(10,43,64,1);
+              line-height:28px;
+            }
+            .tab {
+              display: inline-block;
+              font-size:13px;
+              font-family:PingFang-SC-Medium;
+              font-weight:500;
+              color:rgba(60,91,111,1);
+              line-height:18px;
+              margin: 10px 0 28px;
+              span {
+                font-size:13px;
+                font-family:PingFang-SC-Medium;
+                font-weight:500;
+                color:rgba(60,91,111,1);
+                line-height:18px;
+                padding: 4px 19px;
+                border:1px solid rgba(217,223,226,1);
+              }
+              span:nth-child(1) {
+                margin-right: 10px;
+              }
+            }
+          }
           // 上面的描述
           .header-content {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid red;
+            padding: 4px 0;
+            border-bottom: 3px solid #EEF2F3;
             .column {
-              font-size: 16px;
-              color: #726c6c;
+              font-size:14px;
+              font-family:PingFang-SC-Medium;
+              font-weight:500;
+              color:rgba(144,162,174,1);
             }
             .new {
-              width: 20%;
-              background: rgb(197, 179, 179);
-              display: flex;
-              justify-content: space-between;
-              .left {
-                display: inline-block;
-                span {
-                  font-size: 16px;
-                  color: rgb(144, 146, 148);
-                }
-                i {
-                  display: inline-block;
-                  width: 14px;
-                  height: 14px;
-                  background: url('../../../../../static/images/discovery/testsanjiao.svg') no-repeat center;
-                  background-size: cover;
-                  margin-top: 4px;
-                }
-              }
+              // .left {
+              //   display: inline-block;
+              //   span {
+              //     font-size:14px;
+              //     font-family:PingFang-SC-Medium;
+              //     font-weight:500;
+              //     color:rgba(60,91,111,1);
+              //   }
+              //   i {
+              //     display: inline-block;
+              //     width: 14px;
+              //     height: 14px;
+              //     background: url('../../../../../static/images/discovery/testsanjiao.svg') no-repeat center;
+              //     background-size: cover;
+              //     margin-top: 4px;
+              //   }
+              // }
               span {
-                font-size: 16px;
-                color: rgb(61, 70, 80);
+                font-size:14px;
+                font-family:PingFang-SC-Medium;
+                font-weight:500;
+                color:rgba(60,91,111,1);
               }
             }
           }
         }
         // 下面的内容区
         .describe-content{
+          padding: 0px 43px 19px;
           width: 100%;
-          background: pink;
+          max-height: 860px;
+          overflow-y: auto;
           .describe-lists {
             width: 100%;
+            border-bottom: 3px solid #EEF2F3;
             ul {
               display: flex;
               justify-content: space-between;
@@ -301,32 +390,37 @@ a {
                 display: flex;
                 justify-content: space-between;
                 width: 50%;
-                background: rgb(154, 191, 212);
-                margin: 10px 0;
+                margin-bottom: 30px;
                 .item-img {
                   position: relative;
-                  width: 180px;
-                  height: 180px;
+                  width:170px;
+                  height:90px;
+                  border-radius:5px;
+                  margin-top: 5px;
                   img {
                     width: 100%;
                     height: 100%;
+                    border-radius:5px;
                   }
                   .gradient-layer-play {
+                    cursor: pointer;
                     display: inline-block;
                     position: absolute;
                     right: 6px;
                     bottom: 6px;
+                    background: rgba(18, 18, 18, .415);
+                    border-radius: 50%;
                     .play {
-                      width: 52px;
-                      height: 52px;
+                      width: 24px;
+                      height: 24px;
                       background-image: url('../../../../../static/images/discovery/radio-list-play.svg');
                       background-repeat: no-repeat;
                       background-size: cover;
                       display: inline-block;
                     }
                     .pause {
-                      width: 52px;
-                      height: 52px;
+                      width: 24px;
+                      height: 24px;
                       background-image: url('../../../../../static/images/discovery/radio-list-pause.svg');
                       background-repeat: no-repeat;
                       background-size: cover;
@@ -335,38 +429,68 @@ a {
                   }
                 }
                 .right-describe {
-                  padding: 10px 0;
-                  width: 260px;
-                  background: #c9a3a3;
+                  padding: 10px 0 10px 10px;
+                  width: 280px;
                   .name {
                     width: 120px;
                     overflow: hidden;
                     text-overflow:ellipsis;
                     white-space:nowrap;
-                    font-size: 20px;
-                    color: #333;
-                    font-weight: bold;
+                    font-size:14px;
+                    font-family:PingFang-SC-Medium;
+                    font-weight:500;
+                    color:rgba(51,51,51,1);
+                    line-height:20px;
                   }
                   .num {
-                    font-size: 16px;
-                    color: red;
-                    padding: 5px 0;
+                    font-size:13px;
+                    font-family:PingFang-SC-Medium;
+                    font-weight:500;
+                    color:rgba(245,166,35,1);
+                    line-height:18px;
+                    padding: 4px 0 25px;
+                    span:nth-child(1) {
+                      margin-right: 20px;
+                    }
+                  }
+                  .author {
+                    font-size:12px;
+                    font-family:PingFang-SC-Medium;
+                    font-weight:500;
+                    color:rgba(153,153,153,1);
+                    line-height:17px;
+                    span:nth-child(2) {
+                      display: inline-block;
+                      width: 160px;
+                      overflow: hidden;
+                      text-overflow:ellipsis;
+                      white-space:nowrap;
+                    }
                   }
                 }
               }
             }
           }
-        }
-        // 点击加载更多
-        .load-more {
-          background-color: #ffffff;
-          width: 100%;
-          font-size: 16px;
-          color: rgb(250, 140, 5);
-          padding: 20px 0;
-          text-align: center;
-          span {
-            cursor: pointer;
+          // 点击加载更多
+          .load-more {
+            // background-color: rgba(245,166,35,1);
+            width: 100%;
+            font-size: 16px;
+            color: #3C5B6F;
+            padding: 20px 0;
+            text-align: center;
+            span {
+              cursor: pointer;
+            }
+          }
+          // 没有内容
+          .no-content {
+            width: 100%;
+            min-height: 700px;
+            font-size: 20px;
+            color: rgba(7, 7, 7, .5);
+            text-align: center;
+            line-height: 700px;
           }
         }
       }

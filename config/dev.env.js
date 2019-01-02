@@ -6,6 +6,7 @@ const prodEnv = require('./prod.env')
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   API_HOST: '"http://dev.api.talkmate.com"',
+  LOGIN_URL: '"http://beat-study.talkmate.com/app/index"',
   APP_KEY: '"talkmateVersion"',
   APP_SECRET: '"E6DAC3DC3514681FC922ECE1B0CF06EB"'
 })

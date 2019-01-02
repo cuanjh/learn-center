@@ -181,6 +181,27 @@ export const httpLoginUrl = (_url, _params) => {
   return url
 }
 
+export const httpSnsUrl = (_url, _params) => {
+  if (!_params) {
+    _params = {}
+  }
+  _params.appKey = process.env.APP_KEY
+  if (Cookie.getCookie('device_id')) {
+    _params.deviceid = Cookie.getCookie('device_id')
+  } else {
+    let _deviceId = deviceId()
+    _params.deviceid = _deviceId
+  }
+  _params.loginurl = process.env.LOGIN_URL
+
+  let url = process.env.API_HOST + _url + '?'
+  Object.keys(_params).forEach((key) => {
+    url += key + '=' + _params[key] + '&'
+  })
+  url = url.toString().substring(0, url.length - 1)
+  return url
+}
+
 /**
  * 新登录流程
  */

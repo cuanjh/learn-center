@@ -10,7 +10,7 @@
           <div class="user">
             <div class="user-img">
               <!-- <img src="https://gw.alicdn.com/tfs/TB1yopEdgoQMeJjy1XaXXcSsFXa-640-302.png" alt=""> -->
-              <img v-lazy="author.photo" alt="头像">
+              <img :src="author.photo" alt="头像">
             </div>
             <div class="user-name">
               <span class="new-type">{{author.nickname}}</span>
@@ -85,7 +85,7 @@
         <div class="comment-list">
           <div class="comment-item">
             <div class="comment-pic">
-              <img v-lazy="userInfo.photo" alt="当前用户头像">
+              <img :src="userInfo.photo" alt="当前用户头像">
             </div>
             <div class="text">
               <!-- 说点什么吧... -->
@@ -202,28 +202,28 @@ export default {
   mounted () {
     this.initHeadDetail()
     this.initCommLists()
-    /* this.id = this.$route.params.id
-    console.log('id', this.id)
-    // 头条详情页面
-    this.headlineDetail({id: this.id}).then((data) => {
-      console.log('data', data)
-      this.detail = data.detail
-      this.author = data.detail.author
-      this.html = data.detail.content
-      this.tags_info = data.detail.tags_info
-      this.relatedNews = data.detail.related_news
-      // this.initComment(id)
-    })
-    // 评论列表
-    this.commentList({hid: this.id, page: this.page}).then((res) => {
-      console.log('commentList评论列表', res)
-      if (res.data.comments.length === 0) {
-        this.flag = false
-        this.btnText = '暂时没有评论内容'
-      }
-      this.commentLists = res.data.comments
-    })
-    this.initComments() */
+    // this.id = this.$route.params.id
+    // console.log('id', this.id)
+    // // 头条详情页面
+    // this.headlineDetail({id: this.id}).then((data) => {
+    //   console.log('data', data)
+    //   this.detail = data.detail
+    //   this.author = data.detail.author
+    //   this.html = data.detail.content
+    //   this.tags_info = data.detail.tags_info
+    //   this.relatedNews = data.detail.related_news
+    //   // this.initComment(id)
+    // })
+    // // 评论列表
+    // this.commentList({hid: this.id, page: this.page}).then((res) => {
+    //   console.log('commentList评论列表', res)
+    //   if (res.data.comments.length === 0) {
+    //     this.flag = false
+    //     this.btnText = '暂时没有评论内容'
+    //   }
+    //   this.commentLists = res.data.comments
+    // })
+    // this.initComments()
     this.$nextTick(() => {
       this.removeStyle()
     })
@@ -243,15 +243,6 @@ export default {
       comments: 'course/comments',
       reportList: 'course/reportList'
     }),
-    // getStatus (urlStr) {
-    //   let urlStrArr = urlStr.split('/')
-    //   return urlStrArr[urlStrArr.length - 1]
-    // },
-    // watch: {
-    //   '$route' (to, from) {
-    //     this.getStatus(this.$route.path)
-    //   }
-    // },
     showReport () {
       this.isShow = true
     },
@@ -269,7 +260,7 @@ export default {
       console.log('id', _this.id)
       // 头条详情页面
       await _this.headlineDetail({id: _this.id}).then((data) => {
-        console.log('data', data)
+        console.log('头条详情页面', data)
         _this.detail = data.detail
         _this.author = data.detail.author
         _this.html = data.detail.content

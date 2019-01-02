@@ -3,7 +3,7 @@
     <div class="author-content">
       <div class="autor-header">
         <div class="author-top">
-          <div class="background">背景图片</div>
+          <div class="background"></div>
           <div class="detail">
             <div class="left">
               <ul>
@@ -133,27 +133,6 @@
         </div>
       </div>
     </div>
-    <!-- <transition name='fade'>
-      <div class="alert" v-if="showAlert">
-        <div class="wrap">
-        <div class="head">{{title}}</div>
-        <div class="body">
-          <slot>
-          <p>{{message}}</p>
-          </slot>
-        </div>
-        <div class="foot">
-          <div v-if="type === 'confirm'">
-          <button class="btn-base" @click="sure">确定</button>
-          <button class="btn-gray" @click="cancel">取消</button>
-          </div>
-          <div v-else-if="type === 'inform'">
-          <button class="btn-base" @click="cancel">知道了</button>
-          </div>
-        </div>
-        </div>
-      </div>
-    </transition> -->
     <div class="nolock-test-check" v-show="nolockTestCheckShow">
       <div class="animated flipInX" v-show="nolockTestCheckShow">
         <span v-html="tips"></span>
@@ -169,7 +148,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import Cookie from '../../../../tool/cookie.js'
+// import Cookie from '../../../../tool/cookie.js'
 import authorItem from './authorItem'
 import Bus from '../../../../bus'
 import $ from 'jquery'
@@ -177,8 +156,6 @@ import $ from 'jquery'
 export default {
   data () {
     return {
-      // text: '关注',
-      // showAlert: false,
       nolockTestCheckShow: false,
       flag: true,
       type: 0, // 正常 1回复
@@ -189,16 +166,17 @@ export default {
       radios: [], // 电台列表
       page: 1,
       tips: '',
-      number: 2,
-      isVip: Cookie.getCookie('isVip')
+      number: 2
+      // isVip: Cookie.getCookie('isVip')
     }
   },
   components: {authorItem},
   computed: {
     ...mapState({
       feedInfos: state => state.course.feedInfos, // 动态列表
-      userInfo: state => state.user.userInfo
-    })
+      // userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo // 用户信息
+    }),
     // memberInfo () {
     //   let ui = this.userInfo
     //   if (!ui) {
@@ -206,6 +184,13 @@ export default {
     //   }
     //   return ui
     // }
+    isVip () {
+      if (!this.userInfo.member_info) {
+        return 0
+      }
+      console.log('header', this.userInfo.member_info.member_type)
+      return this.userInfo.member_info.member_type
+    }
   },
   mounted () {
     console.log('111', this.isVip)

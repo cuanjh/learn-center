@@ -117,8 +117,8 @@ export default {
   /**
    * 新登录接口
    */
-  umThirdLoginApi: 'http://talkmate.com', // 第三方登录的测试域名
-  umThirdLoginCallBackApi: 'http://beat-study.talkmate.com/app/index',
+  // umThirdLoginApi: 'http://talkmate.com', // 第三方登录的测试域名
+  // umThirdLoginCallBackApi: 'http://beat-study.talkmate.com/app/index',
   umUserSnsLoginApi: '/umv1/user/web/sns/login', // 第三方登录接口
   umUserLoginApi: '/umv1/user/login', // 快速登录接口
   umUserPwdLoginApi: '/umv1/user/login/pwd', // 密码登录接口

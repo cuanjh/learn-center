@@ -4,7 +4,7 @@
       <div class="left">
         <div class="swiper-container">
           <div id="swiper-wrapper" class="swiper-wrapper">
-            <div id="swiper-slide" class="swiper-slide" v-for="(item, index) in banners" :key="index" @click="get(item.id)">
+            <div id="swiper-slide" class="swiper-slide" v-for="(item, index) in banners" :key="index" @click="get(item.code)">
               <img class="wheeling_img" :src="item.cover" alt="">
               <div class="news_item_right_swipper">
                 <div class="news_item_right1">
@@ -31,7 +31,7 @@
         </div>
         <ul>
           <li v-for="item in menus" :key="item.menu_id">
-            <span v-text="item.menu_title"></span>
+            <span v-text="item.menu_title" @click="goRadioList(item)"></span>
           </li>
         </ul>
       </div>
@@ -215,6 +215,12 @@ export default {
           }
         })
       })
+    },
+    // 跳转详情页面
+    get (code) {
+      this.$router.push({
+        path: `/app/discovery/radio-detail/${code}`
+      })
     }
   }
 }
@@ -284,6 +290,7 @@ export default {
           margin-top: 12px;
           margin-right: 11px;
           span {
+            cursor: pointer;
             font-size: 14px;
             color: #4a4a4a;
             font-weight: 400;

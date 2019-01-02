@@ -2,7 +2,7 @@
   <div class="bounceBox">
     <div class="bounce-content">
       <div class="title">
-        <span>分享</span>
+        <span>请选择要分享的平台</span>
         <i @click="Hidden()"></i>
       </div>
       <div class="bounce-list">
@@ -70,8 +70,11 @@ export default {
     height: 240px;
     background: #ffffff;
     .title {
-      font-size: 20px;
-      color: #333333;
+      font-size:26px;
+      font-family:PingFangSC-Semibold;
+      font-weight:600;
+      color:rgba(10,43,64,1);
+      line-height:37px;
       text-align: center;
       margin-top: 35px;
       i {
@@ -79,7 +82,7 @@ export default {
         display: inline-block;
         width: 16px;
         height: 16px;
-        background: url('../../../../static/images/bounceBox/close.png') no-repeat center;
+        background: url('../../../static/images/bounceBox/close.png') no-repeat center;
         background-size: cover;
         position: absolute;
         right: 30px;
@@ -103,37 +106,37 @@ export default {
           .back-img1 {
             width: 72px;
             height: 72px;
-            background: url('../../../../static/images/bounceBox/talkmate.png') no-repeat center;
+            background: url('../../../static/images/bounceBox/talkmate.png') no-repeat center;
             background-size: 100%;
           }
           .back-img2 {
             width: 72px;
             height: 72px;
-            background: url('../../../../static/images/bounceBox/weixin.png') no-repeat center;
+            background: url('../../../static/images/bounceBox/weixin.png') no-repeat center;
             background-size: 100%;
           }
           .back-img3 {
             width: 72px;
             height: 72px;
-            background: url('../../../../static/images/bounceBox/friend.png') no-repeat center;
+            background: url('../../../static/images/bounceBox/friend.png') no-repeat center;
             background-size: 100%;
           }
           .back-img4 {
             width: 72px;
             height: 72px;
-            background: url('../../../../static/images/bounceBox/weibo.png') no-repeat center;
+            background: url('../../../static/images/bounceBox/weibo.png') no-repeat center;
             background-size: 100%;
           }
           .back-img5 {
             width: 72px;
             height: 72px;
-            background: url('../../../../static/images/bounceBox/qq.png') no-repeat center;
+            background: url('../../../static/images/bounceBox/qq.png') no-repeat center;
             background-size: 100%;
           }
           .back-img6 {
             width: 72px;
             height: 72px;
-            background: url('../../../../static/images/bounceBox/space.png') no-repeat center;
+            background: url('../../../static/images/bounceBox/space.png') no-repeat center;
             background-size: 100%;
           }
         }
