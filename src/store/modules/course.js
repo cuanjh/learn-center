@@ -102,6 +102,7 @@ const state = {
     }
   },
   countrysInfo: [], // 课程详情的国家
+  DynamicIndex: [], // 动态首页数据
   dynamicsLists: [],
   dynamicses: {} // 动态首页的动态列表
 }
@@ -259,6 +260,7 @@ const actions = {
    */
   getCommunity ({commit, dispatch}, params) {
     return httpLogin(config.communityApi, params).then((data) => {
+      commit('updateDynamicIndex', data)
       data.dynamicList.dynamics.forEach(item => {
         let id = item.info.id
         dispatch('radioAuthorCommentRewardList', {id: id}).then((res) => {
@@ -756,6 +758,9 @@ const mutations = {
     state.historyCourseRecord = data
   },
   // 动态首页的列表
+  updateDynamicIndex (state, data) {
+    state.DynamicIndex = data
+  },
   updateDynamics (state, {item, data}) {
     state.dynamicsLists.push(item)
     // state.dynamicsLists = data
