@@ -2,7 +2,7 @@
   <div class="my-partner">
     <div class="title">学习语伴</div>
     <div class="left">
-      <div class="name">为你匹配到了语伴</div>
+      <div class="name"><i></i>语伴动态</div>
       <ul>
         <li v-for="n in 2" :key="n">
           <div class="partner-photo">
@@ -38,27 +38,36 @@ export default {
     width: 1200px;
     margin: 30px auto;
     .title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       color: #849ea5;
       line-height: 35px;
     }
     .left {
       display: inline-block;
-      width: 580px;
-      height: 280px;
+      width: 820px;
+      height: 800px;
       background-color: #fff;
       border-radius: 5px;
       box-shadow:0px 3px 10px 0px rgba(5,43,52,0.03);
       margin-right: 15px;
-      padding-left: 69px;
-      padding-top: 80px;
+      padding-left: 40px;
+      padding-top: 37px;
       .name {
         font-size: 16px;
         font-weight: bold;
         color: #333333;
         height: 22px;
-        line-height: 22px;
+        line-height: 36px;
+        i {
+          width: 36px;
+          height: 36px;
+          background-image: url('../../../../static/images/learnIndex/dynamic-icon.svg');
+          background-repeat: no-repeat;
+          background-size: cover;
+          display: inline-block;
+          margin-right: 15px;
+        }
       }
       ul {
         li {
@@ -94,8 +103,8 @@ export default {
     }
     .right {
       display: inline-block;
-      width: 580px;
-      height: 280px;
+      width: 340px;
+      height: 480px;
       background-color: #fff;
       border-radius: 5px;
       box-shadow:0px 3px 10px 0px rgba(5,43,52,0.03);

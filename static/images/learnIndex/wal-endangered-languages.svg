@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>wal_濒危语种标注</title>
+    <desc>Created with Sketch.</desc>
+    <g id="世界语言地图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="世界地图语言-默认-copy" transform="translate(-626.000000, -414.000000)" fill="#FFFFFF">
+            <g id="语言分类" transform="translate(561.000000, 400.000000)">
+                <g id="世界濒危语种" transform="translate(65.000000, 14.000000)">
+                    <g id="濒危语种标注">
+                        <path d="M7,20 C10.3333333,14.0837373 12,10.1619408 12,8.23461042 C12,5.34361491 9.76142375,3 7,3 C4.23857625,3 2,5.34361491 2,8.23461042 C2,10.1619408 3.66666667,14.0837373 7,20 Z" id="Oval-2"></path>
+                        <path d="M16.5,20 C18.8333333,15.4757991 20,12.4767782 20,11.0029374 C20,8.79217611 18.4329966,7 16.5,7 C14.5670034,7 13,8.79217611 13,11.0029374 C13,12.4767782 14.1666667,15.4757991 16.5,20 Z" id="Oval-2-Copy-2"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

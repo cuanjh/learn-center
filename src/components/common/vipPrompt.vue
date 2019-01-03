@@ -5,7 +5,7 @@
       <span>现在成为会员，12月圣诞好礼，新用户8折！！！</span>
     </div>
     <router-link tag="div" :to="{path: '/app/user/vip'}" class="vip-btn">
-      <span>立即成为会员</span>
+      <span>成为会员</span>
     </router-link>
   </div>
 </template>
@@ -19,32 +19,34 @@ export default {
 <style lang="less" scoped>
 // vip
 .vip-content {
-  margin-top: 10px;
   position: relative;
   display: flex;
-  padding: 20px 50px;
-  width:1200px;
-  height:90px;
-  background:linear-gradient(270deg,rgba(250,217,97,1) 0%,rgba(247,107,28,1) 100%);
+  padding-top: 13px;
+  padding-left: 82px;
+  width:1180px;
+  height:76px;
+  // background:linear-gradient(270deg,rgba(250,217,97,1) 0%,rgba(247,107,28,1) 100%);
+  background-color: #D63B3B;
   box-shadow:0px 3px 10px 0px rgba(5,43,52,0.05);
   border-radius:5px;
   .vip-img {
-    width: 70px;
+    width: 63px;
     height: 50px;
     background: url('../../../static/images/course/vipPrompt.svg') no-repeat center;
     background-size: cover;
   }
   .prompt {
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: 800;
     color: #fff;
-    line-height: 46px;
-    margin-left: 16px;
+    line-height: 50px;
+    margin-left: 32px;
   }
   .vip-btn {
     cursor: pointer;
     position: absolute;
-    right: 59px;
-    top: 27px;
+    right: 37px;
+    top: 22px;
     width: 140px;
     height: 36px;
     background: #fff;
@@ -52,7 +54,7 @@ export default {
     font-size:14px;
     font-family:PingFang-SC-Bold;
     font-weight:bold;
-    color:rgba(248,124,39,1);
+    color:#A92222;
     text-align: center;
     line-height: 36px;
   }

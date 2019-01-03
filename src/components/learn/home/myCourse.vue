@@ -11,6 +11,10 @@
           <span>核心{{ curCoreNum }}</span>
         </div>
         <div class="course-brief-words">{{ curCourseWords }}</div>
+        <div class="change-course">
+          <span class="pre"><i></i></span>
+          <span class="next"><i></i></span>
+        </div>
         <router-link class="start-learn" tag="div" :to="{path: '/learn/stage/A0' + curCoreNum}">开始学习</router-link>
       </div>
     </div>
@@ -20,29 +24,33 @@
         <dd>
           <p>
             <span>{{curCourseName}}</span>
+            <i @click="isShowSubscribeCourses = !isShowSubscribeCourses"></i>
           </p>
           <p>世界语言地图官方课程</p>
+          <learn-course-list class="subscribe-courses" v-show="isShowSubscribeCourses"></learn-course-list>
         </dd>
       </dl>
       <div class="progress-area">
+        <p>学完 {{ learnInfo.chapter_num_finished + '/' + courseBaseInfo.chapter_num }}</p>
         <div class="progress-bg">
           <div class="progress" :style="{width: (curArchiveCourse['complete_rate'] ? curArchiveCourse['complete_rate']*100 : 0) +'%'}"></div>
         </div>
-        <div class="progress-val"
-          v-text="(parseFloat(curArchiveCourse['complete_rate']) > 0 ? curArchiveCourse['complete_rate']*100 : 0)+'%'">
+      </div>
+      <div class="correct-rate">
+        <p>正确率 {{ curChapterCorrectRate + '%' }}</p>
+        <div class="progress-bg">
+          <div class="progress" :style="{width: curChapterCorrectRate +'%'}"></div>
         </div>
       </div>
       <div class="learn-hours"><span>已学习 </span><span>{{ curArchiveCourse['learn_time']>0?parseInt(curArchiveCourse['learn_time']/(60*60))+' 小时':'暂无数据' }}</span></div>
-      <div class="correct-rate"><span v-text="curChapterCorrectRate ? curChapterCorrectRate : '暂无数据'"></span></div>
       <router-link class="all-courses" tag="div" :to="{path: '/app/course-list'}">全部课程</router-link>
     </div>
-    <chartroom class="chartroom"/>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import Chartroom from './chartroom.vue'
+import LearnCourseList from '../../common/learnCourseList.vue'
 
 export default {
   data () {
@@ -54,14 +62,16 @@ export default {
       curCourseDesc: '',
       curCourseWords: '',
       curChapterCorrectRate: '',
-      curArchiveCourse: {}
+      curChapterDesc: '',
+      curArchiveCourse: {},
+      isShowSubscribeCourses: false
     }
   },
   mounted () {
     this.initData()
   },
   components: {
-    Chartroom
+    LearnCourseList
   },
   computed: {
     ...mapState({
@@ -78,41 +88,46 @@ export default {
     }),
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
+      setCurrentChapter: 'course/setCurrentChapter',
       getLearnCourses: 'course/getLearnCourses',
       getCourseArchives: 'user/getCourseArchives'
     }),
     async initData () {
-      await this.getLearnCourses()
-      console.log('userInfo', this.userInfo)
-      let curCourseCode = this.userInfo.current_course_code
-      await this.getLearnInfo(curCourseCode).then(() => {
-        console.log('learnInfo', this.learnInfo)
-        console.log('courseBaseInfo', this.courseBaseInfo)
-        this.curCourseCode = this.courseBaseInfo.code
-        this.curCourseNum = parseInt(this.learnInfo.current_chapter_code.split('-')[3].split('').pop() - 1) * 6 + parseInt(this.learnInfo.current_chapter_code.split('-')[4].split('').pop())
-        this.curCoreNum = this.learnInfo.core_part_num_finished + 1
-        this.curCourseDesc = this.learnInfo.current_chapter_info.describe
-        this.curCourseWords = this.learnInfo.current_chapter_info.words.split('/').join('、')
-        let curChapter = this.learnInfo.current_chapter_code
-        this.updateChapterDes(curChapter)
+      var _this = this
+      // await this.setCurrentChapter('ENG-Basic-Level1-Unit4-Chapter1')
+      await _this.getLearnCourses()
+      console.log('userInfo', _this.userInfo)
+      let curCourseCode = _this.userInfo.current_course_code
+
+      await _this.getLearnInfo(curCourseCode).then(() => {
+        console.log('learnInfo', _this.learnInfo)
+        console.log('courseBaseInfo', _this.courseBaseInfo)
+        _this.curCourseCode = _this.courseBaseInfo.code
+        _this.curCourseNum = parseInt(this.learnInfo.current_chapter_code.split('-')[3].split('').pop() - 1) * 6 + parseInt(_this.learnInfo.current_chapter_code.split('-')[4].split('').pop())
+        _this.curCoreNum = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
+        _this.curCourseDesc = _this.learnInfo.current_chapter_info.describe
+        _this.curCourseWords = _this.learnInfo.current_chapter_info.words.split('/').join('、')
+        let curChapter = _this.learnInfo.current_chapter_code
+        _this.updateChapterDes(curChapter)
         let arr = curChapter.split('-')
-        this.learnInfo.correct_rates.forEach(item => {
+        _this.learnInfo.correct_rates.forEach(item => {
           if (item.level_code === arr[2]) {
             item.rates.forEach(rate => {
               if (rate.unit === arr[3] && rate.chapter === arr[4]) {
-                this.curChapterCorrectRate = '正确率 ' + rate.correct_rate * 100 + '%（当前为' + this.chapterDes[1].replace(' ', '') + this.chapterDes[2] + '）'
+                _this.curChapterCorrectRate = rate.correct_rate * 100
+                _this.curChapterDesc = '当前为' + _this.chapterDes[1].replace(' ', '') + _this.chapterDes[2]
               }
             })
           }
         })
       })
 
-      await this.getCourseArchives().then((res) => {
-        this.curArchiveCourse = res.archives.filter(item => {
-          return item.course_code === this.curCourseCode
+      await _this.getCourseArchives().then((res) => {
+        _this.curArchiveCourse = res.archives.filter(item => {
+          return item.course_code === _this.curCourseCode
         })[0]
-        this.curCourseName = this.curArchiveCourse.course_name['zh-CN']
-        console.log('curArchiveCourse', this.curArchiveCourse)
+        _this.curCourseName = _this.curArchiveCourse.course_name['zh-CN']
+        console.log('curArchiveCourse', _this.curArchiveCourse)
       })
     }
   }
@@ -122,12 +137,15 @@ export default {
 <style scoped>
   .my-course {
     width: 1200px;
-    margin: 30px auto;
+    margin: 30px auto 0;
   }
 
   .my-course .title {
+    margin: 10px 0;
     color: #849EA5;
-    font-size: 16px;
+    font-size: 15px;
+    height: 21px;
+    line-height: 21px;
     line-height: 30px;
     font-weight: bold;
   }
@@ -163,8 +181,8 @@ export default {
     color: #ffffff;
     line-height: 45px;
     font-weight: 500;
-    margin-top: 45px;
-    margin-left: 50px;
+    margin-top: 44px;
+    margin-left: 40px;
   }
 
   .course-brief-core{
@@ -172,7 +190,7 @@ export default {
     color: #ffffff;
     line-height: 22px;
     font-weight: 500;
-    margin: 30px 0 0 50px;
+    margin: 30px 0 0 40px;
   }
 
   .course-brief-words {
@@ -180,7 +198,53 @@ export default {
     color: #ffffff;
     line-height: 22px;
     font-weight: 500;
-    margin: 0 0 0 50px;
+    margin: 2px 0 0 40px;
+  }
+
+  .change-course {
+    float: left;
+    width: 100px;
+    height: 36px;
+    margin-top: 125px;
+    margin-left: 40px;
+  }
+
+  .change-course span {
+    display: inline-flex;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.4)
+  }
+
+  .change-course .pre {
+    float: left;
+  }
+
+  .change-course .pre i {
+    background-image: url('../../../../static/images/learnIndex/course-pre.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: inline-block;
+    width: 10px;
+    height: 27px;
+    margin-left: 10px;
+    margin-top: 4px;
+  }
+
+  .change-course .next i{
+    background-image: url('../../../../static/images/learnIndex/course-next.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: inline-block;
+    width: 12px;
+    height: 20px;
+    margin-left: 12px;
+    margin-top: 8px;
+  }
+
+  .change-course .next {
+    float: right;
   }
 
   .start-learn {
@@ -193,7 +257,8 @@ export default {
     font-size: 14px;
     font-weight: 800;
     text-align: center;
-    margin-left: 50px;
+    margin-right: 30px;
+    float: right;
     margin-top: 125px;
     cursor: pointer;
   }
@@ -206,6 +271,16 @@ export default {
     border-radius: 5px;
     background: #ffffff;
     box-shadow:0px 3px 10px 0px rgba(5,43,52,0.03);
+  }
+
+  .current-course .subscribe-courses {
+    left: 13px;
+    top: 46px;
+    /* width: 380px; */
+  }
+
+  .subscribe-courses>img {
+    left: 150px !important;
   }
 
   .current-course dl {
@@ -244,6 +319,17 @@ export default {
     white-space: nowrap;
   }
 
+  .current-course dd p:nth-of-type(1) i {
+    margin-top: 20px;
+    width: 15px;
+    height: 10px;
+    display: inline-block;
+    background-image: url('../../../../static/images/learnIndex/course-select-icon.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
+  }
+
   .current-course dd p:nth-of-type(2) {
     height:18px;
     font-size:13px;
@@ -255,19 +341,50 @@ export default {
 
   .progress-area {
     display: inline-block;
-    margin-top: 32px;
+    margin-top: 24px;
+    height: 34px;
+  }
+
+  .progress-area p {
+    font-size: 12px;
+    font-weight: 500;
+    color: #98B2BE;
+    height: 17px;
+    line-height: 17px;
+    margin-bottom: 3px;
   }
 
   .progress-bg {
-    width: 228px;
+    width: 264px;
     height: 6px;
-    background-color: #ecf1f4;
+    background-color: #f6f8f9;
     border-radius: 6px;
     display: inline-block;
   }
 
-  .progress{
+  .progress-area .progress{
     background-color: #7ED321;
+    height: 6px;
+    border-radius: 6px;
+    width:0;
+  }
+
+  .correct-rate {
+    display: inline-block;
+    height: 34px;
+  }
+
+  .correct-rate p {
+    font-size: 12px;
+    font-weight: 500;
+    color: #98B2BE;
+    height: 17px;
+    line-height: 17px;
+    margin-bottom: 3px;
+  }
+
+  .correct-rate .progress{
+    background-color: #2A9FE4;
     height: 6px;
     border-radius: 6px;
     width:0;
@@ -282,21 +399,17 @@ export default {
   }
 
   .learn-hours {
-    font-weight: 400;
-    font-size: 14px;
-    color: #888888;
-    line-height: 20px;
-  }
-
-  .correct-rate {
-    font-weight: 400;
-    font-size: 14px;
-    color: #888888;
-    line-height: 20px;
+    font-weight: 500;
+    font-size: 12px;
+    color: #98B2BE;
+    height: 17px;
+    line-height: 17px;
+    margin-top: 4px;
   }
 
   .all-courses {
-    margin-top: 88px;
+    float:right;
+    margin-top: 78px;
     width: 140px;
     height: 38px;
     line-height: 36px;
