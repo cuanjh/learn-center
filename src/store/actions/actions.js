@@ -1,4 +1,4 @@
-import { httpNoLogin, httpLogin } from '../../api/api'
+import { httpNoLogin, httpLogin, httpSnsUrl } from '../../api/api'
 import config from '../../api/config'
 
 export default {
@@ -7,6 +7,10 @@ export default {
     return httpNoLogin(config.umUserLoginApi, params).then((res) => {
       commit('updateLoginInfo', res)
     })
+  },
+  // 第三方登录
+  userSnsLogin ({commit}, params) {
+    return httpSnsUrl(config.umUserSnsLoginApi, params)
   },
   // 新密码登录接口
   userPwdLogin ({commit}, params) {

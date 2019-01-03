@@ -64,19 +64,28 @@ export default {
   mounted () {
     console.log('type', this.type)
     let checked = JSON.parse(Cookie.getCookie('isChecked'))
-    console.log('checked', checked)
-    if (checked === true) {
-      let userNameOld = Cookie.getCookie('userName')
-      let userPwdOld = Cookie.getCookie('userPwd')
-      this.userName = userNameOld
-      this.userPwd = userPwdOld
-      this.isSaveLoginState = true
-    } else {
+    let userId = Cookie.getCookie('user_id')
+    if (!userId) {
       Cookie.delCookie('userName')
       Cookie.delCookie('userPwd')
       this.userName = ''
       this.userPwd = ''
       this.isSaveLoginState = false
+    } else {
+      console.log('checked', checked)
+      if (checked === true) {
+        let userNameOld = Cookie.getCookie('userName')
+        let userPwdOld = Cookie.getCookie('userPwd')
+        this.userName = userNameOld
+        this.userPwd = userPwdOld
+        this.isSaveLoginState = true
+      } else {
+        Cookie.delCookie('userName')
+        Cookie.delCookie('userPwd')
+        this.userName = ''
+        this.userPwd = ''
+        this.isSaveLoginState = false
+      }
     }
   },
   computed: {

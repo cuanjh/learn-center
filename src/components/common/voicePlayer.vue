@@ -111,7 +111,6 @@
             </div>
             <div class="playtime">
               <span>00:{{toParseTime(curTime)}}</span>
-              <!-- 00:{{toParseTime(curTime)}} -->
               <span>/</span>
               <span>00:{{toParseTime(duration)}}</span>
             </div>

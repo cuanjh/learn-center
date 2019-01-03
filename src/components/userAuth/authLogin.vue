@@ -124,15 +124,11 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import { deviceId } from './../../tool/untils'
 import validation from './../../tool/validation.js'
-// import http from './../../api/userAuth.js'
-// import { encrypt } from './../../tool/untils.js'
 import Cookie from '../../tool/cookie'
 import errCode from './../../api/code.js'
 import AuthPwdLogin from './authPwdLogin'
 import $ from 'jquery'
-import Config from '../../api/config'
 
 // import Cookies from 'js-cookie'
 
@@ -146,24 +142,21 @@ export default {
       phone: '',
       phoneCode: '',
       imgCode: '',
-      // email: '',
-      // emailPwd: ''
       loading: false,
       errText: '',
       imgCodeUrl: '', // 图片验证码
       time: 60,
       timer: null, // 定时器
-      type: 0, // 0验证码登录 1手机密码登录 2邮箱登录
-      UsrdeviceId: ''
+      type: 0 // 0验证码登录 1手机密码登录 2邮箱登录
     }
   },
   components: {
     AuthPwdLogin
   },
   mounted () {
-    this.UsrdeviceId = deviceId()
     this.getCodeUrl()
     let userId = Cookie.getCookie('user_id')
+    console.log('userId', userId)
     if (!userId) {
       this.headerTitle = '你好!'
     } else {
@@ -191,7 +184,8 @@ export default {
       getCaptchaUrl: 'user/getCaptchaUrl',
       login: 'user/login',
       userLogin: 'userLogin',
-      sendCode: 'getSendCode'
+      sendCode: 'getSendCode',
+      userSnsLogin: 'userSnsLogin'
     }),
     // 更新type
     updateType (type) {
@@ -288,19 +282,31 @@ export default {
     },
     // 第三方登录
     weixinGoLogin () {
-      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=wx&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
-      // window.open(url)
-      window.location.href = url
+      localStorage.removeItem('userInfo')
+      Cookie.delCookieTalkmate('is_anonymous')
+      Cookie.delCookie('user_id')
+      Cookie.delCookie('verify')
+      Cookie.delCookie('device_id')
+      this.userSnsLogin({ty: 'wx'}).then((res) => {
+        console.log('res', res)
+        window.location.href = res
+      })
     },
     weiboGoLogin () {
-      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=wb&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
-      // window.open(url)
-      window.location.href = url
+      localStorage.removeItem('userInfo')
+      Cookie.delCookieTalkmate('is_anonymous')
+      Cookie.delCookie('user_id')
+      Cookie.delCookie('verify')
+      Cookie.delCookie('device_id')
+      this.userSnsLogin({ty: 'wb'}).then((res) => {
+        console.log('res', res)
+        window.location.href = res
+      })
     },
     qqGoLogin () {
-      let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=qq&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
+      // let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=qq&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
       // window.open(url)
-      window.location.href = url
+      // window.location.href = url
     }
   }
 }
@@ -507,7 +513,7 @@ html,body{-webkit-text-size-adjust:none;}
     padding-left: 40px;
     padding-top: 20px;
     position: absolute;
-    bottom: 250px;
+    bottom: 260px;
   }
   .err-tip p:before {
     content: "";

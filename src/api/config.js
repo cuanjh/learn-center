@@ -69,9 +69,13 @@ export default {
   shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
   chinaLangMapApi: '/studyv1/shelf/china_lang_map', // 中国方言课程地图接口
 
+  // 动态
+  communityApi: '/feedv1/dynamic/v5/index', // 动态首页接口
+
   // 发现
   disvHomeApi: '/disv1/home', // 发现首页接口
   disvRadioApi: '/disv1/radio', // 发现电台首页接口
+  radioListsApi: '/disv1/radio/list', // 发现电台更多电台
   radioDetailApi: '/topic_course/detail/<course_code>/', // 用户电台明细
   radioCardListApi: '/user_course/card_list/{course_code}/{list_order}/{page}/{pagesize}', // 课程卡片列表接口
   radioAuthorDetailApi: '/feedv1/partner/detail', // 电台作者详情接口
@@ -116,9 +120,9 @@ export default {
   /**
    * 新登录接口
    */
-  umThirdLoginApi: 'http://talkmate.com', // 第三方登录的测试域名
-  umThirdLoginCallBackApi: 'http://beat-study.talkmate.com/app/index',
-  umUserSnsLoginApi: '/umv1/user-web/sns-login', // 第三方登录接口
+  // umThirdLoginApi: 'http://talkmate.com', // 第三方登录的测试域名
+  // umThirdLoginCallBackApi: 'http://beat-study.talkmate.com/app/index',
+  umUserSnsLoginApi: '/umv1/user/web/sns/login', // 第三方登录接口
   umUserLoginApi: '/umv1/user/login', // 快速登录接口
   umUserPwdLoginApi: '/umv1/user/login/pwd', // 密码登录接口
   umUserEditPwdApi: '/umv1/user/edit/pwd', // 用户信息里面修改密码

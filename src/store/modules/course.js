@@ -101,7 +101,9 @@ const state = {
       info: ''
     }
   },
-  countrysInfo: [] // 课程详情的国家
+  countrysInfo: [], // 课程详情的国家
+  dynamicsLists: [],
+  dynamicses: {} // 动态首页的动态列表
 }
 
 const actions = {
@@ -253,6 +255,21 @@ const actions = {
     return httpLogin(config.chinaLangMapApi)
   },
   /**
+   * 动态相关
+   */
+  getCommunity ({commit, dispatch}, params) {
+    return httpLogin(config.communityApi, params).then((data) => {
+      data.dynamicList.dynamics.forEach(item => {
+        let id = item.info.id
+        dispatch('radioAuthorCommentRewardList', {id: id}).then((res) => {
+          item.rewardLists = res.detail.rewards
+          commit('updateDynamics', {item, data})
+        })
+      })
+    })
+  },
+
+  /**
    * 发现相关
    */
   postDisvHome ({commit}) {
@@ -264,6 +281,9 @@ const actions = {
   postRadioDetail ({commit}, code) {
     let api = config.radioDetailApi.replace('<course_code>', code)
     return httpLogin(api)
+  },
+  getRadioList ({commit}, params) {
+    return httpLogin(config.radioListsApi, params)
   },
   getRadioCardList ({commit}, params) {
     let api = config.radioCardListApi.replace('{course_code}', params.code)
@@ -734,6 +754,12 @@ const mutations = {
   },
   updateHistoryCourseRecord (state, data) {
     state.historyCourseRecord = data
+  },
+  // 动态首页的列表
+  updateDynamics (state, {item, data}) {
+    state.dynamicsLists.push(item)
+    // state.dynamicsLists = data
+    console.log('动态首页动态列表', state.dynamicsLists)
   },
   // 电台动态
   updateRadioDynamic (state, data) {

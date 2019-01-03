@@ -4,7 +4,7 @@
       <div class="left">
         <div class="swiper-container">
           <div id="swiper-wrapper" class="swiper-wrapper">
-            <div id="swiper-slide" class="swiper-slide" v-for="(item, index) in banners" :key="index" @click="get(item.id)">
+            <div id="swiper-slide" class="swiper-slide" v-for="(item, index) in banners" :key="index" @click="get(item.code)">
               <img class="wheeling_img" :src="item.cover" alt="">
               <div class="news_item_right_swipper">
                 <div class="news_item_right1">
@@ -31,7 +31,7 @@
         </div>
         <ul>
           <li v-for="item in menus" :key="item.menu_id">
-            <span v-text="item.menu_title"></span>
+            <span v-text="item.menu_title" @click="goRadioList(item)"></span>
           </li>
         </ul>
       </div>
@@ -66,7 +66,7 @@
       <div class="radio-title" v-show="false">电台课程</div>
       <!-- <div class="radio-menu">
         <div class="radio-menu-item" v-for="(item, index) in menus" :key="item.menu_id">
-          <span v-text="item.menu_title"></span>
+          <span v-text="item.menu_title" @click="goRadioList(item)"></span>
           <span v-show="!((index === menus.length - 1) || (index === 10))"></span>
         </div>
       </div> -->
@@ -74,7 +74,7 @@
         <div class="radio-type-top">
           <span></span>
           <span v-text="item.menu_title"></span>
-          <span @click="goRadioList()">更多<i></i></span>
+          <span @click="goRadioList(item)">更多<i></i></span>
         </div>
         <div class="radio-list">
           <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
@@ -166,7 +166,13 @@ export default {
       }
     },
     // 查看更多
-    goRadioList () {
+    goRadioList (item) {
+      console.log('跳转之前item', item)
+      let obj = {
+        'item': item
+      }
+      let jsonStr = JSON.stringify(obj)
+      sessionStorage.setItem('itemInfo', jsonStr)
       this.$router.push({path: '/app/discovery/radio-list'})
     },
     radioAuthorPre () {
@@ -208,6 +214,12 @@ export default {
             clickable: true
           }
         })
+      })
+    },
+    // 跳转详情页面
+    get (code) {
+      this.$router.push({
+        path: `/app/discovery/radio-detail/${code}`
       })
     }
   }
@@ -278,6 +290,7 @@ export default {
           margin-top: 12px;
           margin-right: 11px;
           span {
+            cursor: pointer;
             font-size: 14px;
             color: #4a4a4a;
             font-weight: 400;

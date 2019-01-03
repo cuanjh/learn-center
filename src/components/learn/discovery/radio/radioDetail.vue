@@ -18,7 +18,8 @@
                 <span v-text="$t('free')"></span>
               </div>
               <div class="money" v-else-if="courseInfo.money_type === 'CNY'">
-                <span v-text="'￥' + courseInfo.money"></span> 元/年
+                <span v-text="'￥' + courseInfo.money"></span>
+                <span>元/年</span>
                 <span>会员免费</span>
               </div>
               <div class="money" v-else>
@@ -34,10 +35,6 @@
             </div>
           </div>
         </div>
-        <div class="apply-vip">
-          <span><i></i>开通全球说会员，立享免费课程</span>
-          <span @click="toVip()">成为VIP会员</span>
-        </div>
         <div class="author-brief">
           <div class="title">
             作者简介
@@ -47,7 +44,13 @@
               <img v-lazy="authorInfo.photo" :key="authorInfo.photo" alt="">
             </div>
             <div class="author-info-right">
-              <div class="nickname" v-text="authorInfo.nickname"></div>
+              <div class="nickname">
+                <span v-text="authorInfo.nickname"></span>
+                <p @click="relation()">
+                  <span v-if="authorInfo.has_followed === 0">+关注</span>
+                  <span v-else>取消关注</span>
+                </p>
+              </div>
               <div class="passed">
                 <span><i></i>认证用户</span>
                 <span>英语外教</span>
@@ -59,6 +62,10 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="apply-vip">
+          <span><i></i>现在注册成为会员，12月圣诞好礼，新用户80%折！！！</span>
+          <span @click="toVip()">成为会员</span>
         </div>
         <div class="course-list">
           <div class="title">课程列表</div>
@@ -111,7 +118,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import bounceBox from '../bounceBox'
+import bounceBox from '../../../common/bounceBox'
 import { formatDate } from '../../../../tool/date.js'
 
 export default {
@@ -152,7 +159,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      postRadioDetail: 'course/postRadioDetail'
+      postRadioDetail: 'course/postRadioDetail',
+      getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
+      remRadioRelationCancel: 'course/remRadioRelationCancel' // 取消关注
     }),
     // 处理radio的时间
     toParseTime (data) {
@@ -165,6 +174,30 @@ export default {
         s = '0' + s
       }
       return m + ':' + s
+    },
+    // 关注
+    relation () {
+      let _this = this
+      let followId = _this.authorInfo.user_id
+      if (_this.authorInfo.has_followed === 1) { // 关注了
+        console.log('关注了')
+        _this.remRadioRelationCancel({following_id: followId}).then((data) => {
+          console.log('取消关注', data)
+          if (data.success === true) {
+            // _this.text = '关注'
+            _this.authorInfo.has_followed = 0
+          }
+        })
+      } else if (_this.authorInfo.has_followed === 0) { // 没关注
+        console.log('没关注')
+        _this.getRadioRelationFollow({following_id: followId}).then((data) => {
+          console.log('关注', data)
+          if (data.success === true) {
+            // _this.text = '取消关注'
+            _this.authorInfo.has_followed = 1
+          }
+        })
+      }
     },
     // 作者详情页面
     goToUser (userId) {
@@ -183,7 +216,7 @@ export default {
       let _this = this
       let code = _this.$route.params.code
       await _this.postRadioDetail(code).then((res) => {
-        console.log(res)
+        console.log('电台详情返回', res)
         _this.courseInfo = res.result.course_info
         _this.authorInfo = res.result.course_info.author_info
         _this.cards = res.result.course_info.cards
@@ -280,20 +313,24 @@ export default {
   margin-top: 35px;
   font-size: 16px;
   color: #999999;
+  display: flex;
+  align-items: center;
 }
 
 .member .money span {
   font-size: 40px;
   color: #FF8331;
-  display: inline-block;
-  margin-top: -6px;
+  margin-right: 10px;
+}
+.member .money span:nth-child(2) {
+  font-size: 14px;
+  color: #999;
   margin-right: 10px;
 }
 
-.member .money span:nth-child(2) {
+.member .money span:nth-child(3) {
   background-color: #9EDA62;
-  width: 80px;
-  height: 24px;
+  padding: 0 10px;
   border-radius: 12px;
   margin-left: 20px;
   color: #ffffff;
@@ -328,13 +365,14 @@ export default {
   margin-left: 185px;
 }
 .course-right .bottom .button-group span {
+  font-size: 16px;
   width: 81px;
   height: 30px;
   line-height: 30px;
-  color: #2A9FE4;
+  color: #3C5B6F;
   font-size: 15px;
   border: 1px solid #CDCDCD;
-  border-radius: 5px;
+  border-radius: 16px;
   display: inline-block;
   text-align: center;
   margin-left: 10px;
@@ -346,10 +384,10 @@ export default {
   width: 880px;
   height: 60px;
   line-height: 60px;
-  background-color: #2A9FE4;
+  background-color: #D63B3B;
   border-radius: 3px;
   margin-top: 20px;
-  padding: 0 45px;
+  padding: 0 44px;
 }
 
 .radio-left .apply-vip span:first-child {
@@ -371,15 +409,15 @@ export default {
 .radio-left .apply-vip span:last-child {
   cursor: pointer;
   width: 140px;
-  height: 30px;
-  color: #2A9FE4;
+  height: 36px;
+  color: #A92222;
   font-size: 14px;
   background-color: #ffffff;
   border-radius: 18px;
-  line-height: 30px;
+  line-height: 36px;
   text-align: center;
   float: right;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .radio-left .author-brief {
@@ -387,7 +425,7 @@ export default {
   height: 308px;
   background-color: #ffffff;
   border-radius: 3px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
   padding: 0 35px;
 }
 
@@ -413,6 +451,7 @@ export default {
 }
 
 .author-brief .author-info .author-info-right {
+  position: relative;
   display: inline-block;
   width: 724px;
   height: 100%;
@@ -422,6 +461,20 @@ export default {
   margin-top: 30px;
   color: #333333;
   font-size: 20px;
+}
+.author-info .author-info-right .nickname p {
+  display: inline-block;
+  position: absolute;
+  top: 16px;
+  right: 0;
+}
+.author-info .author-info-right .nickname p span {
+  cursor: pointer;
+  background: #F7F7F7;
+  color: #2A9FE4;
+  font-size: 20px;
+  padding: 0 12px;
+  border-radius: 4px;
 }
 .author-info .author-info-right .passed {
   margin-top: 10px;
