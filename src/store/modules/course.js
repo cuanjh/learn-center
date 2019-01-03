@@ -102,8 +102,8 @@ const state = {
     }
   },
   countrysInfo: [], // 课程详情的国家
-  dynamicsLists: [],
-  dynamicses: {} // 动态首页的动态列表
+  dynamicsLists: [], // 动态列表
+  bannerTopics: [] // 动态首页的benners
 }
 
 const actions = {
@@ -759,6 +759,7 @@ const mutations = {
   updateDynamics (state, {item, data}) {
     state.dynamicsLists.push(item)
     // state.dynamicsLists = data
+    state.bannerTopics.push(data.bannerTopics)
     console.log('动态首页动态列表', state.dynamicsLists)
   },
   // 电台动态
