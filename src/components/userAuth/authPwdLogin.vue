@@ -149,7 +149,7 @@ export default {
         if (res.success) {
           $('input').css('border-color', '#E6EBEE')
           _this.errText = ''
-          localStorage.removeItem('userInfo')
+          sessionStorage.removeItem('userInfo')
           Cookie.delCookieTalkmate('is_anonymous')
           Cookie.delCookie('user_id')
           Cookie.delCookie('verify')
@@ -166,6 +166,7 @@ export default {
           Cookie.setCookie('isChecked', _this.isSaveLoginState)
           Cookie.setCookie('user_id', info.user_id)
           Cookie.setCookie('verify', info.verify)
+          this.updateIsLogin('1')
           _this.$router.push({path: '/app/index'})
         } else {
           _this.errText = errCode[res.code]

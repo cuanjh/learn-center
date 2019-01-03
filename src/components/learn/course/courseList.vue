@@ -46,15 +46,16 @@ export default {
     this.$parent.$emit('initLayout')
     this.$parent.$emit('navItem', 'course')
     // this.showLoading()
-    let curCourseCode = this.currentCourseCode
-    if (!curCourseCode) {
-      curCourseCode = localStorage.getItem('currentCourseCode')
+    let ui = this.userInfo
+    if (!Object.keys(ui).length > 0) {
+      ui = JSON.parse(sessionStorage.getItem('userInfo'))
     }
+    let curCourseCode = ui.current_course_code
     this.initData(curCourseCode)
   },
   computed: {
     ...mapState({
-      'userInfo': state => state.user.userInfo,
+      'userInfo': state => state.userInfo,
       'currentCourseCode': state => state.course.currentCourseCode,
       'currentChapterCode': state => state.course.currentChapterCode,
       'curLevel': state => state.course.curLevel,

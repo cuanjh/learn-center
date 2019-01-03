@@ -36,6 +36,11 @@ var copyList = [
 		from: _from + '/images/bookCase/default_course.png',
     to: _to + '/images/bookCase/default_course.png',
 		toType: 'file'
+	},
+	{
+		from: _from + '/images/learnIndex/map',
+    to: _to + '/images/learnIndex/map',
+		toType: 'dir'
 	}
 ]
 module.exports = copyList;

@@ -141,6 +141,10 @@ export default {
   cursor: pointer;
   margin-bottom: 30px;
 }
+
+.mycourse-container > section ul > li.disable dl {
+  width: 80px;
+}
 .mycourse-container > section ul > li.disable dl dt img {
   -webkit-filter: grayscale(100%);
   -moz-filter: grayscale(100%);

@@ -125,7 +125,7 @@ export default {
 <style scoped>
   .learn-wrap {
     padding-top: 80px;
-    background: #f1f5f8;
+    background: #f6f8f9;
   }
 
   .learn-cover {

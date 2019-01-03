@@ -280,6 +280,7 @@ export default {
         // 把后台返回的用户信息存进去
         Cookie.setCookie('user_id', info.user_id)
         Cookie.setCookie('verify', info.verify)
+        this.updateIsLogin('1')
         _this.$router.push({path: '/app/index'})
       } else {
         _this.errText = errCode[_this.loginInfo.code]

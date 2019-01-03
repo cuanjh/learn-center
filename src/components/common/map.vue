@@ -162,14 +162,7 @@ export default {
       // 将标注添加到地图中
       // this.map.addOverlay(marker)
       // this.myGeo = new BMap.Geocoder()
-      /* eslint-disable */
-      var opts = {
-        // offset: new BMap.Size(150, 5),
-        anchor: BMAP_ANCHOR_TOP_RIGHT,
-        type: BMAP_NAVIGATION_CONTROL_SMALL
-      }
-      /* eslint-enable */
-      mp.addControl(new BMap.NavigationControl(opts))
+
       // map.addControl(new BMap.ScaleControl(opts))
       // map.addControl(new BMap.OverviewMapControl())
       // map.addControl(new BMap.MapTypeControl())
@@ -249,7 +242,7 @@ export default {
       //     alert('failed' + this.getStatus())
       //   }
       // })
-
+      // this.addNavigationAnchor()
       var myCity = new BMap.LocalCity()
 
       myCity.get((result) => {
@@ -536,6 +529,17 @@ export default {
       //     console.log('您选择地址没有解析到结果! ' + capital)
       //   }
       // }, capital)
+    },
+    // 缩放拖拽控件
+    addNavigationAnchor () {
+      /* eslint-disable */
+      var opts = {
+        // offset: new BMap.Size(150, 5),
+        anchor: BMAP_ANCHOR_TOP_RIGHT,
+        type: BMAP_NAVIGATION_CONTROL_SMALL
+      }
+      /* eslint-enable */
+      mp.addControl(new BMap.NavigationControl(opts))
     }
   }
 }
@@ -585,11 +589,11 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
   var arrow = this._arrow = document.createElement('div')
 
   if (this._type === 'partner') {
-    arrow.style.background = 'url(../../../static/images/bookCase/map-partner.svg) no-repeat'
+    arrow.style.background = 'url(../../../static/images/learnIndex/map/map-partner.svg) no-repeat'
     arrow.style.width = '30px'
     arrow.style.height = '43px'
   } else {
-    arrow.style.background = 'url(../../../static/images/bookCase/map-course.svg) no-repeat'
+    arrow.style.background = 'url(../../../static/images/learnIndex/map/map-course.svg) no-repeat'
     arrow.style.width = '28px'
     arrow.style.height = '35px'
   }
