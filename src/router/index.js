@@ -30,6 +30,8 @@ const userWallet = r => require.ensure([], () => r(require('@/components/learn/u
 const userVip = r => require.ensure([], () => r(require('@/components/learn/user/userVip.vue')), 'userVip')
 const userSetting = r => require.ensure([], () => r(require('@/components/learn/user/userSetting.vue')), 'user-setting')
 const userAnonymous = r => require.ensure([], () => r(require('@/components/learn/user/userAnonymous.vue')), 'user-anonymous')
+// 学习 --- 语伴
+const communityIndex = r => require.ensure([], () => r(require('@/components/learn/partnersCommunity/index.vue')), 'community-index')
 
 // 学习 --- 发现
 const discovery = r => require.ensure([], () => r(require('@/components/learn/discovery/discovery.vue')), 'discovery')
@@ -187,6 +189,11 @@ export default[
             component: userAnonymous
           }
         ]
+      },
+      // 语伴
+      {
+        path: 'community-index',
+        component: communityIndex
       },
       // 发现
       {

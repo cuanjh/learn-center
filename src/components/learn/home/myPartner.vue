@@ -22,7 +22,7 @@
           <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5a901c662152c7c305b8d6db?v=1" alt="">
         </li>
       </ul>
-      <div class="change-batch">换一批</div>
+      <router-link tag="div" :to="{path: 'community-index'}" class="change-batch">换一批</router-link>
     </div>
   </div>
 </template>

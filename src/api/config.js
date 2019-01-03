@@ -69,6 +69,9 @@ export default {
   shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
   chinaLangMapApi: '/studyv1/shelf/china_lang_map', // 中国方言课程地图接口
 
+  // 动态
+  communityApi: '/feedv1/dynamic/v5/index', // 动态首页接口
+
   // 发现
   disvHomeApi: '/disv1/home', // 发现首页接口
   disvRadioApi: '/disv1/radio', // 发现电台首页接口

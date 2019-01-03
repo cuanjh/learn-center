@@ -2,12 +2,12 @@
   <div class="details">
     <div class="details-content">
       <div class="details-left">
-        <div class="left-content">
+        <div class="left-content" v-if="detail">
           <div class="left-title">
             <span>{{detail.title}}</span>
           </div>
           <!-- 发布者信息 -->
-          <div class="user">
+          <div class="user" v-if="author">
             <div class="user-img">
               <!-- <img src="https://gw.alicdn.com/tfs/TB1yopEdgoQMeJjy1XaXXcSsFXa-640-302.png" alt=""> -->
               <img :src="author.photo" alt="头像">
@@ -233,7 +233,8 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
+      // userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo
     })
   },
   methods: {
