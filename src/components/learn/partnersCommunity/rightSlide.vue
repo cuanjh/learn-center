@@ -13,39 +13,19 @@
         </div>
         <div class="recommend-partners">
           <ul>
-            <li>
+            <li v-for="(partner, index) in dynamics.partners" :key="index">
               <div class="partner-img">
                 <div class="header-img">
-                  <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5c2586f93f34186bf1192fe4/5c2586f93f34186bf1192fe4.jpg?hash=FqZF9gAe1ZLv47blmy4epMriNnmG" alt="推荐语伴头像">
+                  <img :src="partner.photo" alt="推荐语伴头像">
                   <div class="country-img">
-                    <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5c2586f93f34186bf1192fe4/5c2586f93f34186bf1192fe4.jpg?hash=FqZF9gAe1ZLv47blmy4epMriNnmG" alt="国家图片">
+                    <img :src="partner.country_flag" alt="国家图片">
                   </div>
                 </div>
                 <div class="name">
-                  <p class="title">Brashae Hello</p>
+                  <p class="title">{{partner.nickname}}</p>
                   <p class="language">
                     <span>阿拉伯语<i></i></span>
-                    <span>日语,阿拉伯语</span>
-                  </p>
-                </div>
-              </div>
-              <div class="focus">
-                <span>关注</span>
-              </div>
-            </li>
-            <li>
-              <div class="partner-img">
-                <div class="header-img">
-                  <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5c2586f93f34186bf1192fe4/5c2586f93f34186bf1192fe4.jpg?hash=FqZF9gAe1ZLv47blmy4epMriNnmG" alt="推荐语伴头像">
-                  <div class="country-img">
-                    <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5c2586f93f34186bf1192fe4/5c2586f93f34186bf1192fe4.jpg?hash=FqZF9gAe1ZLv47blmy4epMriNnmG" alt="国家图片">
-                  </div>
-                </div>
-                <div class="name">
-                  <p class="title">Brashae Hello</p>
-                  <p class="language">
-                    <span>英语<i></i></span>
-                    <span>日语,阿拉伯语</span>
+                    <span v-for="(lang, index) in partner.lang_infos" :key="index">{{lang.name}}</span>
                   </p>
                 </div>
               </div>
@@ -90,9 +70,28 @@
 </div>
 </template>
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   data () {
     return {}
+  },
+  mounted () {
+    this.initCommunity()
+  },
+  computed: {
+    ...mapState({
+      dynamics: state => state.course.dynamics
+    })
+  },
+  methods: {
+    ...mapActions({
+      getCommunity: 'course/getCommunity' // 动态首页
+    }),
+    async initCommunity () {
+      await this.getCommunity({excludeIds: this.ID})
+      console.log('dynamicses', this.dynamics)
+    }
   }
 }
 </script>
@@ -183,8 +182,8 @@ export default {
                       display: inline-block;
                       i {
                         display: inline-block;
-                        width: 5px;
-                        height: 6px;
+                        width: 10px;
+                        height: 11px;
                         background: url('../../../../static/images/community/Line.svg') no-repeat center;
                         background-size: 100%;
                         margin-top: 6px;

@@ -48,7 +48,7 @@
               </p>
               <div class="topic-lists">
                 <ul>
-                  <li v-for="(item, index) in bannerTopics" :key="index">
+                  <li v-for="(item, index) in dynamics.bannerTopics" :key="index">
                     <img :src="item.cover_url" alt="推荐话题图片">
                     <p class="title">
                       <span>{{item.topic_title}}</span>
@@ -106,7 +106,8 @@ export default {
     ...mapState({
       userInfo: state => state.userInfo,
       dynamicsLists: state => state.course.dynamicsLists, // 动态首页数据
-      bannerTopics: state => state.course.bannerTopics
+      bannerTopics: state => state.course.bannerTopics,
+      dynamics: state => state.course.dynamics
     })
   },
   methods: {
@@ -118,7 +119,7 @@ export default {
     async initCommunity () {
       await this.getCommunity({excludeIds: this.ID})
       console.log('dynamicsLists', this.dynamicsLists)
-      console.log('dynamicses', this.bannerTopics)
+      console.log('dynamicses', this.dynamics)
     }
   }
 }
