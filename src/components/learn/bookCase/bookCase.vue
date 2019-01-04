@@ -1,64 +1,66 @@
 <template>
-  <div>
-    <router-link class="banner" :to="{path: '/app/world-map'}">
-    <div class="describe">
-      <div class="banner-title"></div>
-      <p>
-        <span>共收录</span>{{langMapNum}}<span>种语言</span>
+  <div class="book-case">
+    <vip-prompt class="vip"/>
+    <div class="hot-course-box">
+      <p class="title">热门课程
       </p>
-      <p class="button">查看全部</p>
+      <div class="hot-courses">
+        <div class="pre"><i @click="pre()"></i></div>
+        <div class="list">
+          <ul>
+            <li v-for="(item, index) in hotCourse.slice(startIndex, startIndex + 6)"
+              :key="index"
+              @mouseenter="showDetails('hot', index)"
+              @mouseleave="hideDetails">
+              <img :src="qnUrl(item.flag)" alt="">
+              <p class="name">{{ item.name }}</p>
+              <p class="number">{{ item.buy_num>999999?'999,999+':toThousands(item.buy_num) }}</p>
+              <transition name="fade">
+                <div class="details" v-show="showDetailsHot === index">
+                  <p class="desc">{{item.des}}</p>
+                  <p class="time">课时：{{item.level_num}}课时</p>
+                  <p class="home-work">作业：{{item.homework_num}}</p>
+                  <p class="btn" @click="goDetails(item.code)">课程详情</p>
+                </div>
+              </transition>
+            </li>
+          </ul>
+        </div>
+        <div class="next"><i @click="next()"></i></div>
+      </div>
     </div>
-    </router-link>
-    <div class="book-case">
-      <div class="course-box">
-        <p class="title">热门课程
-          <router-link :to="{path: '/app/hot-courses'}">所有课程</router-link>
-        </p>
-        <ul class="course-item">
-          <li v-for="(item, index) in hotCourse"
-            :key="index"
-            @mouseenter="showDetails('hot', index)"
-            @mouseleave="hideDetails">
-            <img :src="qnUrl(item.flag)" alt="">
-            <p class="name-number"><span class="name">{{ item.name }}</span><span class="number">{{ item.buy_num>999999?'999,999+':toThousands(item.buy_num) }}</span></p>
-            <transition name="fade">
-              <div class="details" v-show="showDetailsHot === index">
-                <p class="desc">{{item.des}}</p>
-                <p class="time">课时：{{item.level_num}}课时</p>
-                <p class="home-work">作业：{{item.homework_num}}</p>
-                <p class="btn" @click="goDetails(item.code)">课程详情</p>
-              </div>
-            </transition>
-          </li>
-        </ul>
+    <div class="course-box">
+      <div class="search">
+        <i class="search-icon"></i>
+        <input type="text" v-model="searchVal" @keyup.enter="search()" placeholder="搜索官方课程" />
+        <i @click="searchVal = ''" class="cancel-icon"></i>
       </div>
-      <div class="course-box">
-        <p class="title">中国方言地图
-          <router-link :to="{path: '/app/china-lang-map'}">所有课程</router-link>
-        </p>
-        <ul class="course-item">
-          <li v-for="(item, index) in chinaLangMap"
-            :key="index"
-            @mouseenter="showDetails('china', index)"
-            @mouseleave="hideDetails">
-            <img :src="qnUrl(item.flag)" alt="">
-            <p class="name-number"><span class="name">{{ item.name }}</span><span class="number">{{ item.buy_num>999999?'999999+':item.buy_num }}</span></p>
-            <transition name="fade">
-              <div class="details" v-show="showDetailsChina === index">
-                <p class="desc">{{item.des}}</p>
-                <p class="time">课时：{{item.level_num}}课时</p>
-                <p class="home-work">作业：{{item.homework_num}}</p>
-                <p class="btn" @click="goDetails(item.code)">课程详情</p>
-              </div>
-            </transition>
-          </li>
-        </ul>
+      <div class="letter-list">
+        <a
+          @click="changeLetter(item)"
+          :class="['letter-item', { 'all': item == '全部' && curLetter == '全部', 'cur': item == curLetter && item != '全部' }]"
+          v-for="(item , index) in letterList"
+          :key="index">
+          {{item}}
+        </a>
       </div>
+      <ul class="course-item">
+        <li v-for="(item, index) in courseLangs"
+          :key="index" @click="routerGo(item)">
+          <div class="imgBox">
+            <img :src="qnUrl(item.flag)" alt="">
+          </div>
+          <p class="name"><span>{{ item.name[languagueHander] }}</span></p>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
+import simplePinyin from 'simple-pinyin'
+import _ from 'lodash'
+import VipPrompt from '../../common/vipPrompt.vue'
 // import Bus from '../../../bus'
 export default {
   data () {
@@ -66,31 +68,49 @@ export default {
       showDetailsHot: null,
       showDetailsChina: null,
       hotCourse: [], // 热门课程
-      chinaLangMap: [], // 中国方言
-      langMapBanner: [], // 语言地图banner
-      langMapNum: 0 // 收录的语言种类数量
+      startIndex: 0,
+      letterList: ['全部', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+      curLetter: '全部',
+      defaultCourseLangs: [],
+      courseLangs: [],
+      searchVal: ''
     }
+  },
+  components: {
+    VipPrompt
   },
   mounted () {
     this.$parent.$emit('navItem', 'bookcase')
+    let _this = this
     // 书架首页接口 热门课程、中国方言地图
     this.bookCaseIndex().then(res => {
       console.log('课程列表', res)
       this.hotCourse = res.data.worldMapCourse.courses
-      this.chinaLangMap = res.data.chinaMapCourse.courses
-      this.langMapBanner = res.data.langMapBanner
-      this.langMapNum = res.data.langMapNum
-      localStorage.setItem('langMapNum', this.langMapNum)
+    })
+
+    this.getCourseLangs().then(res => {
+      console.log('热门课程', res)
+      res.course_langs.forEach((item) => {
+        let obj = item
+        let name = item.name[_this.languagueHander]
+        let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
+        obj['pinyin'] = pinyin
+        obj['letter'] = pinyin.slice(0, 1).toUpperCase()
+        _this.courseLangs.push(obj)
+      })
+      this.defaultCourseLangs = this.courseLangs
     })
   },
   computed: {
     ...mapState({
-      subscribeCoursesStr: state => state.course.subscribeCoursesStr
+      subscribeCoursesStr: state => state.course.subscribeCoursesStr,
+      languagueHander: state => state.course.languagueHander
     })
   },
   methods: {
     ...mapActions({
-      bookCaseIndex: 'course/bookCaseIndex'
+      bookCaseIndex: 'course/bookCaseIndex',
+      getCourseLangs: 'course/getCourseLangs'
     }),
     qnUrl (url) {
       return url.split('?')[0] + '?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1'
@@ -106,239 +126,352 @@ export default {
       this.showDetailsHot = this.showDetailsChina = null
     },
     goDetails (courseCode) {
-      // let langCode = courseCode.split('-')[0]
-      // if (this.subscribeCoursesStr.length === 0) {
-      //   this.$router.push({path: '/app/book-details/' + langCode})
-      //   return
-      // }
-      // if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
-      //   Bus.$emit('changeCourseCode', courseCode)
-      //   return
-      // }
       this.$router.push({path: '/app/book-details/' + courseCode})
     },
     // 数字每三位添加逗号
     toThousands (num) {
       return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+    },
+    pre () {
+      if (this.startIndex === 0) {
+        return
+      }
+      this.startIndex--
+    },
+    next () {
+      if (this.startIndex + 6 === this.hotCourse.length + 1) {
+        return
+      }
+      this.startIndex++
+    },
+    changeLetter (letter) {
+      this.curLetter = letter
+      if (letter === '全部') {
+        this.courseLangs = this.defaultCourseLangs
+      } else {
+        this.courseLangs = this.defaultCourseLangs.filter((item) => {
+          return item.letter === letter
+        })
+      }
+    },
+    compareUp (propertyName) {
+      // 升序排序
+      return (object1, object2) => {
+        var value1 = object1[propertyName]
+        var value2 = object2[propertyName]
+        return value1.localeCompare(value2)
+      }
+    },
+    getUpperLetters () {
+      var arr = []
+      for (let i = 65; i < 91; i++) {
+        arr.push(String.fromCharCode(i))
+      }
+      return arr
+    },
+    routerGo (item) {
+      console.log('item', item)
+      let langCode = item['lan_code']
+      this.$router.push({path: '/app/book-details/' + langCode})
+    },
+    search () {
+      this.courseLangs = this.defaultCourseLangs.filter((item) => {
+        return item.letter.toUpperCase() === this.searchVal.toUpperCase() || item.pinyin.indexOf(this.searchVal) > -1 || item.name[this.languagueHander].indexOf(this.searchVal) > -1 || item.lan_code.toUpperCase() === this.searchVal.toUpperCase()
+      })
     }
   }
 }
 </script>
 
-<style scoped>
-  .banner {
-    display: inline-block;
-    height: 320px;
-    width: 100%;
-    background-image: url('../../../../static/images/course/book-case-banner.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    object-fit: cover;
-    margin-top: -12px;
-  }
-
-  .banner .describe {
-    width: 500px;
-    height: 100%;
-    margin-left: 30%;
-  }
-
-  .banner .describe .banner-title {
-    width: 244px;
-    height: 72px;
-    background-image: url('../../../../static/images/course/book-case-banner-title.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    object-fit: cover;
-    margin-top: 70px;
-  }
-
-  .banner .describe > p {
-    position: relative;
-    top: 60px;
-    font-size: 28px;
-    color: #b9ec10;
-  }
-
-  .banner .describe > p:nth-child(2) {
-    top: 20px;
-  }
-
-  .banner .describe > p > span {
-    color: #6e7a95;
-  }
-
-  .banner .describe .button {
-    border: 1px solid #6E7A95;
-    border-radius: 100px;
-    font-size: 15px;
-    color: #FFFFFF;
-    letter-spacing: 1.05px;
-    text-align: center;
-    width: 180px;
-    height: 38px;
-    line-height: 38px;
-    background: none;
-  }
-
+<style lang="less" scoped>
   .book-case {
     width: 1200px;
     margin: 0px auto;
     padding-bottom: 144px;
-  }
-
-  /* .course-box {
-    margin-top: 45px;
-
-  } */
-
-  .course-box .title {
-    font-size: 20px;
-    color: #333333;
-    margin: 50px 20px 24px 0;
-    font-weight: bold;
-  }
-  .course-box .title a {
-    text-decoration:none;
-    font-size: 15px;
-    color: #2A9FE4;
-    background: url('./../../../../static/images/learn/triangle-blue.png') no-repeat right center;
-    background-size: 5px 9px;
-    padding-left: 20px;
-    padding-right: 10px;
-    vertical-align: initial;
-    font-weight: bold;
-  }
-  .course-item {
-    overflow: hidden;
-  }
-  .course-item li {
-    display: inline-flex;
-    width: 200px;
-    height: 240px;
-    overflow: hidden;
-    border-radius: 3px;
-    cursor: pointer;
-    background: #FFFFFF;
-    /* padding: 0px 20px; */
-    margin-right: 24px;
-    margin-bottom: 30px;
-    position: relative;
-  }
-
-  .course-item li img {
-    position: absolute;
-    top: 22px;
-    right: 18px;
-    width:90px;
-    height:90px;
-    box-shadow:0px 3px 6px 0px rgba(81,120,135,0.18);
-    border-radius:8px;
-  }
-  .course-item li .name-number {
-    width: 164px;
-    height: 28px;
-    line-height: 28px;
-    position: absolute;
-    left: 18px;
-    right: 18px;
-    bottom: 36px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .course-item li .name {
-    width: 80px;
-    font-size: 18px;
-    color: #333333;
-    /* position: absolute;
-    bottom: 0px; */
-    font-weight: bold;
-  }
-  .course-item li .number {
-    font-size: 14px;
-    color: #999999;
-    overflow: hidden;
-    background: url('./../../../../static/images/learn/person.png') no-repeat left center;
-    background-size: 18px 15px;
-    padding-left: 22px;
-    /* position: absolute;
-    right: 0px;
-    padding-top: 3px; */
-    text-align: left;
-    font-weight: bold;
-  }
-  .course-item li .details {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255,255,255,.97);
-    padding: 22px 18px 0px;
-    cursor: pointer;
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-  }
-  .course-item li .details .desc {
-    height: 86px;
-    font-size: 12px;
-    line-height: 18px;
-    color: #333333;
-    overflow: hidden;
-    margin-bottom: 28px;
-    position: relative;
-    word-break: break-all;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    overflow: hidden;
-  }
-
-  /* .course-item li .details .desc::after {
-    content:"...";
-    font-weight:bold;
-    position:absolute;
-    bottom:0;
-    right:0;
-    padding:0 0px 1px 30px;
-  } */
-  .course-item li .details .time,
-  .course-item li .details .home-work {
-    /* font-size: 14px;
-    color: #999999;
-    font-weight: bold; */
-    width:88px;
-    height:18px;
-    font-size:12px;
-    font-family:'PingFang-SC-Medium';
-    font-weight:500;
-    color:rgba(153,153,153,1);
-    line-height:18px;
-  }
-  .course-item li .details .btn {
-    width: 96px;
-    height: 28px;
-    font-size: 12px;
-    line-height: 28px;
-    text-align: center;
-    color: #FFFFFF;
-    border-radius: 16px;
-    background:rgba(42,159,228,1);
-    position: absolute;
-    right: 20px;
-    bottom: 22px;
-  }
-
-  .fade-enter-active, .fade-leave-active {
-    transition: all .3s ease
-  }
-  .fade-enter, .fade-leave-to {
-    transform: translateY(100px);
-    opacity: 0;
-  }
-
-  @media screen and (max-width: 1024px) {
-    .book-case {
-      width: 960px;
+    .vip {
+      margin-top: 40px;
+    }
+    .hot-course-box {
+      margin-top: 40px;
+      position: relative;
+      .title {
+        font-size: 20px;
+        color: #333333;
+        margin: 0 20px 10px 0;
+        font-weight: bold;
+        text-align: center;
+      }
+      .hot-courses {
+        .list{
+          width: 1074px;
+          height: 245px;
+          float:left;
+          overflow:hidden;
+          position:relative;
+          padding: 25px 0 20px;
+        }
+        .pre {
+          float:left;
+          font-size:16px;
+          width:35px;
+          text-align:center;
+          margin: 100px 10px;
+          i {
+            width: 14px;
+            height: 42px;
+            display: inline-block;
+            background-image: url('../../../../static/images/bookCase/pre-icon.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            cursor: pointer;
+          }
+        }
+        .next {
+          float:left;
+          font-size:16px;
+          width:50px;
+          text-align:center;
+          margin: 100px 10px;
+          i {
+            width: 13px;
+            height: 25px;
+            display: inline-block;
+            background-image: url('../../../../static/images/bookCase/next-icon.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            cursor: pointer;
+          }
+        }
+      }
+      ul {
+        overflow: hidden;
+        width: 1200px;
+        li {
+          float: left;
+          width: 180px;
+          height: 200px;
+          overflow: hidden;
+          border-radius: 3px;
+          cursor: pointer;
+          background: #FFFFFF;
+          margin-right: 20px;
+          margin-bottom: 30px;
+          position: relative;
+          vertical-align:top;
+          line-height:30px;
+          padding:0 5px;
+          img {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width:80px;
+            height:80px;
+            box-shadow:0px 4px 10px 0px rgba(81,120,135,0.18);
+            border-radius:6px;
+          }
+          .name {
+            margin-top: 126px;
+            margin-left: 16px;
+            font-size: 16px;
+            color: #333333;
+            font-weight: 600;
+          }
+          .number {
+            font-size: 12px;
+            color: #999999;
+            overflow: hidden;
+            margin-left: 16px;
+            background: url('./../../../../static/images/learn/person.png') no-repeat left center;
+            background-size: 13px 11px;
+            padding-left: 18px;
+            text-align: left;
+            font-weight: 400;
+          }
+          .details {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255,255,255,.97);
+            padding: 22px 18px 0px;
+            cursor: pointer;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            .desc {
+              height: 86px;
+              font-size: 12px;
+              line-height: 18px;
+              color: #333333;
+              font-weight: 400;
+              overflow: hidden;
+              margin-bottom: 28px;
+              position: relative;
+              word-break: break-all;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 5;
+              overflow: hidden;
+            }
+            .time {
+              font-size:13px;
+              font-weight:500;
+              color:#999999;
+              line-height:17px;
+            }
+            .home-work {
+              font-size:13px;
+              font-weight:500;
+              color:#999999;
+              line-height:18px;
+            }
+            .btn {
+              height: 28px;
+              font-size: 13px;
+              font-weight: 600;
+              line-height: 28px;
+              text-align: center;
+              border-radius: 16px;
+              color:rgba(42,159,228,1);
+              position: absolute;
+              right: 20px;
+              bottom: 5px;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+    .course-box {
+      position: relative;
+      margin-top: 315px;
+      .search {
+        width:844px;
+        height:36px;
+        background:#F8FAFB;
+        border-radius:22px;
+        border:1px solid #2A9FE4;
+        margin: 0 auto;
+        .search-icon {
+          width: 15px;
+          height: 15px;
+          margin-left: 8px;
+          margin-top: 9px;
+          display: inline-block;
+          background-image: url('../../../../static/images/learnIndex/wal-search.svg');
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+        input {
+          font-size: 14px;
+          font-weight: 500;
+          color: #b8b8b8;
+          height: 36px;
+          width: 784px;
+        }
+        .cancel-icon {
+          width: 11px;
+          height: 11px;
+          background-image: url('../../../../static/images/bookCase/cancel.svg');
+          background-repeat: no-repeat;
+          background-size: cover;
+          display: inline-block;
+          margin-top: 11px;
+          cursor: pointer;
+        }
+      }
+    }
+    .letter-list {
+      width: 850px;
+      margin: 25px auto;
+      a {
+        font-size:16px;
+        font-weight:bold;
+        color:#2A9FE4;
+        margin-right: 19px;
+        display: inline-block;
+        text-align: center;
+        line-height: 26px;
+      }
+      .all {
+        width:52px;
+        height:26px;
+        background:#0581D1;
+        color: #fff;
+        border-radius:18px;
+      }
+      .cur {
+        width:26px;
+        height:26px;
+        background:#0581D1;
+        color: #fff;
+        border-radius:50%;
+      }
+    }
+    .course-item {
+      width: 944px;
+      min-height: 300px;
+      margin: 0 auto;
+      overflow: hidden;
+      li {
+        float: left;
+        cursor: pointer;
+        width: 100px;
+        height: 120px;
+        margin: 0 9px;
+        color: #666;
+        .imgBox {
+          width: 100%;
+          height: 80px;
+          line-height: 80px;
+          text-align: center;
+          position: relative;
+          img {
+            width: 68px;
+            height: 68px;
+            vertical-align: middle;
+            border: 3px solid #e1e1e1;
+            border-radius: 8px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            transition: all .3s;
+            -ms-transition: all .3s;
+            -o-transition: all .3s;
+            -moz-transition: all .3s;
+            -webkit-transition: all .3s;
+            transform-origin: 30px 60px;
+            -ms-transform-origin: 30px 60px;
+            -o-transform-origin: 30px 60px;
+            -moz-transform-origin: 30px 60px;
+            -webkit-transform-origin: 30px 60px;
+            cursor: pointer;
+            &:hover {
+              border: 3px solid #2A9FE4;
+            }
+          }
+        }
+        .name {
+          height: 36px;
+          text-align: center;
+          position: relative;
+          span {
+            display: block;
+            width: 100%;
+            height: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            position: absolute;
+            top: 10px;
+            left: 0;
+            line-height: 16px;
+          }
+        }
+        &:hover {
+          color: #2A9FE4;
+        }
+      }
     }
   }
 </style>
