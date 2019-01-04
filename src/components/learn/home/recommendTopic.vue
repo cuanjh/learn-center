@@ -2,12 +2,12 @@
   <div class="recomment-topic">
     <div class="title">推荐话题</div>
     <ul>
-      <li v-for="i in 3" :key="i">
-        <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5a901c662152c7c305b8d6db?v=1" alt="">
+      <li v-for="(topic, index) in bannerTopics.slice(0, 3)" :key="index">
+        <img :src="topic.banner_img_url" alt="">
         <div class="line-gradient"></div>
         <div class="topic">
-          <p class="name"># 深谷小溪采集那里的樱花</p>
-          <p class="num">8732人参与</p>
+          <p class="name" v-text="topic.topic_title"></p>
+          <p class="num">{{topic.pub_num}}人参与</p>
         </div>
       </li>
     </ul>
@@ -16,14 +16,14 @@
 
 <script>
 export default {
-
+  props: ['bannerTopics']
 }
 </script>
 
 <style lang="less" scoped>
   .recomment-topic {
     width: 1200px;
-    margin: 0 auto;
+    margin: 40px auto 0;
     .title {
       font-size: 16px;
       font-weight: bold;

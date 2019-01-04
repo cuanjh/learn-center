@@ -1,19 +1,28 @@
 <template>
-  <div>
-    <ul>
-      <li v-for="i in 4" :key="i">
-        <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5a901c662152c7c305b8d6db?v=1" alt="">
-        <div class="content">
-          <p class="name">一起留在日本的足迹</p>
-          <p class="member-num">1284名成员</p>
+  <div class="chat-room">
+    <div class="chat-content">
+      <div class="header">
+        <div class="left">
+          <i></i>
+          <span>主题聊天室</span>
         </div>
-      </li>
-      <li class="more">
-        <span></span>
-        <span></span>
-        <span></span>
-      </li>
-    </ul>
+        <div class="all"><span>更多主题</span></div>
+      </div>
+      <div class="chat-img">
+        <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5c2586f93f34186bf1192fe4/5c2586f93f34186bf1192fe4.jpg?hash=FqZF9gAe1ZLv47blmy4epMriNnmG" alt="主题图片">
+        <div class="title-box">
+          <span>我们在日本的足迹</span>
+        </div>
+      </div>
+      <div class="person-img">
+        <div class="img-lists">
+          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5c2586f93f34186bf1192fe4/5c2586f93f34186bf1192fe4.jpg?hash=FqZF9gAe1ZLv47blmy4epMriNnmG" alt="头像图片">
+        </div>
+        <div class="img-lists">
+          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5c2586f93f34186bf1192fe4/5c2586f93f34186bf1192fe4.jpg?hash=FqZF9gAe1ZLv47blmy4epMriNnmG" alt="头像图片">
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,55 +33,79 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.chartroom {
+.chat-room {
   width: 100%;
-  ul {
-    display: inline-flex;
-    li {
-      width: 260px;
-      height: 80px;
-      background-color: #fff;
-      box-shadow:0px 3px 10px 0px rgba(5,43,52,0.03);
-      border-radius:5px;
-      margin-right: 20px;
-      padding-left: 30px;
-      padding-top: 18px;
+  margin-top: 20px;
+  background: #ffffff;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    font-size:16px;
+    font-family:PingFang-SC-Bold;
+    font-weight:bold;
+    color:rgba(51,51,51,1);
+    line-height:36px;
+    i {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      background: url('../../../../static/images/community/language.svg') no-repeat center;
+      background-size: 100%;
+      margin-right: 10px;
+    }
+    .all {
       cursor: pointer;
+      font-size:14px;
+      font-family:PingFang-SC-Medium;
+      font-weight:500;
+      color:rgba(60,91,111,1);
+      line-height:36px;
+    }
+  }
+  .chat-content {
+    width: 100%;
+    padding: 37px 30px 43px;
+    .chat-img {
+      position: relative;
+      width: 100%;
+      height: 110px;
+      border-radius:5px;
+      margin: 20px 0;
       img {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
       }
-      .content {
-        display: inline-block;
-        margin-left: 10px;
-        padding-top: 2px;
-        .name {
-          font-size: 14px;
-          font-weight: 600;
-          color: #333333;
-          line-height: 20px;
-        }
-        .member-num {
-          display: inline-block;
-          font-size: 12px;
-          font-weight: 500;
-          color: #999999;
-          line-height: 17px;
+      .title-box {
+        width: 100%;
+        height: 110px;
+        position: absolute;
+        top: 0;
+        background:rgba(0,0,0,.3);
+        text-align: center;
+        span {
+          font-size:14px;
+          font-family:PingFang-SC-Bold;
+          font-weight:bold;
+          color:rgba(255,255,255,1);
+          line-height:110px;
         }
       }
     }
-    .more {
-      width: 60px;
-      padding: 35px 0;
-      text-align: center;
-      span {
-        width: 4px;
-        height: 4px;
-        border-radius: 4px;
-        background: #717f85;
-        display: inline-block;
+    .person-img {
+      display: flex;
+      .img-lists {
+        width: 36px;
+        height: 36px;
+        margin-right: 15px;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
+      }
+      .img-lists:last-child {
+        margin-right: 0px;
       }
     }
   }

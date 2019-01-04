@@ -23,8 +23,8 @@
     </div>
     <my-course />
     <my-radio :radios="radios" />
-    <my-partner />
-    <recommend-topic />
+    <my-partner :dynamicLists="dynamicLists"/>
+    <recommend-topic :bannerTopics="bannerTopics" />
     <div class="headline">
       <my-headline :headlines="headlines"></my-headline>
       <mobile-apps></mobile-apps>
@@ -78,17 +78,34 @@ export default {
       _this.radios = res.data.radios
       _this.headlines = res.data.headlines
     })
+
+    this.getCommunity({excludeIds: []})
   },
   computed: {
     ...mapState({
       partnerList: state => state.course.partnerList,
+      DynamicIndex: state => state.course.DynamicIndex,
       courseLangsList: state => state.courseLangsList
-    })
+    }),
+    dynamicLists () {
+      if (!Object.keys(this.DynamicIndex).length) {
+        return []
+      }
+      return this.DynamicIndex.dynamicList.dynamics.slice(0, 3)
+    },
+    // 推荐的话题
+    bannerTopics () {
+      if (!Object.keys(this.DynamicIndex).length) {
+        return []
+      }
+      return this.DynamicIndex.bannerTopics
+    }
   },
   methods: {
     ...mapActions({
       searchPartnerList: 'course/searchPartnerList',
       postDisvHome: 'course/postDisvHome',
+      getCommunity: 'course/getCommunity', // 动态首页
       getLangsList: 'getLangsList'
     }),
     async initData () {

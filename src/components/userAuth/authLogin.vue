@@ -304,9 +304,15 @@ export default {
       })
     },
     qqGoLogin () {
-      // let url = Config.umThirdLoginApi + Config.umUserSnsLoginApi + '?ty=qq&deviceid=' + this.UsrdeviceId + '&loginurl=' + Config.umThirdLoginCallBackApi
-      // window.open(url)
-      // window.location.href = url
+      localStorage.removeItem('userInfo')
+      Cookie.delCookieTalkmate('is_anonymous')
+      Cookie.delCookie('user_id')
+      Cookie.delCookie('verify')
+      Cookie.delCookie('device_id')
+      this.userSnsLogin({ty: 'qq'}).then((res) => {
+        console.log('res', res)
+        window.location.href = res
+      })
     }
   }
 }
