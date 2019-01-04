@@ -23,7 +23,7 @@
     </div>
     <my-course />
     <my-radio :radios="radios" />
-    <my-partner />
+    <my-partner :dynamicLists="dynamicLists"/>
     <recommend-topic :bannerTopics="bannerTopics" />
     <div class="headline">
       <my-headline :headlines="headlines"></my-headline>
@@ -87,6 +87,13 @@ export default {
       DynamicIndex: state => state.course.DynamicIndex,
       courseLangsList: state => state.courseLangsList
     }),
+    dynamicLists () {
+      if (!Object.keys(this.DynamicIndex).length) {
+        return []
+      }
+      return this.DynamicIndex.dynamicList.dynamics.slice(0, 3)
+    },
+    // 推荐的话题
     bannerTopics () {
       if (!Object.keys(this.DynamicIndex).length) {
         return []

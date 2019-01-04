@@ -13,7 +13,7 @@
           <span>英语</span>
         </div> -->
         <div class="learn-more">
-          <div class="language">
+         <div class="language">
             <p>
               <span v-for="(lang, index) in dynamic.info.lang_infos" :key="index">
                 {{lang.name}}
@@ -21,14 +21,10 @@
             </p>
           </div>
         </div>
-      <div class="attention">
-        <div class="relation" @click="relation()">
-          <span v-if="dynamic.info.has_followed === false">关注</span>
-          <span v-else>取消关注</span>
-        </div>
-        <div class="jiantou">
-          <i></i>
-        </div>
+      <div class="attention" @click="relation()">
+        <!-- authorInfo.has_followed === false -->
+        <span v-if="dynamic.info.has_followed === false">关注</span>
+        <span v-else>取消关注</span>
       </div>
       </div>
     </div>
@@ -78,17 +74,6 @@
         </div>
       </transition>
     </div>
-    <div class="hit" v-show="hitShow">
-      <div class="hit-lists">
-        <ul>
-          <span>{{dynamic.rewardLists.length}}个打赏</span>
-          <li v-for="(reward, index) in dynamic.rewardLists" :key="index">
-            <img :src="reward.photo" alt="打赏人头像">
-          </li>
-          <i class="circle"></i>
-        </ul>
-      </div>
-    </div>
   </div>
 </template>
 <script>
@@ -100,14 +85,11 @@ export default {
   data () {
     return {
       reviewShow: false, // 评论输入框
-      hitShow: true, // 打赏名单
       showEmoji: false, // 笑脸表情
       emojiDataUTF: [],
       emojiData: [],
       content: '' // input输入的内容
     }
-  },
-  computed: {
   },
   mounted () {
     for (let key in this.$emoji.EMOJI_MAP) {
@@ -126,7 +108,6 @@ export default {
     // 评论输入框
     clickShoeReview () {
       this.reviewShow = !this.reviewShow
-      this.hitShow = !this.hitShow
     },
     // 评论
     send (id, typeInfo) {
@@ -227,45 +208,30 @@ export default {
       font-family:PingFang-SC-Medium;
       font-weight:500;
       color:rgba(144,162,174,1);
-      span {
-        display: inline-block;
-        // i {
-        //   display: inline-block;
-        //   width: 10px;
-        //   height: 11px;
-        //   background: url('../../../../static/images/community/Line.svg') no-repeat center;
-        //   background-size: 100%;
-        //   margin-top: 6px;
-        // }
-      }
+      // i {
+      //   display: inline-block;
+      //   width: 17px;
+      //   height: 11px;
+      //   background: url('../../../../static/images/community/Line.svg') no-repeat center;
+      //   background-size: 100%;
+      // }
     }
     .attention {
       cursor: pointer;
       position: absolute;
       top: 8px;
       right: 0;
+      // width:60px;
+      // height:24px;
+      border-radius:16px;
+      border:1px solid rgba(213,221,226,1);
       text-align: center;
-      display: flex;
-      .relation {
-        margin-right: 15px;
-        span {
-          font-size:12px;
-          font-family:PingFang-SC-Bold;
-          font-weight:bold;
-          color:rgba(42,159,228,1);
-          padding: 0 16px;
-          border-radius:16px;
-          border:1px solid rgba(213,221,226,1);
-        }
-      }
-      .jiantou {
-        i {
-          display: inline-block;
-          width: 8px;
-          height: 24px;
-          background: url('../../../../static/images/community/jiantou.svg') no-repeat center;
-          background-size: 100%;
-        }
+      padding: 0 10px;
+      span {
+        font-size:12px;
+        font-family:PingFang-SC-Bold;
+        font-weight:bold;
+        color:rgba(42,159,228,1);
       }
     }
   }
@@ -396,48 +362,6 @@ export default {
         cursor: pointer;
         display: inline-block;
         margin: 2px;
-      }
-    }
-  }
-}
-// 打赏人列表
-.hit {
-  width: 100%;
-  .hit-lists {
-    padding: 10px 0;
-    border-top: 1px solid #E0E6EB;
-    border-bottom: 1px solid #E0E6EB;
-    span {
-      font-size:14px;
-      font-family:PingFangSC-Semibold;
-      font-weight:600;
-      color:rgba(10,43,64,1);
-      margin-right: 11px;
-    }
-    ul {
-      width: 100%;
-      position: relative;
-      li {
-        width: 20px;
-        height: 20px;
-        display: inline-block;
-        margin-right: 6px;
-        img {
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-        }
-      }
-      .circle {
-        cursor: pointer;
-        position: absolute;
-        top: 10px;
-        right: 0;
-        display: inline-block;
-        width: 18px;
-        height: 3px;
-        background: url('../../../../static/images/community/more.svg') no-repeat center;
-        background-size: cover;
       }
     }
   }

@@ -102,9 +102,8 @@ const state = {
     }
   },
   countrysInfo: [], // 课程详情的国家
-  DynamicIndex: [], // 动态首页数据
-  dynamicsLists: [],
-  dynamicses: {} // 动态首页的动态列表
+  dynamicsLists: [], // 动态列表
+  DynamicIndex: [] // 动态首页数据
 }
 
 const actions = {
@@ -259,13 +258,14 @@ const actions = {
    * 动态相关
    */
   getCommunity ({commit, dispatch}, params) {
+    state.dynamicsLists = []
     return httpLogin(config.communityApi, params).then((data) => {
       commit('updateDynamicIndex', data)
       data.dynamicList.dynamics.forEach(item => {
         let id = item.info.id
         dispatch('radioAuthorCommentRewardList', {id: id}).then((res) => {
           item.rewardLists = res.detail.rewards
-          commit('updateDynamics', {item, data})
+          commit('updateDynamics', item)
         })
       })
     })
@@ -761,9 +761,9 @@ const mutations = {
   updateDynamicIndex (state, data) {
     state.DynamicIndex = data
   },
-  updateDynamics (state, {item, data}) {
+  updateDynamics (state, item) {
     state.dynamicsLists.push(item)
-    // state.dynamicsLists = data
+    // state.dynamics = data
     console.log('动态首页动态列表', state.dynamicsLists)
   },
   // 电台动态

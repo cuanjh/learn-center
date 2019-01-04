@@ -23,7 +23,7 @@ export default {
 <style lang="less" scoped>
   .recomment-topic {
     width: 1200px;
-    margin: 0 auto;
+    margin: 40px auto 0;
     .title {
       font-size: 16px;
       font-weight: bold;
