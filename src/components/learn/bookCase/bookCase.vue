@@ -32,7 +32,7 @@
     <div class="course-box">
       <div class="search">
         <i class="search-icon"></i>
-        <input type="text" v-model="searchVal" placeholder="Enter the language or country to search for" />
+        <input type="text" v-model="searchVal" @keyup.enter="search()" placeholder="搜索官方课程" />
         <i @click="searchVal = ''" class="cancel-icon"></i>
       </div>
       <div class="letter-list">
@@ -173,6 +173,11 @@ export default {
       console.log('item', item)
       let langCode = item['lan_code']
       this.$router.push({path: '/app/book-details/' + langCode})
+    },
+    search () {
+      this.courseLangs = this.defaultCourseLangs.filter((item) => {
+        return item.letter.toUpperCase() === this.searchVal.toUpperCase() || item.pinyin.indexOf(this.searchVal) > -1 || item.name[this.languagueHander].indexOf(this.searchVal) > -1 || item.lan_code.toUpperCase() === this.searchVal.toUpperCase()
+      })
     }
   }
 }
