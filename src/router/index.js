@@ -29,8 +29,9 @@ const userWallet = r => require.ensure([], () => r(require('@/components/learn/u
 const userVip = r => require.ensure([], () => r(require('@/components/learn/user/userVip.vue')), 'userVip')
 const userSetting = r => require.ensure([], () => r(require('@/components/learn/user/userSetting.vue')), 'user-setting')
 const userAnonymous = r => require.ensure([], () => r(require('@/components/learn/user/userAnonymous.vue')), 'user-anonymous')
-// 学习 --- 语伴
+// 学习 --- 动态首页subjectChat
 const communityIndex = r => require.ensure([], () => r(require('@/components/learn/partnersCommunity/index.vue')), 'community-index')
+const subjectChat = r => require.ensure([], () => r(require('@/components/learn/home/subjectChat.vue')), 'subject-chat')
 
 // 学习 --- 发现
 const discovery = r => require.ensure([], () => r(require('@/components/learn/discovery/discovery.vue')), 'discovery')
@@ -185,10 +186,15 @@ export default[
           }
         ]
       },
-      // 语伴
+      // 动态
       {
         path: 'community-index',
         component: communityIndex
+      },
+      // 聊天室
+      {
+        path: 'subject-chat',
+        component: subjectChat
       },
       // 发现
       {

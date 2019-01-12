@@ -1,6 +1,8 @@
 /* eslint-disable */
 import bus from '../bus'
-import Cookie from '../tool/cookie' 
+import Cookie from '../tool/cookie'
+import { userInfo } from 'os';
+import { Upload } from 'element-ui';
 var qiniu = require('qiniu-js')
 // or
 // import * as qiniu from 'qiniu-js'
@@ -134,21 +136,17 @@ class Recorder {
                         data.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
                     }
                 }
-
                 return new Blob([data], {
                     type: 'audio/wav'
                 });
             }
         };
-
         //音频采集
         this.recorder.onaudioprocess = e => {
             this.audioData.input(e.inputBuffer.getChannelData(0));
             bus.$emit("record_setVolume", [e.inputBuffer.getChannelData(0)]);
         }
-
     }
-
     //开始录音
     start() {
         this.audioData.buffer = [];
@@ -156,25 +154,21 @@ class Recorder {
         this.audioInput.connect(this.recorder);
         this.recorder.connect(this.context.destination);
     }
-
     //停止
     stop() {
         this.audioInput.disconnect(0);
         this.recorder.disconnect(0);
     }
-
     //获取音频文件
     getBlob() {
         this.stop();
         return this.audioData.encodeWAV();
     }
-
     //回放
     play(audio) {
         audio.src = window.URL.createObjectURL(this.getBlob());
         audio.play();
     }
-
     getSoundTime(cb) {
         let audio = new Audio;
         audio.src = window.URL.createObjectURL(this.getBlob());
@@ -185,9 +179,7 @@ class Recorder {
         audio.onloadedmetadata = function () {
             cb(audio.duration)
         }
-
     }
-
     //上传
     upload(url, callback) {
         let fd = new FormData();
@@ -230,40 +222,102 @@ class Recorder {
         },
         mimeType: [] || null
       };
-
       var key = this.GetKey(code);
-
       var next = function(res) {
         console.log(res)
       }
-
       var error = function(err) {
         console.log(err)
       }
-
       var complete = function(res) {
         console.log(res);
       }
-
       var observer = {
         next: next,
         error: error,
         complete: complete
       };
-
-      var observable = qiniu.upload(this.getBlob(), key, token, putExtra, config);
-      var subscription = observable.subscribe(observer);
+        var observable = qiniu.upload(this.getBlob(), key, token, putExtra, config);
+        var subscription = observable.subscribe(observer);
+        console.log('observable--------',observable)
+        console.log('subscription------',subscription)
       // subscription.unsubscribe();
 
     }
-
     GetKey (code) {
-      var date = new Date()
-      var d = date.format('yyyy/MM/dd');
-      var userId = Cookie.getCookie('user_id');
-      var time = date.getTime()
-
-      return d + '/' + code + '/' + userId + '/' + time + '.wav';
+        var date = new Date()
+        var d = date.format('yyyy/MM/dd');
+        var userId = Cookie.getCookie('user_id');
+        var time = date.getTime()
+        return d + '/' + code + '/' + userId + '/' + time + '.wav';
+    }
+    getBlobfromFile (file,type) {
+        var blob = new Blob([file],{type:file});
+        return blob
+    }
+    uploadQiniuType (file, type, token, callback) {
+        var config = {
+            useCdnDomain: true,
+            region: qiniu.region.z0
+        };
+        //获取本地视频音频的地址blob
+        var putExtra = {
+            fname: "",
+            params: {
+                'x:file': file,
+                'x:form_type': type,
+                'x:user_id': Cookie.getCookie('user_id')
+            },
+            mimeType: null
+        };
+        var fileKey = this.GetFileKey(file, type);
+        var next = function(res) {
+            console.log(res)
+        }
+        var error = function(err) {
+            console.log(err)
+        }
+        var complete = function(res) {
+            var url = qiniu.getUploadUrl(config)
+            var u = qiniu.createMkFileUrl(url,fileKey,{})
+            console.log('res', res);
+            console.log('url', url);
+            console.log('u', u);
+        }
+        var observer = {
+            next: next,
+            error: error,
+            complete: complete
+        };
+        console.log('传递的参数', this.getBlob(), fileKey, token, putExtra, config)
+        var observable = qiniu.upload(this.getBlob(), fileKey, token, putExtra, config);
+        var subscription = observable.subscribe(observer);
+        console.log('observable--------',observable)
+        console.log('subscription------',subscription)
+        // return fileKey
+        return observable
+    }
+    GetFileKey (file, type) {
+        var keyString = ''
+        var date = new Date()
+        var d = date.format('yyyy/MM/dd');
+        var userId = Cookie.getCookie('user_id');
+        var time = date.getTime()
+        switch (type) {
+            case 'UploadType_video':
+                keyString = 'feed/video/' + d + '/' + file.uid + '/' + userId + '/' + time + '/' + file.name
+                break;
+            case 'UploadType_voice':
+                keyString = 'feed/sound/' + d + '/' + file.uid + '/' + userId + '/' + time + '/' + file.name
+                break;
+            case 'UploadType_photo':
+                keyString = 'feed/image/' + d + '/' + file.uid + '/' + userId + '/' + time + '/' + file.name
+                break;
+            default:
+                keyString = ''
+                break;
+        }
+        return keyString
     }
 
     // 抛出异常
@@ -272,8 +326,6 @@ class Recorder {
     }
 
 }
-
-
 // 获取录音机
 let init = (callback, config) => {
     let userMedia = navigator.getUserMedia;
@@ -327,8 +379,17 @@ export default {
             } else {
                 this.recorder = false;
             }
-
         });
+    },
+    // uploadQiniuType: function(blob, file, type, token, cb){
+    //     return this.recorder.uploadQiniuType(blob, file, type, token)
+    // },
+    uploadQiniuType: function(file, type, token, callback){
+        this.recorder.uploadQiniuType(file, type, token)
+        this.recorderUrl = this.recorder.GetFileKey(file, type)
+    },
+    getBlobfromFile: function (file, type) {
+        return this.recorder.getBlobfromFile(file, type);
     },
     startRecording: function () {
         if (this.recorder) {
@@ -368,14 +429,11 @@ export default {
     },
     // 是否激活
     isActivity: function (speakwork, canRecord) {
-
         if (speakwork) {
             if (this.recorder) return true;
         } else {
             if (this.recorder && canRecord) return true;
         }
-
         return false;
     }
-
 }

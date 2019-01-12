@@ -8,6 +8,7 @@ import moment from 'moment'
 import VueLazyLoad from 'vue-lazyload'
 import md5 from 'md5'
 import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 // import BootstrapVue from 'bootstrap-vue'
 
@@ -23,7 +24,6 @@ import emoji from './tool/emoji.js'
 require('./../static/css/animate.css')
 require('./../static/css/reset.css')
 require('./../static/css/style.css')
-import 'element-ui/lib/theme-chalk/index.css'
 
 require('./../static/bootstrap.min.js')
 

@@ -76,7 +76,7 @@ export default {
     this.postDisvHome().then((res) => {
       console.log('发现首页', res)
       _this.radios = res.data.radios
-      _this.headlines = res.data.headlines
+      _this.headlines = res.data.headlines.slice(0, 3)
     })
 
     this.getCommunity({excludeIds: []})

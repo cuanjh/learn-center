@@ -39,6 +39,9 @@
               </div>
             </div>
           </div>
+          <div class="more" @click="loadMore()">
+            <span>点击加载更多数据</span>
+          </div>
         </div>
       </div>
       <!-- 右边内容区 -->
@@ -62,7 +65,8 @@ export default {
     return {
       userInfoMessage: {}, // 用户信息
       ID: [], // 移动端缓存的动态ID的数组
-      topics: [] // 推荐的话题
+      topics: [], // 推荐的话题
+      page: 1
     }
   },
   components: {
@@ -72,7 +76,9 @@ export default {
     ChartRoom
   },
   mounted () {
+    console.log('dynamicsLists', this.dynamicsLists)
     this.getCommunity({excludeIds: this.ID})
+    this.getDynamicLists({page: this.page, excludeIds: this.ID})
     let userId = Cookie.getCookie('user_id')
     this.getAuthorDetail({ partner_user_id: userId }).then(data => {
       console.log('用户信息', data)
@@ -85,6 +91,12 @@ export default {
       dynamicsLists: state => state.course.dynamicsLists, // 动态首页列表和打赏列表数据
       DynamicIndex: state => state.course.DynamicIndex // 动态首页数据
     }),
+    dynamicsLists () {
+      if (!Object.keys(this.$store.state.course.dynamicsLists).length) {
+        return []
+      }
+      return this.$store.state.course.dynamicsLists
+    },
     // 推荐的话题
     bannerTopics () {
       if (!Object.keys(this.DynamicIndex).length) {
@@ -102,10 +114,20 @@ export default {
   },
   methods: {
     ...mapActions({
+      getDynamicLists: 'course/getDynamicLists', // 动态列表
       getAuthorDetail: 'course/getAuthorDetail', // 用户的详情
       getUserInfo: 'getUserInfo',
       getCommunity: 'course/getCommunity' // 动态首页
-    })
+    }),
+    loadMore () {
+      this.dynamicsLists.forEach(item => {
+        console.log('item', item.info.id)
+        this.ID.push(item.info.id)
+        console.log('ID', this.ID)
+      })
+      this.page++
+      this.getDynamicLists({page: this.page, excludeIds: this.ID})
+    }
   }
 }
 </script>

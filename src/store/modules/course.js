@@ -113,6 +113,7 @@ const actions = {
     })
   },
   getLearnCourses ({commit, state, dispatch}) {
+    state.learnCourses = []
     return httpLogin(config.getMoreLearnCourses).then((res) => {
       commit('clearMoreCourses')
       _.map(res.learn_courses, (course) => {
@@ -257,18 +258,34 @@ const actions = {
   /**
    * 动态相关
    */
+  // 动态首页数据
   getCommunity ({commit, dispatch}, params) {
-    state.dynamicsLists = []
+    // state.dynamicsLists = []
+    state.DynamicIndex = []
     return httpLogin(config.communityApi, params).then((data) => {
       commit('updateDynamicIndex', data)
-      data.dynamicList.dynamics.forEach(item => {
+    })
+  },
+  getDynamicLists ({commit, dispatch}, params) {
+    state.dynamicsLists = []
+    return httpLogin(config.dynamicListsApi, params).then(res => {
+      console.log('params', params)
+      res.dynamicList.dynamics.forEach(item => {
         let id = item.info.id
         dispatch('radioAuthorCommentRewardList', {id: id}).then((res) => {
           item.rewardLists = res.detail.rewards
-          commit('updateDynamics', item)
+          commit('updateDynamicsLists', item)
         })
       })
     })
+  },
+  // 发布动态
+  getDynamic ({commit}, params) {
+    return httpLogin(config.dynamicPubApi, params)
+  },
+  // 动态话题列表
+  getTopicsLists ({commit}, params) {
+    return httpLogin(config.topicsListsApi, params)
   },
 
   /**
@@ -760,11 +777,15 @@ const mutations = {
   // 动态首页的列表
   updateDynamicIndex (state, data) {
     state.DynamicIndex = data
+    console.log('动态首页数据', state.DynamicIndex)
   },
-  updateDynamics (state, item) {
+  // 动态列表
+  updateDynamicsLists (state, item) {
     state.dynamicsLists.push(item)
-    // state.dynamics = data
-    console.log('动态首页动态列表', state.dynamicsLists)
+    // state.dynamicsLists.forEach(i => {
+    //   console.log('item', i)
+    // })
+    console.log('动态列表', state.dynamicsLists)
   },
   // 电台动态
   updateRadioDynamic (state, data) {
