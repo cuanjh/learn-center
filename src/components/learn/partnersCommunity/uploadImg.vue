@@ -12,16 +12,16 @@
         :http-request="upload"
         accept="image/png,image/gif,image/jpg,image/jpeg"
         list-type="picture-card"
+        :limit=limitNum
         :before-upload="handleBeforeUpload"
         :on-preview="handlePictureCardPreview"
-        :limit="limitNum"
         :file-list="fileList"
         :on-remove="handleRemove">
         <i class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
-     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="">
-    </el-dialog>
+      <el-dialog :visible.sync="dialogVisible">
+        <img width="100%" :src="dialogImageUrl" alt="">
+      </el-dialog>
     </div>
     <div class="publish" @click="publish()">
       <span>发布</span>
@@ -48,7 +48,8 @@ export default {
   },
   computed: {
     ...mapState({
-      qiniuToken: state => state.learn.qiniuToken // 七牛的token
+      qiniuToken: state => state.learn.qiniuToken, // 七牛的token
+      dynamicsLists: state => state.course.dynamicsLists // 动态首页列表和打赏列表数据
     })
   },
   methods: {
@@ -64,6 +65,7 @@ export default {
       console.log('params', params)
       console.log('params.file', params.file)
       let url = window.URL.createObjectURL(params.file)
+      console.log('url', url)
       let file = params.file
       let fileObj = {}
       fileObj.name = file.name
@@ -75,15 +77,16 @@ export default {
         let d = date.format('yyyy/MM/dd')
         let userId = Cookie.getCookie('user_id')
         let time = date.getTime()
-        let fileImgKey = 'feed/image/' + d + '/' + file.uid + '/' + userId + '/' + time + '/' + file.name
+        let fileImgKey = 'feed/image/' + d + '/' + userId + '/' + time + file.name
         that.getQiniuToken().then((res) => {
           that.updateQiniuToken(res)
           let upload = uploadQiniu(result.result, that.qiniuToken, fileImgKey)
           upload.then(function (result) {
+            console.log('result', result)
             if (result.success) {
               // success
               // shang chuan
-              fileObj.qiniuurl = fileImgKey
+              fileObj.qiniuUrl = fileImgKey
             }
             console.log('that.qiniuUrl', that.fileList)
             console.log('upload', upload)
@@ -127,12 +130,25 @@ export default {
     publish () {
       this.qiniuUrl = []
       this.fileList.forEach(item => {
-        this.qiniuUrl.push(item.qiniuurl)
+        this.qiniuUrl.push(item.qiniuUrl)
       })
       console.log('this.qiniuUr', this.qiniuUrl)
       // 请求后端接口
-      this.getDynamic({content: this.content, image_urls: this.qiniuUrl}).then(res => {
+      let params = {}
+      if (this.content !== '') {
+        params = {
+          content: this.content,
+          'image_urls[]': this.qiniuUrl
+        }
+      } else {
+        params = {
+          'image_urls[]': this.qiniuUrl
+        }
+      }
+      this.getDynamic(params).then(res => {
         console.log('发布动态返回数据', res)
+        this.dynamicsLists.unshift(res.feedInfo)
+        // 4.jpg:1 GET https://uploadfile1.talkmate.com/feed/image/2019/01/12/1547272054727/5b74e4432152c797519a092a/1547272054776/4.jpg 404
       })
     }
   }

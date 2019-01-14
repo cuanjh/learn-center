@@ -251,7 +251,7 @@ class Recorder {
         var time = date.getTime()
         return d + '/' + code + '/' + userId + '/' + time + '.wav';
     }
-    getBlobfromFile (file,type) {
+    getBlobfromFile (file, type) {
         var blob = new Blob([file],{type:file});
         return blob
     }

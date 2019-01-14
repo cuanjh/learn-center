@@ -5,31 +5,21 @@
               v-model="content"
               placeholder="说点什么吧~~">
     </textarea>
-    <el-form>
-      <el-form-item prop="Video">
-        <!-- action必选参数, 上传的地址 -->
-        <el-upload  class="avatar-uploader el-upload--text"
-                    action="#"
-                    accept="video/mp4,video/ogg,video/flv,video/avi,video/wmv,video/rmvb"
-                    :http-request="upload"
-                    :show-file-list="false"
-                    :before-upload="beforeUploadVideo"
-                    :on-progress="uploadVideoProcess">
-            <video
-                    v-if="videoForm.Video !='' && videoFlag == false"
-                    :src="videoForm.VideoUrl"
-                    class="avatar"
-                    controls="controls">您的浏览器不支持视频播放</video>
-            <i v-else-if="videoForm.Video =='' && videoFlag == false" class="el-icon-plus avatar-uploader-icon"></i>
-            <el-progress
-                          v-if="videoFlag == true"
-                          class="progress-circle"
-                          type="circle"
-                          :percentage=videoUploadPercent
-                          ></el-progress>
-        </el-upload>
-      </el-form-item>
-    </el-form>
+    <div class="pic">
+      <el-upload
+        class="avatar-uploader"
+        accept="video/mp4,video/ogg,video/flv,video/avi,video/wmv,video/rmvb"
+        action="#"
+        :show-file-list="false"
+        :http-request="upload"
+        :before-upload="beforeUploadVideo"
+        :on-preview="uploadVideoProcess"
+        >
+        <i class="el-icon-plus avatar-uploader-icon" v-show="videoForm.VideoUrl ===''"></i>
+        <video v-if="videoForm.VideoUrl !=''"
+              :src="videoForm.VideoUrl" controls="controls"></video>
+      </el-upload>
+    </div>
     <div class="publish" @click="publish()">
       <span>发布</span>
     </div>
@@ -37,19 +27,22 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import Cookie from '../../../tool/cookie.js'
 import Recorder from '../../../plugins/recorder'
 export default {
   props: ['type'],
   data () {
     return {
-      videoFlag: false,
+      videoFlag: true,
       videoUploadPercent: 0,
       content: '',
       videoForm: {
         videoUploadId: '',
-        Video: ''
+        Video: '',
+        VideoUrl: ''
       },
-      qiniuUrl: ''
+      qiniuUrl: '',
+      fileList: []
     }
   },
   mounted () {
@@ -73,15 +66,30 @@ export default {
       console.log('params', params)
       let file = params.file
       console.log('file', file)
-      // let blob = Recorder.getBlobfromFile(file, file.type)
-      // file, type, token, callback
+      let url = window.URL.createObjectURL(params.file)
+      let fileObj = {}
+      fileObj.name = file.name
+      fileObj.url = url
+      this.fileList.push(fileObj)
+      console.log('url', url)
+      this.videoForm.VideoUrl = url
       this.getQiniuToken().then((res) => {
         this.updateQiniuToken(res)
-        Recorder.uploadQiniuType(file, 'UploadType_video', this.qiniuToken)
-        this.qiniuUrl = Recorder.recorderUrl
+        let date = new Date()
+        let d = date.format('yyyy/MM/dd')
+        let userId = Cookie.getCookie('user_id')
+        let time = date.getTime()
+        let fileImgKey = 'feed/video/' + d + '/' + userId + '/' + time + file.name
+        // const formdata = new FormData()
+        // formdata.append('file', file)
+        // formdata.append('token', this.qiniuToken)
+        // formdata.append('key', fileImgKey)
+        // this.uploadVideo({formdata}).then(res => {
+        //   console.log('发布动态返回数据', res)
+        // })
+        this.qiniuUrl = fileImgKey
         console.log('qiniuUrl', this.qiniuUrl)
       })
-      // console.log('blob', blob)
     },
     beforeUploadVideo (file) {
       const isLt10M = file.size / 1024 / 1024 < 10
@@ -98,7 +106,6 @@ export default {
         return false
       }
       if (!isLt10M) {
-        // this.$message.error('上传视频大小不能超过10MB哦!')
         this.$alert(`上传视频大小不能超过10M哦!`, '温馨提示!', {
           confirmButtonText: '确定',
           callback: action => {
@@ -152,9 +159,12 @@ export default {
   }
 }
 .el-upload {
-  width: 100px;
-  height: 100px;
+  width: 178px;
+  height: 178px;
   border: 1px dashed #C8D4DB;
+  video {
+    height: 178px;
+  }
 }
 .el-upload .progress-circle {
   width: 80px!important;
