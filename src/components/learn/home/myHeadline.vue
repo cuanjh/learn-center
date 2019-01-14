@@ -51,6 +51,7 @@ export default {
     margin-top: 34px;
     li {
       line-height: 25px;
+      margin-top: 6px;
       span {
         height:20px;
         font-size:14px;

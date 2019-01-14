@@ -7,6 +7,8 @@ import VueI18n from 'vue-i18n'
 import moment from 'moment'
 import VueLazyLoad from 'vue-lazyload'
 import md5 from 'md5'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 // import BootstrapVue from 'bootstrap-vue'
 
@@ -30,6 +32,7 @@ Vue.use(VueResource)
 Vue.use(VueI18n)
 Vue.prototype.$emoji = emoji
 Vue.prototype.$md5 = md5
+Vue.use(ElementUI)
 Vue.use(VueLazyLoad, {
   error: require('../static/images/lazyimg/error.gif'),
   loading: require('../static/images/lazyimg/loading.gif'),

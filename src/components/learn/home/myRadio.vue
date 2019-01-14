@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="radio-list">
-        <div class="radio-item" v-for="item in radios.slice(0, 10)" :key="item.code">
+        <div class="radio-item" v-for="item in radios.slice(0, 6)" :key="item.code">
           <a @mouseenter="radioMouseEnter($event)" @mouseleave="radioMouseLeave($event)">
             <img v-lazy="item.cover" :key="item.cover" alt="">
             <div class="gradient-layer-play" @click="loadRadioList($event, item)" style="display: none">
@@ -129,7 +129,7 @@ export default {
           display: inline-block;
           width: 148px;
           height: 82px;
-          margin-right: 20px;
+          margin-right: 40px;
           background: #F4F4F4;
           border-radius: 5px;
           &:hover {

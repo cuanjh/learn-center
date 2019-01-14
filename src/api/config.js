@@ -71,6 +71,9 @@ export default {
 
   // 动态
   communityApi: '/feedv1/dynamic/v5/index', // 动态首页接口
+  dynamicListsApi: '/feedv1/dynamic/v5/list', // 动态列表接口
+  dynamicPubApi: '/feedv1/dynamic/pub', // 动态发布接口
+  topicsListsApi: '/feedv1/topics/v3/list', // 话题列表接口
 
   // 发现
   disvHomeApi: '/disv1/home', // 发现首页接口

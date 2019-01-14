@@ -6,7 +6,7 @@
           <i></i>
           <span>主题聊天室</span>
         </div>
-        <div class="all"><span>更多主题</span></div>
+        <router-link tag="div" class="all" :to="{path: 'subject-chat'}"><span>更多主题</span></router-link>
       </div>
       <div class="chat-img">
         <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5c2586f93f34186bf1192fe4/5c2586f93f34186bf1192fe4.jpg?hash=FqZF9gAe1ZLv47blmy4epMriNnmG" alt="主题图片">

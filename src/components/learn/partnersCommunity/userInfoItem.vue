@@ -29,7 +29,7 @@
         <span>分享你的足迹、文章、照片、视频或新鲜事！</span>
       </div>
     </div>
-    <uploadImg :type="type"/>
+    <upload-img :type="type"/>
     <upload-text :type="type"/>
     <upload-video :type="type"/>
     <upload-voice :type="type"/>
@@ -50,7 +50,7 @@
   </div>
 </template>
 <script>
-import uploadImg from './uploadImg.vue'
+import UploadImg from './uploadImg.vue'
 import UploadText from './uploadText.vue'
 import UploadVideo from './uploadVideo.vue'
 import UploadVoice from './uploadVoice.vue'
@@ -60,11 +60,11 @@ export default {
   props: ['userInfoMessage'],
   data () {
     return {
-      type: '' // 0:上传图片 1:上传文字 2:视频 3:语音 4:话题
+      type: '' // UploadType_photo:上传图片 UploadType_text:上传文字 UploadType_video:视频 UploadType_voice:语音 UploadType_topic:话题
     }
   },
   components: {
-    uploadImg,
+    UploadImg,
     UploadText,
     UploadVideo,
     UploadVoice,
@@ -74,25 +74,26 @@ export default {
   },
   methods: {
     uploadImgs () {
-      this.type = '0'
+      this.type = 'UploadType_photo'
     },
     uploadTexts () {
-      this.type = '1'
+      this.type = 'UploadType_text'
     },
     uploadVideos () {
-      this.type = '2'
+      this.type = 'UploadType_video'
     },
     uploadVoices () {
-      this.type = '3'
+      this.type = 'UploadType_voice'
     },
     uploadTopics () {
-      this.type = '4'
+      this.type = 'UploadType_topic'
     }
   }
 }
 </script>
 <style lang="less" scoped>
 .user {
+  position: relative;
   width: 100%;
   .top {
     background: pink;
