@@ -217,13 +217,16 @@ export default {
           text-align:center;
           margin: 100px 10px;
           i {
-            width: 14px;
-            height: 42px;
+            width: 18px;
+            height: 34px;
             display: inline-block;
             background-image: url('../../../../static/images/bookCase/pre-icon.svg');
             background-repeat: no-repeat;
             background-size: cover;
             cursor: pointer;
+            &:hover {
+              background-image: url('../../../../static/images/bookCase/pre-icon-hover.svg');
+            }
           }
         }
         .next {
@@ -233,13 +236,16 @@ export default {
           text-align:center;
           margin: 100px 10px;
           i {
-            width: 13px;
-            height: 25px;
+            width: 18px;
+            height: 34px;
             display: inline-block;
             background-image: url('../../../../static/images/bookCase/next-icon.svg');
             background-repeat: no-repeat;
             background-size: cover;
             cursor: pointer;
+            &:hover{
+              background-image: url('../../../../static/images/bookCase/next-icon-hover.svg');
+            }
           }
         }
       }
