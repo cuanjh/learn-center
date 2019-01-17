@@ -429,6 +429,13 @@ export default {
         curChapterCode = this.currentChapterCode
       }
       return curChapterCode
+    },
+    ui () {
+      let ui = this.userInfo
+      if (Object.keys(ui).length === 0) {
+        ui = JSON.parse(localStorage.getItem('userInfo'))
+      }
+      return ui
     }
   },
   watch: {
@@ -603,7 +610,9 @@ export default {
       console.log(4444)
       await this.getUserInfo()
       console.log('userInfo===>', this.userInfo)
-      let curCourseCode = this.userInfo.current_course_code
+      // let curCourseCode = this.userInfo.current_course_code
+
+      let curCourseCode = this.ui.current_course_code
       this.updateCurCourseCode(curCourseCode)
       await this.getLearnInfo(curCourseCode)
       await this.getUnlockChapter(curCourseCode).then((res) => {
