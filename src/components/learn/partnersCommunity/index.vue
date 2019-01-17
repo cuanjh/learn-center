@@ -24,8 +24,10 @@
       </div>
       <!-- 右边内容区 -->
       <div class="recommend-right">
-        <recommend-parnters :parnterLists="parnterLists"/>
-        <chart-room/>
+        <!-- 为你推荐的语伴 -->
+        <recommend-parnters :partnerLists="partnerLists"/>
+        <!-- 主题聊天室 -->
+        <chart-room></chart-room>
       </div>
     </div>
   </div>
@@ -80,11 +82,11 @@ export default {
       return this.DynamicIndex.bannerTopics
     },
     // 动态推荐的语伴parnter
-    parnterLists () {
+    partnerLists () {
       if (!Object.keys(this.DynamicIndex).length) {
         return []
       }
-      return this.DynamicIndex.partners.slice(0, 5)
+      return this.DynamicIndex.partners
     },
     userInfoMessage () {
       let userInfoMessage = this.userInfo
