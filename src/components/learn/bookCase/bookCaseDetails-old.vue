@@ -67,7 +67,7 @@
     </div>
     <div class="tab-content">
       <ul class="book-info" v-show="'info' == tabFlag">
-        <li v-for="(item, key, index) in langInfoObj" :key="index" v-if="item.info">
+        <li v-for="(item, key, index) in langInfoObj" :key="index">
           <p class="title">{{item.title}}</p>
           <p v-if="key === 'LanguageResources'" class="desc"><a :href="item.info">{{item.info}}</a></p>
           <p v-else class="desc">{{item.info}}</p>
@@ -358,10 +358,6 @@ export default {
     /* width: 500px; */
     height: 50px;
     margin-top: 34px;
-  }
-  .details-top .details-content .details-resource .course-content .course {
-    /* display: flex;
-    justify-content: space-between; */
   }
   .details-top .details-content .details-resource .course-content .course li {
     display: inline-block;

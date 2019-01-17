@@ -25,8 +25,8 @@
       </div>
       <div class="hot-scroll">
         <div class="hot-content">
-          <div class="hot-list">
-            <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
+          <div class="hot-list" v-if="group.list">
+            <div class="section" v-for="group in groupCourseLangs" :key="group.letter">
               <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
               <ul>
                 <li v-for="item in group.list" :key="item.lan_code" @click="routerGo(item)">

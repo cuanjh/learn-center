@@ -22,8 +22,9 @@
                 <div class="name">
                   <p class="title">{{partner.nickname}}</p>
                   <p class="language">
-                    <span>阿拉伯语<i></i></span>
-                    <span v-for="(lang, index) in partner.lang_infos" :key="index">{{lang.name}}</span>
+                    <span>{{partner.country_name}}</span>
+                    <!-- <span>{{partner.country_name}}<i></i></span> -->
+                    <!-- <span v-for="(lang, index) in partner.lang_infos" :key="index">{{lang.name}}</span> -->
                   </p>
                 </div>
               </div>

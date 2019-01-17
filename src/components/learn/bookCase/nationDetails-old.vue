@@ -42,7 +42,7 @@
         </li>
       </ul>
       <ul class="country-language" v-show="'language' == tabFlag">
-        <li v-for="item in langInfos" :key="item.lang_code" v-if="item.flag" @click="routerGo(item)">
+        <li v-for="item in langInfos" :key="item.lang_code" @click="routerGo(item)">
           <div class="country-img">
             <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="资源图片">
           </div>

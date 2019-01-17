@@ -8,29 +8,7 @@
             <user-info-item :userInfoMessage="userInfoMessage"/>
           </div>
           <!-- 话题推荐 -->
-          <div class="topic">
-            <div class="recommend">
-              <p class="more">
-                <span>话题推荐</span>
-                <span>更多话题</span>
-              </p>
-              <div class="topic-lists">
-                <ul>
-                  <li v-for="(item, index) in bannerTopics" :key="index">
-                    <img :src="item.cover_url" alt="推荐话题图片">
-                    <p class="title">
-                      <span>{{item.topic_title}}</span>
-                    </p>
-                    <p class="number">
-                      <i></i>
-                      <span>{{item.pub_num}}</span>
-                      <span>人参与</span>
-                    </p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          <banner-topic :bannerTopics="bannerTopics"></banner-topic>
           <!-- 动态列表 -->
           <div class="dynamic-content">
             <div class="dynamic-lists">
@@ -55,15 +33,16 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import dynamicItem from './dynamicItem.vue'
-import Cookie from '../../../tool/cookie'
+// import Cookie from '../../../tool/cookie'
 import RecommendParnters from '../home/recommendParnters.vue'
 import ChartRoom from '../home/chartRoom.vue'
 import UserInfoItem from './userInfoItem.vue'
+import BannerTopic from './bannerTopic.vue'
 
 export default {
   data () {
     return {
-      userInfoMessage: {}, // 用户信息
+      // userInfoMessage: {}, // 用户信息
       ID: [], // 移动端缓存的动态ID的数组
       topics: [], // 推荐的话题
       page: 1
@@ -71,6 +50,7 @@ export default {
   },
   components: {
     UserInfoItem,
+    BannerTopic,
     dynamicItem,
     RecommendParnters,
     ChartRoom
@@ -79,11 +59,6 @@ export default {
     console.log('dynamicsLists', this.dynamicsLists)
     this.getCommunity({excludeIds: this.ID})
     this.getDynamicLists({page: this.page, excludeIds: this.ID})
-    let userId = Cookie.getCookie('user_id')
-    this.getAuthorDetail({ partner_user_id: userId }).then(data => {
-      console.log('用户信息', data)
-      this.userInfoMessage = data.detail
-    })
   },
   computed: {
     ...mapState({
@@ -110,6 +85,13 @@ export default {
         return []
       }
       return this.DynamicIndex.partners.slice(0, 5)
+    },
+    userInfoMessage () {
+      let userInfoMessage = this.userInfo
+      if (Object.keys(userInfoMessage).length === 0) {
+        userInfoMessage = JSON.parse(sessionStorage.getItem('userInfo'))
+      }
+      return userInfoMessage
     }
   },
   methods: {
@@ -138,96 +120,19 @@ export default {
 }
 .community-container {
   width: 1200px;
-  background: pink;
   margin: 0 auto;
-  // display: flex;
-  // justify-content: space-between;
 }
 .community-content {
   display: inline-block;
   width: 820px;
   margin-right: 15px;
-  background: rgb(206, 164, 206);
   .left-content {
     width: 100%;
     height: 100%;
     .user-info {
       width: 100%;
-      // height: 180px;
+      background: #ffffff;
       padding: 21px 30px;
-      background: rgb(239, 240, 199);
-    }
-    // 推荐话题
-    .topic {
-      width: 100%;
-      height: 180px;
-      .recommend {
-        padding: 14px 30px;
-        .more {
-          display: flex;
-          justify-content: space-between;
-          font-size:14px;
-          font-family:PingFangSC-Semibold;
-          font-weight:600;
-          color:rgba(144,162,174,1);
-          line-height:20px;
-        }
-        .topic-lists {
-          width: 100%;
-          ul {
-            width: 100%;
-              display: flex;
-              overflow: hidden;
-            li {
-              position: relative;
-              margin-right: 11px;
-              img {
-                width:158px;
-                height:80px;
-                border-radius: 6px;
-                margin: 10px 0 6px;
-              }
-              .title {
-                width:158px;
-                height:80px;
-                border-radius: 6px;
-                background:rgba(0,0,0,.3);
-                position: absolute;
-                top: 10px;
-                text-align: center;
-                line-height: 80px;
-                span {
-                  font-size:14px;
-                  font-family:PingFangSC-Semibold;
-                  font-weight:600;
-                  color:rgba(255,255,255,1);
-                }
-              }
-              .number {
-                i {
-                  display: inline-block;
-                  width: 16px;
-                  height: 14px;
-                  background: url('../../../../static/images/community/person.svg') no-repeat center;
-                  background-size: cover;
-                  margin-right: 4px;
-                  margin-top: 4px;
-                }
-                span {
-                  font-size:13px;
-                  font-family:PingFang-SC-Medium;
-                  font-weight:500;
-                  color:rgba(153,153,153,1);
-                  line-height:18px;
-                }
-              }
-            }
-            li:last-child {
-              margin-right: 0px;
-            }
-          }
-        }
-      }
     }
     // 动态列表
     .dynamic-content {
@@ -241,7 +146,7 @@ export default {
           padding: 29px 50px 44px;
           background: #ffffff;
           box-shadow:0px 3px 10px 0px rgba(5,43,52,0.03);
-          margin-top: 15px;
+          margin-top: 16px;
         }
       }
     }

@@ -5,7 +5,7 @@
       <span>现在成为会员，12月圣诞好礼，新用户8折！！！</span>
     </div>
     <router-link tag="div" :to="{path: '/app/user/vip'}" class="vip-btn">
-      <span>成为会员</span>
+      <span>升级会员</span>
     </router-link>
   </div>
 </template>
@@ -19,16 +19,17 @@ export default {
 <style lang="less" scoped>
 // vip
 .vip-content {
+  margin: 15px 0;
   position: relative;
   display: flex;
   padding-top: 13px;
   padding-left: 82px;
-  width:1180px;
+  width:960px;
   height:76px;
   // background:linear-gradient(270deg,rgba(250,217,97,1) 0%,rgba(247,107,28,1) 100%);
-  background-color: #D63B3B;
+  background-color: #E84C4CFF;
   box-shadow:0px 3px 10px 0px rgba(5,43,52,0.05);
-  border-radius:5px;
+  border-radius:38px;
   .vip-img {
     width: 63px;
     height: 50px;
@@ -54,7 +55,7 @@ export default {
     font-size:14px;
     font-family:PingFang-SC-Bold;
     font-weight:bold;
-    color:#A92222;
+    color:#A92222FF;
     text-align: center;
     line-height: 36px;
   }

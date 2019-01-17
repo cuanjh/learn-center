@@ -9,12 +9,12 @@
       </div>
       <div class="focus">
         <p>
-          <span>{{userInfoMessage.follow_num}}</span>
+          <span>{{userInfoMessage.following_count}}</span>
           <span>关注</span>
         </p>
         <p class="line"></p>
         <p>
-          <span>{{userInfoMessage.be_followed_num}}</span>
+          <span>{{userInfoMessage.followed_count}}</span>
           <span>粉丝</span>
         </p>
         <p class="line"></p>
@@ -33,7 +33,7 @@
     <upload-text :type="type"/>
     <upload-video :type="type"/>
     <upload-voice :type="type"/>
-    <upload-topic :type="type"/>
+    <upload-topic :type="type" :showTopicLists="showTopicLists" @topcItemHidden="hiddenLists"/>
 
     <div class="shareing">
       <div class="shareLists">
@@ -60,7 +60,8 @@ export default {
   props: ['userInfoMessage'],
   data () {
     return {
-      type: '' // UploadType_photo:上传图片 UploadType_text:上传文字 UploadType_video:视频 UploadType_voice:语音 UploadType_topic:话题
+      type: '', // UploadType_photo:上传图片 UploadType_text:上传文字 UploadType_video:视频 UploadType_voice:语音 UploadType_topic:话题
+      showTopicLists: false
     }
   },
   components: {
@@ -87,6 +88,10 @@ export default {
     },
     uploadTopics () {
       this.type = 'UploadType_topic'
+      this.showTopicLists = true
+    },
+    hiddenLists (data) {
+      this.showTopicLists = data
     }
   }
 }
@@ -96,7 +101,6 @@ export default {
   position: relative;
   width: 100%;
   .top {
-    background: pink;
     position: relative;
     display: flex;
     padding-bottom: 13px;
@@ -172,7 +176,7 @@ export default {
   .operation {
     width: 100%;
     .prompt {
-      padding-top: 7px;
+      padding: 10px 0;
       span {
         font-size:16px;
         font-family:PingFang-SC-Medium;

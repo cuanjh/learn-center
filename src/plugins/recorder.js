@@ -3,6 +3,7 @@ import bus from '../bus'
 import Cookie from '../tool/cookie'
 import { userInfo } from 'os';
 import { Upload } from 'element-ui';
+import { resolve, reject } from 'any-promise';
 var qiniu = require('qiniu-js')
 // or
 // import * as qiniu from 'qiniu-js'
@@ -82,7 +83,6 @@ class Recorder {
                         data.setUint8(offset + i, str.charCodeAt(i));
                     }
                 }
-
                 // 资源交换文件标识符
                 writeString('RIFF');
                 offset += 4;
@@ -251,75 +251,74 @@ class Recorder {
         var time = date.getTime()
         return d + '/' + code + '/' + userId + '/' + time + '.wav';
     }
-    getBlobfromFile (file, type) {
+
+    uploadQiniuVoice (token, fileKey, callback) {
+        var that = this;
+        return new Promise(function(resolve, reject) {
+            var config = {
+                useCdnDomain: true,
+                region: qiniu.region.z0
+            }
+            var putExtra = {
+                fname: '',
+                params: {},
+                mimeType: [] || null
+            }
+            var next = function(res) {
+                console.log(res)
+            }
+            var error = function(err) {
+                reject(err)
+            }
+            var complete = function(res) {
+                resolve(res)
+            }
+            var observer = {
+                next: next,
+                error: error,
+                complete: complete
+            }
+            // var fileKey = that.GetFileKey();
+            var observable = qiniu.upload(that.getBlob(), fileKey, token, putExtra, config)
+            var subscription = observable.subscribe(observer);
+        })
+    }
+
+    GetBlobVideo (file) {
         var blob = new Blob([file],{type:file});
         return blob
     }
-    uploadQiniuType (file, type, token, callback) {
-        var config = {
-            useCdnDomain: true,
-            region: qiniu.region.z0
-        };
-        //获取本地视频音频的地址blob
-        var putExtra = {
-            fname: "",
-            params: {
-                'x:file': file,
-                'x:form_type': type,
-                'x:user_id': Cookie.getCookie('user_id')
-            },
-            mimeType: null
-        };
-        var fileKey = this.GetFileKey(file, type);
-        var next = function(res) {
-            console.log(res)
-        }
-        var error = function(err) {
-            console.log(err)
-        }
-        var complete = function(res) {
-            var url = qiniu.getUploadUrl(config)
-            var u = qiniu.createMkFileUrl(url,fileKey,{})
-            console.log('res', res);
-            console.log('url', url);
-            console.log('u', u);
-        }
-        var observer = {
-            next: next,
-            error: error,
-            complete: complete
-        };
-        console.log('传递的参数', this.getBlob(), fileKey, token, putExtra, config)
-        var observable = qiniu.upload(this.getBlob(), fileKey, token, putExtra, config);
-        var subscription = observable.subscribe(observer);
-        console.log('observable--------',observable)
-        console.log('subscription------',subscription)
-        // return fileKey
-        return observable
+    uploadQiniuVideo (file, token, fileKey, callback) {
+        var that = this;
+        return new Promise(function(resolve, reject) {
+            var config = {
+                useCdnDomain: true,
+                region: qiniu.region.z0
+            }
+            var putExtra = {
+                fname: '',
+                params: {},
+                mimeType: [] || null
+            }
+            var next = function(res) {
+                console.log(res)
+            }
+            var error = function(err) {
+                reject(err)
+            }
+            var complete = function(res) {
+                resolve(res)
+            }
+            var observer = {
+                next: next,
+                error: error,
+                complete: complete
+            }
+            var blobVideo = that.GetBlobVideo(file);
+            var observable = qiniu.upload(blobVideo, fileKey, token, putExtra, config)
+            var subscription = observable.subscribe(observer);
+        })
     }
-    GetFileKey (file, type) {
-        var keyString = ''
-        var date = new Date()
-        var d = date.format('yyyy/MM/dd');
-        var userId = Cookie.getCookie('user_id');
-        var time = date.getTime()
-        switch (type) {
-            case 'UploadType_video':
-                keyString = 'feed/video/' + d + '/' + file.uid + '/' + userId + '/' + time + '/' + file.name
-                break;
-            case 'UploadType_voice':
-                keyString = 'feed/sound/' + d + '/' + file.uid + '/' + userId + '/' + time + '/' + file.name
-                break;
-            case 'UploadType_photo':
-                keyString = 'feed/image/' + d + '/' + file.uid + '/' + userId + '/' + time + '/' + file.name
-                break;
-            default:
-                keyString = ''
-                break;
-        }
-        return keyString
-    }
-
     // 抛出异常
     static throwError(message) {
         console.log(message);
@@ -381,15 +380,14 @@ export default {
             }
         });
     },
-    // uploadQiniuType: function(blob, file, type, token, cb){
-    //     return this.recorder.uploadQiniuType(blob, file, type, token)
-    // },
-    uploadQiniuType: function(file, type, token, callback){
-        this.recorder.uploadQiniuType(file, type, token)
-        this.recorderUrl = this.recorder.GetFileKey(file, type)
+    uploadQiniuVoice: function(token, callback){
+        return this.recorder.uploadQiniuVoice(token)
     },
-    getBlobfromFile: function (file, type) {
-        return this.recorder.getBlobfromFile(file, type);
+    uploadQiniuVideo: function(file, token, fileKey, callback) {
+        return this.recorder.uploadQiniuVideo(file, token, fileKey)
+    },
+    getBlobData: function (file) {
+        return this.recorder ? this.recorder.GetBlobVideo(file) : null;
     },
     startRecording: function () {
         if (this.recorder) {

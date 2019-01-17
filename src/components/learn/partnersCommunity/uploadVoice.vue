@@ -85,7 +85,7 @@
                 </div>
                 <div class="time">
                   <!-- <span>00:</span> -->
-                  <span>{{toParseTime(this.curTime)}}</span>
+                  <span>{{toParseTime(curTime)}}</span>
                 </div>
               </div>
             </div>
@@ -93,17 +93,44 @@
         </div>
       </div>
     </div>
+    <div class="success-audio" v-show="successVoice">
+      <div class="succes-content">
+        <textarea id="textarea"
+              autocomplete="off"
+              v-model="content"
+              placeholder="说点什么吧~~">
+        </textarea>
+        <div class="audio-play-box" @click="playRecordVoice()">
+          <!-- <audio id="record-sound" :src="qiniuUrl"></audio> -->
+          <i class="note-line">
+            <span :class="{loadding:loadding}"></span>
+            <span :class="{loadding:loadding}"></span>
+            <span :class="{loadding:loadding}"></span>
+            <span :class="{loadding:loadding}"></span>
+            <span :class="{loadding:loadding}"></span>
+            <span :class="{loadding:loadding}"></span>
+          </i>
+          <span class="hour">{{toParseTime(curTime)}}</span></div>
+      </div>
+      <div class="publish" @click="publish()">
+        <span>发布</span>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import { mapMutations, mapState, mapActions } from 'vuex'
 import bus from '../../../bus'
+import Cookie from '../../../tool/cookie.js'
 import Recorder from '../../../plugins/recorder'
+import SoundCtrl from '../../../plugins/soundCtrl'
 
 export default {
   props: ['type'],
   data () {
     return {
+      loadding: false,
+      successVoice: false,
       uploadVoiceShow: true,
       animat: false,
       defaultShow: true, // 默认
@@ -116,6 +143,10 @@ export default {
       intervalId_draw: null,
       curTime: 0, // 开始时间
       durationTime: 0, // 持续的时间
+      sndctr: SoundCtrl,
+      isPlay: false,
+      isEnd: false,
+      content: '',
       qiniuUrl: ''
     }
   },
@@ -131,17 +162,17 @@ export default {
   computed: {
     ...mapState({
       canRecord: state => state.learn.canRecord,
-      qiniuToken: state => state.learn.qiniuToken
+      FileQiniuToken: state => state.FileQiniuToken, // 七牛的token
+      dynamicsLists: state => state.course.dynamicsLists // 动态首页列表和打赏列表数据
     })
   },
   methods: {
     ...mapActions({
-      getQiniuToken: 'learn/getQiniuToken',
-      homeworkPub: 'course/homeworkPub'
+      getDynamic: 'course/getDynamic', // 发布动态接口
+      getUploadFileToken: 'getUploadFileToken' // 上传七牛
     }),
     ...mapMutations({
-      updateQiniuToken: 'learn/updateQiniuToken',
-      updateSpeakWork: 'learn/updateSpeakWork'
+      updateFileQiniuToken: 'updateFileQiniuToken' // 更新上传七牛token
     }),
     // 转时间的函数
     toParseTime (data) {
@@ -175,7 +206,6 @@ export default {
     },
     // 是否可以录音
     checkRecording () {
-      this.updateSpeakWork(true)
       console.log('mic激活：', Recorder.isActivity(this.speakwork, this.canRecord))
       return Recorder.isActivity(this.speakwork, this.canRecord)
     },
@@ -201,9 +231,23 @@ export default {
       this.active = !this.active
       if (this.active) {
         let audio = Recorder.audio
+        console.log('audio', audio)
         Recorder.playRecording()
         audio.addEventListener('ended', () => {
           this.active = false
+        })
+      } else {
+        Recorder.stopRecordSoud()
+      }
+    },
+    playRecordVoice () {
+      this.loadding = !this.loadding
+      if (this.loadding) {
+        let audio = Recorder.audio
+        console.log('audio', audio)
+        Recorder.playRecording()
+        audio.addEventListener('ended', () => {
+          this.loadding = false
         })
       } else {
         Recorder.stopRecordSoud()
@@ -216,15 +260,53 @@ export default {
       this.lastRecordShow = false // 录完音
     },
     send () {
-      this.uploadVoiceShow = false
-      Recorder.getTime((duration) => {
-        // 上传七牛
-        this.getQiniuToken().then((res) => {
-          this.updateQiniuToken(res)
-          Recorder.uploadQiniu(Recorder.audiofile, 'UploadType_video', this.qiniuToken)
-          this.qiniuUrl = Recorder.recorderUrl
-          console.log('qiniuUrl', this.qiniuUrl)
+      let _this = this
+      _this.uploadVoiceShow = false
+      _this.successVoice = true
+      let time = Math.round(_this.durationTime)
+      console.log('time', time)
+      // 上传七牛
+      _this.getUploadFileToken().then((res) => {
+        _this.updateFileQiniuToken(res)
+        console.log('res', res)
+        let date = new Date()
+        let d = date.format('yyyy/MM/dd')
+        let userId = Cookie.getCookie('user_id')
+        let time = date.getTime()
+        let fileImgKey = 'feed/sound/' + d + '/' + userId + '/' + time + '.wav'
+        Recorder.uploadQiniuVoice(_this.FileQiniuToken, fileImgKey).then(data => {
+          console.log('data', data)
+          _this.qiniuUrl = data.key
         })
+        console.log('qiniuUrl', _this.qiniuUrl)
+      })
+    },
+    end () {
+      this.isPlay = false
+      this.isEnd = true
+      clearInterval(this.interval)
+    },
+    // 点击上传语音
+    publish () {
+      // 请求后端接口
+      let params = {}
+      if (this.content !== '') {
+        params = {
+          content: this.content,
+          sound_url: this.qiniuUrl,
+          sound_time: this.curTime
+        }
+      } else {
+        params = {
+          sound_url: this.qiniuUrl,
+          sound_time: this.curTime
+        }
+      }
+      this.getDynamic(params).then(res => {
+        console.log('发布动态返回数据', res)
+        this.dynamicsLists.unshift(res.feedInfo)
+        this.successVoice = false
+        // 4.jpg:1 GET https://uploadfile1.talkmate.com/feed/image/2019/01/12/1547272054727/5b74e4432152c797519a092a/1547272054776/4.jpg 404
       })
     }
   }
@@ -597,6 +679,124 @@ export default {
             }
           }
         }
+      }
+    }
+  }
+}
+.success-audio {
+  .publish{
+    cursor: pointer;
+    position: absolute;
+    bottom: 6px;
+    right: 0;
+    margin-top: 7px;
+    display: inline-block;
+    span {
+      font-size:14px;
+      font-family:PingFangSC-Semibold;
+      font-weight:600;
+      color:rgba(255,255,255,1);
+      padding: 6px 31px;
+      background-color: #7ED321;
+      border-radius: 18px;
+    }
+  }
+  .succes-content {
+    #textarea {
+      padding: 0 3px;
+      width: 100%;
+      height: 64px;
+      background:rgba(246,248,249,1);
+      border-radius:3px;
+      border:1px dashed rgba(216,227,233,1);
+    }
+    .audio-play-box {
+      margin-top: 20px;
+      cursor: pointer;
+      width: 266px;
+      height: 36px;
+      background: #2A9FE4;
+      border-radius: 5px;
+      position: relative;
+      left: 0;
+      top: 0;
+      i {
+        display: flex;
+        // width: 70px;
+        height: 32px;
+        padding: 0 6px;
+        margin: 0 auto;
+        align-items: center;
+        font-style: normal;
+        // margin-right: 200px;
+      }
+      i span {
+        display: inline-block;
+        width: 4px;
+        height: 8px;
+        border-radius: 127px;
+        margin-right: 4px;
+        background: #ffffff;
+        // -webkit-animation: load 1s ease infinite;
+        // animation-play-state: paused;
+        &.loadding {
+          -webkit-animation: loadding 1s ease infinite;
+        }
+        &:nth-child(1){
+          animation-delay:0.2s;
+          -webkit-animation-delay:0.2s;
+          -ms-animation-delay:0.2s;
+          -o-animation-delay:0.2s;
+          -moz-animation-delay:0.2s;
+        }
+        &:nth-child(2){
+          animation-delay:0.3s;
+          -webkit-animation-delay:0.3s;
+          -ms-animation-delay:0.3s;
+          -o-animation-delay:0.3s;
+          -moz-animation-delay:0.3s;
+        }
+        &:nth-child(3){
+          height: 16px;
+        }
+        &:nth-child(4){
+          height: 16px;
+          animation-delay:0.1s;
+          -webkit-animation-delay:0.1s;
+          -ms-animation-delay:0.1s;
+          -o-animation-delay:0.1s;
+          -moz-animation-delay:0.1s;
+        }
+        &:nth-child(5){
+          animation-delay:0.4s;
+          -webkit-animation-delay:0.4s;
+          -ms-animation-delay:0.4s;
+          -o-animation-delay:0.4s;
+          -moz-animation-delay:0.4s;
+        }
+        &:nth-child(6){
+          animation-delay:0.5s;
+          -webkit-animation-delay:0.5s;
+          -ms-animation-delay:0.5s;
+          -o-animation-delay:0.5s;
+          -moz-animation-delay:0.5s;
+        }
+      }
+      .hour {
+        font-size: 13px;
+        color: #ffffff;
+        position: absolute;
+        right: 0;
+        top: 6px;
+        right: 6px;
+      }
+    }
+    @keyframes loadding{
+      0%,100%{
+        height: 8px;
+      }
+      50%{
+        height: 16px;
       }
     }
   }

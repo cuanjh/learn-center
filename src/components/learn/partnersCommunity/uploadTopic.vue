@@ -46,7 +46,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
-  props: ['type'],
+  props: ['type', 'showTopicLists'],
   data () {
     return {
       topics: [],
@@ -55,8 +55,7 @@ export default {
       keyWord: '',
       content: '',
       topicKey: '',
-      topicTitle: '',
-      showTopicLists: true
+      topicTitle: ''
     }
   },
   mounted () {
@@ -81,7 +80,7 @@ export default {
       this.content = '#' + topic.topic_title + '#'
       this.topicKey = topic.topic_key
       this.topicTitle = topic.topic_title
-      this.showTopicLists = false
+      this.$emit('topcItemHidden', false)
     },
     // 搜索话题
     search () {
@@ -115,6 +114,13 @@ export default {
         this.dynamicsLists.unshift(res.feedInfo)
         this.content = ''
       })
+    }
+  },
+  watch: {
+    content () {
+      if (this.content === '') {
+        this.$emit('topcItemHidden', true)
+      }
     }
   }
 }

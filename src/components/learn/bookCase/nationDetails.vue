@@ -44,24 +44,22 @@
           </div>
         </div>
       </div>
+      <div class="shadow"></div>
       <!-- 下面的内容区域 -->
       <div class="nation-bottom-content">
         <div class="nation-in-content">
           <!-- 左边导航区域 -->
           <div class="nation-left-tab">
             <div class="left">
-              <a v-bind:class="{'active': 'info' == tabFlag}" @click="tabChange('info')">
-                <span>/</span>
-                <span>国家 信息</span>
-              </a>
-              <a v-bind:class="{'active': 'language' == tabFlag}" @click="tabChange('language')">
-                <span>/</span>
-                <span>国家 语言</span>
-              </a>
-              <a v-bind:class="{'active': 'news' == tabFlag}" @click="tabChange('news')">
-                <span>/</span>
-                <span>国家 新闻</span>
-              </a>
+              <p v-bind:class="{'active': 'info' == tabFlag}" @click="tabChange('info')">
+                <span>National data</span>
+              </p>
+              <p v-bind:class="{'active': 'language' == tabFlag}" @click="tabChange('language')">
+                <span>Own language</span>
+              </p>
+              <p v-bind:class="{'active': 'news' == tabFlag}" @click="tabChange('news')">
+                <span>全球头条</span>
+              </p>
             </div>
           </div>
           <!-- 右边对应的内容区域 -->
@@ -92,21 +90,27 @@
                 </div>
                 <div class="country-out-language" v-show="'language' == tabFlag">
                   <ul class="country-language">
-                    <li v-for="item in langInfos.slice(0, 16)" :key="item.lang_code">
-                      <div v-if="item.flag">
+                    <li class="country-img" v-for="item in countryLanguages" :key="item.lang_code">
+                      <div class="have-img">
                         <div class="country-img">
                           <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="语言图片">
                         </div>
                         <div class="country-title">
                           <p>{{item.name}}</p>
+                          <p>{{item.location}}</p>
                         </div>
                         <!-- <div class="country-icon"></div> -->
                       </div>
-                      <div v-if="item.flag === ''">
+                    </li>
+                  </ul>
+                  <ul class="country-language">
+                    <li class="country-no-img" v-for="item in countryLanguagesNo.slice(0, 10)" :key="item.lang_code">
+                      <div class="no-img">
                         <div class="country-title">
                           <p>{{item.name}}</p>
                           <p>{{item.location}}</p>
                         </div>
+                        <!-- <div class="country-icon"></div> -->
                       </div>
                     </li>
                   </ul>
@@ -166,11 +170,17 @@ export default {
       },
       langInfos: [], // 国家的语言
       code: '',
-      cd: ''
+      countryLanguages: [],
+      countryLanguagesNo: []
     }
   },
   components: {
     VipPrompt
+  },
+  mounted () {
+    console.log('==========>', this.naInfo)
+    console.log('==========>', this.countryCode)
+    this.initDataCountryInfo()
   },
   computed: {
     ...mapState({
@@ -179,24 +189,10 @@ export default {
     naInfo () {
       let nationInfos = JSON.parse(localStorage.getItem('nationInfos'))
       return nationInfos
+    },
+    countryCode () {
+      return this.$route.params.countryCode
     }
-  },
-  mounted () {
-    console.log('==========>', this.naInfo)
-    console.log('==========>', this.$route.params.countryCode)
-    let _this = this
-    // _this.cd = _this.naInfo.params ? _this.naInfo.params : _this.naInfoHot.langCode
-    _this.code = this.$route.params.countryCode
-    _this.countryInfo({code: _this.code}).then(res => {
-      console.log('国家详情', res)
-      for (var item in res.country_info.info) {
-        if (_this.nationInfoObj[item]) {
-          _this.nationInfoObj[item]['info'] = res.country_info.info[item]['info']
-        }
-      }
-      _this.langInfos = res.country_info.langsInfo
-      console.log('langInfos', this.langInfos)
-    })
   },
   methods: {
     ...mapActions({
@@ -209,6 +205,28 @@ export default {
     // 左边导航切换
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
+    },
+    async initDataCountryInfo () {
+      let _this = this
+      await _this.countryInfo({code: _this.countryCode}).then(res => {
+        console.log('国家详情', res)
+        for (var item in res.country_info.info) {
+          if (_this.nationInfoObj[item]) {
+            _this.nationInfoObj[item]['info'] = res.country_info.info[item]['info']
+          }
+        }
+        _this.langInfos = res.country_info.langsInfo
+        _this.langInfos.forEach(item => {
+          if (item.flag === '') {
+            _this.countryLanguagesNo.push(item)
+          } else {
+            _this.countryLanguages.push(item)
+          }
+        })
+        console.log('langInfos', _this.langInfos)
+        console.log('countryLanguagesNo', this.countryLanguagesNo)
+        console.log('countryLanguages', this.countryLanguages)
+      })
     }
   }
 }
@@ -218,9 +236,8 @@ a {
   text-decoration:none;
 }
 .nation-details {
-  width: 1200px;
+  width: 960px;
   margin: 0px auto 144px;
-  background: pink;
   .nav {
     margin: 20px 0;
     font-weight: bold;
@@ -240,14 +257,16 @@ a {
 .nation-details-content {
   width: 100%;
   height: auto;
+  margin-bottom: 23px;
 }
 .nation-header {
   width: 100%;
-  background: rgb(143, 187, 126);
+  background:#2A9FE4FF;
+  border-radius:5px 5px 0px 0px;
   .nation-header-content {
     width: 100%;
     height: 100%;
-    padding: 40px 30px 16px;
+    // padding: 40px 30px 16px;
     display: flex;
     justify-content: space-between;
     .logo-img {
@@ -267,7 +286,7 @@ a {
       background: rgb(240, 178, 235);
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items:center;
       .share-item {
         cursor: pointer;
         width: 30px;
@@ -321,33 +340,44 @@ a {
     }
   }
 }
+.shadow {
+  width: 100%;
+  height: 11px;
+  background:rgba(112,161,190,1);
+  border-radius:5px 5px 0px 0px;
+  opacity:0.3131;
+  filter:blur(5px);
+}
 .nation-bottom-content {
   width: 100%;
-  background: rgb(239, 198, 240);
   .nation-in-content {
     width: 100%;
     height: 100%;
     display: flex;
+    background: #F9F9F9FF;
     // 左边导航
     .nation-left-tab {
       height: 100%;
-      background: rgb(226, 195, 156);
+      width: 240px;
       .left {
-        background: rgb(177, 203, 218);
-        padding: 50px 20px 0 80px;
-        a {
-          display: block;
-          font-size: 20px;
-          color: #333333;
-          width: 116px;
-          height: 40px;
-          line-height: 40px;
-          span:nth-child(1) {
-            margin-right: 10px;
+        padding-top: 30px;
+        p {
+          cursor: pointer;
+          padding-bottom: 25px;
+          font-size:16px;
+          font-family:PingFangSC-Regular;
+          font-weight:400;
+          color:rgba(153,153,153,1);
+          span {
+            padding-left: 25px;
           }
           &.active {
-            border-bottom: 1px solid #2A9FE4;
-            color: #2A9FE4;
+            color:#333333FF;
+            span {
+              display: inline-block;
+              border-left: 4px solid #2A9FE4FF;
+              width: 100%;
+            }
           }
         }
       }
@@ -356,23 +386,22 @@ a {
     .nation-right-content {
       width: 100%;
       height: auto;
-      background: rgb(193, 164, 204);
+      background:#fff;
       .nation-right {
         width: 100%;
-        padding: 50px;
+        padding: 31px 40px 60px;
         .right-header {
           width: 100%;
           padding-bottom: 20px;
-          border-bottom: 1px solid #918c8c;
+          border-bottom: 1px solid #EAEAEAFF;
           display: flex;
           .right-img {
-            width: 120px;
-            height: 60px;
-            border-radius: 8px;
+            width: 60px;
+            height: 40px;
             img {
               width: 100%;
               height: 100%;
-              border-radius: 8px;
+              // border-radius: 8px;
             }
           }
           .introduce {
@@ -381,20 +410,22 @@ a {
             justify-content: space-between;
             margin-left: 20px;
             p:nth-child(1) {
-              font-size: 30px;
-              font-weight: bold;
-              color: #333333;
+              font-size:16px;
+              font-family:PingFangSC-Semibold;
+              font-weight:600;
+              color:rgba(0,42,91,1);
             }
-            p {
-              font-size: 20px;
-              font-weight: bold;
-              color: #999999;
+            p:nth-child(2) {
+              font-size:12px;
+              font-family:PingFangSC-Regular;
+              font-weight:400;
+              color:rgba(51,51,51,1);
             }
           }
         }
         .country-contents {
           background-color: #fff;
-          margin-top: 50px;
+          margin-top: 33px;
           .country-out-info {
             width: 100%;
             .icon-list {
@@ -405,22 +436,21 @@ a {
                 width: 50%;
                 i {
                   display: inline-block;
-                  width: 80px;
-                  height: 40px;
-                  background: url('https://course-assets1.talkmate.com/course/icons/CHI-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1') no-repeat center;
+                  width: 12px;
+                  height: 30px;
+                  background: url('../../../../static/images/bookCase/countryName.svg') no-repeat center;
                   background-size: cover;
-                  border-radius: 8px;
+                  margin-left: 25px;
                 }
               }
               p:nth-child(2) {
                 width: 50%;
                 i {
                   display: inline-block;
-                  width: 80px;
-                  height: 40px;
-                  background: url('https://course-assets1.talkmate.com/course/icons/CHI-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1') no-repeat center;
+                  width: 26px;
+                  height: 23px;
+                  background: url('../../../../static/images/bookCase/personName.svg') no-repeat center;
                   background-size: cover;
-                  border-radius: 8px;
                 }
               }
             }
@@ -435,17 +465,17 @@ a {
                 justify-content: space-between;
                 margin-bottom: 30px;
                 .title {
-                  font-size: 16px;
-                  color: #333333;
-                  border-bottom: 1px solid #EAEAEA;
-                  padding-bottom: 10px;
-                  margin-bottom: 10px;
-                  font-weight: bold;
+                  font-size:16px;
+                  font-family:PingFangSC-Semibold;
+                  font-weight:600;
+                  color:rgba(0,42,91,1);
                 }
                 .desc {
                   width: 90%;
-                  font-size: 16px;
-                  color: #999999;
+                  font-size:14px;
+                  font-family:PingFang-SC-Regular;
+                  font-weight:400;
+                  color:rgba(153,153,153,1);
                 }
               }
               li:nth-child(1) {
@@ -468,11 +498,13 @@ a {
               li {
                 position: relative;
                 width: 100%;
-                border-bottom: 1px solid #EBEBEB;
-                margin-bottom: 20px;
+                padding: 20px 0;
                 cursor: pointer;
                 &:last-child {
                   border-bottom: 0px;
+                }
+                .have-img {
+                  display: flex;
                 }
                 .country-img {
                   display: inline-block;
@@ -491,13 +523,19 @@ a {
                   display: inline-block;
                   font-size: 14px;
                   color: #444444;
-                  padding-bottom: 15px;
                   line-height: 20px;
                   p:nth-child(1) {
-                    font-size: 20px;
-                    color: #333333;
-                    font-weight: bold;
-                    margin-bottom: 10px;
+                    font-size:16px;
+                    font-family:PingFangSC-Semibold;
+                    font-weight:600;
+                    color:rgba(0,42,91,1);
+                    margin-bottom: 9px;
+                  }
+                  p:nth-child(2) {
+                    font-size:14px;
+                    font-family:PingFangSC-Regular;
+                    font-weight:400;
+                    color:rgba(132,147,165,1);
                   }
                 }
                 .country-icon {
@@ -510,6 +548,19 @@ a {
                   background: url('../../../../static/images/bookCase/jiantou.png') no-repeat;
                   background-size: 10px 18px;
                   cursor: pointer;
+                }
+              }
+              li:first-child {
+                padding-top: 0px;
+              }
+              li {
+                &.country-no-img:first-child {
+                  padding-top: 20px;
+                }
+              }
+              li {
+                &.country-img:last-child {
+                  border-bottom:1px solid rgba(241,245,248,1);
                 }
               }
             }

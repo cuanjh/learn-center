@@ -70,6 +70,7 @@ export default {
   chinaLangMapApi: '/studyv1/shelf/china_lang_map', // 中国方言课程地图接口
 
   // 动态
+  qiniuFilesToken: '/qiniu_token/uploadfiles', // 获取上传的token
   communityApi: '/feedv1/dynamic/v5/index', // 动态首页接口
   dynamicListsApi: '/feedv1/dynamic/v5/list', // 动态列表接口
   dynamicPubApi: '/feedv1/dynamic/pub', // 动态发布接口
