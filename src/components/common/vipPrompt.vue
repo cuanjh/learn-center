@@ -23,13 +23,12 @@ export default {
   position: relative;
   display: flex;
   padding-top: 13px;
-  padding-left: 82px;
-  width:960px;
+  padding-left: 38px;
   height:76px;
   // background:linear-gradient(270deg,rgba(250,217,97,1) 0%,rgba(247,107,28,1) 100%);
   background-color: #E84C4CFF;
   box-shadow:0px 3px 10px 0px rgba(5,43,52,0.05);
-  border-radius:38px;
+  border-radius:5px;
   .vip-img {
     width: 63px;
     height: 50px;
@@ -46,8 +45,8 @@ export default {
   .vip-btn {
     cursor: pointer;
     position: absolute;
-    right: 37px;
-    top: 22px;
+    right: 44px;
+    top: 20px;
     width: 140px;
     height: 36px;
     background: #fff;

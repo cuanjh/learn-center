@@ -7,8 +7,8 @@
             <span>{{detail.title}}</span>
           </div>
           <!-- 发布者信息 -->
-          <div class="user" v-if="author">
-            <div class="user-img">
+          <div class="user">
+            <div class="user-img" v-if="author">
               <!-- <img src="https://gw.alicdn.com/tfs/TB1yopEdgoQMeJjy1XaXXcSsFXa-640-302.png" alt=""> -->
               <img :src="author.photo" alt="头像">
             </div>
@@ -22,8 +22,8 @@
           <div class="key-bottom">
             <!--关键词 begin-->
             <div class="keywords">
-              <ul class="keywords-list">
-                <li v-for="(item, index) in tags_info" :key="index">
+              <ul class="keywords-list" v-if="tagsInfo">
+                <li v-for="(item, index) in tagsInfo" :key="index">
                   <!-- :to="{ name: 'stage', params: {id: 'A0' + i}}" -->
                   <router-link :to="{ name: 'headlineSearch', params: {val: item}}">
                     <span>#</span>
@@ -53,7 +53,7 @@
             <span class="line"></span>
           </p>
           <div class="recommend-list">
-            <ul>
+            <ul v-if="relatedNews">
               <router-link  tag="li"
                             v-for="(item, index) in relatedNews"
                             :key="index"
@@ -169,11 +169,11 @@ export default {
       detail: {},
       author: {}, // 作者
       html: '', // 内容
-      tags_info: [], // 关键字
+      tagsInfo: [], // 关键字
       relatedNews: [], // 相关新闻，推荐
       commentLists: [], // 评论列表
       introduct: '', // 输入的内容
-      id: '',
+      // id: '',
       page: 1,
       arrReport: [
         {id: 1, item_des: '内容虚假', isEdit: '0'},
@@ -199,23 +199,25 @@ export default {
       next()
     }
   },
+  created () {
+  },
   mounted () {
     this.initHeadDetail()
     this.initCommLists()
     // this.id = this.$route.params.id
-    // console.log('id', this.id)
+    console.log('id', this.headlineId)
     // // 头条详情页面
-    // this.headlineDetail({id: this.id}).then((data) => {
+    // this.headlineDetail({id: this.headlineId}).then((data) => {
     //   console.log('data', data)
     //   this.detail = data.detail
     //   this.author = data.detail.author
     //   this.html = data.detail.content
-    //   this.tags_info = data.detail.tags_info
+    //   this.tagsInfo = data.detail.tags_info
     //   this.relatedNews = data.detail.related_news
     //   // this.initComment(id)
     // })
     // // 评论列表
-    // this.commentList({hid: this.id, page: this.page}).then((res) => {
+    // this.commentList({hid: this.headlineId, page: this.page}).then((res) => {
     //   console.log('commentList评论列表', res)
     //   if (res.data.comments.length === 0) {
     //     this.flag = false
@@ -224,18 +226,25 @@ export default {
     //   this.commentLists = res.data.comments
     // })
     // this.initComments()
+    this.headlineDetail({id: this.headlineId})
     this.$nextTick(() => {
       this.removeStyle()
     })
   },
   updated () {
+    // this.initHeadDetail()
+    // this.initCommLists()
     this.resetStyle()
   },
   computed: {
     ...mapState({
       // userInfo: state => state.user.userInfo
-      userInfo: state => state.userInfo
-    })
+      userInfo: state => state.userInfo,
+      headDetail: state => state.course.headDetail
+    }),
+    headlineId () {
+      return this.$route.params.id
+    }
   },
   methods: {
     ...mapActions({
@@ -255,26 +264,28 @@ export default {
       this.showTextSuccess = false
     },
     // 头条详情页面
-    async initHeadDetail () {
+    initHeadDetail () {
       let _this = this
-      _this.id = _this.$route.params.id
-      console.log('id', _this.id)
+      // _this.id = _this.$route.params.id
+      console.log('id', _this.headlineId)
       // 头条详情页面
-      await _this.headlineDetail({id: _this.id}).then((data) => {
+      _this.headlineDetail({id: _this.headlineId}).then((data) => {
         console.log('头条详情页面', data)
-        _this.detail = data.detail
-        _this.author = data.detail.author
-        _this.html = data.detail.content
-        _this.tags_info = data.detail.tags_info
-        _this.relatedNews = data.detail.related_news
+        if (data.success) {
+          _this.detail = data.detail
+          _this.author = data.detail.author
+          _this.html = data.detail.content
+          _this.tags_info = data.detail.tags_info
+          _this.relatedNews = data.detail.related_news
+        }
         // this.initComment(id)
       })
     },
     // 评论列表
-    async initCommLists () {
+    initCommLists () {
       let _this = this
-      _this.id = _this.$route.params.id
-      await _this.commentList({hid: _this.id, page: _this.page}).then((res) => {
+      // _this.id = _this.$route.params.id
+      _this.commentList({hid: _this.headlineId, page: _this.page}).then((res) => {
         console.log('commentList评论列表', res)
         if (res.data.comments.length === 0) {
           _this.flag = false
@@ -293,12 +304,12 @@ export default {
         alert('请输入内容')
         return
       }
-      this.comments({hid: this.id, content: this.introduct}).then((data) => {
+      this.comments({hid: this.headlineId, content: this.introduct}).then((data) => {
         console.log('comments评论的内容', data)
         data['content'] = this.introduct
         this.commentLists.unshift(data)
         // console.log('this.commentLists', this.commentLists)
-        this.commentList({hid: this.id, page: 1}).then((res) => {
+        this.commentList({hid: this.headlineId, page: 1}).then((res) => {
           this.introduct = ''
           console.log('res评论后返回的', res)
           if (res.data.page === -1) {
@@ -325,7 +336,7 @@ export default {
         if (_this.reportContents) {
           _this.list += _this.reportContents
         }
-        _this.reportList({id: _this.id, report: _this.list}).then((data) => {
+        _this.reportList({id: _this.headlineId, report: _this.list}).then((data) => {
           console.log('reportdata', data)
           _this.showTextSuccess = true
           $('.toast2').addClass('toast-fadeOut')
@@ -354,7 +365,7 @@ export default {
       }
       this.page++
       console.log('this.page', this.page)
-      this.commentList({hid: this.id, page: this.page}).then((res) => {
+      this.commentList({hid: this.headlineId, page: this.page}).then((res) => {
         console.log('res', res)
         this.commentLists = this.commentLists.concat(res.data.comments)
         console.log('commentLists', this.commentLists)

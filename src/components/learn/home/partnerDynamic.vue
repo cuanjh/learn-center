@@ -66,7 +66,7 @@ export default {
       display: inline-block;
       width: 36px;
       height: 36px;
-      background: url('../../../../static/images/community/language.svg') no-repeat center;
+      background: url('../../../../static/images/learnIndex/dynamic-icon.svg') no-repeat center;
       background-size: 100%;
       margin-right: 10px;
     }

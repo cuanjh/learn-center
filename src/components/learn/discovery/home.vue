@@ -15,7 +15,7 @@
               <span v-text="'阅读 ' + item.hits"></span>
             </div>
           </div>
-          <div class="headline-item2" v-for="(item, index) in headlines.slice(1)" :key="'headline-item2' + index" @click="get(item.id)">
+          <div class="headline-item2" v-for="(item, index) in headlines.slice(1, 9)" :key="'headline-item2' + index" @click="get(item.id)">
             <img v-lazy="item.thumb" :key="item.thumb" alt="">
             <div class="title" v-text="item.title"></div>
             <div class="headline-item2-bottom">

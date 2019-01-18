@@ -1,43 +1,79 @@
 <template>
   <div class="radio-wrap">
     <div class="radio-container">
+      <div class="nav">
+        <router-link :to="{path: '/app/user/course'}">
+          <span>个人账户</span>
+        </router-link>
+        >
+        <router-link :to="{path: '/app/discovery/radio-home'}">
+          <span>电台</span>
+        </router-link>
+        >
+        <router-link :to="{path: '/app/book-case'}">
+          <span>分类</span>
+        </router-link>
+        >
+        <div class="nav-current">
+          课程详情
+        </div>
+      </div>
       <div class="radio-left">
         <div class="course">
-          <img v-lazy="courseInfo.cover" :key="courseInfo.cover" alt="">
-          <div class="tags">
-            <span v-for="tag in courseInfo.tags" :key="tag.tag_id" v-text="tag.tag_name[languagueHander]"></span>
+          <div class="top-course">
+            <img v-lazy="courseInfo.cover" :key="courseInfo.cover" alt="">
+            <div class="course-right">
+              <div class="module-name" v-text="courseInfo.module_name"></div>
+              <div class="count">
+                <span v-text="'共计 ' + courseInfo.cards_count + ' 课'"></span>
+                <span v-text="'订阅 ' + courseInfo.buy_num + ' 次'"></span>
+              </div>
+            </div>
           </div>
-          <div class="course-right">
-            <div class="module-name" v-text="courseInfo.module_name"></div>
-            <div class="count">
-              <span v-text="'共计 ' + courseInfo.cards_count + ' 课'"></span>
-              <span v-text="'订阅 ' + courseInfo.buy_num + ' 次'"></span>
+          <!-- 价钱 -->
+           <div class="member">
+            <div class="money" v-if="courseInfo.money === 0">
+              <span v-text="$t('free')"></span>
             </div>
-            <div class="member">
-              <div class="money" v-if="courseInfo.money === 0">
-                <span v-text="$t('free')"></span>
-              </div>
-              <div class="money" v-else-if="courseInfo.money_type === 'CNY'">
-                <span v-text="'￥' + courseInfo.money"></span>
-                <span>元/年</span>
-                <span>会员免费</span>
-              </div>
-              <div class="money" v-else>
-                <span v-text="courseInfo.money"></span> {{$t('coins')}}
+            <div class="money" v-else-if="courseInfo.money_type === 'CNY'">
+              <span v-text="'￥' + courseInfo.money"></span>
+              <span>元/年</span>
+              <span>会员免费</span>
+            </div>
+            <div class="money" v-else>
+              <span v-text="courseInfo.money"></span> {{$t('coins')}}
+            </div>
+          </div>
+          <!-- 介绍 -->
+          <div class="introduce">
+            <div class="introduce-content">
+              <span class="title">简介：</span>
+              <div class="tags">
+                <span v-for="tag in courseInfo.tags" :key="tag.tag_id" v-text="tag.tag_name[languagueHander]"></span>
               </div>
             </div>
+            <div class="introduce-text">
+              <span>{{courseInfo.description}}</span>
+            </div>
+          </div>
+          <!-- 收听订阅分享等 -->
+          <div class="subscription">
             <div class="bottom">
               <span><i></i>立即收听</span>
-              <div class="button-group">
-                <span>订阅</span>
-                <span @click="showBox()">分享</span>
-              </div>
+              <span><i></i> 订阅</span>
+                <!-- <span @click="showBox()">分享</span> -->
+            </div>
+            <div class="share">
+              <div class="li weixin"></div>
+              <div class="li weibo"></div>
+              <div class="li friend"></div>
+              <div class="li qq"></div>
             </div>
           </div>
         </div>
         <div class="author-brief">
           <div class="title">
-            作者简介
+            作者简介:
           </div>
           <div class="author-info">
             <div @click="goToUser(authorInfo.user_id)" class="author-info-left">
@@ -46,27 +82,24 @@
             <div class="author-info-right">
               <div class="nickname">
                 <span v-text="authorInfo.nickname"></span>
+              </div>
+              <div class="passed">
+                <p>
+                  <span><i></i>认证用户</span>
+                  <span>英语外教</span>
+                </p>
                 <p @click="relation()">
                   <span v-if="authorInfo.has_followed === 0">+关注</span>
                   <span v-else>取消关注</span>
                 </p>
               </div>
-              <div class="passed">
-                <span><i></i>认证用户</span>
-                <span>英语外教</span>
-              </div>
-              <div class="line"></div>
-              <div class="desc" v-text="authorInfo.tech_desc ? authorInfo.tech_desc : '暂无数据'"></div>
-              <div class="bottom">
-                <span  @click="goToUser(authorInfo.user_id)">详情<i></i></span>
-              </div>
             </div>
           </div>
+          <div class="author-text">
+            <div class="desc" v-text="authorInfo.tech_desc ? authorInfo.tech_desc : '暂无数据'"></div>
+          </div>
         </div>
-        <div class="apply-vip">
-          <span><i></i>现在注册成为会员，12月圣诞好礼，新用户80%折！！！</span>
-          <span @click="toVip()">成为会员</span>
-        </div>
+        <vip-prompt class="vip-width"></vip-prompt>
         <div class="course-list">
           <div class="title">课程列表</div>
           <div class="course-item" v-for="card in cards" :key="card.card_id">
@@ -74,20 +107,26 @@
             <div class="course-title" v-text="card.title"></div>
             <div class="course-desc" v-text="card.description"></div>
             <div class="course-bottom">
-              <span v-text="toParseTime(card.sound_time)"></span>
-              <span v-text="card.comment_count"></span>
+              <p>
+                <span><i></i>{{toParseTime(card.sound_time)}}</span>
+                <span><i></i>{{card.comment_count}}</span>
+              </p>
               <span>{{card.create_time | formatDate}}</span>
             </div>
           </div>
         </div>
-        <div class="comments">
-          <div class="title">学生评论</div>
+        <div class="comments" v-if="comments">
+          <div class="title">{{comments.length}}条评论</div>
           <div v-if="comments">
             <div class="comment-item" v-for="(item, index) in comments" :key="'comment' + index">
-              <img v-lazy="item.user.photo" alt="">
-              <div class="nickname" v-text="item.user.nickname"></div>
-              <div class="date">{{item.created_on | formatDate}}</div>
-              <div class="comment" v-text="item.comment"></div>
+              <div class="img">
+                <img v-lazy="item.user.photo" alt="">
+              </div>
+              <div class="img-right">
+                <div class="nickname" v-text="item.user.nickname"></div>
+                <div class="date">{{item.created_on | formatDate}}</div>
+                <div class="comment" v-text="item.comment"></div>
+              </div>
             </div>
           </div>
           <div class="comment-item" v-else>
@@ -96,30 +135,20 @@
         </div>
       </div>
       <div class="radio-right">
-        <div class="other-radio"><span></span>其他电台<span></span></div>
-        <router-link tag="div"  class="other-radio-item"
-              v-for="(radio, index) in otherRadios" :key="'other-radio' + index"
-              :to="{path: '/app/discovery/radio-detail/' + radio.code}"
-              >
-          <img v-lazy="radio.cover" :key="radio.cover" alt="">
-          <div class="subscribe">
-            <i></i>
-            <span v-text="radio.buy_num"></span>
-          </div>
-          <div class="title" v-text="radio.module_name"></div>
-          <div class="author" v-text="radio.author_info.nickname"></div>
-          <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
-        </router-link>
+        <radio-detail-other :otherRadios="otherRadios"></radio-detail-other>
+        <students-listening></students-listening>
       </div>
-      <bounceBox @hidden="hiddenShow" v-show="isShowBox"></bounceBox>
+      <!-- <bounceBox @hidden="hiddenShow" v-show="isShowBox"></bounceBox> -->
     </div>
   </div>
 </template>
-
 <script>
 import { mapState, mapActions } from 'vuex'
 import bounceBox from '../../../common/bounceBox'
 import { formatDate } from '../../../../tool/date.js'
+import VipPrompt from '../../../common/vipPrompt.vue'
+import RadioDetailOther from './radioDetailOther.vue'
+import StudentsListening from './studentsListening.vue'
 
 export default {
   data () {
@@ -133,6 +162,9 @@ export default {
     }
   },
   components: {
+    RadioDetailOther,
+    VipPrompt,
+    StudentsListening,
     bounceBox
   },
   filters: {
@@ -223,20 +255,38 @@ export default {
         _this.comments = res.result.course_info.comments
         _this.otherRadios = res.result.realated_courses
       })
-    },
-    // 分享弹框
-    showBox () {
-      this.isShowBox = true
-    },
-    hiddenShow () {
-      let that = this
-      that.isShowBox = false
     }
+    // 分享弹框
+    // showBox () {
+    //   this.isShowBox = true
+    // },
+    // hiddenShow () {
+    //   let that = this
+    //   that.isShowBox = false
+    // }
   }
 }
 </script>
 
 <style scoped>
+.vip-width {
+  width: 100%;
+}
+.nav {
+  margin: 20px 0;
+  font-weight: bold;
+  font-size: 16px;
+}
+.nav a {
+  text-decoration:none;;
+}
+.nav a span {
+  color: #999999;
+}
+.nav .nav-current {
+  display: inline-block;
+  color: #2A9FE4;
+}
 .radio-wrap {
   background: #ecf4f7;
   width: 100%;
@@ -245,7 +295,7 @@ export default {
 
 .radio-container {
   width: 1200px;
-  margin: 20px auto 100px;
+  margin: 25px auto 100px;
 }
 
 .radio-left {
@@ -256,38 +306,64 @@ export default {
 
 .radio-left .course {
   width: 100%;
-  height: 330px;
+  /* height: 330px; */
   background-color: #ffffff;
   border-radius: 3px;
-  padding: 40px;
+  padding: 42px 50px;
+}
+.radio-left .course .top-course {
+  display: flex;
+}
+
+.radio-left .course .introduce {
+  width: 100%;
+}
+.radio-left .course .introduce .introduce-content {
+  width: 100%;
+  display: flex;
+  padding: 24px 0 10px;
+}
+.radio-left .course .introduce .introduce-content .tags {
+  font-size:12px;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(113,191,247,1);
+}
+.radio-left .course .introduce .introduce-content .tags span {
+  padding: 2px 7px;
+  border-radius:4px;
+  border:1px solid rgba(200,212,219,1);
+  margin-right: 10px;
+}
+.radio-left .course .introduce .introduce-content .title {
+  font-size:14px;
+  font-family:PingFang-SC-Regular;
+  font-weight:400;
+  color:rgba(136,136,136,1);
+}
+.radio-left .course .introduce .introduce-text {
+  font-size:14px;
+  font-family:PingFang-SC-Regular;
+  font-weight:400;
+  color:rgba(136,136,136,1);
+  line-height: 22px;
+  padding-bottom: 27px;
 }
 
 .radio-left .course img {
   width: 250px;
-  height: 250px;
+  height: 124px;
   object-fit: cover;
   border-radius: 3px;
-  margin-right: 40px;
-}
-
-.radio-left .course .tags {
-  position: absolute;
-  margin-top: -40px;
-  margin-left: 20px;
-}
-
-.radio-left .course .tags span {
-  color: #ffffff;
-  font-size: 12px;
-  padding: 1px 5px;
-  border: 1px solid #ffffff;
-  border-radius: 4px;
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
 .radio-left .course .course-right {
-  display: inline-block;
   width: 504px;
+  height: 124px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .radio-left .course .module-name {
   color: #333333;
@@ -309,8 +385,8 @@ export default {
   margin-right: 20px;
 }
 
-.course-right .member .money {
-  margin-top: 35px;
+.member .money {
+  margin-top: 30px;
   font-size: 16px;
   color: #999999;
   display: flex;
@@ -318,68 +394,107 @@ export default {
 }
 
 .member .money span {
-  font-size: 40px;
-  color: #FF8331;
-  margin-right: 10px;
+  font-size:24px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(255,131,49,1);
+  margin-right: 5px;
 }
 .member .money span:nth-child(2) {
-  font-size: 14px;
-  color: #999;
+  font-size:14px;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(153,153,153,1);
   margin-right: 10px;
 }
 
 .member .money span:nth-child(3) {
-  background-color: #9EDA62;
+  cursor: pointer;
+  font-size:12px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(245,166,35,1);
   padding: 0 10px;
-  border-radius: 12px;
-  margin-left: 20px;
-  color: #ffffff;
-  font-size: 14px;
+  border-radius:12px;
+  border:1px solid;
+  border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
   text-align: center;
 }
-
-.course-right .bottom {
-  margin-top: 30px;
+.course .subscription {
+  margin-top: 27px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.course-right .bottom span {
-  color: #333333;
-  font-size: 18px;
-  line-height: 45px;
+.course .subscription .bottom span:nth-child(1) {
+  font-size:15px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(255,255,255,1);
   cursor: pointer;
+  background:linear-gradient(270deg,rgba(130,214,255,1) 0%,rgba(81,147,231,1) 100%);
+  border-radius:21px;
+  padding: 8px 24px;
+  margin-right: 17px;
 }
 
-.course-right .bottom span i {
-  width: 45px;
-  height: 45px;
+.course .subscription .bottom span:nth-child(1) i {
+  width: 14px;
+  height: 14px;
   background-image: url('../../../../../static/images/discovery/radio-play.png');
   background-repeat: no-repeat;
   background-size: cover;
   display: inline-block;
-  margin-right: 12px;
+  margin-right: 10px;
+  margin-top: 7px;
 }
-
-.course-right .bottom .button-group {
-  float: right;
-  line-height: 45px;
-  margin-left: 185px;
-}
-.course-right .bottom .button-group span {
-  font-size: 16px;
-  width: 81px;
-  height: 30px;
-  line-height: 30px;
-  color: #3C5B6F;
-  font-size: 15px;
-  border: 1px solid #CDCDCD;
-  border-radius: 16px;
-  display: inline-block;
-  text-align: center;
-  margin-left: 10px;
-  vertical-align: middle;
+.course .subscription .bottom span:nth-child(2) {
   cursor: pointer;
+  font-size:15px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(98,169,239,1);
+  background:rgba(245,247,248,1);
+  border-radius:21px;
+  padding: 8px 24px;
+}
+.course .subscription .bottom span:nth-child(2) i {
+  width: 12px;
+  height: 13px;
+  background-image: url('../../../../../static/images/discovery/radio-play.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-block;
+  margin-right: 10px;
+  margin-top: 7px;
 }
 
+.course .subscription .share {
+  display: flex;
+}
+.course .subscription .share .li {
+  width: 26px;
+  height: 26px;
+  background: pink;
+  cursor: pointer;
+  margin-right: 11px;
+}
+.course .subscription .share .weixin {
+  background: url('../../../../../static/images/discovery/radio-play.png') no-repeat center;
+  background-size: cover;
+}
+.course .subscription .share .weibo {
+  background: url('../../../../../static/images/discovery/radio-play.png') no-repeat center;
+  background-size: cover;
+}
+.course .subscription .share .friend {
+  background: url('../../../../../static/images/discovery/radio-play.png') no-repeat center;
+  background-size: cover;
+}
+.course .subscription .share .qq {
+  background: url('../../../../../static/images/discovery/radio-play.png') no-repeat center;
+  background-size: cover;
+}
 .radio-left .apply-vip {
   width: 880px;
   height: 60px;
@@ -389,12 +504,10 @@ export default {
   margin-top: 20px;
   padding: 0 44px;
 }
-
 .radio-left .apply-vip span:first-child {
   color: #ffffff;
   font-size: 20px;
 }
-
 .radio-left .apply-vip span:first-child i {
   width: 26px;
   height: 20px;
@@ -405,7 +518,6 @@ export default {
   margin-top: 19px;
   margin-right: 10px;
 }
-
 .radio-left .apply-vip span:last-child {
   cursor: pointer;
   width: 140px;
@@ -419,23 +531,23 @@ export default {
   float: right;
   margin-top: 12px;
 }
-
 .radio-left .author-brief {
   width: 880px;
-  height: 308px;
   background-color: #ffffff;
   border-radius: 3px;
-  /* margin-top: 20px; */
-  padding: 0 35px;
+  padding: 40px 50px;
+  margin-top: 10px;
 }
-
 .radio-left .author-brief .title {
-  color: #444444;
-  font-size: 24px;
-  padding: 15px 0;
-  border-bottom: 1px solid #EAEAEA;
+  font-size:16px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(144,162,174,1);
 }
-
+.author-brief .author-info {
+  display: flex;
+  padding-top: 16px;
+}
 .author-brief .author-info .author-info-left {
   cursor: pointer;
   display: inline-block;
@@ -447,20 +559,16 @@ export default {
   height: 60px;
   object-fit: cover;
   border-radius: 50%;
-  margin-top: 20px;
 }
-
 .author-brief .author-info .author-info-right {
-  position: relative;
-  display: inline-block;
   width: 724px;
-  height: 100%;
+  height: 60px;
 }
-
 .author-info .author-info-right .nickname {
-  margin-top: 30px;
-  color: #333333;
-  font-size: 20px;
+  font-size:20px;
+  font-family:PingFang-SC-Bold;
+  font-weight:bold;
+  color:rgba(51,51,51,1);
 }
 .author-info .author-info-right .nickname p {
   display: inline-block;
@@ -479,13 +587,17 @@ export default {
 .author-info .author-info-right .passed {
   margin-top: 10px;
   line-height: 15px;
+  display: flex;
+  justify-content: space-between;
 }
-.author-info .author-info-right .passed span:first-child {
-  font-size: 14px;
-  color: #ACACAC;
+.author-info .author-info-right .passed p:nth-child(1) span:nth-child(1) {
+  font-size:14px;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(172,172,172,1);
+  margin-right: 30px;
 }
-
-.author-info .author-info-right .passed span:first-child i{
+.author-info .author-info-right .passed p:nth-child(1) span:nth-child(1) i{
   width: 13px;
   height: 13px;
   background-image: url('../../../../../static/images/discovery/radio-passed.png');
@@ -494,33 +606,24 @@ export default {
   display: inline-block;
   margin-right: 10px;
 }
-
-.author-info .author-info-right .passed span:last-child {
-  width: 56px;
-  height: 20px;
-  border-radius: 10px;
-  border: 0.5px solid #9EDA62;
-  color: #9EDA62;
-  font-size: 10px;
-  padding: 1px 6px;
-  margin-left: 25px;
+.author-info .author-info-right .passed p:nth-child(1) span:nth-child(2) {
+  font-size:10px;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(158,218,98,1);
+  padding: 5px 8px;
+  border-radius:20px;
+  border:1px solid rgba(158,218,98,1);
 }
-
-.author-info .author-info-right .line {
-  width: 100%;
-  height: 1px;
-  background-color: #EAEAEA;
-  border-radius: 3px;
-  margin-top: 20px;
+.author-info .author-info-right .passed p:nth-child(2) span {
+  font-size:14px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(60,91,111,1);
+  padding: 5px 20px;
+  border-radius:19px;
+  border:1px solid rgba(178,192,201,1);
 }
-
-.author-info .author-info-right .desc {
-  color: #333333;
-  font-size: 16px;
-  height: 100px;
-  padding: 15px 0;
-}
-
 .author-info .author-info-right .bottom span{
   cursor: pointer;
   float: right;
@@ -528,7 +631,6 @@ export default {
   font-size: 16px;
   line-height: 10px;
 }
-
 .author-info .author-info-right .bottom span i {
   width: 7px;
   height: 10px;
@@ -538,19 +640,30 @@ export default {
   display: inline-block;
   margin-left: 10px;
 }
-
+.author-text {
+  margin-top: 24px;
+}
+.author-text .desc {
+  font-size:14px;
+  font-family:PingFang-SC-Regular;
+  font-weight:400;
+  color:rgba(136,136,136,1);
+  line-height:22px;
+}
 .radio-left .course-list {
   width: 880px;
   height: auto;
   background-color: #ffffff;
   margin-top: 25px;
   border-radius: 3px;
-  padding: 15px 35px;
+  padding: 16px 40px 44px;
 }
 
 .radio-left .course-list .title {
-  color: #444444;
-  font-size: 24px;
+  font-size:18px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(68,68,68,1);
   padding-bottom: 15px;
   border-bottom: 1px solid #EAEAEA;
 }
@@ -578,14 +691,18 @@ export default {
 }
 
 .radio-left .course-list .course-item .course-title {
-  color: #333333;
-  font-size: 16px;
+  font-size:16px;
+  font-family:PingFang-SC-Bold;
+  font-weight:bold;
+  color:rgba(51,51,51,1);
 }
 
 .radio-left .course-list .course-item .course-desc {
   width: 70%;
-  color: #B8B8B8;
-  font-size: 14px;
+  font-size:14px;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(184,184,184,1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -595,12 +712,17 @@ export default {
   position: relative;
   margin-left: 100px;
   margin-top: 18px;
-  font-size: 14px;
-  color: #999999;
+  font-size:14px;
+  font-family:Helvetica;
+  color:rgba(153,153,153,1);
+  display: flex;
+  justify-content: space-between;
+}
+.radio-left .course-list .course-item .course-bottom p {
+  display: inline-block;
 }
 
-.radio-left .course-list .course-item .course-bottom span:first-child::before {
-  content: '';
+.radio-left .course-list .course-item .course-bottom span:first-child i {
   width: 14px;
   height: 14px;
   line-height: 14px;
@@ -608,7 +730,7 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   display: inline-block;
-  margin-top: 5px;
+  margin-top: 6px;
   margin-right: 5px;
 }
 
@@ -616,8 +738,7 @@ export default {
   margin-left: 20px;
 }
 
-.radio-left .course-list .course-item .course-bottom span:nth-child(2)::before {
-  content: '';
+.radio-left .course-list .course-item .course-bottom span:nth-child(2) i {
   width: 16px;
   height: 14px;
   line-height: 14px;
@@ -625,7 +746,7 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   display: inline-block;
-  margin-top: 5px;
+  margin-top: 8px;
   margin-right: 5px;
 }
 
@@ -639,29 +760,38 @@ export default {
   background-color: #ffffff;
   margin-top: 25px;
   border-radius: 3px;
-  padding: 15px 35px;
+  padding: 29px 30px;
 }
 
 .radio-left .comments .title {
-  color: #444444;
-  font-size: 24px;
-  padding-bottom: 15px;
+  font-size:18px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(51,51,51,1);
+  padding-bottom: 20px;
   border-bottom: 1px solid #EAEAEA;
 }
 
 .radio-left .comments .comment-item {
-  height: 120px;
   width: 100%;
-  padding: 20px 0;
-  border-bottom: 1px solid #EAEAEA;
+  padding: 23px 10px 0;
+  display: flex;
 }
-
+.radio-left .comments .comment-item  .img-right{
+  width: 100%;
+  padding-bottom: 23px;
+  border-bottom: 2px solid #EAEAEA;
+}
+.radio-left .comments .comment-item:last-child .img-right{
+  width: 100%;
+  padding-bottom: 23px;
+  border-bottom: 0px;
+}
 .radio-left .comments .comment-item:last-child {
   border-bottom: 0;
 }
 
 .radio-left .comments .comment-item img {
-  float: left;
   width: 40px;
   height: 40px;
   object-fit: cover;
@@ -670,123 +800,31 @@ export default {
 }
 
 .radio-left .comments .comment-item .nickname {
-  color: #333333;
-  font-size: 14px;
-  font-weight: bold;
+  font-size:14px;
+  font-family:Helvetica-Bold;
+  font-weight:bold;
+  color:rgba(51,51,51,1);
 }
 
 .radio-left .comments .comment-item .date {
-  color: #d8d8d8;
-  font-size: 14px;
+  font-size:14px;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(216,216,216,1);
 }
 
 .radio-left .comments .comment-item .comment {
-  color: #333333;
-  font-size: 14px;
-  margin-left: 60px;
-  margin-top: 10px;
+  font-size:14px;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(51,51,51,1);
 }
 
 .radio-right {
   width: 280px;
   height: auto;
-  background-color: #ffffff;
-  padding: 35px 20px;
   display: inline-block;
   margin-left: 20px;
   border-radius: 3px;
 }
-
-.radio-right .other-radio {
-  color: #333333;
-  font-size: 16px;
-  line-height: 2px;
-  text-align: center;
-}
-
-.radio-right .other-radio span {
-  width: 24px;
-  height: 2px;
-  background-color: #F2F2F2;
-  display: inline-block;
-  margin: 0 10px;
-}
-
-.radio-right .other-radio-item {
-  cursor: pointer;
-  width: 100%;
-  height: 241px;
-  margin-top: 20px;
-  border-bottom: 1px dotted #8E8E8E;
-}
-
-.radio-right .other-radio-item img {
-  width: 100%;
-  height: 128px;
-  object-fit: cover;
-  border-radius: 3px;
-}
-
-.other-radio-item .subscribe {
-  position: relative;
-  display: -webkit-box;
-  margin-top: -25px;
-}
-
-.other-radio-item .subscribe i {
-  display: inline-block;
-  margin: 0 8px;
-  width: 14px;
-  height: 14px;
-  background-image: url('../../../../../static/images/discovery/home-radio.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.other-radio-item .subscribe span {
-  color: #ffffff;
-  font-size: 12px;
-  display: inline-block;
-  margin-top: -5px;
-  margin-left: -3px;
-}
-
-.other-radio-item .title {
-  color: #444444;
-  font-size: 16px;
-  margin-top: 15px;
-  height: 41px;
-  line-height: 20px;
-  word-break: break-all;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.other-radio-item .author {
-  color: #999999;
-  font-size: 12px;
-  display: inline-block;
-  position: relative;
-  margin-top: 10px;
-  width: 90px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-left: 10px;
-}
-
-.other-radio-item .money {
-  color: #999999;
-  font-size: 12px;
-  float: right;
-  /* display: inline-block; */
-  position: relative;
-  margin-top: 10px;
-  margin-right: 10px;
-}
-
 </style>
