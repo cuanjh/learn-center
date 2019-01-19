@@ -91,6 +91,7 @@
             </div>
           </div>
         </div>
+        <div class="close" @click="closeBox()"></div>
       </div>
     </div>
     <div class="success-audio" v-show="successVoice">
@@ -126,12 +127,11 @@ import Recorder from '../../../plugins/recorder'
 import SoundCtrl from '../../../plugins/soundCtrl'
 
 export default {
-  props: ['type'],
+  props: ['type', 'uploadVoiceShow'],
   data () {
     return {
       loadding: false,
       successVoice: false,
-      uploadVoiceShow: true,
       animat: false,
       defaultShow: true, // 默认
       startRecordShow: false, // 开始录音
@@ -226,7 +226,7 @@ export default {
       console.log('curTime---', this.curTime)
       return false
     },
-    // 播放录音 点击动画停止，播完停止动画
+    // 播放录音
     startMySound () {
       this.active = !this.active
       if (this.active) {
@@ -258,6 +258,8 @@ export default {
       this.startRecordShow = true // 录音的显示
       this.animat = true // 动画开始
       this.lastRecordShow = false // 录完音
+      this.curTime = 0
+      this.startRecording()
     },
     send () {
       let _this = this
@@ -284,7 +286,7 @@ export default {
     end () {
       this.isPlay = false
       this.isEnd = true
-      clearInterval(this.interval)
+      clearInterval(this.intervalId_draw)
     },
     // 点击上传语音
     publish () {
@@ -308,6 +310,17 @@ export default {
         this.successVoice = false
         // 4.jpg:1 GET https://uploadfile1.talkmate.com/feed/image/2019/01/12/1547272054727/5b74e4432152c797519a092a/1547272054776/4.jpg 404
       })
+    },
+    // 点击差号关闭弹框
+    closeBox () {
+      this.recordStop()
+      clearInterval(this.intervalId_draw)
+      this.defaultShow = true
+      this.lastRecordShow = false
+      this.startRecordShow = false
+      this.animat = false
+      this.curTime = 0
+      this.$emit('uploadVoiceHidden', false)
     }
   }
 }
@@ -325,7 +338,7 @@ export default {
     width: 500px;
     height: 300px;
     background: #ffffff;
-    position:absolute;
+    position:relative;
     top: 50%;
     left: 50%;
     right: 0;
@@ -680,6 +693,16 @@ export default {
           }
         }
       }
+    }
+    .close {
+      cursor: pointer;
+      position: absolute;
+      top: -40px;
+      right: -26px;
+      width: 30px;
+      height: 30px;
+      background: url('../../../../static/images/headline/close.png') no-repeat center;
+      background-size: cover;
     }
   }
 }

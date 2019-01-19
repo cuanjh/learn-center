@@ -170,10 +170,9 @@ export default {
       author: {}, // 作者
       html: '', // 内容
       tagsInfo: [], // 关键字
-      relatedNews: [], // 相关新闻，推荐
+      relatedNews: [], // 相关新闻其他推荐
       commentLists: [], // 评论列表
       introduct: '', // 输入的内容
-      // id: '',
       page: 1,
       arrReport: [
         {id: 1, item_des: '内容虚假', isEdit: '0'},
@@ -202,43 +201,42 @@ export default {
   created () {
   },
   mounted () {
+    console.log('id======', this.headlineId)
     this.initHeadDetail()
     this.initCommLists()
-    // this.id = this.$route.params.id
-    console.log('id', this.headlineId)
-    // // 头条详情页面
-    // this.headlineDetail({id: this.headlineId}).then((data) => {
-    //   console.log('data', data)
-    //   this.detail = data.detail
-    //   this.author = data.detail.author
-    //   this.html = data.detail.content
-    //   this.tagsInfo = data.detail.tags_info
-    //   this.relatedNews = data.detail.related_news
-    //   // this.initComment(id)
-    // })
-    // // 评论列表
-    // this.commentList({hid: this.headlineId, page: this.page}).then((res) => {
-    //   console.log('commentList评论列表', res)
-    //   if (res.data.comments.length === 0) {
-    //     this.flag = false
-    //     this.btnText = '暂时没有评论内容'
-    //   }
-    //   this.commentLists = res.data.comments
-    // })
-    // this.initComments()
-    this.headlineDetail({id: this.headlineId})
+    // this.$router.go(0)
+    // window.location.reload()
+    // setTimeout(() => {
+    //   // location.replace(location)
+    //   window.location.reload()
+    // }, 1000)
+    // 头条详情页面
+    /* this.headlineDetail({id: this.headlineId}).then((data) => {
+      console.log('头条详情页面', data)
+      this.detail = data.detail
+      this.author = data.detail.author
+      this.html = data.detail.content
+      this.tagsInfo = data.detail.tags_info
+      this.relatedNews = data.detail.related_news
+    }) */
+    // 评论列表
+    /* this.commentList({hid: this.headlineId, page: this.page}).then((res) => {
+      console.log('commentList评论列表', res)
+      if (res.data.comments.length === 0) {
+        this.flag = false
+        this.btnText = '暂时没有评论内容'
+      }
+      this.commentLists = res.data.comments
+    }) */
     this.$nextTick(() => {
       this.removeStyle()
     })
   },
   updated () {
-    // this.initHeadDetail()
-    // this.initCommLists()
     this.resetStyle()
   },
   computed: {
     ...mapState({
-      // userInfo: state => state.user.userInfo
       userInfo: state => state.userInfo,
       headDetail: state => state.course.headDetail
     }),
@@ -253,11 +251,14 @@ export default {
       comments: 'course/comments',
       reportList: 'course/reportList'
     }),
+    shua () {
+      window.location.reload()
+    },
     showReport () {
       this.isShow = true
     },
     hidePanel () {
-      // qing kong
+      // 清空
       this.checkboxList = []
       this.reportContents = ''
       this.isShow = false
@@ -265,33 +266,33 @@ export default {
     },
     // 头条详情页面
     initHeadDetail () {
-      let _this = this
-      // _this.id = _this.$route.params.id
-      console.log('id', _this.headlineId)
+      console.log('id', this.headlineId)
       // 头条详情页面
-      _this.headlineDetail({id: _this.headlineId}).then((data) => {
+      let id = this.headlineId
+      this.headlineDetail({id: id}).then((data) => {
         console.log('头条详情页面', data)
         if (data.success) {
-          _this.detail = data.detail
-          _this.author = data.detail.author
-          _this.html = data.detail.content
-          _this.tags_info = data.detail.tags_info
-          _this.relatedNews = data.detail.related_news
+          this.detail = data.detail
+          console.log('detail', this.detail)
+          this.author = data.detail.author
+          console.log('detail', this.author)
+          this.html = data.detail.content
+          this.tagsInfo = data.detail.tags_info
+          console.log('tagsInfo', this.tagsInfo)
+          this.relatedNews = data.detail.related_news
+          console.log('relatedNews', this.relatedNews)
         }
-        // this.initComment(id)
       })
     },
     // 评论列表
     initCommLists () {
-      let _this = this
-      // _this.id = _this.$route.params.id
-      _this.commentList({hid: _this.headlineId, page: _this.page}).then((res) => {
+      this.commentList({hid: this.headlineId, page: this.page}).then((res) => {
         console.log('commentList评论列表', res)
         if (res.data.comments.length === 0) {
-          _this.flag = false
-          _this.btnText = '暂时没有评论内容'
+          this.flag = false
+          this.btnText = '暂时没有评论内容'
         }
-        _this.commentLists = res.data.comments
+        this.commentLists = res.data.comments
       })
     },
     // 评论

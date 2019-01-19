@@ -32,7 +32,7 @@
     <upload-img :type="type"/>
     <upload-text :type="type"/>
     <upload-video :type="type"/>
-    <upload-voice :type="type"/>
+    <upload-voice :type="type" :uploadVoiceShow="uploadVoiceShow" @uploadVoiceHidden="hiddenBox"/>
     <upload-topic :type="type" :showTopicLists="showTopicLists" @topcItemHidden="hiddenLists"/>
 
     <div class="shareing">
@@ -61,7 +61,8 @@ export default {
   data () {
     return {
       type: '', // UploadType_photo:上传图片 UploadType_text:上传文字 UploadType_video:视频 UploadType_voice:语音 UploadType_topic:话题
-      showTopicLists: false
+      showTopicLists: false,
+      uploadVoiceShow: false
     }
   },
   components: {
@@ -85,10 +86,14 @@ export default {
     },
     uploadVoices () {
       this.type = 'UploadType_voice'
+      this.uploadVoiceShow = true
     },
     uploadTopics () {
       this.type = 'UploadType_topic'
       this.showTopicLists = true
+    },
+    hiddenBox (data) {
+      this.uploadVoiceShow = data
     },
     hiddenLists (data) {
       this.showTopicLists = data
