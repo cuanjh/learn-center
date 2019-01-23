@@ -66,7 +66,7 @@
                     </div>
                   </div>
                   <div class="right-describe">
-                    <p class="name">{{radio.title}}</p>
+                    <router-link tag="p" class="name" :to="{path: '/app/discovery/radio-detail/' + radio.code}">{{radio.title}}</router-link>
                     <p class="num">
                       <span>{{radio.buy_num}}次试听</span>
                       <span v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></span>
@@ -432,6 +432,7 @@ a {
                   padding: 10px 0 10px 10px;
                   width: 280px;
                   .name {
+                    cursor: pointer;
                     width: 120px;
                     overflow: hidden;
                     text-overflow:ellipsis;

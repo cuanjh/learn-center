@@ -90,6 +90,11 @@
                           @click="loadNoRadioList($event, item)">
                       <i class="play-no" v-if="index>number"></i>
                     </div>
+                    <div  class="buy-cny"
+                          v-if="item.money !== 0 && item.money_type === 'CNY' && parseInt(isVip) === 1 && item.free_for_member === false"
+                          @click="loadNoRadioList($event, item)">
+                      <i class="play-no" v-if="index>number"></i>
+                    </div>
                     <!-- <div class="gradient-layer-play-no" style="display: none">
                       <i class="play-no"></i>
                     </div> -->
@@ -188,11 +193,11 @@ export default {
       if (!this.userInfo.member_info) {
         return 0
       }
-      console.log('header', this.userInfo.member_info.member_type)
       return this.userInfo.member_info.member_type
     }
   },
   mounted () {
+    console.log('isVip', this.isVip)
     console.log('111', this.isVip)
     let _this = this
     _this.userId = _this.$route.params.userId
@@ -281,17 +286,32 @@ export default {
       this.nolockTestCheckShow = false
     },
     radioMouseEnter (e, item, index) {
-      console.log('item', item)
-      console.log('itemindex', index)
-      if (item.money !== 0 && parseInt(this.isVip) !== 1) {
-        // 不免费不是会员
-        if (index > this.number) {
-          $('.gradient-layer-play-no', $(e.target)).show()
+      // 课程不免费
+      if (item.money !== 0) {
+        // 是否会员
+        if (parseInt(this.isVip) === 1) {
+          if (item.money_type === 'CNY') {
+            if (item.free_for_member === false) {
+              // 会员不免费
+              if (index <= this.number) {
+                $('.gradient-layer-play', $(e.target)).show()
+              }
+              $('.buy-cny', $(e.target)).show()
+            } else {
+              $('.gradient-layer-play', $(e.target)).show()
+            }
+          } else {
+            $('.gradient-layer-play', $(e.target)).show()
+          }
         } else {
-          $('.gradient-layer-play', $(e.target)).show()
+          // 不是会员
+          if (index > this.number) {
+            $('.gradient-layer-play-no', $(e.target)).show()
+          } else {
+            $('.gradient-layer-play', $(e.target)).show()
+          }
         }
       } else {
-        // $('.gradient-layer-play-no', $(e.target)).hide()
         $('.gradient-layer-play', $(e.target)).show()
       }
     },
@@ -610,6 +630,22 @@ export default {
               }
             }
             .gradient-layer-play-no {
+              width: 220px;
+              height: 120px;
+              position: absolute;
+              margin-top: -120px;
+              text-align:  center;
+              z-index: 2;
+              .play-no {
+                width: 100%;
+                height: 100%;
+                background-image: url('../../../../../static/images/learn/learn-course-little-bg.png');
+                background-repeat: no-repeat;
+                background-size: cover;
+                display: inline-block;
+              }
+            }
+            .buy-cny {
               width: 220px;
               height: 120px;
               position: absolute;

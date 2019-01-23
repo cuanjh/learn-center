@@ -4,7 +4,7 @@
     <div class="prompt">
       <span>现在成为会员，12月圣诞好礼，新用户8折！！！</span>
     </div>
-    <router-link tag="div" :to="{path: '/app/user/vip'}" class="vip-btn">
+    <router-link tag="div" :to="{path: '/app/vip-index'}" class="vip-btn">
       <span>升级会员</span>
     </router-link>
   </div>

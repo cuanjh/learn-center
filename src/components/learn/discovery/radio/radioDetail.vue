@@ -115,17 +115,19 @@
             </div>
           </div>
         </div>
-        <div class="comments" v-if="comments">
-          <div class="title">{{comments.length}}条评论</div>
+        <div class="comments">
           <div v-if="comments">
-            <div class="comment-item" v-for="(item, index) in comments" :key="'comment' + index">
-              <div class="img">
-                <img v-lazy="item.user.photo" alt="">
-              </div>
-              <div class="img-right">
-                <div class="nickname" v-text="item.user.nickname"></div>
-                <div class="date">{{item.created_on | formatDate}}</div>
-                <div class="comment" v-text="item.comment"></div>
+            <div class="title">{{comments.length}}条评论</div>
+            <div v-if="comments">
+              <div class="comment-item" v-for="(item, index) in comments" :key="'comment' + index">
+                <div class="img">
+                  <img v-lazy="item.user.photo" alt="">
+                </div>
+                <div class="img-right">
+                  <div class="nickname" v-text="item.user.nickname"></div>
+                  <div class="date">{{item.created_on | formatDate}}</div>
+                  <div class="comment" v-text="item.comment"></div>
+                </div>
               </div>
             </div>
           </div>

@@ -29,6 +29,10 @@ const userWallet = r => require.ensure([], () => r(require('@/components/learn/u
 const userVip = r => require.ensure([], () => r(require('@/components/learn/user/userVip.vue')), 'userVip')
 const userSetting = r => require.ensure([], () => r(require('@/components/learn/user/userSetting.vue')), 'user-setting')
 const userAnonymous = r => require.ensure([], () => r(require('@/components/learn/user/userAnonymous.vue')), 'user-anonymous')
+// vip升级跳转页面
+const vipIndex = r => require.ensure([], () => r(require('@/components/learn/vipUpgrade/vipIndex.vue')), 'vip-index')
+const vipUserBuy = r => require.ensure([], () => r(require('@/components/learn/vipUpgrade/vipUserBuy.vue')), 'vip-user-buy')
+
 // 学习 --- 动态首页subjectChat
 const communityIndex = r => require.ensure([], () => r(require('@/components/learn/partnersCommunity/index.vue')), 'community-index')
 const subjectChat = r => require.ensure([], () => r(require('@/components/learn/home/subjectChat.vue')), 'subject-chat')
@@ -185,6 +189,18 @@ export default[
             component: userAnonymous
           }
         ]
+      },
+      // vip升级跳转路由
+      {
+        path: 'vip-index',
+        name: 'vipIndex',
+        component: vipIndex
+      },
+      {
+        // /:nape
+        path: 'vip-user-buy',
+        name: 'vipUserBuy',
+        component: vipUserBuy
       },
       // 动态
       {
