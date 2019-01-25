@@ -12,5 +12,9 @@ export default {
     state.userInfo = data.info
     sessionStorage.setItem('userInfo', JSON.stringify(state.userInfo))
     console.log('userInfo', state.userInfo)
+  },
+  // 更新上传七牛的token
+  updateFileQiniuToken (state, data) {
+    state.FileQiniuToken = data.token
   }
 }

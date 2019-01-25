@@ -229,6 +229,7 @@ const mutations = {
     state.pay.aliWebPayUrl = response.redirect_url
     state.pay.productId = response.productId
     state.pay.tradeNo = response.trade_no
+    console.log('.......', state.pay)
   },
   updateMemberProductsList (state, response) {
     state.productList = response

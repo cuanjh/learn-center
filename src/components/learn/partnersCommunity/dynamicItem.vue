@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="dynamic.info">
     <div class="item-top">
       <div class="people-img" v-if="dynamic.info">
         <img :src="dynamic.info.photo | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="动态头像">
@@ -108,7 +108,7 @@
       </div>
       <!-- width="320" height="240" -->
       <div class="audio-video-box">
-        <video :style="{ width: '100%', height: '200px' }" class="record-video" id="record-video" :src="dynamic.info.video_url" controls/>
+        <video class="record-video" id="record-video" :src="dynamic.info.video_url" controls/>
       </div>
     </div>
     <div class="dialectCourse-info" v-if="dynamic.info.type_info === 'dialectCourse'">

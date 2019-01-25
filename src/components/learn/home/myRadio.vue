@@ -202,6 +202,7 @@ export default {
             margin: 10px 0 16px;
             color: #333333;
             font-weight: 500;
+            height: 40px;
             font-size: 14px;
             cursor: pointer;
             line-height:20px;

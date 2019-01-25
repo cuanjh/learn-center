@@ -24,8 +24,8 @@
         </div>
       </div>
       <div class="china-lang-content">
-        <div class="hot-list">
-          <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
+        <div class="hot-list" v-if="group.list.length > 0">
+          <div class="section" v-for="group in groupCourseLangs" :key="group.letter">
             <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
             <ul>
               <li v-for="item in group.list" :key="item.lan_code" @click="routerGo(item)">
@@ -141,15 +141,6 @@ export default {
     },
     routerGo (item) {
       let langCode = item['code'].split('-')[0]
-      // if (this.subscribeCoursesStr.length === 0) {
-      //   this.$router.push({path: '/app/book-details/' + langCode})
-      //   return
-      // }
-      // let courseCode = item['code']
-      // if (this.subscribeCoursesStr.indexOf(courseCode) > -1) {
-      //   Bus.$emit('changeCourseCode', courseCode)
-      //   return
-      // }
       this.$router.push({path: '/app/book-details/' + langCode})
     }
   }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="30px" viewBox="0 0 32 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>资源 选中</title>
+    <desc>Created with Sketch.</desc>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-753.000000, -1270.000000)">
+            <g id="资源-copy" transform="translate(753.000000, 1270.000000)">
+                <g id="icon-" transform="translate(1.000000, 1.000000)">
+                    <path d="M5.14752109,5.31823899 L24.8524789,5.31823899 C26.9660268,5.31823899 28.7148284,6.96253499 28.8448972,9.07207688 L29.7381927,23.5601272 C29.8741443,25.765079 28.1968882,27.6627561 25.9919365,27.7987076 C25.9099797,27.8037609 25.8278868,27.8062893 25.7457744,27.8062893 L4.25422564,27.8062893 C2.04508664,27.8062893 0.25422564,26.0154283 0.25422564,23.8062893 C0.25422564,23.7241769 0.256754058,23.642084 0.261807299,23.5601272 L1.15510275,9.07207688 C1.28517161,6.96253499 3.03397316,5.31823899 5.14752109,5.31823899 Z" id="Rectangle" stroke="#2A9FE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <ellipse id="Oval" stroke="#2A9FE4" stroke-width="2" cx="9.46666667" cy="17.0289308" rx="4.8" ry="4.78993711"></ellipse>
+                    <rect id="Rectangle" fill="#2A9FE4" x="17.2666667" y="11.6402516" width="8.4" height="2"></rect>
+                    <polygon id="Rectangle-Copy-7" fill="#2A9FE4" points="17.2666667 15.8314465 25.6666667 15.8314465 25.6666667 17.8314465 17.2666667 17.8314465"></polygon>
+                    <polygon id="Rectangle-Copy-9" fill="#2A9FE4" points="17.2666667 20.0226415 22.6666667 20.0226415 22.6666667 22.0226415 17.2666667 22.0226415"></polygon>
+                    <path d="M4.2691569,5.35624509 L23.3333333,0.633333333" id="Path-3" stroke="#2A9FE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -49,7 +49,7 @@ export default {
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'course')
     this.$parent.$emit('navItem', 'user')
-    // this.getLearnCourses()
+    this.getLearnCourses()
   },
   computed: {
     ...mapState({

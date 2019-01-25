@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="30px" viewBox="0 0 32 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>资源默认</title>
+    <desc>Created with Sketch.</desc>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-753.000000, -1210.000000)">
+            <g id="资源" transform="translate(753.000000, 1210.000000)">
+                <g id="icon-" transform="translate(1.000000, 1.000000)">
+                    <path d="M5.14752109,4.31823899 L24.8524789,4.31823899 C26.9660268,4.31823899 28.7148284,5.96253499 28.8448972,8.07207688 L29.7381927,22.5601272 C29.8741443,24.765079 28.1968882,26.6627561 25.9919365,26.7987076 C25.9099797,26.8037609 25.8278868,26.8062893 25.7457744,26.8062893 L4.25422564,26.8062893 C2.04508664,26.8062893 0.25422564,25.0154283 0.25422564,22.8062893 C0.25422564,22.7241769 0.256754058,22.642084 0.261807299,22.5601272 L1.15510275,8.07207688 C1.28517161,5.96253499 3.03397316,4.31823899 5.14752109,4.31823899 Z" id="Rectangle" stroke="#B9CDE2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <ellipse id="Oval" stroke="#B9CDE2" stroke-width="2" cx="9.46666667" cy="17.0289308" rx="4.8" ry="4.78993711"></ellipse>
+                    <rect id="Rectangle" fill="#B9CDE2" x="17.2666667" y="11.6402516" width="8.4" height="2"></rect>
+                    <polygon id="Rectangle-Copy-7" fill="#B9CDE2" points="17.2666667 15.8314465 25.6666667 15.8314465 25.6666667 17.8314465 17.2666667 17.8314465"></polygon>
+                    <polygon id="Rectangle-Copy-9" fill="#B9CDE2" points="17.2666667 20.0226415 22.6666667 20.0226415 22.6666667 22.0226415 17.2666667 22.0226415"></polygon>
+                    <path d="M5,4.19407694 L23,0.507699565" id="Path-3" stroke="#B9CDE2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

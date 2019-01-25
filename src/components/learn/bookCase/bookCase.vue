@@ -202,7 +202,8 @@ export default {
         text-align: center;
       }
       .hot-courses {
-        .list{
+        overflow: hidden;
+        .list {
           width: 1074px;
           height: 245px;
           float:left;
@@ -349,7 +350,7 @@ export default {
     }
     .course-box {
       position: relative;
-      margin-top: 315px;
+      margin-top: 85px;
       .search {
         width:844px;
         height:36px;

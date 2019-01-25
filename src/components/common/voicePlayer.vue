@@ -210,12 +210,14 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
+      // userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo // 用户信息
     })
   },
   created () {
     Bus.$on('getRadioCardList', (item) => {
       console.log('item', item)
+      // this.page = 1
       let params = {
         code: item.code,
         listOrder: this.listOrder,
@@ -224,8 +226,6 @@ export default {
       }
       console.log('params', params)
       this.getRadioCardList(params).then((res) => {
-        console.log('res电台列表', res)
-        console.log('userInfo', this.userInfo)
         this.page = res.page
         if (res.cards.length > 0) {
           // 判断是否免费，免费就是加载全部列表，收费判断vip只加载前三条
@@ -237,10 +237,17 @@ export default {
             if (this.userInfo.member_info.member_type !== 1) {
               this.radioList = res.cards.slice(0, 3)
             } else {
+              // 是会员
+              if (item.money_type === 'CNY') {
+                if (item.free_for_member === false) {
+                  this.radioList = res.cards.slice(0, 3)
+                  console.log('会员免费列表', this.radioList)
+                }
+              }
               this.radioList = res.cards
+              console.log('======>', this.radioList)
             }
           }
-          // this.radioList = res.cards
           this.curIndex = 0
           this.playRadio()
         }
@@ -756,7 +763,7 @@ export default {
       overflow: hidden;
     }
     .voice-player-list-content {
-      height: 260px;
+      height: 340px;
       width: 1100px;
       overflow-y: auto;
       ul {

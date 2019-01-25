@@ -11,7 +11,7 @@
         </div>
         <div class="recommend-partners">
           <ul>
-            <li v-for="(partner, index) in parnterLists" :key="index">
+            <li v-for="(partner, index) in partnerLists.slice(0, 5)" :key="index">
               <div class="partner-img">
                 <div class="header-img">
                   <img :src="partner.photo" alt="推荐语伴头像">
@@ -22,8 +22,9 @@
                 <div class="name">
                   <p class="title">{{partner.nickname}}</p>
                   <p class="language">
-                    <span>阿拉伯语<i></i></span>
-                    <span v-for="(lang, index) in partner.lang_infos" :key="index">{{lang.name}}</span>
+                    <span>{{partner.country_name}}</span>
+                    <!-- <span>{{partner.country_name}}<i></i></span> -->
+                    <!-- <span v-for="(lang, index) in partner.lang_infos" :key="index">{{lang.name}}</span> -->
                   </p>
                 </div>
               </div>
@@ -41,7 +42,7 @@
 </template>
 <script>
 export default {
-  props: ['parnterLists'],
+  props: ['partnerLists'],
   data () {
     return {}
   },
@@ -140,7 +141,6 @@ export default {
           }
           .focus {
             cursor: pointer;
-            width:50px;
             height:24px;
             border-radius:16px;
             border:1px solid rgba(213,221,226,1);
@@ -151,6 +151,7 @@ export default {
               font-weight:bold;
               color:rgba(42,159,228,1);
               line-height:24px;
+              padding: 6px 10px;
             }
           }
         }

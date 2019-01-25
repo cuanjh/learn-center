@@ -1,4 +1,4 @@
-import { httpNoLogin, httpLogin, httpSnsUrl } from '../../api/api'
+import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken } from '../../api/api'
 import config from '../../api/config'
 
 export default {
@@ -47,5 +47,9 @@ export default {
     httpNoLogin(config.umLangsListApi).then(res => {
       commit('updateCourseLangsList', res.hotLangsInfo.concat(res.langsInfo))
     })
+  },
+  // 动态获取token的方法
+  getUploadFileToken ({ commit, start }) {
+    return httpGetToken(config.qiniuFilesToken)
   }
 }

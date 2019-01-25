@@ -23,7 +23,7 @@
     </div>
     <my-course />
     <my-radio :radios="radios" />
-    <my-partner :dynamicLists="dynamicLists"/>
+    <my-partner/>
     <recommend-topic :bannerTopics="bannerTopics" />
     <div class="headline">
       <my-headline :headlines="headlines"></my-headline>

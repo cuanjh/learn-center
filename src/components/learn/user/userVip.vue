@@ -551,7 +551,7 @@ input:-ms-input-placeholder {
   /*width:22px;*/
 }
 .vip-wrap-tips ul>li:nth-of-type(2) dl dt{
-  background-image: url(../../../../static/images/learn/learn-youxian.svg);
+  /* background-image: url(../../../../static/images/learn/learn-youxian.svg); */
   height:22px;
 }
 .vip-wrap-tips ul>li:nth-of-type(3) dl dt{

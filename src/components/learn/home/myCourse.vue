@@ -80,7 +80,14 @@ export default {
       currentChapterCode: state => state.course.currentChapterCode,
       chapterDes: state => state.course.chapterDes,
       userInfo: state => state.userInfo
-    })
+    }),
+    ui () {
+      let ui = this.userInfo
+      if (Object.keys(ui).length === 0) {
+        ui = JSON.parse(localStorage.getItem('userInfo'))
+      }
+      return ui
+    }
   },
   methods: {
     ...mapMutations({
@@ -97,8 +104,9 @@ export default {
       // await this.setCurrentChapter('ENG-Basic-Level1-Unit4-Chapter1')
       await _this.getLearnCourses()
       console.log('userInfo', _this.userInfo)
-      let curCourseCode = _this.userInfo.current_course_code
+      // let curCourseCode = _this.userInfo.current_course_code
 
+      let curCourseCode = _this.ui.current_course_code
       await _this.getLearnInfo(curCourseCode).then(() => {
         console.log('learnInfo', _this.learnInfo)
         console.log('courseBaseInfo', _this.courseBaseInfo)

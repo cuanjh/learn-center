@@ -30,6 +30,7 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import moment from 'moment'
 import Cookie from '../../../tool/cookie.js'
 import { uploadImgToBase64, uploadQiniu } from '../../../plugins/uploadCommiunty'
 
@@ -48,17 +49,17 @@ export default {
   },
   computed: {
     ...mapState({
-      qiniuToken: state => state.learn.qiniuToken, // 七牛的token
+      FileQiniuToken: state => state.FileQiniuToken, // 七牛的token
       dynamicsLists: state => state.course.dynamicsLists // 动态首页列表和打赏列表数据
     })
   },
   methods: {
     ...mapActions({
       getDynamic: 'course/getDynamic', // 发布动态接口
-      getQiniuToken: 'learn/getQiniuToken'
+      getUploadFileToken: 'getUploadFileToken' // 上传七牛
     }),
     ...mapMutations({
-      updateQiniuToken: 'learn/updateQiniuToken'
+      updateFileQiniuToken: 'updateFileQiniuToken' // 更新上传七牛token
     }),
     upload (params) {
       let that = this
@@ -73,24 +74,24 @@ export default {
       that.fileList.push(fileObj)
       let base64file = uploadImgToBase64(params.file)
       base64file.then(function (result) {
+        console.log('result', result)
         let date = new Date()
         let d = date.format('yyyy/MM/dd')
         let userId = Cookie.getCookie('user_id')
         let time = date.getTime()
-        let fileImgKey = 'feed/image/' + d + '/' + userId + '/' + time + file.name
-        that.getQiniuToken().then((res) => {
-          that.updateQiniuToken(res)
-          let upload = uploadQiniu(result.result, that.qiniuToken, fileImgKey)
-          upload.then(function (result) {
-            console.log('result', result)
-            if (result.success) {
-              // success
-              // shang chuan
-              fileObj.qiniuUrl = fileImgKey
-            }
-            console.log('that.qiniuUrl', that.fileList)
+        let suffix = file.name.split('.')
+        console.log('suffix[suffix.length-1]', suffix[suffix.length - 1])
+        let fileImgKey = 'feed/image/' + d + '/' + userId + '/' + moment(time) + '.' + suffix[suffix.length - 1]
+        that.getUploadFileToken().then((res) => {
+          that.updateFileQiniuToken(res)
+          console.log('res', res)
+          let upload = uploadQiniu(result.result, that.FileQiniuToken, fileImgKey)
+          upload.then((data) => {
+            console.log('data', data)
+            fileObj.qiniuUrl = data.key
+            console.log('this.fileList', that.fileList)
             console.log('upload', upload)
-            console.log('url', fileImgKey)
+            console.log('fileImgKey', fileImgKey)
           })
         })
       })
@@ -128,7 +129,7 @@ export default {
     },
     // 点击上传上传图片
     publish () {
-      this.qiniuUrl = []
+      console.log('this.fileList', this.fileList)
       this.fileList.forEach(item => {
         this.qiniuUrl.push(item.qiniuUrl)
       })
@@ -148,6 +149,7 @@ export default {
       this.getDynamic(params).then(res => {
         console.log('发布动态返回数据', res)
         this.dynamicsLists.unshift(res.feedInfo)
+        this.fileList = []
         // 4.jpg:1 GET https://uploadfile1.talkmate.com/feed/image/2019/01/12/1547272054727/5b74e4432152c797519a092a/1547272054776/4.jpg 404
       })
     }
