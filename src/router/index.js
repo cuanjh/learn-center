@@ -21,6 +21,8 @@ const nationDetails = r => require.ensure([], () => r(require('@/components/lear
 const gradeLevelShow = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelShow.vue')), 'grade-level-show')
 const gradeLevelConfirm = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelConfirm.vue')), 'grade-level-confirm')
 const homework = r => require.ensure([], () => r(require('@/components/learn/homework/homework.vue')), 'homework')
+const introduceApp = r => require.ensure([], () => r(require('@/components/learn/home/introduceApp.vue')), 'introduce-app')
+
 // 学习 --- 我的
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue')), 'user')
 const userCourse = r => require.ensure([], () => r(require('@/components/learn/user/userCourse.vue')), 'user-course')
@@ -189,6 +191,11 @@ export default[
             component: userAnonymous
           }
         ]
+      },
+      // 介绍app
+      {
+        path: 'introduce-app',
+        component: introduceApp
       },
       // vip升级跳转路由
       {

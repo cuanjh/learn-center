@@ -25,7 +25,7 @@
           <div class="logo-img">
             <i></i>
           </div>
-          <div class="share-lists">
+          <div class="share-lists" v-show="false">
             <div class="share-item" @click="tabShare(0)">
               <i class="farim" :class="{'active': active == 0}"></i>
             </div>
@@ -57,7 +57,7 @@
               <p v-bind:class="{'active': 'language' == tabFlag}" @click="tabChange('language')">
                 <span>Own language</span>
               </p>
-              <p v-bind:class="{'active': 'news' == tabFlag}" @click="tabChange('news')">
+              <p v-show="false" v-bind:class="{'active': 'news' == tabFlag}" @click="tabChange('news')">
                 <span>全球头条</span>
               </p>
             </div>
@@ -270,15 +270,16 @@ a {
     display: flex;
     justify-content: space-between;
     .logo-img {
-      width: 120px;
-      height: 80px;
+      width: 167px;
+      height: 60px;
       background: #2A9FE4;
+      padding: 11px 15px;
       i {
         display: inline-block;
-        width: 120px;
+        width: 334px;
         height: 80px;
-        background: url('../../../../static/images/bookCase/dog.png') no-repeat center;
-        background-size: cover;
+        background: url('../../../../static/images/wal.svg') no-repeat center;
+        background-size: 100% 100%;
       }
     }
     .share-lists {
@@ -372,7 +373,7 @@ a {
             padding-left: 25px;
           }
           &.active {
-            color:#333333FF;
+            color:#0A2B40FF;
             span {
               display: inline-block;
               border-left: 4px solid #2A9FE4FF;
@@ -396,8 +397,8 @@ a {
           border-bottom: 1px solid #EAEAEAFF;
           display: flex;
           .right-img {
-            width: 60px;
-            height: 40px;
+            width: 90px;
+            height: 60px;
             img {
               width: 100%;
               height: 100%;
@@ -436,8 +437,8 @@ a {
                 width: 50%;
                 i {
                   display: inline-block;
-                  width: 12px;
-                  height: 30px;
+                  width: 24px;
+                  height: 36px;
                   background: url('../../../../static/images/bookCase/countryName.svg') no-repeat center;
                   background-size: cover;
                   margin-left: 25px;
@@ -447,8 +448,8 @@ a {
                 width: 50%;
                 i {
                   display: inline-block;
-                  width: 26px;
-                  height: 23px;
+                  width: 32px;
+                  height: 36px;
                   background: url('../../../../static/images/bookCase/personName.svg') no-repeat center;
                   background-size: cover;
                 }
@@ -510,13 +511,12 @@ a {
                   display: inline-block;
                   width: 50px;
                   height: 50px;
-                  border-radius: 4px;
                   margin-right: 10px;
                   img {
                     width: 50px;
                     height: 50px;
                     object-fit: cover;
-                    border-radius: 4px;
+                    border-radius: 8px;
                   }
                 }
                 .country-title {
@@ -561,6 +561,13 @@ a {
               li {
                 &.country-img:last-child {
                   border-bottom:1px solid rgba(241,245,248,1);
+                }
+              }
+              li:hover {
+                .country-title {
+                  p {
+                    color: #2A9FE4FF;
+                  }
                 }
               }
             }

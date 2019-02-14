@@ -112,7 +112,7 @@ export default {
     word-wrap: break-word;
     word-break: normal;
     width: 200px;
-    height: 80px;
+    height: 70px;
     font-size: 14px;
     font-family: PingFang-SC-Regular;
     font-weight: 400;

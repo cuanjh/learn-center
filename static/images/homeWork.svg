@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>作业</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="语种信息-信息" transform="translate(-543.000000, -350.000000)">
+            <g id="分组-5" transform="translate(512.000000, 257.000000)">
+                <g id="列表">
+                    <g id="作业" transform="translate(31.000000, 93.000000)">
+                        <path d="M4,1 L12,1 C12.5522847,1 13,1.44771525 13,2 L13,10.0118408 L10.0065918,13 L3,13 L3,2 C3,1.44771525 3.44771525,1 4,1 Z" id="Rectangle" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M4.98803711,13 L2,13 C1.44771525,13 1,12.5522847 1,12 L1,4 C1,3.44771525 1.44771525,3 2,3 L3.00805664,3" id="Path" stroke="#333333"></path>
+                        <path d="M13.0263672,10.0264893 L11,10.0264893 C10.4477153,10.0264893 10,10.4742045 10,11.0264893 L10,13" id="Path-2" stroke="#333333"></path>
+                        <rect id="Rectangle" fill="#333333" x="5" y="4" width="6" height="1"></rect>
+                        <rect id="Rectangle-Copy-4" fill="#333333" x="5" y="6" width="6" height="1"></rect>
+                        <rect id="Rectangle-Copy-5" fill="#333333" x="5" y="8" width="3" height="1"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

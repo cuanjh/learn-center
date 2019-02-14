@@ -23,16 +23,18 @@
     </div>
     <my-course />
     <my-radio :radios="radios" />
-    <my-partner/>
-    <recommend-topic :bannerTopics="bannerTopics" />
-    <div class="headline">
-      <my-headline :headlines="headlines"></my-headline>
+    <!-- 语伴 -->
+    <my-partner v-show="false"/>
+    <!-- 话题 -->
+    <recommend-topic :bannerTopics="bannerTopics" v-show="false"/>
+    <!-- 头条 -->
+    <div class="headline" v-show="true">
+      <my-headline :headlines="headlines" v-show="false"></my-headline>
       <mobile-apps></mobile-apps>
     </div>
     <div class="vip">
       <vip-prompt />
     </div>
-
   </div>
 </template>
 
