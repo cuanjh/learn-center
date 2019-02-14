@@ -20,12 +20,13 @@ export default {
 
 <style lang="less" scoped>
 .my-headline {
-  width: 580px;
+  // width: 580px;
+  width: 100%;
   height: 230px;
   background-color: #fff;
   box-shadow:0px 3px 10px 0px rgba(5,43,52,0.03);
   border-radius:5px;
-  display: inline-block;
+  // display: inline-block;
   margin-right: 16px;
   padding-top: 44px;
   padding-left: 41px;

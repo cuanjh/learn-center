@@ -3,7 +3,10 @@
     <div class="title">Tallkmate Mobile Apps</div>
     <div class="desc">You can learn with talkmate on your smartphone or tablet.</div>
     <div class="link">
-      <span class="more">了解更多</span>
+      <i></i>
+      <router-link tag="p" :to="{path: '/app/introduce-app'}">
+        <span class="more">了解更多</span>
+      </router-link>
     </div>
   </div>
 </template>
@@ -16,14 +19,14 @@ export default {
 
 <style lang="less" scoped>
 .mobile-apps {
-  width:580px;
-  height:230px;
+  // width:580px;
+  width: 100%;
+  height:210px;
   background:#fff;
   box-shadow:0px 3px 10px 0px rgba(5,43,52,0.03);
   border-radius:5px;
-  display: inline-block;
-  padding-top: 41px;
-  padding-left: 47px;
+  // display: inline-block;
+  padding: 42px 40px 28px;
   .title {
     height:22px;
     font-size:16px;
@@ -39,18 +42,25 @@ export default {
     line-height:20px;
   }
   .link {
-    margin-top: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 26px;
+    i {
+      display: inline-block;
+      width: 108px;
+      height: 72px;
+      background: url('../../../../static/images/liaojieapp.svg') no-repeat center;
+      background-size: cover;
+    }
     .more {
-      float: right;
-      height:36px;
+      display: inline-block;
       border-radius:18px;
       border:1px solid #90A2AE;
-      padding: 8px 37px;
-      font-size:14px;
-      font-weight:bold;
-      color:#3C5B6F;
-      line-height:20px;
-      margin-right: 36px;
+      font-family: PingFang-SC;
+      font-size: 14px;
+      line-height: 20px;
+      padding: 8px 38px;
       cursor: pointer;
     }
   }

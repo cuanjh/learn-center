@@ -19,7 +19,7 @@
           <div class="left-content">
             <div class="left-top">
               <div class="details-img">
-                <img :src="(courseInfo.cover ? courseInfo.cover : '/static/images/bookCase/img_default_maige.png') | urlFix('imageView2/0/format/jpg')" alt="课程详情的图片">
+                <img :src="(courseInfo.flag ? courseInfo.flag : '/static/images/bookCase/img_default_maige.png') | urlFix('imageView2/0/format/jpg')" alt="课程详情的图片">
               </div>
               <div class="details-case">
                 <!-- <p>全球说</p> -->
@@ -60,21 +60,21 @@
                       <span>价格</span>
                       <span class="fl">{{ courseInfo.price }}金币/课</span>
                     </div>
-                    <div class="buy-button">
+                    <div class="buy-button" v-show="false">
                       <span>购买</span>
                     </div>
+                    <a v-if="subscribeCourses.indexOf(courseCode) > -1 && courseInfo.has_course" @click="startLearn()" href="javascript:void(0)" class="button">
+                      <span>开始学习</span>
+                    </a>
+                    <a v-else-if="subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course" @click="subscribeCourse()" href="javascript:void(0)" class="button">
+                      <span>订阅课程</span>
+                    </a>
+                    <a v-else href="javascript:void(0)" class="button locked">
+                      <span>课程建设中</span>
+                    </a>
                   </li>
                 </ul>
               </div>
-              <a v-if="subscribeCourses.indexOf(courseCode) > -1 && courseInfo.has_course" @click="startLearn()" href="javascript:void(0)" class="button">
-                <span>开始学习</span>
-              </a>
-              <a v-else-if="subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course" @click="subscribeCourse()" href="javascript:void(0)" class="button">
-                <span>订阅课程</span>
-              </a>
-              <a v-else href="javascript:void(0)" class="button locked">
-                <span>课程建设中</span>
-              </a>
             </div>
           </div>
         </div>
@@ -88,11 +88,12 @@
               </p>
             </div>
             <div class="add-btn">
-              <a href="javascript(0)">
-                <i></i>
-              </a>
+              <div class="img-cont">
+                <div class="img"></div>
+                <span>扫一扫下载全球说App</span>
+              </div>
             </div>
-            <div class="flicking">
+            <div class="flicking" v-show="false">
               <p><span>扫一扫下载全球说App</span></p>
               <div class="third-party">
                 <div class="weixin">
@@ -159,8 +160,9 @@
             <div class="nation-list" v-if="'nation' == tabFlag">
               <book-case-country :countryLists="countryLists"></book-case-country>
               <div class="up-all" v-if="countryLists.length>0">
-                <span @click="loadMoreNation()" v-text="showMore?'全部展开':'收起~~'"></span>
+                <span @click="loadMoreNation()" v-text="showMore?'全部展开':'收起'"></span>
                 <i v-show="showMore"></i>
+                <i class="active" v-show="showMore === false"></i>
               </div>
               <div class="up-all" v-else>
                 <span >暂时没有课程相关国家</span>
@@ -354,7 +356,7 @@ export default {
         }
       }
       await _this.langInfoDetails(params).then(res => {
-        console.log('课程详情', res)
+        console.log('语言详情', res)
         for (var item in res.langInfo) {
           if (_this.langInfoObj[item]) {
             _this.langInfoObj[item]['info'] = res.langInfo[item]['info']
@@ -367,7 +369,6 @@ export default {
         // _this.resPage = res.resourceInfo.page
         _this.allCountryLists.forEach(item => {
           _this.countryInfo({code: item.code}).then(data => {
-            console.log('国家详情', data)
             item.countryLangueInfos = data.country_info.langsInfo
           })
         })
@@ -413,7 +414,7 @@ export default {
       background: #ffffff;
       .left-content {
         height: 100%;
-        padding: 30px 20px 20px;
+        padding: 36px 40px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -452,13 +453,14 @@ export default {
           .left-bottom-content {
             ul {
               li {
-                width: 70%;
-                padding: 13px 0;
+                // width: 380px;
+                margin-top: 6px;
                 // border-bottom: 1px solid #EBEBEB;
                 .item {
-                  display: inline-block;
-                  overflow: hidden;
-                  width: 75%;
+                  width: 380px;
+                  padding: 13px 50px 13px 32px;
+                  background: #F6F8F9FF;
+                  border-radius: 40px;
                   font-size:14px;
                   font-family:PingFang-SC-Regular;
                   font-weight:400;
@@ -466,7 +468,7 @@ export default {
                   .fl {
                     float: right;
                     display: block;
-                    width: 110px;
+                    // width: 110px;
                     font-family:PingFang-SC-Heavy;
                     font-weight:800;
                   }
@@ -475,21 +477,22 @@ export default {
                     width: 20px;
                     height: 20px;
                     margin-right: 10px;
+                    margin-top: 3px;
                   }
                   .language {
-                    background: url('../../../../static/images/bookCase/icon.svg') no-repeat center;
+                    background: url('../../../../static/images/language.svg') no-repeat center;
                     background-size: cover;
                   }
                   .case {
-                    background: url('../../../../static/images/bookCase/icon.svg') no-repeat center;
+                    background: url('../../../../static/images/case.svg') no-repeat center;
                     background-size: cover;
                   }
                   .homeWork {
-                    background: url('../../../../static/images/bookCase/icon.svg') no-repeat center;
+                    background: url('../../../../static/images/homeWork.svg') no-repeat center;
                     background-size: cover;
                   }
                   .price {
-                    background: url('../../../../static/images/bookCase/icon.svg') no-repeat center;
+                    background: url('../../../../static/images/price.svg') no-repeat center;
                     background-size: cover;
                   }
                 }
@@ -510,25 +513,34 @@ export default {
                   }
                 }
               }
-              li:nth-child(1), li:nth-child(3) {
-                background: #FAFAFAFF;
-              }
+              // li:nth-child(1), li:nth-child(3) {
+              //   background: #FAFAFAFF;
+              // }
               li:last-child {
-                border-bottom: 1px solid #E8E8E8FF;
+                display: flex;
+                justify-content: space-between;
+                .item {
+                  .fl {
+                    background: linear-gradient(to right, #FAD961FF, #F76B1CFF);
+                    -webkit-background-clip: text;
+                    color: transparent;
+                  }
+                }
               }
             }
           }
           .button {
-            width: 150px;
-            height: 40px;
+            // width: 150px;
+            // height: 40px;
             background: #2A9FE4FF;
             font-size: 14px;
             color: #ffffff;
             text-align: center;
-            line-height: 40px;
-            position: absolute;
-            right: 20px;
-            top: 160px;
+            // line-height: 40px;
+            // position: absolute;
+            // right: 20px;
+            // top: 160px;
+            padding: 13px 42px;
             border-radius: 30px;
             box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, .15);
           }
@@ -570,18 +582,22 @@ export default {
           }
         }
         .add-btn {
-          width: 80px;
-          height: 80px;
-          margin: 20px auto 0;
-          a {
-            display: inline-block;
-            text-decoration: none;
-            width: 100%;
-            height: 100%;
-            i {
-              display: inline-block;
-              background: url('../../../../static/images/authLogin/weixin.svg') no-repeat center;
-              block-size: cover;
+          width: 100%;
+          .img-cont {
+            padding: 36px 0 0;
+            text-align: center;
+            .img {
+              width: 120px;
+              height: 120px;
+              background: url('../../../../static/images/qrcode.png') no-repeat center;
+              background-size: cover;
+              margin: 0 auto;
+              margin-bottom: 36px;
+            }
+            span {
+              font-size: 12px;
+              color: #7E929FFF;
+              line-height: 12px;
             }
           }
         }
@@ -733,7 +749,7 @@ export default {
         .up-all {
           cursor: pointer;
           width: 100%;
-          background: #DEDEDEFF;
+          background: rgba(221, 221, 221, .1);
           text-align: center;
           line-height: 42px;
           font-size:14px;
@@ -745,9 +761,17 @@ export default {
           align-items: center;
           i {
             display: inline-block;
-            width: 14px;
-            height: 14px;
-            background: url('../../../../static/images/authLogin/weixin.svg') no-repeat center;
+            width: 10px;
+            height: 6px;
+            background: url('../../../../static/images/upAll.svg') no-repeat center;
+            background-size: cover;
+            margin-left: 10px;
+          }
+          .active {
+            display: inline-block;
+            width: 10px;
+            height: 6px;
+            background: url('../../../../static/images/upAllActive.svg') no-repeat center;
             background-size: cover;
             margin-left: 10px;
           }
