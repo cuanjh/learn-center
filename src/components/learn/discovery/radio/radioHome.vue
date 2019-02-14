@@ -1,5 +1,14 @@
 <template>
   <div class="radio-wrap">
+    <div class="nav">
+      <router-link :to="{path: '/app/user/course'}">
+        <span>我的学习账户</span>
+      </router-link>
+      >
+      <div class="nav-current">
+        电台
+      </div>
+    </div>
     <div class="radio-swiper">
       <div class="left">
         <div class="swiper-container">
@@ -39,10 +48,10 @@
     <div class="radio-recommend">
       <div class="left">
         <div class="recommend-list">
-          <div class="recommend-item">Special recommendation</div>
-          <div class="recommend-item">Language related</div>
-          <div class="recommend-item">Newest</div>
-          <div class="recommend-item">Star teacher</div>
+          <div class="recommend-item"><i></i><span>Special recommendation</span></div>
+          <div class="recommend-item"><i></i><span>Language related</span></div>
+          <div class="recommend-item"><i></i><span>Newest</span></div>
+          <div class="recommend-item"><i></i><span>Star teacher</span></div>
         </div>
         <div class="recommend-radio"></div>
         <div class="recommend-teachers">
@@ -59,7 +68,17 @@
         </div>
       </div>
       <div class="right">
-        <div class="radio-self-brief"></div>
+        <div class="user-info">
+          <div class="content">
+            <div class="bg-img"></div>
+            <div class="info">
+              <div class="user-img">
+                <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="用户头像">
+                <p class="name"><span>Type something</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="radio-container">
@@ -120,7 +139,7 @@ export default {
     _this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
       _this.banners = res.data.banners
-      _this.menus = res.data.menuInfos
+      _this.menus = res.data.menuInfos.slice(0, 10)
       _this.authors = res.data.authors
       _this.menuRadios = res.data.menuRadios
       _this.swiperInit()
@@ -231,9 +250,24 @@ export default {
   width: 1200px;
   margin: 0 auto;
   min-height: 1000px;
+  .nav {
+    margin: 24px 0 12px 0;
+    font-weight: bold;
+    display: inline-block;
+    font-size: 16px;
+    a {
+      span {
+        color: #999999;
+      }
+    }
+    .nav-current {
+      display: inline-block;
+      color: #2A9FE4;
+    }
+  }
   .radio-swiper {
-    margin: 16px auto;
-    height: 340px;
+    margin: 0px auto 16px;
+    height: 300px;
     .left {
       float: left;
       margin-right: 23px;
@@ -270,6 +304,7 @@ export default {
     .right {
       display: inline-block;
       width: 296px;
+      height: 300px;
       .name {
         font-size: 20px;
         font-weight: 600;
@@ -309,13 +344,37 @@ export default {
         .recommend-item {
           display: inline-block;
           width: 219px;
-          height: 70px;
           background-color: #0a2b40;
           font-size: 16px;
           font-weight: bold;
           color: #fff;
           padding: 10px 25px;
           margin-right: 1px;
+          line-height: 50px;
+          border-top: 3px solid #2A9FE4FF;
+          span {
+            display: inline-block;
+            width: 120px;
+          }
+          i {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background: pink;
+            margin-top: 10px;
+            margin-right: 13px;
+          }
+        }
+        .recommend-item:nth-child(1), .recommend-item:nth-child(2) {
+          display: inline-block;
+          width: 219px;
+          background-color: #0a2b40;
+          font-size: 16px;
+          font-weight: bold;
+          color: #fff;
+          padding: 10px 25px;
+          margin-right: 1px;
+          line-height: 25px;
         }
       }
       .recommend-radio {
@@ -416,6 +475,37 @@ export default {
             display: inline-block;
             &:hover {
               background-image: url('../../../../../static/images/discovery/radio-author-right-hover.svg');
+            }
+          }
+        }
+      }
+    }
+    // 右边
+    .right {
+      display: inline-block;
+      width: 296px;
+      margin-left: 23px;
+      .user-info {
+        width: 296px;
+        display: inline-block;
+        .content {
+          width: 100%;
+          .bg-img {
+            width: 100%;
+            height: 70px;
+            background: pink;
+          }
+          .info {
+            width: 100%;
+            .user-img {
+              width: 100%;
+              display: flex;
+              img {
+                width: 58px;
+                height: 58px;
+                border-radius: 50%;
+                border: 2px solid #fff;
+              }
             }
           }
         }

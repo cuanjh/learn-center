@@ -711,6 +711,7 @@ export default {
   width: 34px;
   height: 34px;
   border-radius: 50%;
+  border: 2px solid #fff;
 }
 .right p.learn-user a {
   width: 34px;
