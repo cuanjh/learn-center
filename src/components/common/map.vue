@@ -28,7 +28,8 @@ export default {
       myGeo: null,
       copyrightText: '联合国教科文组织-全球说世界语言地图',
       partnerIndex: 0,
-      partnerList: []
+      partnerList: [],
+      endangerList: []
     }
   },
   created () {
@@ -51,6 +52,12 @@ export default {
       this.removeMarks()
       this.partnerList = data
       this.loadPartner()
+    })
+
+    this.$on('loadEndangerMap', (data) => {
+      console.log('濒危语种：', data)
+      this.removeMarks()
+      this.endangerList = data
     })
   },
   mounted () {
@@ -110,7 +117,6 @@ export default {
           content: '<span style="font-size:14px; font-weight: 500; color:#4c4c4c ;background:;margin-left: 50px; line-height:40px;">' + this.copyrightText + '</span>',
           bounds: bs
         })
-        this.courseLangsMap()
         // this.addPosition()
       //   alert(0)
       //   var circle = new BMap.Circle(point, 500000, {
@@ -540,6 +546,15 @@ export default {
       }
       /* eslint-enable */
       mp.addControl(new BMap.NavigationControl(opts))
+    },
+    // 加载濒危语言
+    loadEndanger () {
+      this.endangerList.forEach(endanger => {
+        this.setEndangerPoint(endanger)
+      })
+    },
+    setEndangerPoint (item) {
+
     }
   }
 }

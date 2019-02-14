@@ -66,6 +66,7 @@ export default {
   languageMap: '/studyv1/shelf/v2/lang_map', // 世界语言地图
   countryInfo: '/studyv1/shelf/v2/country_info', // 国家信息
   courseLangs: '/info/course_langs', // 获取和课程相关的语言列表信息
+  courseListApi: '/studyv1/course/list',
   shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
   chinaLangMapApi: '/studyv1/shelf/china_lang_map', // 中国方言课程地图接口
 
@@ -105,6 +106,7 @@ export default {
    */
   partnerListApi: '/feedv1/partner/list', // 语伴列表接口
   partnerSearchApi: '/feedv1/partner/search', // 语伴搜索接口
+  endangeredMapListApi: '/studyv1/shelf/v2/endangered_map', // 濒危语言列表
 
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token

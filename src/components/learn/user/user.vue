@@ -114,7 +114,7 @@ export default {
 
 <style scoped>
 .user-wrap {
-  background: #ecf4f7;
+  /* background: #ecf4f7; */
   width: 100%;
   /*height: 1000px;*/
   min-height: 1000px;
@@ -126,7 +126,7 @@ export default {
 .user-left-bar {
   width: 320px;
   height: 100%;
-  background: #ecf4f7;
+  /* background: #ecf4f7; */
   float: left;
 }
 .user-left-userDetail {

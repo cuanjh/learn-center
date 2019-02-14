@@ -50,7 +50,7 @@
           <div class="imgBox">
             <img :src="qnUrl(item.flag)" alt="">
           </div>
-          <p class="name"><span>{{ item.name[languagueHander] }}</span></p>
+          <p class="name"><span>{{ item.name }}</span></p>
         </li>
       </ul>
     </div>
@@ -88,11 +88,11 @@ export default {
       this.hotCourse = res.data.worldMapCourse.courses
     })
 
-    this.getCourseLangs().then(res => {
-      console.log('热门课程', res)
-      res.course_langs.forEach((item) => {
+    this.getCourseList().then(res => {
+      console.log('官方课程', res)
+      res.courseInfo.listCourses.forEach((item) => {
         let obj = item
-        let name = item.name[_this.languagueHander]
+        let name = item.name
         let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
         obj['pinyin'] = pinyin
         obj['letter'] = pinyin.slice(0, 1).toUpperCase()
@@ -103,14 +103,13 @@ export default {
   },
   computed: {
     ...mapState({
-      subscribeCoursesStr: state => state.course.subscribeCoursesStr,
-      languagueHander: state => state.course.languagueHander
+      subscribeCoursesStr: state => state.course.subscribeCoursesStr
     })
   },
   methods: {
     ...mapActions({
       bookCaseIndex: 'course/bookCaseIndex',
-      getCourseLangs: 'course/getCourseLangs'
+      getCourseList: 'getCourseList'
     }),
     qnUrl (url) {
       return url.split('?')[0] + '?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1'
@@ -171,12 +170,12 @@ export default {
     },
     routerGo (item) {
       console.log('item', item)
-      let langCode = item['lan_code']
+      let langCode = item['code']
       this.$router.push({path: '/app/book-details/' + langCode})
     },
     search () {
       this.courseLangs = this.defaultCourseLangs.filter((item) => {
-        return item.letter.toUpperCase() === this.searchVal.toUpperCase() || item.pinyin.indexOf(this.searchVal) > -1 || item.name[this.languagueHander].indexOf(this.searchVal) > -1 || item.lan_code.toUpperCase() === this.searchVal.toUpperCase()
+        return item.letter.toUpperCase() === this.searchVal.toUpperCase() || item.pinyin.indexOf(this.searchVal) > -1 || item.name.indexOf(this.searchVal) > -1 || item.code.toUpperCase() === this.searchVal.toUpperCase()
       })
     }
   }
@@ -423,7 +422,7 @@ export default {
         float: left;
         cursor: pointer;
         width: 100px;
-        height: 120px;
+        height: 122px;
         margin: 0 9px;
         color: #666;
         .imgBox {
