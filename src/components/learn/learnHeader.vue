@@ -2,22 +2,19 @@
   <div class="header-box">
     <div class="content" >
       <div class="left" @mouseleave='navChangeCourseTwo'>
-        <p><img src="./../../../static/images/home/logo.png" alt=""></p>
-        <p :class="{ 'header-box-left-active': activeItem === 'course' }" @mouseenter='navChangeCourse' @click='jumpCourse()'>
+        <router-link tag="p" :to="{path: '/app/index'}"><img src="./../../../static/images/home/logo.png" alt=""></router-link>
+        <p v-show="false" :class="{ 'header-box-left-active': activeItem === 'course' }" @mouseenter='navChangeCourse' @click='jumpCourse()'>
           学习
           <i class='' :class="{ 'animate-down': navArrowDown, 'animate-up':navArrowUp }"></i>
         </p>
-        <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'discovery'  }"  :to="{path: '/app/discovery'}">
-            发现
+        <router-link v-show="false" tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'discovery'  }"  :to="{path: '/app/discovery'}">
+          发现
         </router-link>
-        <router-link :class="{ 'header-box-left-active': activeItem === 'bookcase' }" tag="p" class="nav-find-btn" :to="{path: '/app/book-case'}">
+        <router-link v-show="false" :class="{ 'header-box-left-active': activeItem === 'bookcase' }" tag="p" class="nav-find-btn" :to="{path: '/app/book-case'}">
           书架
         </router-link>
-        <!-- <router-link :class="{ 'header-box-left-active': activeItem === 'discovery' }" tag="p" class="nav-find-btn" :to="{path: '/app/discovery'}">
-          发现
-        </router-link> -->
-        <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
-            我的
+        <router-link v-show="false" tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
+          我的
         </router-link>
         <router-link tag="span"  :to="{ path: '/auth/register/' + langCode }" class='learn-login-right-tips-probation learn-login-right-tips-probation-modify' v-show="userInfo.is_anonymous">您是试用账号<span>去注册</span></router-link>
         <!-- 课程列表 -->
@@ -53,7 +50,7 @@
         </transition>
       </div>
       <div class="right" @mouseleave="hideExit" v-if="userInfo.member_info">
-        <div class="container">
+        <div class="container" v-show="false">
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <div class="search" @click="enterSearch"></div>
         </div>
@@ -64,7 +61,10 @@
           <img class="nation" src="https://course-assets1.talkmate.com/course/icons/IND-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="国籍">
         </div> -->
         <div class='learn-user' @mouseenter="showExit" >
-          <a><img :src='userInfo.photo'></a>
+          <a>
+            <img :src='userInfo.photo' />
+            <span v-show="isActive" class="active"></span>
+          </a>
           <transition name="fade">
             <span class='user-login-out mycourse-loginout animated' v-show="showExitState">
               <img class='arrow' src="./../../../static/images/course/learn-big-arrow.png">
@@ -94,7 +94,8 @@ export default {
       showExitState: false,
       learnCourse: [],
       searchUserCourse: '',
-      courseDetailShow: false
+      courseDetailShow: false,
+      isActive: false
     }
   },
   components: {
@@ -111,7 +112,7 @@ export default {
   mounted () {
     // this.getLearnCourses()
     this.getUserInfo()
-    console.log('订阅课程======', this.learnCourses)
+    // console.log('订阅课程======', this.learnCourses)
   },
   computed: {
     ...mapState({
@@ -121,9 +122,6 @@ export default {
     ...mapGetters({
       langCode: 'user/langCode'
     }),
-    languagueHander () {
-      return this.userInfo.sys_lang
-    },
     isVip () {
       if (!this.userInfo.member_info) {
         return 0
@@ -153,6 +151,15 @@ export default {
         this.courseDetailShow = false
       } else {
         this.courseDetailShow = true
+      }
+    },
+    // 监听路由变化
+    $route (to, from) {
+      console.log('监听路由变化：', this.$route.path)
+      if (this.$route.path.indexOf('/user/') > -1) {
+        this.isActive = true
+      } else {
+        this.isActive = false
       }
     }
   },
@@ -217,7 +224,7 @@ export default {
 <style scoped>
 .header-box {
   width: 100%;
-  height: 68px;
+  height: 62px;
   background: #2A9FE4;
   position: fixed;
   top: 0px;
@@ -225,19 +232,19 @@ export default {
 }
 .header-box .content {
   width: 1200px;
-  height: 68px;
+  height: 62px;
   margin: 0px auto;
   position: relative;
 }
 
 .header-box .left{
   display: inline-block;
-  height: 68px;
+  height: 62px;
 }
 .header-box .right{
   display: inline-block;
   width: 133px;
-  height: 68px;
+  height: 62px;
   margin-right: 18px;
 }
 .header-box .left>p{
@@ -704,7 +711,7 @@ export default {
   height: 34px;
   position: absolute;
   right: 0;
-  top: 17px;
+  top: 16px;
 }
 
 .right .learn-user img {
@@ -713,12 +720,15 @@ export default {
   border-radius: 50%;
   border: 2px solid #fff;
 }
-.right p.learn-user a {
-  width: 34px;
-  height: 34px;
-  display: inline-block;
-  border-radius: 100px;
-  overflow: hidden;
+
+.learn-user .active {
+  height: 4px;
+  width: 4px;
+  background-color: #fff;
+  position: absolute;
+  margin-left: 215px;
+  margin-top: 4px;
+  border-radius: 50%;
 }
 
 .right .user-login-out {

@@ -42,6 +42,9 @@ export default {
   userExistsPhone ({commit}, params) {
     return httpLogin(config.umUserExistsPhoneApi, params)
   },
+  getCourseList ({commit}) {
+    return httpLogin(config.courseListApi)
+  },
   // 获取语言列表
   getLangsList ({commit}) {
     httpNoLogin(config.umLangsListApi).then(res => {
@@ -51,5 +54,9 @@ export default {
   // 动态获取token的方法
   getUploadFileToken ({ commit, start }) {
     return httpGetToken(config.qiniuFilesToken)
+  },
+  // 濒危语言地图列表
+  getEndangeredMap ({commit}, params) {
+    return httpLogin(config.endangeredMapListApi, params)
   }
 }

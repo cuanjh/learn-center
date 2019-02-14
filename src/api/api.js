@@ -115,7 +115,7 @@ export const httpNoLogin = (_url, _params) => { // 未登录
   let keys = Object.keys(_params).sort()
   keys.forEach(key => {
     let val = _params[key]
-    if ((typeof val === 'object') && val.constructor === Array) {
+    if ((typeof val === 'object') && val.constructor === Array && val.length > 0) {
       val.forEach(item => {
         paramsStr += '&' + key + '=' + item
         str += key + item
