@@ -256,7 +256,13 @@ export default {
       if (!validation.verfiyCode(_this.phoneCode)) {
         _this.errText = errCode['er02'] // 'er02': '验证码错误'
       }
-
+      Cookie.delCookieTalkmate('is_anonymous')
+      Cookie.delCookie('user_id')
+      Cookie.delCookie('verify')
+      Cookie.delCookieTalkmate('device_id')
+      Cookie.delCookie('device_id')
+      Cookie.delCookie('userName')
+      Cookie.delCookie('userPwd')
       // 快速登录，有手机号就正常登录没有就相当于注册登录
       await _this.userLogin({phonenumber: _this.phone, code: _this.phoneCode})
       if (_this.loginInfo.success) {
@@ -264,12 +270,7 @@ export default {
         this.errText = ''
         // 先把localStorage里面的用户的信息和cookie里面的用户信息都清除了
         localStorage.removeItem('userInfo')
-        Cookie.delCookieTalkmate('is_anonymous')
-        Cookie.delCookie('user_id')
-        Cookie.delCookie('verify')
-        Cookie.delCookie('device_id')
-        Cookie.delCookie('userName')
-        Cookie.delCookie('userPwd')
+
         let info = _this.loginInfo.result
         // 把后台返回的用户信息存进去
         Cookie.setCookie('user_id', info.user_id)

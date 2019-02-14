@@ -122,9 +122,6 @@ export default {
     ...mapGetters({
       langCode: 'user/langCode'
     }),
-    languagueHander () {
-      return this.userInfo.sys_lang
-    },
     isVip () {
       if (!this.userInfo.member_info) {
         return 0

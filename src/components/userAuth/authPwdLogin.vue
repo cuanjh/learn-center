@@ -150,6 +150,12 @@ export default {
         $('input[type="password"]').css('border-color', '#D0021B')
         return false
       }
+      sessionStorage.removeItem('userInfo')
+      Cookie.delCookieTalkmate('is_anonymous')
+      Cookie.delCookie('user_id')
+      Cookie.delCookie('verify')
+      Cookie.delCookieTalkmate('device_id')
+      Cookie.delCookie('device_id')
       await _this.userPwdLogin({
         identity: _this.userName,
         password: _this.userPwd
@@ -158,11 +164,7 @@ export default {
         if (res.success) {
           $('input').css('border-color', '#E6EBEE')
           _this.errText = ''
-          sessionStorage.removeItem('userInfo')
-          Cookie.delCookieTalkmate('is_anonymous')
-          Cookie.delCookie('user_id')
-          Cookie.delCookie('verify')
-          Cookie.delCookie('device_id')
+
           if (_this.isSaveLoginState) {
             Cookie.setCookie('userName', _this.userName)
             Cookie.setCookie('userPwd', _this.userPwd)
