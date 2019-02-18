@@ -58,5 +58,9 @@ export default {
   // 濒危语言地图列表
   getEndangeredMap ({commit}, params) {
     return httpLogin(config.endangeredMapListApi, params)
+  },
+  // 随机获取推荐的电台
+  getRandomRadio ({commit}, params) {
+    return httpLogin(config.getRandomRadioApi, params)
   }
 }

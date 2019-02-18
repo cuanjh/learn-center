@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>电台播放</title>
+    <desc>Created with Sketch.</desc>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="iPhone-SE" transform="translate(-85.000000, -54.000000)" fill-rule="nonzero">
+            <g id="电台播放" transform="translate(85.000000, 54.000000)">
+                <circle id="椭圆形" fill-opacity="0.346608922" fill="#004068" cx="12" cy="12" r="12"></circle>
+                <circle id="椭圆形" stroke="#FFFFFF" stroke-width="1.5" cx="12" cy="12" r="11.25"></circle>
+                <rect id="矩形" fill="#FFFFFF" x="8" y="8" width="2.5" height="9" rx="1.25"></rect>
+                <rect id="矩形-copy" fill="#FFFFFF" x="13" y="8" width="2.5" height="9" rx="1.25"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

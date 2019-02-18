@@ -46,6 +46,8 @@ const radioHome = r => require.ensure([], () => r(require('@/components/learn/di
 const radioList = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioList.vue')), 'radio-list')
 const radioDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioDetail.vue')), 'radio-detail')
 const radioAuthorDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/authorDetail.vue')), 'author-detail')
+const radioClassify = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioClassify.vue')), 'radio-classify')
+const radioRecomTeachers = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioRecomTeachers.vue')), 'radio-recom-teachers')
 const headline = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headline.vue')), 'headline')
 const headlineDetails = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headlineDetails.vue')), 'headline-details')
 const headlineSearch = r => require.ensure([], () => r(require('@/components/learn/discovery/headline/headlineSearch.vue')), 'headline-search')
@@ -248,6 +250,16 @@ export default[
           {
             path: 'author-detail/:userId',
             component: radioAuthorDetail
+          },
+          {
+            path: 'radio-classify',
+            name: radioClassify,
+            component: radioClassify
+          },
+          {
+            path: 'radio-recom-teachers',
+            name: radioRecomTeachers,
+            component: radioRecomTeachers
           }
         ]
       },

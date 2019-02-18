@@ -57,7 +57,7 @@
                 </li>
                 <li>
                   <div class="list-li">
-                    <div class="img"></div>
+                    <div class="img2"></div>
                     <div class="title">
                       <span>更好的语伴交互</span>
                       <span>来自一百多个国家的语伴学习互助和主题群聊室，接触系统智能推荐的国外语伴，让学习更有意义。</span>
@@ -68,7 +68,7 @@
               <ul>
                 <li>
                   <div class="list-li">
-                    <div class="img2"></div>
+                    <div class="img3"></div>
                     <div class="title">
                       <span>边走边听的电台课程</span>
                       <span>你可以相信，电台课程语声具来的轻松惬意，你可以做到随时随地边走边听，多样有趣的音频课程带你聊基恩异域风情，扩展你的认知。</span>
@@ -77,7 +77,7 @@
                 </li>
                 <li>
                   <div class="list-li">
-                    <div class="img2"></div>
+                    <div class="img4"></div>
                     <div class="title">
                       <span>也可以读上一篇文章</span>
                       <span>有关你的语种，我们会推荐有助于提升语言认知的文章或新闻，如果你还会第二门语言，那“更多”就是你最好的选择。</span>
@@ -362,7 +362,7 @@ export default {
                     height: 50px;
                     border-radius: 50%;
                     margin-right: 10px;
-                    background: url('../../../../static/images/gongneng.png') no-repeat center;
+                    background: url('../../../../static/images/downloadicon.svg') no-repeat center;
                     background-size: cover;
                   }
                   .img2 {
@@ -370,7 +370,23 @@ export default {
                     height: 50px;
                     border-radius: 50%;
                     margin-right: 10px;
-                    background: url('../../../../static/images/gongneng2.png') no-repeat center;
+                    background: url('../../../../static/images/partnersicon.svg') no-repeat center;
+                    background-size: cover;
+                  }
+                  .img3 {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                    background: url('../../../../static/images/radioicon.svg') no-repeat center;
+                    background-size: cover;
+                  }
+                  .img4 {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                    background: url('../../../../static/images/articleicon.svg') no-repeat center;
                     background-size: cover;
                   }
                   .title {

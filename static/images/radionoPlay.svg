@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>电台默认</title>
+    <desc>Created with Sketch.</desc>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="iPhone-SE" transform="translate(-51.000000, -54.000000)" fill-rule="nonzero">
+            <g id="电台默认" transform="translate(51.000000, 54.000000)">
+                <circle id="椭圆形" fill-opacity="0.346608922" fill="#004068" cx="12" cy="12" r="12"></circle>
+                <circle id="椭圆形" stroke="#FFFFFF" stroke-width="1.5" cx="12" cy="12" r="11.25"></circle>
+                <path d="M7.09403339,8.85790951 L14.031086,7.47049899 C14.5726457,7.36218704 15.0994709,7.71340378 15.2077828,8.25496353 C15.2336752,8.38442569 15.2336752,8.51773364 15.2077828,8.6471958 L13.8203723,15.5842484 C13.6903979,16.2341201 13.0582078,16.6555802 12.4083361,16.5256058 C12.1760268,16.479144 11.962668,16.3649578 11.7951473,16.1974372 L6.48084462,10.8831345 C6.01221547,10.4145053 6.01221547,9.65470733 6.48084462,9.18607818 C6.64836527,9.01855753 6.86172404,8.90437138 7.09403339,8.85790951 Z" id="矩形" fill="#FFFFFF" transform="translate(10.678287, 12.000014) rotate(-315.000000) translate(-10.678287, -12.000014) "></path>
+            </g>
+        </g>
+    </g>
+</svg>
