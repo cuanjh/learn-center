@@ -18,7 +18,25 @@
         <div class="left">
           <div class="head-top"><span>主播推荐</span></div>
           <div class="teacher-list">
-            <div class="teacher-list-content"></div>
+            <div class="teacher-list-content">
+              <div class="teacher-left">
+                <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b9770784ab41/5b9770784ab41.jpg?hash=Fvl0qWXpSfVwsxGYv4FXt3Do_CZR" alt="头像">
+                <div class="text">
+                  <p>Japan 青田四五六</p>
+                  <p>6780粉丝</p>
+                </div>
+              </div>
+              <div class="teacher-right">
+                <p class="button">
+                  <i></i>
+                  <span>关注</span>
+                </p>
+                <p class="hidden-button">
+                  <i></i>
+                  <span>隐藏</span>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div class="right">
@@ -87,6 +105,32 @@ export default {
         width: 100%;
         height: 200px;
         background: #ffffff;
+        .teacher-list-content {
+          width: 100%;
+          padding: 20px 40px;
+          .teacher-left {
+            display: flex;
+            align-items: center;
+            img {
+              width: 60px;
+              height: 60px;
+              border-radius: 50%;
+            }
+            .text {
+              padding-left: 10px;
+              p:nth-child(1) {
+                font-size: 16px;
+                font-weight: bold;
+                color: #0A2B40FF;
+              }
+              p:nth-child(2) {
+                font-size: 14px;
+                font-weight: bold;
+                color: #7E929FFF;
+              }
+            }
+          }
+        }
       }
     }
   }
