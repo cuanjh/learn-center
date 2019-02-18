@@ -144,7 +144,7 @@ export default {
 
 <style scoped>
   .my-course {
-    width: 1200px;
+    width: 1180px;
     margin: 30px auto 0;
   }
 
@@ -164,7 +164,7 @@ export default {
     background-color: #D8D8D8;
     width: 820px;
     height: 360px;
-    margin-right: 16px;
+    margin-right: 14px;
   }
 
   .current-chapter img {

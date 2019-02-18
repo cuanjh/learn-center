@@ -2,8 +2,9 @@
   <div class="learn-index">
     <b-map class="b-map" ref="map"></b-map>
     <search-box />
+    <map-statistics />
     <my-course />
-    <my-radio :radios="radios" />
+    <my-radio />
     <!-- 语伴 -->
     <my-partner v-show="false"/>
     <!-- 话题 -->
@@ -23,6 +24,7 @@
 import { mapState, mapActions } from 'vuex'
 import BMap from '../../common/map.vue'
 import SearchBox from './searchBox.vue'
+import MapStatistics from './mapStatistics.vue'
 import VipPrompt from '../../common/vipPrompt.vue'
 import MyCourse from './myCourse.vue'
 import MyRadio from './myRadio.vue'
@@ -34,13 +36,13 @@ import MobileApps from './mobileApps.vue'
 export default {
   data () {
     return {
-      radios: [],
       headlines: []
     }
   },
   components: {
     BMap,
     SearchBox,
+    MapStatistics,
     MyCourse,
     MyRadio,
     MyPartner,
@@ -53,10 +55,9 @@ export default {
     var _this = this
     this.postDisvHome().then((res) => {
       console.log('发现首页', res)
-      _this.radios = res.data.radios
+      // _this.radios = res.data.radios
       _this.headlines = res.data.headlines.slice(0, 3)
     })
-
     this.getCommunity({excludeIds: []})
   },
   computed: {
@@ -101,12 +102,12 @@ export default {
   }
 
   .headline {
-    width: 1200px;
-    margin: 50px auto;
+    width: 1180px;
+    margin: 30px auto;
   }
 
   .vip {
-    width: 1200px;
+    width: 1180px;
     margin: 0 auto;
   }
 </style>

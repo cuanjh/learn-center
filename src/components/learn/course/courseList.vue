@@ -113,7 +113,7 @@ export default {
 
         setTimeout(() => {
           this.$refs['chapterItem'].$emit('changeIsShow', true)
-          let top = $('#' + chapterCode).offset().top - 138
+          let top = $('#' + chapterCode).offset().top - 126
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, 0)
         // $('body,html').scrollTop(top)
@@ -135,7 +135,7 @@ export default {
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)
 
-      let top = $('#' + this.currentChapterCode).offset().top - 138
+      let top = $('#' + this.currentChapterCode).offset().top - 126
       $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
       // this.hideLoading()

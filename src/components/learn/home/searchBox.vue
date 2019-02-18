@@ -10,7 +10,7 @@
             <i :class="['arrow', {'active': isShowEndangerPanel}]"></i>
           </li>
           <li><span class="wal-courses" @click="loadCourses()"><i></i>课程</span></li>
-          <li><span class="wal-partners" @click="loadPartner()"><i></i>电台主播</span></li>
+          <li><span class="wal-partners" @click="loadRecommendTeachers()"><i></i>电台主播</span></li>
         </ul>
         <!-- <span @click="removeMarks()"><i></i>remove</span> -->
         <span class="search-icon" @click="isShowSearch = true"><i></i></span>
@@ -45,9 +45,9 @@ export default {
       isShowSearch: false,
       endangeredLevelList: [
         {id: 1, iconClass: 'vulnerableIcon', text: '不安全型', val: 'Vulnerable'},
-        {id: 2, iconClass: 'definitelyIcon', text: '肯定濒危型', val: 'Definitely Endangered'},
-        {id: 3, iconClass: 'severelyIcon', text: '严重濒危型', val: 'Severely Endangered'},
-        {id: 4, iconClass: 'criticallyIcon', text: '极度濒危型', val: 'Critically Endangered'},
+        {id: 2, iconClass: 'definitelyIcon', text: '肯定濒危型', val: 'Definitely endangered'},
+        {id: 3, iconClass: 'severelyIcon', text: '严重濒危型', val: 'Severely endangered'},
+        {id: 4, iconClass: 'criticallyIcon', text: '极度濒危型', val: 'Critically endangered'},
         {id: 5, iconClass: 'extinct', text: '已经消失型', val: 'Extinct'}
       ],
       isShowEndangerPanel: false,
@@ -57,25 +57,26 @@ export default {
   mounted () {
     // 加载官方课程
     this.getLangsList()
-    // 加载语伴信息
-    this.searchPartnerList()
+    // 加载推荐的主播
+    this.getRecommendTeachers()
   },
   computed: {
     ...mapState({
-      partnerList: state => state.course.partnerList,
       courseLangsList: state => state.courseLangsList
     })
   },
   methods: {
-    ...mapActions({
-      searchPartnerList: 'course/searchPartnerList',
-      getLangsList: 'getLangsList',
-      getEndangeredMap: 'getEndangeredMap'
-    }),
-    loadPartner () {
-      this.$parent.$refs.map.$emit('loadPartner', this.partnerList)
+    ...mapActions([
+      'getLangsList',
+      'getEndangeredMap',
+      'getRecommendTeachers'
+    ]),
+    loadRecommendTeachers () {
+      this.isShowEndangerPanel = false
+      this.$parent.$refs.map.$emit('loadRecommendTeachers')
     },
     loadCourses () {
+      this.isShowEndangerPanel = false
       this.$parent.$refs.map.$emit('loadCourseLangs', this.courseLangsList)
     },
     cancelSearch () {
@@ -109,11 +110,11 @@ export default {
     height: 50px;
     border-radius: 31px;
     background: rgba(5,129,209,.8);
-    top:0;
+    // top:0;
     left: 0;
     right: 0;
-    bottom: 0;
-    margin:-75px auto;
+    bottom: 70px;
+    margin: 0 auto;
   }
 
   .search-inner-desc {
