@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>分组 5</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="22.6573905%" y1="15.3300621%" x2="85.3007812%" y2="82.9960938%" id="linearGradient-1">
+            <stop stop-color="#FFE3DD" offset="0%"></stop>
+            <stop stop-color="#FFDBD3" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="9.49009487%" y1="0%" x2="94.0587468%" y2="96.069961%" id="linearGradient-2">
+            <stop stop-color="#FFDCDC" offset="0%"></stop>
+            <stop stop-color="#FFB3B1" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="60.0760324%" y1="56.4801897%" x2="100%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#FFB2B1" offset="0%"></stop>
+            <stop stop-color="#FF8A87" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="移动APP产品介绍及下载页-Copy-4" transform="translate(-995.000000, -1089.000000)">
+            <rect fill="#FFFFFF" x="0" y="0" width="1920" height="2218"></rect>
+            <g id="分组-5" transform="translate(995.000000, 1089.000000)">
+                <g id="分组-2">
+                    <circle id="椭圆形-copy-2" fill-opacity="0.79" fill="url(#linearGradient-1)" cx="25" cy="25" r="25"></circle>
+                    <circle id="椭圆形" fill="#FFFFFF" cx="25" cy="25" r="23"></circle>
+                    <circle id="椭圆形-copy-2" fill-opacity="0.79" fill="url(#linearGradient-1)" cx="25" cy="25" r="20"></circle>
+                    <g id="list" transform="translate(14.000000, 13.000000)">
+                        <path d="M22,22.6687012 C22,23.95625 21.0815,25 19.948457,25 L2.05154297,25 C0.9185,25 0,23.95625 0,22.6687012 L0,2.33129883 C0,1.04375 0.9185,0 2.05154297,0 L19.948457,0 C21.0815,0 22,1.04375 22,2.33129883 L22,22.6687012 Z" id="Shape" fill="url(#linearGradient-2)" fill-rule="nonzero"></path>
+                        <path d="M19.948457,0 L19.3445742,0 C17.9600781,11.1980957 9.96875,19.9882324 0,21.123877 L0,22.6687012 C0,23.95625 0.9185,25 2.05154297,25 L19.948457,25 C21.0815,25 22,23.95625 22,22.6687012 L22,2.33129883 C22,1.04375 21.0815,0 19.948457,0 Z" id="Shape" fill="url(#linearGradient-3)" fill-rule="nonzero"></path>
+                        <g id="分组-3" transform="translate(4.000000, 6.000000)" fill="#FE6C6B">
+                            <rect id="矩形" x="0" y="0" width="15" height="1.07692308" rx="0.538461538"></rect>
+                            <rect id="矩形-copy" x="0" y="4.30769231" width="10" height="1.07692308" rx="0.538461538"></rect>
+                            <rect id="矩形-copy-2" x="0" y="8.61538462" width="13" height="1.07692308" rx="0.538461538"></rect>
+                            <rect id="矩形-copy-3" x="0" y="12.9230769" width="7" height="1.07692308" rx="0.538461538"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

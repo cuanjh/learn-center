@@ -93,6 +93,7 @@ export default {
   radioAuthorCommentRewardList: '/feedv1/dynamic/detail', // 动态、作业详情接口 动态打赏列表rewards取出
   radioAuthorCommentReward: '/feedv1/dynamic/reward', // 动态奖励接口
   disvRecommendRadiosApi: '/disv1/radio/recommends', // 电台推荐接口
+  getRandomRadioApi: '/disv1/radio/recommend_one', // 电台首页随机推荐电台
 
   // 头条
   headlineHome: '/disv1/headline/home', // 头条首页接口

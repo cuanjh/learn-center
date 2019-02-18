@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>强推荐默认</title>
+    <desc>Created with Sketch.</desc>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="iPhone-SE" transform="translate(-51.000000, -11.000000)" fill-rule="nonzero">
+            <g id="强推荐默认" transform="translate(51.000000, 11.000000)">
+                <circle id="椭圆形" stroke="#FFFFFF" stroke-width="3" fill-opacity="0.221099411" fill="#002843" cx="18" cy="18" r="16.5"></circle>
+                <path d="M10.8141934,13.6629128 L20.9339311,11.3629724 C21.7417576,11.1793755 22.5454651,11.6854135 22.729062,12.49324 C22.7758719,12.6992038 22.7786566,12.9127315 22.7372337,13.1198459 L20.668835,23.4618394 C20.4738735,24.436647 19.5255883,25.0688371 18.5507808,24.8738756 C18.2023167,24.8041828 17.8822786,24.6329036 17.6309976,24.3816226 L9.94031916,16.6909441 C9.23737543,15.9880004 9.23737543,14.8483035 9.94031916,14.1453597 C10.180303,13.9053759 10.4832445,13.7381284 10.8141934,13.6629128 Z" id="矩形" fill="#FFFFFF" transform="translate(16.089737, 18.117261) rotate(-315.000000) translate(-16.089737, -18.117261) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

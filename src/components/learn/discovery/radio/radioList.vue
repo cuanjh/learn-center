@@ -5,16 +5,15 @@
         <span>我的学习账户</span>
       </router-link>
       >
-      <router-link :to="{path: '/app/discovery/home'}">
+      <router-link :to="{path: '/app/discovery/radio-home'}">
         <span>电台</span>
       </router-link>
       >
-      <router-link :to="{path: '/app/discovery/radio-home'}">
-        <span>分类</span>
+      <router-link :to="{path: '/app/discovery/home'}">
+        <span>简介简介军军</span>
       </router-link>
-      >
       <div class="nav-current">
-        课程详情
+        分类
       </div>
     </div>
     <div class="classification">
@@ -117,6 +116,7 @@ export default {
     }
   },
   mounted () {
+    console.log('跳转之后的item', this.courseOrder)
     this.isActive = this.courseOrder.item.list_order
     console.log('跳转之后的item', this.courseOrder)
     console.log('isActive', this.isActive)
@@ -413,7 +413,7 @@ a {
                     .play {
                       width: 24px;
                       height: 24px;
-                      background-image: url('../../../../../static/images/discovery/radio-list-play.svg');
+                      background-image: url('../../../../../static/images/radionoPlay.svg');
                       background-repeat: no-repeat;
                       background-size: cover;
                       display: inline-block;
@@ -421,7 +421,7 @@ a {
                     .pause {
                       width: 24px;
                       height: 24px;
-                      background-image: url('../../../../../static/images/discovery/radio-list-pause.svg');
+                      background-image: url('../../../../../static/images/radioPlay.svg');
                       background-repeat: no-repeat;
                       background-size: cover;
                       display: inline-block;

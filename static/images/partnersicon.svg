@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>分组 6 copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="19.578125%" y1="12.0039062%" x2="85.3007812%" y2="82.9960938%" id="linearGradient-1">
+            <stop stop-color="#FFEBC5" offset="0%"></stop>
+            <stop stop-color="#FFD392" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="39.5380435%" y1="8.67866848%" x2="100%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#FFCF31" offset="0%"></stop>
+            <stop stop-color="#FFBB10" offset="100%"></stop>
+        </linearGradient>
+        <path d="M9.34782609,8.26086957 C6.94658804,8.26086957 5,6.41161092 5,4.13043478 C5,1.84925864 6.94658804,-1.42108547e-14 9.34782609,-1.42108547e-14 C11.7490641,-1.42108547e-14 13.6956522,1.84925864 13.6956522,4.13043478 C13.6956522,6.41161092 11.7490641,8.26086957 9.34782609,8.26086957 Z M12.580122,11 C15.5734146,11 18,13.2439165 18,16.0045935 L18,18.7031439 C18,19.0127023 17.7278659,19.2608696 17.3921951,19.2608696 L0.584878049,19.2608696 C0.249146341,19.2608696 -3.55271368e-15,19.0127589 -3.55271368e-15,18.7031439 L-3.55271368e-15,16.0045935 C-3.55271368e-15,13.2439165 2.40359756,11 5.39689024,11 L12.580122,11 Z" id="path-3"></path>
+        <linearGradient x1="141.829427%" y1="-36.4931127%" x2="85.9713056%" y2="74.0433731%" id="linearGradient-5">
+            <stop stop-color="#F8DD6F" offset="0%"></stop>
+            <stop stop-color="#EEA621" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="38.1835938%" y1="11.0631525%" x2="88.4714278%" y2="94.9260115%" id="linearGradient-6">
+            <stop stop-color="#FFC84D" offset="0%"></stop>
+            <stop stop-color="#ED9300" offset="100%"></stop>
+        </linearGradient>
+        <path d="M8.31818182,8.26086957 C5.93331585,8.26086957 4,6.41161092 4,4.13043478 C4,1.84925864 5.93331585,-1.42108547e-14 8.31818182,-1.42108547e-14 C10.7030478,-1.42108547e-14 12.6363636,1.84925864 12.6363636,4.13043478 C12.6363636,6.41161092 10.7030478,8.26086957 8.31818182,8.26086957 Z M16.4443957,19.2608696 L0.577460123,19.2608696 C0.258539877,19.2608696 1.0658141e-14,19.0127023 1.0658141e-14,18.7031439 L1.0658141e-14,16.0045935 C1.0658141e-14,13.2439165 2.3052362,11 5.14888344,11 L11.8729724,11 C14.7166196,11 17,13.2439165 17,16.0045935 L17,18.7031439 C17,19.0127023 16.763316,19.2608696 16.4443957,19.2608696 Z" id="path-7"></path>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="移动APP产品介绍及下载页-Copy-4" transform="translate(-995.000000, -1003.000000)">
+            <rect fill="#FFFFFF" x="0" y="0" width="1920" height="2218"></rect>
+            <g id="分组-6-copy" transform="translate(995.000000, 1003.000000)">
+                <g id="分组">
+                    <circle id="椭圆形-copy" fill-opacity="0.79" fill="url(#linearGradient-1)" cx="25" cy="25" r="25"></circle>
+                    <circle id="椭圆形" fill="#FFFFFF" cx="25" cy="25" r="23"></circle>
+                    <circle id="椭圆形-copy" fill-opacity="0.79" fill="url(#linearGradient-1)" cx="25" cy="25" r="20"></circle>
+                </g>
+                <g id="分组-7" transform="translate(11.000000, 15.000000)">
+                    <g id="Rectangle-path" transform="translate(10.000000, 0.000000)">
+                        <mask id="mask-4" fill="white">
+                            <use xlink:href="#path-3"></use>
+                        </mask>
+                        <use id="Mask" fill="url(#linearGradient-2)" fill-rule="nonzero" xlink:href="#path-3"></use>
+                        <rect fill="#FFD354" fill-rule="nonzero" mask="url(#mask-4)" x="14" y="16" width="1" height="3.3"></rect>
+                    </g>
+                    <path d="M16.5460963,11 L12.6705455,11 C9.53957219,11 7,13.173056 7,15.8465537 L7,18.7207563 C7,19.0205939 7.28607487,19.2608696 7.63721925,19.2608696 L19,19.2608696 L19,15.3572353 C19,13.5990863 18.0321711,12.041103 16.5460963,11 Z" id="Shape" fill="url(#linearGradient-5)" fill-rule="nonzero"></path>
+                    <g id="Rectangle-path-+-Rectangle-path-Mask">
+                        <mask id="mask-8" fill="white">
+                            <use xlink:href="#path-7"></use>
+                        </mask>
+                        <use id="Mask" fill="url(#linearGradient-6)" fill-rule="nonzero" xlink:href="#path-7"></use>
+                        <rect id="Rectangle-path" fill="#FFC258" fill-rule="nonzero" mask="url(#mask-8)" x="3" y="16" width="1" height="3.3"></rect>
+                        <rect id="Rectangle-path" fill="#FFC258" fill-rule="nonzero" mask="url(#mask-8)" x="13" y="16" width="1" height="3.3"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

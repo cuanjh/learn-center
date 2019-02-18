@@ -718,6 +718,7 @@ export default {
   width: 34px;
   height: 34px;
   border-radius: 50%;
+  border: 2px solid #fff;
 }
 
 .learn-user .active {

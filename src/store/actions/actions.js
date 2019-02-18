@@ -86,5 +86,9 @@ export default {
   // 获取世界语言地图统计数据
   getMapLangInfo ({commit}, params) {
     return httpLogin(config.langMapInfoApi, params)
+  },
+  // 随机获取推荐的电台
+  getRandomRadio ({commit}, params) {
+    return httpLogin(config.getRandomRadioApi, params)
   }
 }

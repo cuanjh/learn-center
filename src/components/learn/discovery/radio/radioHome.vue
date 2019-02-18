@@ -1,12 +1,21 @@
 <template>
   <div class="radio-wrap">
+    <div class="nav">
+      <router-link :to="{path: '/app/user/course'}">
+        <span>我的学习账户</span>
+      </router-link>
+      >
+      <div class="nav-current">
+        电台
+      </div>
+    </div>
     <div class="radio-swiper">
       <div class="left">
         <div class="swiper-container">
           <div id="swiper-wrapper" class="swiper-wrapper">
             <div id="swiper-slide" class="swiper-slide" v-for="(item, index) in banners" :key="index" @click="get(item.code)">
               <img class="wheeling_img" :src="item.cover" alt="">
-              <div class="news_item_right_swipper">
+              <div class="news_item_right_swipper" v-show="false">
                 <div class="news_item_right1">
                   <span class="news_item_title">{{item.title}}</span>
                 </div>
@@ -20,14 +29,14 @@
           <!-- 分页器 -->
           <div id="swiper-pagination" class="swiper-pagination"></div>
           <!-- 导航按钮 -->
-          <div id="swiper-button-prev" class="swiper-button-prev"></div>
-          <div id="swiper-button-next" class="swiper-button-next"></div>
+          <!-- <div id="swiper-button-prev" class="swiper-button-prev"></div>
+          <div id="swiper-button-next" class="swiper-button-next"></div> -->
         </div>
       </div>
       <div class="right">
         <div class="name">
           <span>分类 / </span>
-          <span class="more">更多</span>
+          <span @click="lookMoreRadioList(menus[0])" class="more">更多</span>
         </div>
         <ul>
           <li v-for="item in menus" :key="item.menu_id">
@@ -39,27 +48,20 @@
     <div class="radio-recommend">
       <div class="left">
         <div class="recommend-list">
-          <div class="recommend-item">Special recommendation</div>
-          <div class="recommend-item">Language related</div>
-          <div class="recommend-item">Newest</div>
-          <div class="recommend-item">Star teacher</div>
+          <div @click="goRecommendRadio('hostRadio', menus[0])" class="recommend-item"><i></i><span>热播电台</span></div>
+          <div @click="goRecommendRadio('learnRecom')" class="recommend-item"><i></i><span>学习推荐</span></div>
+          <div @click="goRecommendRadio('latestRelease', menus[1])" class="recommend-item"><i></i><span>最新发布</span></div>
+          <div class="recommend-item"><i></i><span>明星主播</span></div>
         </div>
-        <div class="recommend-radio"></div>
-        <div class="recommend-teachers">
-          <ul>
-            <li v-for="author in this.authors.slice(this.startAuthorsIndex, this.startAuthorsIndex + 5)" :key="author.user_id">
-              <img :src="author.photo" alt="">
-              <p class="author_name" v-text="author.author_name"></p>
-              <p class="title" v-text="'《' + author.title + '》'"></p>
-              <p class="button"><span>follow</span></p>
-            </li>
-          </ul>
-          <div class="pre" @click="radioAuthorPre()"><i></i></div>
-          <div class="next" @click="radioAuthorNext()"><i></i></div>
-        </div>
+        <!-- 根据学习课程推荐的电台 -->
+        <get-random-radio :randomRadio="randomRadio" v-if="flag"></get-random-radio>
+        <!-- 推荐的老师 -->
+        <recommend-teachers :authors="authors"></recommend-teachers>
       </div>
       <div class="right">
-        <div class="radio-self-brief"></div>
+        <!-- 用户信息 -->
+        <user-box></user-box>
+        <introduce-app-box></introduce-app-box>
       </div>
     </div>
     <div class="radio-container">
@@ -78,16 +80,16 @@
         </div>
         <div class="radio-list">
           <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
-            <a @mouseenter="radioMouseEnter($event)" @mouseleave="radioMouseLeave($event)">
+            <div class="play-radio">
               <img v-lazy="radio.cover" :key="radio.cover" alt="">
-              <div class="gradient-layer-play" @click="loadRadioList($event, radio)" style="display: none">
+              <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                 <i class="play"></i>
               </div>
               <div class="subscribe">
                 <i></i>
                 <span v-text="radio.buy_num"></span>
               </div>
-            </a>
+            </div>
             <router-link tag="div" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
             <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
             <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
@@ -104,26 +106,44 @@ import Bus from '../../../../bus'
 import $ from 'jquery'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
+import UserBox from '../../../common/userBox.vue'
+import IntroduceAppBox from '../../../common/introduceAppBox.vue'
+import RecommendTeachers from '../../../common/recommendTeachers.vue'
+import GetRandomRadio from '../../../common/getRandomRadio.vue'
 
 export default {
   data () {
     return {
+      flag: false,
       banners: [],
       menus: [],
       authors: [],
-      startAuthorsIndex: 0,
-      menuRadios: []
+      // startAuthorsIndex: 0,
+      menuRadios: [],
+      randomRadio: {} // 随机推荐电台
     }
+  },
+  components: {
+    UserBox,
+    GetRandomRadio,
+    IntroduceAppBox,
+    RecommendTeachers
   },
   mounted () {
     let _this = this
     _this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
       _this.banners = res.data.banners
-      _this.menus = res.data.menuInfos
+      _this.menus = res.data.menuRadios
       _this.authors = res.data.authors
       _this.menuRadios = res.data.menuRadios
       _this.swiperInit()
+    })
+    // 随机推荐单个电台
+    _this.getRandomRadio().then(res => {
+      console.log('随机推荐单个电台', res)
+      _this.randomRadio = res.data
+      this.flag = true
     })
   },
   computed: {
@@ -135,7 +155,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      postDisvRadio: 'course/postDisvRadio'
+      postDisvRadio: 'course/postDisvRadio',
+      getRandomRadio: 'getRandomRadio' // 随机推荐单个电台
     }),
     loadRadioList (e, radio) {
       if (this.isPlay && radio.code === this.lastCode) {
@@ -147,7 +168,6 @@ export default {
         $('.gradient-layer-play i').addClass('play')
         $(e.target).removeClass('play')
         $(e.target).addClass('pause')
-        $('.gradient-layer-play').not($(e.target).parent()).hide()
         if (radio.code !== this.lastCode) {
           Bus.$emit('getRadioCardList', radio)
           this.lastCode = radio.code
@@ -156,14 +176,6 @@ export default {
         }
       }
       this.isPlay = !this.isPlay
-    },
-    radioMouseEnter (e) {
-      $('.gradient-layer-play', $(e.target)).show()
-    },
-    radioMouseLeave (e) {
-      if ($('.gradient-layer-play i', $(e.target)).hasClass('play')) {
-        $('.gradient-layer-play', $(e.target)).hide()
-      }
     },
     // 查看更多
     goRadioList (item) {
@@ -175,17 +187,16 @@ export default {
       sessionStorage.setItem('itemInfo', jsonStr)
       this.$router.push({path: '/app/discovery/radio-list'})
     },
-    radioAuthorPre () {
-      if (this.startAuthorsIndex === 0) {
-        return
+    // 点击更多
+    lookMoreRadioList (item) {
+      console.log('==========>', item)
+      sessionStorage.removeItem('itemInfo')
+      let obj = {
+        'item': item
       }
-      this.startAuthorsIndex--
-    },
-    radioAuthorNext () {
-      if (this.startAuthorsIndex === this.authors.length - 5) {
-        return
-      }
-      this.startAuthorsIndex++
+      let jsonStr = JSON.stringify(obj)
+      sessionStorage.setItem('itemInfo', jsonStr)
+      this.$router.push({path: '/app/discovery/radio-list'})
     },
     swiperInit () {
       this.$nextTick(() => {
@@ -205,10 +216,10 @@ export default {
           },
           paginationClickable: true,
           mousewheelControl: true,
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
-          },
+          // navigation: {
+          //   nextEl: '.swiper-button-next',
+          //   prevEl: '.swiper-button-prev'
+          // },
           pagination: {
             el: '.swiper-pagination',
             clickable: true
@@ -221,6 +232,12 @@ export default {
       this.$router.push({
         path: `/app/discovery/radio-detail/${code}`
       })
+    },
+    // 最新推荐等四个页面
+    goRecommendRadio (navNum, item) {
+      console.log(navNum)
+      this.$router.push({path: 'radio-classify', query: { isActive: navNum }})
+      // this.$router.push({path: 'radio-classify'})
     }
   }
 }
@@ -231,9 +248,24 @@ export default {
   width: 1200px;
   margin: 0 auto;
   min-height: 1000px;
+  .nav {
+    margin: 24px 0 12px 0;
+    font-weight: bold;
+    display: inline-block;
+    font-size: 16px;
+    a {
+      span {
+        color: #999999;
+      }
+    }
+    .nav-current {
+      display: inline-block;
+      color: #2A9FE4;
+    }
+  }
   .radio-swiper {
-    margin: 16px auto;
-    height: 340px;
+    margin: 0px auto 16px;
+    height: 300px;
     .left {
       float: left;
       margin-right: 23px;
@@ -258,6 +290,8 @@ export default {
         }
         #swiper-pagination {
           #swiper-pagination-bullet {
+            width: 10px !important;
+            height: 10px !important;
             transition: width 0.3s ease-in-out !important;
           }
           #swiper-pagination-bullet-active {
@@ -265,17 +299,32 @@ export default {
             border-radius: 8px !important;
           }
         }
+        .swiper-pagination {
+          position: absolute;
+          bottom: 0;
+          text-align: right;
+          padding-right: 46px;
+        }
+        #swiper-pagination {
+          .swiper-pagination-bullet {
+            width: 20px !important;
+            height: 20px !important;
+          }
+        }
       }
     }
     .right {
       display: inline-block;
       width: 296px;
+      height: 296px;
+      overflow: hidden;
       .name {
         font-size: 20px;
         font-weight: 600;
         color: #4a4a4a;
         line-height: 28px;
         .more {
+          cursor: pointer;
           font-size: 16px;
           color: #2a9fe4;
         }
@@ -296,6 +345,11 @@ export default {
             font-weight: 400;
           }
         }
+        li:hover {
+          span {
+            color: #2A9FE4;
+          }
+        }
       }
     }
   }
@@ -309,117 +363,83 @@ export default {
         .recommend-item {
           display: inline-block;
           width: 219px;
-          height: 70px;
           background-color: #0a2b40;
           font-size: 16px;
           font-weight: bold;
           color: #fff;
-          padding: 10px 25px;
+          padding: 20px 25px;
           margin-right: 1px;
-        }
-      }
-      .recommend-radio {
-        width: 880px;
-        height: 184px;
-        margin-top: 8px;
-        background-color: #EEF2F3;
-      }
-      .recommend-teachers {
-        margin: 16px 0 43px;
-        position: relative;
-        ul {
-          margin-left: 17px;
-          li {
+          line-height: 33px;
+          border-top: 3px solid #2A9FE4FF;
+          span {
             display: inline-block;
-            width: 158px;
-            height: 220px;
-            background-color: #eef2f3;
-            border-radius: 5px;
-            margin-right: 14px;
-            text-align: center;
-            img {
-              width: 70px;
-              height: 70px;
-              background-color: #B2C0C9;
-              border-radius: 50%;
-              margin-top: 27px;
-            }
-            .author_name {
-              font-size: 14px;
-              font-weight: bold;
-              color: #103044;
-              margin-top: 14px;
-              // width: 100px;
-              overflow: hidden;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-            }
-            .title {
-              font-size: 14px;
-              font-weight: 500;
-              overflow: hidden;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-            }
-            .button {
-              width: 84px;
-              height: 27px;
-              background-color: #fff;
-              border-radius: 17px;
-              padding: 4px 22px;
-              margin: 22px auto 0;
-              span {
-                font-size: 14px;
-                font-weight: 500;
-                color: #2A9FE4;
-              }
-            }
+            width: 120px;
           }
-        }
-        .pre {
-          position: absolute;
-          background-color: #fff;
-          margin-top: -125px;
-          width:28px;
-          height:36px;
-          box-shadow:3px 1px 4px 0px rgba(60,91,111,0.05);
-          border-radius:0px 5px 5px 0px;
-          cursor: pointer;
           i {
-            width:28px;
-            height:36px;
-            background-image: url('../../../../../static/images/discovery/radio-author-left.svg');
-            background-repeat: no-repeat;
-            background-size: cover;
             display: inline-block;
-            &:hover {
-              background-image: url('../../../../../static/images/discovery/radio-author-left-hover.svg');
+            background-repeat: no-repeat;
+            background-position:center;
+            background-size: cover;
+            width: 28px;
+            height: 30px;
+            margin-right: 13px;
+          }
+        }
+        .recommend-item:nth-child(1) {
+          i {
+            background-image: url('../../../../../static/images/hotradio.svg');
+          }
+          &:hover {
+            cursor: pointer;
+            color: #2A9FE4FF;
+            i {
+              background-image: url('../../../../../static/images/hotradiohover.svg');
             }
           }
         }
-        .next {
-          position: absolute;
-          right: 0;
-          background-color: #fff;
-          margin-top: -125px;
-          width:28px;
-          height:36px;
-          box-shadow:-3px 1px 4px 0px rgba(60,91,111,0.05);
-          border-radius:5px 0px 0px 5px;
-          cursor: pointer;
+        .recommend-item:nth-child(2) {
           i {
-            width:28px;
-            height:36px;
-            background-image: url('../../../../../static/images/discovery/radio-author-right.svg');
-            background-repeat: no-repeat;
-            background-size: cover;
-            display: inline-block;
-            &:hover {
-              background-image: url('../../../../../static/images/discovery/radio-author-right-hover.svg');
+            background-image: url('../../../../../static/images/learntuijian.svg');
+          }
+          &:hover {
+            cursor: pointer;
+            color: #2A9FE4FF;
+            i {
+              background-image: url('../../../../../static/images/learntuijianhover.svg');
+            }
+          }
+        }
+        .recommend-item:nth-child(3) {
+          i {
+            background-image: url('../../../../../static/images/latest.svg');
+          }
+          &:hover {
+            cursor: pointer;
+            color: #2A9FE4FF;
+            i {
+              background-image: url('../../../../../static/images/latesthover.svg');
+            }
+          }
+        }
+        .recommend-item:nth-child(4) {
+          i {
+            background-image: url('../../../../../static/images/star.svg');
+          }
+          &:hover {
+            cursor: pointer;
+            color: #2A9FE4FF;
+            i {
+              background-image: url('../../../../../static/images/starhover.svg');
             }
           }
         }
       }
+    }
+    // 右边
+    .right {
+      display: inline-block;
+      width: 296px;
+      margin-left: 23px;
     }
   }
   .radio-container {
@@ -461,7 +481,7 @@ export default {
     }
     .radio-type {
       width: 880px;
-      height: 260px;
+      // height: 260px;
       background-color: #ffffff;
       border-radius: 3px;
       display: inline-block;
@@ -470,20 +490,22 @@ export default {
       .radio-type-top {
         width: 100%;
         // border-bottom: 1px solid #EAEAEA;
-        height: 40px;
+        // height: 40px;
         span {
           &:first-child {
+            display: inline-block;
+            display: none;
             background-color: #2A9FE4;
             width: 6px;
             height: 20px;
-            display: inline-block;
             border-radius: 4px;
           }
           &:nth-child(2) {
-            color: #444444;
-            font-size: 24px;
-            margin-left: 10px;
-            line-height: 22px;
+            color: #0A2B40FF;
+            font-size: 16px;
+            font-weight: bold;
+            // margin-left: 10px;
+            line-height: 20px;
           }
           &:last-child{
             cursor: pointer;
@@ -491,9 +513,9 @@ export default {
             color: #b8b8b8;
             font-size: 15px;
             i{
-              width: 7px;
-              height: 11px;
-              background-image: url('../../../../../static/images/discovery/radio-more.png');
+              width: 8px;
+              height: 10px;
+              background-image: url('../../../../../static/images/more.svg');
               background-repeat: no-repeat;
               background-size: cover;
               display: inline-block;
@@ -502,6 +524,9 @@ export default {
             }
             &:hover {
               color: #2A9FE4;
+              i {
+                background-image: url('../../../../../static/images/morehover.svg');
+              }
             }
           }
         }
@@ -513,36 +538,41 @@ export default {
           margin-top: 20px;
           margin-right: 15px;
           width: 152px;
-          height: 159px;
+          // height: 159px;
           background-color: #ffffff;
-          cursor: pointer;
-          .gradient-layer-play {
+          .play-radio {
+            position: relative;
+            display: block;
             width: 152px;
             height: 80px;
+          }
+          .gradient-layer-play {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
             position: absolute;
-            background-image: url('../../../../../static/images/discovery/radio-gradient-layer.png');
-            background-repeat: no-repeat;
-            background-size: cover;
-            margin-top: -80px;
+            // background-image: url('../../../../../static/images/discovery/radio-gradient-layer.png');
+            // background-repeat: no-repeat;
+            // background-size: cover;
+            bottom: 0;
+            right: 0;
             text-align:  center;
             z-index: 2;
             .play {
-              width: 52px;
-              height: 52px;
-              background-image: url('../../../../../static/images/discovery/radio-list-play.svg');
+              width: 24px;
+              height:24px;
+              background-image: url('../../../../../static/images/radionoPlay.svg');
               background-repeat: no-repeat;
               background-size: cover;
               display: inline-block;
-              margin-top: 16px;
             }
             .pause {
-              width: 52px;
-              height: 52px;
-              background-image: url('../../../../../static/images/discovery/radio-list-pause.svg');
+              width: 24px;
+              height: 24px;
+              background-image: url('../../../../../static/images/radioPlay.svg');
               background-repeat: no-repeat;
               background-size: cover;
               display: inline-block;
-              margin-top: 16px;
             }
           }
           img {
@@ -573,10 +603,10 @@ export default {
             }
           }
           .title {
-            color: #444444;
+            color: #333333FF;
             font-size: 14px;
-            margin-top: 15px;
-            height: 41px;
+            margin-top: 10px;
+            // height: 41px;
             line-height: 20px;
             word-break: break-all;
             display: -webkit-box;
@@ -587,10 +617,9 @@ export default {
           .author {
             color: #B8B8B8;
             font-size: 12px;
-            display: inline-block;
             position: relative;
-            margin-top: 10px;
-            width: 70px;
+            margin-top: 6px;
+            width: 90%;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -599,10 +628,8 @@ export default {
           .money {
             color: #B8B8B8;
             font-size: 12px;
-            float: right;
-            /* display: inline-block; */
             position: relative;
-            margin-top: 10px;
+            margin-top: 4px;
             font-weight: 400;
           }
         }
