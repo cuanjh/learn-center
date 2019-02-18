@@ -281,7 +281,8 @@ export default {
       countryInfo: 'course/countryInfo', // 国家详情
       getShelfResList: 'course/getShelfResList',
       postPurchaseCourse: 'course/postPurchaseCourse',
-      getLearnCourses: 'course/getLearnCourses'
+      getLearnCourses: 'course/getLearnCourses',
+      getEndangeredDetail: 'getEndangeredDetail'
     }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag

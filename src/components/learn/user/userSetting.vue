@@ -77,7 +77,7 @@
         </div>
 
         <div class='expertLang-box' :class="{'error':!languageSkill}">
-          <span style='position:relative;vertical-align: top;line-height: 40px;'>精通语言</span>
+          <span style='position:relative;vertical-align: top;line-height: 40px;'>我的母语</span>
           <div class="selsex sellang">
             <language-skill-selector ref="langSkill" :value="languageSkill" @update="updateLanguageSkill"></language-skill-selector>
           </div>
@@ -315,7 +315,7 @@ export default {
       } else {
         result.skill_langs.forEach((value, index, array) => {
           var _tmp = {}
-          _tmp.language = value.lan_code
+          _tmp.lan_code = value.lan_code
           _tmp.name = value.name
           _this.languageSkill.push(_tmp)
         })
@@ -500,12 +500,8 @@ export default {
         return this.alertMessageNotFull()
       }
       // 精通语言
-      if (this.languageSkill.length > 0) {
-        _params.skillLangs = []
-        this.languageSkill.forEach((value, index, array) => {
-          _params.skillLangs.push(value.language)
-        })
-        // _params.skillLangs = _params.skillLangs.join(',')
+      if (this.languageSkill) {
+        _params.skillLangs = this.languageSkill['language']
       } else {
         return this.alertMessageNotFull()
       }
@@ -529,7 +525,6 @@ export default {
         }
       })
       await _this.getUserInfo()
-      _this.loadData()
     },
     modifyPsw () {
       var _this = this

@@ -42,6 +42,14 @@ export default {
   userExistsPhone ({commit}, params) {
     return httpLogin(config.umUserExistsPhoneApi, params)
   },
+  // 语言设置状态接口
+  getLangsState ({commit, dispatch}, params) {
+    httpLogin(config.umLangsStateApi).then(res => {
+      commit('updateLangsState', res.state)
+      let curLanCode = res.state.currentLang['lan_code']
+      dispatch('getRecommendRadios', {'lan_code': curLanCode, limit: 6, page: 1})
+    })
+  },
   getCourseList ({commit}) {
     return httpLogin(config.courseListApi)
   },
@@ -58,5 +66,25 @@ export default {
   // 濒危语言地图列表
   getEndangeredMap ({commit}, params) {
     return httpLogin(config.endangeredMapListApi, params)
+  },
+  // 濒危语言详情
+  getEndangeredDetail ({commit}, params) {
+    return httpLogin(config.endangeredLangDetailApi, params)
+  },
+  // 获取推荐的电台主播
+  getRecommendTeachers ({commit}, params) {
+    httpLogin(config.recommendRadioTeachersApi).then(res => {
+      commit('updatereCommendRadioTeachers', res.data)
+    })
+  },
+  // 获取推荐的电台
+  getRecommendRadios ({commit}, params) {
+    httpLogin(config.disvRecommendRadiosApi, params).then(res => {
+      commit('updateRecommendRadios', res)
+    })
+  },
+  // 获取世界语言地图统计数据
+  getMapLangInfo ({commit}, params) {
+    return httpLogin(config.langMapInfoApi, params)
   }
 }

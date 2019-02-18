@@ -495,7 +495,7 @@ export default {
           this.isShow = !this.isShow
         } else {
           this.isShow = !this.isShow
-          let top = $('#' + chapterCode).offset().top - 138
+          let top = $('#' + chapterCode).offset().top - 126
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }
 
@@ -507,7 +507,7 @@ export default {
         }
         this.isShow = false
         setTimeout(() => {
-          let top = $('#' + chapterCode).offset().top - 138
+          let top = $('#' + chapterCode).offset().top - 126
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, time)
 

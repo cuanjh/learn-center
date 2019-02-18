@@ -1,22 +1,17 @@
 <template>
   <multiselect
     label="name"
-    track-by="name"
-    :options="options"
-    :close-on-select="true"
+    :selected="value"
     v-model="selected"
-    :multiple="true"
-    :taggable="false"
-    :loading='false'
-    :max='3'
+    :options="options"
+    :searchable='true'
     @input="updateSelected"
-    placeholder='精通语言'
+    placeholder='搜索国籍/地区'
     select-label='按回车可选择'
     deselect-label='按回车取消选择'
     selected-label='已选择'
   >
     <span slot="noResult" >未找到相匹配的语言</span>
-    <span slot="maxElements">最多只能选3门精通语言</span>
   </multiselect>
 </template>
 

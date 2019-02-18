@@ -92,6 +92,8 @@ export default {
   radioAuthorCommentPub: '/feedv1/comment/pub', // 发表动态评论、批改作业接口
   radioAuthorCommentRewardList: '/feedv1/dynamic/detail', // 动态、作业详情接口 动态打赏列表rewards取出
   radioAuthorCommentReward: '/feedv1/dynamic/reward', // 动态奖励接口
+  disvRecommendRadiosApi: '/disv1/radio/recommends', // 电台推荐接口
+
   // 头条
   headlineHome: '/disv1/headline/home', // 头条首页接口
   headlineList: '/disv1/headline/list', // 头条列表接口
@@ -107,6 +109,9 @@ export default {
   partnerListApi: '/feedv1/partner/list', // 语伴列表接口
   partnerSearchApi: '/feedv1/partner/search', // 语伴搜索接口
   endangeredMapListApi: '/studyv1/shelf/v2/endangered_map', // 濒危语言列表
+  endangeredLangDetailApi: '/studyv1/shelf/v2/endangered_lang', // 濒危语言详情
+  recommendRadioTeachersApi: '/disv1/radio/recommend_teachers', // 推荐的电台主播
+  langMapInfoApi: '/studyv1/learn_info/v2/lang_map_info', // 语言地图统计数据
 
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token
@@ -137,5 +142,6 @@ export default {
   umUpdateUserInfoApi: '/umv1/user/edit/info', // 修改用户信息
   umUserBindPhoneApi: '/umv1/user/sns/bind/phone', // 绑定手机号码
   umUserExistsPhoneApi: '/umv1/user/exists/phone', // 验证手机号是否存在接口
-  umLangsListApi: '/umv1/langs/lists' // 语言列表接口
+  umLangsListApi: '/umv1/langs/lists', // 语言列表接口
+  umLangsStateApi: '/umv1/langs/state' // 语言设置状态接口
 }
