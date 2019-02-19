@@ -19,23 +19,23 @@ export default {
 </script>
 <style lang="less" scoped>
 .introduce-app {
-  width: 296px;
+  width: 280px;
   height: 200px;
   display: inline-block;
   margin-top: 20px;
   background: #fff;
   .introduce-app-cont {
-    width: 296px;
+    width: 280px;
     background: #fff;
     .introduce-app-img {
-      width: 296px;
-      height: 260px;
+      width: 280px;
+      height: 220px;
       background: pink;
     }
     .ios-google {
       width: 100%;
-      display: inline-block;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
       padding: 12px 20px;
       .ios {
         cursor: pointer;

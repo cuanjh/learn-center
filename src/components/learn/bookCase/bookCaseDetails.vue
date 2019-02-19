@@ -553,7 +553,7 @@ export default {
     }
     // 上部右边部分
     .details-header-right {
-      width: 260px;
+      width: 280px;
       border-radius: 5px;
       background: #ffffff;
       .right-content {

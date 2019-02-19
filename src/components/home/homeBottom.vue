@@ -1,6 +1,6 @@
 <style scoped>
   .bottom-box {
-    position: fixed;
+    position: relative;
     background-color: #00315e;
     padding-top: 50px;
     bottom: 0;

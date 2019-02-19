@@ -44,7 +44,7 @@ export default {
 
 <style lang="less" scoped>
 .bg-box {
-    min-height: 765px;
+    min-height: 560px;
     /* background-color: #fcf1d5; */
     background-size: cover;
     padding: 80px 0;

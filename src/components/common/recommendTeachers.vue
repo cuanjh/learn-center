@@ -9,10 +9,17 @@
           <img :src="author.photo" alt>
           <p class="author_name" v-text="author.author_name"></p>
           <p class="title" v-text="'《' + author.title + '》'"></p>
-          <p class="button">
+          <!-- <p class="button">
             <i></i>
             <span>关注</span>
-          </p>
+          </p> -->
+          <div class="teacher-follow">
+            <p class="button" @click="relation(author)">
+              <i></i>
+              <span v-if="author.has_followed === 0">关注</span>
+              <span v-else>取消关注</span>
+            </p>
+          </div>
         </li>
         <li>
           <div class="view-more">
@@ -33,6 +40,7 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 
 export default {
   props: ['authors'],
@@ -42,17 +50,46 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
+      remRadioRelationCancel: 'course/remRadioRelationCancel' // 取消关注
+    }),
+    // 上一个
     radioAuthorPre () {
       if (this.startAuthorsIndex === 0) {
         return
       }
       this.startAuthorsIndex--
     },
+    // 下一个
     radioAuthorNext () {
       if (this.startAuthorsIndex === this.authors.length - 4) {
         return
       }
       this.startAuthorsIndex++
+    },
+    // 关注取消关注
+    relation (teacher) {
+      let followId = teacher.user_id
+      if (teacher.has_followed === 1) { // 关注了
+        console.log('关注了')
+        this.remRadioRelationCancel({following_id: followId}).then((data) => {
+          console.log('取消关注', data)
+          if (data.success === true) {
+            // _this.text = '关注'
+            teacher.has_followed = 0
+          }
+        })
+      } else if (teacher.has_followed === 0) { // 没关注
+        console.log('没关注')
+        this.getRadioRelationFollow({following_id: followId}).then((data) => {
+          console.log('关注', data)
+          if (data.success === true) {
+            // _this.text = '取消关注'
+            teacher.has_followed = 1
+          }
+        })
+      }
     }
   }
 }
@@ -96,9 +133,11 @@ export default {
         white-space: nowrap;
         text-overflow: ellipsis;
       }
+      .teacher-follow {
+        display: inline-block;
+      }
       .button {
-        width: 84px;
-        padding: 4px 0;
+        padding: 4px 18px;
         background-color: #fff;
         border-radius: 17px;
         display: flex;
@@ -126,7 +165,7 @@ export default {
           display: inline-block;
           width: 12px;
           height: 12px;
-          background: url("../../../static/images/followhover.svg") no-repeat center;
+          background: url("../../../static/images/follow.svg") no-repeat center;
           background-size: cover;
           margin-right: 5px;
         }

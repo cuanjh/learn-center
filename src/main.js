@@ -35,7 +35,7 @@ Vue.prototype.$md5 = md5
 Vue.use(ElementUI)
 Vue.use(VueLazyLoad, {
   error: require('../static/images/lazyimg/error.gif'),
-  loading: require('../static/images/lazyimg/loading.gif'),
+  // loading: require('../static/images/lazyimg/loading.gif'),
   listenEvents: ['scroll'] // 你想要监听的事件,我个人喜欢全部监听，方便
 })
 

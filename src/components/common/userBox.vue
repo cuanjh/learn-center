@@ -62,7 +62,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .user-info {
-  width: 296px;
+  width: 280px;
   display: inline-block;
   background: #fff;
   .content {
