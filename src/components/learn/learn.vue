@@ -151,8 +151,7 @@ export default {
   .learn-cover {
     width: 100%;
     height: 100%;
-    opacity: .9;
-    background-color: #003d5a;
+    background-color: rgba(0, 0, 0, .4);
     position: fixed;
     top: 0;
     left: 0;

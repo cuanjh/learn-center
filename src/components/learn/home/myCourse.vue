@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="correct-rate">
-        <p>正确率 {{ curChapterCorrectRate ? curChapterCorrectRate : 0 + '%' }}</p>
+        <p>正确率 {{ curChapterCorrectRate ? curChapterCorrectRate + '%' : 0 + '%' }}</p>
         <div class="progress-bg">
           <div class="progress" :style="{width: curChapterCorrectRate +'%'}"></div>
         </div>
@@ -373,7 +373,7 @@ opacity:0.8251999999999999;
   }
 
   .progress-area .progress{
-    background-color: #7ED321;
+    background-color: #2A9FE4;
     height: 6px;
     border-radius: 6px;
     width:0;
@@ -394,7 +394,7 @@ opacity:0.8251999999999999;
   }
 
   .correct-rate .progress{
-    background-color: #2A9FE4;
+    background-color: #7ED321;
     height: 6px;
     border-radius: 6px;
     width:0;
@@ -424,11 +424,11 @@ opacity:0.8251999999999999;
     height: 38px;
     line-height: 36px;
     border-radius: 21px;
-    border: 1px solid #717f85;
+    border: 1px solid #B2C0C9;
     font-size: 14px;
     font-weight: 800;
     text-align: center;
-    color: #717f85;
+    color: #0A2B40;
     cursor: pointer;
   }
 

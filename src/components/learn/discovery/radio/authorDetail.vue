@@ -503,7 +503,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 61, 90, .9);
+  background-color: rgba(0, 0, 0, .4);
   z-index:99999999;
   overflow: hidden;
 }
@@ -553,7 +553,7 @@ export default {
   border-radius: 20px;
   line-height: 40px;
   text-align: center;
-  background-color: #fd8469;
+  background-color: #2A9FE4;
 }
 .nolock-test-check .animated .buttons {
   width: 300px;

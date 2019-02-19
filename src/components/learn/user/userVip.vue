@@ -408,7 +408,7 @@ input:-ms-input-placeholder {
   text-align: center;
   color: #9b9b9b;
   font-size: 14px;
-  padding: 15px 0 26px 0;
+  padding: 15px 0 5px 0;
 }
 .userVip-tabItem-purchase div ol li:nth-of-type(4) {
   font-size: 12px;
