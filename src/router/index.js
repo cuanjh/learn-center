@@ -124,6 +124,7 @@ export default[
       },
       {
         path: 'index',
+        name: 'learnIndex',
         component: learnIndex
       },
       {

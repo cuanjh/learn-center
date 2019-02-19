@@ -1,5 +1,17 @@
+import _ from 'lodash'
+import simplePinyin from 'simple-pinyin'
+
 export default {
   updateCourseLangsList (state, data) {
+    let arr = []
+    data.forEach((item) => {
+      let obj = item
+      let name = item.name
+      let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
+      obj['pinyin'] = pinyin
+      obj['letter'] = pinyin.slice(0, 1).toUpperCase()
+      arr.push(obj)
+    })
     state.courseLangsList = data
   },
   // 更新快速登录登录用户的信息
@@ -31,5 +43,8 @@ export default {
     state.recommendRadioPage = res.page
     state.recommendRadios = res.data
     console.log('推荐的电台', state.recommendRadios)
+  },
+  updateRecommendRadioPage (state, page) {
+    state.recommendRadioPage = page
   }
 }

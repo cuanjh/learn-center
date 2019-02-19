@@ -5,7 +5,7 @@
 <script>
 // import $ from 'jquery'
 // import _ from 'lodash'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import BMap from 'BMap'
 import BMapLib from 'BMapLib'
 import Bus from '../../bus'
@@ -33,13 +33,16 @@ export default {
   },
   created () {
     Bus.$on('mapSearch', (key) => {
-      this.mapSearch(key)
+      this.removeMarks()
+      if (key) {
+        this.mapSearch(key)
+      }
     })
 
     // 加载官方语言数据
-    this.$on('loadCourseLangs', (courseLangs) => {
+    this.$on('loadCourseLangs', () => {
       this.removeMarks()
-      this.courseLangsMap()
+      this.courseLangsMap(this.courseLangsList)
     })
 
     this.$on('removeMarks', () => {
@@ -55,7 +58,7 @@ export default {
       console.log('濒危语种：', data)
       this.removeMarks()
       this.endangerList = data
-      this.loadEndanger()
+      this.loadEndanger(this.endangerList)
     })
   },
   mounted () {
@@ -69,6 +72,9 @@ export default {
     })
   },
   methods: {
+    ...mapActions([
+      'getEndangeredMap'
+    ]),
     // 返回
     goback () {
       this.$router.go(-1)
@@ -172,73 +178,40 @@ export default {
     mapSearch (key) {
       console.log(key)
       console.log(mp)
-      var options = {
-        renderOptions: {
-          map: mp
-        },
-        onSearchComplete: (results) => {
-          console.log('Search Completed', results)
-          // 可添加自定义回调函数
-        }
+      let _this = this
+      // 课程检索
+      let lanlist = this.courseLangsList.filter((item) => {
+        return item.letter.toUpperCase() === key.toUpperCase() || item.pinyin.indexOf(key) > -1 || item.name.indexOf(key) > -1 || item.lan_code.toUpperCase() === key.toUpperCase()
+      })
+      if (lanlist.length > 0) {
+        _this.courseLangsMap(lanlist)
       }
-      var localSearch = new BMap.LocalSearch(mp, options)
-      // let swLng = mp.getBounds().getSouthWest().lng
-      // let swLat = mp.getBounds().getSouthWest().lat
-      // let neLng = mp.getBounds().getNorthEast().lng
-      // let neLat = mp.getBounds().getNorthEast().lat
-      // var b = new BMap.Bounds(new BMap.Point(swLng, swLat), new BMap.Point(neLng, neLat)) // 范围 左下角，右上角的点位置
-      // localSearch.searchInBounds(key, b, {
-      //   customData: {
-      //     geotableId: 196965
-      //   }
-      // })
-      localSearch.search('北京')
+
+      // 濒危语言检索
+      _this.getEndangeredMap({keyword: key}).then(res => {
+        _this.loadEndanger(res.data)
+      })
     },
     // 官方语言地图
-    courseLangsMap () {
-      // let courseLangsData = mapData.courseLangsMap
-      let _this = this
-      console.log('courseLangsList', _this.courseLangsList)
+    courseLangsMap (lanList) {
+      console.log('courseLangsList', lanList)
       mapData.courseLangMap.forEach(lang => {
         if (!lang.lng) {
           console.log('lang', lang)
         }
-        let pt = new BMap.Point(lang.lng, lang.lat)
-        // var myIcon = new BMap.Icon('../../../static/images/bookCase/endangered-big.svg', new BMap.Size(150, 150))
 
-        // let marker = new BMap.Marker(pt, {icon: myIcon, offset: new BMap.Size(65, 40)})
-        let obj = _this.courseLangsList.find((x) => {
+        let obj = lanList.find((x) => {
           return x.lan_code === lang.lang_code
         })
-        // let label = new BMap.Label(obj.name['zh-CN'], {offset: new BMap.Size(60, 15)}) // 创建marker点的标记
 
-        // 对label 样式隐藏
-        // label.setStyle({display: 'none'})
-        // 把label设置到maker上
-        // marker.setLabel(label)
-        // mp.addOverlay(marker)
-        // var sContent =
-        //   '<div>' +
-        //     '<p>' +
-        //       '<img style="float:left;margin:4px" src="' + obj.flag + '" width="50" height="50" title=""/>' +
-        //       '<a href="./book-details/' + obj.lan_code + '-Basic">' +
-        //         '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
-        //           obj.name['zh-CN'] +
-        //         '</span>' +
-        //       '</a>' +
-        //     '</p>' +
-        //   '</div>'
-        // this.addMouseoverHandler(sContent, marker)
         if (obj) {
+          let pt = new BMap.Point(lang.lng, lang.lat)
           var myCompOverlay = new ComplexCustomOverlay(pt, obj, 'course')
           mp.addOverlay(myCompOverlay)
         } else {
           console.log(lang.lang_code)
         }
       })
-      /* eslint-disable */
-      // var markerClusterer = new BMapLib.MarkerClusterer(mp, {markers:markers})
-       /* eslint-enable */
     },
     // 删除覆盖物
     removeMarks () {
@@ -282,9 +255,9 @@ export default {
       mp.addControl(new BMap.NavigationControl(opts))
     },
     // 加载濒危语言
-    loadEndanger () {
+    loadEndanger (list) {
       let _this = this
-      _this.endangerList.forEach(endanger => {
+      list.forEach(endanger => {
         _this.setEndangerPoint(endanger)
       })
     },

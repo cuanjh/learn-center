@@ -52,13 +52,13 @@ export default {
     VipPrompt
   },
   mounted () {
-    var _this = this
-    this.postDisvHome().then((res) => {
-      console.log('发现首页', res)
-      // _this.radios = res.data.radios
-      _this.headlines = res.data.headlines.slice(0, 3)
-    })
-    this.getCommunity({excludeIds: []})
+    // var _this = this
+    // this.postDisvHome().then((res) => {
+    //   console.log('发现首页', res)
+    //   // _this.radios = res.data.radios
+    //   _this.headlines = res.data.headlines.slice(0, 3)
+    // })
+    // this.getCommunity({excludeIds: []})
   },
   computed: {
     ...mapState({

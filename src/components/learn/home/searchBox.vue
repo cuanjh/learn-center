@@ -18,7 +18,7 @@
       <transition name="slide-fade" mode="out-in">
         <div class="search-inner" v-show="isShowSearch">
           <i @click="search()"></i>
-          <input type="text" @keyup.enter="search()" v-model="searchKey" placeholder="Enter the language or country to search for">
+          <input type="text" @keyup.enter="search()" v-model="searchKey" placeholder="搜索官方课程或濒危语种">
           <i @click="cancelSearch()"></i>
         </div>
       </transition>

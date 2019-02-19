@@ -8,7 +8,15 @@
         <div class="title"><i></i>推荐电台</div>
         <div class="radio-control">
           <div class="lang-sel">
-            <span>{{ selStateText }} <i></i></span>
+            <span @click="isShowPanel = !isShowPanel">{{ selStateText }} <i></i></span>
+            <div class="lang-list" v-show="isShowPanel">
+              <ul>
+                <li :class="{'active': selStateCode == item.lan_code }"
+                  v-for="item in langsStateSel"
+                  :key="item.lan_code"
+                  @click="changeState(item)">{{item.text}}</li>
+              </ul>
+            </div>
           </div>
           <router-link tag="span" :to="{path: '/app/discovery/radio-home'}" class="more">
             全部电台
@@ -18,16 +26,16 @@
       </div>
       <div class="radio-list">
         <div class="radio-item" v-for="item in recommendRadios.slice(0, 6)" :key="item.code">
-          <a @mouseenter="radioMouseEnter($event)" @mouseleave="radioMouseLeave($event)">
+          <div class="play-radio">
             <img v-lazy="item.cover" :key="item.cover" alt="">
-            <div class="gradient-layer-play" @click="loadRadioList($event, item)" style="display: none">
-              <i class="play"></i>
+            <div class="gradient-layer-play">
+              <i class="play" @click="loadRadioList($event, item)"></i>
             </div>
             <div class="subscribe">
               <i></i>
               <span v-text="item.buy_num"></span>
             </div>
-          </a>
+          </div>
           <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + item.code}" class="title" v-text="item.module_name"></router-link>
           <div class="author" v-text="item.author.nickname"></div>
           <div class="money" v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' +item.money : $t('coins') + ' ' + item.money"></div>
@@ -50,7 +58,8 @@ export default {
   data () {
     return {
       selState: {},
-      radios: []
+      radios: [],
+      isShowPanel: false
     }
   },
   mounted () {
@@ -72,6 +81,17 @@ export default {
           return ''
         }
       }
+    },
+    selStateCode () {
+      if (Object.keys(this.selState).length > 0) {
+        return this.selState['lan_code']
+      } else {
+        if (this.langsStateSel && this.langsStateSel.length > 0) {
+          return this.langsStateSel[0]['lan_code']
+        } else {
+          return ''
+        }
+      }
     }
   },
   methods: {
@@ -79,8 +99,8 @@ export default {
       'getLangsState',
       'getRecommendRadios'
     ]),
-    loadRadioList (e, item) {
-      if (this.isPlay && item.code === this.lastCode) {
+    loadRadioList (e, radio) {
+      if (this.isPlay && radio.code === this.lastCode) {
         $('.gradient-layer-play i').removeClass('pause')
         $(e.target).addClass('play')
         Bus.$emit('radioPause')
@@ -89,10 +109,9 @@ export default {
         $('.gradient-layer-play i').addClass('play')
         $(e.target).removeClass('play')
         $(e.target).addClass('pause')
-        $('.gradient-layer-play').not($(e.target).parent()).hide()
-        if (item.code !== this.lastCode) {
-          Bus.$emit('getRadioCardList', item)
-          this.lastCode = item.code
+        if (radio.code !== this.lastCode) {
+          Bus.$emit('getRadioCardList', radio)
+          this.lastCode = radio.code
         } else {
           Bus.$emit('radioPlay')
         }
@@ -113,6 +132,11 @@ export default {
       }
       let lanCode = this.selState['lan_code']
       this.getRecommendRadios({'lan_code': lanCode, limit: 6, page: this.recommendRadioPage})
+    },
+    changeState (item) {
+      this.selState = item
+      let lanCode = this.selState['lan_code']
+      this.getRecommendRadios({'lan_code': lanCode, limit: 6, page: 1})
     }
   }
 }
@@ -189,6 +213,9 @@ export default {
         cursor: pointer;
         &:hover {
           color: #0581D1;
+          i {
+            background-image: url('../../../../static/images/learnIndex/icon-triangle-hover.svg');
+          }
         }
         span{
           font-size: 14px;
@@ -198,10 +225,37 @@ export default {
             width: 9px;
             height: 6px;
             display: inline-block;
-            background-image: url('../../../../static/images/learnIndex/course-select-icon.svg');
+            background-image: url('../../../../static/images/learnIndex/icon-triangle.svg');
             background-repeat: no-repeat;
             background-size: cover;
             cursor: pointer;
+          }
+        }
+        .lang-list {
+          position: absolute;
+          width:126px;
+          height:83px;
+          background:rgba(255,255,255,1);
+          box-shadow:0px 4px 9px 0px rgba(10,43,64,0.3);
+          border-radius:3px;
+          margin-left: -55px;
+          z-index: 99;
+          ul {
+            padding-top: 9px;
+            li {
+              height: 32px;
+              border-left: 3px solid #fff;
+              font-size: 14px;
+              font-weight: 500;
+              line-height: 32px;
+              color: #103044;
+              text-align: center;
+              cursor: pointer;
+            }
+            .active {
+              border-left: 3px solid #2a9fe4;
+              background-color: #EEF2F3;
+            }
           }
         }
       }
@@ -225,6 +279,12 @@ export default {
             -o-transition: all .3s ease-in-out;
             transition: all .3s ease-in-out;
           }
+          .play-radio {
+            position: relative;
+            display: block;
+            width: 160px;
+            height: 89px;
+          }
           img {
             width: 100%;
             height: 100%;
@@ -236,37 +296,39 @@ export default {
             width: 160px;
             height: 89px;
             position: absolute;
-            background-image: url('../../../../static/images/discovery/radio-gradient-layer.png');
-            background-repeat: no-repeat;
-            background-size: cover;
+            // background-image: url('../../../../static/images/discovery/radio-gradient-layer.png');
+            // background-repeat: no-repeat;
+            // background-size: cover;
             margin-top: -89px;
-            text-align:  center;
+            text-align: right;
             z-index: 2;
             .play {
-              width: 36px;
-              height: 36px;
-              background-image: url('../../../../static/images/discovery/radio-list-play.svg');
+              width: 24px;
+              height: 24px;
+              background-image: url('../../../../static/images/radionoPlay.svg');
               background-repeat: no-repeat;
               background-size: cover;
               display: inline-block;
-              margin-top: 24px;
+              margin-top: 58px;
+              margin-right: 8px;
+              cursor: pointer;
             }
             .pause {
-              width: 36px;
-              height: 36px;
-              background-image: url('../../../../static/images/discovery/radio-list-pause.svg');
+              width: 24px;
+              height: 24px;
+              background-image: url('../../../../static/images/radioPlay.svg');
               background-repeat: no-repeat;
               background-size: cover;
               display: inline-block;
-              margin-top: 24px;
+              margin-top: 58px;
+              margin-right: 8px;
+              cursor: pointer;
             }
           }
           .subscribe {
             position: relative;
-            display: -webkit-box;
             margin-top: -25px;
-            z-index: 3;
-            i {
+            i:first-child {
               display: inline-block;
               margin: 0 8px;
               width: 14px;

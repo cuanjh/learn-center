@@ -1,19 +1,16 @@
 <template>
   <div class="discovery-wrap">
     <router-view></router-view>
-    <voice-player></voice-player>
   </div>
 </template>
 
 <script>
-import VoicePlayer from '../../common/voicePlayer.vue'
 export default {
   data () {
     return {
     }
   },
   components: {
-    VoicePlayer
   },
   mounted () {
     this.$parent.$emit('initLayout')

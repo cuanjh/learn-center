@@ -22,9 +22,9 @@
       <dl>
         <dt><img :src="curArchiveCourse['course_flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
-          <p>
+          <p :class="{'active': isShowSubscribeCourses}" @click="isShowSubscribeCourses = !isShowSubscribeCourses">
             <span>{{curCourseName}}</span>
-            <i @click="isShowSubscribeCourses = !isShowSubscribeCourses"></i>
+            <i></i>
           </p>
           <p>世界语言地图官方课程</p>
           <learn-course-list class="subscribe-courses" v-show="isShowSubscribeCourses"></learn-course-list>
@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="correct-rate">
-        <p>正确率 {{ curChapterCorrectRate + '%' }}</p>
+        <p>正确率 {{ curChapterCorrectRate ? curChapterCorrectRate : 0 + '%' }}</p>
         <div class="progress-bg">
           <div class="progress" :style="{width: curChapterCorrectRate +'%'}"></div>
         </div>
@@ -97,46 +97,47 @@ export default {
       getLearnInfo: 'course/getLearnInfo',
       setCurrentChapter: 'course/setCurrentChapter',
       getLearnCourses: 'course/getLearnCourses',
-      getCourseArchives: 'user/getCourseArchives'
+      getCourseArchives: 'user/getCourseArchives',
+      getUserInfo: 'getUserInfo'
     }),
     async initData () {
       var _this = this
-      // await this.setCurrentChapter('ENG-Basic-Level1-Unit4-Chapter1')
-      await _this.getLearnCourses()
-      console.log('userInfo', _this.userInfo)
-      // let curCourseCode = _this.userInfo.current_course_code
+      await this.getUserInfo()
+      console.log('userInfo', this.userInfo)
 
-      let curCourseCode = _this.ui.current_course_code
-      await _this.getLearnInfo(curCourseCode).then(() => {
-        console.log('learnInfo', _this.learnInfo)
-        console.log('courseBaseInfo', _this.courseBaseInfo)
-        _this.curCourseCode = _this.courseBaseInfo.code
-        _this.curCourseNum = parseInt(this.learnInfo.current_chapter_code.split('-')[3].split('').pop() - 1) * 6 + parseInt(_this.learnInfo.current_chapter_code.split('-')[4].split('').pop())
-        _this.curCoreNum = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
-        _this.curCourseDesc = _this.learnInfo.current_chapter_info.describe
-        _this.curCourseWords = _this.learnInfo.current_chapter_info.words.split('/').join('、')
-        let curChapter = _this.learnInfo.current_chapter_code
-        _this.updateChapterDes(curChapter)
-        let arr = curChapter.split('-')
-        _this.learnInfo.correct_rates.forEach(item => {
-          if (item.level_code === arr[2]) {
-            item.rates.forEach(rate => {
-              if (rate.unit === arr[3] && rate.chapter === arr[4]) {
-                _this.curChapterCorrectRate = rate.correct_rate * 100
-                _this.curChapterDesc = '当前为' + _this.chapterDes[1].replace(' ', '') + _this.chapterDes[2]
-              }
-            })
-          }
+      setTimeout(() => {
+        let curCourseCode = _this.userInfo.current_course_code
+        _this.getLearnInfo(curCourseCode).then(() => {
+          console.log('learnInfo', _this.learnInfo)
+          console.log('courseBaseInfo', _this.courseBaseInfo)
+          _this.curCourseCode = _this.courseBaseInfo.code
+          _this.curCourseNum = parseInt(this.learnInfo.current_chapter_code.split('-')[3].split('').pop() - 1) * 6 + parseInt(_this.learnInfo.current_chapter_code.split('-')[4].split('').pop())
+          _this.curCoreNum = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
+          _this.curCourseDesc = _this.learnInfo.current_chapter_info.describe
+          _this.curCourseWords = _this.learnInfo.current_chapter_info.words.split('/').join('、')
+          let curChapter = _this.learnInfo.current_chapter_code
+          _this.updateChapterDes(curChapter)
+          let arr = curChapter.split('-')
+          _this.learnInfo.correct_rates.forEach(item => {
+            if (item.level_code === arr[2]) {
+              item.rates.forEach(rate => {
+                if (rate.unit === arr[3] && rate.chapter === arr[4]) {
+                  _this.curChapterCorrectRate = rate.correct_rate * 100
+                  _this.curChapterDesc = '当前为' + _this.chapterDes[1].replace(' ', '') + _this.chapterDes[2]
+                }
+              })
+            }
+          })
+
+          _this.getCourseArchives().then((res) => {
+            _this.curArchiveCourse = res.archives.filter(item => {
+              return item.course_code === _this.curCourseCode
+            })[0]
+            _this.curCourseName = _this.curArchiveCourse.course_name['zh-CN']
+            console.log('curArchiveCourse', _this.curArchiveCourse)
+          })
         })
-      })
-
-      await _this.getCourseArchives().then((res) => {
-        _this.curArchiveCourse = res.archives.filter(item => {
-          return item.course_code === _this.curCourseCode
-        })[0]
-        _this.curCourseName = _this.curArchiveCourse.course_name['zh-CN']
-        console.log('curArchiveCourse', _this.curArchiveCourse)
-      })
+      }, 100)
     }
   }
 }
@@ -179,7 +180,8 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
-    background: rgba(0,0,0,0.40);
+    background:linear-gradient(180deg,rgba(9,74,131,1) 0%,rgba(0,109,184,0) 100%);
+opacity:0.8251999999999999;
     border-radius: 5px;
     z-index: 2;
   }
@@ -211,22 +213,20 @@ export default {
 
   .change-course {
     float: left;
-    width: 100px;
     height: 36px;
     margin-top: 125px;
     margin-left: 40px;
   }
 
   .change-course span {
-    display: inline-flex;
+    display: inline-block;
     height: 36px;
     width: 36px;
     border-radius: 50%;
-    background-color: rgba(0,0,0,0.4)
-  }
-
-  .change-course .pre {
-    float: left;
+    background-color: rgba(0,0,0,0.4);
+    text-align: center;
+    margin-right: 30px;
+    cursor: pointer;
   }
 
   .change-course .pre i {
@@ -235,9 +235,8 @@ export default {
     background-size: cover;
     display: inline-block;
     width: 10px;
-    height: 27px;
-    margin-left: 10px;
-    margin-top: 4px;
+    height: 16px;
+    margin-top: 9px;
   }
 
   .change-course .next i{
@@ -245,14 +244,9 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     display: inline-block;
-    width: 12px;
-    height: 20px;
-    margin-left: 12px;
-    margin-top: 8px;
-  }
-
-  .change-course .next {
-    float: right;
+    width: 10px;
+    height: 16px;
+    margin-top: 9px;
   }
 
   .start-learn {
@@ -284,7 +278,7 @@ export default {
   .current-course .subscribe-courses {
     left: 13px;
     top: 46px;
-    /* width: 380px; */
+    width: 380px;
   }
 
   .subscribe-courses>img {
@@ -325,17 +319,25 @@ export default {
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   .current-course dd p:nth-of-type(1) i {
     margin-top: 20px;
-    width: 15px;
-    height: 10px;
+    width: 12px;
+    height: 9px;
     display: inline-block;
-    background-image: url('../../../../static/images/learnIndex/course-select-icon.svg');
+    background-image: url('../../../../static/images/learnIndex/icon-triangle.svg');
     background-repeat: no-repeat;
     background-size: cover;
-    cursor: pointer;
+  }
+
+  .current-course dd .active span {
+    color: #0581D1 !important;
+  }
+
+  .current-course dd .active i {
+      background-image: url('../../../../static/images/learnIndex/icon-triangle-hover.svg') !important;
   }
 
   .current-course dd p:nth-of-type(2) {
@@ -417,7 +419,7 @@ export default {
 
   .all-courses {
     float:right;
-    margin-top: 78px;
+    margin-top: 73px;
     width: 140px;
     height: 38px;
     line-height: 36px;

@@ -573,7 +573,6 @@ export default {
             position: relative;
             width: 540px;
             height: 2px;
-            // background: transparent linear-gradient(to right,rgba(0,0,0,.85),rgba(0,0,0,.95));
             background-color: #FFFFFF;
             .progress-load {
               height: 100%;
@@ -734,7 +733,7 @@ export default {
     // border-radius: 3px 3px 0 0;
     // width:1180px;
     height:427px;
-    background:linear-gradient(180deg,rgba(0,22,55,0.8) 0%,rgba(0,164,202,0.8) 100%);
+    background:linear-gradient(180deg,rgba(0,22,55,0.9) 0%,rgba(15,144,198,0.74) 100%);
     border-radius:8px 8px 0px 0px;
     z-index: 90;
     -webkit-user-select: none;

@@ -714,7 +714,7 @@ export default {
   top: 16px;
 }
 
-.right .learn-user img {
+.right .learn-user a img {
   width: 34px;
   height: 34px;
   border-radius: 50%;

@@ -59,7 +59,7 @@ const actions = {
     return httpNoLogin(config.anonymousRegisterApi, params)
   },
   getUserInfo ({commit}) {
-    return httpLogin(config.userInfo).then((res) => {
+    httpLogin(config.userInfo).then((res) => {
       commit('updateUserInfo', res)
     })
   },

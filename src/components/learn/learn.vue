@@ -6,6 +6,7 @@
     <div class="learn-cover learn-all-hide-cover" v-show="anonymousCover"></div>
     <router-view></router-view>
     <!-- 底部 -->
+    <voice-player v-show="isShow"></voice-player>
     <learn-bottom></learn-bottom>
     <photo-uploader></photo-uploader>
     <rocket></rocket>
@@ -18,11 +19,13 @@ import learnHeader from './learnHeader.vue'
 import learnBottom from './learnBottom.vue'
 import PhotoUploader from '../common/user/photoUploader.vue'
 import Rocket from '../common/rocket.vue'
+import VoicePlayer from '../common/voicePlayer.vue'
 import Bus from '../../bus'
 
 export default {
   data () {
     return {
+      isShow: false
     }
   },
   created () {
@@ -43,7 +46,16 @@ export default {
     learnHeader,
     learnBottom,
     PhotoUploader,
-    Rocket
+    Rocket,
+    VoicePlayer
+  },
+  mounted () {
+    this.updateIsShowVoicePlayer(this.$route)
+  },
+  watch: {
+    $route (to, from) {
+      this.updateIsShowVoicePlayer(to)
+    }
   },
   computed: {
     ...mapState({
@@ -117,6 +129,14 @@ export default {
       this.updateSuccessAlert(false)
       this.updateErrorTip(false)
       this.updateAlertType('')
+    },
+    updateIsShowVoicePlayer (route) {
+      let name = route.name ? route.name.toLowerCase() : ''
+      if (name === 'learnindex' || route.path.indexOf('/discovery/') > -1) {
+        this.isShow = true
+      } else {
+        this.isShow = false
+      }
     }
   }
 }
