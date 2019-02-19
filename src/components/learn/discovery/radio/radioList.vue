@@ -9,9 +9,9 @@
         <span>电台</span>
       </router-link>
       >
-      <router-link :to="{path: '/app/discovery/home'}">
-        <span>简介简介军军</span>
-      </router-link>
+      <!-- <router-link :to="{path: '/app/discovery/home'}">
+        <span>以前的电台首页</span>
+      </router-link> -->
       <div class="nav-current">
         分类
       </div>
@@ -43,7 +43,7 @@
               </p>
             </div>
             <div class="header-content">
-              <span class="column">共975档节目</span>
+              <span class="column">共{{lists.length}}个电台节目</span>
               <div class="new">
                 <!-- <p class="left">
                   <span>日语优先</span>
@@ -67,11 +67,11 @@
                   <div class="right-describe">
                     <router-link tag="p" class="name" :to="{path: '/app/discovery/radio-detail/' + radio.code}">{{radio.title}}</router-link>
                     <p class="num">
-                      <span>{{radio.buy_num}}次试听</span>
+                      <span><i></i>{{radio.buy_num}}次试听</span>
                       <span v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></span>
                     </p>
                     <p class="author">
-                      <span>主播：</span>
+                      <span>作者：</span>
                       <span v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></span>
                     </p>
                   </div>
@@ -117,7 +117,8 @@ export default {
   },
   mounted () {
     console.log('跳转之后的item', this.courseOrder)
-    this.isActive = this.courseOrder.item.list_order
+    // this.isActive = this.courseOrder.item.list_order
+    this.isActive = this.courseOrder ? this.courseOrder : 410
     console.log('跳转之后的item', this.courseOrder)
     console.log('isActive', this.isActive)
     this.postDisvRadio().then((res) => {
@@ -125,10 +126,8 @@ export default {
       this.menuRadioNavs = res.data.menuRadios
       for (var i = 0; i < this.menuRadioNavs.length; i++) {
         let item = this.menuRadioNavs[i]
-        console.log('item', item)
         // 遍历时根据返回的数据给nav传对应的值
         if (item.list_order === this.isActive) {
-          console.log('12121212121221')
           this.tabChange(item)
           break
         }
@@ -137,8 +136,7 @@ export default {
   },
   computed: {
     courseOrder () {
-      let itemInfo = JSON.parse(sessionStorage.getItem('itemInfo'))
-      return itemInfo
+      return this.$route.params.itemId
     }
   },
   methods: {
@@ -257,18 +255,25 @@ a {
           li {
             font-size:14px;
             font-family:PingFang-SC-Medium;
-            font-weight:500;
             color:rgba(60,91,111,1);
             line-height:20px;
-            padding: 16px 26px;
+            padding: 11px 26px;
             border-bottom: 1px solid rgba(230,235,238,1);
             &.active {
               background: #2A9FE4;
               color: #ffffff;
+              i {
+                background: url('../../../../../static/images/radioListjiantouhover.svg') no-repeat center;
+                background-size: cover;
+              }
             }
             &:hover {
               background: #2A9FE4;
               color: #ffffff;
+              i {
+                background: url('../../../../../static/images/radioListjiantouhover.svg') no-repeat center;
+                background-size: cover;
+              }
             }
             a {
               position: relative;
@@ -280,9 +285,9 @@ a {
                 right: 0;
                 top: 8px;
                 display: inline-block;
-                width: 14px;
-                height: 14px;
-                background: url('../../../../../static/images/discovery/testjiantou.svg') no-repeat center;
+                width: 8px;
+                height: 11px;
+                background: url('../../../../../static/images/radioListjiantou.svg') no-repeat center;
                 background-size: cover;
               }
             }
@@ -444,14 +449,26 @@ a {
                     line-height:20px;
                   }
                   .num {
+                    display: flex;
                     font-size:13px;
                     font-family:PingFang-SC-Medium;
                     font-weight:500;
-                    color:rgba(245,166,35,1);
+                    // color:rgba(245,166,35,1);
+                    color: #999999FF;
                     line-height:18px;
                     padding: 4px 0 25px;
                     span:nth-child(1) {
+                      display: flex;
+                      align-items: center;
                       margin-right: 20px;
+                      i {
+                        display: inline-block;
+                        width: 13px;
+                        height: 10px;
+                        background: url('../../../../../static/images/listening.png') no-repeat center;
+                        background-size: cover;
+                        margin-right: 8px;
+                      }
                     }
                   }
                   .author {

@@ -37,9 +37,10 @@
             <!-- 切换内容区域 -->
             <div class="classify-switch">
               <div class="switch-content">
+                <!-- 热播电台 -->
                 <div class="switch-radio" v-if="'hostRadio' == navFlag">
-                  <div class="host-content" v-if="hostRadioLists[0]">
-                    <div class="radio-li" v-for="(radio, index) in hostRadioLists[0].radios" :key="index">
+                  <div class="host-content" v-if="hostRadios">
+                    <div class="radio-li" v-for="(radio, index) in hostRadios" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
                           <img :src="radio.cover" alt="背景图片">
@@ -48,7 +49,7 @@
                           </div>
                         </div>
                         <div class="text-author">
-                          <router-link tag="p" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}">{{radio.title}}</router-link>
+                          <router-link tag="p" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}"><span>{{radio.title}}</span></router-link>
                           <p class="author-text">
                             <span>作者：{{radio.author_name}}</span>
                             <span><i></i>{{radio.buy_num}}</span>
@@ -61,46 +62,53 @@
                       </div>
                     </div>
                     <div class="radio-num">
-                      <span>共{{hostRadioLists[0].radios.length}}个电台节目</span>
+                      <span>共{{hostRadios.length}}个电台节目</span>
                     </div>
                   </div>
                   <div class="up-all">
-                    <span>全部展开</span>
-                    <i ></i>
+                    <span @click="changeHostRadio(hostRadioLists)" v-text="showMoreHost?'全部展开':'已经没有更多内容了~~'" >全部展开</span>
+                    <i v-show="showMoreHost"></i>
                   </div>
                 </div>
+                <!-- 推荐课程 -->
                 <div class="switch-radio" v-if="'learnRecom' == navFlag">
                   <div class="host-content">
-                    <div class="radio-li">
+                    <div class="radio-li" v-for="(radio, index) in recommendRadios" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
-                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="背景图片">
-                          <div class="gradient-layer-play">
+                          <img v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
+                          <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                             <i class="play"></i>
                           </div>
                         </div>
                         <div class="text-author">
-                          <p class="title">日语官方课程高级C2讲解</p>
+                          <!-- <p class="title">日语官方课程高级C2讲解</p> -->
+                          <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="title"><span>{{radio.module_name}}</span></router-link>
                           <p class="author-text">
-                            <span>作者：叶圣陶</span>
-                            <span><i></i>46435</span>
-                            <span>免费</span>
+                            <span>作者：{{radio.author.nickname}}</span>
+                            <span><i></i>{{radio.buy_num}}</span>
+                            <!-- <span>免费</span> -->
+                            <span v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></span>
                           </p>
                         </div>
                       </div>
-                      <div class="more-icon">
+                      <div class="more-icon" v-show="false">
                         <i></i>
+                      </div>
+                      <div class="radio-num">
+                        <span>共{{recommendRadios.length}}个电台节目</span>
                       </div>
                     </div>
                   </div>
                   <div class="up-all">
-                    <span>全部展开</span>
-                    <i ></i>
+                    <span @click="changeBatch()" v-text="showMore?'全部展开':'已经没有更多内容了~~'" ></span>
+                    <i v-show="showMore"></i>
                   </div>
                 </div>
+                <!-- 最新发布 -->
                 <div class="switch-radio" v-if="'latestRelease' == navFlag">
-                  <div class="host-content" v-if="latestReleaseRadio[0]">
-                    <div class="radio-li" v-for="(radio, index) in latestReleaseRadio[0].radios" :key="index">
+                  <div class="host-content" v-if="releaseRadio">
+                    <div class="radio-li" v-for="(radio, index) in releaseRadio" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
                           <img :src="radio.cover" alt="背景图片">
@@ -109,7 +117,7 @@
                           </div>
                         </div>
                         <div class="text-author">
-                          <router-link tag="p" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}">{{radio.title}}</router-link>
+                          <router-link tag="p" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}"><span>{{radio.title}}</span></router-link>
                           <p class="author-text">
                             <span>作者：{{radio.author_name}}</span>
                             <span><i></i>{{radio.buy_num}}</span>
@@ -122,12 +130,12 @@
                       </div>
                     </div>
                     <div class="radio-num">
-                      <span>共{{latestReleaseRadio[0].radios.length}}个电台节目</span>
+                      <span>共{{releaseRadio.length}}个电台节目</span>
                     </div>
                   </div>
                   <div class="up-all">
-                    <span>全部展开</span>
-                    <i ></i>
+                    <span @click="changeReleaseRadio(latestReleaseRadio)" v-text="showMoreRelease?'全部展开':'已经没有更多内容了~~'" >全部展开</span>
+                    <i v-show="showMoreRelease"></i>
                   </div>
                 </div>
               </div>
@@ -135,7 +143,7 @@
           </div>
         </div>
         <div class="right">
-          <star-host-list></star-host-list>
+          <star-host-list :teacherLists="teacherLists"></star-host-list>
           <introduce-app-box></introduce-app-box>
         </div>
       </div>
@@ -143,7 +151,7 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import Bus from '../../../../bus'
 import $ from 'jquery'
 import StarHostList from '../../../common/starHostList.vue'
@@ -152,19 +160,37 @@ import IntroduceAppBox from '../../../common/introduceAppBox.vue'
 export default {
   data () {
     return {
+      showMore: true, // true是展开，false是收起
+      showMoreHost: true,
+      showMoreRelease: true,
+      selState: {},
       navFlag: 'hostRadio',
-      hostRadioLists: [], // 热播电台
-      latestReleaseRadio: [] // 最新发布
+      hostRadioLists: {}, // 热播电台
+      hostRadios: [],
+      latestReleaseRadio: {}, // 最新发布
+      releaseRadio: [],
+      teacherLists: [], // 主播推荐
+      recommendRadios: [],
+      page: 1
     }
   },
   mounted () {
-    console.log('paramsFlag', this.paramsFlag)
-    this.navFlag = this.paramsFlag
-    this.postDisvRadio().then((res) => {
-      console.log('电台首页', res)
-      this.hostRadioLists.push(res.data.menuRadios[0])
-      this.latestReleaseRadio.push(res.data.menuRadios[1])
-      console.log(this.latestReleaseRadio)
+    let _this = this
+    console.log('课程', _this.langCode)
+    _this.getLangsState()
+    _this.navFlag = _this.paramsFlag ? _this.paramsFlag : 'hostRadio'
+    _this.postDisvRadio().then((res) => {
+      console.log('电台首页=====>', res)
+      _this.hostRadioLists = res.data.menuRadios[0]
+      _this.hostRadios = _this.hostRadioLists.radios
+      _this.latestReleaseRadio = res.data.menuRadios[1]
+      _this.releaseRadio = _this.latestReleaseRadio.radios
+      _this.teacherLists = res.data.authors
+      console.log('========>热播电台', _this.hostRadios)
+    })
+    _this.getRecommendRadiosIndex({'lan_code': _this.langCode.lan_code, limit: 10, page: _this.page}).then(res => {
+      console.log('推荐电台数据', res)
+      this.recommendRadios = res.data
     })
   },
   components: {
@@ -172,12 +198,37 @@ export default {
     IntroduceAppBox
   },
   computed: {
+    ...mapState({
+      langsStateSel: state => state.langsStateSel // 优先课程
+      // recommendRadioPage: state => state.recommendRadioPage, // 页数
+      // recommendRadios: state => state.recommendRadios // 推荐的电台
+    }),
     paramsFlag () {
-      return this.$route.query.isActive
+      return this.$route.params.isActive
+    },
+    langCode () {
+      if (!Object.keys(this.langsStateSel).length) {
+        return []
+      }
+      return this.langsStateSel[0]
+    },
+    selStateText () {
+      if (Object.keys(this.selState).length > 0) {
+        return this.selState['text']
+      } else {
+        if (this.langsStateSel && this.langsStateSel.length > 0) {
+          return this.langsStateSel[0]['text']
+        } else {
+          return ''
+        }
+      }
     }
   },
   methods: {
     ...mapActions({
+      getLangsState: 'getLangsState',
+      getRecommendRadiosIndex: 'getRecommendRadiosIndex', // 推荐的电台
+      getRadioList: 'course/getRadioList', // 电台列表加载更多
       postDisvRadio: 'course/postDisvRadio' // 电台首页
     }),
     tabChange (tabFlag) {
@@ -204,6 +255,46 @@ export default {
         }
       }
       this.isPlay = !this.isPlay
+    },
+    // 加载更多热播电台
+    changeHostRadio (radio) {
+      console.log('radio', radio)
+      this.page++
+      // let params = {
+      //   menu_type: radio.menu_type,
+      //   menu_id: radio.menu_id,
+      //   page: this.page
+      // }
+      this.showMoreHost = false
+    },
+    // 加载更多推荐课程
+    changeBatch () {
+      if (!this.showMore) {
+        return
+      }
+      this.page++
+      this.getRecommendRadiosIndex({'lan_code': this.langCode.lan_code, limit: 10, page: this.page}).then(res => {
+        console.log('推荐电台数据', res)
+        this.recommendRadios = this.recommendRadios.concat(res.data)
+        if (res.page === -1) {
+          this.showMore = !this.showMore
+          return false
+        }
+      })
+    },
+    // 加载更多最新课程
+    changeReleaseRadio (radio) {
+      this.page++
+      let params = {
+        menu_type: radio.menu_type,
+        menu_id: radio.menu_id,
+        page: this.page
+      }
+      console.log('点击加载更多params', params)
+      this.getRadioList(params).then((res) => {
+        console.log('点击加载更多', res)
+        this.releaseRadio = this.releaseRadio.concat(res.data.radios)
+      })
     }
   }
 }
@@ -282,13 +373,16 @@ export default {
               .switch-radio {
                 .host-content {
                   .radio-li {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
+                    // display: flex;
+                    // justify-content: space-between;
+                    // align-items: center;
                     padding-bottom: 40px;
                     .radio-li-left {
+                      // display: inline-block;
                       display: flex;
+                      align-items: center;
                       .play-radio {
+                        display: inline-block;
                         position: relative;
                         display: block;
                         width: 152px;
@@ -298,14 +392,15 @@ export default {
                           width: 100%;
                           height: 100%;
                           border-radius: 4px;
+                          object-fit: cover;
                         }
                         .gradient-layer-play {
                           cursor: pointer;
                           width: 24px;
                           height: 24px;
                           position: absolute;
-                          bottom: 10px;
-                          right: 10px;
+                          bottom: 5px;
+                          right: 5px;
                           text-align:  center;
                           z-index: 2;
                           .play {
@@ -327,14 +422,24 @@ export default {
                         }
                       }
                       .text-author {
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-around;
+                        display: inline-block;
+                        // display: flex;
+                        // flex-direction: column;
+                        // justify-content: space-around;
+                        padding: 10px 0;
+                        p {
+                          display: block;
+                        }
                         .title {
+                          width: 160px;
                           cursor: pointer;
                           font-size: 14px;
                           color: #333333FF;
                           font-weight: bold;
+                          padding-bottom: 26px;
+                          overflow: hidden;
+                          text-overflow:ellipsis;
+                          white-space: nowrap;
                         }
                         .author-text {
                           font-size: 12px;
@@ -347,8 +452,9 @@ export default {
                             white-space: nowrap;
                           }
                           span:nth-child(2) {
-                            padding-left: 32px;
-                            padding-right: 74px;
+                            display: inline-block;
+                            padding-left: 10px;
+                            min-width: 100px;
                             i {
                               display: inline-block;
                               width: 18px;
@@ -420,8 +526,8 @@ export default {
         }
       }
       .right {
-        width: 300px;
-        height: 440px;
+        width: 280px;
+        // height: 440px;
       }
     }
   }

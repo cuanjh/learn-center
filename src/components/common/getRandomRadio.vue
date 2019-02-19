@@ -18,7 +18,7 @@
             <div class="gradient-layer-play"  @click="loadRadioList($event, randomRadioLists)">
               <i class="play"></i>
             </div>
-            <div class="swiper-list">
+            <div class="swiper-list" v-if="radioCardsLists">
               <vueSeamlessScroll :data="radioCardsLists" :class-option="defaultOption" class="seamless-warp">
                 <ul class="box">
                   <li v-for="(radio, index) in radioCardsLists" :key="index">
@@ -29,14 +29,9 @@
                   </li>
                 </ul>
               </vueSeamlessScroll>
-              <!-- <ul class="box">
-                <li v-for="(radio, index) in randomRadioLists.cards" :key="index" :class="{'anim': animate}">
-                  <div class="lists">
-                    <span>{{radio.title}}</span>
-                    <span>{{radio.description}}</span>
-                  </div>
-                </li>
-              </ul> -->
+            </div>
+            <div class="no-cards" v-if="radioCardsLists === null">
+              <span>暂时没有数据~~~</span>
             </div>
           </div>
         </div>
@@ -148,6 +143,7 @@ export default {
         padding-left: 22px;
         padding-right: 70px;
         border-right: 1px solid #d5dee7ff;
+        min-width: 66%;
         .radio-info {
           .radio-name {
             font-size: 22px;
@@ -210,6 +206,10 @@ export default {
                 }
               }
             }
+          }
+          .no-cards {
+            text-align: center;
+            line-height: 36px;
           }
         }
       }

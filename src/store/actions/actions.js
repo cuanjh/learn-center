@@ -83,6 +83,10 @@ export default {
       commit('updateRecommendRadios', res)
     })
   },
+  // 获取推荐的电台数据
+  getRecommendRadiosIndex ({commit}, params) {
+    return httpLogin(config.disvRecommendRadiosApi, params)
+  },
   // 获取世界语言地图统计数据
   getMapLangInfo ({commit}, params) {
     return httpLogin(config.langMapInfoApi, params)

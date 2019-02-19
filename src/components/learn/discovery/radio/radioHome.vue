@@ -48,9 +48,9 @@
     <div class="radio-recommend">
       <div class="left">
         <div class="recommend-list">
-          <div @click="goRecommendRadio('hostRadio', menus[0])" class="recommend-item"><i></i><span>热播电台</span></div>
+          <div @click="goRecommendRadio('hostRadio')" class="recommend-item"><i></i><span>热播电台</span></div>
           <div @click="goRecommendRadio('learnRecom')" class="recommend-item"><i></i><span>学习推荐</span></div>
-          <div @click="goRecommendRadio('latestRelease', menus[1])" class="recommend-item"><i></i><span>最新发布</span></div>
+          <div @click="goRecommendRadio('latestRelease')" class="recommend-item"><i></i><span>最新发布</span></div>
           <div class="recommend-item"><i></i><span>明星主播</span></div>
         </div>
         <!-- 根据学习课程推荐的电台 -->
@@ -136,7 +136,7 @@ export default {
       _this.banners = res.data.banners
       _this.menus = res.data.menuRadios
       _this.authors = res.data.authors
-      _this.menuRadios = res.data.menuRadios
+      _this.menuRadios = res.data.menuRadios.slice(0, 3)
       _this.swiperInit()
     })
     // 随机推荐单个电台
@@ -180,23 +180,11 @@ export default {
     // 查看更多
     goRadioList (item) {
       console.log('跳转之前item', item)
-      let obj = {
-        'item': item
-      }
-      let jsonStr = JSON.stringify(obj)
-      sessionStorage.setItem('itemInfo', jsonStr)
-      this.$router.push({path: '/app/discovery/radio-list'})
+      this.$router.push({name: 'radioList', params: { itemId: item.list_order }})
     },
     // 点击更多
-    lookMoreRadioList (item) {
-      console.log('==========>', item)
-      sessionStorage.removeItem('itemInfo')
-      let obj = {
-        'item': item
-      }
-      let jsonStr = JSON.stringify(obj)
-      sessionStorage.setItem('itemInfo', jsonStr)
-      this.$router.push({path: '/app/discovery/radio-list'})
+    lookMoreRadioList () {
+      this.$router.push({name: 'radioList', params: { itemId: 410 }})
     },
     swiperInit () {
       this.$nextTick(() => {
@@ -234,9 +222,9 @@ export default {
       })
     },
     // 最新推荐等四个页面
-    goRecommendRadio (navNum, item) {
+    goRecommendRadio (navNum) {
       console.log(navNum)
-      this.$router.push({path: 'radio-classify', query: { isActive: navNum }})
+      this.$router.push({name: 'radioClassify', params: { isActive: navNum }})
       // this.$router.push({path: 'radio-classify'})
     }
   }
@@ -315,8 +303,8 @@ export default {
     }
     .right {
       display: inline-block;
-      width: 296px;
-      height: 296px;
+      width: 280px;
+      height: 276px;
       overflow: hidden;
       .name {
         font-size: 20px;
@@ -330,12 +318,14 @@ export default {
         }
       }
       ul {
+        width: 100%;
+        height: 100%;
         margin-top: 10px;
         li {
           display: inline-flex;
           background-color: #fff;
           border-radius: 4px;
-          padding: 7px 13px;
+          padding: 7px 21px;
           margin-top: 12px;
           margin-right: 11px;
           span {
@@ -438,7 +428,7 @@ export default {
     // 右边
     .right {
       display: inline-block;
-      width: 296px;
+      width: 280px;
       margin-left: 23px;
     }
   }
@@ -554,8 +544,8 @@ export default {
             // background-image: url('../../../../../static/images/discovery/radio-gradient-layer.png');
             // background-repeat: no-repeat;
             // background-size: cover;
-            bottom: 0;
-            right: 0;
+            bottom: 5px;
+            right: 5px;
             text-align:  center;
             z-index: 2;
             .play {
@@ -603,6 +593,7 @@ export default {
             }
           }
           .title {
+            cursor: pointer;
             color: #333333FF;
             font-size: 14px;
             margin-top: 10px;

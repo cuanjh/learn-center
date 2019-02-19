@@ -238,7 +238,6 @@ export default[
             component: radioHome
           },
           {
-            // path: 'radio-list/:order',
             path: 'radio-list',
             name: 'radioList',
             component: radioList
@@ -254,7 +253,7 @@ export default[
           },
           {
             path: 'radio-classify',
-            name: radioClassify,
+            name: 'radioClassify',
             component: radioClassify
           },
           {

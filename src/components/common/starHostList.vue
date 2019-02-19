@@ -1,78 +1,28 @@
 <template>
   <div class="star-host">
     <div class="name">
-      <span>学习主播推荐</span>
-      <span class="more">更多
+      <span>主播推荐</span>
+      <router-link class="more" tag="span" :to="{path: 'radio-recom-teachers'}">更多
         <i></i>
-      </span>
+      </router-link>
     </div>
     <div class="host-list">
-      <ul>
-        <li>
+      <ul v-if="teacherLists">
+        <li v-for="(teacher, index) in teacherLists.slice(0, 4)" :key="index">
           <div class="list-cont">
             <div class="list-left">
-              <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI"
-                alt="头像">
+              <img :src="teacher.photo" alt="头像">
               <div class="list-text">
-                <span>信じよ</span>
-                <span>198粉丝</span>
+                <span>{{teacher.author_name}}</span>
+                <span>{{teacher.followed_count}}粉丝</span>
               </div>
             </div>
             <div class="list-right">
-              <!-- <span>-</span> -->
-              <i></i>
-              <span>关注</span>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="list-cont">
-            <div class="list-left">
-              <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI"
-                alt="头像">
-              <div class="list-text">
-                <span>信じよ</span>
-                <span>198粉丝</span>
-              </div>
-            </div>
-            <div class="list-right">
-              <!-- <span>-</span> -->
-              <i></i>
-              <span>关注</span>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="list-cont">
-            <div class="list-left">
-              <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI"
-                alt="头像">
-              <div class="list-text">
-                <span>信じよ</span>
-                <span>198粉丝</span>
-              </div>
-            </div>
-            <div class="list-right">
-              <!-- <span>-</span> -->
-              <i></i>
-              <span>关注</span>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="list-cont">
-            <div class="list-left">
-              <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI"
-                alt="头像">
-              <div class="list-text">
-                <span>信じよ</span>
-                <span>198粉丝</span>
-              </div>
-            </div>
-            <div class="list-right">
-              <!-- <span>-</span> -->
-              <i></i>
-              <span>关注</span>
+              <p class="button" @click="relation(teacher)">
+                <i></i>
+                <span v-if="teacher.has_followed === 0">关注</span>
+                <span v-else>取消关注</span>
+              </p>
             </div>
           </div>
         </li>
@@ -81,11 +31,44 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
+
 export default {
+  props: ['teacherLists'],
   data () {
     return {}
   },
-  methods: {}
+  mounted () {
+  },
+  computed: {
+  },
+  methods: {
+    ...mapActions({
+      getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
+      remRadioRelationCancel: 'course/remRadioRelationCancel' // 取消关注
+    }),
+    // 关注取消关注
+    relation (teacher) {
+      let followId = teacher.user_id
+      if (teacher.has_followed === 1) { // 关注了
+        console.log('关注了')
+        this.remRadioRelationCancel({following_id: followId}).then((data) => {
+          console.log('取消关注', data)
+          if (data.success === true) {
+            teacher.has_followed = 0
+          }
+        })
+      } else if (teacher.has_followed === 0) { // 没关注
+        console.log('没关注')
+        this.getRadioRelationFollow({following_id: followId}).then((data) => {
+          console.log('关注', data)
+          if (data.success === true) {
+            teacher.has_followed = 1
+          }
+        })
+      }
+    }
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -156,6 +139,11 @@ export default {
                 line-height: 22px;
                 font-weight: bold;
                 padding-bottom: 4px;
+                display: inline-block;
+                width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
               span:nth-child(2) {
                 font-size: 14px;
@@ -164,29 +152,16 @@ export default {
               }
             }
           }
-          // .list-right {
-          //   width: 26px;
-          //   height: 26px;
-          //   background: #c7eaffff;
-          //   text-align: center;
-          //   border-radius: 6px;
-          //   cursor: pointer;
-          //   span {
-          //     display: inline-block;
-          //     width: 10px;
-          //     height: 2px;
-          //     color: #103044ff;
-          //   }
-          // }
           .list-right {
-            width: 84px;
-            padding: 4px 0;
+            padding: 4px 12px;
             background-color: #fff;
             border-radius: 18px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             border: 1px solid #E6EBEEFF;
+            p {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
             i {
               display: inline-block;
               width: 12px;
@@ -208,7 +183,7 @@ export default {
               display: inline-block;
               width: 12px;
               height: 12px;
-              background: url("../../../static/images/followhover.svg") no-repeat center;
+              background: url("../../../static/images/follow.svg") no-repeat center;
               background-size: cover;
               margin-right: 5px;
             }

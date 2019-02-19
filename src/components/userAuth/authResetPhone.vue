@@ -210,7 +210,7 @@ export default {
     color: #D6DFE4;
   }
   .bg-box {
-    min-height: 765px;
+    min-height: 560px;
     padding: 80px 0px;
   }
   .reset-box {
