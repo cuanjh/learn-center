@@ -51,6 +51,12 @@ export default {
       dispatch('getRecommendRadios', {'lan_code': curLanCode, limit: 6, page: 1})
     })
   },
+  // 获取语言接口
+  getLangCodes ({commit}, params) {
+    httpLogin(config.umLangsStateApi).then(res => {
+      commit('updateLangCodes', res.state)
+    })
+  },
   getCourseList ({commit}) {
     return httpLogin(config.courseListApi)
   },
@@ -78,6 +84,10 @@ export default {
       commit('updatereCommendRadioTeachers', res.data)
     })
   },
+  // 获取和课程相关的电台主播
+  getLearnRecommendTeachers ({commit}, params) {
+    return httpLogin(config.recommendRadioTeachersApi, params)
+  },
   // 获取推荐的电台
   getRecommendRadios ({commit}, params) {
     httpLogin(config.disvRecommendRadiosApi, params).then(res => {
@@ -95,5 +105,13 @@ export default {
   // 随机获取推荐的电台
   getRandomRadio ({commit}, params) {
     return httpLogin(config.getRandomRadioApi, params)
+  },
+  // 其他人也在听
+  getOtherRecommends ({commit}, params) {
+    return httpLogin(config.getOtherRecommendsApi, params)
+  },
+  // 热门电台
+  getHotRadios ({commit}, params) {
+    return httpLogin(config.getHotRadiosApi, params)
   }
 }

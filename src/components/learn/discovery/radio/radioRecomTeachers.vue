@@ -1,7 +1,7 @@
 <template>
   <div class="teachers">
     <div class="nav">
-      <router-link :to="{path: '/app/user/course'}">
+      <router-link :to="{path: '/app/index'}">
         <span>我的学习账户</span>
       </router-link>
       >
@@ -23,17 +23,16 @@
                 <div class="teacher-left">
                   <img :src="teacher.photo" alt="头像">
                   <div class="text">
-                    <p>{{teacher.author_name}}</p>
+                    <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + teacher.code}">{{teacher.author_name}}</router-link>
                     <p>{{teacher.followed_count}}粉丝</p>
                   </div>
                 </div>
                 <div class="teacher-right">
                   <p class="button" @click="relation(teacher)">
-                    <i></i>
-                    <span v-if="teacher.has_followed === 0">关注</span>
+                    <span v-if="teacher.has_followed === 0"><i></i>关注</span>
                     <span v-else>取消关注</span>
                   </p>
-                  <p class="hidden-button" @click="hidden(index)">
+                  <p class="hidden-button" @click="hidden(index)" v-show="false">
                     <span>隐藏</span>
                   </p>
                 </div>
@@ -41,11 +40,11 @@
             </div>
             <div class="change-batch">
               <div class="p" @click="changeBatch()">
-                <p v-show="inBatch">
+                <p>
                   <i ></i>
                   <span>换一批</span>
                 </p>
-                <p v-show="!inBatch">
+                <p v-show="false">
                   <span>没有跟多了</span>
                 </p>
               </div>
@@ -60,17 +59,16 @@
                 <div class="teacher-left">
                   <img :src="teacher.photo" alt="头像">
                   <div class="text">
-                    <p>{{teacher.author_name}}</p>
+                    <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + teacher.code}">{{teacher.author_name}}</router-link>
                     <p>{{teacher.followed_count}}粉丝</p>
                   </div>
                 </div>
                 <div class="teacher-right">
                   <p class="button" @click="relation(teacher)">
-                    <i></i>
-                    <span v-if="teacher.has_followed === 0">关注</span>
+                    <span v-if="teacher.has_followed === 0"><i></i>关注</span>
                     <span v-else>取消关注</span>
                   </p>
-                  <p class="hidden-button" @click="hidden(index)">
+                  <p class="hidden-button" @click="hidden(index)" v-show="false">
                     <span>隐藏</span>
                   </p>
                 </div>
@@ -78,12 +76,9 @@
             </div>
             <div class="change-batch">
               <div class="p" @click="changeBatchOther()">
-                <p v-show="inBatchOther">
+                <p >
                   <i ></i>
                   <span>换一批</span>
-                </p>
-                <p v-show="!inBatchOther">
-                  <span>没有跟多了</span>
                 </p>
               </div>
             </div>
@@ -94,13 +89,11 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   data () {
     return {
-      inBatch: true,
-      inBatchOther: true,
       teachers: [], // 老师
       teacherLists: [] // 其他老师
     }
@@ -108,21 +101,27 @@ export default {
   mounted () {
     this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
-      this.teachers = res.data.authors
-      console.log('老师', this.teachers)
       this.teacherLists = this.randArray(res.data.authors)
       console.log('随机老师', this.teacherLists)
     })
+    this.getLearnRecommendTeachers({'study_related': 1}).then(res => {
+      console.log('res=====>', res)
+      this.teachers = res.data
+      console.log('老师', this.teachers)
+    })
   },
   computed: {
+    ...mapState({
+    })
   },
   methods: {
     ...mapActions({
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
       remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
-      postDisvRadio: 'course/postDisvRadio' // 电台首页
+      postDisvRadio: 'course/postDisvRadio', // 电台首页
+      getLearnRecommendTeachers: 'getLearnRecommendTeachers' // 课程相关的电台主播
     }),
-    // 排序函数
+    // 数组随机排序函数
     randArray (data) {
       /* eslint-disable */
       // 获取数组长度
@@ -172,12 +171,13 @@ export default {
     hidden (index) {
       this.teachers.splice(index, 1)
     },
-    // 换一批
+    // 换一批主播
     changeBatch () {
-      this.inBatch = false
+      this.teachers = this.randArray(this.teachers)
     },
+    // 换一批其他老师
     changeBatchOther () {
-      this.inBatchOther = false
+      this.teacherLists = this.randArray(this.teacherLists)
     }
   }
 }
@@ -249,6 +249,7 @@ export default {
               .text {
                 padding-left: 10px;
                 p:nth-child(1) {
+                  cursor: pointer;
                   width: 120px;
                   font-size: 16px;
                   font-weight: bold;
@@ -264,10 +265,14 @@ export default {
                 }
               }
             }
-            .teacher-right{
+            .teacher-right {
               display: flex;
               justify-content: space-between;
               p {
+                -webkit-user-select:none;
+                -moz-user-select:none;
+                -ms-user-select:none;
+                user-select:none;
                 i {
                   display: inline-block;
                   width: 12px;
@@ -280,9 +285,9 @@ export default {
               }
               p:nth-child(1) {
                 // width: 86px;
-                padding: 4px 18px;
+                padding: 3px 17px;
                 background-color: #fff;
-                border-radius: 18px;
+                border-radius: 15px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -292,6 +297,8 @@ export default {
                   background: url("../../../../../static/images/follow.svg");
                 }
                 span {
+                  display: flex;
+                  align-items: center;
                   font-size: 14px;
                   font-weight: 500;
                   color: #7E929FFF;
@@ -310,10 +317,9 @@ export default {
                 }
               }
               p:nth-child(2) {
-                width: 86px;
-                padding: 4px 0;
+                padding: 3px 17px;
                 background-color: #fff;
-                border-radius: 18px;
+                border-radius: 15px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -347,6 +353,10 @@ export default {
             float: right;
             display: inline-block;
             cursor: pointer;
+            -webkit-user-select:none;
+            -moz-user-select:none;
+            -ms-user-select:none;
+            user-select:none;
             &:hover {
               color: #0581D1;
               i {

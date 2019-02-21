@@ -30,7 +30,8 @@ export default {
     .introduce-app-img {
       width: 280px;
       height: 220px;
-      background: pink;
+      background: url('../../../static/images/introduceappimg.svg') no-repeat center;
+      background-size: cover;
     }
     .ios-google {
       width: 100%;

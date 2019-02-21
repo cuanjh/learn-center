@@ -10,7 +10,7 @@
           <span>电台</span>
         </router-link>
         >
-        <router-link :to="{path: '/app/book-case'}">
+        <router-link :to="{path: '/app/discovery/radio-list'}">
           <span>分类</span>
         </router-link>
         >
@@ -59,11 +59,22 @@
           <!-- 收听订阅分享等 -->
           <div class="subscription">
             <div class="bottom">
-              <span><i></i>立即收听</span>
-              <span><i></i> 订阅</span>
-                <!-- <span @click="showBox()">分享</span> -->
+              <div class="gradient-layer-play" @click="loadRadioList($event, cards[0])">
+                <i class="play"></i>
+                <span>立即收听</span>
+              </div>
+              <div class="subscibeno-play">
+                <p class="have-no-course" v-if="subscibenoInfo.purchased_state == 0">
+                  <i class="subscibeno"></i>
+                  <span @click="subscibe()">订阅</span>
+                </p>
+                <p v-if="subscibenoInfo.purchased_state == 1">
+                  <i class="subscibe"></i>
+                  <span>已订阅</span>
+                </p>
+              </div>
             </div>
-            <div class="share">
+            <div class="share" v-show="false">
               <div class="li weixin"></div>
               <div class="li weibo"></div>
               <div class="li friend"></div>
@@ -74,6 +85,7 @@
         <div class="author-brief">
           <div class="title">
             作者简介:
+            <router-link :to="{path: '/app/discovery/author-detail-old/'+authorInfo.user_id}">去老的详情</router-link>
           </div>
           <div class="author-info">
             <div @click="goToUser(authorInfo.user_id)" class="author-info-left">
@@ -84,12 +96,14 @@
                 <span v-text="authorInfo.nickname"></span>
               </div>
               <div class="passed">
-                <p>
+                <div class="passed-user">
                   <span><i></i>认证用户</span>
-                  <span>英语外教</span>
-                </p>
-                <p @click="relation()">
-                  <span v-if="authorInfo.has_followed === 0">+关注</span>
+                  <p>
+                    <span>英语外教</span>
+                  </p>
+                </div>
+                <p class="flowed" @click="relation()">
+                  <span v-if="authorInfo.has_followed === 0"><i></i>关注</span>
                   <span v-else>取消关注</span>
                 </p>
               </div>
@@ -137,8 +151,8 @@
         </div>
       </div>
       <div class="radio-right">
-        <radio-detail-other :otherRadios="otherRadios"></radio-detail-other>
-        <students-listening></students-listening>
+        <radio-detail-other :otherRadios="otherRadios" v-if="otherRadios"></radio-detail-other>
+        <students-listening :studentsListening="studentsListening"></students-listening>
       </div>
       <!-- <bounceBox @hidden="hiddenShow" v-show="isShowBox"></bounceBox> -->
     </div>
@@ -146,6 +160,8 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
+import Bus from '../../../../bus'
+import $ from 'jquery'
 import bounceBox from '../../../common/bounceBox'
 import { formatDate } from '../../../../tool/date.js'
 import VipPrompt from '../../../common/vipPrompt.vue'
@@ -159,8 +175,10 @@ export default {
       courseInfo: {},
       authorInfo: {},
       cards: [],
+      subscibenoInfo: {},
       comments: [],
-      otherRadios: []
+      otherRadios: [],
+      studentsListening: []
     }
   },
   components: {
@@ -185,6 +203,11 @@ export default {
   },
   mounted () {
     this.loadData()
+    this.getOtherRecommends({current_radio_code: this.$route.params.code}).then(res => {
+      console.log('其他人也在听', res)
+      this.studentsListening = res.data
+      console.log('其他人也在听', this.studentsListening)
+    })
   },
   computed: {
     ...mapState({
@@ -194,8 +217,10 @@ export default {
   methods: {
     ...mapActions({
       postRadioDetail: 'course/postRadioDetail',
+      postPurchaseCourse: 'course/postPurchaseCourse', // 订阅课程
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
-      remRadioRelationCancel: 'course/remRadioRelationCancel' // 取消关注
+      remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
+      getOtherRecommends: 'getOtherRecommends' // 其他人也在听
     }),
     // 处理radio的时间
     toParseTime (data) {
@@ -256,21 +281,43 @@ export default {
         _this.cards = res.result.course_info.cards
         _this.comments = res.result.course_info.comments
         _this.otherRadios = res.result.realated_courses
+        _this.subscibenoInfo = res.result.relation
+      })
+    },
+    // 立即收听
+    loadRadioList (e, radio) {
+      if (this.isPlay && radio.code === this.lastCode) {
+        $('.gradient-layer-play i').removeClass('pause')
+        $(e.target).addClass('play')
+        Bus.$emit('radioPause')
+      } else {
+        $('.gradient-layer-play i').removeClass('pause')
+        $('.gradient-layer-play i').addClass('play')
+        $(e.target).removeClass('play')
+        $(e.target).addClass('pause')
+        if (radio.code !== this.lastCode) {
+          Bus.$emit('getRadioCardList', radio)
+          this.lastCode = radio.code
+        } else {
+          Bus.$emit('radioPlay')
+        }
+      }
+      this.isPlay = !this.isPlay
+    },
+    // 点击订阅
+    subscibe () {
+      // this.subscibenoInfo.purchased_state = 1
+      this.postPurchaseCourse({code: this.courseInfo.code}).then(res => {
+        console.log('订阅课程返回', res)
+        this.subscibenoInfo.purchased_state = 1
+        console.log('this.subscibenoInfo', this.subscibenoInfo)
       })
     }
-    // 分享弹框
-    // showBox () {
-    //   this.isShowBox = true
-    // },
-    // hiddenShow () {
-    //   let that = this
-    //   that.isShowBox = false
-    // }
   }
 }
 </script>
 
-<style scoped>
+<style scope="less" scoped>
 .vip-width {
   width: 100%;
 }
@@ -427,8 +474,14 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-
-.course .subscription .bottom span:nth-child(1) {
+.course .subscription .bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.course .subscription .bottom .gradient-layer-play {
+  display: flex;
+  align-items: center;
   font-size:15px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
@@ -440,18 +493,23 @@ export default {
   margin-right: 17px;
 }
 
-.course .subscription .bottom span:nth-child(1) i {
+.course .subscription .bottom .gradient-layer-play i {
   width: 14px;
   height: 14px;
-  background-image: url('../../../../../static/images/discovery/radio-play.png');
   background-repeat: no-repeat;
   background-size: cover;
   display: inline-block;
   margin-right: 10px;
-  margin-top: 7px;
 }
-.course .subscription .bottom span:nth-child(2) {
-  cursor: pointer;
+.course .subscription .bottom .gradient-layer-play .play {
+  background-image: url('../../../../../static/images/listenDetail.svg');
+}
+.course .subscription .bottom .gradient-layer-play .pause {
+  background-image: url('../../../../../static/images/listenDetailplay.svg');
+}
+.course .subscription .bottom .subscibeno-play p {
+  display: flex;
+  align-items: center;
   font-size:15px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
@@ -460,15 +518,22 @@ export default {
   border-radius:21px;
   padding: 8px 24px;
 }
-.course .subscription .bottom span:nth-child(2) i {
-  width: 12px;
-  height: 13px;
-  background-image: url('../../../../../static/images/discovery/radio-play.png');
+.have-no-course {
+  cursor: pointer;
+}
+.course .subscription .bottom .subscibeno-play i {
+  width: 15px;
+  height: 15px;
   background-repeat: no-repeat;
   background-size: cover;
   display: inline-block;
   margin-right: 10px;
-  margin-top: 7px;
+}
+.course .subscription .bottom .subscibeno-play .subscibeno {
+  background-image: url('../../../../../static/images/subscibeNo.svg');
+}
+.course .subscription .bottom .subscibeno-play .subscibe {
+  background-image: url('../../../../../static/images/subscibe.svg');
 }
 
 .course .subscription .share {
@@ -590,16 +655,41 @@ export default {
   margin-top: 10px;
   line-height: 15px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
-.author-info .author-info-right .passed p:nth-child(1) span:nth-child(1) {
-  font-size:14px;
-  font-family:PingFangSC-Regular;
-  font-weight:400;
-  color:rgba(172,172,172,1);
-  margin-right: 30px;
+.author-info .author-info-right .passed .flowed:hover {
+  cursor: pointer;
+  border-color: #2A9FE4;
+  color: #2A9FE4;
 }
-.author-info .author-info-right .passed p:nth-child(1) span:nth-child(1) i{
+.author-info .author-info-right .passed .flowed span {
+  display: flex;
+  align-items:center;
+}
+.author-info .author-info-right .passed .flowed span i{
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  background: url('../../../../../static/images/follow.svg') no-repeat center;
+  background-size: cover;
+  margin-right: 3px;
+}
+.author-info .author-info-right .passed p {
+  font-size:14px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(60,91,111,1);
+  padding: 5px 20px;
+  border-radius:19px;
+  border:1px solid rgba(178,192,201,1);
+}
+.author-info .author-info-right .passed .passed-user {
+  display: flex;
+  align-items: center;
+}
+
+.author-info .author-info-right .passed .passed-user span i{
   width: 13px;
   height: 13px;
   background-image: url('../../../../../static/images/discovery/radio-passed.png');
@@ -608,23 +698,16 @@ export default {
   display: inline-block;
   margin-right: 10px;
 }
-.author-info .author-info-right .passed p:nth-child(1) span:nth-child(2) {
+.author-info .author-info-right .passed .passed-user p {
+  color:rgba(158,218,98,1);
+  border-color:#9EDA62FF;
+  margin-left: 38px;
   font-size:10px;
   font-family:PingFangSC-Regular;
   font-weight:400;
   color:rgba(158,218,98,1);
-  padding: 5px 8px;
-  border-radius:20px;
-  border:1px solid rgba(158,218,98,1);
-}
-.author-info .author-info-right .passed p:nth-child(2) span {
-  font-size:14px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(60,91,111,1);
-  padding: 5px 20px;
-  border-radius:19px;
-  border:1px solid rgba(178,192,201,1);
+  padding: 3px 8px;
+  border-radius:11px;
 }
 .author-info .author-info-right .bottom span{
   cursor: pointer;
@@ -782,7 +865,7 @@ export default {
 .radio-left .comments .comment-item  .img-right{
   width: 100%;
   padding-bottom: 23px;
-  border-bottom: 2px solid #EAEAEA;
+  border-bottom: 1px solid #EAEAEA;
 }
 .radio-left .comments .comment-item:last-child .img-right{
   width: 100%;

@@ -6,5 +6,6 @@ export default {
   FileQiniuToken: '', // 获取上传七牛的token
   langsStateSel: [],
   recommendRadioPage: 1,
-  recommendRadios: []
+  recommendRadios: [],
+  langCodesSel: [] // 课程相关
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="radio-wrap">
     <div class="nav">
-      <router-link :to="{path: '/app/user/course'}">
+      <router-link :to="{path: '/app/index'}">
         <span>我的学习账户</span>
       </router-link>
       >
@@ -51,7 +51,7 @@
           <div @click="goRecommendRadio('hostRadio')" class="recommend-item"><i></i><span>热播电台</span></div>
           <div @click="goRecommendRadio('learnRecom')" class="recommend-item"><i></i><span>学习推荐</span></div>
           <div @click="goRecommendRadio('latestRelease')" class="recommend-item"><i></i><span>最新发布</span></div>
-          <div class="recommend-item"><i></i><span>明星主播</span></div>
+          <router-link tag="div" :to="{path: 'radio-recom-teachers'}" class="recommend-item"><i></i><span>明星主播</span></router-link>
         </div>
         <!-- 根据学习课程推荐的电台 -->
         <get-random-radio :randomRadio="randomRadio" v-if="flag"></get-random-radio>
@@ -66,34 +66,83 @@
     </div>
     <div class="radio-container">
       <div class="radio-title" v-show="false">电台课程</div>
-      <!-- <div class="radio-menu">
+      <div class="radio-menu" v-show="false">
         <div class="radio-menu-item" v-for="(item, index) in menus" :key="item.menu_id">
           <span v-text="item.menu_title" @click="goRadioList(item)"></span>
           <span v-show="!((index === menus.length - 1) || (index === 10))"></span>
         </div>
-      </div> -->
-      <div class="radio-type" v-for="(item, index) in menuRadios" :key="index">
-        <div class="radio-type-top">
-          <span></span>
-          <span v-text="item.menu_title"></span>
-          <span @click="goRadioList(item)">更多<i></i></span>
+      </div>
+      <div v-if="menuRadios">
+        <div class="radio-type">
+          <div class="radio-type-top">
+            <span></span>
+            <span v-text="recomendRadios.menu_title"></span>
+            <span @click="goRadioList(item)" v-show="false">更多<i></i></span>
+          </div>
+          <div class="radio-list">
+            <div class="radio-item" v-for="radio in recomendRadiosList" :key="radio.code">
+              <div class="play-radio">
+                <img v-lazy="radio.cover" :key="radio.cover" alt="">
+                <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
+                  <i class="play"></i>
+                </div>
+                <div class="subscribe">
+                  <i></i>
+                  <span v-text="radio.buy_num"></span>
+                </div>
+              </div>
+              <router-link tag="div" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
+              <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
+              <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
+            </div>
+          </div>
+          <div class="radio-type-bottom">
+            <p @click="changeBatch()">
+              <i></i>
+              <span>换一批</span>
+            </p>
+          </div>
         </div>
-        <div class="radio-list">
-          <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
-            <div class="play-radio">
-              <img v-lazy="radio.cover" :key="radio.cover" alt="">
-              <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
+        <div class="radio-type" v-for="(item, index) in menuRadios.slice(1, 4)" :key="index">
+          <div class="radio-type-top">
+            <span></span>
+            <span v-text="item.menu_title"></span>
+            <span @click="goRadioList(item)">更多<i></i></span>
+          </div>
+          <div class="radio-list" v-if="item.radios">
+            <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
+              <div class="play-radio">
+                <img v-lazy="radio.cover" :key="radio.cover" alt="">
+                <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
+                  <i class="play"></i>
+                </div>
+                <div class="subscribe">
+                  <i></i>
+                  <span v-text="radio.buy_num"></span>
+                </div>
+              </div>
+              <router-link tag="div" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
+              <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
+              <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 人气电台推荐 -->
+      <div class="moods-radios">
+        <div class="recommend-radios"><span>人气电台推荐</span></div>
+        <div class="moods-lists">
+          <ul>
+            <li v-for="(item, index) in hotRadiosList.slice(0, 9)" :key="index">
+              <div class="moods-item">
+                <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + item.code}">{{item.title}}</router-link>
+                <p>订阅量 {{item.buy_num}}次</p>
+              </div>
+              <div class="gradient-layer-play" @click="loadRadioList($event, item)">
                 <i class="play"></i>
               </div>
-              <div class="subscribe">
-                <i></i>
-                <span v-text="radio.buy_num"></span>
-              </div>
-            </div>
-            <router-link tag="div" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
-            <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
-            <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
-          </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -120,7 +169,10 @@ export default {
       authors: [],
       // startAuthorsIndex: 0,
       menuRadios: [],
-      randomRadio: {} // 随机推荐电台
+      recomendRadios: {}, // 推荐电台
+      recomendRadiosList: [],
+      randomRadio: {}, // 随机推荐电台
+      hotRadiosList: [] // 热门电台
     }
   },
   components: {
@@ -136,7 +188,10 @@ export default {
       _this.banners = res.data.banners
       _this.menus = res.data.menuRadios
       _this.authors = res.data.authors
-      _this.menuRadios = res.data.menuRadios.slice(0, 3)
+      _this.menuRadios = res.data.menuRadios
+      _this.recomendRadios = res.data.menuRadios[0]
+      _this.recomendRadiosList = res.data.menuRadios[0].radios.slice(0, 5)
+      console.log('this.recomendRadiosList', _this.recomendRadiosList)
       _this.swiperInit()
     })
     // 随机推荐单个电台
@@ -144,6 +199,11 @@ export default {
       console.log('随机推荐单个电台', res)
       _this.randomRadio = res.data
       this.flag = true
+    })
+    // 热门电台
+    _this.getHotRadios({limit: 10}).then(res => {
+      console.log('热门电台', res)
+      _this.hotRadiosList = res.radios
     })
   },
   computed: {
@@ -156,7 +216,8 @@ export default {
   methods: {
     ...mapActions({
       postDisvRadio: 'course/postDisvRadio',
-      getRandomRadio: 'getRandomRadio' // 随机推荐单个电台
+      getRandomRadio: 'getRandomRadio', // 随机推荐单个电台
+      getHotRadios: 'getHotRadios' // 热门电台
     }),
     loadRadioList (e, radio) {
       if (this.isPlay && radio.code === this.lastCode) {
@@ -226,6 +287,33 @@ export default {
       console.log(navNum)
       this.$router.push({name: 'radioClassify', params: { isActive: navNum }})
       // this.$router.push({path: 'radio-classify'})
+    },
+    // 点击换一批
+    changeBatch () {
+      this.recomendRadiosList = this.randArray(this.recomendRadiosList)
+    },
+    // 数组随机排序函数
+    randArray (data) {
+      /* eslint-disable */
+      // 获取数组长度
+      var arrLen = data.length
+      // 创建数组 存放下标数
+      var try1 = new Array()
+      for (var i = 0; i < arrLen; i++) {
+        try1[i] = i
+      }
+      // 创建数组 生成随机下标数
+      var try2 = new Array()
+      for (var j = 0 ; j < arrLen ; j++) {
+        try2[j] = try1.splice(Math.floor(Math.random() * try1.length), 1)
+      }
+      // 创建数组，生成对应随机下标数的数组
+      var try3 = new Array()
+      for (var x = 0; x < arrLen; x++) {
+        try3[x] = data[ try2[x] ]
+      }
+      return try3
+       /* eslint-disable */
     }
   }
 }
@@ -470,13 +558,14 @@ export default {
       }
     }
     .radio-type {
+      position: relative;
       width: 880px;
       // height: 260px;
       background-color: #ffffff;
       border-radius: 3px;
       display: inline-block;
       margin-top: 20px;
-      padding: 15px 20px;
+      padding: 27px 21px 34px;
       .radio-type-top {
         width: 100%;
         // border-bottom: 1px solid #EAEAEA;
@@ -517,6 +606,39 @@ export default {
               i {
                 background-image: url('../../../../../static/images/morehover.svg');
               }
+            }
+          }
+        }
+      }
+      .radio-type-bottom {
+        width: 100%;
+        p {
+          -webkit-user-select:none;
+          -moz-user-select:none;
+          -ms-user-select:none;
+          user-select:none;
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          font-size:14px;
+          font-family:PingFang-SC-Medium;
+          font-weight:500;
+          color:rgba(126,146,159,1);
+          i {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            background-image: url('../../../../../static/images/learnIndex/icon-change.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: inline-block;
+            margin-right: 10px;
+          }
+          &:hover {
+            cursor: pointer;
+            color: #2A9FE4FF;
+            i {
+              background-image: url('../../../../../static/images/learnIndex/icon-change-hover.svg');
             }
           }
         }
@@ -622,6 +744,80 @@ export default {
             position: relative;
             margin-top: 4px;
             font-weight: 400;
+          }
+        }
+      }
+    }
+    // 人气电台推荐
+    .moods-radios {
+      width: 880px;
+      border-radius: 3px;
+      display: inline-block;
+      margin-top: 20px;
+      margin-bottom: 112px;
+      .recommend-radios {
+        width: 100%;
+        padding-bottom: 20px;
+        padding: 0 21px 20px;
+        span {
+          font-size:16px;
+          font-family:PingFang-SC-Bold;
+          font-weight:bold;
+          color:rgba(10,43,64,1);
+          line-height:18px;
+        }
+      }
+      .moods-lists {
+        width: 100%;
+        ul {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          li {
+            width: 32%;
+            background: #fff;
+            padding: 11px 20px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            .moods-item {
+              p {
+                font-size:16px;
+                font-family:PingFang-SC-Medium;
+                font-weight:500;
+                color:rgba(74,74,74,1);
+                line-height:22px;
+              }
+              p:nth-child(1) {
+                cursor: pointer;
+              }
+              p:nth-child(2) {
+                font-size:12px;
+                color:rgba(153,153,153,1);
+                padding-top: 4px;
+              }
+            }
+            .gradient-layer-play {
+              cursor: pointer;
+              .play {
+                width: 24px;
+                height:24px;
+                background-image: url('../../../../../static/images/hotnoplay.svg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                display: inline-block;
+              }
+              .pause {
+                width: 24px;
+                height: 24px;
+                background-image: url('../../../../../static/images/hotplay.svg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                display: inline-block;
+              }
+            }
           }
         }
       }

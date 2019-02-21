@@ -1,7 +1,7 @@
 <template>
   <div class="radio-classification">
     <div class="nav">
-      <router-link :to="{path: '/app/user/course'}">
+      <router-link :to="{path: '/app/index'}">
         <span>我的学习账户</span>
       </router-link>
       >
@@ -37,19 +37,23 @@
           <div class="header-describe">
             <div class="top">
               <p class="title">电台节目</p>
-              <p class="tab">
-                <span>日语相关</span>
-                <span>母语相关</span>
-              </p>
+              <div class="tab">
+                <p  v-for="item in langCodesSel" :key="item.lan_code"
+                    :class="{'active': selStateCode == item.lan_code }"
+                    @click="changeState(item)">
+                  <span>{{item.text}}</span>
+                </p>
+              </div>
             </div>
             <div class="header-content">
               <span class="column">共{{lists.length}}个电台节目</span>
               <div class="new">
-                <!-- <p class="left">
-                  <span>日语优先</span>
-                  <i></i>
-                </p> -->
-                <span>最新</span>
+                <span
+                      v-for="(item, index) in isHot"
+                      :key="index"
+                      v-text="item.text"
+                      :class="{'active': onActive == item.type}"
+                      @click="changeIsHot(item)"></span>
               </div>
             </div>
           </div>
@@ -60,8 +64,21 @@
                 <li v-for="(radio, index) in lists" :key="index">
                   <div class="item-img">
                     <img v-lazy="radio.cover" :key="radio.cover" alt="电台的图片">
+                    <!-- 可以播放 -->
                     <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                       <i class="play"></i>
+                    </div>
+                    <!-- 不能播放 -->
+                    <div  class="gradient-layer-play-no"
+                          v-if="radio.money !== 0 && parseInt(isVip) !== 1"
+                          @click="loadNoRadioList($event, radio)">
+                      <i class="play-no" v-if="index>number"></i>
+                    </div>
+                    <!-- 是会员需要购买 -->
+                    <div  class="buy-cny"
+                          v-if="radio.money !== 0 && radio.money_type === 'CNY' && parseInt(isVip) === 1 && radio.free_for_member === false"
+                          @click="loadNoRadioList($event, radio)" >
+                      <i class="play-no" v-if="index>number"></i>
                     </div>
                   </div>
                   <div class="right-describe">
@@ -84,14 +101,8 @@
               <span v-show="flag == false">已显示全部内容~</span>
             </div>
           </div>
-          <!-- 点击加载更多 -->
-          <!-- <div class="load-more" @click="loadMore()" v-show="lists.length > 0">
-            <span v-show="flag == true">点击加载更多</span>
-            <span v-show="flag == false">已显示全部内容~</span>
-          </div> -->
-          <!-- 没有内容 -->
           <div class="no-content" v-show="lists.length === 0">
-            <span>没有相关电台的课程···</span>
+            <span>没有相关电台的课程</span>
           </div>
         </div>
       </div>
@@ -99,20 +110,24 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import Bus from '../../../../bus'
 import $ from 'jquery'
 
 export default {
   data () {
     return {
+      isHot: [{type: 'hot', text: '热播', id: 0}, {type: 'new', text: '最新', id: 1}],
+      onActive: 'hot',
+      selState: {},
       flag: true,
       isActive: 410,
       menuRadioNavs: [], // 电台导航
       lists: [], // 更多电台列表
       page: 1, // 页码
       menu_type: '',
-      menu_id: ''
+      menu_id: '',
+      number: 2
     }
   },
   mounted () {
@@ -133,22 +148,49 @@ export default {
         }
       }
     })
+    this.getLangCodes()
+    console.log('======>', this.selStateCode)
   },
   computed: {
+    ...mapState({
+      langCodesSel: state => state.langCodesSel,
+      userInfo: state => state.userInfo // 用户信息
+    }),
+    isVip () {
+      if (!this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
+    },
     courseOrder () {
       return this.$route.params.itemId
+    },
+    selStateCode () {
+      if (Object.keys(this.selState).length > 0) {
+        return this.selState['lan_code']
+      } else {
+        if (this.langCodesSel && this.langCodesSel.length > 0) {
+          return this.langCodesSel[0]['lan_code']
+        } else {
+          return ''
+        }
+      }
     }
   },
   methods: {
     ...mapActions({
+      getLangCodes: 'getLangCodes', // 语言相关
       postDisvRadio: 'course/postDisvRadio',
       getRadioList: 'course/getRadioList'
     }),
     // 导航切换
     tabChange (item) {
       console.log('item', item)
+      console.log('langCodesSel====', this.langCodesSel)
       let _this = this
+      _this.selState = _this.langCodesSel[0]
       _this.page = 1
+      _this.onActive = 'hot'
       _this.flag = true
       _this.isActive = item.list_order
       _this.menu_type = item.menu_type
@@ -156,11 +198,13 @@ export default {
       let params = {
         menu_type: _this.menu_type,
         menu_id: _this.menu_id,
-        page: _this.page
+        page: _this.page,
+        preferred_lan_code: _this.selState.lan_code,
+        sort: _this.onActive
       }
       console.log('params', params)
       _this.getRadioList(params).then((res) => {
-        console.log('电台列表返回', res)
+        console.log('切换导航电台列表返回', res)
         _this.lists = res.data.radios
       })
     },
@@ -169,18 +213,21 @@ export default {
       if (!this.flag) {
         return false
       }
+      if (Object.keys(this.selState).length === 0) {
+        this.selState = this.langCodesSel[0]
+      }
+      let lanCode = this.selState['lan_code']
       this.page++
       let params = {
         menu_type: this.menu_type,
         menu_id: this.menu_id,
-        page: this.page
+        page: this.page,
+        preferred_lan_code: lanCode,
+        sort: this.onActive
       }
       console.log('点击加载更多params', params)
       this.getRadioList(params).then((res) => {
         console.log('点击加载更多', res)
-        // if (res.data.page === -1) {
-        //   this.flag = false
-        // }
         this.lists = this.lists.concat(res.data.radios)
         if (res.data.page === -1) {
           this.flag = false
@@ -208,6 +255,45 @@ export default {
         }
       }
       this.isPlay = !this.isPlay
+    },
+    // 切换课程
+    changeState (item) {
+      console.log(this.menu_type, this.menu_id, item.lan_code)
+      this.selState = item
+      this.page = 1
+      this.onActive = 'hot'
+      let params = {
+        menu_type: this.menu_type,
+        menu_id: this.menu_id,
+        page: this.page,
+        preferred_lan_code: item.lan_code,
+        sort: this.onActive
+      }
+      console.log('切换母语params', params)
+      this.getRadioList(params).then((res) => {
+        console.log('切换母语', res)
+        this.lists = res.data.radios
+      })
+    },
+    // 切换热度
+    changeIsHot (item) {
+      console.log('热度', item)
+      console.log('selState', this.selState)
+
+      this.onActive = item.type
+      this.page = 1
+      let params = {
+        menu_type: this.menu_type,
+        menu_id: this.menu_id,
+        page: this.page,
+        preferred_lan_code: this.selState.lan_code,
+        sort: this.onActive
+      }
+      console.log('切换热度', params)
+      this.getRadioList(params).then((res) => {
+        console.log('切换热度', res)
+        this.lists = res.data.radios
+      })
     }
   }
 }
@@ -317,24 +403,38 @@ a {
               line-height:28px;
             }
             .tab {
-              display: inline-block;
               font-size:13px;
               font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(60,91,111,1);
               line-height:18px;
-              margin: 10px 0 28px;
+              margin: 20px 0 46px;
+              display: flex;
+              p {
+                margin-right: 10px;
+                padding: 8px 20px;
+                border:1px solid rgba(217,223,226,1);
+                border-radius: 5px;
+                &:hover {
+                  border:1px solid #2A9FE4;
+                  span {
+                    color: #2A9FE4;
+                  }
+                }
+                &.active {
+                  border:1px solid #2A9FE4;
+                  span {
+                    color: #2A9FE4;
+                  }
+                }
+              }
               span {
+                cursor: pointer;
                 font-size:13px;
                 font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(60,91,111,1);
                 line-height:18px;
-                padding: 4px 19px;
-                border:1px solid rgba(217,223,226,1);
-              }
-              span:nth-child(1) {
-                margin-right: 10px;
               }
             }
           }
@@ -351,41 +451,32 @@ a {
               color:rgba(144,162,174,1);
             }
             .new {
-              // .left {
-              //   display: inline-block;
-              //   span {
-              //     font-size:14px;
-              //     font-family:PingFang-SC-Medium;
-              //     font-weight:500;
-              //     color:rgba(60,91,111,1);
-              //   }
-              //   i {
-              //     display: inline-block;
-              //     width: 14px;
-              //     height: 14px;
-              //     background: url('../../../../../static/images/discovery/testsanjiao.svg') no-repeat center;
-              //     background-size: cover;
-              //     margin-top: 4px;
-              //   }
-              // }
               span {
                 font-size:14px;
                 font-family:PingFang-SC-Medium;
                 font-weight:500;
-                color:rgba(60,91,111,1);
+                color:#3C5B6FFF;
+                padding-right: 20px;
+                &:hover {
+                  cursor: pointer;
+                  color: #2A9FE4FF;
+                }
+                &.active {
+                  color: #2A9FE4FF;
+                }
               }
             }
           }
         }
         // 下面的内容区
-        .describe-content{
+        .describe-content {
           padding: 0px 43px 19px;
           width: 100%;
           max-height: 860px;
           overflow-y: auto;
           .describe-lists {
             width: 100%;
-            border-bottom: 3px solid #EEF2F3;
+            border-bottom: 1px solid #EEF2F3;
             ul {
               display: flex;
               justify-content: space-between;
@@ -432,6 +523,38 @@ a {
                       display: inline-block;
                     }
                   }
+                  .gradient-layer-play-no {
+                    width: 170px;
+                    height: 90px;
+                    position: absolute;
+                    top: 0;
+                    text-align: center;
+                    z-index: 2;
+                    .play-no {
+                      width: 100%;
+                      height: 100%;
+                      background-image: url("../../../../../static/images/learn/learn-course-little-bg.png");
+                      background-repeat: no-repeat;
+                      background-size: cover;
+                      display: inline-block;
+                    }
+                  }
+                  .buy-cny {
+                    width: 170px;
+                    height: 90px;
+                    position: absolute;
+                    top: 0;
+                    text-align: center;
+                    z-index: 2;
+                    .play-no {
+                      width: 100%;
+                      height: 100%;
+                      background-image: url("../../../../../static/images/learn/learn-course-little-bg.png");
+                      background-repeat: no-repeat;
+                      background-size: cover;
+                      display: inline-block;
+                    }
+                  }
                 }
                 .right-describe {
                   padding: 10px 0 10px 10px;
@@ -450,7 +573,7 @@ a {
                   }
                   .num {
                     display: flex;
-                    font-size:13px;
+                    font-size:12px;
                     font-family:PingFang-SC-Medium;
                     font-weight:500;
                     // color:rgba(245,166,35,1);
@@ -510,6 +633,10 @@ a {
             text-align: center;
             line-height: 700px;
           }
+        }
+        // 没有相关电台
+        .no-content {
+          padding: 0 43px;
         }
       }
     }

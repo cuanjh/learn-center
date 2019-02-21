@@ -131,6 +131,7 @@ export default {
         $('.gradient-layer-play', $(e.target)).hide()
       }
     },
+    // 换一批
     changeBatch () {
       if (Object.keys(this.selState).length === 0) {
         this.selState = this.langsStateSel[0]
@@ -138,6 +139,7 @@ export default {
       let lanCode = this.selState['lan_code']
       this.getRecommendRadios({'lan_code': lanCode, limit: 6, page: this.recommendRadioPage})
     },
+    // 切换课程
     changeState (item) {
       this.selState = item
       let lanCode = this.selState['lan_code']

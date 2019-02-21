@@ -71,6 +71,7 @@ export default {
       'getEndangeredMap',
       'getRecommendTeachers'
     ]),
+    // 点击电台主播
     loadRecommendTeachers () {
       this.isShowEndangerPanel = false
       this.$parent.$refs.map.$emit('loadRecommendTeachers')
