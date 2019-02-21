@@ -1,7 +1,7 @@
 <template>
   <div class="radio-classify">
     <div class="nav">
-      <router-link :to="{path: '/app/user/course'}">
+      <router-link :to="{path: '/app/index'}">
         <span>我的学习账户</span>
       </router-link>
       >
@@ -66,7 +66,7 @@
                     </div>
                   </div>
                   <div class="up-all">
-                    <span @click="changeHostRadio(hostRadioLists)" v-text="showMoreHost?'全部展开':'已经没有更多内容了~~'" >全部展开</span>
+                    <span @click="changeHostRadio(hostRadioLists)" v-text="showMoreHost?'全部展开':'已展示全部内容'" >全部展开</span>
                     <i v-show="showMoreHost"></i>
                   </div>
                 </div>
@@ -101,7 +101,7 @@
                     </div>
                   </div>
                   <div class="up-all">
-                    <span @click="changeBatch()" v-text="showMore?'全部展开':'已经没有更多内容了~~'" ></span>
+                    <span @click="changeBatch()" v-text="showMore?'全部展开':'已展示全部内容'" ></span>
                     <i v-show="showMore"></i>
                   </div>
                 </div>
@@ -134,7 +134,7 @@
                     </div>
                   </div>
                   <div class="up-all">
-                    <span @click="changeReleaseRadio(latestReleaseRadio)" v-text="showMoreRelease?'全部展开':'已经没有更多内容了~~'" >全部展开</span>
+                    <span @click="changeReleaseRadio(latestReleaseRadio)" v-text="showMoreRelease?'全部展开':'已展示全部内容'" >全部展开</span>
                     <i v-show="showMoreRelease"></i>
                   </div>
                 </div>
@@ -258,14 +258,24 @@ export default {
     },
     // 加载更多热播电台
     changeHostRadio (radio) {
-      console.log('radio', radio)
+      if (!this.showMoreHost) {
+        return
+      }
       this.page++
-      // let params = {
-      //   menu_type: radio.menu_type,
-      //   menu_id: radio.menu_id,
-      //   page: this.page
-      // }
-      this.showMoreHost = false
+      let params = {
+        menu_type: radio.menu_type,
+        menu_id: radio.menu_id,
+        page: this.page
+      }
+      console.log('点击加载更多params', params)
+      this.getRadioList(params).then((res) => {
+        console.log('点击加载更多热播电台', res)
+        this.hostRadios = this.hostRadios.concat(res.data.radios)
+        if (res.data.page === -1) {
+          this.showMoreHost = !this.showMoreHost
+          return false
+        }
+      })
     },
     // 加载更多推荐课程
     changeBatch () {
@@ -284,6 +294,9 @@ export default {
     },
     // 加载更多最新课程
     changeReleaseRadio (radio) {
+      if (!this.showMoreRelease) {
+        return
+      }
       this.page++
       let params = {
         menu_type: radio.menu_type,
@@ -292,8 +305,11 @@ export default {
       }
       console.log('点击加载更多params', params)
       this.getRadioList(params).then((res) => {
-        console.log('点击加载更多', res)
         this.releaseRadio = this.releaseRadio.concat(res.data.radios)
+        if (res.data.page === -1) {
+          this.showMoreRelease = !this.showMoreRelease
+          return false
+        }
       })
     }
   }

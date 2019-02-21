@@ -2,7 +2,7 @@
   <div class="radio-content">
     <div class="other-radio">该老师的其他电台</div>
     <router-link tag="div"  class="other-radio-item"
-          v-for="(radio, index) in otherRadios.slice(0, 5)" :key="'other-radio' + index"
+          v-for="(radio, index) in otherRadios.slice(0, 3)" :key="'other-radio' + index"
           :to="{path: '/app/discovery/radio-detail/' + radio.code}"
           >
       <img v-lazy="radio.cover" :key="radio.cover" alt="">
@@ -14,6 +14,9 @@
       <div class="author" v-text="radio.author_info.nickname"></div>
       <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
     </router-link>
+    <div class="other-radio-no" v-if="otherRadios.length == 0">
+      <span>没有相关的其他电台</span>
+    </div>
   </div>
 </template>
 <script>
@@ -47,7 +50,12 @@ export default {
   padding: 23px 20px;
   /* border-bottom: 1px dotted #8E8E8E; */
 }
-
+.radio-content .other-radio-no {
+  height: 80px;
+  margin-top: 10px;
+  background: #ffffff;
+  padding: 23px 20px;
+}
 .radio-content .other-radio-item img {
   width: 100%;
   height: 128px;

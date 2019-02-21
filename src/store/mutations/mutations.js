@@ -29,8 +29,10 @@ export default {
   updateFileQiniuToken (state, data) {
     state.FileQiniuToken = data.token
   },
+  // 电台主播推荐
   updatereCommendRadioTeachers (state, data) {
     state.recommendRadioTeachers = data
+    console.log('电台主播推荐', state.recommendRadioTeachers)
   },
   updateLangsState (state, data) {
     let opt = []
@@ -38,6 +40,14 @@ export default {
     opt.push({'lan_code': data.skillLang.lan_code, 'text': '母语优先'})
     state.langsStateSel = opt
     console.log('语言状态选项', state.langsStateSel)
+  },
+  // 更新相关课程
+  updateLangCodes (state, data) {
+    let arr = []
+    arr.push({'lan_code': data.currentLang.lan_code, 'text': data.currentLang.name + '相关'})
+    arr.push({'lan_code': data.skillLang.lan_code, 'text': '母语相关'})
+    state.langCodesSel = arr
+    console.log('语言相关', state.langCodesSel)
   },
   updateRecommendRadios (state, res) {
     state.recommendRadioPage = res.page

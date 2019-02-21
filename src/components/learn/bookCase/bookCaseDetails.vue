@@ -1,7 +1,7 @@
 <template>
   <div class="book-details">
     <div class="nav">
-      <router-link :to="{path: '/app/user/course'}">
+      <router-link :to="{path: '/app/index'}">
         <span>我的学习账户</span>
       </router-link>
       >

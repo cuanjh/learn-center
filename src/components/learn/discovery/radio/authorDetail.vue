@@ -1,162 +1,158 @@
 <template>
   <div class="author">
-    <div class="author-content">
-      <div class="autor-header">
-        <div class="author-top">
-          <div class="background"></div>
-          <div class="detail">
-            <div class="left">
-              <ul>
-                <li>
-                  <span>全球说ID</span>
-                  <span>{{authorInfo.talkmate_id}}</span>
-                </li>
-                <li class="line"></li>
-                <li>
-                  <span>精通语言</span>
-                  <span>{{language}}</span>
-                </li>
-                <li class="line"></li>
-                <li>
-                  <span>金币数量</span>
-                  <span>{{authorInfo.coins}}</span>
-                </li>
-              </ul>
-            </div>
-            <div class="right">
-              <ul>
-                <li>
-                  <span>Ta的关注</span>
-                  <span>{{authorInfo.follow_num}}</span>
-                </li>
-                <li class="line"></li>
-                <li>
-                  <span>Ta的粉丝</span>
-                  <span>{{authorInfo.be_followed_num}}</span>
-                </li>
-                <li class="line"></li>
-                <li>
-                  <span>国家/地区</span>
-                  <span>{{authorInfo.country_name}}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+    <div class="author-top">
+      <div class="author-top-content">
+        <div class="author-img">
+          <img :src="authorInfo.photo" alt="作者头像">
+          <i class="vip-img" v-show="authorInfo.is_member == true"></i>
         </div>
-        <div class="author-bottom">
-          <div class="user-photo">
-            <img v-lazy="authorInfo.photo" alt="头像">
-          </div>
-          <div class="author-user">
-            <div class="sex">
-              <p>{{authorInfo.nickname}}</p>
-              <div class="cont">
-                <p class="bg">
-                  <i class="gender" v-if="authorInfo.gender === 'female'"></i>
-                  <i class="man" v-else></i>
-                </p>
-                <span class="age">{{authorInfo.age}}</span>
-                <span class="course">精通:{{language}}</span>
-              </div>
+        <div class="author-text">
+          <p class="nickname"><span>{{authorInfo.nickname}}</span></p>
+          <div class="cont">
+            <div class="bg">
+              <i class="gender" v-if="authorInfo.gender === 'female'"></i>
+              <i class="man" v-else></i>
             </div>
-            <div class="pay" @click="relation()">
-              <p>
-                <!-- <span v-text="text"></span> -->
-                <span v-if="authorInfo.has_followed === false">关注</span>
-                <span v-else>取消关注</span>
-              </p>
-              <!-- <p><span>私信</span></p> -->
+            <div class="location">
+              <i></i>
+              <span>{{authorInfo.country_name}}</span>
             </div>
           </div>
-          <div class="tab-item">
-            <span v-bind:class="{'active': 'radio' == tabFlag}" @click="tabChange('radio')">Ta的电台</span>
-            <span v-bind:class="{'active': 'dynamic' == tabFlag}" @click="tabChange('dynamic')">动态</span>
+          <div class="dialogue">
+            <p class="talk" v-show="false">
+              <span><i></i>对话</span>
+            </p>
+            <p class="follow" @click="relation()">
+              <span v-if="authorInfo.has_followed === false"><i></i>关注</span>
+              <span v-else>取消关注</span>
+            </p>
           </div>
-        </div>
-      </div>
-      <!-- 下面的电台列表 动态列表-->
-      <div class="autor-radio">
-        <div class="autor-content">
-          <!-- 电台 -->
-          <div class="radio-list" v-show="'radio' == tabFlag">
-            <div v-if="radios.length>0" class="out-list">
-              <div class="radio-item" v-for="(item, index) in radios" :key="index">
-                <div class="item">
-                  <a @mouseenter="radioMouseEnter($event, item, index)" @mouseleave="radioMouseLeave($event, item, index)">
-                    <img v-lazy="item.cover" :key="item.cover" alt="背景图片">
-                    <!-- 判断不免费并且不是会员的时候 -->
-                    <div  class="gradient-layer-play-no"
-                          v-if="item.money !== 0 && parseInt(isVip) !== 1"
-                          @click="loadNoRadioList($event, item)">
-                      <i class="play-no" v-if="index>number"></i>
-                    </div>
-                    <div  class="buy-cny"
-                          v-if="item.money !== 0 && item.money_type === 'CNY' && parseInt(isVip) === 1 && item.free_for_member === false"
-                          @click="loadNoRadioList($event, item)">
-                      <i class="play-no" v-if="index>number"></i>
-                    </div>
-                    <!-- <div class="gradient-layer-play-no" style="display: none">
-                      <i class="play-no"></i>
-                    </div> -->
-                    <div  class="gradient-layer-play"
-                          style="display: none"
-                          @click="loadRadioList($event, item)">
-                      <i class="play"></i>
-                    </div>
-                    <div class="subscribe">
-                      <i></i>
-                      <span >{{item.buy_num}}</span>
-                    </div>
-                  </a>
-                  <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + item.code}" class="title" v-text="item.title"></router-link>
-                  <div class="author" v-text="item.author_name ? item.author_name : '用户' + item.talkmate_id"></div>
-                  <div class="money" v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' +item.money : $t('coins') + ' ' + item.money"></div>
-                </div>
-              </div>
-            </div>
-            <!-- <div v-else>
-              <div class="no-dynamic">
-                <div class="noradio-img"></div>
-                <div class="text">这个人很懒没有录制电台~~</div>
-              </div>
-            </div> -->
-          </div>
-          <!-- 动态 -->
-          <div class="dynamic-list" v-show="'dynamic' == tabFlag">
-            <div v-if="feedInfos.length>0">
-              <div class="dynamic-item" v-for="(feedInfo, index) in feedInfos" :key="index">
-                <authorItem :feedInfo="feedInfo" v-if="feedInfo.rewardLists"/>
-              </div>
-            </div>
-            <div v-else>
-              <div class="no-dynamic">
-                <div class="no-img"></div>
-                <div class="text">Ta学习太忙了，稍后会来分享动态~~~</div>
-              </div>
-            </div>
+          <div class="introduce">
+            <span>{{authorInfo.description}}</span>
           </div>
         </div>
       </div>
     </div>
-    <div class="nolock-test-check" v-show="nolockTestCheckShow">
+    <!-- 下面的电台列表 动态列表-->
+    <div class="author-radio">
+      <div class="tab-item">
+        <span v-bind:class="{'active': 'authorInfo' == tabFlag}" @click="tabChange('authorInfo')">个人信息</span>
+        <span v-bind:class="{'active': 'radios' == tabFlag}" @click="tabChange('radios')">他的电台</span>
+      </div>
+      <div class="author-content">
+        <div class="author-content-box" v-if="'authorInfo' == tabFlag">
+          <div class="lists">
+            <div class="personal-dynamic">
+              <div class="content">
+                <p>个人动态</p>
+                <p><span>{{feedInfos.length}}</span></p>
+                <p><span>查看他的动态</span></p>
+              </div>
+            </div>
+            <div class="personal-dynamic">
+              <div class="content">
+                <p>他的粉丝</p>
+                <p><span>{{authorInfo.be_followed_num}}</span></p>
+                <p><i></i><span></span></p>
+              </div>
+            </div>
+            <div class="personal-dynamic">
+              <div class="content">
+                <p>他的关注</p>
+                <p><span>{{authorInfo.follow_num}}</span></p>
+                <p><span>关注他们</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="author-details">
+            <div class="author-lists">
+              <ul>
+                <li>
+                  <div class="item">
+                    <p class="text">
+                      <span>国家/地区：</span>
+                      <span>{{authorInfo.country_name}}</span>
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <div class="item">
+                    <p class="text">
+                      <span>全球说ID：</span>
+                      <span>{{authorInfo.talkmate_id}}</span>
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <div class="item">
+                    <p class="text">
+                      <span>年龄：</span>
+                      <span>{{authorInfo.age}}岁</span>
+                    </p>
+                  </div>
+                </li>
+                 <li>
+                  <div class="item">
+                    <p class="text">
+                      <span>金币：</span>
+                      <span>{{authorInfo.coins}}</span>
+                    </p>
+                  </div>
+                </li>
+                 <li>
+                  <div class="item">
+                    <p class="text">
+                      <span>性别：</span>
+                      <span>{{authorInfo.gender == 'female'?'女':'男'}}</span>
+                    </p>
+                  </div>
+                </li>
+                 <li>
+                  <div class="item">
+                    <p class="text">
+                      <span>会员：</span>
+                      <span>{{authorInfo.is_member == false?'非会员':'VIP'}}</span>
+                    </p>
+                  </div>
+                </li>
+                 <li>
+                  <div class="item">
+                    <p class="text">
+                      <span>精通语种：</span>
+                      <span>{{language}}</span>
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="talkmate-img">
+            <p></p>
+          </div>
+        </div>
+        <div class="author-content-box" v-if="'radios' == tabFlag">
+          <author-radios :radios="radios" :isVip="isVip"></author-radios>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="nolock-test-check" v-show="nolockTestCheckShow">
       <div class="animated flipInX" v-show="nolockTestCheckShow">
         <span v-html="tips"></span>
         <i></i>
         <p class="buttons">
-          <span class="goBackCore" @click="goBack">取消</span>
+          <span class="goBackCore" @click="goBack()">取消</span>
           <span class="goBackCore">购买</span>
         </p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
-
 <script>
 import { mapState, mapActions } from 'vuex'
-// import Cookie from '../../../../tool/cookie.js'
 import authorItem from './authorItem'
-import Bus from '../../../../bus'
-import $ from 'jquery'
+// import Bus from '../../../../bus'
+// import $ from 'jquery'
+import AuthorRadios from './authorRadios.vue'
 
 export default {
   data () {
@@ -164,7 +160,7 @@ export default {
       nolockTestCheckShow: false,
       flag: true,
       type: 0, // 正常 1回复
-      tabFlag: 'radio', // true Ta的电台 false 动态
+      tabFlag: 'authorInfo', // authorInfo个人信息 radios他的电台
       authorInfo: {}, // 作者信息
       language: '', // 精通语言
       userId: '',
@@ -172,23 +168,14 @@ export default {
       page: 1,
       tips: '',
       number: 2
-      // isVip: Cookie.getCookie('isVip')
     }
   },
-  components: {authorItem},
+  components: {AuthorRadios, authorItem},
   computed: {
     ...mapState({
       feedInfos: state => state.course.feedInfos, // 动态列表
-      // userInfo: state => state.user.userInfo
       userInfo: state => state.userInfo // 用户信息
     }),
-    // memberInfo () {
-    //   let ui = this.userInfo
-    //   if (!ui) {
-    //     ui = localStorage.getItem('userInfo')
-    //   }
-    //   return ui
-    // }
     isVip () {
       if (!this.userInfo.member_info) {
         return 0
@@ -197,8 +184,6 @@ export default {
     }
   },
   mounted () {
-    console.log('isVip', this.isVip)
-    console.log('111', this.isVip)
     let _this = this
     _this.userId = _this.$route.params.userId
     console.log('userId', _this.userId)
@@ -210,14 +195,14 @@ export default {
       console.log('authorInfo', _this.authorInfo)
       console.log('language', _this.language)
     })
-    // 电台列表
+    // 作者电台列表
     _this.getRadioAuthorList({ partner_user_id: _this.userId, page: _this.page }).then((data) => {
       console.log('电台列表', data)
       if (data.data.radios) {
         _this.radios = data.data.radios
       }
     })
-    // 动态列表
+    // 作者动态列表
     _this.getRadioAuthorDynamic({ partner_user_id: _this.userId, page: _this.page, has_homework: 'Y' })
   },
   methods: {
@@ -228,6 +213,14 @@ export default {
       getRadioAuthorList: 'course/getRadioAuthorList', // 作者电台列表
       getRadioAuthorDynamic: 'course/getRadioAuthorDynamic' // 作者的动态
     }),
+    // 电台和动态的bunner切换
+    tabChange (tab) {
+      this.tabFlag = tab
+    },
+    // // 取消
+    // goBack () {
+    //   this.nolockTestCheckShow = false
+    // },
     // 关注
     relation () {
       let _this = this
@@ -251,621 +244,497 @@ export default {
           }
         })
       }
-    },
-    // 电台和动态的bunner切换
-    tabChange (tabFlag) {
-      this.tabFlag = tabFlag
-    },
-    // 能播放的列表点击播放
-    loadRadioList (e, item) {
-      if (this.isPlay && item.code === this.lastCode) {
-        $('.gradient-layer-play i').removeClass('pause')
-        $(e.target).addClass('play')
-        Bus.$emit('radioPause')
-      } else {
-        $('.gradient-layer-play i').removeClass('pause')
-        $('.gradient-layer-play i').addClass('play')
-        $(e.target).removeClass('play')
-        $(e.target).addClass('pause')
-        $('.gradient-layer-play').not($(e.target).parent()).hide()
-        if (item.code !== this.lastCode) {
-          Bus.$emit('getRadioCardList', item)
-          this.lastCode = item.code
-        } else {
-          Bus.$emit('radioPlay')
-        }
-      }
-      this.isPlay = !this.isPlay
-    },
-    // 不能播放的列表点击提示购买课程
-    loadNoRadioList (e, item) {
-      this.tips = '收费课程需要购买才能听哦(升级为会员免费)'
-      this.nolockTestCheckShow = true
-    },
-    goBack () {
-      this.nolockTestCheckShow = false
-    },
-    radioMouseEnter (e, item, index) {
-      // 课程不免费
-      if (item.money !== 0) {
-        // 是否会员
-        if (parseInt(this.isVip) === 1) {
-          if (item.money_type === 'CNY') {
-            if (item.free_for_member === false) {
-              // 会员不免费
-              if (index <= this.number) {
-                $('.gradient-layer-play', $(e.target)).show()
-              }
-              $('.buy-cny', $(e.target)).show()
-            } else {
-              $('.gradient-layer-play', $(e.target)).show()
-            }
-          } else {
-            $('.gradient-layer-play', $(e.target)).show()
-          }
-        } else {
-          // 不是会员
-          if (index > this.number) {
-            $('.gradient-layer-play-no', $(e.target)).show()
-          } else {
-            $('.gradient-layer-play', $(e.target)).show()
-          }
-        }
-      } else {
-        $('.gradient-layer-play', $(e.target)).show()
-      }
-    },
-    radioMouseLeave (e) {
-      if ($('.gradient-layer-play i', $(e.target)).hasClass('play')) {
-        $('.gradient-layer-play', $(e.target)).hide()
-      }
     }
+    // // 点击加载更多
+    // loadMoreRadio () {
+    //   console.log('....')
+    // },
+    // // 能播放的列表点击播放
+    // loadRadioList (e, item) {
+    //   if (this.isPlay && item.code === this.lastCode) {
+    //     $('.gradient-layer-play i').removeClass('pause')
+    //     $(e.target).addClass('play')
+    //     Bus.$emit('radioPause')
+    //   } else {
+    //     $('.gradient-layer-play i').removeClass('pause')
+    //     $('.gradient-layer-play i').addClass('play')
+    //     $(e.target).removeClass('play')
+    //     $(e.target).addClass('pause')
+    //     $('.gradient-layer-play').not($(e.target).parent()).hide()
+    //     if (item.code !== this.lastCode) {
+    //       Bus.$emit('getRadioCardList', item)
+    //       this.lastCode = item.code
+    //     } else {
+    //       Bus.$emit('radioPlay')
+    //     }
+    //   }
+    //   this.isPlay = !this.isPlay
+    // },
+    // // 不能播放的列表点击提示购买课程
+    // loadNoRadioList (e, item) {
+    //   this.tips = '收费课程需要购买才能听哦(升级为会员免费)'
+    //   this.nolockTestCheckShow = true
+    // },
+    // radioMouseEnter (e, item, index) {
+    //   // 课程不免费
+    //   if (item.money !== 0) {
+    //     // 是否会员
+    //     if (parseInt(this.isVip) === 1) {
+    //       if (item.money_type === 'CNY') {
+    //         if (item.free_for_member === false) {
+    //           // 会员不免费
+    //           if (index <= this.number) {
+    //             $('.gradient-layer-play', $(e.target)).show()
+    //           }
+    //           $('.buy-cny', $(e.target)).show()
+    //         } else {
+    //           $('.gradient-layer-play', $(e.target)).show()
+    //         }
+    //       } else {
+    //         $('.gradient-layer-play', $(e.target)).show()
+    //       }
+    //     } else {
+    //       // 不是会员
+    //       if (index > this.number) {
+    //         $('.gradient-layer-play-no', $(e.target)).show()
+    //       } else {
+    //         $('.gradient-layer-play', $(e.target)).show()
+    //       }
+    //     }
+    //   } else {
+    //     $('.gradient-layer-play', $(e.target)).show()
+    //   }
+    // },
+    // radioMouseLeave (e) {
+    //   if ($('.gradient-layer-play i', $(e.target)).hasClass('play')) {
+    //     $('.gradient-layer-play', $(e.target)).hide()
+    //   }
+    // }
   }
 }
 </script>
-
 <style lang="less" scoped>
 .author {
   width: 100%;
-  .author-content {
+  .author-top {
     width: 100%;
-    .autor-header {
-      width: 100%;
-      .author-top {
+    background: #ffffff;
+    .author-top-content {
+      width: 1200px;
+      display: flex;
+      padding: 42px 129px 33px;
+      margin: 0 auto;
+      .author-img {
         position: relative;
-        width: 100%;
-        height: 344px;
-        .background {
-          height: 344px;
-          background: url("../../../../../static/images/headline/background.png")
-            no-repeat center;
+        width: 110px;
+        height: 110px;
+        margin-right: 30px;
+        border-radius: 50%;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          border: 5px solid rgb(4, 116, 185);
+        }
+        .vip-img {
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          margin-left: -30px;
+          display: inline-block;
+          width: 60px;
+          height: 20px;
+          background: url('../../../../../static/images/authorVIP.svg') no-repeat center;
           background-size: cover;
         }
-        .detail {
-          position: absolute;
-          bottom: 25px;
-          left: 50%;
-          margin-left: -590px;
-          width: 1180px;
+      }
+      .author-text {
+        font-size:13px;
+        font-family:PingFang-SC-Medium;
+        font-weight:500;
+        color:rgba(144,162,174,1);
+        .nickname {
+          font-size: 24px;
+          font-weight:bold;
+          color:rgba(10,43,64,1);
+        }
+        i {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
+        }
+        .cont {
+          display: flex;
+          padding-top: 3px;
+          .bg {
+            display: flex;
+            align-items: center;
+            .gender {
+              background-image: url('../../../../../static/images/authorfemale.svg');
+            }
+            .man {
+              background-image: url('../../../../../static/images/authorman.svg');
+            }
+          }
+          .location {
+            display: flex;
+            align-items: center;
+            i {
+              background-image: url('../../../../../static/images/authorlocation.svg');
+              margin: 0 6px 0 8px;
+            }
+          }
+        }
+        .dialogue {
+          padding: 9px 0 11px;
+          p {
+            display: inline-block;
+            padding: 3px 15px;
+            font-size:14px;
+            font-family:PingFang-SC-Medium;
+            font-weight:500;
+            color:rgba(255,255,255,1);
+            border-radius: 13px;
+            span {
+              display: flex;
+              align-items: center;
+            }
+          }
+          .talk {
+            background: #C8D4DBFF;
+            margin-right: 9px;
+            i {
+              background-image: url('../../../../../static/images/authordialogue.svg');
+              margin-right: 5px;
+            }
+          }
+          .follow {
+            cursor: pointer;
+            background: #2A9FE4FF;
+            i {
+              background-image: url('../../../../../static/images/authorfllowrit.svg');
+              margin-right: 5px;
+            }
+          }
+        }
+        .introduce {
+          width: 510px;
+          font-size:13px;
+          font-family:PingFang-SC-Medium;
+          font-weight:500;
+          color:rgba(144,162,174,1);
+          span {
+            line-height:18px;
+          }
+        }
+      }
+    }
+  }
+  // 下面内容区域
+  .author-radio {
+    width: 1200px;
+    margin: 0 auto;
+    margin-top: 14px;
+    // 导航
+    .tab-item {
+      display: flex;
+      padding: 0 129px;
+      span {
+        cursor: pointer;
+        font-size:14px;
+        font-family:PingFang-SC-Bold;
+        font-weight:bold;
+        color:rgba(16,48,68,1);
+        line-height: 20px;
+        padding: 0 14px 2px;
+        margin-right: 44px;
+        &.active {
+          color: #2A9FE4FF;
+          border-bottom: 3px solid #2A9FE4FF;
+        }
+      }
+    }
+    // 内容区域
+    .author-content {
+      width: 100%;
+      background: #ffffff;
+      // padding: 0 129px;
+      .author-content-box {
+        padding: 63px 129px 40px;
+        i {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
+        }
+        .lists {
           display: flex;
           justify-content: space-between;
-          .left,
-          .right {
-            width: 480px;
-          }
-          ul {
-            display: flex;
-            justify-content: space-around;
-            li {
-              display: inline-block;
-              span {
-                display: block;
-              }
-              span:nth-child(1) {
-                text-align: center;
-                font-size: 14px;
-                color: #b5b5b5;
-                margin-bottom: 16px;
-              }
-              span:nth-child(2) {
-                font-size: 24px;
-                color: #ffffff;
-                text-align: center;
-              }
-            }
-            .line {
-              background: #b1b1b1;
-              width: 2px;
-              height: 30px;
-              margin-top: 15px;
-            }
-          }
-        }
-      }
-      .author-bottom {
-        position: relative;
-        width: 100%;
-        height: 285px;
-        background: #ffffff;
-        .user-photo {
-          position: absolute;
-          top: -60px;
-          left: 50%;
-          margin-left: -64px;
-          width: 128px;
-          height: 128px;
-          background: #ffffff;
-          border-radius: 50%;
-          text-align: center;
-          vertical-align: middle;
-          img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            vertical-align: middle;
-            margin-top: 4px;
-          }
-        }
-        .author-user {
-          display: inline-block;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          .sex {
-            font-size: 0;
-            margin-bottom: 22px;
-            p {
-              font-size: 24px;
-              color: #444444;
-              margin: 13px 0 5px 0;
-              text-align: center;
-            }
-            span {
-              font-size: 12px;
-              color: #afafaf;
-              line-height: 51px;
-            }
-            .cont {
-              text-align: center;
-              .bg {
-                display: inline-block;
-                width: 16px;
-                height: 26px;
-                .gender {
-                  display: inline-block;
-                  width: 16px;
-                  height: 26px;
-                  background: url("../../../../../static/images/headline/gendermalse.png") no-repeat center;
-                  background-size: 100%;
-                }
-                .man {
-                  display: inline-block;
-                  width: 16px;
-                  height: 26px;
-                  background: url("../../../../../static/images/headline/man.png") no-repeat center;
-                  background-size: 100%;
-                }
-              }
-              .age {
-                padding: 0 10px;
-                border-right: 1px solid #d8d8d8;
-              }
-              .course {
-                padding-left: 10px;
-              }
-            }
-          }
-          .pay {
-            cursor: pointer;
-            width: 120px;
-            height: 36px;
-            background: #2a9fe4;
-            font-size: 14px;
-            color: #ffffff;
-            text-align: center;
-            line-height: 36px;
-            border-radius: 30px;
-            margin: 0 auto;
-          }
-        }
-        .tab-item {
-          width: 240px;
-          height: 40px;
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          margin-left: -120px;
-          display: flex;
-          justify-content: space-around;
-        }
-        .tab-item span {
-          font-size: 16px;
-          color: #333333;
-          cursor: pointer;
-          padding: 0px 0px 12px;
-        }
-        .tab-item .active {
-          color: #0581d1;
-          border-bottom: 4px solid #0581d1;
-          /* transition: all .5s linear; */
-        }
-      }
-    }
-  }
-}
-// 弹框提示
-.nolock-test-check{
-  position:fixed;
-  width:100%;
-  height:100%;
-  top:0px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 61, 90, .9);
-  z-index:99999999;
-  overflow: hidden;
-}
-
-.nolock-test-check .animated {
-  width:354px;
-  height:250px;
-  padding:80px 30px 0px;
-  text-align:center;
-  font-size:14px;
-  color:#4a4a4a;
-  word-wrap:break-word;
-  word-break:normal;
-  background-color:#fff;
-  border-radius:4px;
-  position:absolute;
-  top:0px;
-  left:0px;
-  right:0px;
-  bottom:0px;
-  margin:auto;
-}
-
-.nolock-test-check .animated i{
-  position:absolute;
-  width:110px;
-  height:110px;
-  padding:26px;
-  border-radius:55px;
-  top:0px;
-  left:50%;
-  margin-left:-55px;
-  margin-top:-55px;
-  background:url('../../../../../static/images/learn/learn-vip-warn.png') #fff center center no-repeat;
-  background-size:86%;
-}
-.nolock-test-check .animated span {
-  display: inline-block;
-  width: 200px;
-}
-.nolock-test-check .animated .goBackCore {
-  width: 100px;
-  height: 40px;
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-  border-radius: 20px;
-  line-height: 40px;
-  text-align: center;
-  background-color: #fd8469;
-}
-.nolock-test-check .animated .buttons {
-  width: 300px;
-  height: 40px;
-  position: absolute;
-  bottom: 30px;
-  display: flex;
-  justify-content: space-around;
-}
-// 电台动态
-.autor-radio {
-  width: 100%;
-  margin-bottom: 20px;
-  .autor-content {
-    width: 1180px;
-    margin: 0 auto;
-    min-height: 800px;
-    // 电台
-    .radio-list {
-      // display: flex;
-      // flex-wrap: wrap;
-      .out-list {
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .radio-item {
-        margin-top: 20px;
-        width: 220px;
-        height: 223px;
-        background-color: #ffffff;
-        margin-right: 16px;
-        .item {
-          width: 220px;
-          height: 223px;
-          background-color: #ffffff;
-          margin-right: 16px;
-          a {
-            display: inline-block;
-            width: 100%;
-            height: 120px;
-            img {
+          padding-bottom: 36px;
+          border-bottom: 1px solid #EEF2F3FF;
+          .personal-dynamic {
+            width: 32.5%;
+            .content {
               width: 100%;
-              height: 120px;
-              object-fit: cover;
-              border-radius: 4px;
-            }
-            .gradient-layer-play {
-              width: 220px;
-              height: 120px;
-              position: absolute;
-              background-image: url('../../../../../static/images/discovery/radio-gradient-layer.png');
-              background-repeat: no-repeat;
-              background-size: cover;
-              margin-top: -120px;
-              text-align:  center;
-              z-index: 2;
-              .play {
-                width: 52px;
-                height: 52px;
-                background-image: url('../../../../../static/images/discovery/radio-list-play.svg');
-                background-repeat: no-repeat;
-                background-size: cover;
-                display: inline-block;
-                margin-top: 30px;
+              padding: 16px 100px;
+              background:rgba(246,248,249,.7);
+              p {
+                text-align: center;
+                font-family:PingFang-SC-Medium;
               }
-              .pause {
-                width: 52px;
-                height: 52px;
-                background-image: url('../../../../../static/images/discovery/radio-list-pause.svg');
-                background-repeat: no-repeat;
-                background-size: cover;
-                display: inline-block;
-                margin-top: 30px;
+              p:nth-child(1) {
+                font-size:14px;
+                font-weight:500;
+                color:rgba(126,146,159,1);
+                line-height:20px;
               }
-            }
-            .gradient-layer-play-no {
-              width: 220px;
-              height: 120px;
-              position: absolute;
-              margin-top: -120px;
-              text-align:  center;
-              z-index: 2;
-              .play-no {
-                width: 100%;
-                height: 100%;
-                background-image: url('../../../../../static/images/learn/learn-course-little-bg.png');
-                background-repeat: no-repeat;
-                background-size: cover;
-                display: inline-block;
+              p:nth-child(2) {
+                font-size:26px;
+                font-weight:800;
+                color:rgba(10,43,64,1);
+                line-height:37px;
+                padding: 14px 0 10px;
+              }
+              p:nth-child(3) {
+                cursor: pointer;
+                font-size:14px;
+                font-weight:800;
+                color: #3C5B6FFF;
+                line-height:20px;
+                i {
+                  background-image: url('../../../../../static/images/authorFllow.svg');
+                }
+                &:hover {
+                  color:rgba(5,129,209,1);
+                }
               }
             }
-            .buy-cny {
-              width: 220px;
-              height: 120px;
-              position: absolute;
-              margin-top: -120px;
-              text-align:  center;
-              z-index: 2;
-              .play-no {
-                width: 100%;
-                height: 100%;
-                background-image: url('../../../../../static/images/learn/learn-course-little-bg.png');
-                background-repeat: no-repeat;
-                background-size: cover;
-                display: inline-block;
-              }
-            }
-            .subscribe {
-              position: relative;
-              display: -webkit-box;
-              margin-top: -25px;
-              i {
-                display: inline-block;
-                margin: 0 8px;
-                width: 14px;
-                height: 14px;
-                background-image: url('../../../../../static/images/discovery/home-radio.png');
-                background-repeat: no-repeat;
-                background-size: cover;
-              }
-              span {
-                color: #ffffff;
-                font-size: 12px;
-                display: inline-block;
-                margin-top: -5px;
-                margin-left: -3px;
-              }
-            }
-          }
-          .item-disabled {
-            cursor: not-allowed;
-          }
-          .title {
-            cursor: pointer;
-            color: #444444;
-            font-size: 14px;
-            margin-top: 15px;
-            height: 41px;
-            line-height: 20px;
-            word-break: break-all;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
-            padding: 0 10px;
-            font-weight: bold;
-          }
-          .author {
-            color: #B8B8B8;
-            font-size: 12px;
-            display: inline-block;
-            position: relative;
-            margin-top: 10px;
-            width: 110px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding-left: 10px;
-          }
-          .money {
-            color: #B8B8B8;
-            font-size: 12px;
-            float: right;
-            /* display: inline-block; */
-            position: relative;
-            margin-top: 10px;
-            padding-right: 10px;
           }
         }
-        /* a {
-          display: inline-block;
+        // 作者介绍
+        .author-details {
           width: 100%;
-          height: 120px;
-          img {
+          .author-lists {
             width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 4px;
+            padding: 36px 0 173px;
+            ul {
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: space-between;
+              li {
+                width: 45%;
+                padding-bottom: 12px;
+                .item {
+                  width: 100%;
+                  .text {
+                    font-size:14px;
+                    font-family:PingFang-SC-Medium;
+                    font-weight:500;
+                    color:rgba(126,146,159,1);
+                    line-height:20px;
+                    span:nth-child(2) {
+                      color: #0A2B40FF;
+                    }
+                  }
+                }
+              }
+            }
           }
-          .gradient-layer-play {
-            width: 220px;
-            height: 120px;
-            position: absolute;
-            background-image: url('../../../../../static/images/discovery/radio-gradient-layer.png');
-            background-repeat: no-repeat;
+        }
+        // 公司背景图
+        .talkmate-img {
+          width: 100%;
+          p {
+            width: 120px;
+            height: 18px;
+            margin: 0 auto;
+            background:url('../../../../../static/images/talkmate-logo.svg') no-repeat center;
             background-size: cover;
-            margin-top: -120px;
-            text-align:  center;
-            z-index: 2;
-            .play {
-              width: 52px;
-              height: 52px;
-              background-image: url('../../../../../static/images/discovery/radio-list-play.svg');
-              background-repeat: no-repeat;
-              background-size: cover;
-              display: inline-block;
-              margin-top: 30px;
-            }
-            .pause {
-              width: 52px;
-              height: 52px;
-              background-image: url('../../../../../static/images/discovery/radio-list-pause.svg');
-              background-repeat: no-repeat;
-              background-size: cover;
-              display: inline-block;
-              margin-top: 30px;
-            }
-          }
-          .subscribe {
-            position: relative;
-            display: -webkit-box;
-            margin-top: -25px;
-            i {
-              display: inline-block;
-              margin: 0 8px;
-              width: 14px;
-              height: 14px;
-              background-image: url('../../../../../static/images/discovery/home-radio.png');
-              background-repeat: no-repeat;
-              background-size: cover;
-            }
-            span {
-              color: #ffffff;
-              font-size: 12px;
-              display: inline-block;
-              margin-top: -5px;
-              margin-left: -3px;
-            }
           }
         }
-        .title {
-          color: #444444;
-          font-size: 14px;
-          margin-top: 15px;
-          height: 41px;
-          line-height: 20px;
-          word-break: break-all;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          overflow: hidden;
-          padding: 0 10px;
-          font-weight: bold;
-        }
-        .author {
-          color: #B8B8B8;
-          font-size: 12px;
-          display: inline-block;
-          position: relative;
-          margin-top: 10px;
-          width: 110px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          padding-left: 10px;
-        }
-        .money {
-          color: #B8B8B8;
-          font-size: 12px;
-          float: right;
-          //display: inline-block;
-          position: relative;
-          margin-top: 10px;
-          padding-right: 10px;
-        } */
-      }
-      .noradio-img {
-        width: 300px;
-        height: 300px;
-        background: url('../../../../../static/images/headline/noradio.jpg') no-repeat center;
-        background-size: cover;
-        margin: 50px auto 0;
-      }
-      .text {
-        font-size: 26px;
-        color: #B8B8B8;
-        text-align: center;
-        margin-top: 50px;
-      }
-    }
-    // 动态
-    .dynamic-list {
-      width: 900px;
-      margin: 0 auto;
-      .dynamic-item {
-        width: 100%;
-        padding: 29px;
-        margin-top: 20px;
-        background: #ffffff;
-      }
-      .no-dynamic {
-        width: 100%;
-        min-height: 600px;
-        margin-top: 20px;
-        padding: 29px;
-        background: #ffffff;
-        .no-img {
-          width: 300px;
-          height: 300px;
-          background: url('../../../../../static/images/headline/nodynamic.jpg') no-repeat center;
-          background-size: cover;
-          margin: 50px auto 0;
-        }
-        .text {
-          font-size: 26px;
-          color: #B8B8B8;
-          text-align: center;
-          margin-top: 50px;
-        }
+        // 电台
+        // .describe-content {
+        //   width: 100%;
+        //   .describe-lists {
+        //     width: 100%;
+        //     ul {
+        //       display: flex;
+        //       justify-content: space-between;
+        //       flex-wrap: wrap;
+        //       width: 100%;
+        //       li {
+        //         width: 50%;
+        //         margin-bottom: 30px;
+        //         .item {
+        //           width: 100%;
+        //           display: flex;
+        //           justify-content: space-between;
+        //         }
+        //         .item-img {
+        //           position: relative;
+        //           width:170px;
+        //           height:90px;
+        //           border-radius:5px;
+        //           margin-top: 5px;
+        //           img {
+        //             width: 100%;
+        //             height: 100%;
+        //             border-radius:5px;
+        //           }
+        //           .gradient-layer-play {
+        //             cursor: pointer;
+        //             display: inline-block;
+        //             position: absolute;
+        //             right: 6px;
+        //             bottom: 6px;
+        //             background: rgba(18, 18, 18, .415);
+        //             border-radius: 50%;
+        //             .play {
+        //               width: 24px;
+        //               height: 24px;
+        //               background-image: url('../../../../../static/images/radionoPlay.svg');
+        //               background-repeat: no-repeat;
+        //               background-size: cover;
+        //               display: inline-block;
+        //             }
+        //             .pause {
+        //               width: 24px;
+        //               height: 24px;
+        //               background-image: url('../../../../../static/images/radioPlay.svg');
+        //               background-repeat: no-repeat;
+        //               background-size: cover;
+        //               display: inline-block;
+        //             }
+        //           }
+        //           .gradient-layer-play-no {
+        //             width: 170px;
+        //             height: 90px;
+        //             position: absolute;
+        //             top: 0;
+        //             text-align:  center;
+        //             z-index: 2;
+        //             .play-no {
+        //               width: 100%;
+        //               height: 100%;
+        //               background-image: url('../../../../../static/images/learn/learn-course-little-bg.png');
+        //               background-repeat: no-repeat;
+        //               background-size: cover;
+        //               display: inline-block;
+        //             }
+        //           }
+        //           .buy-cny {
+        //             width: 170px;
+        //             height: 90px;
+        //             position: absolute;
+        //             top: 0;
+        //             text-align:  center;
+        //             z-index: 2;
+        //             .play-no {
+        //               width: 100%;
+        //               height: 100%;
+        //               background-image: url('../../../../../static/images/learn/learn-course-little-bg.png');
+        //               background-repeat: no-repeat;
+        //               background-size: cover;
+        //               display: inline-block;
+        //             }
+        //           }
+        //         }
+        //         .right-describe {
+        //           padding: 10px 0 10px 10px;
+        //           width: 280px;
+        //           .name {
+        //             cursor: pointer;
+        //             width: 120px;
+        //             overflow: hidden;
+        //             text-overflow:ellipsis;
+        //             white-space:nowrap;
+        //             font-size:14px;
+        //             font-family:PingFang-SC-Medium;
+        //             font-weight:500;
+        //             color:rgba(51,51,51,1);
+        //             line-height:20px;
+        //           }
+        //           .num {
+        //             display: flex;
+        //             align-items: center;
+        //             font-size:12px;
+        //             font-family:PingFang-SC-Medium;
+        //             font-weight:500;
+        //             // color:rgba(245,166,35,1);
+        //             color: #999999FF;
+        //             line-height:18px;
+        //             padding: 5px 0 25px;
+        //             span:nth-child(1) {
+        //               display: flex;
+        //               align-items: center;
+        //               margin-right: 20px;
+        //               i {
+        //                 display: inline-block;
+        //                 width: 13px;
+        //                 height: 10px;
+        //                 background: url('../../../../../static/images/listening.png') no-repeat center;
+        //                 background-size: cover;
+        //                 margin-right: 8px;
+        //               }
+        //             }
+        //           }
+        //           .author {
+        //             font-size:12px;
+        //             font-family:PingFang-SC-Medium;
+        //             font-weight:500;
+        //             color:rgba(153,153,153,1);
+        //             line-height:17px;
+        //             span:nth-child(2) {
+        //               display: inline-block;
+        //               width: 160px;
+        //               overflow: hidden;
+        //               text-overflow:ellipsis;
+        //               white-space:nowrap;
+        //             }
+        //           }
+        //         }
+        //       }
+        //     }
+        //   }
+        //   // 点击加载更多
+        //   .up-all {
+        //     cursor: pointer;
+        //     width: 100%;
+        //     background: rgba(221, 221, 221, .1);
+        //     text-align: center;
+        //     line-height: 42px;
+        //     font-size:14px;
+        //     font-family:PingFangSC-Semibold;
+        //     font-weight:600;
+        //     color:rgba(42,159,228,1);
+        //     display: flex;
+        //     justify-content: center;
+        //     align-items: center;
+        //     i {
+        //       display: inline-block;
+        //       width: 10px;
+        //       height: 6px;
+        //       background: url('../../../../../static/images/upAll.svg') no-repeat center;
+        //       background-size: cover;
+        //       margin-left: 10px;
+        //     }
+        //     .active {
+        //       display: inline-block;
+        //       width: 10px;
+        //       height: 6px;
+        //       background: url('../../../../../static/images/upAllActive.svg') no-repeat center;
+        //       background-size: cover;
+        //       margin-left: 10px;
+        //     }
+        //   }
+        // }
       }
     }
   }
 }
-
 </style>

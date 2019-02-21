@@ -80,7 +80,7 @@ export default {
   // 发现
   disvHomeApi: '/disv1/home', // 发现首页接口
   disvRadioApi: '/disv1/radio', // 发现电台首页接口
-  radioListsApi: '/disv1/radio/list', // 发现电台更多电台
+  radioListsApi: '/disv1/radio/list', // 发现，电台，更多电台列表
   radioDetailApi: '/topic_course/detail/<course_code>/', // 用户电台明细
   radioCardListApi: '/user_course/card_list/{course_code}/{list_order}/{page}/{pagesize}', // 课程卡片列表接口
   radioAuthorDetailApi: '/feedv1/partner/detail', // 电台作者详情接口
@@ -94,6 +94,8 @@ export default {
   radioAuthorCommentReward: '/feedv1/dynamic/reward', // 动态奖励接口
   disvRecommendRadiosApi: '/disv1/radio/recommends', // 电台推荐接口
   getRandomRadioApi: '/disv1/radio/recommend_one', // 电台首页随机推荐电台
+  getOtherRecommendsApi: '/disv1/radio/recommends', // 其他人也在听
+  getHotRadiosApi: '/disv1/radio/hot', // 热门电台
 
   // 头条
   headlineHome: '/disv1/headline/home', // 头条首页接口

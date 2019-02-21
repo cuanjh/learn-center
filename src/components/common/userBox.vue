@@ -71,7 +71,8 @@ export default {
     .bg-img {
       width: 100%;
       height: 70px;
-      background: pink;
+      background: url('../../../static/images/user-bg-img.svg') no-repeat center;
+      background-size: cover;
     }
     .info {
       position: absolute;

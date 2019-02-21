@@ -45,6 +45,9 @@ const discoveryHome = r => require.ensure([], () => r(require('@/components/lear
 const radioHome = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioHome.vue')), 'radio-home')
 const radioList = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioList.vue')), 'radio-list')
 const radioDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioDetail.vue')), 'radio-detail')
+// authorDetail-old
+const authorDetailOld = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/authorDetail-old.vue')), 'author-detail-old')
+
 const radioAuthorDetail = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/authorDetail.vue')), 'author-detail')
 const radioClassify = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioClassify.vue')), 'radio-classify')
 const radioRecomTeachers = r => require.ensure([], () => r(require('@/components/learn/discovery/radio/radioRecomTeachers.vue')), 'radio-recom-teachers')
@@ -247,6 +250,12 @@ export default[
             name: 'radioDetail',
             component: radioDetail
           },
+          // 以前的作者详情
+          {
+            path: 'author-detail-old/:userId',
+            name: 'authorDetailOld',
+            component: authorDetailOld
+          },
           {
             path: 'author-detail/:userId',
             component: radioAuthorDetail
@@ -258,7 +267,7 @@ export default[
           },
           {
             path: 'radio-recom-teachers',
-            name: radioRecomTeachers,
+            name: 'radioRecomTeachers',
             component: radioRecomTeachers
           }
         ]
