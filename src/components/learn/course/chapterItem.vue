@@ -175,27 +175,19 @@
         </div>
       <!-- </transition> -->
     </div>
-    <div class="nolock-test-check" v-show="nolockTestCheckShow">
-      <p class="animated flipInX" v-show="nolockTestCheckShow">
-        <span v-html="tips"></span>
-        <i></i>
-        <span class="goBackCore" @click="goBackLearn">继续学习</span>
-      </p>
-    </div>
     <div class="nolock-test-check" v-show="anonymousCheckShow">
       <p class="animated flipInX">快去注册，<br>开启全球说学习之旅吧！
         <i></i>
         <span class="goBackCore" @click="goToRegister">去注册</span>
       </p>
     </div>
-    <buy-chapter ref='buyChapter' />
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
-import BuyChapter from './buyChapterConfirm.vue'
+import bus from '../../../bus'
 export default {
   props: ['currentCourseCode', 'item'],
   data () {
@@ -203,15 +195,11 @@ export default {
       isCoreCompleted: 0,
       chapterProgress: 0,
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
-      nolockTestCheckShow: false,
       anonymousCheckShow: false,
       isShow: true,
       isHistory: false,
       tips: ''
     }
-  },
-  components: {
-    BuyChapter
   },
   created () {
     this.$on('draw', this.drawProgress)
@@ -234,7 +222,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       'currentChapterCode': state => state.course.currentChapterCode,
       'unlockCourses': state => state.course.unlockCourses,
       'buyChapters': state => state.course.buyChapters,
@@ -482,11 +470,11 @@ export default {
       }
       if (this.unlockCourses.indexOf(chapterCode) === -1) {
         this.tips = '完成上一课“核心课程”, <br>才能开启本课程！'
-        this.nolockTestCheckShow = true
+        bus.$emit('setContinueLearn', this.tips)
         return false
       }
       if (this.buyChapters.indexOf(chapterCode) === -1 && parseInt(this.isVip) !== 1) {
-        this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
+        bus.$emit('showBuyChapterPanel', chapterCode)
         return false
       }
 
@@ -495,7 +483,7 @@ export default {
           this.isShow = !this.isShow
         } else {
           this.isShow = !this.isShow
-          let top = $('#' + chapterCode).offset().top - 126
+          let top = $('#' + chapterCode).offset().top - 116
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }
 
@@ -536,13 +524,13 @@ export default {
         this.$router.push({ name: 'stage', params: {id: id} })
       } else {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-        this.nolockTestCheckShow = true
+        bus.$emit('setContinueLearn', this.tips)
       }
     },
     startTest (isCoreCompleted) {
       if (!isCoreCompleted) {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-        this.nolockTestCheckShow = true
+        bus.$emit('setContinueLearn', this.tips)
       } else {
         this.$router.push({ path: '/learn/pk' })
       }
@@ -550,7 +538,7 @@ export default {
     startHomework (isCoreCompleted) {
       if (!isCoreCompleted) {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-        this.nolockTestCheckShow = true
+        bus.$emit('setContinueLearn', this.tips)
       } else {
         this.$router.push({ path: '/app/homework' })
       }
@@ -563,12 +551,9 @@ export default {
           this.$router.push({ name: 'stage', params: {id: id} })
         } else {
           this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-          this.nolockTestCheckShow = true
+          bus.$emit('setContinueLearn', this.tips)
         }
       }
-    },
-    goBackLearn () {
-      this.nolockTestCheckShow = false
     },
     drawProgress (type, retObj) {
       console.log(retObj)
@@ -718,7 +703,7 @@ export default {
     color: #616161;
     font-size: 12px;
     line-height: 15px;
-    margin-top: 39px;
+    margin-top: 18px;
   }
 
  .current-learn-course-gold i{

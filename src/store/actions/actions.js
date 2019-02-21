@@ -26,8 +26,9 @@ export default {
   },
   // 获取用户信息
   getUserInfo ({commit}) {
-    httpLogin(config.umUserInfoApi).then((res) => {
+    return httpLogin(config.umUserInfoApi).then((res) => {
       commit('updateUserInfo', res)
+      return res
     })
   },
   // 修改用户信息

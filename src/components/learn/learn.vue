@@ -6,10 +6,12 @@
     <div class="learn-cover learn-all-hide-cover" v-show="anonymousCover"></div>
     <router-view></router-view>
     <!-- 底部 -->
-    <voice-player v-show="isShow"></voice-player>
-    <learn-bottom></learn-bottom>
-    <photo-uploader></photo-uploader>
-    <rocket></rocket>
+    <voice-player v-show="isShow" />
+    <learn-bottom />
+    <photo-uploader />
+    <rocket />
+    <continue-learn />
+    <buy-chapter />
   </div>
 </template>
 <script>
@@ -20,6 +22,8 @@ import learnBottom from './learnBottom.vue'
 import PhotoUploader from '../common/user/photoUploader.vue'
 import Rocket from '../common/rocket.vue'
 import VoicePlayer from '../common/voicePlayer.vue'
+import ContinueLearn from '../common/continueLearn.vue'
+import BuyChapter from '../common/buyChapterConfirm.vue'
 import Bus from '../../bus'
 
 export default {
@@ -36,7 +40,7 @@ export default {
       this.$refs.header.$emit('activeNavItem', item)
     })
     Bus.$on('changeCourseCode', (courseCode) => {
-      this.$router.push({ path: '/app/course-list' })
+      // this.$router.push({ path: '/app/course-list' })
       this.$nextTick(() => {
         this.changeCourseCode(courseCode)
       })
@@ -47,7 +51,9 @@ export default {
     learnBottom,
     PhotoUploader,
     Rocket,
-    VoicePlayer
+    VoicePlayer,
+    ContinueLearn,
+    BuyChapter
   },
   mounted () {
     this.updateIsShowVoicePlayer(this.$route)
@@ -74,7 +80,8 @@ export default {
       getChapterContent: 'course/getChapterContent',
       getRecord: 'course/getRecord',
       getCourseTestRanking: 'course/getCourseTestRanking',
-      homeworkContent: 'course/homeworkContent'
+      homeworkContent: 'course/homeworkContent',
+      setCurrentChapter: 'course/setCurrentChapter'
     }),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
@@ -113,8 +120,11 @@ export default {
 
       await that.getChapterContent()
 
-      let top = $('#' + that.currentChapterCode).offset().top - 90
-      $('body,html').animate({ scrollTop: top }, 100, 'linear')
+      await this.setCurrentChapter(that.currentChapterCode)
+      if ($('#' + that.currentChapterCode).length > 0) {
+        let top = $('#' + that.currentChapterCode).offset().top - 90
+        $('body,html').animate({ scrollTop: top }, 100, 'linear')
+      }
 
       await that.getRecord(that.currentChapterCode + '-A0')
       await that.getProgress(that.currentChapterCode)

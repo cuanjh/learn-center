@@ -185,7 +185,8 @@ export default {
       login: 'user/login',
       userLogin: 'userLogin',
       sendCode: 'getSendCode',
-      userSnsLogin: 'userSnsLogin'
+      userSnsLogin: 'userSnsLogin',
+      getUserInfo: 'getUserInfo'
     }),
     // 更新type
     updateType (type) {
@@ -276,6 +277,7 @@ export default {
         Cookie.setCookie('user_id', info.user_id)
         Cookie.setCookie('verify', info.verify)
         this.updateIsLogin('1')
+        await this.getUserInfo()
         _this.$router.push({path: '/app/index'})
       } else {
         _this.errText = errCode[_this.loginInfo.code]

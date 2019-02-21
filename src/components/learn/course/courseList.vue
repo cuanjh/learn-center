@@ -46,12 +46,8 @@ export default {
     this.$parent.$emit('initLayout')
     this.$parent.$emit('navItem', 'course')
     // this.showLoading()
-    let ui = this.userInfo
-    if (!Object.keys(ui).length > 0) {
-      ui = JSON.parse(sessionStorage.getItem('userInfo'))
-    }
-    let curCourseCode = ui.current_course_code
-    this.initData(curCourseCode)
+
+    this.initData()
   },
   computed: {
     ...mapState({
@@ -80,7 +76,8 @@ export default {
       getChapterContent: 'course/getChapterContent',
       setCurrentChapter: 'course/setCurrentChapter',
       getCourseTestRanking: 'course/getCourseTestRanking',
-      homeworkContent: 'course/homeworkContent'
+      homeworkContent: 'course/homeworkContent',
+      getUserInfo: 'getUserInfo'
     }),
     ...mapMutations({
       updateUnlockCourseList: 'course/updateUnlockCourseList',
@@ -113,13 +110,15 @@ export default {
 
         setTimeout(() => {
           this.$refs['chapterItem'].$emit('changeIsShow', true)
-          let top = $('#' + chapterCode).offset().top - 126
+          let top = $('#' + chapterCode).offset().top - 116
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, 0)
         // $('body,html').scrollTop(top)
       }
     },
-    async initData (curCourseCode) {
+    async initData () {
+      let res = await this.getUserInfo()
+      let curCourseCode = res.info.current_course_code
       console.log('courselist initData', curCourseCode)
       this.$refs['chapterItem'].$emit('changeIsHistory', false)
       await this.getLearnInfo(curCourseCode)
@@ -135,7 +134,7 @@ export default {
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)
 
-      let top = $('#' + this.currentChapterCode).offset().top - 126
+      let top = $('#' + this.currentChapterCode).offset().top - 116
       $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
       // this.hideLoading()

@@ -62,8 +62,13 @@ export default {
       isShowPanel: false
     }
   },
+  created () {
+    Bus.$on('loadRecommendRadio', () => {
+      this.getLangsState()
+    })
+  },
   mounted () {
-    this.getLangsState()
+    // this.getLangsState()
   },
   computed: {
     ...mapState({

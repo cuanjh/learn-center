@@ -1,5 +1,5 @@
 <template>
-  <div class="vip-container" v-show="coverShow">
+  <div class="vip-container" v-show="isShow">
     <section class='vip-update-success learn-begin-study-warn animated flipInX ' v-show='costAlert'>
       <!-- 提示花费金币弹出框 -->
       <div class='vip-update-success-logo learn-begin-study-warn-logo animated tada'></div>
@@ -28,9 +28,11 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import bus from '../../bus'
 export default {
   data () {
     return {
+      isShow: false,
       costAlert: false,
       goldShortage: false,
       selectLevel: '',
@@ -38,20 +40,36 @@ export default {
       chapterCode: ''
     }
   },
+  created () {
+    bus.$on('showBuyChapterPanel', (code) => {
+      this.isShow = true
+      console.log('-----+++++----购买chapter-----+++++++++')
+      this.lanCode = code.split('-')[0]
+      this.selectLevel = code.split('-')[2]
+      this.chapterCode = code
+      console.log(code)
+      console.log(this.lanCode)
+      console.log(this.selectLevel)
+      if (this.ui.coins >= 150) {
+        this.costAlert = true
+      } else {
+        this.goldShortage = true
+      }
+    })
+  },
   watch: {
     buyHide () {
       if (this.buyHide) {
         this.costAlert = !this.buyHide
-        this.updateCoverState(this.costAlert)
+        this.isShow = this.costAlert
       } else {
         this.costAlert = this.buyHide
-        this.updateCoverState(this.costAlert)
+        this.isShow = this.costAlert
       }
     }
   },
   computed: {
     ...mapState({
-      coverShow: state => state.course.coverShow,
       userInfo: state => state.userInfo,
       buyHide: state => state.course.buyHide
     }),
@@ -63,27 +81,8 @@ export default {
       return ui
     }
   },
-  created () {
-    this.$on('buyCoin', (code) => {
-      console.log('-----+++++----购买chapter-----+++++++++')
-      this.lanCode = code.split('-')[0]
-      this.selectLevel = code.split('-')[2]
-      this.chapterCode = code
-      console.log(code)
-      console.log(this.lanCode)
-      console.log(this.selectLevel)
-      if (this.ui.coins >= 150) {
-        this.costAlert = true
-        this.updateCoverState(true)
-      } else {
-        this.goldShortage = true
-        this.updateCoverState(true)
-      }
-    })
-  },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState',
       updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     ...mapActions({
@@ -93,7 +92,7 @@ export default {
     }),
     btnCancel () {
       this.costAlert = false
-      this.updateCoverState(this.costAlert)
+      this.isShow = false
     },
     // 购买 课程 接口实现
     async buyChapter () {
@@ -113,20 +112,20 @@ export default {
       await _this.getUserInfo()
 
       _this.costAlert = false
-      _this.updateCoverState(_this.costAlert)
+      _this.isShow = false
     },
     close () {
-      this.updateCoverState(false)
+      this.isShow = false
       this.goldShortage = false
     },
     gotoWallet () {
       this.goldShortage = false
-      this.updateCoverState(false)
+      this.isShow = false
       this.$router.push({ path: '/app/user/wallet' })
     },
     gotoVip () {
       this.goldShortage = false
-      this.updateCoverState(false)
+      this.isShow = false
       this.$router.push({ path: '/app/user/vip' })
     }
   }
@@ -137,7 +136,15 @@ export default {
 /*弹出层*/
 .vip-container {
   position: fixed;
-  z-index: 9999;
+  width:100%;
+  height:100%;
+  top:0px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .4);
+  z-index:99999999;
+  overflow: hidden;
 }
 .vip-update-success{
   width: 424px;
@@ -156,7 +163,7 @@ export default {
 .vip-update-success-logo{
   width:110px;
   height: 110px;
-  background-image: url(../../../../static/images/learn/learn-vip-success.png);
+  background-image: url(../../../static/images/learn/learn-vip-success.png);
   background-repeat: no-repeat;
   background-color: #fff;
   background-position: center center;
@@ -201,7 +208,7 @@ export default {
 }
 
 .learn-begin-study-warn-logo {
-  background-image: url(../../../../static/images/learn/learn-vip-warn.png);
+  background-image: url(../../../static/images/learn/learn-vip-warn.png);
   padding: 40px;
   margin-left: -56px;
   top: -50px;
@@ -258,7 +265,7 @@ export default {
   background-color: #fd8469;
   line-height: 34px;
   color: #fde257;
-  background-image: url(../../../../static/images/learn/learn-huangguan-vip.png);
+  background-image: url(../../../static/images/learn/learn-huangguan-vip.png);
   background-repeat: no-repeat;
   background-position: 75px center;
   position: absolute;

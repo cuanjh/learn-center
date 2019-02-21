@@ -418,9 +418,7 @@ const mutations = {
   },
   updateChapters (state, data) {
     state.chapters = courseMethod.getCourseStructure(data.themes, state.unlock)
-    // state.chapters.map((item) => {
-    //   console.log(item)
-    // })
+    console.log('theme chapters', state.chapters)
     state.curLevelChapters = []
     state.chapters
       .filter((item) => { return item.code.indexOf(state.curLevel) > -1 })

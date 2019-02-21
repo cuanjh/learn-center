@@ -41,6 +41,7 @@
 import { mapState, mapActions, mapMutations } from 'vuex'
 import Bus from '../../bus'
 export default {
+  props: ['type'],
   data () {
     return {
       learnCourse: []
@@ -65,7 +66,11 @@ export default {
     changeCourseCodes (courseCode) {
       localStorage.setItem('lastCourseCode', courseCode)
       this.updateCurCourseCode(courseCode)
-      Bus.$emit('changeCourseCode', courseCode)
+      if (this.type === 'index') {
+        Bus.$emit('loadIndexCourse', courseCode)
+      } else {
+        Bus.$emit('changeCourseCode', courseCode)
+      }
     }
   },
   watch: {

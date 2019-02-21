@@ -103,9 +103,9 @@ export default {
       updateUserInfo: 'user/updateUserInfo'
     }),
     ...mapActions({
-      getUserInfo: 'user/getUserInfo',
       login: 'user/login',
-      userPwdLogin: 'userPwdLogin'
+      userPwdLogin: 'userPwdLogin',
+      getUserInfo: 'getUserInfo'
     }),
     // 失去焦点
     blurPEFn () {
@@ -156,33 +156,33 @@ export default {
       Cookie.delCookie('verify')
       Cookie.delCookieTalkmate('device_id')
       Cookie.delCookie('device_id')
-      await _this.userPwdLogin({
+      let res = await _this.userPwdLogin({
         identity: _this.userName,
         password: _this.userPwd
-      }).then(res => {
-        console.log('密码登录接口返回', res)
-        if (res.success) {
-          $('input').css('border-color', '#E6EBEE')
-          _this.errText = ''
-
-          if (_this.isSaveLoginState) {
-            Cookie.setCookie('userName', _this.userName)
-            Cookie.setCookie('userPwd', _this.userPwd)
-          } else {
-            Cookie.delCookie('userName', _this.userName)
-            Cookie.delCookie('userPwd', _this.userPwd)
-          }
-          // 存后台传来的user的信息
-          let info = res.result
-          Cookie.setCookie('isChecked', _this.isSaveLoginState)
-          Cookie.setCookie('user_id', info.user_id)
-          Cookie.setCookie('verify', info.verify)
-          this.updateIsLogin('1')
-          _this.$router.push({path: '/app/index'})
-        } else {
-          _this.errText = errCode[res.code]
-        }
       })
+      console.log('密码登录接口返回', res)
+      if (res.success) {
+        $('input').css('border-color', '#E6EBEE')
+        _this.errText = ''
+
+        if (_this.isSaveLoginState) {
+          Cookie.setCookie('userName', _this.userName)
+          Cookie.setCookie('userPwd', _this.userPwd)
+        } else {
+          Cookie.delCookie('userName', _this.userName)
+          Cookie.delCookie('userPwd', _this.userPwd)
+        }
+        // 存后台传来的user的信息
+        let info = res.result
+        Cookie.setCookie('isChecked', _this.isSaveLoginState)
+        Cookie.setCookie('user_id', info.user_id)
+        Cookie.setCookie('verify', info.verify)
+        this.updateIsLogin('1')
+        await this.getUserInfo()
+        _this.$router.push({path: '/app/index'})
+      } else {
+        _this.errText = errCode[res.code]
+      }
     }
   }
 }

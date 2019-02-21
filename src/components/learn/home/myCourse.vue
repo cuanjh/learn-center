@@ -2,47 +2,47 @@
   <div class="my-course">
     <div class="title">我的课程</div>
     <div class="current-chapter">
-      <img :src="learnInfo.current_chapter_bg_img" alt="">
+      <img :src="curCourseObj['courseBg']" alt="">
       <div class="course-brief-shade">
         <div class="course-brief-title">
-          <span>课程{{ curCourseNum }}：{{ curCourseDesc }}</span>
+          <span> {{ curCourseObj['courseLevel'] }} 课程{{ curCourseObj['courseNum'] }}：{{ curCourseObj['courseDesc'] }}</span>
         </div>
         <div class="course-brief-core">
-          <span>核心{{ curCoreNum }}</span>
+          <span>核心{{ curCourseObj['courseCore'] }}</span>
         </div>
-        <div class="course-brief-words">{{ curCourseWords }}</div>
+        <div class="course-brief-words">{{ curCourseObj['courseWords'] }}</div>
         <div class="change-course">
-          <span class="pre"><i></i></span>
-          <span class="next"><i></i></span>
+          <span class="pre" @click="pre()" v-show="isShowPre"><i></i></span>
+          <span class="next" @click="next()" v-show="isShowNext"><i></i></span>
         </div>
-        <router-link class="start-learn" tag="div" :to="{path: '/learn/stage/A0' + curCoreNum}">开始学习</router-link>
+        <div class="start-learn" @click="startLearn()">开始学习</div>
       </div>
     </div>
     <div class="current-course">
       <dl>
-        <dt><img :src="curArchiveCourse['course_flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
+        <dt><img :src="courseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
           <p :class="{'active': isShowSubscribeCourses}" @click="isShowSubscribeCourses = !isShowSubscribeCourses">
-            <span>{{curCourseName}}</span>
+            <span>{{ courseBaseInfo.name }}</span>
             <i></i>
           </p>
           <p>世界语言地图官方课程</p>
-          <learn-course-list class="subscribe-courses" v-show="isShowSubscribeCourses"></learn-course-list>
+          <learn-course-list :type="'index'" class="subscribe-courses" v-show="isShowSubscribeCourses" />
         </dd>
       </dl>
       <div class="progress-area">
-        <p>学完 {{ learnInfo.chapter_num_finished + '/' + courseBaseInfo.chapter_num }}</p>
+        <p>学完 {{ (learnInfo.chapter_num_finished ? learnInfo.chapter_num_finished : 0) + '/' + (courseBaseInfo.chapter_num ? courseBaseInfo.chapter_num : 0) }}</p>
         <div class="progress-bg">
           <div class="progress" :style="{width: (curArchiveCourse['complete_rate'] ? curArchiveCourse['complete_rate']*100 : 0) +'%'}"></div>
         </div>
       </div>
       <div class="correct-rate">
-        <p>正确率 {{ curChapterCorrectRate ? curChapterCorrectRate + '%' : 0 + '%' }}</p>
+        <p>正确率 {{ curChapterCorrectRate }}</p>
         <div class="progress-bg">
-          <div class="progress" :style="{width: curChapterCorrectRate +'%'}"></div>
+          <div class="progress" :style="{width: curChapterCorrectRate }"></div>
         </div>
       </div>
-      <div class="learn-hours"><span>已学习 </span><span>{{ curArchiveCourse['learn_time']>0?parseInt(curArchiveCourse['learn_time']/(60*60))+' 小时':'暂无数据' }}</span></div>
+      <div class="learn-hours"><span>已学习 </span><span>{{ curArchiveCourse['learn_time']>0?parseInt(curArchiveCourse['learn_time']/(60*60))+' 小时':'0 小时' }}</span></div>
       <router-link class="all-courses" tag="div" :to="{path: '/app/course-list'}">全部课程</router-link>
     </div>
   </div>
@@ -51,23 +51,45 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import LearnCourseList from '../../common/learnCourseList.vue'
-
+import bus from '../../../bus'
 export default {
   data () {
     return {
-      curCourseCode: '',
-      curCourseName: '',
-      curCourseNum: 1,
-      curCoreNum: 1,
-      curCourseDesc: '',
-      curCourseWords: '',
+      curCourseObj: {
+        courseLevel: '',
+        courseNum: 1,
+        courseCore: 1,
+        courseDesc: '',
+        courseWords: '',
+        courseBg: '',
+        purchased: false
+      },
+      levelObj: {
+        'Level1': 'A1',
+        'Level2': 'A2',
+        'Level3': 'B1',
+        'Level4': 'B2',
+        'Level5': 'C1',
+        'Level6': 'C2'
+      },
+      curChapterCode: '',
+      maxLevelNum: 6,
       curChapterCorrectRate: '',
       curChapterDesc: '',
       curArchiveCourse: {},
-      isShowSubscribeCourses: false
+      isShowSubscribeCourses: false,
+      isShowNext: true,
+      isShowPre: true
     }
   },
+  created () {
+    bus.$on('loadIndexCourse', (code) => {
+      this.initData(code)
+    })
+  },
   mounted () {
+    // this.getUserInfo()
+
     this.initData()
   },
   components: {
@@ -78,66 +100,224 @@ export default {
       courseBaseInfo: state => state.course.courseBaseInfo,
       learnInfo: state => state.course.learnInfo,
       currentChapterCode: state => state.course.currentChapterCode,
+      assetsUrl: state => state.course.assetsUrl,
       chapterDes: state => state.course.chapterDes,
-      userInfo: state => state.userInfo
+      unlock: state => state.course.unlock,
+      unlockCourses: state => state.course.unlockCourses,
+      chapters: state => state.course.chapters,
+      userInfo: state => state.userInfo,
+      historyCourseRecord: state => state.course.historyCourseRecord
     }),
     ui () {
       let ui = this.userInfo
       if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
       }
       return ui
+    },
+    isVip () {
+      if (!this.userInfo.member_info) {
+        return
+      }
+      return this.userInfo.member_info['member_type']
     }
   },
   methods: {
     ...mapMutations({
-      updateChapterDes: 'course/updateChapterDes'
+      updateChapterDes: 'course/updateChapterDes',
+      updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
       setCurrentChapter: 'course/setCurrentChapter',
       getLearnCourses: 'course/getLearnCourses',
+      getUnlockChapter: 'course/getUnlockChapter',
+      getCourseContent: 'course/getCourseContent',
+      getProgress: 'course/getProgress',
+      getChapterContent: 'course/getChapterContent',
+      getCourseTestRanking: 'course/getCourseTestRanking',
+      homeworkContent: 'course/homeworkContent',
       getCourseArchives: 'user/getCourseArchives',
       getUserInfo: 'getUserInfo'
     }),
-    async initData () {
+    async initData (courseCode) {
       var _this = this
-      await this.getUserInfo()
-      console.log('userInfo', this.userInfo)
+      let res = await this.getUserInfo()
+      console.log(res)
+      let curCourseCode = res.info.current_course_code
+      if (courseCode) {
+        curCourseCode = courseCode
+      }
+      await _this.getLearnInfo(curCourseCode)
+      await _this.getUnlockChapter(curCourseCode).then((res) => {
+        _this.updateUnlockCourseList(res)
+      })
+      this.curChapterCode = this.learnInfo.current_chapter_code
 
-      setTimeout(() => {
-        let curCourseCode = _this.userInfo.current_course_code
-        _this.getLearnInfo(curCourseCode).then(() => {
-          console.log('learnInfo', _this.learnInfo)
-          console.log('courseBaseInfo', _this.courseBaseInfo)
-          _this.curCourseCode = _this.courseBaseInfo.code
-          _this.curCourseNum = parseInt(this.learnInfo.current_chapter_code.split('-')[3].split('').pop() - 1) * 6 + parseInt(_this.learnInfo.current_chapter_code.split('-')[4].split('').pop())
-          _this.curCoreNum = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
-          _this.curCourseDesc = _this.learnInfo.current_chapter_info.describe
-          _this.curCourseWords = _this.learnInfo.current_chapter_info.words.split('/').join('、')
-          let curChapter = _this.learnInfo.current_chapter_code
-          _this.updateChapterDes(curChapter)
-          let arr = curChapter.split('-')
-          _this.learnInfo.correct_rates.forEach(item => {
-            if (item.level_code === arr[2]) {
-              item.rates.forEach(rate => {
-                if (rate.unit === arr[3] && rate.chapter === arr[4]) {
-                  _this.curChapterCorrectRate = rate.correct_rate * 100
-                  _this.curChapterDesc = '当前为' + _this.chapterDes[1].replace(' ', '') + _this.chapterDes[2]
-                }
-              })
+      console.log('learnInfo', _this.learnInfo)
+      console.log('courseBaseInfo', _this.courseBaseInfo)
+      this.maxLevelNum = _this.courseBaseInfo.level_num
+      let contentUrl = _this.courseBaseInfo.content_config.content_url
+      await _this.getCourseContent(contentUrl)
+
+      await this.setCurrentChapter(this.curChapterCode)
+      bus.$emit('loadRecommendRadio')
+      let obj = this.chapters.filter((item) => {
+        return item.code === this.curChapterCode
+      })[0]
+      this.curCourseObj['courseLevel'] = this.levelObj[this.curChapterCode.split('-')[2]]
+      this.curCourseObj['courseNum'] = parseInt(obj.code.split('-')[3].split('').pop() - 1) * 6 + parseInt(obj.code.split('-')[4].split('').pop())
+      this.curCourseObj['courseCore'] = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
+      this.curCourseObj['courseDesc'] = obj.info['zh-cn'].describe
+      this.curCourseObj['courseWords'] = obj.info['zh-cn'].words.split('/').join('、')
+      this.curCourseObj['courseBg'] = this.assetsUrl + obj.image.replace('200x200', '1200x488')
+      this.curCourseObj['purchased'] = obj.purchased
+      console.log(this.curCourseObj)
+
+      _this.updateChapterDes(this.curChapterCode)
+      _this.curChapterCorrectRate = '0%'
+      let arr = this.curChapterCode.split('-')
+      _this.learnInfo.correct_rates.forEach(item => {
+        if (item.level_code === arr[2]) {
+          item.rates.forEach(rate => {
+            if (rate.unit === arr[3] && rate.chapter === arr[4]) {
+              _this.curChapterCorrectRate = rate.correct_rate * 100 + '%'
+              _this.curChapterDesc = '当前为' + _this.chapterDes[1].replace(' ', '') + _this.chapterDes[2]
             }
           })
+        }
+      })
 
-          _this.getCourseArchives().then((res) => {
-            _this.curArchiveCourse = res.archives.filter(item => {
-              return item.course_code === _this.curCourseCode
-            })[0]
-            _this.curCourseName = _this.curArchiveCourse.course_name['zh-CN']
-            console.log('curArchiveCourse', _this.curArchiveCourse)
-          })
-        })
-      }, 100)
+      await _this.getCourseArchives().then((res) => {
+        _this.curArchiveCourse = res.archives.filter(item => {
+          return item.course_code === curCourseCode
+        })[0]
+        console.log('curArchiveCourse', _this.curArchiveCourse)
+      })
+    },
+    pre () {
+      this.isShowNext = true
+      let coreNum = this.curCourseObj['courseCore']
+      if (coreNum === 1) {
+        let arr = this.curChapterCode.split('-')
+        if (this.curChapterCode === arr[0] + '-' + arr[1] + '-Level1-Unit1-Chapter1') {
+          this.isShowPre = false
+          return
+        }
+
+        let chapterNum = parseInt(arr[4].toLowerCase().replace('chapter', ''))
+        let unitNum = parseInt(arr[3].toLowerCase().replace('unit', ''))
+        let levelNum = parseInt(arr[2].toLowerCase().replace('level', ''))
+        if (chapterNum > 1) {
+          this.curChapterCode = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + arr[3] + '-Chapter' + (chapterNum - 1)
+        } else {
+          if (unitNum > 1) {
+            this.curChapterCode = arr[0] + '-' + arr[1] + '-' + arr[2] + '-Unit' + (unitNum - 1) + '-Chapter6'
+          } else {
+            if (levelNum > 1) {
+              this.curChapterCode = arr[0] + '-' + arr[1] + '-Level' + (levelNum - 1) + '-Unit4-Chapter6'
+            } else {
+              this.curChapterCode = arr[0] + '-' + arr[1] + '-Level1-Unit1-Chapter1'
+            }
+          }
+        }
+
+        console.log('pre chapter code', this.curChapterCode)
+        let obj = this.chapters.filter((item) => {
+          return item.code === this.curChapterCode
+        })[0]
+        this.curCourseObj['courseLevel'] = this.levelObj[this.curChapterCode.split('-')[2]]
+        this.curCourseObj['courseNum'] = parseInt(obj.code.split('-')[3].split('').pop() - 1) * 6 + parseInt(obj.code.split('-')[4].split('').pop())
+        this.curCourseObj['courseCore'] = 5
+        this.curCourseObj['courseDesc'] = obj.info['zh-cn'].describe
+        this.curCourseObj['courseWords'] = obj.info['zh-cn'].words.split('/').join('、')
+        this.curCourseObj['courseBg'] = this.assetsUrl + obj.image.replace('200x200', '1200x488')
+        this.curCourseObj['purchased'] = obj.purchased
+      } else {
+        this.curCourseObj['courseCore'] = coreNum - 1
+      }
+    },
+    next () {
+      this.isShowPre = true
+      let coreNum = this.curCourseObj['courseCore']
+      if (coreNum === 5) {
+        let arr = this.curChapterCode.split('-')
+        if (this.curChapterCode === arr[0] + '-' + arr[1] + '-Level' + this.maxLevelNum + '-Unit4-Chapter6') {
+          this.isShowNext = false
+          return
+        }
+
+        let chapterNum = parseInt(arr[4].toLowerCase().replace('chapter', ''))
+        let unitNum = parseInt(arr[3].toLowerCase().replace('unit', ''))
+        let levelNum = parseInt(arr[2].toLowerCase().replace('level', ''))
+        if (chapterNum < 6) {
+          this.curChapterCode = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + arr[3] + '-Chapter' + (chapterNum + 1)
+        } else {
+          if (unitNum < 4) {
+            this.curChapterCode = arr[0] + '-' + arr[1] + '-' + arr[2] + '-Unit' + (unitNum + 1) + '-Chapter1'
+          } else {
+            if (levelNum < this.maxLevelNum) {
+              this.curChapterCode = arr[0] + '-' + arr[1] + '-Level' + (levelNum + 1) + '-Unit1-Chapter1'
+            } else {
+              this.curChapterCode = arr[0] + '-' + arr[1] + '-Level' + this.maxLevelNum + '-Unit4-Chapter6'
+            }
+          }
+        }
+
+        console.log('next chapter code', this.curChapterCode)
+        let obj = this.chapters.filter((item) => {
+          return item.code === this.curChapterCode
+        })[0]
+        this.curCourseObj['courseLevel'] = this.levelObj[this.curChapterCode.split('-')[2]]
+        this.curCourseObj['courseNum'] = parseInt(obj.code.split('-')[3].split('').pop() - 1) * 6 + parseInt(obj.code.split('-')[4].split('').pop())
+        this.curCourseObj['courseCore'] = 1
+        this.curCourseObj['courseDesc'] = obj.info['zh-cn'].describe
+        this.curCourseObj['courseWords'] = obj.info['zh-cn'].words.split('/').join('、')
+        this.curCourseObj['courseBg'] = this.assetsUrl + obj.image.replace('200x200', '1200x488')
+        this.curCourseObj['purchased'] = obj.purchased
+      } else {
+        this.curCourseObj['courseCore'] = coreNum + 1
+      }
+    },
+    startLearn () {
+      let tips = ''
+      if (this.unlockCourses.indexOf(this.curChapterCode) === -1) {
+        tips = '完成上一课“核心课程”, <br>才能开启本课程！'
+        bus.$emit('setContinueLearn', tips)
+        return false
+      }
+      if (!this.curCourseObj['purchased'] && parseInt(this.isVip) !== 1) {
+        bus.$emit('showBuyChapterPanel', this.curChapterCode)
+        return false
+      }
+
+      let curCourseDetail = this.unlock[this.curChapterCode]
+      let coreNum = parseInt(this.curCourseObj['courseCore'])
+      let lastCore = 'A0' + ((coreNum === 1) ? 1 : coreNum - 1)
+      let core = 'A0' + coreNum
+      if (core !== 'A01' && !curCourseDetail[lastCore]) {
+        tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+        bus.$emit('setContinueLearn', tips)
+        return false
+      }
+
+      if (this.curChapterCode === this.learnInfo.current_chapter_code) {
+        this.$router.push({path: '/learn/stage/A0' + this.curCourseObj['courseCore']})
+      } else {
+        this.changeChapter(this.curChapterCode)
+      }
+    },
+    async changeChapter (chapterCode) {
+      if (this.historyCourseRecord[chapterCode] && Object.keys(this.historyCourseRecord[chapterCode]).length > 0) {
+        await this.setCurrentChapter(chapterCode)
+      } else {
+        await this.setCurrentChapter(chapterCode)
+        await this.getChapterContent()
+        await this.getProgress(chapterCode)
+        await this.getCourseTestRanking(chapterCode)
+        await this.homeworkContent(chapterCode + '-A8')
+      }
+      this.$router.push({path: '/learn/stage/A0' + this.curCourseObj['courseCore']})
     }
   }
 }
@@ -213,6 +393,7 @@ opacity:0.8251999999999999;
 
   .change-course {
     float: left;
+    width: 110px;
     height: 36px;
     margin-top: 125px;
     margin-left: 40px;
@@ -225,8 +406,12 @@ opacity:0.8251999999999999;
     border-radius: 50%;
     background-color: rgba(0,0,0,0.4);
     text-align: center;
-    margin-right: 30px;
+    /* margin-right: 30px; */
     cursor: pointer;
+  }
+
+  .change-course .pre {
+    float: left;
   }
 
   .change-course .pre i {
@@ -239,6 +424,9 @@ opacity:0.8251999999999999;
     margin-top: 9px;
   }
 
+  .change-course .next {
+    float: right;
+  }
   .change-course .next i{
     background-image: url('../../../../static/images/learnIndex/course-next.svg');
     background-repeat: no-repeat;
@@ -278,7 +466,7 @@ opacity:0.8251999999999999;
   .current-course .subscribe-courses {
     left: 13px;
     top: 46px;
-    width: 380px;
+    width: 302px;
   }
 
   .subscribe-courses>img {
