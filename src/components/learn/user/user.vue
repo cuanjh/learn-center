@@ -42,7 +42,7 @@
               <router-link tag="p" :to="{ path:'/app/user/setting' }" ><i></i>设置</router-link>
             </li>
           </ul>
-          <ul class='spe-bind' v-if="false">
+          <ul class='spe-bind' v-if="isAnonymous">
             <li :class="{'active': activeItem === 'bind' }">
               <router-link tag="p" :to="{ path:'/app/user/bind' }" ><i></i>绑定</router-link>
             </li>
@@ -60,6 +60,7 @@
 <script>
 import Rocket from '../../common/rocket.vue'
 import $ from 'jquery'
+import cookie from '../../../tool/cookie'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -92,11 +93,13 @@ export default {
   computed: {
     ...mapState({
       userInfo: state => state.userInfo
-    })
+    }),
+    isAnonymous () {
+      return cookie.getCookie('is_anonymous') === 'true'
+    }
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState'
     }),
     ...mapActions({
       getTradeRecord: 'user/getTradeRecord',
@@ -106,7 +109,6 @@ export default {
     uploadPicBtn () {
       $('#avatar-modal').fadeIn()
       console.log(window.location.href)
-      this.updateCoverState(true)
     }
   }
 }

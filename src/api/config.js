@@ -37,7 +37,7 @@ export default {
   // 登录新的接口
 
   // 课程
-  getMoreLearnCourses: '/study/more_learn_courses', // 获取更多的订阅课程
+  moreLearnCoursesApi: '/study/more_learn_courses', // 获取更多的订阅课程
   currentCourse: '/study/current_course', // 获取一个课程的详情
   learnInfo: '/studyv1/learn_info/index', // 1.一门课程基本配置 2.用户针对此课程学习基本配置 3.学习信息
   unlockChapter: '/chapters_state/get_unlock_chapter', // 最新的接口加入A0-A8是否完成的数据结构；返回正在学习的chapter编码；
@@ -146,5 +146,6 @@ export default {
   umUserBindPhoneApi: '/umv1/user/sns/bind/phone', // 绑定手机号码
   umUserExistsPhoneApi: '/umv1/user/exists/phone', // 验证手机号是否存在接口
   umLangsListApi: '/umv1/langs/lists', // 语言列表接口
-  umLangsStateApi: '/umv1/langs/state' // 语言设置状态接口
+  umLangsStateApi: '/umv1/langs/state', // 语言设置状态接口
+  umUserAnonyApi: '/umv1/user/anony' // 匿名登录
 }

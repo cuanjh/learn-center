@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo
     }),
     isGetCode () {
       return this.time === 60
@@ -115,80 +115,6 @@ export default {
         }
       })
     }
-    /* async goReset () {
-      this.errText = ''
-      if (!validation.verfiyCode(this.phoneCode)) {
-        this.errText = errCode['e03']
-        return false
-      }
-      if (!validation.pwd(this.pwd1) || !validation.pwd(this.pwd2)) {
-        this.errText = errCode['e02']
-        return false
-      }
-      if (this.pwd1 !== this.pwd2) {
-        this.errText = errCode['e08']
-        return false
-      }
-      this.loading = true
-      // let flag = true
-      await http.resetPwdPhone({
-        phonenumber: this.$route.params.phone,
-        new_pwd: encrypt(this.pwd1),
-        re_pwd: encrypt(this.pwd2),
-        verification_code: this.phoneCode
-      }).then(res => {
-        if (res.success) {
-          console.log('改成功了')
-          localStorage.removeItem('userInfo')
-          Cookie.delCookieTalkmate('is_anonymous')
-          Cookie.delCookie('user_id')
-          Cookie.delCookie('verify')
-          Cookie.setCookie('user_id', res.user_id)
-          Cookie.setCookie('verify', res.verify)
-          let UserId = Cookie.getCookie('user_id')
-          let lastUserId = localStorage.getItem('last_user_id')
-          if (lastUserId !== UserId) {
-            localStorage.setItem('lastUserId', UserId)
-            localStorage.removeItem('lastCourseCode')
-          }
-          // let lastCourseCode = localStorage.getItem('lastCourseCode')
-          // this.updateCurCourseCode(lastCourseCode)
-          // this.updateIsLogin('1')
-          // this.$router.push({path: '/app/course-list'})
-          let lastCourseCode = localStorage.getItem('lastCourseCode')
-          if (!lastCourseCode) {
-            this.getUserInfo()
-            this.updateCurCourseCode(this.userInfo.current_course_code)
-            localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
-            localStorage.setItem('userInfo', this.userInfo)
-            this.updateIsLogin('1')
-            this.$router.push({path: '/app/course-list'})
-          } else {
-            this.updateCurCourseCode(lastCourseCode)
-            this.updateIsLogin('1')
-            this.$router.push({path: '/app/course-list'})
-          }
-        } else {
-          this.loading = false
-          this.errText = errCode[res.code]
-          // flag = false
-        }
-      })
-      // if (flag) {
-      // let lastCourseCode = localStorage.getItem('lastCourseCode')
-      // if (!lastCourseCode) {
-      //   await this.getUserInfo()
-      //   this.updateCurCourseCode(this.userInfo.current_course_code)
-      //   localStorage.setItem('lastCourseCode', this.userInfo.current_course_code)
-      //   this.updateIsLogin('1')
-      //   this.$router.push({path: '/app/course-list'})
-      // } else {
-      //   this.updateCurCourseCode(lastCourseCode)
-      //   this.updateIsLogin('1')
-      //   this.$router.push({path: '/app/course-list'})
-      // }
-      // }
-    } */
   }
 }
 </script>

@@ -99,27 +99,40 @@ export default {
         _this.errText = errCode['er02'] // 'er02': '验证码错误'
       }
 
+      _this.delCommonCookie()
       // 快速登录，有手机号就正常登录没有就相当于注册登录
       _this.userLogin({phonenumber: _this.phone, code: _this.phoneCode})
       if (_this.loginInfo.success) {
         this.errText = ''
-        // 先把localStorage里面的用户的信息和cookie里面的用户信息都清除了
-        localStorage.removeItem('userInfo')
-        Cookie.delCookieTalkmate('is_anonymous')
-        Cookie.delCookie('user_id')
-        Cookie.delCookie('verify')
-        Cookie.delCookie('device_id')
-        Cookie.delCookie('userName')
-        Cookie.delCookie('userPwd')
         let info = _this.loginInfo.result
         // 把后台返回的用户信息存进去
-        Cookie.setCookie('user_id', info.user_id)
-        Cookie.setCookie('verify', info.verify)
+        _this.setCommonCookie(info)
         this.updateIsLogin('1')
         _this.$router.push({path: '/app/index'})
       } else {
         _this.errText = errCode[_this.loginInfo.code]
       }
+    },
+    delCommonCookie () {
+      localStorage.removeItem('userInfo')
+      Cookie.delCookieTalkmate('is_anonymous')
+      Cookie.delCookieTalkmate('hasPhone')
+      Cookie.delCookieTalkmate('user_id')
+      Cookie.delCookieTalkmate('verify')
+      Cookie.delCookieTalkmate('device_id')
+      Cookie.delCookie('device_id')
+      Cookie.delCookie('is_anonymous')
+      Cookie.delCookie('hasPhone')
+      Cookie.delCookie('user_id')
+      Cookie.delCookie('verify')
+      Cookie.delCookie('userName')
+      Cookie.delCookie('userPwd')
+    },
+    setCommonCookie (info) {
+      Cookie.setCookie('user_id', info.user_id)
+      Cookie.setCookie('verify', info.verify)
+      Cookie.setCookie('is_anonymous', info.is_anonymous)
+      Cookie.setCookie('hasPhone', info.hasPhone)
     }
   }
 }

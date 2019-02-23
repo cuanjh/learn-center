@@ -29,7 +29,7 @@
           <div class='userVip-tabItem-active'>
             <p>会员卡激活：</p>
             <p><input type="text" placeholder='输入激活码' id='vip-codeNum-user'>
-              <span @click='showConfirm' >激活</span>
+              <span @click='showConfirm()' >激活</span>
             </p>
           </div>
           <div class='userVip-tabItem-purchase'>
@@ -42,7 +42,7 @@
                 <li><span>{{ item.money }}</span><em>￥/月</em></li>
                 <li><!-- <span>赠送</span>{{ item.gave_coins }}<span>金币</span> --></li>
                 <li><span>合计：</span>{{ item.total_money }}<span>元</span></li>
-                <li @click='purchase( item.product_id )'>点击购买</li>
+                <li @click='purchase(item.product_id)'>点击购买</li>
               </ol>
             </div>
             <i class='user-vip-clearboth'></i>
@@ -69,7 +69,8 @@
         </div>
       </div>
     </div>
-    <user-alert ref="alert"></user-alert>
+    <user-alert ref="userAlert"></user-alert>
+    <pay-alert ref="payAlert"></pay-alert>
   </section>
 </template>
 
@@ -79,10 +80,11 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import I18nLocales from '../../../vueI18/locale'
 import LogCollect from '../../../tool/logCollect'
 import UserAlert from './userAlert.vue'
-
+import PayAlert from './userPayAlert.vue'
 export default {
   components: {
-    UserAlert
+    UserAlert,
+    PayAlert
   },
   data () {
     return {
@@ -161,7 +163,6 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState',
       updatePurchaseIconPay: 'user/updatePurchaseIconPay'
     }),
     ...mapActions({
@@ -175,17 +176,17 @@ export default {
     },
     showConfirm () {
       this.codeNum = document.getElementById('vip-codeNum-user').value
-      this.$refs.alert.$emit('UserVipCode', this.codeNum)
+      this.$refs['userAlert'].$emit('isShowAlert', true)
+      this.$refs['userAlert'].$emit('UserVipCode', this.codeNum)
       if (!this.codeNum) {
         return
       }
-      this.$refs.alert.$emit('ifConfirmShow', true)
-      this.updateCoverState(true)
+      this.$refs['userAlert'].$emit('ifConfirmShow', true)
     },
     purchase (productId) {
+      this.$refs['payAlert'].$emit('isShowPayAlert', true)
       this.createAliWebOrder(productId)
       this.updatePurchaseIconPay(true)
-      this.updateCoverState(true)
     }
   }
 }

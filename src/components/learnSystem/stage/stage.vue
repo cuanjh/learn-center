@@ -401,7 +401,7 @@ export default {
       tips: state => state.learn.tips,
       formScores: state => state.course.formScores,
       canRecord: state => state.learn.canRecord,
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       totalCoin: state => state.user.totalCoin,
       contentUrl: state => state.course.contentUrl
     }),
@@ -433,7 +433,7 @@ export default {
     ui () {
       let ui = this.userInfo
       if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
       }
       return ui
     }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pay-alert-container" v-show="isShow">
     <section class='vip-update-success vip-update-confirm animated flipInX slow user-payAlert-view user-payAlert-goali' v-show='purchaseIconPay'>
       <div class='vip-update-success-logo animated tada' v-show='chooseLogo'></div>
       <div class='vip-update-success-logo vip-icon-logo animated tada' v-show='!chooseLogo'></div>
@@ -29,8 +29,17 @@ export default {
   data () {
     return {
       goAliAlert: false,
-      chooseLogo: true
+      chooseLogo: true,
+      isShow: false
     }
+  },
+  created () {
+    this.$on('goAliAlert', (e) => {
+      this.goAliAlert = e
+    })
+    this.$on('isShowPayAlert', (flag) => {
+      this.isShow = flag
+    })
   },
   mounted () {
     // 判断导航栏
@@ -40,11 +49,6 @@ export default {
     } else {
       this.chooseLogo = false
     }
-  },
-  created () {
-    this.$on('goAliAlert', (e) => {
-      this.goAliAlert = e
-    })
   },
   computed: {
     ...mapState({
@@ -59,13 +63,12 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState',
       updatePurchaseIconPay: 'user/updatePurchaseIconPay'
     }),
     close (e) {
-      this.updateCoverState(false)
       this.$emit('goAliAlert', false)
       this.updatePurchaseIconPay(false)
+      this.isShow = false
     },
     goAli () {
       let ui = this.userInfo
@@ -94,6 +97,19 @@ export default {
 </script>
 
 <style scoped>
+.pay-alert-container {
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .4);
+  z-index:99999999;
+  overflow: hidden;
+}
+
 .user-payAlert-view em {
   width: 17px;
   height: 17px;
@@ -190,7 +206,7 @@ export default {
   border-radius: 100px;
   display: inline-block;
   line-height: 40px;
-  background-color: #fd8469;
+  background-color: #2A9FE4;
   cursor: pointer;
   color: #fff;
   margin: 42px 25px;

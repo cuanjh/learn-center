@@ -85,7 +85,6 @@ export default {
     }),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
-      updateCoverState: 'course/updateCoverState',
       updatePurchaseIconPay: 'user/updatePurchaseIconPay',
       updateConfirmAlert: 'user/updateConfirmAlert',
       updateSuccessAlert: 'user/updateSuccessAlert',
@@ -133,7 +132,6 @@ export default {
       that.hideLoading()
     },
     coverHide () {
-      this.updateCoverState(false)
       this.updatePurchaseIconPay(false)
       this.updateConfirmAlert(false)
       this.updateSuccessAlert(false)

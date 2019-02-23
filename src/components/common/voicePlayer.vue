@@ -210,7 +210,6 @@ export default {
   },
   computed: {
     ...mapState({
-      // userInfo: state => state.user.userInfo
       userInfo: state => state.userInfo // 用户信息
     })
   },

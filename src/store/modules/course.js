@@ -11,6 +11,7 @@ const state = {
   language: 'chinese',
   languagueHander: 'zh-CN', // 默认不同的level的实现方式
   learnCourses: [], // 已订阅的课程
+  radioCourses: [], // 订阅的电台课程
   subscribeCoursesStr: '',
   loading: false, // 用来判断加载状态程序
   currentCourseCode: '',
@@ -76,13 +77,16 @@ const actions = {
   },
   getLearnCourses ({commit, state, dispatch}) {
     state.learnCourses = []
-    return httpLogin(config.getMoreLearnCourses).then((res) => {
+    state.radioCourses = []
+    return httpLogin(config.moreLearnCoursesApi).then((res) => {
       commit('clearMoreCourses')
       _.map(res.learn_courses, (course) => {
         if (course.course_type === 0) {
           dispatch('getUnlockChapter', course.code).then((data) => {
             commit('updateLearnCourses', { course, data })
           })
+        } else if (course.course_type === 1) {
+          commit('updateRadioCourses', course)
         }
       })
     })
@@ -394,6 +398,10 @@ const mutations = {
     localStorage.setItem('subscribeCoursesStr', subscribeCoursesStr)
     localStorage.setItem('learnMoreCourses', JSON.stringify(state.learnCourses))
   },
+  updateRadioCourses (state, course) {
+    state.radioCourses.push(course)
+    console.log('radioCourse', state.radioCourses)
+  },
   updateCurCourseCode (state, data) {
     state.currentCourseCode = data
     localStorage.setItem('currentCourseCode', state.currentCourseCode)
@@ -694,6 +702,7 @@ const mutations = {
   },
   clearMoreCourses (state) {
     state.learnCourses = []
+    state.radioCourses = []
     state.subscribeCoursesStr = ''
     localStorage.setItem('subscribeCoursesStr', '')
   },
@@ -702,9 +711,6 @@ const mutations = {
   },
   hideLoading (state) {
     state.loading = false
-  },
-  updateCoverState (state, flag) {
-    state.coverShow = flag
   },
   updateChapterDes (state, chapterCode) {
     let arr = chapterCode.split('-')

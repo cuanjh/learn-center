@@ -188,6 +188,7 @@
 import { mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
 import bus from '../../../bus'
+import cookie from '../../../tool/cookie'
 export default {
   props: ['currentCourseCode', 'item'],
   data () {
@@ -463,7 +464,7 @@ export default {
       updateHistoryCourseRecord: 'course/updateHistoryCourseRecord'
     }),
     jumpToCourse (chapterCode) {
-      let isAnonymous = this.userInfo['is_anonymous']
+      let isAnonymous = cookie.getCookie('is_anonymous')
       if (isAnonymous) {
         this.anonymousCheckShow = true
         return false

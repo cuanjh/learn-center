@@ -16,7 +16,7 @@
         <router-link v-show="false" tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
           我的
         </router-link>
-        <router-link tag="span"  :to="{ path: '/auth/register/' + langCode }" class='learn-login-right-tips-probation learn-login-right-tips-probation-modify' v-show="userInfo.is_anonymous">您是试用账号<span>去注册</span></router-link>
+        <router-link tag="span"  :to="{ path: '/app/user/bind' }" class='learn-login-right-tips-probation learn-login-right-tips-probation-modify' v-show="isAnonymous">您是试用账号<span>去绑定</span></router-link>
         <!-- 课程列表 -->
         <transition name="fade">
           <section class='mycourse-wrap mycourse-loginout animated' v-show="navCourse">
@@ -82,6 +82,7 @@
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import Bus from '../../bus'
+import cookie from '../../tool/cookie'
 import SearchCourse from '../common/find/searchCourse'
 
 export default {
@@ -95,7 +96,8 @@ export default {
       learnCourse: [],
       searchUserCourse: '',
       courseDetailShow: false,
-      isActive: false
+      isActive: false,
+      isAnonymous: false
     }
   },
   components: {
@@ -111,6 +113,8 @@ export default {
   },
   mounted () {
     // this.getLearnCourses()
+    this.isAnonymous = cookie.getCookie('is_anonymous') === 'true'
+    console.log(this.isAnonymous)
     this.getUserInfo()
     // console.log('订阅课程======', this.learnCourses)
   },
@@ -810,10 +814,9 @@ export default {
 }
 
 .learn-login-right-tips-probation-modify{
-  position: static !important;
   float: right;
-  margin-top: 25px;
-  margin-right:5px;
+  margin-top: 3px;
+  margin-right: 50px;
 }
 
 @media screen and (max-width: 1024px) {

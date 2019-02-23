@@ -84,7 +84,7 @@ export default {
       chapterNum: state => state.course.chapterNum + '',
       finishedChapter: state => state.course.finishedChapter + '',
       curLevel: state => state.course.curLevel,
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo
     }),
     langDesc () {
       let des = '全球说 《' + this.courseBaseInfo.name + '》'

@@ -76,7 +76,6 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState'
     }),
     ...mapActions({
       getUploadPhotoUrl: 'user/getUploadPhotoUrl'
@@ -84,11 +83,9 @@ export default {
     // 用于隐藏图片
     hidePicture () {
       $('#avatar-modal').hide()
-      this.updateCoverState(false)
     },
     closeUploadView () {
       $('#avatar-modal').hide()
-      this.updateCoverState(false)
     }
   }
 }

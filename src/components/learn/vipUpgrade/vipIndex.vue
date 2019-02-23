@@ -215,7 +215,6 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState'
     }),
     ...mapActions({
       getMemberProductsList: 'user/getMemberProductsList'
@@ -235,7 +234,6 @@ export default {
         return
       }
       this.$refs.alert.$emit('ifConfirmShow', true)
-      this.updateCoverState(true)
     }
   }
 }

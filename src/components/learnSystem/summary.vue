@@ -154,8 +154,8 @@ export default {
         _this.hasRecord = _this.finishedInfo.record_course.has_record
         _this.recordCourse = _this.finishedInfo.record_course
 
-        let ui = this.$store.state.user.userInfo
-        _this.userInfo = (Object.keys(ui).length === 0) ? JSON.parse(localStorage.getItem('userInfo')) : ui
+        let ui = this.$store.state.userInfo
+        _this.userInfo = (Object.keys(ui).length === 0) ? JSON.parse(sessionStorage.getItem('userInfo')) : ui
 
         let cbi = this.$store.state.course.courseBaseInfo
         _this.courseBaseInfo = (Object.keys(cbi).length === 0) ? JSON.parse(localStorage.getItem('courseBaseInfo')) : cbi

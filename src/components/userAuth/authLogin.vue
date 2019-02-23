@@ -154,6 +154,9 @@ export default {
     AuthPwdLogin
   },
   mounted () {
+    this.postAnonyLogin({preferLangs: 'ENG', skillLangs: 'ENG'}).then(res => {
+      console.log(res)
+    })
     this.getCodeUrl()
     let userId = Cookie.getCookie('user_id')
     console.log('userId', userId)
@@ -186,6 +189,7 @@ export default {
       userLogin: 'userLogin',
       sendCode: 'getSendCode',
       userSnsLogin: 'userSnsLogin',
+      postAnonyLogin: 'postAnonyLogin',
       getUserInfo: 'getUserInfo'
     }),
     // 更新type
@@ -257,13 +261,7 @@ export default {
       if (!validation.verfiyCode(_this.phoneCode)) {
         _this.errText = errCode['er02'] // 'er02': '验证码错误'
       }
-      Cookie.delCookieTalkmate('is_anonymous')
-      Cookie.delCookie('user_id')
-      Cookie.delCookie('verify')
-      Cookie.delCookieTalkmate('device_id')
-      Cookie.delCookie('device_id')
-      Cookie.delCookie('userName')
-      Cookie.delCookie('userPwd')
+      this.delCommonCookie()
       // 快速登录，有手机号就正常登录没有就相当于注册登录
       await _this.userLogin({phonenumber: _this.phone, code: _this.phoneCode})
       if (_this.loginInfo.success) {
@@ -274,8 +272,8 @@ export default {
 
         let info = _this.loginInfo.result
         // 把后台返回的用户信息存进去
-        Cookie.setCookie('user_id', info.user_id)
-        Cookie.setCookie('verify', info.verify)
+        this.setCommonCookie(info)
+
         this.updateIsLogin('1')
         await this.getUserInfo()
         _this.$router.push({path: '/app/index'})
@@ -285,37 +283,46 @@ export default {
     },
     // 第三方登录
     weixinGoLogin () {
-      localStorage.removeItem('userInfo')
-      Cookie.delCookieTalkmate('is_anonymous')
-      Cookie.delCookie('user_id')
-      Cookie.delCookie('verify')
-      Cookie.delCookie('device_id')
+      this.delCommonCookie()
       this.userSnsLogin({ty: 'wx'}).then((res) => {
         console.log('res', res)
         window.location.href = res
       })
     },
     weiboGoLogin () {
-      localStorage.removeItem('userInfo')
-      Cookie.delCookieTalkmate('is_anonymous')
-      Cookie.delCookie('user_id')
-      Cookie.delCookie('verify')
-      Cookie.delCookie('device_id')
+      this.delCommonCookie()
       this.userSnsLogin({ty: 'wb'}).then((res) => {
         console.log('res', res)
         window.location.href = res
       })
     },
     qqGoLogin () {
-      localStorage.removeItem('userInfo')
-      Cookie.delCookieTalkmate('is_anonymous')
-      Cookie.delCookie('user_id')
-      Cookie.delCookie('verify')
-      Cookie.delCookie('device_id')
+      this.delCommonCookie()
       this.userSnsLogin({ty: 'qq'}).then((res) => {
         console.log('res', res)
         window.location.href = res
       })
+    },
+    delCommonCookie () {
+      localStorage.removeItem('userInfo')
+      Cookie.delCookieTalkmate('is_anonymous')
+      Cookie.delCookieTalkmate('hasPhone')
+      Cookie.delCookieTalkmate('user_id')
+      Cookie.delCookieTalkmate('verify')
+      Cookie.delCookieTalkmate('device_id')
+      Cookie.delCookie('device_id')
+      Cookie.delCookie('is_anonymous')
+      Cookie.delCookie('hasPhone')
+      Cookie.delCookie('user_id')
+      Cookie.delCookie('verify')
+      Cookie.delCookie('userName')
+      Cookie.delCookie('userPwd')
+    },
+    setCommonCookie (info) {
+      Cookie.setCookie('user_id', info.user_id)
+      Cookie.setCookie('verify', info.verify)
+      Cookie.setCookie('is_anonymous', info.is_anonymous)
+      Cookie.setCookie('hasPhone', info.hasPhone)
     }
   }
 }

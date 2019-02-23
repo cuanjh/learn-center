@@ -90,7 +90,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo
     }),
     isGoLogin () {
       return this.userName && this.userPwd
@@ -152,10 +152,15 @@ export default {
       }
       sessionStorage.removeItem('userInfo')
       Cookie.delCookieTalkmate('is_anonymous')
-      Cookie.delCookie('user_id')
-      Cookie.delCookie('verify')
+      Cookie.delCookieTalkmate('user_id')
+      Cookie.delCookieTalkmate('verify')
+      Cookie.delCookieTalkmate('hasPhone')
       Cookie.delCookieTalkmate('device_id')
       Cookie.delCookie('device_id')
+      Cookie.delCookie('user_id')
+      Cookie.delCookie('verify')
+      Cookie.delCookie('is_anonymous')
+      Cookie.delCookie('hasPhone')
       let res = await _this.userPwdLogin({
         identity: _this.userName,
         password: _this.userPwd
@@ -177,6 +182,8 @@ export default {
         Cookie.setCookie('isChecked', _this.isSaveLoginState)
         Cookie.setCookie('user_id', info.user_id)
         Cookie.setCookie('verify', info.verify)
+        Cookie.setCookie('is_anonymous', info.is_anonymous)
+        Cookie.setCookie('hasPhone', info.hasPhone)
         this.updateIsLogin('1')
         await this.getUserInfo()
         _this.$router.push({path: '/app/index'})

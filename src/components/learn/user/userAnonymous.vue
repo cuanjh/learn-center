@@ -27,12 +27,13 @@
           <div class='learn-setting-error-tips-settingpage' v-show='!email'><i></i><em>请输入正确的邮箱账号</em></div>
           <div :class="{'error':false}" class='learn-bind-psd'><span style='position:relative;top:3px'>密码</span><input class='learn-bind-psd-input' type="password" placeholder='字母 / 数字 / 下划线 6-15位' v-model="newPsw2"></div>
           <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码不符合规范，请重新输入</div>
-          <div class='submit learn-bind-submit' @click="bindEmailAccount">我要绑定</div>
+          <div class='submit learn-bind-submit' @click="bindEmailAccount()">我要绑定</div>
           <p v-show='noticeEmail' class='bindPhone-error-tips'><i class='user error'></i><em>请填写完成后再绑定</em></p>
         </form>
       </div>
     </section>
     <set-alert
+      ref="setAlert"
       :alert-type="alertType"
       :bind-phone-num="phone"
       :alert-message="alertMessage"
@@ -139,6 +140,7 @@ export default {
       params.type = 'bind_phonenumber'
       params.phonenumber = this.phone
       this.sendCode(params).then((res) => {
+        this.$refs['setAlert'].$emit('isShowSetAlert', true)
         if (res.success) {
           _this.updateAlertType('bindPhoneNumber')
         } else {
@@ -152,6 +154,7 @@ export default {
       params.email = this.email
       params.password = this.newPsw2
       this.resetAnonymous(params).then((res) => {
+        this.$refs['setAlert'].$emit('isShowSetAlert', true)
         if (res.success) {
           setTimeout(() => {
             _this.updateAlertType('bindEmail')
@@ -173,6 +176,7 @@ export default {
     },
     closeWin () {
       this.updateAlertType('')
+      this.$refs['setAlert'].$emit('isShowSetAlert', false)
     },
     updateAlertMessage (msg) {
       this.alertMessage = msg

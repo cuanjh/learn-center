@@ -78,7 +78,7 @@ export default {
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
       tipsMsg: state => state.learn.tips,
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo
     }),
     dir () {
       return this.direction < 0

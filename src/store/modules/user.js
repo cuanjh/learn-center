@@ -178,10 +178,6 @@ const mutations = {
     console.log('=======旧的userInfo', data)
     state.userInfo = data
     state.totalCoin = data.coins
-    let isAnonymous = Cookie.getCookie('is_anonymous')
-    if (isAnonymous) {
-      state.userInfo['is_anonymous'] = true
-    }
     localStorage.setItem('userInfo', JSON.stringify(data))
     Cookie.setCookie('isVip', data.member_info.member_type)
   },
@@ -263,14 +259,10 @@ const mutations = {
   },
   modefiyEmailMemberInfo (state, param) {
     state.userInfo['email'] = param.email
-    state.userInfo['is_anonymous'] = false
-    Cookie.delCookieTalkmate('is_anonymous')
   },
   modefiyPhoneMemberInfo (state, param) {
     state.userInfo['phonenumber'] = param.phoneNumber
     state.userInfo['email'] = ''
-    state.userInfo['is_anonymous'] = false
-    Cookie.delCookieTalkmate('is_anonymous')
   },
   updateTotalCoin (state, coins) {
     state.totalCoin = coins

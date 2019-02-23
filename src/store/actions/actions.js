@@ -8,6 +8,10 @@ export default {
       commit('updateLoginInfo', res)
     })
   },
+  // 匿名登录
+  postAnonyLogin ({commit}, params) {
+    return httpNoLogin(config.umUserAnonyApi, params)
+  },
   // 第三方登录
   userSnsLogin ({commit}, params) {
     return httpSnsUrl(config.umUserSnsLoginApi, params)
@@ -113,5 +117,9 @@ export default {
   // 热门电台
   getHotRadios ({commit}, params) {
     return httpLogin(config.getHotRadiosApi, params)
+  },
+  // 获取更多订阅课程，包括电台课程
+  getMoreLearnCourses ({commit}, params) {
+    return httpLogin(config.moreLearnCoursesApi, params)
   }
 }

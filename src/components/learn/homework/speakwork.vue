@@ -105,7 +105,7 @@ export default {
       direction: state => state.learn.direction,
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       qiniuToken: state => state.learn.qiniuToken
     }),
     dir () {

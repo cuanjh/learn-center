@@ -53,7 +53,7 @@
       </div>
     </div>
     <div></div>
-    <pay-alert ref="pay"></pay-alert>
+    <pay-alert ref="payAlert"></pay-alert>
   </section>
 </template>
 
@@ -84,7 +84,6 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState',
       updatePurchaseIconPay: 'user/updatePurchaseIconPay'
     }),
     ...mapActions({
@@ -92,12 +91,11 @@ export default {
       createAliWebOrder: 'user/createAliWebOrder'
     }),
     close () {
-      this.updateCoverState(false)
     },
     purchaseIconPay (productId) {
       this.createAliWebOrder(productId)
       this.updatePurchaseIconPay(true)
-      this.updateCoverState(true)
+      this.$refs['payAlert'].$emit('isShowPayAlert', true)
     },
     swapVipTab () {
       this.activeTab = true

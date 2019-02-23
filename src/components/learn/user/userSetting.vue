@@ -118,6 +118,7 @@
     </div>
   </section>
   <set-alert
+    ref="setAlert"
     :alert-type="alertType"
     :bind-phone-num="phone"
     :alert-message="alertMessage"
@@ -135,6 +136,7 @@
 <script>
 import $ from 'jquery'
 import { mapState, mapMutations, mapActions } from 'vuex'
+import cookie from '../../../tool/cookie'
 
 import Constant from '../../../api/constant'
 import SetAlert from './userSettingAlert.vue'
@@ -191,16 +193,17 @@ export default {
     this.$parent.$emit('navItem', 'user')
     // let ui = JSON.parse(sessionStorage.getItem('userInfo'))
     this.loadData()
-    // if (ui.member_info['is_anonymous']) {
-    //   this.updateUserAnonymous(true)
-    //   this.updateAlertType('bindAccount')
-    // }
+    let isAnonymous = cookie.getCookie('is_anonymous') === 'true'
+    if (isAnonymous) {
+      // this.updateUserAnonymous(true)
+      this.$refs['setAlert'].$emit('isShowSetAlert', true)
+      this.updateAlertType('bindAccount')
+    }
   },
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
-      alertType: state => state.user.alertType,
-      userInfos: state => state.user.userInfo
+      alertType: state => state.user.alertType
     }),
     nicknameError () {
       if (this.nickname.length === 0 || this.nickname.length > 50) {
@@ -222,10 +225,7 @@ export default {
       return this.$store.state.user.languageHandler
     },
     isAnonymous () {
-      if (!this.userInfo.member_info) {
-        return
-      }
-      return this.userInfo.member_info.is_anonymous
+      return cookie.getCookie('is_anonymous') === 'true'
     }
   },
   methods: {
@@ -248,9 +248,9 @@ export default {
     loadData () {
       var _this = this
       var result = JSON.parse(sessionStorage.getItem('userInfo'))
-      if (result.member_info['is_anonymous']) {
-        _this.updateUserAnonymous(true)
-        _this.updateAlertType('bindAccount')
+      if (result.member_info['is_anonymous'] === 'true') {
+        // _this.updateUserAnonymous(true)
+        // _this.updateAlertType('bindAccount')
       }
       console.log('result', result)
       if (result.nickname === undefined) {
@@ -568,6 +568,7 @@ export default {
     },
     closeWin () {
       this.updateAlertType('')
+      this.$refs['setAlert'].$emit('isShowSetAlert', false)
     },
     updateAlertMessage (msg) {
       this.alertMessage = msg
