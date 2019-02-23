@@ -6,7 +6,7 @@
           v-for="author in this.authors.slice(this.startAuthorsIndex, this.startAuthorsIndex + 4)"
           :key="author.user_id"
         >
-          <img :src="author.photo" alt>
+          <img @click="goToUser(author.user_id)" :src="author.photo" alt="老师头像">
           <p class="author_name" v-text="author.author_name"></p>
           <p class="title" v-text="'《' + author.title + '》'"></p>
           <!-- <p class="button">
@@ -54,6 +54,12 @@ export default {
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
       remRadioRelationCancel: 'course/remRadioRelationCancel' // 取消关注
     }),
+    // 作者详情页面
+    goToUser (userId) {
+      this.$router.push({
+        path: `/app/discovery/author-detail/${userId}`
+      })
+    },
     // 上一个
     radioAuthorPre () {
       if (this.startAuthorsIndex === 0) {
@@ -113,6 +119,7 @@ export default {
         height: 70px;
         background-color: #b2c0c9;
         border-radius: 50%;
+        cursor: pointer;
       }
       .author_name {
         font-size: 14px;

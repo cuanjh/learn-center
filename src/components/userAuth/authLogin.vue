@@ -325,7 +325,7 @@ export default {
 html,body{-webkit-text-size-adjust:none;}
 .pcss5{-webkit-text-size-adjust:none;}
   .bg-box {
-    min-height: 560px;
+    min-height: 640px;
     padding: 80px 0px;
   }
   .user-login .go-email-login {

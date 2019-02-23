@@ -62,7 +62,7 @@
         </div> -->
         <div class='learn-user' @mouseenter="showExit" >
           <a>
-            <img :src='userInfo.photo' />
+            <img :src='userInfoImg' />
             <span v-show="isActive" class="active"></span>
           </a>
           <transition name="fade">
@@ -95,7 +95,8 @@ export default {
       learnCourse: [],
       searchUserCourse: '',
       courseDetailShow: false,
-      isActive: false
+      isActive: false,
+      domainName: 'https://uploadfile1.talkmate.com'
     }
   },
   components: {
@@ -110,6 +111,7 @@ export default {
     // })
   },
   mounted () {
+    console.log('用户图片是否正常显示', this.userInfoImg)
     // this.getLearnCourses()
     this.getUserInfo()
     // console.log('订阅课程======', this.learnCourses)
@@ -128,6 +130,20 @@ export default {
       }
       console.log('header', this.userInfo.member_info.member_type)
       return this.userInfo.member_info.member_type
+    },
+    ui () {
+      let ui = this.userInfo
+      if (Object.keys(ui).length === 0) {
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
+      }
+      return ui
+    },
+    userInfoImg () {
+      let photoURL = this.ui.photo
+      if (photoURL.indexOf(this.domainName) === -1) { // 没有出现
+        return this.domainName + '/' + photoURL
+      }
+      return photoURL
     }
   },
   watch: {

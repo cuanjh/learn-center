@@ -12,8 +12,8 @@
             <div class="lang-list" v-show="isShowPanel">
               <ul>
                 <li :class="{'active': selStateCode == item.lan_code }"
-                  v-for="item in langsStateSel"
-                  :key="item.lan_code"
+                  v-for="(item, index) in langsStateSel"
+                  :key="item.lan_code + index"
                   @click="changeState(item)">{{item.text}}</li>
               </ul>
             </div>

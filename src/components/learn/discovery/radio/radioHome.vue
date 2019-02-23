@@ -830,6 +830,7 @@ export default {
   .wheeling_img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
   .news_item_right_swipper {
     position: absolute;
