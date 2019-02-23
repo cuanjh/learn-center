@@ -154,7 +154,7 @@ export default {
     padding: 40px 43px 70px;
   }
   .bg-box {
-    min-height: 560px;
+    min-height: 630px;
     padding: 80px 0px;
   }
   input::-webkit-input-placeholder {

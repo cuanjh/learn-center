@@ -32,16 +32,19 @@
           </div>
           <!-- 价钱 -->
            <div class="member">
+             <!-- 免费课程 -->
             <div class="money" v-if="courseInfo.money === 0">
               <span v-text="$t('free')"></span>
             </div>
-            <div class="money" v-else-if="courseInfo.money_type === 'CNY'">
+            <!-- 会员不免费 -->
+            <div class="money cny" v-else-if="courseInfo.money_type === 'CNY' && courseInfo.free_for_member === 0">
               <span v-text="'￥' + courseInfo.money"></span>
               <span>元/年</span>
-              <span>会员免费</span>
             </div>
-            <div class="money" v-else>
+            <!-- 会员免费 -->
+            <div class="money vip-free" v-else>
               <span v-text="courseInfo.money"></span> {{$t('coins')}}
+              <span>会员免费</span>
             </div>
           </div>
           <!-- 介绍 -->
@@ -64,13 +67,13 @@
                 <span>立即收听</span>
               </div>
               <div class="subscibeno-play">
-                <p class="have-no-course" v-if="subscibenoInfo.purchased_state == 0">
-                  <i class="subscibeno"></i>
-                  <span @click="subscibe()">订阅</span>
-                </p>
-                <p v-if="subscibenoInfo.purchased_state == 1">
+                <p class="have-course" v-if="subscibenoInfo.purchased_state == 1">
                   <i class="subscibe"></i>
                   <span>已订阅</span>
+                </p>
+                <p class="have-no-course" v-else>
+                  <i class="subscibeno"></i>
+                  <span @click="subscibe()">订阅</span>
                 </p>
               </div>
             </div>
@@ -85,7 +88,6 @@
         <div class="author-brief">
           <div class="title">
             作者简介:
-            <router-link :to="{path: '/app/discovery/author-detail-old/'+authorInfo.user_id}">去老的详情</router-link>
           </div>
           <div class="author-info">
             <div @click="goToUser(authorInfo.user_id)" class="author-info-left">
@@ -155,6 +157,7 @@
         <students-listening :studentsListening="studentsListening"></students-listening>
       </div>
       <!-- <bounceBox @hidden="hiddenShow" v-show="isShowBox"></bounceBox> -->
+      <buy-coins-radio-box @hidBuyCoinsBox="hiddenBuyCoinsBox"/>
     </div>
   </div>
 </template>
@@ -167,6 +170,7 @@ import { formatDate } from '../../../../tool/date.js'
 import VipPrompt from '../../../common/vipPrompt.vue'
 import RadioDetailOther from './radioDetailOther.vue'
 import StudentsListening from './studentsListening.vue'
+import BuyCoinsRadioBox from '../../../common/buyCoinsRadioBox.vue'
 
 export default {
   data () {
@@ -182,6 +186,7 @@ export default {
     }
   },
   components: {
+    BuyCoinsRadioBox,
     RadioDetailOther,
     VipPrompt,
     StudentsListening,
@@ -211,13 +216,20 @@ export default {
   },
   computed: {
     ...mapState({
+      userInfo: state => state.userInfo, // 用户信息
       languagueHander: state => state.course.languagueHander
-    })
+    }),
+    isVip () {
+      if (!this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
+    }
   },
   methods: {
     ...mapActions({
-      postRadioDetail: 'course/postRadioDetail',
-      postPurchaseCourse: 'course/postPurchaseCourse', // 订阅课程
+      postRadioDetail: 'course/postRadioDetail', // 电台详情
+      postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
       remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
       getOtherRecommends: 'getOtherRecommends' // 其他人也在听
@@ -284,6 +296,19 @@ export default {
         _this.subscibenoInfo = res.result.relation
       })
     },
+    // 订阅初始化
+    async initSubscibe () {
+      await this.postPurchaseCourse({code: this.courseInfo.code}).then(res => {
+        console.log('订阅课程返回', res)
+        // purchased_state状态值显示隐藏
+        // 0未购买
+        // 1已购买 隐藏
+        // 2购买已删除
+        this.subscibenoInfo.purchased_state = 1
+        this.loadData()
+        console.log('this.subscibenoInfo', this.subscibenoInfo)
+      })
+    },
     // 立即收听
     loadRadioList (e, radio) {
       if (this.isPlay && radio.code === this.lastCode) {
@@ -306,12 +331,41 @@ export default {
     },
     // 点击订阅
     subscibe () {
-      // this.subscibenoInfo.purchased_state = 1
-      this.postPurchaseCourse({code: this.courseInfo.code}).then(res => {
-        console.log('订阅课程返回', res)
-        this.subscibenoInfo.purchased_state = 1
-        console.log('this.subscibenoInfo', this.subscibenoInfo)
-      })
+      console.log('courseInfo', this.courseInfo)
+      let radio = this.courseInfo
+      console.log('组件中的radio', radio)
+      if (radio.money !== 0) { // 收费
+        if (this.isVip !== 1) { // 不是会员
+          if (radio.money_type !== 'CNY') { // 不是会员金币收费课程
+            // alert('不是会员的金币收费')
+            Bus.$emit('showBuyCoinsRadio', radio)
+          } else { // 不是会员人民币收费课程
+            alert('不是会员人民币收费')
+          }
+        } else { // 是会员
+          if (radio.money_type === 'CNY') {
+            if (radio.free_for_member === 0) {
+              alert('这是会员不免费课程')
+            }
+          }
+        }
+      } else { // 免费
+        this.initSubscibe()
+      }
+      // this.postPurchaseCourse({code: this.courseInfo.code}).then(res => {
+      //   console.log('订阅课程返回', res)
+      //   // purchased_state状态值显示隐藏
+      //   // 0未购买
+      //   // 1已购买 隐藏
+      //   // 2购买已删除
+      //   this.subscibenoInfo.purchased_state = 1
+      //   this.loadData()
+      //   console.log('this.subscibenoInfo', this.subscibenoInfo)
+      // })
+    },
+    // 关闭金币支付弹框
+    hiddenBuyCoinsBox () {
+      this.initSubscibe()
     }
   }
 }
@@ -337,7 +391,7 @@ export default {
   color: #2A9FE4;
 }
 .radio-wrap {
-  background: #ecf4f7;
+  /* background: #ecf4f7; */
   width: 100%;
   min-height: 1000px;
 }
@@ -449,15 +503,15 @@ export default {
   color:rgba(255,131,49,1);
   margin-right: 5px;
 }
-.member .money span:nth-child(2) {
+.member .money.cny span:nth-child(2) {
   font-size:14px;
   font-family:PingFangSC-Regular;
   font-weight:400;
   color:rgba(153,153,153,1);
-  margin-right: 10px;
+  padding: 0 5px
 }
 
-.member .money span:nth-child(3) {
+.member .money.vip-free span:nth-child(2) {
   cursor: pointer;
   font-size:12px;
   font-family:PingFangSC-Semibold;
@@ -468,6 +522,7 @@ export default {
   border:1px solid;
   border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
   text-align: center;
+  margin: 0 10px;
 }
 .course .subscription {
   margin-top: 27px;
@@ -531,6 +586,9 @@ export default {
 }
 .course .subscription .bottom .subscibeno-play .subscibeno {
   background-image: url('../../../../../static/images/subscibeNo.svg');
+}
+.course .subscription .bottom .subscibeno-play .have-course span{
+  color: #B2C0C9;
 }
 .course .subscription .bottom .subscibeno-play .subscibe {
   background-image: url('../../../../../static/images/subscibe.svg');

@@ -138,7 +138,7 @@
         <i></i>
         <p class="buttons">
           <span class="goBackCore" @click="goBack">取消</span>
-          <span class="goBackCore">购买</span>
+          <!-- <span class="goBackCore">购买</span> -->
         </p>
       </div>
     </div>

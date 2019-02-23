@@ -157,7 +157,7 @@ export default {
 
 <style scoped>
 .discovery-wrap {
-  background: #ecf4f7;
+  /* background: #ecf4f7; */
   width: 100%;
   min-height: 1000px;
 }

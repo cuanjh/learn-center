@@ -38,9 +38,9 @@
             <div class="top">
               <p class="title">电台节目</p>
               <div class="tab">
-                <p  v-for="item in langCodesSel" :key="item.lan_code"
-                    :class="{'active': selStateCode == item.lan_code }"
-                    @click="changeState(item)">
+                <p  v-for="(item, index) in langCodesSel" :key="item.lan_code + index"
+                    :class="{'active': isSelStateCode == index }"
+                    @click="changeState(item, index)">
                   <span>{{item.text}}</span>
                 </p>
               </div>
@@ -61,24 +61,11 @@
           <div class="describe-content" v-if="lists.length > 0">
             <div class="describe-lists">
               <ul>
-                <li v-for="(radio, index) in lists" :key="index">
+                <li v-for="(radio, index) in lists" :key="index+radio.code">
                   <div class="item-img">
                     <img v-lazy="radio.cover" :key="radio.cover" alt="电台的图片">
-                    <!-- 可以播放 -->
                     <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                       <i class="play"></i>
-                    </div>
-                    <!-- 不能播放 -->
-                    <div  class="gradient-layer-play-no"
-                          v-if="radio.money !== 0 && parseInt(isVip) !== 1"
-                          @click="loadNoRadioList($event, radio)">
-                      <i class="play-no" v-if="index>number"></i>
-                    </div>
-                    <!-- 是会员需要购买 -->
-                    <div  class="buy-cny"
-                          v-if="radio.money !== 0 && radio.money_type === 'CNY' && parseInt(isVip) === 1 && radio.free_for_member === false"
-                          @click="loadNoRadioList($event, radio)" >
-                      <i class="play-no" v-if="index>number"></i>
                     </div>
                   </div>
                   <div class="right-describe">
@@ -96,9 +83,9 @@
               </ul>
             </div>
             <!-- 点击加载更多 -->
-            <div class="load-more" @click="loadMore()" v-show="lists.length > 0">
-              <span v-show="flag == true">点击加载更多</span>
-              <span v-show="flag == false">已显示全部内容~</span>
+            <div class="load-more">
+              <span v-if="showPage === -1">已显示全部内容</span>
+              <span @click="loadMore()" v-else>点击加载更多</span>
             </div>
           </div>
           <div class="no-content" v-show="lists.length === 0">
@@ -119,23 +106,22 @@ export default {
     return {
       isHot: [{type: 'hot', text: '热播', id: 0}, {type: 'new', text: '最新', id: 1}],
       onActive: 'hot',
+      isSelStateCode: 0,
       selState: {},
       flag: true,
+      buyCoins: false,
       isActive: 410,
       menuRadioNavs: [], // 电台导航
       lists: [], // 更多电台列表
       page: 1, // 页码
       menu_type: '',
       menu_id: '',
-      number: 2
+      showPage: 0,
+      buyRadio: {}
     }
   },
   mounted () {
-    console.log('跳转之后的item', this.courseOrder)
-    // this.isActive = this.courseOrder.item.list_order
     this.isActive = this.courseOrder ? this.courseOrder : 410
-    console.log('跳转之后的item', this.courseOrder)
-    console.log('isActive', this.isActive)
     this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
       this.menuRadioNavs = res.data.menuRadios
@@ -149,7 +135,7 @@ export default {
       }
     })
     this.getLangCodes()
-    console.log('======>', this.selStateCode)
+    console.log('selState', this.selState)
   },
   computed: {
     ...mapState({
@@ -164,17 +150,6 @@ export default {
     },
     courseOrder () {
       return this.$route.params.itemId
-    },
-    selStateCode () {
-      if (Object.keys(this.selState).length > 0) {
-        return this.selState['lan_code']
-      } else {
-        if (this.langCodesSel && this.langCodesSel.length > 0) {
-          return this.langCodesSel[0]['lan_code']
-        } else {
-          return ''
-        }
-      }
     }
   },
   methods: {
@@ -189,6 +164,7 @@ export default {
       console.log('langCodesSel====', this.langCodesSel)
       let _this = this
       _this.selState = _this.langCodesSel[0]
+      _this.isSelStateCode = 0
       _this.page = 1
       _this.onActive = 'hot'
       _this.flag = true
@@ -206,11 +182,13 @@ export default {
       _this.getRadioList(params).then((res) => {
         console.log('切换导航电台列表返回', res)
         _this.lists = res.data.radios
+        _this.showPage = res.data.page
+        console.log('==>>>>>>>', _this.showPage)
       })
     },
     // 加载更多
     loadMore () {
-      if (!this.flag) {
+      if (this.showPage === -1) {
         return false
       }
       if (Object.keys(this.selState).length === 0) {
@@ -230,7 +208,7 @@ export default {
         console.log('点击加载更多', res)
         this.lists = this.lists.concat(res.data.radios)
         if (res.data.page === -1) {
-          this.flag = false
+          this.showPage = res.data.page
         }
       })
     },
@@ -257,9 +235,10 @@ export default {
       this.isPlay = !this.isPlay
     },
     // 切换课程
-    changeState (item) {
+    changeState (item, index) {
       console.log(this.menu_type, this.menu_id, item.lan_code)
       this.selState = item
+      this.isSelStateCode = index
       this.page = 1
       this.onActive = 'hot'
       let params = {
@@ -366,10 +345,10 @@ a {
               display: block;
               width: 100%;
               height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
               i {
-                position: absolute;
-                right: 0;
-                top: 8px;
                 display: inline-block;
                 width: 8px;
                 height: 11px;
@@ -471,12 +450,11 @@ a {
         // 下面的内容区
         .describe-content {
           padding: 0px 43px 19px;
-          width: 100%;
+          width: 104%;
           max-height: 860px;
           overflow-y: auto;
           .describe-lists {
             width: 100%;
-            border-bottom: 1px solid #EEF2F3;
             ul {
               display: flex;
               justify-content: space-between;
@@ -497,6 +475,7 @@ a {
                     width: 100%;
                     height: 100%;
                     border-radius:5px;
+                    object-fit: cover;
                   }
                   .gradient-layer-play {
                     cursor: pointer;
@@ -518,38 +497,6 @@ a {
                       width: 24px;
                       height: 24px;
                       background-image: url('../../../../../static/images/radioPlay.svg');
-                      background-repeat: no-repeat;
-                      background-size: cover;
-                      display: inline-block;
-                    }
-                  }
-                  .gradient-layer-play-no {
-                    width: 170px;
-                    height: 90px;
-                    position: absolute;
-                    top: 0;
-                    text-align: center;
-                    z-index: 2;
-                    .play-no {
-                      width: 100%;
-                      height: 100%;
-                      background-image: url("../../../../../static/images/learn/learn-course-little-bg.png");
-                      background-repeat: no-repeat;
-                      background-size: cover;
-                      display: inline-block;
-                    }
-                  }
-                  .buy-cny {
-                    width: 170px;
-                    height: 90px;
-                    position: absolute;
-                    top: 0;
-                    text-align: center;
-                    z-index: 2;
-                    .play-no {
-                      width: 100%;
-                      height: 100%;
-                      background-image: url("../../../../../static/images/learn/learn-course-little-bg.png");
                       background-repeat: no-repeat;
                       background-size: cover;
                       display: inline-block;
@@ -642,5 +589,4 @@ a {
     }
   }
 }
-
 </style>

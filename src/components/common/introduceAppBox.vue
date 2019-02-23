@@ -3,8 +3,8 @@
     <div class="introduce-app-cont">
       <div class="introduce-app-img"></div>
       <div class="ios-google">
-        <i class="ios"></i>
-        <i class="google"></i>
+        <i class="ios" @click="goDownLoadIos()"></i>
+        <i class="google" @click="goDownLoadGoogle()"></i>
       </div>
     </div>
   </div>
@@ -14,7 +14,14 @@ export default {
   data () {
     return {}
   },
-  methods: {}
+  methods: {
+    goDownLoadIos () {
+      window.open('https://itunes.apple.com/cn/app/%E5%85%A8%E7%90%83%E8%AF%B4-talkmate-%E8%8B%B1%E8%AF%AD%E6%97%A5%E8%AF%AD%E9%9F%A9%E8%AF%AD%E7%AD%89%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B/id959231176?mt=8')
+    },
+    goDownLoadGoogle () {
+      window.open('https://play.google.com/store/apps/details?id=com.kuyu')
+    }
+  }
 }
 </script>
 <style lang="less" scoped>

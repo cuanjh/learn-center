@@ -46,21 +46,21 @@
               <div class="content">
                 <p>个人动态</p>
                 <p><span>{{feedInfos.length}}</span></p>
-                <p><span>查看他的动态</span></p>
+                <p v-show="false"><span>查看他的动态</span></p>
               </div>
             </div>
             <div class="personal-dynamic">
               <div class="content">
                 <p>他的粉丝</p>
                 <p><span>{{authorInfo.be_followed_num}}</span></p>
-                <p><i></i><span></span></p>
+                <p v-show="false"><i></i><span></span></p>
               </div>
             </div>
             <div class="personal-dynamic">
               <div class="content">
                 <p>他的关注</p>
                 <p><span>{{authorInfo.follow_num}}</span></p>
-                <p><span>关注他们</span></p>
+                <p v-show="false"><span>关注他们</span></p>
               </div>
             </div>
           </div>
@@ -132,19 +132,18 @@
         </div>
         <div class="author-content-box" v-if="'radios' == tabFlag">
           <author-radios :radios="radios" :isVip="isVip"></author-radios>
+          <!-- 展开全部 -->
+          <div class="up-all" v-if="radios.length > 0">
+            <span v-if="showPage === -1">已显示全部内容</span>
+            <span @click="loadMoreRadio()" v-else>全部展开<i></i></span>
+          </div>
+          <div class="author-describe-content" v-else>
+            <i></i>
+            <span>这个人比较懒没有制作电台</span>
+          </div>
         </div>
       </div>
     </div>
-    <!-- <div class="nolock-test-check" v-show="nolockTestCheckShow">
-      <div class="animated flipInX" v-show="nolockTestCheckShow">
-        <span v-html="tips"></span>
-        <i></i>
-        <p class="buttons">
-          <span class="goBackCore" @click="goBack()">取消</span>
-          <span class="goBackCore">购买</span>
-        </p>
-      </div>
-    </div> -->
   </div>
 </template>
 <script>
@@ -167,7 +166,8 @@ export default {
       radios: [], // 电台列表
       page: 1,
       tips: '',
-      number: 2
+      number: 2,
+      showPage: 0
     }
   },
   components: {AuthorRadios, authorItem},
@@ -201,6 +201,9 @@ export default {
       if (data.data.radios) {
         _this.radios = data.data.radios
       }
+      if (data.data.page === -1) {
+        _this.showPage = -1
+      }
     })
     // 作者动态列表
     _this.getRadioAuthorDynamic({ partner_user_id: _this.userId, page: _this.page, has_homework: 'Y' })
@@ -217,10 +220,6 @@ export default {
     tabChange (tab) {
       this.tabFlag = tab
     },
-    // // 取消
-    // goBack () {
-    //   this.nolockTestCheckShow = false
-    // },
     // 关注
     relation () {
       let _this = this
@@ -244,72 +243,23 @@ export default {
           }
         })
       }
+    },
+    // 点击加载更多
+    loadMoreRadio () {
+      if (this.showPage === -1) {
+        return false
+      }
+      this.page++
+      this.getRadioAuthorList({ partner_user_id: this.$route.params.userId, page: this.page }).then((res) => {
+        console.log('电台列表', res)
+        if (res.data.radios) {
+          this.radios = this.radios.concat(res.data.radios)
+        }
+        if (res.data.page === -1) {
+          this.showPage = res.data.page
+        }
+      })
     }
-    // // 点击加载更多
-    // loadMoreRadio () {
-    //   console.log('....')
-    // },
-    // // 能播放的列表点击播放
-    // loadRadioList (e, item) {
-    //   if (this.isPlay && item.code === this.lastCode) {
-    //     $('.gradient-layer-play i').removeClass('pause')
-    //     $(e.target).addClass('play')
-    //     Bus.$emit('radioPause')
-    //   } else {
-    //     $('.gradient-layer-play i').removeClass('pause')
-    //     $('.gradient-layer-play i').addClass('play')
-    //     $(e.target).removeClass('play')
-    //     $(e.target).addClass('pause')
-    //     $('.gradient-layer-play').not($(e.target).parent()).hide()
-    //     if (item.code !== this.lastCode) {
-    //       Bus.$emit('getRadioCardList', item)
-    //       this.lastCode = item.code
-    //     } else {
-    //       Bus.$emit('radioPlay')
-    //     }
-    //   }
-    //   this.isPlay = !this.isPlay
-    // },
-    // // 不能播放的列表点击提示购买课程
-    // loadNoRadioList (e, item) {
-    //   this.tips = '收费课程需要购买才能听哦(升级为会员免费)'
-    //   this.nolockTestCheckShow = true
-    // },
-    // radioMouseEnter (e, item, index) {
-    //   // 课程不免费
-    //   if (item.money !== 0) {
-    //     // 是否会员
-    //     if (parseInt(this.isVip) === 1) {
-    //       if (item.money_type === 'CNY') {
-    //         if (item.free_for_member === false) {
-    //           // 会员不免费
-    //           if (index <= this.number) {
-    //             $('.gradient-layer-play', $(e.target)).show()
-    //           }
-    //           $('.buy-cny', $(e.target)).show()
-    //         } else {
-    //           $('.gradient-layer-play', $(e.target)).show()
-    //         }
-    //       } else {
-    //         $('.gradient-layer-play', $(e.target)).show()
-    //       }
-    //     } else {
-    //       // 不是会员
-    //       if (index > this.number) {
-    //         $('.gradient-layer-play-no', $(e.target)).show()
-    //       } else {
-    //         $('.gradient-layer-play', $(e.target)).show()
-    //       }
-    //     }
-    //   } else {
-    //     $('.gradient-layer-play', $(e.target)).show()
-    //   }
-    // },
-    // radioMouseLeave (e) {
-    //   if ($('.gradient-layer-play i', $(e.target)).hasClass('play')) {
-    //     $('.gradient-layer-play', $(e.target)).hide()
-    //   }
-    // }
   }
 }
 </script>
@@ -326,15 +276,15 @@ export default {
       margin: 0 auto;
       .author-img {
         position: relative;
-        width: 110px;
-        height: 110px;
+        width: 108px;
+        height: 108px;
         margin-right: 30px;
         border-radius: 50%;
         img {
           width: 100%;
           height: 100%;
           border-radius: 50%;
-          border: 5px solid rgb(4, 116, 185);
+          border: 5px solid #EEF2F3;
         }
         .vip-img {
           position: absolute;
@@ -557,182 +507,60 @@ export default {
             background-size: cover;
           }
         }
-        // 电台
-        // .describe-content {
-        //   width: 100%;
-        //   .describe-lists {
-        //     width: 100%;
-        //     ul {
-        //       display: flex;
-        //       justify-content: space-between;
-        //       flex-wrap: wrap;
-        //       width: 100%;
-        //       li {
-        //         width: 50%;
-        //         margin-bottom: 30px;
-        //         .item {
-        //           width: 100%;
-        //           display: flex;
-        //           justify-content: space-between;
-        //         }
-        //         .item-img {
-        //           position: relative;
-        //           width:170px;
-        //           height:90px;
-        //           border-radius:5px;
-        //           margin-top: 5px;
-        //           img {
-        //             width: 100%;
-        //             height: 100%;
-        //             border-radius:5px;
-        //           }
-        //           .gradient-layer-play {
-        //             cursor: pointer;
-        //             display: inline-block;
-        //             position: absolute;
-        //             right: 6px;
-        //             bottom: 6px;
-        //             background: rgba(18, 18, 18, .415);
-        //             border-radius: 50%;
-        //             .play {
-        //               width: 24px;
-        //               height: 24px;
-        //               background-image: url('../../../../../static/images/radionoPlay.svg');
-        //               background-repeat: no-repeat;
-        //               background-size: cover;
-        //               display: inline-block;
-        //             }
-        //             .pause {
-        //               width: 24px;
-        //               height: 24px;
-        //               background-image: url('../../../../../static/images/radioPlay.svg');
-        //               background-repeat: no-repeat;
-        //               background-size: cover;
-        //               display: inline-block;
-        //             }
-        //           }
-        //           .gradient-layer-play-no {
-        //             width: 170px;
-        //             height: 90px;
-        //             position: absolute;
-        //             top: 0;
-        //             text-align:  center;
-        //             z-index: 2;
-        //             .play-no {
-        //               width: 100%;
-        //               height: 100%;
-        //               background-image: url('../../../../../static/images/learn/learn-course-little-bg.png');
-        //               background-repeat: no-repeat;
-        //               background-size: cover;
-        //               display: inline-block;
-        //             }
-        //           }
-        //           .buy-cny {
-        //             width: 170px;
-        //             height: 90px;
-        //             position: absolute;
-        //             top: 0;
-        //             text-align:  center;
-        //             z-index: 2;
-        //             .play-no {
-        //               width: 100%;
-        //               height: 100%;
-        //               background-image: url('../../../../../static/images/learn/learn-course-little-bg.png');
-        //               background-repeat: no-repeat;
-        //               background-size: cover;
-        //               display: inline-block;
-        //             }
-        //           }
-        //         }
-        //         .right-describe {
-        //           padding: 10px 0 10px 10px;
-        //           width: 280px;
-        //           .name {
-        //             cursor: pointer;
-        //             width: 120px;
-        //             overflow: hidden;
-        //             text-overflow:ellipsis;
-        //             white-space:nowrap;
-        //             font-size:14px;
-        //             font-family:PingFang-SC-Medium;
-        //             font-weight:500;
-        //             color:rgba(51,51,51,1);
-        //             line-height:20px;
-        //           }
-        //           .num {
-        //             display: flex;
-        //             align-items: center;
-        //             font-size:12px;
-        //             font-family:PingFang-SC-Medium;
-        //             font-weight:500;
-        //             // color:rgba(245,166,35,1);
-        //             color: #999999FF;
-        //             line-height:18px;
-        //             padding: 5px 0 25px;
-        //             span:nth-child(1) {
-        //               display: flex;
-        //               align-items: center;
-        //               margin-right: 20px;
-        //               i {
-        //                 display: inline-block;
-        //                 width: 13px;
-        //                 height: 10px;
-        //                 background: url('../../../../../static/images/listening.png') no-repeat center;
-        //                 background-size: cover;
-        //                 margin-right: 8px;
-        //               }
-        //             }
-        //           }
-        //           .author {
-        //             font-size:12px;
-        //             font-family:PingFang-SC-Medium;
-        //             font-weight:500;
-        //             color:rgba(153,153,153,1);
-        //             line-height:17px;
-        //             span:nth-child(2) {
-        //               display: inline-block;
-        //               width: 160px;
-        //               overflow: hidden;
-        //               text-overflow:ellipsis;
-        //               white-space:nowrap;
-        //             }
-        //           }
-        //         }
-        //       }
-        //     }
-        //   }
-        //   // 点击加载更多
-        //   .up-all {
-        //     cursor: pointer;
-        //     width: 100%;
-        //     background: rgba(221, 221, 221, .1);
-        //     text-align: center;
-        //     line-height: 42px;
-        //     font-size:14px;
-        //     font-family:PingFangSC-Semibold;
-        //     font-weight:600;
-        //     color:rgba(42,159,228,1);
-        //     display: flex;
-        //     justify-content: center;
-        //     align-items: center;
-        //     i {
-        //       display: inline-block;
-        //       width: 10px;
-        //       height: 6px;
-        //       background: url('../../../../../static/images/upAll.svg') no-repeat center;
-        //       background-size: cover;
-        //       margin-left: 10px;
-        //     }
-        //     .active {
-        //       display: inline-block;
-        //       width: 10px;
-        //       height: 6px;
-        //       background: url('../../../../../static/images/upAllActive.svg') no-repeat center;
-        //       background-size: cover;
-        //       margin-left: 10px;
-        //     }
-        //   }
-        // }
+      }
+      // 点击加载更多
+      .up-all {
+        cursor: pointer;
+        width: 100%;
+        background: rgba(221, 221, 221, 0.1);
+        text-align: center;
+        line-height: 42px;
+        font-size: 14px;
+        font-family: PingFangSC-Semibold;
+        font-weight: 600;
+        color: rgba(42, 159, 228, 1);
+        span {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        i {
+          display: inline-block;
+          width: 10px;
+          height: 6px;
+          background: url("../../../../../static/images/upAll.svg") no-repeat center;
+          background-size: cover;
+          margin-left: 10px;
+        }
+        .active {
+          display: inline-block;
+          width: 10px;
+          height: 6px;
+          background: url("../../../../../static/images/upAllActive.svg") no-repeat
+            center;
+          background-size: cover;
+          margin-left: 10px;
+        }
+      }
+      // 没电台
+      .author-describe-content {
+        width: 100%;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        i {
+          display: inline-block;
+          width: 300px;
+          height: 160px;
+          background: url('../../../../../static/images/noradios.png') no-repeat center;
+          background-size: cover;
+        }
+        span {
+          padding-top: 30px;
+          font-size: 24px;
+          color: #b8b3b2;
+        }
       }
     }
   }
