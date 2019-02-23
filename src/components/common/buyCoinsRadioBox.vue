@@ -52,17 +52,28 @@
   </div>
 </template>
 <script>
+import Bus from '../../bus'
 export default {
-  props: ['itemRadio', 'showBuyCoinsBox'],
+  // props: ['itemRadio', 'showBuyCoinsBox'],
   data () {
     return {
+      itemRadio: {},
+      showBuyCoinsBox: false,
       contentShow: true,
       successShow: false
     }
   },
+  created () {
+    Bus.$on('showBuyCoinsRadio', (radio) => {
+      this.showBuyCoinsBox = true
+      console.log('当前要购买的金币radio', radio)
+      this.itemRadio = radio
+    })
+  },
   methods: {
     closeButton () {
-      this.$emit('hidBuyCoinsBox')
+      // this.$emit('hidBuyCoinsBox')
+      this.showBuyCoinsBox = false
     },
     clickPay () {
       this.contentShow = false
@@ -70,6 +81,7 @@ export default {
       setTimeout(() => {
         this.successShow = false
         this.$emit('hidBuyCoinsBox')
+        this.showBuyCoinsBox = false
         this.contentShow = true
       }, 1000)
     }

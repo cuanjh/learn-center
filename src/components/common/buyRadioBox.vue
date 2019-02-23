@@ -13,7 +13,7 @@
           <div class="course">
             <p>{{itemRadio.title}}</p>
             <div class="price">
-              <p>课程共计 {{cardsCount}} 课</p>
+              <p>课程共计 50 课</p>
               <p class="yuan">
                 <span>{{itemRadio.money}}</span>
                 <span>元/年</span>
@@ -84,15 +84,24 @@
   </div>
 </template>
 <script>
-
+import bus from '../../bus'
 export default {
-  props: ['showBuyBox', 'itemRadio', 'cardsCount'],
+  // props: ['showBuyBox', 'itemRadio', 'cardsCount'],
   data () {
     return {
+      itemRadio: {},
+      showBuyBox: false,
       contentShow: true,
       activeButton: false,
       successBox: false
     }
+  },
+  created () {
+    bus.$on('showBuyRadio', (radio, cardsCount) => {
+      console.log('当前要购买的人民币radio', radio, cardsCount)
+      this.itemRadio = radio
+      this.showBuyBox = true
+    })
   },
   mounted () {
   },

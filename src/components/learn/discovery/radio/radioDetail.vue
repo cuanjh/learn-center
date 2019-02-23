@@ -157,6 +157,7 @@
         <students-listening :studentsListening="studentsListening"></students-listening>
       </div>
       <!-- <bounceBox @hidden="hiddenShow" v-show="isShowBox"></bounceBox> -->
+      <buy-coins-radio-box @hidBuyCoinsBox="hiddenBuyCoinsBox"/>
     </div>
   </div>
 </template>
@@ -169,6 +170,7 @@ import { formatDate } from '../../../../tool/date.js'
 import VipPrompt from '../../../common/vipPrompt.vue'
 import RadioDetailOther from './radioDetailOther.vue'
 import StudentsListening from './studentsListening.vue'
+import BuyCoinsRadioBox from '../../../common/buyCoinsRadioBox.vue'
 
 export default {
   data () {
@@ -184,6 +186,7 @@ export default {
     }
   },
   components: {
+    BuyCoinsRadioBox,
     RadioDetailOther,
     VipPrompt,
     StudentsListening,
@@ -226,7 +229,7 @@ export default {
   methods: {
     ...mapActions({
       postRadioDetail: 'course/postRadioDetail', // 电台详情
-      postPurchaseCourse: 'course/postPurchaseCourse', // 订阅课程
+      postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
       remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
       getOtherRecommends: 'getOtherRecommends' // 其他人也在听
@@ -329,15 +332,20 @@ export default {
     // 点击订阅
     subscibe () {
       console.log('courseInfo', this.courseInfo)
-      if (this.courseInfo.money !== 0) { // 收费
+      let radio = this.courseInfo
+      console.log('组件中的radio', radio)
+      if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
-          if (this.courseInfo.money_type !== 'CNY') { // 不是会员金币收费课程
+          if (radio.money_type !== 'CNY') { // 不是会员金币收费课程
+            // alert('不是会员的金币收费')
+            Bus.$emit('showBuyCoinsRadio', radio)
           } else { // 不是会员人民币收费课程
+            alert('不是会员人民币收费')
           }
         } else { // 是会员
-          if (this.courseInfo.money_type === 'CNY') {
-            if (this.courseInfo.free_for_member === 0) {
-              console.log('这是会员不免费课程')
+          if (radio.money_type === 'CNY') {
+            if (radio.free_for_member === 0) {
+              alert('这是会员不免费课程')
             }
           }
         }
@@ -354,6 +362,10 @@ export default {
       //   this.loadData()
       //   console.log('this.subscibenoInfo', this.subscibenoInfo)
       // })
+    },
+    // 关闭金币支付弹框
+    hiddenBuyCoinsBox () {
+      this.initSubscibe()
     }
   }
 }
@@ -379,7 +391,7 @@ export default {
   color: #2A9FE4;
 }
 .radio-wrap {
-  background: #ecf4f7;
+  /* background: #ecf4f7; */
   width: 100%;
   min-height: 1000px;
 }
