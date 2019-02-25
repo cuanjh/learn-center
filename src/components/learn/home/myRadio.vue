@@ -207,7 +207,7 @@ export default {
               background-image: url('../../../../static/images/learnIndex/icon-more.svg');
               background-repeat: no-repeat;
               background-size: cover;
-              margin-top: 15px;
+              margin-top: 14px;
             }
           }
         }

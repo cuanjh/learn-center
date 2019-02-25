@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920px" height="73px" viewBox="0 0 1920 73" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>底部播放@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="1.85829118%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#0089D1" offset="0%"></stop>
+            <stop stop-color="#28BDFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.8" opacity="0.95">
+        <g id="电台详情" transform="translate(0.000000, -2204.000000)" fill="url(#linearGradient-1)">
+            <g id="Group" transform="translate(0.000000, 2204.000000)">
+                <g id="底部播放">
+                    <g id="分组-7">
+                        <path d="M0,17 L1484,17 L1491.10012,4.92979873 C1492.89682,1.87541178 1496.17582,-1.20383863e-12 1499.71946,-1.12265752e-12 L1524.28054,-1.06759046e-12 C1527.82418,-1.15007348e-12 1531.10318,1.87541178 1532.89988,4.92979873 L1540,17 L1920,17 L1920,73 L0,73 L0,17 Z" id="Rectangle-17"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

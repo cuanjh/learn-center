@@ -5,7 +5,7 @@
       <p :class="['user-course-wrap-title', {'active': !selTab}]" @click="selTab = !selTab">电台课程</p>
     </div>
     <div class='user-course-item-wrap' v-show="selTab" :class="{ 'userifloading': judgeLoading  }">
-      <div class='user-course-item' v-for='(item, index) in courseRander' :key="index">
+      <div class='user-course-item' v-for='(item, index) in courseRander' :key="item.code + index">
         <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
           <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
           <ol>
@@ -44,41 +44,43 @@
       </div>
     </div>
     <div class='user-radio-course-item-wrap' v-show="!selTab">
-      <div class='user-radio-course-item' v-for='(item, index) in radioCourses' :key="index">
-        <div class="user-radio-course-item-box" @mouseleave="mouseleaveControl($event)">
-          <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
-          <div class="play">
-            <i></i>
-          </div>
-          <ol>
-            <router-link tag="li" :to="{path: '/app/discovery/radio-detail/' + item.code}"><span>{{item.module_name}}</span></router-link>
-            <li>
-              <span>作者：{{item.author_info.nickname}}</span>
-              <span>
-                <i></i>
-                {{item.buy_num}}
-              </span>
-              <span v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' + item.money : $t('coins') + ' ' + item.money"></span>
-            </li>
-          </ol>
-          <div class="user-control">
-            <div class="user-control-btn" @mouseenter="mouseoverControl($event)">
-              <span></span>
-              <span></span>
-              <span></span>
+      <ul>
+        <li class='user-radio-course-item' v-for='(item, index) in radioCourses' :key="item.code + index">
+          <div class="user-radio-course-item-box" @mouseleave="mouseleaveControl($event)">
+            <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
+            <div class="play">
+              <i></i>
             </div>
-            <div class="user-control-sel" style="display:none">
-              <ul>
-                <!-- <li>置顶</li> -->
-                <li @click="deleteCourse(item.code)">取消订阅</li>
-              </ul>
-              <div class="triangle_border_down">
+            <ol>
+              <router-link tag="li" :to="{path: '/app/discovery/radio-detail/' + item.code}"><span>{{item.module_name}}</span></router-link>
+              <li>
+                <span>作者：{{item.author_info.nickname}}</span>
+                <span>
+                  <i></i>
+                  {{item.buy_num}}
+                </span>
+                <span v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' + item.money : $t('coins') + ' ' + item.money"></span>
+              </li>
+            </ol>
+            <div class="user-control">
+              <div class="user-control-btn" @mouseenter="mouseoverControl($event)">
                 <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="user-control-sel" style="display:none">
+                <ul>
+                  <!-- <li>置顶</li> -->
+                  <li @click="deleteCourse(item.code)">取消订阅</li>
+                </ul>
+                <div class="triangle_border_down">
+                  <span></span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </li>
+      </ul>
       <div class='user-course-nocourse' v-show="isShowRadioCourse">
         <dl>
           <dt></dt>
@@ -284,12 +286,17 @@ export default {
   background-color: #ffffff;
   margin-top: 16px;
   border-radius: 5px;
-  padding: 15px 21px;
+  padding: 15px 21px 0px;
 }
+
 .user-radio-course-item-wrap .user-radio-course-item {
   height: 100px;
   margin: 20px 0;
   border-bottom: 1px solid #EEF2F3;
+}
+
+.user-radio-course-item-wrap .user-radio-course-item:last-child{
+  border-bottom: 0px solid #EEF2F3 !important;
 }
 
 .user-radio-course-item-box {
@@ -299,7 +306,6 @@ export default {
   -webkit-box-align: start;
   -ms-flex-align: start;
   align-items: flex-start;
-  background-color: #ffffff;
 }
 
 .user-radio-course-item-box img {

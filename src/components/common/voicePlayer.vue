@@ -558,7 +558,9 @@ export default {
     transition: all .2s;
     // background-color: rgba(0, 57, 91, .8);
     background:linear-gradient(90deg,rgba(0,145,209,1) 0%,rgba(65,196,255,1) 100%);
-    opacity:0.95;
+    // background-image: url(./../../../static/images/learnIndex/icon-voice-player-bg.svg);
+    // background-repeat: no-repeat;
+    // background-size: cover;
     z-index: 999;
     .voice-player-hand {
       position: absolute;

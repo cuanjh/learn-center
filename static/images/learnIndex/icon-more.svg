@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="9px" height="10px" viewBox="0 0 9 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="7px" height="9px" viewBox="0 0 7 9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
-    <title>默认</title>
+    <title>全部电台</title>
     <desc>Created with Sketch.</desc>
-    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
-        <g id="iPhone-SE" transform="translate(-365.000000, -152.000000)" fill-rule="nonzero" stroke="#B2C0C9" stroke-width="0.891452">
-            <g id="默认" transform="translate(365.595549, 153.000000)">
-                <path d="M-2,2 L1.58044975,6.09749658 C1.78292224,6.32920779 2.13489767,6.35291045 2.36660887,6.15043796 C2.38542308,6.13399784 2.40311013,6.11631079 2.41955025,6.09749658 L6,2" id="直线-3" transform="translate(2.000000, 4.000000) rotate(-90.000000) translate(-2.000000, -4.000000) "></path>
-                <path d="M1,2 L4.58044975,6.09749658 C4.78292224,6.32920779 5.13489767,6.35291045 5.36660887,6.15043796 C5.38542308,6.13399784 5.40311013,6.11631079 5.41955025,6.09749658 L9,2" id="直线-3-copy" transform="translate(5.000000, 4.000000) rotate(-90.000000) translate(-5.000000, -4.000000) "></path>
+    <g id="切图-+-杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="iPhone-SE" transform="translate(-326.000000, -392.000000)" fill-rule="nonzero" stroke="#3C5B6F" stroke-width="0.8">
+            <g id="全部电台" transform="translate(326.000000, 393.000000)">
+                <path d="M-1.83286879,1.83286879 L1.23794783,5.11191275 C1.4267054,5.31346967 1.7431178,5.3238456 1.94467473,5.13508804 C1.952651,5.12761827 1.96038025,5.11988903 1.96785002,5.11191275 L5.03866664,1.83286879" id="直线-3" transform="translate(1.602899, 3.435768) rotate(-90.000000) translate(-1.602899, -3.435768) "></path>
+                <path d="M1.16713121,1.83286879 L4.23794783,5.11191275 C4.4267054,5.31346967 4.7431178,5.3238456 4.94467473,5.13508804 C4.952651,5.12761827 4.96038025,5.11988903 4.96785002,5.11191275 L8.03866664,1.83286879" id="直线-3-copy" transform="translate(4.602899, 3.435768) rotate(-90.000000) translate(-4.602899, -3.435768) "></path>
             </g>
         </g>
     </g>
