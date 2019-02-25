@@ -1,22 +1,22 @@
 <template>
   <div class="radio-classification">
-    <div class="nav">
-      <router-link :to="{path: '/app/index'}">
-        <span>我的学习账户</span>
-      </router-link>
-      >
-      <router-link :to="{path: '/app/discovery/radio-home'}">
-        <span>电台</span>
-      </router-link>
-      >
-      <!-- <router-link :to="{path: '/app/discovery/home'}">
-        <span>以前的电台首页</span>
-      </router-link> -->
-      <div class="nav-current">
-        分类
-      </div>
-    </div>
     <div class="classification">
+      <div class="nav">
+        <router-link :to="{path: '/app/index'}">
+          <span>我的学习账户</span>
+        </router-link>
+        >
+        <router-link :to="{path: '/app/discovery/radio-home'}">
+          <span>电台</span>
+        </router-link>
+        >
+        <!-- <router-link :to="{path: '/app/discovery/home'}">
+          <span>以前的电台首页</span>
+        </router-link> -->
+        <div class="nav-current">
+          分类
+        </div>
+      </div>
       <!-- 左边导航 -->
       <div class="radio-nav">
         <div class="nav-list">
@@ -85,7 +85,7 @@
             <!-- 点击加载更多 -->
             <div class="load-more">
               <span v-if="showPage === -1">已显示全部内容</span>
-              <span @click="loadMore()" v-else>点击加载更多</span>
+              <!-- <span @click="loadMore()" v-else>点击加载更多</span> -->
             </div>
           </div>
           <div class="no-content" v-show="lists.length === 0">
@@ -136,6 +136,7 @@ export default {
     })
     this.getLangCodes()
     console.log('selState', this.selState)
+    window.addEventListener('scroll', this.handleScroll())
   },
   computed: {
     ...mapState({
@@ -212,6 +213,38 @@ export default {
         }
       })
     },
+    handleScroll () {
+      let before = $(window).scrollTop() // 判断滚动条向下滚动
+      $(window).scroll(() => {
+        let after = $(window).scrollTop()
+        if (before < after) {
+          before = after
+          if (this.showPage === -1) {
+            return false
+          }
+          if (Object.keys(this.selState).length === 0) {
+            this.selState = this.langCodesSel[0]
+          }
+          let lanCode = this.selState['lan_code']
+          this.page++
+          let params = {
+            menu_type: this.menu_type,
+            menu_id: this.menu_id,
+            page: this.page,
+            preferred_lan_code: lanCode,
+            sort: this.onActive
+          }
+          console.log('点击加载更多params', params)
+          this.getRadioList(params).then((res) => {
+            console.log('点击加载更多', res)
+            this.lists = this.lists.concat(res.data.radios)
+            if (res.data.page === -1) {
+              this.showPage = -1
+            }
+          })
+        }
+      })
+    },
     // 点击播放电台
     loadRadioList (e, radio) {
       console.log('e', e)
@@ -285,13 +318,16 @@ a {
   width: 1200px;
   margin: 0px auto 144px;
   .nav {
-    margin: 20px 0;
-    display: inline-block;
+    position: fixed;
+    background-color: #f6f8f9;
+    width: 100%;
+    height: 60px;
     font-size:14px;
     font-family:PingFang-SC-Medium;
     font-weight:500;
     color:rgba(60,91,111,1);
-    line-height:20px;
+    line-height:60px;
+    z-index: 99;
     a {
       text-decoration:none;
       span {
@@ -304,14 +340,16 @@ a {
     }
   }
   .classification {
-    margin-top: 20px;
+    // margin-top: 20px;
     width: 100%;
     // 左边导航
     .radio-nav {
+      position: fixed;
       display: inline-block;
       width: 220px;
-      background: #ffffff;
+      margin-top: 60px;
       .nav-list {
+        background: #ffffff;
         width: 100%;
         height: 100%;
         ul {
@@ -363,10 +401,11 @@ a {
     // 右边内容区
     .radio-content {
       display: inline-block;
-      margin-left: 14px;
+      margin-left: 234px;
       width: 960px;
       padding-bottom: 50px;
       background: #ffffff;
+      margin-top: 60px;
       .radio-in-content {
         width: 100%;
         height: 100%;
@@ -450,8 +489,8 @@ a {
         // 下面的内容区
         .describe-content {
           padding: 0px 43px 19px;
-          width: 104%;
-          max-height: 860px;
+          width: 100%;
+          min-height: 260px;
           overflow-y: auto;
           .describe-lists {
             width: 100%;
