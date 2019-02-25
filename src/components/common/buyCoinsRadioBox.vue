@@ -52,12 +52,15 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 import Bus from '../../bus'
 export default {
   // props: ['itemRadio', 'showBuyCoinsBox'],
   data () {
     return {
       itemRadio: {},
+      itemRadioDetail: {},
+      subscibenoInfo: {},
       showBuyCoinsBox: false,
       contentShow: true,
       successShow: false
@@ -69,19 +72,36 @@ export default {
       console.log('当前要购买的金币radio', radio)
       this.itemRadio = radio
     })
+    Bus.$on('hiddenBuyCoinsBox', (radioDetail) => {
+      console.log('组件传过来的radio的详情页面', radioDetail)
+      this.itemRadioDetail = radioDetail
+      this.subscibenoInfo = radioDetail.relation
+    })
   },
   methods: {
+    ...mapActions({
+      postPurchaseCourse: 'course/postPurchaseCourse' // 金币订阅课程
+    }),
+    // 关闭按钮
     closeButton () {
-      // this.$emit('hidBuyCoinsBox')
       this.showBuyCoinsBox = false
     },
+    // 初始化订阅的状态
+    async initSubscibe (radioDetail) {
+      await this.postPurchaseCourse({code: radioDetail.course_info.code}).then(res => {
+        console.log('订阅课程返回', res)
+        // purchased_state状态值显示隐藏 0未购买 1已购买 隐藏 2购买已删除
+        this.subscibenoInfo.purchased_state = 1
+      })
+    },
+    // 立即订阅
     clickPay () {
       this.contentShow = false
       this.successShow = true
       setTimeout(() => {
         this.successShow = false
-        this.$emit('hidBuyCoinsBox')
         this.showBuyCoinsBox = false
+        this.initSubscibe(this.itemRadioDetail)
         this.contentShow = true
       }, 1000)
     }

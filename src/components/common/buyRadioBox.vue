@@ -86,7 +86,6 @@
 <script>
 import bus from '../../bus'
 export default {
-  // props: ['showBuyBox', 'itemRadio', 'cardsCount'],
   data () {
     return {
       itemRadio: {},
@@ -113,10 +112,10 @@ export default {
       this.activeButton = false
     },
     closeButton () {
-      this.$emit('hiddenBuyRadioBox')
+      this.showBuyBox = false
     },
     know () {
-      this.$emit('hiddenBuyRadioBox')
+      this.showBuyBox = false
     }
   }
 }

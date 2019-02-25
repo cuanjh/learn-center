@@ -165,10 +165,10 @@
       </div>
     </div>
     <!-- 人民币付费课程弹框 -->
-    <buy-radio-box @hiddenBuyRadioBox="hiddenBuyBox">
+    <buy-radio-box>
     </buy-radio-box>
     <!-- 金币付费课程弹框 -->
-    <buy-coins-radio-box @hidBuyCoinsBox="hiddenBuyCoinsBox"/>
+    <buy-coins-radio-box/>
   </div>
 </template>
 
@@ -205,8 +205,8 @@ export default {
       isHand: true,
       sndctr: SoundCtrl,
       itemRadio: {}, // 当前的电台
-      cardsCount: 0,
-      subscibenoInfo: {} // 订阅状态
+      radioDetail: {}, // 当前电台的详情
+      cardsCount: 0
       // showBuyBox: false // 人民币购买的弹框
       // showBuyCoinsBox: false // 金币购买弹框
     }
@@ -237,6 +237,7 @@ export default {
       console.log('params', params)
       this.postRadioDetail(params.code).then((res) => {
         this.subscibenoInfo = res.result.relation
+        this.radioDetail = res.result
         console.log('subscibenoInfo', this.subscibenoInfo)
       })
       this.getRadioCardList(params).then((res) => {
@@ -286,24 +287,6 @@ export default {
       postRadioDetail: 'course/postRadioDetail', // 电台详情
       getRadioCardList: 'course/getRadioCardList' // 电台列表
     }),
-    // 关闭支付弹框
-    hiddenBuyBox () {
-      this.showBuyBox = false
-    },
-    // 关闭金币支付弹框
-    hiddenBuyCoinsBox () {
-      // 支付金币之后请求后端接口
-      this.initSubscibe()
-    },
-    // 金币订阅课程初始化
-    async initSubscibe () {
-      await this.postPurchaseCourse({code: this.itemRadio.code}).then(res => {
-        console.log('订阅课程返回', res)
-        // purchased_state状态值显示隐藏 0未购买 1已购买 隐藏 2购买已删除
-        this.subscibenoInfo.purchased_state = 1
-        console.log('this.subscibenoInfo', this.subscibenoInfo)
-      })
-    },
     toParseTime (data) {
       let m = parseInt(data / 60)
       if (m < 10) {
@@ -389,7 +372,6 @@ export default {
     },
     // 点击播放
     goPlay (index) {
-      // this.judgeCondition(index)
       let radio = this.itemRadio
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
@@ -399,6 +381,7 @@ export default {
                 alert('不是会员金币收费课程')
                 index = 0
                 Bus.$emit('showBuyCoinsRadio', radio)
+                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
               }
             }
           } else { // 不是会员 人民币收费课程
@@ -427,47 +410,6 @@ export default {
       }
       this.curIndex = index
       this.playRadio()
-    },
-    // 是否收费课程点击播放列表判断条件
-    judgeCondition (index) {
-      let radio = this.itemRadio
-      if (radio.money !== 0) { // 收费
-        if (this.isVip !== 1) { // 不是会员
-          if (radio.money_type !== 'CNY') { // 不是会员金币收费课程
-            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-              if (index > 2) {
-                alert('不是会员金币收费课程')
-                this.curIndex = 0
-                this.playRadio()
-                Bus.$emit('showBuyCoinsRadio', radio)
-              }
-            }
-          } else { // 不是会员人民币收费课程
-            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-              if (index > 2) {
-                alert('不是会员人民币收费课程')
-                this.curIndex = 0
-                this.playRadio()
-                Bus.$emit('showBuyRadio', radio, this.cardsCount)
-              }
-            }
-          }
-        } else { // 是会员
-          if (radio.money_type === 'CNY') {
-            if (radio.free_for_member === false) {
-              console.log('这是会员不免费课程')
-              if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-                if (index > 2) {
-                  alert('后面课程会员不免费需要收费')
-                  this.curIndex = 0
-                  this.playRadio()
-                  Bus.$emit('showBuyRadio', radio, this.cardsCount)
-                }
-              }
-            }
-          }
-        }
-      }
     },
     // 收费课程自动播放列表判断条件
     nextJudgeCondition (index) {

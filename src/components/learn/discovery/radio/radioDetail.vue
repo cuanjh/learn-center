@@ -157,7 +157,7 @@
         <students-listening :studentsListening="studentsListening"></students-listening>
       </div>
       <!-- <bounceBox @hidden="hiddenShow" v-show="isShowBox"></bounceBox> -->
-      <buy-coins-radio-box @hidBuyCoinsBox="hiddenBuyCoinsBox"/>
+      <!-- <buy-coins-radio-box @hidBuyCoinsBox="hiddenBuyCoinsBox"/> -->
     </div>
   </div>
 </template>
@@ -170,12 +170,13 @@ import { formatDate } from '../../../../tool/date.js'
 import VipPrompt from '../../../common/vipPrompt.vue'
 import RadioDetailOther from './radioDetailOther.vue'
 import StudentsListening from './studentsListening.vue'
-import BuyCoinsRadioBox from '../../../common/buyCoinsRadioBox.vue'
+// import BuyCoinsRadioBox from '../../../common/buyCoinsRadioBox.vue'
 
 export default {
   data () {
     return {
       isShowBox: false,
+      radioDetail: {},
       courseInfo: {},
       authorInfo: {},
       cards: [],
@@ -186,7 +187,7 @@ export default {
     }
   },
   components: {
-    BuyCoinsRadioBox,
+    // BuyCoinsRadioBox,
     RadioDetailOther,
     VipPrompt,
     StudentsListening,
@@ -229,7 +230,7 @@ export default {
   methods: {
     ...mapActions({
       postRadioDetail: 'course/postRadioDetail', // 电台详情
-      postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
+      // postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
       remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
       getOtherRecommends: 'getOtherRecommends' // 其他人也在听
@@ -288,25 +289,13 @@ export default {
       let code = _this.$route.params.code
       await _this.postRadioDetail(code).then((res) => {
         console.log('电台详情返回', res)
+        _this.radioDetail = res.result
         _this.courseInfo = res.result.course_info
         _this.authorInfo = res.result.course_info.author_info
         _this.cards = res.result.course_info.cards
         _this.comments = res.result.course_info.comments
         _this.otherRadios = res.result.realated_courses
         _this.subscibenoInfo = res.result.relation
-      })
-    },
-    // 订阅初始化
-    async initSubscibe () {
-      await this.postPurchaseCourse({code: this.courseInfo.code}).then(res => {
-        console.log('订阅课程返回', res)
-        // purchased_state状态值显示隐藏
-        // 0未购买
-        // 1已购买 隐藏
-        // 2购买已删除
-        this.subscibenoInfo.purchased_state = 1
-        this.loadData()
-        console.log('this.subscibenoInfo', this.subscibenoInfo)
       })
     },
     // 立即收听
@@ -336,36 +325,32 @@ export default {
       console.log('组件中的radio', radio)
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
-          if (radio.money_type !== 'CNY') { // 不是会员金币收费课程
-            // alert('不是会员的金币收费')
-            Bus.$emit('showBuyCoinsRadio', radio)
-          } else { // 不是会员人民币收费课程
-            alert('不是会员人民币收费')
+          if (radio.money_type !== 'CNY') { // 不是会员 金币收费课程
+            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+              alert('不是会员 金币收费')
+              Bus.$emit('showBuyCoinsRadio', radio)
+              Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+            }
+          } else { // 不是会员 人民币收费课程
+            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+              alert('不是会员 人民币收费课程')
+              Bus.$emit('showBuyRadio', radio, radio.cards_count)
+            }
           }
         } else { // 是会员
           if (radio.money_type === 'CNY') {
-            if (radio.free_for_member === 0) {
-              alert('这是会员不免费课程')
+            if (radio.free_for_member === false) {
+              console.log('这是会员不免费课程')
+              if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+                alert('是会员 人民币收费课程')
+                Bus.$emit('showBuyRadio', radio, radio.cards_count)
+              }
             }
           }
         }
       } else { // 免费
-        this.initSubscibe()
+        this.subscibenoInfo.purchased_state = 1
       }
-      // this.postPurchaseCourse({code: this.courseInfo.code}).then(res => {
-      //   console.log('订阅课程返回', res)
-      //   // purchased_state状态值显示隐藏
-      //   // 0未购买
-      //   // 1已购买 隐藏
-      //   // 2购买已删除
-      //   this.subscibenoInfo.purchased_state = 1
-      //   this.loadData()
-      //   console.log('this.subscibenoInfo', this.subscibenoInfo)
-      // })
-    },
-    // 关闭金币支付弹框
-    hiddenBuyCoinsBox () {
-      this.initSubscibe()
     }
   }
 }
