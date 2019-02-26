@@ -81,7 +81,7 @@ export default {
 .book-nation li {
   width: 318px;
   padding: 25px 0;
-  border-bottom: 1px solid #EBEBEB;
+  // border-bottom: 1px solid #EBEBEB;
   cursor: pointer;
 }
 .book-nation li .nation-li {
