@@ -306,7 +306,6 @@ export default {
     next () {
       this.curIndex++
       let radio = this.itemRadio
-      // this.nextJudgeCondition(this.curIndex)
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
           if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
@@ -413,85 +412,8 @@ export default {
         Bus.$emit('showBuyCoinsRadio', radio)
         Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
       }
-      /* if (radio.money !== 0) { // 收费
-        if (this.isVip !== 1) { // 不是会员
-          if (radio.money_type !== 'CNY') { // 不是会员 金币收费课程
-            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-              if (index > 2) {
-                alert('不是会员金币收费课程')
-                index = 0
-                Bus.$emit('showBuyCoinsRadio', radio)
-                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-              }
-            }
-          } else { // 不是会员 人民币收费课程
-            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-              if (index > 2) {
-                alert('不是会员人民币收费课程')
-                index = 0
-                Bus.$emit('showBuyRadio', radio, this.cardsCount)
-              }
-            }
-          }
-        } else { // 是会员
-          if (radio.money_type === 'CNY') {
-            if (radio.free_for_member === false || radio.free_for_member === 0) {
-              console.log('这是会员不免费课程')
-              if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-                if (index > 2) {
-                  alert('后面课程会员不免费需要收费')
-                  index = 0
-                  Bus.$emit('showBuyRadio', radio, this.cardsCount)
-                }
-              }
-            }
-          }
-        }
-      } */
       this.curIndex = index
       this.playRadio()
-    },
-    // 收费课程自动播放列表判断条件
-    nextJudgeCondition (index) {
-      let radio = this.itemRadio
-      if (radio.money !== 0) { // 收费
-        if (this.isVip !== 1) { // 不是会员
-          if (radio.money_type !== 'CNY') { // 不是会员金币收费课程
-            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-              if (index > 2) {
-                alert('不是会员金币收费课程')
-                this.curIndex = 0
-                this.playRadio()
-                Bus.$emit('showBuyCoinsRadio', radio)
-                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-              }
-            }
-          } else { // 不是会员人民币收费课程
-            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-              if (index > 2) {
-                alert('不是会员人民币收费课程')
-                this.curIndex = 0
-                this.playRadio()
-                Bus.$emit('showBuyRadio', radio, this.cardsCount)
-              }
-            }
-          }
-        } else { // 是会员
-          if (radio.money_type === 'CNY') {
-            if (radio.free_for_member === false) {
-              console.log('这是会员不免费课程')
-              if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-                if (index > 2) {
-                  alert('后面课程会员不免费需要收费')
-                  this.curIndex = 0
-                  this.playRadio()
-                  Bus.$emit('showBuyRadio', radio, this.cardsCount)
-                }
-              }
-            }
-          }
-        }
-      }
     },
     loopPlay () {
       this.isLoop = !this.isLoop
