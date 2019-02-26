@@ -172,7 +172,7 @@ export default {
           display: inline-block;
           width: 12px;
           height: 12px;
-          background: url("../../../static/images/follow.svg") no-repeat center;
+          background: url("../../../static/images/authorFllow.svg") no-repeat center;
           background-size: cover;
           margin-right: 5px;
         }

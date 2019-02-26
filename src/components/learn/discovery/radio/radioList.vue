@@ -25,7 +25,7 @@
                 :key="index"
                 :class="{active: item.list_order === isActive}"
                 @click="tabChange(item)">
-              <a href="javascript:;">{{item.menu_title}}<i></i></a>
+              <span>{{item.menu_title}}<i></i></span>
             </li>
           </ul>
         </div>
@@ -46,7 +46,7 @@
               </div>
             </div>
             <div class="header-content">
-              <span class="column">共{{lists.length}}个电台节目</span>
+              <span class="column">共{{count}}个电台节目</span>
               <div class="new">
                 <span
                       v-for="(item, index) in isHot"
@@ -113,6 +113,7 @@ export default {
       isActive: 410,
       menuRadioNavs: [], // 电台导航
       lists: [], // 更多电台列表
+      count: '',
       page: 1, // 页码
       menu_type: '',
       menu_id: '',
@@ -182,6 +183,7 @@ export default {
       console.log('params', params)
       _this.getRadioList(params).then((res) => {
         console.log('切换导航电台列表返回', res)
+        _this.count = res.data.count
         _this.lists = res.data.radios
         _this.showPage = res.data.page
         console.log('==>>>>>>>', _this.showPage)
@@ -284,6 +286,7 @@ export default {
       console.log('切换母语params', params)
       this.getRadioList(params).then((res) => {
         console.log('切换母语', res)
+        this.count = res.data.count
         this.lists = res.data.radios
       })
     },
@@ -304,6 +307,7 @@ export default {
       console.log('切换热度', params)
       this.getRadioList(params).then((res) => {
         console.log('切换热度', res)
+        this.count = res.data.count
         this.lists = res.data.radios
       })
     }
@@ -371,14 +375,10 @@ a {
               }
             }
             &:hover {
-              background: #2A9FE4;
-              color: #ffffff;
-              i {
-                background: url('../../../../../static/images/radioListjiantouhover.svg') no-repeat center;
-                background-size: cover;
-              }
+              cursor: pointer;
+              background: #EEF2F3FF;
             }
-            a {
+            span {
               position: relative;
               display: block;
               width: 100%;

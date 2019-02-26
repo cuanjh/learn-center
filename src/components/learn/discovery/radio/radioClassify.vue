@@ -66,8 +66,8 @@
                     </div>
                   </div>
                   <div class="up-all">
-                    <span @click="changeHostRadio(hostRadioLists)" v-text="showMoreHost?'全部展开':'已展示全部内容'" >全部展开</span>
-                    <i v-show="showMoreHost"></i>
+                    <span v-if="showMoreHost === -1">已显示全部内容</span>
+                    <span @click="changeHostRadio(hostRadioLists)" v-else>全部展开<i></i></span>
                   </div>
                 </div>
                 <!-- 推荐课程 -->
@@ -101,8 +101,8 @@
                     </div>
                   </div>
                   <div class="up-all">
-                    <span @click="changeBatch()" v-text="showMore?'全部展开':'已展示全部内容'" ></span>
-                    <i v-show="showMore"></i>
+                    <span v-if="showMore === -1">已显示全部内容</span>
+                    <span @click="changeBatch()" v-else>全部展开<i></i></span>
                   </div>
                 </div>
                 <!-- 最新发布 -->
@@ -134,8 +134,8 @@
                     </div>
                   </div>
                   <div class="up-all">
-                    <span @click="changeReleaseRadio(latestReleaseRadio)" v-text="showMoreRelease?'全部展开':'已展示全部内容'" >全部展开</span>
-                    <i v-show="showMoreRelease"></i>
+                    <span v-if="showMoreRelease === -1">已显示全部内容</span>
+                    <span @click="changeReleaseRadio(latestReleaseRadio)" v-else>全部展开<i></i></span>
                   </div>
                 </div>
               </div>
@@ -160,9 +160,9 @@ import IntroduceAppBox from '../../../common/introduceAppBox.vue'
 export default {
   data () {
     return {
-      showMore: true, // true是展开，false是收起
-      showMoreHost: true,
-      showMoreRelease: true,
+      showMore: 0,
+      showMoreHost: 0,
+      showMoreRelease: 0,
       selState: {},
       navFlag: 'hostRadio',
       hostRadioLists: {}, // 热播电台
@@ -182,15 +182,15 @@ export default {
     _this.postDisvRadio().then((res) => {
       console.log('电台首页=====>', res)
       _this.hostRadioLists = res.data.menuRadios[0]
-      _this.hostRadios = _this.hostRadioLists.radios
       _this.latestReleaseRadio = res.data.menuRadios[1]
-      _this.releaseRadio = _this.latestReleaseRadio.radios
       _this.teacherLists = res.data.authors
-      console.log('========>热播电台', _this.hostRadios)
+      _this.initHotRadio(this.hostRadioLists)
+      _this.initReleaseRadio(this.latestReleaseRadio)
     })
     _this.getRecommendRadiosIndex({'lan_code': _this.langCode.lan_code, limit: 10, page: _this.page}).then(res => {
       console.log('推荐电台数据', res)
       this.recommendRadios = res.data
+      this.showMore = res.page
     })
   },
   components: {
@@ -256,10 +256,23 @@ export default {
       }
       this.isPlay = !this.isPlay
     },
+    // 默认热播电台列表
+    initHotRadio (radio) {
+      let params = {
+        menu_type: radio.menu_type,
+        menu_id: radio.menu_id,
+        page: this.page
+      }
+      this.getRadioList(params).then(res => {
+        console.log('列表', res)
+        this.hostRadios = res.data.radios
+        this.showMoreHost = res.data.page
+      })
+    },
     // 加载更多热播电台
     changeHostRadio (radio) {
-      if (!this.showMoreHost) {
-        return
+      if (this.showMoreHost === -1) {
+        return false
       }
       this.page++
       let params = {
@@ -272,30 +285,43 @@ export default {
         console.log('点击加载更多热播电台', res)
         this.hostRadios = this.hostRadios.concat(res.data.radios)
         if (res.data.page === -1) {
-          this.showMoreHost = !this.showMoreHost
+          this.showMoreHost = res.data.page
           return false
         }
       })
     },
     // 加载更多推荐课程
     changeBatch () {
-      if (!this.showMore) {
-        return
+      if (this.showMore === -1) {
+        return false
       }
       this.page++
       this.getRecommendRadiosIndex({'lan_code': this.langCode.lan_code, limit: 10, page: this.page}).then(res => {
         console.log('推荐电台数据', res)
         this.recommendRadios = this.recommendRadios.concat(res.data)
         if (res.page === -1) {
-          this.showMore = !this.showMore
+          this.showMore = res.page
           return false
         }
       })
     },
+    // 默认最新发布列表
+    initReleaseRadio (radio) {
+      let params = {
+        menu_type: radio.menu_type,
+        menu_id: radio.menu_id,
+        page: this.page
+      }
+      this.getRadioList(params).then(res => {
+        console.log('列表', res)
+        this.releaseRadio = res.data.radios
+        this.showMoreRelease = res.data.page
+      })
+    },
     // 加载更多最新课程
     changeReleaseRadio (radio) {
-      if (!this.showMoreRelease) {
-        return
+      if (this.showMoreRelease === -1) {
+        return false
       }
       this.page++
       let params = {
@@ -305,9 +331,10 @@ export default {
       }
       console.log('点击加载更多params', params)
       this.getRadioList(params).then((res) => {
+        console.log('res======>', res)
         this.releaseRadio = this.releaseRadio.concat(res.data.radios)
         if (res.data.page === -1) {
-          this.showMoreRelease = !this.showMoreRelease
+          this.showMoreRelease = res.data.page
           return false
         }
       })
@@ -389,10 +416,8 @@ export default {
               .switch-radio {
                 .host-content {
                   .radio-li {
-                    // display: flex;
-                    // justify-content: space-between;
-                    // align-items: center;
-                    padding-bottom: 40px;
+                    padding: 20px 0;
+                    border-bottom: 1px solid #EEF2F3FF;
                     .radio-li-left {
                       // display: inline-block;
                       display: flex;
@@ -496,6 +521,12 @@ export default {
                       }
                     }
                   }
+                  .radio-li:first-child {
+                    padding-top: 0px;
+                  }
+                  .radio-li:last-child {
+                    border-bottom: none;
+                  }
                 }
                 .radio-num {
                   position: absolute;
@@ -516,9 +547,11 @@ export default {
                   font-family:PingFangSC-Semibold;
                   font-weight:600;
                   color:rgba(42,159,228,1);
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
+                  span {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  }
                   i {
                     display: inline-block;
                     width: 10px;

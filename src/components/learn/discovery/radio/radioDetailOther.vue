@@ -48,6 +48,7 @@ export default {
   margin-top: 10px;
   background: #ffffff;
   padding: 23px 20px;
+  border-radius: 3px;
   /* border-bottom: 1px dotted #8E8E8E; */
 }
 .radio-content .other-radio-no {

@@ -62,7 +62,7 @@
         </div> -->
         <div class='learn-user' @mouseenter="showExit" >
           <a>
-            <img :src='userInfoImg' />
+            <img :src='ui.photo' />
             <span v-show="isActive" class="active"></span>
           </a>
           <transition name="fade">

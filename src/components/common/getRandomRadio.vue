@@ -137,6 +137,7 @@ export default {
             border-radius: 50%;
             border: 14px solid #0a2b40ff;
             border-color:linear-gradient(270deg,#3023AE14 0%,#51B3EC54 100%);
+            object-fit: cover;
           }
         }
       }

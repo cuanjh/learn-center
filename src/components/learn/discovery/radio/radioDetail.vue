@@ -43,8 +43,15 @@
             </div>
             <!-- 会员免费 -->
             <div class="money vip-free" v-else>
-              <span v-text="courseInfo.money"></span> {{$t('coins')}}
-              <span>会员免费</span>
+              <p class="cny" v-if="courseInfo.money_type === 'CNY'">
+                <span v-text="'￥' + courseInfo.money"></span>
+                <span>元/年</span>
+                <span>会员免费</span>
+              </p>
+              <p class="coins" v-else>
+                <span v-text="courseInfo.money"></span> {{$t('coins')}}
+                <span>会员免费</span>
+              </p>
             </div>
           </div>
           <!-- 介绍 -->
@@ -62,7 +69,7 @@
           <!-- 收听订阅分享等 -->
           <div class="subscription">
             <div class="bottom">
-              <div class="gradient-layer-play" @click="loadRadioList($event, cards[0])">
+              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo)">
                 <i class="play"></i>
                 <span>立即收听</span>
               </div>
@@ -85,6 +92,7 @@
             </div>
           </div>
         </div>
+        <!-- 作者介绍 -->
         <div class="author-brief">
           <div class="title">
             作者简介:
@@ -116,6 +124,7 @@
           </div>
         </div>
         <vip-prompt class="vip-width"></vip-prompt>
+        <!-- 课程列表 -->
         <div class="course-list">
           <div class="title">课程列表</div>
           <div class="course-item" v-for="card in cards" :key="card.card_id">
@@ -131,6 +140,7 @@
             </div>
           </div>
         </div>
+        <!-- 评论 -->
         <div class="comments">
           <div v-if="comments">
             <div class="title">{{comments.length}}条评论</div>
@@ -152,6 +162,7 @@
           </div>
         </div>
       </div>
+      <!-- 右边的内容 -->
       <div class="radio-right">
         <radio-detail-other :otherRadios="otherRadios" v-if="otherRadios"></radio-detail-other>
         <students-listening :studentsListening="studentsListening"></students-listening>
@@ -323,6 +334,7 @@ export default {
       console.log('courseInfo', this.courseInfo)
       let radio = this.courseInfo
       console.log('组件中的radio', radio)
+      console.log('subscibenoInfo', this.subscibenoInfo)
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
           if (radio.money_type !== 'CNY') { // 不是会员 金币收费课程
@@ -339,7 +351,7 @@ export default {
           }
         } else { // 是会员
           if (radio.money_type === 'CNY') {
-            if (radio.free_for_member === false) {
+            if (radio.free_for_member === 0) {
               console.log('这是会员不免费课程')
               if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
                 alert('是会员 人民币收费课程')
@@ -348,7 +360,7 @@ export default {
             }
           }
         }
-      } else { // 免费
+      } else if (radio.money === 0 || radio.free_for_member === 1) { // 免费 会员免费
         this.subscibenoInfo.purchased_state = 1
       }
     }
@@ -495,8 +507,16 @@ export default {
   color:rgba(153,153,153,1);
   padding: 0 5px
 }
-
-.member .money.vip-free span:nth-child(2) {
+.member .money.vip-free .coins {
+  font-size:14px;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(153,153,153,1);
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+}
+.member .money.vip-free .coins span:nth-child(2) {
   cursor: pointer;
   font-size:12px;
   font-family:PingFangSC-Semibold;
@@ -509,6 +529,31 @@ export default {
   text-align: center;
   margin: 0 10px;
 }
+.member .money.vip-free .cny {
+  display: flex;
+  align-items: center;
+}
+.member .money.vip-free .cny span:nth-child(2) {
+  font-size:14px;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(153,153,153,1);
+  padding: 0 5px
+}
+.member .money.vip-free .cny span:nth-child(3) {
+  cursor: pointer;
+  font-size:12px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(245,166,35,1);
+  padding: 0 10px;
+  border-radius:12px;
+  border:1px solid;
+  border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+  text-align: center;
+  margin: 0 10px;
+}
+
 .course .subscription {
   margin-top: 27px;
   display: flex;

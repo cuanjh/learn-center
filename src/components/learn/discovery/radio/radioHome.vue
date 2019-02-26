@@ -438,21 +438,19 @@ export default {
       background-color: #fff;
       .recommend-list {
         font-size: 0;
+        display: flex;
         .recommend-item {
-          display: inline-block;
+          display: flex;
+          justify-content: center;
           width: 219px;
           background-color: #0a2b40;
           font-size: 16px;
           font-weight: bold;
           color: #fff;
-          padding: 20px 25px;
+          padding: 17px 0;
           margin-right: 1px;
           line-height: 33px;
           border-top: 3px solid #2A9FE4FF;
-          span {
-            display: inline-block;
-            width: 120px;
-          }
           i {
             display: inline-block;
             background-repeat: no-repeat;
@@ -612,13 +610,14 @@ export default {
       }
       .radio-type-bottom {
         width: 100%;
+        display: flex;
+        justify-content: flex-end;
         p {
           -webkit-user-select:none;
           -moz-user-select:none;
           -ms-user-select:none;
           user-select:none;
           display: flex;
-          justify-content: flex-end;
           align-items: center;
           font-size:14px;
           font-family:PingFang-SC-Medium;

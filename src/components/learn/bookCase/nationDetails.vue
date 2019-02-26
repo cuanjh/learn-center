@@ -9,7 +9,7 @@
         <span>添加语言</span>
       </router-link>
       >
-      <router-link :to="{path: '/app/book-details/' + naInfo.params}">
+      <router-link :to="{path: '/app/book-details/' + naInfo.courseCode}">
         <span>语言详情</span>
       </router-link>
       >
@@ -22,9 +22,7 @@
       <!-- 上面分享的部分 -->
       <div class="nation-header">
         <div class="nation-header-content">
-          <div class="logo-img">
-            <i></i>
-          </div>
+          <div class="logo-img"></div>
           <div class="share-lists" v-show="false">
             <div class="share-item" @click="tabShare(0)">
               <i class="farim" :class="{'active': active == 0}"></i>
@@ -273,14 +271,8 @@ a {
       width: 167px;
       height: 60px;
       background: #2A9FE4;
-      padding: 11px 15px;
-      i {
-        display: inline-block;
-        width: 334px;
-        height: 80px;
-        background: url('../../../../static/images/wal.svg') no-repeat center;
-        background-size: 100% 100%;
-      }
+      padding: 11px 15px;background: url('../../../../static/images/wal.svg') no-repeat center;
+      background-size: 100%;
     }
     .share-lists {
       width: 200px;
@@ -441,7 +433,6 @@ a {
                   height: 36px;
                   background: url('../../../../static/images/bookCase/countryName.svg') no-repeat center;
                   background-size: cover;
-                  margin-left: 25px;
                 }
               }
               p:nth-child(2) {

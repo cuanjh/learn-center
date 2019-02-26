@@ -29,7 +29,7 @@
         </div>
       </div>
       <!-- 了解会员 -->
-      <div class="vip-understand">
+      <div class="vip-understand"  v-show="isVip !== 1 && (itemRadio.free_for_member !== 0 || itemRadio.free_for_member === true)">
         <div class="vip-cont">
           <div class="left">
             <i></i>
@@ -52,7 +52,7 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import Bus from '../../bus'
 export default {
   // props: ['itemRadio', 'showBuyCoinsBox'],
@@ -77,6 +77,17 @@ export default {
       this.itemRadioDetail = radioDetail
       this.subscibenoInfo = radioDetail.relation
     })
+  },
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo // 用户信息
+    }),
+    isVip () {
+      if (!this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
+    }
   },
   methods: {
     ...mapActions({
