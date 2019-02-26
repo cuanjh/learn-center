@@ -13,7 +13,7 @@
             <div class="list-left">
               <img :src="teacher.photo" alt="头像">
               <div class="list-text">
-                <span>{{teacher.author_name}}</span>
+                <router-link tag="span" :to="{path: '/app/discovery/author-detail/' + teacher.user_id}">{{teacher.author_name}}</router-link>
                 <span>{{teacher.followed_count}}粉丝</span>
               </div>
             </div>
@@ -134,6 +134,7 @@ export default {
                 display: block;
               }
               span:nth-child(1) {
+                cursor: pointer;
                 font-size: 16px;
                 color: #0a2b40ff;
                 line-height: 22px;
@@ -183,7 +184,7 @@ export default {
               display: inline-block;
               width: 12px;
               height: 12px;
-              background: url("../../../static/images/follow.svg") no-repeat center;
+              background: url("../../../static/images/authorFllow.svg") no-repeat center;
               background-size: cover;
               margin-right: 5px;
             }

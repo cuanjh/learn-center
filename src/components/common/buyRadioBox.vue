@@ -37,7 +37,7 @@
         </div>
       </div>
       <!-- 了解会员 -->
-      <div class="vip-understand" v-show="itemRadio.free_for_member !== false">
+      <div class="vip-understand" v-show="isVip !== 1 && (itemRadio.free_for_member !== 0 || itemRadio.free_for_member === true)">
         <div class="vip-cont">
           <div class="left">
             <i></i>
@@ -84,6 +84,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import bus from '../../bus'
 export default {
   data () {
@@ -103,6 +104,17 @@ export default {
     })
   },
   mounted () {
+  },
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo // 用户信息
+    }),
+    isVip () {
+      if (!this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
+    }
   },
   methods: {
     showActiveButton () {

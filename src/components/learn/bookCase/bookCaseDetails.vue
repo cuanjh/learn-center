@@ -81,7 +81,7 @@
         <div class="details-header-right">
           <div class="right-content">
             <div class="audio-play">
-              <img src="https://course-assets1.talkmate.com/course/icons/CHI-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="audio的背景图片">
+              <img :src="courseInfo.cover" alt="audio的背景图片">
               <audio src=""></audio>
               <p class="text">
                 <span>全球说母语教学法</span>
@@ -140,29 +140,38 @@
         <!-- 切换内容区 -->
         <div class="tab-content-box">
           <div class="tab-content">
+            <!-- 信息 -->
             <div class="info-list" v-if="'info' == tabFlag">
               <book-case-info :langInfoObj="langInfoObj"></book-case-info>
               <div class="up-all">
-                <span @click="loadMoreInfo()" v-text="showMore?'全部展开':'已经没有更多内容了~~'" ></span>
-                <i v-show="showMore"></i>
+                <span>已经没有更多内容了</span>
               </div>
             </div>
+            <!-- 资源 -->
             <div class="resource-list" v-if="'resource' == tabFlag">
-              <book-case-radios :resourceInfoRadios="resourceInfoRadios" :showMore="showMore" @loadingMoreRadio="loadMoreRadio"></book-case-radios>
+              <book-case-radios :resourceInfoRadios="resourceInfoRadios"></book-case-radios>
               <div class="up-all" v-if="resourceInfoRadios.length>0">
-                <span @click="loadMoreRadio()" v-text="showMore?'全部展开':'已经没有更多内容了~~'" ></span>
-                <i v-show="showMore"></i>
+                <!-- <span @click="loadMoreRadio()" v-text="showMore?'全部展开':'已经没有更多内容了~~'" ></span>
+                <i v-show="showMore"></i> -->
+                <span v-if="showMore === -1">已显示全部内容</span>
+                <span @click="loadMoreRadio()" v-else>全部展开<i></i></span>
               </div>
               <div class="up-all" v-else>
                 <span >暂时没有课程相关资源</span>
               </div>
             </div>
+            <!-- 国家 -->
             <div class="nation-list" v-if="'nation' == tabFlag">
-              <book-case-country :countryLists="countryLists"></book-case-country>
+              <book-case-country :countryLists="countryLists" :courseCode="courseCode"></book-case-country>
               <div class="up-all" v-if="countryLists.length>0">
-                <span @click="loadMoreNation()" v-text="showMore?'全部展开':'收起'"></span>
-                <i v-show="showMore"></i>
-                <i class="active" v-show="showMore === false"></i>
+                <div class="up-all-content" v-if="allCountryLists.length>9">
+                  <span @click="loadMoreNation()" v-text="showMoreCountry?'全部展开':'收起'"></span>
+                  <i v-show="showMoreCountry"></i>
+                  <i class="active" v-show="showMoreCountry === false"></i>
+                </div>
+                <div v-else>
+                  <span>已经是全部内容了</span>
+                </div>
               </div>
               <div class="up-all" v-else>
                 <span >暂时没有课程相关国家</span>
@@ -193,7 +202,8 @@ export default {
   data () {
     return {
       goLogin: true, // 登录的提示
-      showMore: true, // true是展开，false是收起
+      showMore: 0, // true是展开，false是收起
+      showMoreCountry: true,
       tabFlag: 'info', // true 语言信息 false 资源 电台
       defaultImg: 'this.src="/static/images/bookCase/default_course.png"',
       // params: {}
@@ -246,11 +256,9 @@ export default {
     BookCaseCountry
   },
   created () {
-    // Bus.$on('initLangData', () => {
-    //   this.langInfo()
-    // })
   },
   mounted () {
+    console.log('courseCode', this.courseCode)
     this.initDataDetails()
     let userId = Cookie.getCookie('user_id')
     console.log('userId', userId)
@@ -298,20 +306,16 @@ export default {
       localStorage.setItem('nationInfos', jsonStr)
       this.$router.push({ path: `/app/nation-details/${code}` })
     },
-    // 展开信息介绍
-    loadMoreInfo () {
-      this.showMore = !this.showMore
-    },
     // 点击展开电台的时候加载电台
     loadMoreRadio () {
       let _this = this
       _this.pageindex++
       _this.getShelfResList({ page: _this.pageindex }).then((res) => {
+        console.log('resradio', res)
         if (res.resourceInfo.page === -1) {
-          this.showMore = !this.showMore
+          _this.showMore = res.resourceInfo.page
           return false
         }
-        console.log('resradio', res)
         res.resourceInfo.radios.forEach((item) => {
           _this.resourceInfoRadios.push(item)
         })
@@ -320,12 +324,12 @@ export default {
     },
     // 点击展开，国家全部展开
     loadMoreNation () {
-      if (this.showMore) {
+      if (this.showMoreCountry) {
         this.countryLists = this.allCountryLists
       } else {
         this.countryLists = this.allCountryLists.slice(0, 9)
       }
-      this.showMore = !this.showMore
+      this.showMoreCountry = !this.showMoreCountry
     },
     // 点开始学习
     startLearn () {
@@ -366,8 +370,8 @@ export default {
         _this.courseInfo = res.courseInfo
         _this.allCountryLists = res.countryInfo
         _this.countryLists = _this.allCountryLists.slice(0, 9)
+        console.log('allCountryLists,countryLists', _this.allCountryLists, _this.countryLists)
         _this.resourceInfoRadios = res.resourceInfo.radios
-        // _this.resPage = res.resourceInfo.page
         _this.allCountryLists.forEach(item => {
           _this.countryInfo({code: item.code}).then(data => {
             item.countryLangueInfos = data.country_info.langsInfo
@@ -410,7 +414,6 @@ export default {
     // 上部左边部分
     .details-header-left {
       width: 690px;
-      height: 100%;
       border-radius: 5px;
       background: #ffffff;
       .left-content {
@@ -459,9 +462,9 @@ export default {
                 // border-bottom: 1px solid #EBEBEB;
                 .item {
                   width: 380px;
-                  padding: 13px 50px 13px 32px;
+                  padding: 8px 50px;
                   background: #F6F8F9FF;
-                  border-radius: 40px;
+                  border-radius: 80px;
                   font-size:14px;
                   font-family:PingFang-SC-Regular;
                   font-weight:400;
@@ -531,18 +534,12 @@ export default {
             }
           }
           .button {
-            // width: 150px;
-            // height: 40px;
             background: #2A9FE4FF;
             font-size: 14px;
             color: #ffffff;
             text-align: center;
-            // line-height: 40px;
-            // position: absolute;
-            // right: 20px;
-            // top: 160px;
-            padding: 13px 42px;
-            border-radius: 30px;
+            padding: 8px 42px;
+            border-radius: 20px;
             box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, .15);
           }
           .button:hover {
@@ -553,7 +550,7 @@ export default {
     }
     // 上部右边部分
     .details-header-right {
-      width: 280px;
+      width: 258px;
       border-radius: 5px;
       background: #ffffff;
       .right-content {
@@ -568,7 +565,8 @@ export default {
           img {
             width: 100%;
             height: 100%;
-            border-radius: 10px;
+            border-radius: 3px;
+            object-fit: cover;
           }
           .text {
             width: 100%;
@@ -580,6 +578,7 @@ export default {
             line-height: 120px;
             font-size: 20px;
             color: #ffffff;
+            border-radius: 3px;
           }
         }
         .add-btn {
@@ -686,7 +685,7 @@ export default {
         .item {
           background: #ffffff;
           cursor: pointer;
-          width: 320px;
+          width: 318px;
           display: flex;
           flex-direction: row;
           justify-content: center;
@@ -741,7 +740,7 @@ export default {
     .tab-content-box {
       width: 100%;
       background: #ffffff;
-      margin-top: 15px;
+      margin-top: 4px;
       .tab-content {
         width: 100%;
         height: 100%;
@@ -757,9 +756,11 @@ export default {
           font-family:PingFangSC-Semibold;
           font-weight:600;
           color:rgba(42,159,228,1);
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
           i {
             display: inline-block;
             width: 10px;
@@ -775,6 +776,11 @@ export default {
             background: url('../../../../static/images/upAllActive.svg') no-repeat center;
             background-size: cover;
             margin-left: 10px;
+          }
+          .up-all-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
         }
       }

@@ -285,6 +285,7 @@ export default {
           height: 100%;
           border-radius: 50%;
           border: 5px solid #EEF2F3;
+          object-fit: cover;
         }
         .vip-img {
           position: absolute;
@@ -409,6 +410,7 @@ export default {
     }
     // 内容区域
     .author-content {
+      position: relative;
       width: 100%;
       background: #ffffff;
       // padding: 0 129px;
@@ -510,6 +512,9 @@ export default {
       }
       // 点击加载更多
       .up-all {
+        position: absolute;
+        left: 0;
+        bottom: 0;
         cursor: pointer;
         width: 100%;
         background: rgba(221, 221, 221, 0.1);

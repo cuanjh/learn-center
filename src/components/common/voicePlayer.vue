@@ -165,8 +165,7 @@
       </div>
     </div>
     <!-- 人民币付费课程弹框 -->
-    <buy-radio-box>
-    </buy-radio-box>
+    <buy-radio-box></buy-radio-box>
     <!-- 金币付费课程弹框 -->
     <buy-coins-radio-box/>
   </div>
@@ -208,8 +207,6 @@ export default {
       itemRadio: {}, // 当前的电台
       radioDetail: {}, // 当前电台的详情
       cardsCount: 0
-      // showBuyBox: false // 人民币购买的弹框
-      // showBuyCoinsBox: false // 金币购买弹框
     }
   },
   components: {BuyRadioBox, BuyCoinsRadioBox},
@@ -237,8 +234,8 @@ export default {
       }
       console.log('params', params)
       this.postRadioDetail(params.code).then((res) => {
-        this.subscibenoInfo = res.result.relation
         this.radioDetail = res.result
+        this.subscibenoInfo = res.result.relation
         console.log('subscibenoInfo', this.subscibenoInfo)
       })
       this.getRadioCardList(params).then((res) => {
@@ -321,7 +318,25 @@ export default {
     // 下一条自动播放
     next () {
       this.curIndex++
-      this.nextJudgeCondition(this.curIndex)
+      let radio = this.itemRadio
+      // this.nextJudgeCondition(this.curIndex)
+      if (radio.money !== 0) { // 收费
+        if (this.isVip !== 1) { // 不是会员
+          if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+            if (this.curIndex > 2) {
+              this.curIndex = 0
+            }
+          }
+        } else { // 是会员
+          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
+            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+              if (this.curIndex > 2) {
+                this.curIndex = 0
+              }
+            }
+          }
+        }
+      }
       if (this.curIndex === this.radioList.length) {
         this.curIndex = 0
         this.playRadio()
@@ -387,6 +402,31 @@ export default {
       let radio = this.itemRadio
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
+          if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+            if (index > 2) {
+              index = 0
+            }
+          }
+        } else { // 是会员
+          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
+            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+              if (index > 2) {
+                index = 0
+              }
+            }
+          }
+        }
+      }
+      if (index === 0 && radio.money_type === 'CNY') {
+        // 人民币提示
+        Bus.$emit('showBuyRadio', radio, this.cardsCount)
+      } else if (index === 0 && radio.money_type === 'coins') {
+        // 金币提示
+        Bus.$emit('showBuyCoinsRadio', radio)
+        Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+      }
+      /* if (radio.money !== 0) { // 收费
+        if (this.isVip !== 1) { // 不是会员
           if (radio.money_type !== 'CNY') { // 不是会员 金币收费课程
             if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
               if (index > 2) {
@@ -407,7 +447,7 @@ export default {
           }
         } else { // 是会员
           if (radio.money_type === 'CNY') {
-            if (radio.free_for_member === false) {
+            if (radio.free_for_member === false || radio.free_for_member === 0) {
               console.log('这是会员不免费课程')
               if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
                 if (index > 2) {
@@ -419,7 +459,7 @@ export default {
             }
           }
         }
-      }
+      } */
       this.curIndex = index
       this.playRadio()
     },
@@ -434,6 +474,8 @@ export default {
                 alert('不是会员金币收费课程')
                 this.curIndex = 0
                 this.playRadio()
+                Bus.$emit('showBuyCoinsRadio', radio)
+                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
               }
             }
           } else { // 不是会员人民币收费课程
@@ -442,6 +484,7 @@ export default {
                 alert('不是会员人民币收费课程')
                 this.curIndex = 0
                 this.playRadio()
+                Bus.$emit('showBuyRadio', radio, this.cardsCount)
               }
             }
           }
@@ -454,6 +497,7 @@ export default {
                   alert('后面课程会员不免费需要收费')
                   this.curIndex = 0
                   this.playRadio()
+                  Bus.$emit('showBuyRadio', radio, this.cardsCount)
                 }
               }
             }

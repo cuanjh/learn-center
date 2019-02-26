@@ -2,25 +2,25 @@
   <div>
     <ul class="book-nation">
       <li v-for="(item, index) in countryLists" :key="index">
-        <div class="nation-title">
-          <p>{{ item.name }}</p>
-        </div>
-        <div class="nation-img" @click="nationDetail(item.code, item.flag, item.name)">
-          <img v-lazy="item.flag" :key="item.flag" :onerror="defaultImg" alt="资源图片">
-        </div>
-        <div class="nation-languages">
-          <div class="languages">
-            <p>Principal Languages:</p>
-            <p>
-              <span v-for="(el, index) in item.countryLangueInfos" :key="index">{{el.name}},</span>
-            </p>
-            <p>
-              <span>Learn more</span>
-            </p>
+        <div class="nation-li">
+          <div class="nation-title">
+            <p>{{ item.name }}</p>
+          </div>
+          <div class="nation-img" @click="nationDetail(item.code, item.flag, item.name)">
+            <img v-lazy="item.flag" :key="item.flag" :onerror="defaultImg" alt="资源图片">
+          </div>
+          <div class="nation-languages">
+            <div class="languages">
+              <p>Principal Languages:</p>
+              <p>
+                <span v-for="(el, index) in item.countryLangueInfos" :key="index">{{el.name}},</span>
+              </p>
+              <p>
+                <span>Learn more</span>
+              </p>
+            </div>
           </div>
         </div>
-        <!-- <router-link :to="{ path: '/app/nation-details/' + item.code }" class="nation-icon"></router-link> -->
-        <!-- <a class="nation-icon" @click="nationDetail(item.code, item.flag, item.name)"></a> -->
       </li>
     </ul>
   </div>
@@ -28,7 +28,7 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
-  props: ['countryLists'],
+  props: ['countryLists', 'courseCode'],
   data () {
     return {
       langsInfoList: '',
@@ -55,7 +55,8 @@ export default {
       let OBJ = {
         'flag': flag,
         'name': name,
-        'params': this.courseCode
+        'params': this.courseCode,
+        'courseCode': this.courseCode
       }
       let jsonStr = JSON.stringify(OBJ)
       localStorage.setItem('nationInfos', jsonStr)
@@ -68,7 +69,7 @@ export default {
 .book-nation {
   width: 100%;
   // min-height: 630px;
-  padding: 50px 100px;
+  padding: 50px 0px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -78,10 +79,15 @@ export default {
   flex: auto;
 }
 .book-nation li {
-  width: 33.33333333%;
+  width: 318px;
   padding: 25px 0;
-  border-bottom: 1px solid #EBEBEB;
+  // border-bottom: 1px solid #EBEBEB;
   cursor: pointer;
+}
+.book-nation li .nation-li {
+  width: 100%;
+  padding: 0 0 0 89px;
+  border-right: 1px solid #EEF2F3FF;
 }
 .book-nation li .nation-img {
   width: 53px;
@@ -112,7 +118,7 @@ export default {
     word-wrap: break-word;
     word-break: normal;
     width: 200px;
-    height: 70px;
+    height: 62px;
     font-size: 14px;
     font-family: PingFang-SC-Regular;
     font-weight: 400;

@@ -15,30 +15,20 @@
               <span>128 W</span>
             </p>
           </router-link>
-          <div class="icon"></div>
+          <div class="icon" v-show="false"></div>
         </div>
       </li>
     </ul>
-    <!-- <div class="up-all" v-if="resourceInfoRadios.length>0">
-      <span @click="loadMore()" v-text="showMore?'全部展开':'已经没有更多内容了~~'" ></span>
-      <i v-show="showMore"></i>
-    </div>
-    <div class="up-all" v-else>
-      <span >暂时没有课程相关资源</span>
-    </div> -->
   </div>
 </template>
 <script>
 export default {
-  props: ['resourceInfoRadios', 'showMore'],
+  props: ['resourceInfoRadios'],
   data () {
     return {
     }
   },
   methods: {
-    loadMore () {
-      this.$emit('loadingMoreRadio')
-    }
   }
 }
 </script>
