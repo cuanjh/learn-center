@@ -15,7 +15,15 @@
     </a>
     <a class="float-bar-item facebook" v-show="false">
     </a>
-    <a class="float-bar-item help">
+    <a class="float-bar-item help"
+      @mouseenter="isShowHelp = true"
+      @mouseleave="isShowHelp = false">
+      <div class="help-panel" v-show="isShowHelp">
+        <p><i></i> 400-068-8056</p>
+        <p><i></i> vip@talkmate.com</p>
+        <div class="triangle_border_left">
+        </div>
+      </div>
     </a>
     <a class="float-bar-item top" @click="backToTop()">
     </a>
@@ -27,7 +35,8 @@ export default {
   data () {
     return {
       isBackToTop: false,
-      isFocusWeixin: false
+      isFocusWeixin: false,
+      isShowHelp: true
     }
   },
   mounted () {
@@ -120,7 +129,7 @@ export default {
     background:rgba(255,255,255,1);
     box-shadow:0px 5px 14px 0px rgba(10,43,64,0.21);
     border-right: 3px solid #2A9FE4;
-    border-radius:3px 0px 0px 3px;
+    border-radius:3px;
     p {
       &:first-child {
         font-size: 16px;
@@ -144,18 +153,68 @@ export default {
         margin-left: 4px;
       }
     }
+    /*向左*/
+    .triangle_border_left{
+      width:0;
+      height:0;
+      border-width:8px 0 8px 8px;
+      border-style:solid;
+      border-color:transparent transparent transparent #2A9FE4;/*透明 透明 透明 灰*/
+      left: 152px;
+      top: 46px;
+      position: absolute;
+    }
   }
-}
-
-/*向左*/
-.triangle_border_left{
-  width:0;
-  height:0;
-  border-width:8px 0 8px 8px;
-  border-style:solid;
-  border-color:transparent transparent transparent #2A9FE4;/*透明 透明 透明 灰*/
-  left: 152px;
-  top: 46px;
-  position: absolute;
+  .help-panel {
+    position: absolute;
+    left: -172px;
+    top: -14px;
+    width:160px;
+    height:70px;
+    background:rgba(255,255,255,1);
+    box-shadow:0px 5px 14px 0px rgba(10,43,64,0.21);
+    padding-top: 15px;
+    border-right: 3px solid #2A9FE4;
+    border-radius:3px;
+    p {
+      font-size: 13px;
+      font-weight: 500;
+      color: #0A2B40;
+      &:first-child {
+        i {
+          margin: 2px 7px 0 13px;
+          display: inline-block;
+          width: 14px;
+          height: 12px;
+          background-image: url('../../../static/images/floatBar/icon-headset.svg');
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+      }
+      &:nth-child(2) {
+        margin-top: 3px;
+        i {
+          margin: 5px 7px 0 13px;
+          display: inline-block;
+          width: 14px;
+          height: 12px;
+          background-image: url('../../../static/images/floatBar/icon-email.svg');
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+      }
+    }
+    /*向左*/
+    .triangle_border_left{
+      width:0;
+      height:0;
+      border-width:8px 0 8px 8px;
+      border-style:solid;
+      border-color:transparent transparent transparent #2A9FE4;/*透明 透明 透明 灰*/
+      left: 159px;
+      top: 30px;
+      position: absolute;
+    }
+  }
 }
 </style>
