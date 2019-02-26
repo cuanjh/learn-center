@@ -9,7 +9,7 @@
     <voice-player v-show="isShow" />
     <learn-bottom />
     <photo-uploader />
-    <rocket />
+    <float-bar />
     <continue-learn />
     <buy-chapter />
   </div>
@@ -20,7 +20,7 @@ import $ from 'jquery'
 import learnHeader from './learnHeader.vue'
 import learnBottom from './learnBottom.vue'
 import PhotoUploader from '../common/user/photoUploader.vue'
-import Rocket from '../common/rocket.vue'
+import FloatBar from '../common/floatBar.vue'
 import VoicePlayer from '../common/voicePlayer.vue'
 import ContinueLearn from '../common/continueLearn.vue'
 import BuyChapter from '../common/buyChapterConfirm.vue'
@@ -50,7 +50,7 @@ export default {
     learnHeader,
     learnBottom,
     PhotoUploader,
-    Rocket,
+    FloatBar,
     VoicePlayer,
     ContinueLearn,
     BuyChapter
@@ -152,6 +152,7 @@ export default {
 
 <style scoped>
   .learn-wrap {
+    height: 100%;
     padding-top: 62px;
     background: #f6f8f9;
   }

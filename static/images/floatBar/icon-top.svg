@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46px" height="46px" viewBox="0 0 46 46" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>置顶</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="世语图默认-未登录-未选择语种" transform="translate(-1609.000000, -1708.000000)" fill-rule="nonzero">
+            <g id="置顶" transform="translate(1609.000000, 1708.000000)">
+                <rect id="矩形-copy-13" fill="#FFFFFF" x="-7.10542736e-15" y="0" width="46" height="46" rx="3"></rect>
+                <rect id="矩形-copy-14" fill="#C8D4DB" x="13" y="15" width="20" height="2" rx="1"></rect>
+                <path d="M14,29.1206886 L22.3133765,21.2691664 C22.6987697,20.9051839 23.3012303,20.9051839 23.6866235,21.2691664 L32,29.1206886" id="直线-9" stroke="#C8D4DB" stroke-width="2" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>
