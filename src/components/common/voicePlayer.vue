@@ -98,20 +98,20 @@
           </a>
         </div>
         <div class="play-body">
-          <div class="play-body-title">
+          <div class="play-body-title" v-show="false">
             <span v-text="curRadio.title"></span>
           </div>
           <div class="play-body-progress">
-            <div class="progress" @mousedown="downProgress($event)">
+            <div id="voice-player-progress" class="progress">
               <i class="progress-load" style="width: 0%;"></i>
-              <i class="progress-cur" :style="{'width': curProgress}">
-                <span class="progress-btn">
+              <i class="progress-cur"  :style="{'width': curProgress + 'px'}">
+                <span id="progressCurBtn" class="progress-btn" @mousedown="onMouseDownProgress($event)" :style="{'left': curProgress + 'px'}">
                 </span>
               </i>
             </div>
             <div class="playtime">
-              <span>00:{{toParseTime(curTime)}}</span>
-              <span>/</span>
+              <span>00:{{toParseTime(curTime)}} </span>
+              <span>&nbsp;/&nbsp;</span>
               <span>00:{{toParseTime(duration)}}</span>
             </div>
           </div>
@@ -140,7 +140,7 @@
               <use xlink:href="#icon-single"></use>
             </svg>
           </a>
-          <a class="list" @click="isShowList = !isShowList">
+          <a id="voicePlayerListBtn" class="list" @click="isShowList = !isShowList">
             <svg>
               <use xlink:href="#icon-list"></use>
             </svg>
@@ -148,7 +148,7 @@
         </div>
       </div>
     </div>
-    <div class="voice-player-list" v-show="isShowList">
+    <div id="voicePlayerList" class="voice-player-list" v-show="isShowList">
       <div class="voice-player-list-head clearfix">
         <h4>播放列表({{radioList.length}})</h4>
       </div>
@@ -190,6 +190,7 @@ export default {
       curIndex: 0,
       curTime: 0,
       curProgress: 0,
+      progressWidth: 0,
       interval: null,
       duration: 0,
       isPlay: false,
@@ -277,6 +278,18 @@ export default {
         that.isHand = false
       }
     })
+    this.progressWidth = $('#voice-player-progress').width()
+    $('body').click((e) => {
+      e = e || window.event
+      let elem = e.target || e.srcElement
+      while (elem) {
+        if (elem.id && (elem.id === 'voicePlayerList' || elem.id === 'voicePlayerListBtn')) {
+          return
+        }
+        elem = elem.parentNode
+      }
+      this.isShowList = false
+    })
   },
   methods: {
     ...mapActions({
@@ -339,8 +352,7 @@ export default {
       } else {
         this.interval = setInterval(() => {
           this.curTime++
-          this.curProgress = (this.curTime / this.duration).toFixed(4) * 100 + '%'
-          // console.log(this.curProgress)
+          this.curProgress = (this.curTime / this.duration).toFixed(4) * this.progressWidth
         }, 1000)
         this.sndctr.play(() => {
           this.end()
@@ -350,7 +362,7 @@ export default {
     },
     end () {
       this.isPlay = false
-      this.curProgress = '100%'
+      this.curProgress = this.progressWidth
       this.isEnd = true
       clearInterval(this.interval)
       if (this.isLoop) {
@@ -372,7 +384,7 @@ export default {
         _this.duration = Math.round(_this.sndctr.getDuration())
         _this.interval = setInterval(() => {
           _this.curTime++
-          _this.curProgress = (_this.curTime / _this.duration).toFixed(4) * 100 + '%'
+          _this.curProgress = (_this.curTime / _this.duration).toFixed(4) * _this.progressWidth
         }, 1000)
       })
       _this.isPlay = true
@@ -433,15 +445,6 @@ export default {
       this.sndctr.setVolume(height * 1.0 / 90)
       console.log(height)
     },
-    downProgress (e) {
-      let width = e.pageX - $('.progress').offset().left
-      if (width > 540 || width < 0) {
-        return
-      }
-      this.curProgress = (width * 1.0 / 540 * 100).toFixed(2) + '%'
-      this.curTime = Math.round((width * 1.0 / 540) * this.duration)
-      this.sndctr.setCurrentTime(this.curTime)
-    },
     setLock () {
       this.isLock = !this.isLock
       if (!this.isLock) {
@@ -449,6 +452,38 @@ export default {
       } else {
         this.isHand = true
       }
+    },
+    onMouseDownProgress (ev) {
+      let _this = this
+      let progressCur = document.getElementById('progressCurBtn')
+      let oevent = ev || event
+      let distanceX = oevent.clientX - progressCur.offsetLeft
+
+      document.onmousemove = (ev) => {
+        let oevent = ev || event
+        let left = oevent.clientX - distanceX
+        if (left < 0) {
+          left = 0
+        }
+        if (_this.progressWidth >= left) {
+          _this.curProgress = left
+        } else {
+          _this.curProgress = _this.progressWidth
+        }
+        let time = left / _this.progressWidth * _this.duration
+        if (time > _this.duration) {
+          time = _this.duration
+        }
+        _this.curTime = time
+        _this.sndctr.setCurrentTime(_this.curTime)
+      }
+
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
+
+      return false
     }
   }
 }
@@ -465,10 +500,10 @@ export default {
     line-height: 56px;
     transition: all .2s;
     // background-color: rgba(0, 57, 91, .8);
-    background:linear-gradient(90deg,rgba(0,145,209,1) 0%,rgba(65,196,255,1) 100%);
-    // background-image: url(./../../../static/images/learnIndex/icon-voice-player-bg.svg);
-    // background-repeat: no-repeat;
-    // background-size: cover;
+    // background:linear-gradient(90deg,rgba(0,145,209,1) 0%,rgba(65,196,255,1) 100%);
+    background-image: url(./../../../static/images/learnIndex/icon-voice-player-bg.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
     z-index: 999;
     .voice-player-hand {
       position: absolute;
@@ -484,12 +519,11 @@ export default {
       .voice-player-lock {
         position: absolute;
         right: 40px;
-        top: -14px;
-        width: 64px;
-        height: 14px;
-        background: url('./../../../static/images/discovery/radio-player-lock-bg.svg') center no-repeat;
+        top: -17px;
+        width: 56px;
+        height: 17px;
+        background: url('./../../../static/images/learnIndex/icon-voice-player-lock-bg.svg') center no-repeat;
         background-size: 100%;
-        opacity: .95;
         text-align: center;
         cursor: pointer;
         z-index: 99;
@@ -497,7 +531,7 @@ export default {
           width: 10px;
           height: 10px;
           display: inline-block;
-          margin-top: 2px;
+          margin-top: 4px;
           stroke: #FFFFFF;
           fill: #ffffff;
           margin-left: -10px;
@@ -533,7 +567,9 @@ export default {
         background-size: cover;
         display: inline-block;
         vertical-align: middle;
+        border-radius: 7px;
         img {
+          border-radius: 7px;
           width: 30px;
           height: 30px;
           object-fit: cover;
@@ -615,7 +651,7 @@ export default {
             position: relative;
             width: 540px;
             height: 2px;
-            background-color: #FFFFFF;
+            background-color: rgba(255, 255, 255, .2);
             .progress-load {
               height: 100%;
               width: 0%;
@@ -630,7 +666,7 @@ export default {
               height: 100%;
               width: 0%;
               // background-color: #FFD343;
-              background-color: #49B5E5;
+              background-color: #fff;
               z-index: 1;
               .progress-btn{
                 position: absolute;

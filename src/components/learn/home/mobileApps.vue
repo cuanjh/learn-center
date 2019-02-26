@@ -4,7 +4,7 @@
     <div class="desc">You can learn with talkmate on your smartphone or tablet.</div>
     <div class="link">
       <i></i>
-      <router-link tag="p" :to="{path: '/app/introduce-app'}">
+      <router-link :to="{path: '/app/introduce-app'}" target="_blank">
         <span class="more">了解更多</span>
       </router-link>
     </div>
@@ -46,6 +46,7 @@ export default {
     justify-content: space-between;
     align-items: flex-end;
     padding-top: 26px;
+    color: #0A2B40;
     i {
       display: inline-block;
       width: 108px;
@@ -61,7 +62,6 @@ export default {
       font-size: 14px;
       line-height: 20px;
       padding: 8px 38px;
-      cursor: pointer;
     }
   }
 }

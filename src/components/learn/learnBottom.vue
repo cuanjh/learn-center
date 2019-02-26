@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-box">
+  <div class="bottom-box" v-show="false">
     <div class="content">
       <div class="left">
         <p>2018 @ talkmate</p>

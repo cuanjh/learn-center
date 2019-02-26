@@ -18,7 +18,7 @@
               </ul>
             </div>
           </div>
-          <router-link tag="span" :to="{path: '/app/discovery/radio-home'}" class="more">
+          <router-link target="_blank" :to="{path: '/app/discovery/radio-home'}" class="more">
             全部电台
             <i></i>
           </router-link>

@@ -53,12 +53,10 @@
         <router-view></router-view>
       </div>
     </div>
-    <rocket v-show="rocketShow"></rocket>
   </div>
 </template>
 
 <script>
-import Rocket from '../../common/rocket.vue'
 import $ from 'jquery'
 import cookie from '../../../tool/cookie'
 import { mapState, mapMutations, mapActions } from 'vuex'
@@ -67,12 +65,8 @@ export default {
   data () {
     return {
       activeItem: '',
-      judgeVip: false,
-      rocketShow: false
+      judgeVip: false
     }
-  },
-  components: {
-    Rocket
   },
   created () {
     this.$on('activeNavUserItem', (e) => {
