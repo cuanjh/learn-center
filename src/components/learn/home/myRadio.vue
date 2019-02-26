@@ -7,11 +7,11 @@
       <div class="radio-player">
         <div class="title"><i></i>推荐电台</div>
         <div class="radio-control">
-          <div class="lang-sel">
-            <span @click="isShowPanel = !isShowPanel">{{ selStateText }} <i></i></span>
+          <div class="lang-sel" @mouseleave="isShowPanel = false">
+            <span @mouseenter="isShowPanel = true">{{ selStateText }} <i></i></span>
             <div class="lang-list" v-show="isShowPanel">
               <ul>
-                <li :class="{'active': selStateCode == item.lan_code }"
+                <li @mouseenter="selState = {'lan_code':item.lan_code, 'text': item.text}" :class="{'active': selStateCode == item.lan_code }"
                   v-for="(item, index) in langsStateSel"
                   :key="item.lan_code + index"
                   @click="changeState(item)">{{item.text}}</li>
@@ -278,14 +278,14 @@ export default {
           margin-right: 25px;
           background: #EEF2F3;
           border-radius: 3px;
-          &:hover {
-            box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
-            -webkit-transition: all .3s ease-in-out;
-            -moz-transition: all .3s ease-in-out;
-            -ms-transition: all .3s ease-in-out;
-            -o-transition: all .3s ease-in-out;
-            transition: all .3s ease-in-out;
-          }
+          // &:hover {
+          //   box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
+          //   -webkit-transition: all .3s ease-in-out;
+          //   -moz-transition: all .3s ease-in-out;
+          //   -ms-transition: all .3s ease-in-out;
+          //   -o-transition: all .3s ease-in-out;
+          //   transition: all .3s ease-in-out;
+          // }
           .play-radio {
             position: relative;
             display: block;
@@ -356,10 +356,15 @@ export default {
             margin: 10px 0 6px;
             color: #333333;
             font-weight: 500;
-            height: 40px;
             font-size: 14px;
             cursor: pointer;
             line-height:20px;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            &:hover {
+              color: #2A9FE4;
+            }
           }
           .author {
             color: #B8B8B8;

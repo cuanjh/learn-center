@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="820px" height="360px" viewBox="0 0 820 360" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>背景遮罩</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-2.4%" y="-5.6%" width="104.9%" height="111.1%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0352941176   0 0 0 0 0.117647059   0 0 0 0 0.137254902  0 0 0 0.05 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="31.9628193%" y1="-10.0282118%" x2="52.5410145%" y2="89.8558702%" id="linearGradient-2">
+            <stop stop-color="#0D3458" offset="0%"></stop>
+            <stop stop-color="#005691" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.6" opacity="0.825195312">
+        <g id="世语图默认-未登录-未选择语种" transform="translate(-370.000000, -591.000000)" fill="url(#linearGradient-2)" fill-rule="nonzero">
+            <g id="课程学习" transform="translate(370.000000, 591.000000)">
+                <g id="Level2-Unit3-Chapter1" filter="url(#filter-1)">
+                    <g id="分组-2">
+                        <rect id="背景遮罩" style="mix-blend-mode: multiply;" x="0" y="0" width="820" height="360"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -61,14 +61,14 @@
           <img class="nation" src="https://course-assets1.talkmate.com/course/icons/IND-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="国籍">
         </div> -->
         <div class='learn-user' @mouseenter="showExit" >
-          <a>
+          <router-link :to="{path: '/app/user/course'}">
             <img :src='ui.photo' />
             <span v-show="isActive" class="active"></span>
-          </a>
+          </router-link>
           <transition name="fade">
             <span class='user-login-out mycourse-loginout animated' v-show="showExitState">
               <img class='arrow' src="./../../../static/images/course/learn-big-arrow.png">
-              <router-link tag="span" :to="{ path: '/app/user/setting' }">设置</router-link>
+              <router-link v-show="false" tag="span" :to="{ path: '/app/user/setting' }">设置</router-link>
               <span @click='jumpSystem()'>退出</span>
             </span>
           </transition>
@@ -245,7 +245,7 @@ export default {
 .header-box {
   width: 100%;
   height: 62px;
-  background: #2A9FE4;
+  background: #0581D1;
   position: fixed;
   top: 0px;
   z-index: 99999;

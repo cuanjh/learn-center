@@ -19,15 +19,17 @@
       </div>
     </div>
     <div class="current-course">
-      <dl>
+      <dl @mouseleave="isShowSubscribeCourses = false">
         <dt><img :src="courseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
-          <p :class="{'active': isShowSubscribeCourses}" @click="isShowSubscribeCourses = !isShowSubscribeCourses">
+          <p :class="{'active': isShowSubscribeCourses}" @mouseenter="isShowSubscribeCourses = true">
             <span>{{ courseBaseInfo.name }}</span>
             <i></i>
           </p>
           <p>世界语言地图官方课程</p>
-          <learn-course-list :type="'index'" class="subscribe-courses" v-show="isShowSubscribeCourses" />
+          <transition name="fade">
+            <learn-course-list :type="'index'" class="subscribe-courses" v-show="isShowSubscribeCourses" />
+          </transition>
         </dd>
       </dl>
       <div class="progress-area">
@@ -360,8 +362,9 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
-    background:linear-gradient(180deg,rgba(9,74,131,1) 0%,rgba(0,109,184,0) 100%);
-opacity:0.8251999999999999;
+    background-image: url('../../../../static/images/learnIndex/icon-course-bg.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
     border-radius: 5px;
     z-index: 2;
   }
@@ -370,7 +373,7 @@ opacity:0.8251999999999999;
     font-size: 28px;
     color: #ffffff;
     line-height: 45px;
-    font-weight: 500;
+    font-weight: bold;
     margin-top: 44px;
     margin-left: 40px;
   }
@@ -438,7 +441,8 @@ opacity:0.8251999999999999;
   }
 
   .start-learn {
-    background-color: #2A9FE4;
+    /* background-color: #2A9FE4; */
+    background: rgba(5,129,209,1);
     color: #ffffff;
     border-radius: 21px;
     width: 160px;
@@ -487,8 +491,8 @@ opacity:0.8251999999999999;
     background: #ffffff;
     width: 72px;
     height: 72px;
-    border: 2px solid #eaeaea;
-    border-radius: 6px;
+    border: 3px solid #eaeaea;
+    border-radius: 8px;
     object-fit: cover;
   }
 
@@ -620,7 +624,19 @@ opacity:0.8251999999999999;
     cursor: pointer;
   }
 
+  .all-courses:hover {
+    color: #2A9FE4;
+    border: 1px solid #2A9FE4;
+  }
+
   .chartroom {
     margin-top: 30px;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

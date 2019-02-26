@@ -3,13 +3,15 @@
     <a class="float-bar-item weixin"
       @mouseenter="isFocusWeixin = true"
       @mouseleave="isFocusWeixin = false">
-      <div class="focus-weixin" v-show="isFocusWeixin">
-        <p>关注微信公众号</p>
-        <p></p>
-        <p>扫一扫，关注我！</p>
-        <div class="triangle_border_left">
+      <transition name="fade">
+        <div class="focus-weixin" v-show="isFocusWeixin">
+          <p>关注微信公众号</p>
+          <p></p>
+          <p>扫一扫，关注我！</p>
+          <div class="triangle_border_left">
+          </div>
         </div>
-      </div>
+      </transition>
     </a>
     <a class="float-bar-item weibo" href="https://weibo.com/u/5487063021" target="_blank">
     </a>
@@ -18,12 +20,14 @@
     <a class="float-bar-item help"
       @mouseenter="isShowHelp = true"
       @mouseleave="isShowHelp = false">
-      <div class="help-panel" v-show="isShowHelp">
-        <p><i></i> 400-068-8056</p>
-        <p><i></i> vip@talkmate.com</p>
-        <div class="triangle_border_left">
+      <transition name="fade">
+        <div class="help-panel" v-show="isShowHelp">
+          <p><i></i> 400-068-8056</p>
+          <p><i></i> vip@talkmate.com</p>
+          <div class="triangle_border_left">
+          </div>
         </div>
-      </div>
+      </transition>
     </a>
     <a class="float-bar-item top" @click="backToTop()">
     </a>
@@ -36,7 +40,7 @@ export default {
     return {
       isBackToTop: false,
       isFocusWeixin: false,
-      isShowHelp: true
+      isShowHelp: false
     }
   },
   mounted () {
@@ -216,5 +220,12 @@ export default {
       position: absolute;
     }
   }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

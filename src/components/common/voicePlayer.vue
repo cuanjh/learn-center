@@ -116,18 +116,18 @@
             </div>
           </div>
         </div>
-        <div class="play-controls">
+        <div class="play-controls" @mouseleave="isShowVolume = false">
           <div class="player-volume-wrapper" v-show="isShowVolume">
             <div class="player-volume">
               <div class="player-volume-progress" ref="trunk">
                 <i class="player-volume-cur" :style="{'height': volumeHeight}">
-                  <span class="player-volume-btn"  @mousemove="moveVolume($event)">
+                  <span id='playerVolumeBtn' class="player-volume-btn"  @mousedown="mousedownVolume($event)">
                   </span>
                 </i>
               </div>
             </div>
           </div>
-          <a class="volume" @click="isShowVolume = !isShowVolume">
+          <a class="volume" @mouseenter="isShowVolume = true">
             <svg>
               <use xlink:href="#icon-volume"></use>
             </svg>
@@ -200,7 +200,6 @@ export default {
       isLoop: true,
       isLock: true,
       tagVolume: false,
-      thunk: null, // 拖拽DOM元素
       volumeHeight: '50%',
       isHand: true,
       sndctr: SoundCtrl,
@@ -257,15 +256,6 @@ export default {
     })
   },
   mounted () {
-    this.thunk = this.$refs.trunk
-    this.thunkBtn = this.$refs.trunk_btn
-    this.thunk.onmousedown = (e) => {
-      this.downVolume(e)
-      document.onmouseup = () => {
-        document.onmousemove = document.onmouseup = null
-      }
-      return false
-    }
     let that = this
     $('.voice-player').mouseenter(() => {
       if (!that.isLock) {
@@ -511,17 +501,24 @@ export default {
         this.next()
       }
     },
-    moveVolume (e) {
-      this.downVolume(e)
-    },
-    downVolume (e) {
-      let height = $('.player-volume-progress').offset().top + 90 - e.pageY
-      if (height > 90 || height < 0) {
-        return
+    mousedownVolume (ev) {
+      var _this = this
+      document.onmousemove = (ev) => {
+        let height = $('.player-volume-progress').offset().top + 90 - ev.pageY
+        if (height > 90 || height < 0) {
+          return
+        }
+        _this.volumeHeight = (height * 1.0 / 90 * 100).toFixed(2) + '%'
+        _this.sndctr.setVolume(height * 1.0 / 90)
+        console.log(height)
       }
-      this.volumeHeight = (height * 1.0 / 90 * 100).toFixed(2) + '%'
-      this.sndctr.setVolume(height * 1.0 / 90)
-      console.log(height)
+
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
+
+      return false
     },
     setLock () {
       this.isLock = !this.isLock
@@ -826,13 +823,14 @@ export default {
         }
         .player-volume-wrapper {
           position: absolute;
-          bottom: 50px;
+          bottom: 56px;
           margin-left: -18px;
           .player-volume {
             display: block;
             width: 46px;
             height: 134px;
-            background-color: rgba(0, 57, 91, .8);
+            background-color: #0F90C6;
+            opacity: .7;
             .player-volume-progress {
               position: absolute;
               top: 16px;
@@ -840,7 +838,7 @@ export default {
               margin-left: -1px;
               width: 2px;
               height: 90px;
-              background: #40404c;
+              background: rgba(255, 255, 255, .2);
               .player-volume-cur {
                 position: absolute;
                 left: 0;
@@ -848,7 +846,7 @@ export default {
                 display: block;
                 height: 0%;
                 width: 100%;
-                background-color: #f86442;
+                background-color: #fff;
                 .player-volume-btn {
                   position: absolute;
                   right: -4px;

@@ -10,6 +10,7 @@ import BMap from 'BMap'
 import BMapLib from 'BMapLib'
 import Bus from '../../bus'
 import mapData from '../../api/mapData'
+import cookie from '../../tool/cookie'
 
 var mp = null
 // import BMapSymbolSHAPEPOINT from 'BMap_Symbol_SHAPE_POINT'
@@ -80,10 +81,11 @@ export default {
       this.$router.go(-1)
     },
     baiduMap () {
+      let _this = this
       // 创建地图实例
       mp = new BMap.Map('allmap', {
         enableMapClick: false,
-        minZoom: 1,
+        minZoom: 3,
         maxZoom: 6
       })
       // 开启鼠标滚轮缩放
@@ -91,6 +93,13 @@ export default {
       console.log('bmaplib', BMapLib)
 
       mp.addEventListener('load', () => {
+        let userId = cookie.getCookie('user_id')
+        if (userId) {
+          this.loadRecommendTeachers()
+        } else {
+          _this.courseLangsMap(_this.courseLangsList)
+        }
+
         // 设置版权控件位置
         /* eslint-disable */
         var cr = new BMap.CopyrightControl({
@@ -291,13 +300,17 @@ export default {
       mp.addOverlay(marker)
       // 添加点击事件
       let endangerStr = (item['ISO-639-3'] && item['ISO-639-3'].length > 0) ? item['ISO-639-3'].join(',') : ''
+      let text = '了解详情'
       var sContent =
         '<div>' +
           '<p>' +
+            '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 20px; margin-left: 5px;">' +
+              item.en_name +
+            '</span>' +
+          '</p>' +
+          '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 12px; text-decoration: underline;">' +
             '<a href="./book-details/' + endangerStr + '">' +
-              '<span style="font-size:13px; font-weight:bold; color:#333333; line-height: 20px; margin-left: 5px;">' +
-                item.en_name +
-              '</span>' +
+              text +
             '</a>' +
           '</p>' +
         '</div>'
@@ -373,33 +386,42 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
     div.style.transform = 'translateY(-5px)'
     // 创建信息窗口对象
     var sContent = ''
+    var text = ''
     if (that._type === 'partner') {
+      text = '个人主页'
       sContent =
         '<div>' +
           '<p>' +
-            '<img style="float:left;margin:4px" src="' + that._data.photo + '" width="50" height="50" title=""/>' +
+            '<img style="float:left;margin:4px; border: 2px solid #E5E9DB; border-radius: 50%;" src="' + that._data.photo + '" width="32" height="32" title=""/>' +
+            '<span style="font-size:14px; font-weight:600; color:#333333; line-height: 40px; margin-left: 5px;">' +
+              that._data.author_name +
+            '</span>' +
+          '</p>' +
+          '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 1px; text-decoration: underline;">' +
             '<a href="./discovery/author-detail/' + that._data.user_id + '">' +
-              '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
-                that._data.author_name +
-              '</span>' +
+              text +
             '</a>' +
           '</p>' +
         '</div>'
     } else if (that._type === 'course') {
+      text = '了解详情'
       sContent =
         '<div>' +
           '<p>' +
-            '<img style="float:left;margin:4px" src="' + that._data.flag + '" width="50" height="50" title=""/>' +
+            '<img style="width: 32px; height:32px; float:left;margin:4px; border-radius:6px; border: 2px solid rgba(229,233,219,1);" src="' + that._data.flag + '" width="50" height="50" title=""/>' +
+            '<span style="font-size:14px; font-weight:600; color:#333333; line-height: 38px; margin-left: 5px;">' +
+              that._data.name +
+            '</span>' +
+          '</p>' +
+          '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 2px; text-decoration: underline;">' +
             '<a href="./book-details/' + that._data.lan_code + '-Basic">' +
-              '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 60px; margin-left: 5px;">' +
-                that._data.name +
-              '</span>' +
+              text +
             '</a>' +
           '</p>' +
         '</div>'
     }
     var infoWindow = new BMap.InfoWindow(sContent, {
-      offset: new BMap.Size(15, -15)
+      offset: new BMap.Size(15, -25)
     })
     // 开启信息窗口
     mp.openInfoWindow(infoWindow, that._point)

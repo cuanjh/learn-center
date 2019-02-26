@@ -1,10 +1,10 @@
 <template>
-  <div class="search-box">
+  <div class="search-box" @mouseleave="isShowEndangerPanel = false">
     <div class="search">
       <div class="search-inner-desc" v-show="!isShowSearch">
         <ul>
-          <li>
-            <span class="endangered-languages" @click="isShowEndangerPanel = !isShowEndangerPanel">
+          <li @mouseenter="isShowEndangerPanel = true">
+            <span class="endangered-languages">
               <i></i>濒危语种
             </span>
             <i :class="['arrow', {'active': isShowEndangerPanel}]"></i>
@@ -22,15 +22,17 @@
           <i @click="cancelSearch()"></i>
         </div>
       </transition>
-      <div class="endangered-panel" v-show="isShowEndangerPanel">
-        <ul>
-          <li :class="{'active': item.val == activeEndanger}"
-            @click="selectEndanger(item)" v-for="item in endangeredLevelList"
-            :key="item.id">
-            <i :class="item.iconClass"></i>{{ item.text }}
-          </li>
-        </ul>
-      </div>
+      <transition name="show">
+        <div class="endangered-panel" v-show="isShowEndangerPanel">
+          <ul>
+            <li @mouseenter="activeEndanger = item.val" :class="{'active': item.val == activeEndanger}"
+              @click="selectEndanger(item)" v-for="item in endangeredLevelList"
+              :key="item.id">
+              <i :class="item.iconClass"></i>{{ item.text }}
+            </li>
+          </ul>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -269,7 +271,7 @@ export default {
         color: #103044;
         font-size: 14px;
         font-weight: 500;
-        border-left: 3px solid #fff;
+        border-left: 3px solid rgba(255, 255, 255, 0);
         cursor: pointer;
       }
     }
@@ -333,4 +335,34 @@ export default {
     margin-top: 1px;
     margin-right: 10px;
   }
+
+  @keyframes show {
+    0% {
+        opacity: 0;
+        height: 0;
+    }
+    100% {
+        opacity: 1;
+        height: 192px;
+    }
+  }
+@keyframes hide {
+    0% {
+        opacity: 1;
+        height: 192px;
+    }
+    100% {
+        opacity: 0;
+        height: 0;
+    }
+}
+.show-enter-active {
+    animation: show .5s;
+}
+.show-leave-active {
+    animation: hide .5s;
+}
+.show-enter, .show-leave-to {
+    opacity: 0;
+}
 </style>
