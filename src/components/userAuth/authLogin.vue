@@ -72,7 +72,8 @@
           <a @click="showAreement()">使用条款及隐私政策</a>
         </p>
       </div>
-      <div class="areacode-box" v-show="shoeAreaCode">
+      <!--  v-show="shoeAreaCode" -->
+      <div class="areacode-box" v-show="false">
         <div>
           <ul class="code-tab">
             <li class="js-code-tab">常用</li>
@@ -137,7 +138,7 @@ export default {
     return {
       message: '获取',
       headerTitle: '',
-      shoeAreaCode: false, // 显示区域编码
+      // shoeAreaCode: false, // 显示区域编码
       goPhone: true, // true 手机号 false 邮箱
       phone: '',
       phoneCode: '',
@@ -369,7 +370,7 @@ html,body{-webkit-text-size-adjust:none;}
     border-radius: 5px;
     background-color: #fff;
     margin: 0px auto;
-    padding: 40px 40px 0px;
+    padding: 38px 40px 0px;
   }
   h2 {
     line-height: 36px;
@@ -395,7 +396,7 @@ html,body{-webkit-text-size-adjust:none;}
     color: #D6DFE4;
   }
   .phone-resigter .item {
-    margin-top: 10px;
+    margin-top: 20px;
     overflow: hidden;
     position: relative;
     .areacode {
@@ -449,16 +450,18 @@ html,body{-webkit-text-size-adjust:none;}
     padding: 4px 0px;
   }
   .phone-resigter .phone-code button {
-    padding: 0 10px;
-    height: 26px;
+    padding:4px 15px;
     font-size: 13px;
     color: #fff;
     border-radius: 84px;
     border: none;
-    background-color: #299fe4;
+    background-color:#0581D1;
     position: absolute;
     right: 8px;
     top: 6px;
+  }
+  .phone-resigter .phone-code button:hover {
+    background-color: #2A9FE4;
   }
   .phone-resigter .phone-code button:disabled {
     color: #fff;
@@ -550,17 +553,21 @@ html,body{-webkit-text-size-adjust:none;}
       display: inline-block;
       width:90px;
       height:1px;
-      border:1px solid #E5E5E5;
+      background: #E5E5E5;
       margin-top: 10px;
     }
   }
   .third-party {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-top: 14px;
     .third {
       width:40px;
       height:40px;
+      margin-right: 20px;
+    }
+    .third:last-child {
+      margin-right: 0px;
     }
     i {
       cursor: pointer;

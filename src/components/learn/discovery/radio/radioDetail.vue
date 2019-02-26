@@ -33,25 +33,33 @@
           <!-- 价钱 -->
            <div class="member">
              <!-- 免费课程 -->
-            <div class="money" v-if="courseInfo.money === 0">
+            <div class="money-nopay" v-if="courseInfo.money === 0">
               <span v-text="$t('free')"></span>
             </div>
-            <!-- 会员不免费 -->
-            <div class="money cny" v-else-if="courseInfo.money_type === 'CNY' && courseInfo.free_for_member === 0">
-              <span v-text="'￥' + courseInfo.money"></span>
-              <span>元/年</span>
-            </div>
-            <!-- 会员免费 -->
-            <div class="money vip-free" v-else>
-              <p class="cny" v-if="courseInfo.money_type === 'CNY'">
-                <span v-text="'￥' + courseInfo.money"></span>
-                <span>元/年</span>
-                <span>会员免费</span>
-              </p>
-              <p class="coins" v-else>
-                <span v-text="courseInfo.money"></span> {{$t('coins')}}
-                <span>会员免费</span>
-              </p>
+            <!-- 花钱 -->
+            <div class="money-pay" v-else>
+              <!-- 会员不免费 -->
+              <div class="money" v-if="courseInfo.free_for_member === 0 || courseInfo.free_for_member === false">
+                <p class="cny" v-if="courseInfo.money_type === 'CNY'">
+                  <span v-text="'￥' + courseInfo.money"></span>
+                  <span>元/年</span>
+                </p>
+                <p class="coins" v-else>
+                  <span v-text="courseInfo.money"></span> {{$t('coins')}}
+                </p>
+              </div>
+              <!-- 会员免费 -->
+              <div class="vip-free" v-else>
+                <p class="cny" v-if="courseInfo.money_type === 'CNY'">
+                  <span v-text="'￥' + courseInfo.money"></span>
+                  <span>元/年</span>
+                  <span>会员免费</span>
+                </p>
+                <p class="coins" v-else>
+                  <span v-text="courseInfo.money"></span> {{$t('coins')}}
+                  <span>会员免费</span>
+                </p>
+              </div>
             </div>
           </div>
           <!-- 介绍 -->
@@ -236,12 +244,15 @@ export default {
         return 0
       }
       return this.userInfo.member_info.member_type
+    },
+    radioCode () {
+      return this.$route.params.code
     }
   },
   methods: {
     ...mapActions({
       postRadioDetail: 'course/postRadioDetail', // 电台详情
-      // postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
+      postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
       remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
       getOtherRecommends: 'getOtherRecommends' // 其他人也在听
@@ -297,7 +308,7 @@ export default {
     // 发请求获取radio的详情页面
     async loadData () {
       let _this = this
-      let code = _this.$route.params.code
+      let code = _this.radioCode
       await _this.postRadioDetail(code).then((res) => {
         console.log('电台详情返回', res)
         _this.radioDetail = res.result
@@ -338,23 +349,40 @@ export default {
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
           if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+            if (radio.money_type === 'CNY') {
+              // 人民币提示
+              Bus.$emit('showBuyRadio', radio, radio.cards_count)
+            } else if (radio.money_type === 'coins') {
+              // 金币提示
+              Bus.$emit('showBuyCoinsRadio', radio)
+              Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+            }
           }
         } else { // 是会员
           if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
             if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+              if (radio.money_type === 'CNY') {
+                // 人民币提示
+                Bus.$emit('showBuyRadio', radio, radio.cards_count)
+              } else if (radio.money_type === 'coins') {
+                // 金币提示
+                Bus.$emit('showBuyCoinsRadio', radio)
+                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+              }
             }
           }
         }
+      } else {
+        this.initSubscibe(radio)
       }
-      if (radio.money_type === 'CNY') {
-        // 人民币提示
-        Bus.$emit('showBuyRadio', radio, radio.cards_count)
-      } else if (radio.money_type === 'coins') {
-        // 金币提示
-        Bus.$emit('showBuyCoinsRadio', radio)
-        Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-      }
-      this.subscibenoInfo.purchased_state = 1
+      // if (radio.money_type === 'CNY') {
+      //   // 人民币提示
+      //   Bus.$emit('showBuyRadio', radio, radio.cards_count)
+      // } else if (radio.money_type === 'coins') {
+      //   // 金币提示
+      //   Bus.$emit('showBuyCoinsRadio', radio)
+      //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+      // }
       // if (radio.money !== 0) { // 收费
       //   if (this.isVip !== 1) { // 不是会员
       //     if (radio.money_type !== 'CNY') { // 不是会员 金币收费课程
@@ -383,6 +411,16 @@ export default {
       // } else if (radio.money === 0 || radio.free_for_member === 1) { // 免费 会员免费
       //   this.subscibenoInfo.purchased_state = 1
       // }
+    },
+    // 初始化订阅的状态
+    async initSubscibe (radio) {
+      await this.postPurchaseCourse({code: radio.code}).then(res => {
+        console.log('订阅课程返回', res)
+        if (res.success) {
+          // purchased_state状态值显示隐藏 0未购买 1已购买 隐藏 2购买已删除
+          this.subscibenoInfo.purchased_state = 1
+        }
+      })
     }
   }
 }
@@ -504,30 +542,53 @@ export default {
 .radio-left .course .count span:first-child {
   margin-right: 20px;
 }
-
-.member .money {
-  margin-top: 30px;
-  font-size: 16px;
-  color: #999999;
-  display: flex;
-  align-items: center;
-}
-
-.member .money span {
+/* 免费 */
+ .member .money-nopay {
+   margin-top: 30px;
+ }
+.member .money-nopay span {
   font-size:24px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
   color:rgba(255,131,49,1);
   margin-right: 5px;
 }
-.member .money.cny span:nth-child(2) {
+/* 收费 */
+/* 会员免费 */
+.member .money-pay .vip-free {
+  margin-top: 30px;
+}
+.member .money-pay .vip-free .cny {
+  display: flex;
+    align-items: center;
+}
+.member .money-pay .vip-free .cny span {
   font-size:14px;
   font-family:PingFangSC-Regular;
   font-weight:400;
   color:rgba(153,153,153,1);
-  padding: 0 5px
 }
-.member .money.vip-free .coins {
+.member .money-pay .vip-free .cny span:nth-child(1) {
+  font-size:24px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(255,131,49,1);
+  margin-right: 5px;
+}
+.member .money-pay .vip-free  .cny span:nth-child(3) {
+  cursor: pointer;
+  font-size:12px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(245,166,35,1);
+  padding: 0 10px;
+  border-radius:12px;
+  border:1px solid;
+  border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+  text-align: center;
+  margin: 0 10px;
+}
+.member .money-pay .vip-free .coins {
   font-size:14px;
   font-family:PingFangSC-Regular;
   font-weight:400;
@@ -536,7 +597,7 @@ export default {
   display: flex;
   align-items: center;
 }
-.member .money.vip-free .coins span:nth-child(2) {
+.member .money-pay .vip-free  .coins span:nth-child(2) {
   cursor: pointer;
   font-size:12px;
   font-family:PingFangSC-Semibold;
@@ -549,29 +610,35 @@ export default {
   text-align: center;
   margin: 0 10px;
 }
-.member .money.vip-free .cny {
-  display: flex;
-  align-items: center;
-}
-.member .money.vip-free .cny span:nth-child(2) {
+/* 会员不免费 */
+.member .money-pay .money {
+  margin-top: 30px;
   font-size:14px;
   font-family:PingFangSC-Regular;
   font-weight:400;
   color:rgba(153,153,153,1);
-  padding: 0 5px
 }
-.member .money.vip-free .cny span:nth-child(3) {
-  cursor: pointer;
-  font-size:12px;
+.member .money-pay .money .cny {
+  display: flex;
+  align-items: center;
+}
+.member .money-pay .money .cny span:nth-child(1) {
+  font-size:24px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
-  color:rgba(245,166,35,1);
-  padding: 0 10px;
-  border-radius:12px;
-  border:1px solid;
-  border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
-  text-align: center;
-  margin: 0 10px;
+  color:rgba(255,131,49,1);
+  margin-right: 5px;
+}
+.member .money-pay .money .coins {
+  display: flex;
+  align-items: center;
+}
+.member .money-pay .money .coins span {
+  font-size:24px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(255,131,49,1);
+  margin-right: 5px;
 }
 
 .course .subscription {
@@ -788,7 +855,7 @@ export default {
   font-family:PingFangSC-Semibold;
   font-weight:600;
   color:rgba(60,91,111,1);
-  padding: 5px 20px;
+  padding: 6px 20px;
   border-radius:19px;
   border:1px solid rgba(178,192,201,1);
 }

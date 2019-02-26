@@ -96,6 +96,13 @@ export default {
           font-size: 16px;
           color: #0a2b40ff;
           font-weight: bold;
+          span {
+            display: inline-block;
+            width: 110px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
         }
       }
     }

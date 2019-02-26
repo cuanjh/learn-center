@@ -9,10 +9,9 @@
           <router-link tag="div" class="book-title" :to="{path: '/app/discovery/radio-detail/' + item.code}">
             <p class="share-title">{{ item.title }}</p>
             <p class="share">
-              <span>BY:</span>
-              <span>{{ item.author_name }}</span>
-              <i></i>
-              <span>128 W</span>
+              <span>作者：{{ item.author_name }}</span>
+              <span><i></i>{{item.buy_num}}次播放</span>
+              <span v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' +item.money : $t('coins') + ' ' + item.money"></span>
             </p>
           </router-link>
           <div class="icon" v-show="false"></div>
@@ -77,30 +76,40 @@ export default {
   font-family:PingFangSC-Medium;
   font-weight:500;
   color:rgba(51,51,51,1);
+  width: 300px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 .book-resource li .book-title .share {
+  display: flex;
   font-size:12px;
   font-family:Helvetica;
   color:rgba(203,203,203,1);
 }
 .book-resource li .book-title .share span {
+  display: flex;
+  align-items: center;
   color: #999999;
-  margin-right: 10px;
+  margin-right: 32px;
 }
-.book-resource li .book-title .share span:nth-child(2) {
+.book-resource li .book-title .share span:nth-child(1) {
+  margin-right: 0;
   display: inline-block;
   width: 100px;
   height: 24px;
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
+  margin-right: 2px;
 }
 .book-resource li .book-title .share i {
   display: inline-block;
-  width: 25px;
-  height: 25px;
-  background: url('../../../../static/images/bookCase/icon.svg') no-repeat center;
+  width: 12px;
+  height: 9px;
+  background: url('../../../../static/images/listening.png') no-repeat center;
   background-size: cover;
+  margin-right: 10px;
 }
 .book-resource li .book-content .icon {
   cursor: pointer;

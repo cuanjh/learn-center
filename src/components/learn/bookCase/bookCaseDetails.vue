@@ -81,9 +81,8 @@
         <div class="details-header-right">
           <div class="right-content">
             <div class="audio-play">
-              <img :src="courseInfo.cover" alt="audio的背景图片">
-              <audio src=""></audio>
-              <p class="text">
+              <img src="https://mobile-static.talkmate.com/resource/2017-01-16/jiaoxuefa.png" alt>
+              <p class="text" @click="playRadio()">
                 <span>全球说母语教学法</span>
               </p>
             </div>
@@ -185,22 +184,32 @@
         <vip-prompt></vip-prompt>
       </div>
     </div>
+    <div class="video-box" v-show="showRadioPlay">
+      <div class="video-dialog">
+        <!-- txy.mp4 -->
+        <video id="my-video" controls="controls">
+          <source src="/i/movie.ogg" type="video/ogg" />
+          <source src="//mobile-static.talkmate.com/resource/2017-04-05/jiaoxuefa-zh.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
 import Bus from '../../../bus'
+import $ from 'jquery'
 import VipPrompt from '../../../components/common/vipPrompt.vue'
 import LoginBox from '../../../components/common/loginBox.vue'
 import BookCaseInfo from './bookCaseInfo.vue'
 import BookCaseRadios from './bookCaseRadios.vue'
 import BookCaseCountry from './bookCaseCountry.vue'
 import Cookie from '../../../tool/cookie'
-// import $ from 'jquery'
 
 export default {
   data () {
     return {
+      showRadioPlay: false,
       goLogin: true, // 登录的提示
       showMore: 0, // true是展开，false是收起
       showMoreCountry: true,
@@ -267,6 +276,13 @@ export default {
     } else {
       this.goLogin = false
     }
+    document.addEventListener('click', (e) => {
+      console.log('e', e)
+      if (e.target.className === 'video-box' && e.target.className !== 'video-dialog') {
+        this.showRadioPlay = false
+        $('#my-video')[0].pause()
+      }
+    })
   },
   computed: {
     ...mapState({
@@ -378,6 +394,11 @@ export default {
           })
         })
       })
+    },
+    // 播放视频
+    playRadio () {
+      $('#my-video')[0].play()
+      this.showRadioPlay = true
     }
   }
 }
@@ -569,6 +590,7 @@ export default {
             object-fit: cover;
           }
           .text {
+            cursor: pointer;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, .2);
@@ -784,6 +806,31 @@ export default {
           }
         }
       }
+    }
+  }
+}
+.video-box {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  overflow: hidden;
+  outline: 0;
+  background: rgba(0, 0, 0, .5);
+  .video-dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 710px;
+    height: 400px;
+    transform: translate(-50%, -50%);
+    video {
+      width: 100%;
+      height: 100%;
     }
   }
 }

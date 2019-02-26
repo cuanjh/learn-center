@@ -37,7 +37,7 @@ export default {
     .introduce-app-img {
       width: 280px;
       height: 220px;
-      background: url('../../../static/images/introduceappimg.svg') no-repeat center;
+      background: url('../../../static/images/introduceApp/introduceappimg.png') no-repeat center;
       background-size: cover;
     }
     .ios-google {
@@ -50,7 +50,7 @@ export default {
         display: inline-block;
         width: 114px;
         height: 36px;
-        background: url("../../../static/images/ios.svg") no-repeat center;
+        background: url("../../../static/images/introduceApp/iosapp.png") no-repeat center;
         background-size: cover;
         margin-right: 10px;
       }
@@ -59,7 +59,7 @@ export default {
         display: inline-block;
         width: 114px;
         height: 36px;
-        background: url("../../../static/images/google.svg") no-repeat center;
+        background: url("../../../static/images/introduceApp/google.png") no-repeat center;
         background-size: cover;
       }
     }
