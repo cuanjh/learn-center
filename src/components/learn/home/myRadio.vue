@@ -356,6 +356,7 @@ export default {
             margin: 10px 0 6px;
             color: #333333;
             font-weight: 500;
+            margin-bottom: 6px;
             font-size: 14px;
             cursor: pointer;
             line-height:20px;

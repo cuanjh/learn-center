@@ -72,7 +72,7 @@ export default {
     border-radius: 20px;
     font-size:14px;
     font-family:PingFang-SC-Bold;
-    font-weight:bold;
+    font-weight:500;
     color:#A92222FF;
     text-align: center;
     line-height: 36px;

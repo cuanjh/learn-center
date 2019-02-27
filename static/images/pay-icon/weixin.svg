@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="98px" height="98px" viewBox="0 0 98 98" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>微信支付</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="电台付费" transform="translate(-233.000000, -596.000000)">
+            <g id="提示弹框-copy" transform="translate(68.000000, 313.000000)">
+                <g id="微信支付" transform="translate(165.000000, 283.000000)">
+                    <rect id="矩形" stroke-opacity="0.418365036" stroke="#57A900" fill="#7ED321" fill-rule="nonzero" x="0.5" y="0.5" width="97" height="97" rx="5.21276596"></rect>
+                    <path d="M45.5805601,36.6313658 C43.6053973,37.6433907 43.3124355,36.0632397 43.3124355,36.0632397 L40.83701,30.7542141 C39.8845214,28.2314401 41.6613781,29.6167422 41.6613781,29.6167422 C41.6613781,29.6167422 43.1859593,30.6767802 44.3430407,31.3226973 C45.4994773,31.968644 46.8176925,31.5123404 46.8176925,31.5123404 L63.0008412,24.6471704 C60.0151263,21.2326721 55.0829741,19 49.4991618,19 C40.3864285,19 33,24.9416155 33,32.2714185 C33,36.4874453 35.445894,40.2398504 39.2556224,42.6719229 L38.5685952,46.3017368 C38.5685952,46.3017368 38.2336574,47.3614179 39.3944141,46.8699224 C40.185382,46.5348119 42.2017792,45.3339173 43.4021263,44.6030699 C45.2891135,45.2074291 47.3449399,45.5430156 49.5000645,45.5430156 C58.612024,45.5430156 66,39.6013704 66,32.2714483 C66,30.1483676 65.3774522,28.1433565 64.2746624,26.3636562 C59.1186703,29.2148178 47.1260649,35.8408143 45.5805601,36.6313658 Z" id="路径" fill="#FFFFFF"></path>
+                    <text font-family="PingFang-SC-Bold, PingFang SC" font-size="14" font-weight="bold" letter-spacing="3" fill="#2A4C04">
+                        <tspan x="17" y="70">微信支</tspan>
+                        <tspan x="68" y="70">付</tspan>
+                    </text>
+                    <text id="WeChat-payment" font-family="DINCondensed-Bold, DIN Condensed" font-size="12" font-style="condensed" font-weight="bold" letter-spacing="0.200000003" fill="#417505">
+                        <tspan x="17" y="83">WeChat paymen</tspan>
+                        <tspan x="79.012" y="83">t</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

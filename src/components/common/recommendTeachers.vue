@@ -3,25 +3,24 @@
     <div class="recommend-teachers">
       <ul>
         <li
-          v-for="author in this.authors.slice(this.startAuthorsIndex, this.startAuthorsIndex + 4)"
+          v-for="author in this.authors.slice(this.startAuthorsIndex, this.startAuthorsIndex + 5)"
           :key="author.user_id"
         >
           <img @click="goToUser(author.user_id)" :src="author.photo" alt="老师头像">
           <p class="author_name" v-text="author.author_name"></p>
-          <p class="title" v-text="'《' + author.title + '》'"></p>
+          <p class="title" v-text="'《'+ author.title +'》'"></p>
           <!-- <p class="button">
             <i></i>
             <span>关注</span>
           </p> -->
           <div class="teacher-follow">
             <p class="button" @click="relation(author)">
-              <i></i>
-              <span v-if="author.has_followed === 0">关注</span>
-              <span v-else>取消关注</span>
+              <span v-if="author.has_followed === 0"><i></i>关注</span>
+              <span class="followed" v-else>已关注</span>
             </p>
           </div>
         </li>
-        <li>
+        <li v-show="showMoreAuthor">
           <div class="view-more">
             <router-link tag="p" :to="{path: 'radio-recom-teachers'}">
               <span>查看更多</span>
@@ -46,6 +45,7 @@ export default {
   props: ['authors'],
   data () {
     return {
+      showMoreAuthor: false,
       startAuthorsIndex: 0
     }
   },
@@ -69,10 +69,14 @@ export default {
     },
     // 下一个
     radioAuthorNext () {
-      if (this.startAuthorsIndex === this.authors.length - 4) {
+      if (this.startAuthorsIndex === this.authors.length - 5) {
         return
       }
       this.startAuthorsIndex++
+      if (this.startAuthorsIndex === 11) {
+        this.startAuthorsIndex = this.authors.length - 4
+        this.showMoreAuthor = true
+      }
     },
     // 关注取消关注
     relation (teacher) {
@@ -164,6 +168,15 @@ export default {
           font-size: 14px;
           font-weight: 500;
           color: #0a2b40ff;
+          display: flex;
+          align-items: center;
+        }
+        .followed {
+          font-size: 14px;
+          font-weight: 500;
+          color: #90A2AE;
+          display: flex;
+          align-items: center;
         }
       }
       .button:hover {

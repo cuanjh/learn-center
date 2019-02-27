@@ -192,6 +192,7 @@ export default {
       _this.recomendRadios = res.data.menuRadios[0]
       _this.recomendRadiosList = res.data.menuRadios[0].radios.slice(0, 5)
       console.log('this.recomendRadiosList', _this.recomendRadiosList)
+      console.log('老师', this.authors)
       _this.swiperInit()
     })
     // 随机推荐单个电台

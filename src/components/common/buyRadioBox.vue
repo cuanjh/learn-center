@@ -11,7 +11,7 @@
         <div class="introduce-content">
           <div class="triangle"></div>
           <div class="course">
-            <p>{{itemRadio.title}}</p>
+            <p>{{itemRadio.title ||itemRadio.module_name}}</p>
             <div class="price">
               <p>课程共计 50 课</p>
               <p class="yuan">
@@ -222,7 +222,7 @@ export default {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0px 7px;
+            padding: 0px 0px;
             p {
               font-size:13px;
               font-family:PingFang-SC-Medium;
@@ -290,7 +290,7 @@ export default {
           align-items: center;
           margin-right: 30px;
           i {
-            background-image: url('../../../static/images/weixin.svg');
+            background-image: url('../../../static/images/pay-icon/weixin.svg');
           }
         }
         .zhifubao {
@@ -299,7 +299,7 @@ export default {
           justify-content: center;
           align-items: center;
           i {
-            background-image: url('../../../static/images/weixin.svg');
+            background-image: url('../../../static/images/pay-icon/zhifubao.svg');
           }
         }
       }

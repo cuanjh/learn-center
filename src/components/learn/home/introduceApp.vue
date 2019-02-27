@@ -26,7 +26,7 @@
           <div class="ios">
             <p class="p">
               <span>iPad 和 iPhone 的 </span>
-              <span>下载</span>
+              <span>下载<i></i></span>
             </p>
             <i class="ios-icon"></i>
             <i class="ios-app" @click="goDownLoadIos()"></i>
@@ -174,7 +174,7 @@ export default {
       .bg-img {
         width: 100%;
         height: 344px;
-        background: url('../../../../static/images/headimg.png') no-repeat center;
+        background: url('../../../../static/images/introduceApp/headimg.png') no-repeat center;
         background-size: cover;
       }
       .text {
@@ -207,45 +207,46 @@ export default {
       height: 312px;
       background: #ffffff;
       .content {
-        width: 1200px;
+        width: 100%;
         height: 100%;
         padding-bottom: 41px;
         margin: 0 auto;
         display: flex;
         align-items: flex-end;
+        padding-left: 95px;
         .ipad {
           width: 190px;
           height: 100%;
-          background: url('../../../../static/images/iPad.svg') no-repeat center;
-        background-size: cover;
-          margin-right: 28px;
+            margin-right: 25px;
+            background: url('../../../../static/images/introduceApp/iPad.svg') no-repeat center;
+            background-size: 100%;
         }
         .mini {
           width:128px;
           height: 182px;
           background: url('../../../../static/images/mini.svg') no-repeat center;
-        background-size: cover;
-          margin-right: 28px;
+          background-size: 100%;
+          margin-right: 27px;
         }
         .iphone {
-          width: 70px;
-          height: 140px;
-          background: url('../../../../static/images/iPhone.svg') no-repeat center;
-        background-size: cover;
-          margin-right: 60px;
+          width: 71px;
+          height: 141px;
+          background: url('../../../../static/images/introduceApp/iPhone.png') no-repeat center;
+          background-size: 100%;
+          margin-right: 58px;
         }
         .icon {
           width: 142px;
           height: 99px;
-          background: url('../../../../static/images/icon.svg') no-repeat center;
-        background-size: cover;
-          margin-right: 88px;
+          background: url('../../../../static/images/introduceApp/icon.png') no-repeat center;
+          background-size: 100%;
+          margin-right:73px;
         }
         .score {
-          width: 370px;
-          height: 71px;
-          background: url('../../../../static/images/comments.svg') no-repeat center;
-        background-size: cover;
+          width: 374px;
+          height: 43px;
+          background: url('../../../../static/images/introduceApp/comments.png') no-repeat center;
+          background-size: 100%;
         }
       }
     }
@@ -260,6 +261,7 @@ export default {
         margin: 0 auto;
         display: flex;
         .ios {
+          position: relative;
           display: flex;
           align-items: center;
           p {
@@ -267,20 +269,32 @@ export default {
             margin-right: 30px;
           }
           span {
-            font-family: PingFangSC;
-            font-size: 16px;
-            color: #0A2B40FF;
-            font-weight: Semibold;
-            line-height: 22px;
+            font-size:16px;
+            font-family:PingFangSC-Semibold;
+            font-weight:600;
+            color:rgba(10,43,64,1);
+            line-height:22px
           }
           span:nth-child(2) {
             color: #2A9FE4FF;
+            &:hover {
+              i {
+                display: inline-block;
+                position: absolute;
+                top: -130px;
+                left: 123px;
+                width: 126px;
+                height: 144px;
+                background: url('../../../../static/images/introduceApp/download-app.png') no-repeat center;
+                background-size: cover;
+              }
+            }
           }
           .ios-icon {
             display: inline-block;
             width: 62px;
             height: 46px;
-            background: url('../../../../static/images/blacktuijian.svg') no-repeat center;
+            background: url('../../../../static/images/introduceApp/blacktuijian.png') no-repeat center;
             background-size: cover;
             margin-right: 50px;
           }
@@ -288,7 +302,7 @@ export default {
             display: inline-block;
             width: 160px;
             height: 48px;
-            background: url('../../../../static/images/ios.svg') no-repeat center;
+            background: url('../../../../static/images/introduceApp/iosapp.png') no-repeat center;
             background-size: cover;
             cursor: pointer;
           }
@@ -303,18 +317,18 @@ export default {
           display: flex;
           align-items: center;
           span {
-            font-family: PingFangSC;
-            font-size: 16px;
-            color: #0A2B40FF;
-            font-weight: Semibold;
-            line-height: 22px;
+            font-size:16px;
+            font-family:PingFangSC-Semibold;
+            font-weight:600;
+            color:rgba(10,43,64,1);
+            line-height:22px;
             margin-right: 42px;
           }
           .google {
             display: inline-block;
             width: 160px;
             height: 48px;
-            background: url('../../../../static/images/google.svg') no-repeat center;
+            background: url('../../../../static/images/introduceApp/google.png') no-repeat center;
             background-size: cover;
             margin-right: 10px;
             cursor: pointer;
@@ -323,7 +337,7 @@ export default {
             display: inline-block;
             width: 160px;
             height: 48px;
-            background: url('../../../../static/images/android.svg') no-repeat center;
+            background: url('../../../../static/images/introduceApp/androoid.png') no-repeat center;
             background-size: cover;
             cursor: pointer;
           }
@@ -398,6 +412,9 @@ export default {
                       line-height: 20px;
                       color: #333333FF;
                     }
+                    span:nth-child(1) {
+                      font-weight: 600;
+                    }
                     span:nth-child(2) {
                       padding-top: 6px;
                       display: inline-block;
@@ -435,16 +452,16 @@ export default {
           text-align: center;
           .red-icon {
             display: inline-block;
-            width: 242px;
-            height: 150px;
-            margin-right: 94px;
+            width: 235px;
+            height: 146px;
+            margin-right: 99px;
             background: url('../../../../static/images/redlearn.png') no-repeat center;
             background-size: cover;
           }
           .blue-icon {
             display: inline-block;
-            width: 152px;
-            height: 142px;
+            width: 151px;
+            height: 135px;
             background: url('../../../../static/images/bluelearn.png') no-repeat center;
             background-size: cover;
           }
@@ -466,6 +483,7 @@ export default {
             color: #333333FF;
             line-height: 34px;
             font-weight: bold;
+            padding-bottom: 5px;
           }
         }
         p {
@@ -492,7 +510,7 @@ export default {
                   width: 72px;
                   height: 72px;
                   border-radius: 50%;
-                  background: url('../../../../static/images/china.svg') no-repeat center;
+                  background: url('../../../../static/images/introduceApp/china.svg') no-repeat center;
                   background-size: cover;
                   margin-right: 24px;
                 }
@@ -500,7 +518,7 @@ export default {
                   width: 72px;
                   height: 72px;
                   border-radius: 50%;
-                  background: url('../../../../static/images/frach.svg') no-repeat center;
+                  background: url('../../../../static/images/introduceApp/frach.svg') no-repeat center;
                   background-size: cover;
                   margin-right: 24px;
                 }
@@ -559,6 +577,7 @@ export default {
               .text {
                 padding-top: 16px;
                 width: 384px;
+                font-weight: 500;
               }
             }
           }

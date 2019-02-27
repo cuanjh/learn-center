@@ -181,6 +181,21 @@ export default {
       var infoWindow = new BMap.InfoWindow(content, {
         offset: new BMap.Size(0, -25)
       })
+      // var opt = {
+      //   boxStyle: {
+      //     width: '149px',
+      //     height: '82px',
+      //     background: '#fff',
+      //     boxShadow: '0px 6px 8px 0px rgba(0,89,104,0.2)',
+      //     padding: '12px',
+      //     borderRadius: '5px'
+      //   },
+      //   closeIconMargin: '10px 2px 0 0',
+      //   enableAutoPan: true,
+      //   alignBottom: false
+      // }
+      // var infoBox = new BMapLib.InfoBox(mp, content, opt)
+      // infoBox.open(point)
       // 开启信息窗口
       mp.openInfoWindow(infoWindow, point)
     },
@@ -301,6 +316,14 @@ export default {
       // 添加点击事件
       let endangerStr = (item['ISO-639-3'] && item['ISO-639-3'].length > 0) ? item['ISO-639-3'].join(',') : ''
       let text = '了解详情'
+      let p = ''
+      if (endangerStr) {
+        p = '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 12px; text-decoration: underline;">' +
+              '<a href="./book-details/' + endangerStr + '">' +
+                text +
+              '</a>' +
+            '</p>'
+      }
       var sContent =
         '<div>' +
           '<p>' +
@@ -308,11 +331,7 @@ export default {
               item.en_name +
             '</span>' +
           '</p>' +
-          '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 12px; text-decoration: underline;">' +
-            '<a href="./book-details/' + endangerStr + '">' +
-              text +
-            '</a>' +
-          '</p>' +
+            p +
         '</div>'
       // sContent = ''
       this.addClickHandler(sContent, marker)
