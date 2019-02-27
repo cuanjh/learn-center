@@ -187,13 +187,17 @@ export default {
   width: 1200px;
   margin: 0 auto;
   .nav {
-    margin: 24px 0 12px 0;
+    height: 40px;
+    line-height: 40px;
     font-weight: bold;
     display: inline-block;
     font-size: 16px;
     a {
       span {
         color: #999999;
+        &:hover {
+          color: #2A9FE4;
+        }
       }
     }
     .nav-current {

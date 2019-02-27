@@ -35,7 +35,7 @@
           <div class="android">
             <span>Android 的 下载</span>
             <i class="google" @click="goDownLoadGoogle()"></i>
-            <i class="android-app"></i>
+            <div class="android-app"><i></i></div>
           </div>
         </div>
       </div>
@@ -207,13 +207,12 @@ export default {
       height: 312px;
       background: #ffffff;
       .content {
-        width: 100%;
+        width: 1200px;
         height: 100%;
         padding-bottom: 41px;
         margin: 0 auto;
         display: flex;
         align-items: flex-end;
-        padding-left: 95px;
         .ipad {
           width: 190px;
           height: 100%;
@@ -278,6 +277,7 @@ export default {
           span:nth-child(2) {
             color: #2A9FE4FF;
             &:hover {
+              cursor: pointer;
               i {
                 display: inline-block;
                 position: absolute;
@@ -285,14 +285,14 @@ export default {
                 left: 123px;
                 width: 126px;
                 height: 144px;
-                background: url('../../../../static/images/introduceApp/download-app.png') no-repeat center;
+                background: url('../../../../static/images/introduceApp/download-appios.png') no-repeat center;
                 background-size: cover;
               }
             }
           }
           .ios-icon {
             display: inline-block;
-            width: 62px;
+            width: 63px;
             height: 46px;
             background: url('../../../../static/images/introduceApp/blacktuijian.png') no-repeat center;
             background-size: cover;
@@ -305,6 +305,7 @@ export default {
             background: url('../../../../static/images/introduceApp/iosapp.png') no-repeat center;
             background-size: cover;
             cursor: pointer;
+            border-radius: 5px;
           }
         }
         .line {
@@ -314,6 +315,7 @@ export default {
           margin: 0 28px;
         }
         .android {
+          position: relative;
           display: flex;
           align-items: center;
           span {
@@ -332,14 +334,29 @@ export default {
             background-size: cover;
             margin-right: 10px;
             cursor: pointer;
+            border-radius: 5px;
           }
           .android-app {
+            position: relative;
             display: inline-block;
             width: 160px;
             height: 48px;
             background: url('../../../../static/images/introduceApp/androoid.png') no-repeat center;
             background-size: cover;
             cursor: pointer;
+            border-radius: 5px;
+            &:hover {
+              i {
+                display: inline-block;
+                position: absolute;
+                top: -146px;
+                left: 37px;
+                width: 126px;
+                height: 144px;
+                background: url('../../../../static/images/introduceApp/download-appandroid.png') no-repeat center;
+                background-size: cover;
+              }
+            }
           }
         }
       }

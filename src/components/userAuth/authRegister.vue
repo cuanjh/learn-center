@@ -116,6 +116,9 @@ export default {
     padding: 10px 0 10px 21px;
     position: relative;
   }
+  .phone-resigter .item input:focus, .mail-resigter .item input:focus {
+    border-color: #2A9FE4FF;
+  }
   button {
     position: relative;
     width: 100%;

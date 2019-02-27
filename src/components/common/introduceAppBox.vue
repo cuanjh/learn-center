@@ -45,6 +45,9 @@ export default {
       display: flex;
       justify-content: space-between;
       padding: 12px 20px;
+      i {
+        border-radius: 5px;
+      }
       .ios {
         cursor: pointer;
         display: inline-block;

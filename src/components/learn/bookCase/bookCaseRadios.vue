@@ -4,6 +4,9 @@
       <li v-for="(item, index) in resourceInfoRadios" :key="index">
         <div class="book-img">
           <img v-lazy="item.cover" :key="item.cover" alt="资源图片">
+          <div class="gradient-layer-play" @click="loadRadioList($event, item)">
+            <i class="play"></i>
+          </div>
         </div>
         <div class="book-content">
           <router-link tag="div" class="book-title" :to="{path: '/app/discovery/radio-detail/' + item.code}">
@@ -21,6 +24,9 @@
   </div>
 </template>
 <script>
+import Bus from '../../../bus.js'
+import $ from 'jquery'
+
 export default {
   props: ['resourceInfoRadios'],
   data () {
@@ -28,6 +34,28 @@ export default {
     }
   },
   methods: {
+    // 点击播放电台
+    loadRadioList (e, radio) {
+      console.log('e', e)
+      console.log('radio', radio)
+      if (this.isPlay && radio.code === this.lastCode) {
+        $('.gradient-layer-play i').removeClass('pause')
+        $(e.target).addClass('play')
+        Bus.$emit('radioPause')
+      } else {
+        $('.gradient-layer-play i').removeClass('pause')
+        $('.gradient-layer-play i').addClass('play')
+        $(e.target).removeClass('play')
+        $(e.target).addClass('pause')
+        if (radio.code !== this.lastCode) {
+          Bus.$emit('getRadioCardList', radio)
+          this.lastCode = radio.code
+        } else {
+          Bus.$emit('radioPlay')
+        }
+      }
+      this.isPlay = !this.isPlay
+    }
   }
 }
 </script>
@@ -45,13 +73,39 @@ export default {
   border-bottom:1px solid rgba(234,234,234,1);
 }
 .book-resource li .book-img {
+  position: relative;
   display: inline-block;
-  width:168px;
+  width:160px;
   height:80px;
   border-radius:3px;
 }
+.gradient-layer-play {
+  cursor: pointer;
+  display: inline-block;
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  background: rgba(18, 18, 18, .415);
+  border-radius: 50%;
+  .play {
+    width: 24px;
+    height: 24px;
+    background-image: url('../../../../static/images/radionoPlay.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: inline-block;
+  }
+  .pause {
+    width: 24px;
+    height: 24px;
+    background-image: url('../../../../static/images/radioPlay.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: inline-block;
+  }
+}
 .book-resource li .book-img img{
-  width:168px;
+  width:160px;
   height:80px;
   border-radius:3px;
   object-fit: cover;

@@ -55,6 +55,11 @@
                   <span>元/年</span>
                   <span>会员免费</span>
                 </p>
+                <p class="cny" v-else-if="courseInfo.money_type === 'USD'">
+                  <span v-text="courseInfo.money*(3.03030303)"></span>
+                  <span>元/年</span>
+                  <span>会员免费</span>
+                </p>
                 <p class="coins" v-else>
                   <span v-text="courseInfo.money"></span> {{$t('coins')}}
                   <span>会员免费</span>
@@ -77,8 +82,8 @@
           <!-- 收听订阅分享等 -->
           <div class="subscription">
             <div class="bottom">
-              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo)">
-                <i class="play"></i>
+              <div class="gradient-layer-play">
+                <i class="play" @click="loadRadioList($event, courseInfo)"></i>
                 <span>立即收听</span>
               </div>
               <div class="subscibeno-play">
@@ -136,21 +141,28 @@
         <div class="course-list">
           <div class="title">课程列表</div>
           <div class="course-item" v-for="card in cards" :key="card.card_id">
-            <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
-            <div class="course-title" v-text="card.title"></div>
-            <div class="course-desc" v-text="card.description"></div>
-            <div class="course-bottom">
-              <p>
-                <span><i></i>{{toParseTime(card.sound_time)}}</span>
-                <span><i></i>{{card.comment_count}}</span>
-              </p>
-              <span>{{card.create_time | formatDate}}</span>
+            <div class="course-play-img">
+              <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
+              <div class="gradient-layer-play" @click="loadRadioList($event, card)">
+                <i class="play"></i>
+              </div>
+            </div>
+            <div class="course-item-right">
+              <div class="course-title"><span>试听</span><span>{{card.title}}</span></div>
+              <div class="course-desc" v-text="card.description"></div>
+              <div class="course-bottom">
+                <p>
+                  <span><i></i>{{toParseTime(card.sound_time)}}</span>
+                  <span><i></i>{{card.comment_count}}</span>
+                </p>
+                <span>{{card.create_time | formatDate}}</span>
+              </div>
             </div>
           </div>
         </div>
         <!-- 评论 -->
-        <div class="comments">
-          <div v-if="comments">
+        <div class="comments" v-if="comments">
+          <div >
             <div class="title">{{comments.length}}条评论</div>
             <div v-if="comments">
               <div class="comment-item" v-for="(item, index) in comments" :key="'comment' + index">
@@ -165,7 +177,7 @@
               </div>
             </div>
           </div>
-          <div class="comment-item" v-else>
+          <div class="comment-item" v-show="false">
             <span>暂时没有评论~~~</span>
           </div>
         </div>
@@ -431,15 +443,19 @@ export default {
   width: 100%;
 }
 .nav {
-  margin: 20px 0;
+  height: 40px;
+  line-height: 40px;
   font-weight: bold;
   font-size: 16px;
 }
 .nav a {
-  text-decoration:none;;
+  text-decoration:none;
 }
 .nav a span {
   color: #999999;
+}
+.nav a span:hover {
+  color: #2A9FE4;
 }
 .nav .nav-current {
   display: inline-block;
@@ -453,7 +469,7 @@ export default {
 
 .radio-container {
   width: 1200px;
-  margin: 25px auto 100px;
+  margin: 0px auto 100px;
 }
 
 .radio-left {
@@ -467,7 +483,7 @@ export default {
   /* height: 330px; */
   background-color: #ffffff;
   border-radius: 3px;
-  padding: 42px 50px;
+  padding: 60px 40px 40px;
 }
 .radio-left .course .top-course {
   display: flex;
@@ -509,10 +525,10 @@ export default {
 }
 
 .radio-left .course img {
-  width: 250px;
-  height: 124px;
+  width: 240px;
+  height: 126px;
   object-fit: cover;
-  border-radius: 3px;
+  border-radius: 4px;
   margin-right: 20px;
 }
 
@@ -529,7 +545,10 @@ export default {
   font-size: 24px;
   line-height: 32px;
   margin-top: 8px;
-  width: 100%;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .radio-left .course .count {
@@ -658,7 +677,6 @@ export default {
   font-family:PingFangSC-Semibold;
   font-weight:600;
   color:rgba(255,255,255,1);
-  cursor: pointer;
   background:linear-gradient(270deg,rgba(130,214,255,1) 0%,rgba(81,147,231,1) 100%);
   border-radius:21px;
   padding: 8px 24px;
@@ -666,6 +684,7 @@ export default {
 }
 
 .course .subscription .bottom .gradient-layer-play i {
+  cursor: pointer;
   width: 14px;
   height: 14px;
   background-repeat: no-repeat;
@@ -673,10 +692,10 @@ export default {
   display: inline-block;
   margin-right: 10px;
 }
-.course .subscription .bottom .gradient-layer-play .play {
+.course .subscription .bottom .gradient-layer-play i.play {
   background-image: url('../../../../../static/images/listenDetail.svg');
 }
-.course .subscription .bottom .gradient-layer-play .pause {
+.course .subscription .bottom .gradient-layer-play i.pause {
   background-image: url('../../../../../static/images/listenDetailplay.svg');
 }
 .course .subscription .bottom .subscibeno-play p {
@@ -777,7 +796,7 @@ export default {
   width: 880px;
   background-color: #ffffff;
   border-radius: 3px;
-  padding: 40px 50px;
+  padding: 40px;
   margin-top: 10px;
 }
 .radio-left .author-brief .title {
@@ -837,6 +856,14 @@ export default {
   cursor: pointer;
   border-color: #2A9FE4;
   color: #2A9FE4;
+}
+.author-info .author-info-right .passed .flowed:hover i {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  background: url('../../../../../static/images/authorFllow.svg') no-repeat center;
+  background-size: cover;
+  margin-right: 3px;
 }
 .author-info .author-info-right .passed .flowed span {
   display: flex;
@@ -929,25 +956,74 @@ export default {
 }
 
 .radio-left .course-list .course-item {
-  cursor: pointer;
-  height: 120px;
+  position: relative;
+  display: flex;
+  /* cursor: pointer; */
+  /* height: 120px; */
   width: 100%;
   padding: 20px 0;
   border-bottom: 1px solid #EAEAEA;
 }
-
+.course-item .course-play-img {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  margin-right: 20px;
+}
+.course-item .course-play-img .gradient-layer-play {
+  width: 70px;
+  height: 70px;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(18, 18, 18, .16);
+  border-radius: 7px;
+}
+.course-item .course-play-img .gradient-layer-play i {
+  display: inline-block;
+  width: 31px;
+  height: 31px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%)
+}
+.course-item .course-play-img .gradient-layer-play i:hover {
+  opacity: 0.6;
+}
+.course-item .course-play-img .gradient-layer-play .play {
+  width: 31px;
+  height: 31px;
+  background-image: url('../../../../../static/images/discovery/noplay.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-block;
+}
+.course-item .course-play-img .gradient-layer-play .pause {
+  width: 31px;
+  height: 31px;
+  background-image: url('../../../../../static/images/discovery/play.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-block;
+}
+.radio-left .course-list .course-item .course-item-right {
+  width: 100%;
+}
 .radio-left .course-list .course-item:last-child {
   border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .radio-left .course-list .course-item img {
-  float: left;
-  width: 80px;
-  height: 80px;
+  /* float: left; */
+  width: 70px;
+  height: 70px;
   object-fit: cover;
   /* display: inline-block; */
-  border-radius: 5px;
-  margin-right: 20px;
+  border-radius: 7px;
 }
 
 .radio-left .course-list .course-item .course-title {
@@ -955,8 +1031,24 @@ export default {
   font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:rgba(51,51,51,1);
+  width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
-
+.radio-left .course-list .course-item .course-title span:nth-child(1) {
+  font-size:11px;
+  font-family:PingFang-SC-Medium;
+  font-weight:500;
+  color:rgba(214,59,59,1);
+  line-height:16px;
+  padding: 1px 5px;
+  border:1px solid rgba(214,59,59,1);
+  border-radius: 5px;
+  margin-right: 8px;
+}
 .radio-left .course-list .course-item .course-desc {
   width: 70%;
   font-size:14px;
@@ -966,12 +1058,11 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 4px 0 15px;
 }
 
 .radio-left .course-list .course-item .course-bottom {
   position: relative;
-  margin-left: 100px;
-  margin-top: 18px;
   font-size:14px;
   font-family:Helvetica;
   color:rgba(153,153,153,1);
@@ -990,30 +1081,31 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   display: inline-block;
-  margin-top: 6px;
-  margin-right: 5px;
 }
-
+.radio-left .course-list .course-item .course-bottom p {
+  display: flex;
+}
+.radio-left .course-list .course-item .course-bottom p span {
+  display: flex;
+  align-items: center;
+}
 .radio-left .course-list .course-item .course-bottom span:nth-child(2) {
-  margin-left: 20px;
+  margin-left: 23px;
 }
 
 .radio-left .course-list .course-item .course-bottom span:nth-child(2) i {
   width: 16px;
-  height: 14px;
+  height: 13px;
   line-height: 14px;
   background-image: url('../../../../../static/images/discovery/radio-message.png');
   background-repeat: no-repeat;
   background-size: cover;
   display: inline-block;
-  margin-top: 8px;
-  margin-right: 5px;
 }
 
-.radio-left .course-list .course-item .course-bottom span:last-child {
-  float:right;
+.radio-left .course-list .course-item .course-bottom p span i {
+  margin-right: 10px;
 }
-
 .radio-left .comments {
   width: 100%;
   height: auto;
@@ -1034,7 +1126,7 @@ export default {
 
 .radio-left .comments .comment-item {
   width: 100%;
-  padding: 23px 10px 0;
+  padding: 23px 0px 0;
   display: flex;
 }
 .radio-left .comments .comment-item  .img-right{
@@ -1064,6 +1156,10 @@ export default {
   font-family:Helvetica-Bold;
   font-weight:bold;
   color:rgba(51,51,51,1);
+  width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .radio-left .comments .comment-item .date {
@@ -1071,6 +1167,7 @@ export default {
   font-family:PingFangSC-Regular;
   font-weight:400;
   color:rgba(216,216,216,1);
+  padding: 6px 0 16px;
 }
 
 .radio-left .comments .comment-item .comment {

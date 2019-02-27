@@ -352,7 +352,7 @@ html,body{-webkit-text-size-adjust:none;}
     .bg-img:hover {
       width: 42px;
       height: 42px;
-      background: url('../../../static/images/authLogin/emailHover.svg') no-repeat center;
+      background: url('../../../static/images/authLogin/emailhover.svg') no-repeat center;
       background-size: cover;
       animation: seconddiv 1.5s ease-in-out;
     }
@@ -395,28 +395,35 @@ html,body{-webkit-text-size-adjust:none;}
     font-size: 14px;
     color: #D6DFE4;
   }
-  .phone-resigter .item {
-    margin-top: 20px;
-    overflow: hidden;
-    position: relative;
-    .areacode {
-      position: absolute;
-      cursor: pointer;
-      left: 21px;
-      top: 6px;
-      font-size: 14px;
-      font-family:PingFang-SC-Medium;
-      font-weight:500;
-      color: #103044;
-      text-align: left;
-      line-height: 24px;
+  .phone-resigter {
+    .item {
+      overflow: hidden;
+      position: relative;
+      .areacode {
+        position: absolute;
+        cursor: pointer;
+        left: 21px;
+        top: 6px;
+        font-size: 14px;
+        font-family:PingFang-SC-Medium;
+        font-weight:500;
+        color: #103044;
+        text-align: left;
+        line-height: 24px;
+      }
+      .arrow {
+        display: inline-block;
+        width: 9px;
+        height: 24px;
+        background: url('../../../static/images/authLogin/dropDown.svg') no-repeat center;
+        background-size: 100%;
+      }
     }
-    .arrow {
-      display: inline-block;
-      width: 9px;
-      height: 24px;
-      background: url('../../../static/images/authLogin/dropDown.svg') no-repeat center;
-      background-size: 100%;
+    .item:nth-child(1) {
+      margin-top: 20px;
+    }
+    .item:nth-child(2) {
+      margin-top: 10px;
     }
   }
   .phone-resigter .item input {
@@ -433,6 +440,7 @@ html,body{-webkit-text-size-adjust:none;}
     background-color: #fff;
     padding: 10px 0 10px 21px;
   }
+
   .phone-resigter .item #phoneNumber {
     padding-left: 82px;
   }
@@ -562,9 +570,9 @@ html,body{-webkit-text-size-adjust:none;}
     justify-content: center;
     margin-top: 14px;
     .third {
-      width:40px;
-      height:40px;
-      margin-right: 20px;
+      width:32px;
+      height:32px;
+      margin-right: 30px;
     }
     .third:last-child {
       margin-right: 0px;
@@ -572,8 +580,8 @@ html,body{-webkit-text-size-adjust:none;}
     i {
       cursor: pointer;
       display: inline-block;
-      width:40px;
-      height:40px;
+      width:32px;
+      height:32px;
     }
     .weixin i{
       background: url('../../../static/images/authLogin/weixin.svg') no-repeat center;
@@ -688,5 +696,8 @@ html,body{-webkit-text-size-adjust:none;}
   }
   .areacode-box .code-list li:hover {
     background: #EEF2F3;
+  }
+  .phone-resigter .item input:focus {
+    border-color: #2A9FE4FF;
   }
 </style>
