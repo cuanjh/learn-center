@@ -143,7 +143,7 @@
           <div class="course-item" v-for="card in cards" :key="card.card_id">
             <div class="course-play-img">
               <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
-              <div class="gradient-layer-play" @click="loadRadioList($event, card)">
+              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo)">
                 <i class="play"></i>
               </div>
             </div>
