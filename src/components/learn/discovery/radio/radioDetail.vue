@@ -320,8 +320,8 @@ export default {
     // 发请求获取radio的详情页面
     async loadData () {
       let _this = this
-      let code = _this.radioCode
-      await _this.postRadioDetail(code).then((res) => {
+      console.log('电台详情的参数', _this.radioCode)
+      await _this.postRadioDetail(_this.radioCode).then((res) => {
         console.log('电台详情返回', res)
         _this.radioDetail = res.result
         _this.courseInfo = res.result.course_info

@@ -232,7 +232,7 @@ export default {
         return false
       }
       // 发送验证码
-      this.sendCode({phonenumber: this.phone, codeLen: '6'}).then(res => {
+      this.sendCode({phonenumber: this.phone, codeLen: '4'}).then(res => {
         console.log('发送验证码', res)
         if (res.success) {
           $('input[type="text"]').css('border-color', '#E6EBEE')

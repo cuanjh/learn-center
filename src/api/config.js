@@ -96,6 +96,8 @@ export default {
   getRandomRadioApi: '/disv1/radio/recommend_one', // 电台首页随机推荐电台
   getOtherRecommendsApi: '/disv1/radio/recommends', // 其他人也在听
   getHotRadiosApi: '/disv1/radio/hot', // 热门电台
+  // 电台支付相关接口
+  createWxRadioOrderApi: '/pay/wx_qrcode_order', // 电台微信支付
 
   // 头条
   headlineHome: '/disv1/headline/home', // 头条首页接口

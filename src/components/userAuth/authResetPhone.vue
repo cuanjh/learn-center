@@ -76,7 +76,7 @@ export default {
     // 获取验证码
     getCode () {
       if (this.timer) return
-      this.sendCode({phonenumber: this.$route.params.phone, codeLen: '6'}).then(res => {
+      this.sendCode({phonenumber: this.$route.params.phone, codeLen: '4'}).then(res => {
         if (res.success) {
           console.log('发送验证码成功', res)
           this.timer = setInterval(() => {

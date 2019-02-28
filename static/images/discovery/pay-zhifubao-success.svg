@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="94px" height="94px" viewBox="0 0 94 94" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>分组 6</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="4.51148084%" y1="8.30158517%" x2="119.311283%" y2="110.507919%" id="linearGradient-1">
+            <stop stop-color="#B79CFF" offset="0%"></stop>
+            <stop stop-color="#9772FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="-16.9170673%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#FFE090" offset="0%"></stop>
+            <stop stop-color="#FDB521" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="-26.4414416%" y2="50%" id="linearGradient-3">
+            <stop stop-color="#77D4FF" offset="0%"></stop>
+            <stop stop-color="#39BAFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="世界语言地图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="付费提示" transform="translate(-562.000000, -400.000000)">
+            <g id="分组-6" transform="translate(562.000000, 400.000000)">
+                <circle id="椭圆形-copy-8" stroke="#FFEDC0" stroke-width="4" fill="#FFF7E0" cx="47" cy="47" r="45"></circle>
+                <g id="分组-12" transform="translate(21.000000, 20.000000)">
+                    <path d="M15.9885282,2.84804043 L22.6529144,5.54062723 C22.9273652,5.30706176 23.319106,5.23025164 23.676397,5.37460659 L45.0016257,13.9905582 C45.5136952,14.1974478 45.7610925,14.7802792 45.554203,15.2923487 C45.3473134,15.8044182 44.764482,16.0518155 44.2524125,15.844926 L22.9271839,7.2289743 C22.5984871,7.09617221 22.3788443,6.8084693 22.3184055,6.4840116 L15.6258049,3.78002545 C15.4544816,3.9176526 15.2368575,4 15,4 C14.4477153,4 14,3.55228475 14,3 C14,2.44771525 14.4477153,2 15,2 C15.5006229,2 15.9153247,2.36787247 15.9885282,2.84804043 Z" id="合并形状" fill="url(#linearGradient-1)" transform="translate(29.813642, 8.959003) rotate(-6.000000) translate(-29.813642, -8.959003) "></path>
+                    <rect id="矩形" fill="#AA8BFF" x="10" y="47" width="4" height="3" rx="0.5"></rect>
+                    <rect id="矩形-copy-7" fill="#AA8BFF" x="38" y="47" width="4" height="3" rx="0.5"></rect>
+                    <rect id="矩形" fill="url(#linearGradient-2)" x="0" y="12" width="52" height="36" rx="6"></rect>
+                    <rect id="矩形" fill-opacity="0.61" fill="#FFFFFF" x="6" y="32" width="23" height="1" rx="0.5"></rect>
+                    <rect id="矩形-copy-4" fill-opacity="0.61" fill="#FFFFFF" x="6" y="35.6666667" width="23" height="1" rx="0.5"></rect>
+                    <rect id="矩形-copy-5" fill-opacity="0.61" fill="#FFFFFF" x="6" y="39.3333333" width="23" height="1" rx="0.5"></rect>
+                    <rect id="矩形-copy-6" fill-opacity="0.61" fill="#FFFFFF" x="6" y="43" width="23" height="1" rx="0.5"></rect>
+                    <rect id="矩形" fill-opacity="0.86" fill="#FFFFFF" x="5" y="17" width="42" height="10" rx="3"></rect>
+                    <circle id="椭圆形" fill="url(#linearGradient-3)" cx="39.5" cy="37.5" r="6.5"></circle>
+                    <circle id="椭圆形" fill-opacity="0.7" fill="#D3F1FF" cx="39.5" cy="37.5" r="3.5"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

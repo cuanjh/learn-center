@@ -85,7 +85,7 @@
         <dl>
           <dt></dt>
           <dd>
-            <p>您还没有订阅的电台课程哦！</p>
+            <p>您暂没有创建电台课程</p>
           </dd>
         </dl>
       </div>
@@ -468,30 +468,40 @@ export default {
 .user-course-nocourse {
   margin-top: 16px;
   width: 100%;
-  height: 176px;
+  /* height: 176px; */
+  min-height: 600px;
   border-radius: 4px;
   background-color: #ffffff;
 }
 .user-course-nocourse dl {
   width: 100%;
-  height: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .user-course-nocourse dl dt {
-  width: 30%;
-  height: 100%;
-  float: left;
-  background-image: url(../../../../static/images/learn/learn-vip-warn.svg);
+  width: 144px;
+  height: 81px;
+  background-image: url('../../../../static/images/discovery/userradiono.svg');
   background-repeat: no-repeat;
-  background-position: right center;
-  background-size: 90px;
+  background-position: center;
+  background-size: cover;
 }
 .user-course-nocourse dl dd {
-  float: right;
-  width: 70%;
-  height: 100%;
+  /* width: 70%;
+  height: 100%; */
   text-align: center;
-  padding: 60px 30px;
+  padding: 20px 0 0;
   font-size: 18px;
+}
+.user-course-nocourse dl dd p {
+  font-size:16px;
+  font-family:PingFang-SC-Medium;
+  font-weight:500;
+  color:rgba(200,212,219,1);
+  line-height:22px;
 }
 .user-course-nocourse dl dd p span {
   color: #e46773;

@@ -203,9 +203,7 @@ export default {
       volumeHeight: '50%',
       isHand: true,
       sndctr: SoundCtrl,
-      itemRadio: {}, // 当前的电台
-      radioDetail: {}, // 当前电台的详情
-      cardsCount: 0
+      radioDetail: {} // 当前电台的详情
     }
   },
   components: {BuyRadioBox, BuyCoinsRadioBox},
@@ -223,30 +221,9 @@ export default {
   created () {
     Bus.$on('getRadioCardList', (item) => {
       console.log('item电台====》', item)
-      this.itemRadio = item
-      // this.page = 1
-      let params = {
-        code: item.code,
-        listOrder: this.listOrder,
-        page: this.page,
-        pageSize: this.pageSize
-      }
-      console.log('params', params)
-      this.postRadioDetail(params.code).then((res) => {
-        this.radioDetail = res.result
-        this.subscibenoInfo = res.result.relation
-        console.log('subscibenoInfo', this.subscibenoInfo)
-      })
-      this.getRadioCardList(params).then((res) => {
-        console.log('电台列表', res)
-        this.page = res.page
-        if (res.cards.length > 0) {
-          this.radioList = res.cards
-          this.cardsCount = res.cards.length
-          this.curIndex = 0
-          this.playRadio()
-        }
-      })
+      $('.voice-player-cover').css('background-image', '')
+      this.initRadioDetail(item)
+      this.initrRadioCardList(item)
     })
     Bus.$on('radioPlay', () => {
       this.play()
@@ -287,6 +264,34 @@ export default {
       postRadioDetail: 'course/postRadioDetail', // 电台详情
       getRadioCardList: 'course/getRadioCardList' // 电台列表
     }),
+    // 获取这个电台的列表
+    async initrRadioCardList (radio) {
+      let params = {
+        code: radio.code,
+        listOrder: this.listOrder,
+        page: this.page,
+        pageSize: this.pageSize
+      }
+      console.log('params', params)
+      await this.getRadioCardList(params).then((res) => {
+        console.log('电台列表', res)
+        this.page = res.page
+        if (res.cards.length > 0) {
+          this.radioList = res.cards
+          this.curIndex = 0
+          this.playRadio()
+        }
+      })
+    },
+    // 获取电台详情
+    async initRadioDetail (radio) {
+      await this.postRadioDetail(radio.code).then((res) => {
+        console.log('电台返回', res)
+        this.radioDetail = res.result
+        this.subscibenoInfo = res.result.relation
+        console.log('subscibenoInfo', this.subscibenoInfo)
+      })
+    },
     toParseTime (data) {
       let m = parseInt(data / 60)
       if (m < 10) {
@@ -308,7 +313,7 @@ export default {
     // 下一条自动播放
     next () {
       this.curIndex++
-      let radio = this.itemRadio
+      let radio = this.radioDetail.course_info
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
           if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
@@ -332,6 +337,7 @@ export default {
       }
       this.playRadio()
     },
+    // 播放按钮
     play () {
       if (this.isEnd) {
         this.curTime = 0
@@ -388,7 +394,8 @@ export default {
     },
     // 点击播放
     goPlay (index) {
-      let radio = this.itemRadio
+      let radio = this.radioDetail.course_info
+      console.log('播放器中的radio', radio)
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
           if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
@@ -396,7 +403,7 @@ export default {
               index = 0
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', radio, this.cardsCount)
+                Bus.$emit('showBuyRadio', radio)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -411,7 +418,7 @@ export default {
                 index = 0
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', radio, this.cardsCount)
+                  Bus.$emit('showBuyRadio', radio)
                 } else if (radio.money_type === 'coins') {
                   // 金币提示
                   Bus.$emit('showBuyCoinsRadio', radio)

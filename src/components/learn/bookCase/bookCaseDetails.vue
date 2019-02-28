@@ -148,15 +148,18 @@
             </div>
             <!-- 资源 -->
             <div class="resource-list" v-if="'resource' == tabFlag">
-              <book-case-radios :resourceInfoRadios="resourceInfoRadios"></book-case-radios>
-              <div class="up-all" v-if="resourceInfoRadios.length>0">
-                <!-- <span @click="loadMoreRadio()" v-text="showMore?'全部展开':'已经没有更多内容了~~'" ></span>
-                <i v-show="showMore"></i> -->
-                <span v-if="showMorePage == -1">已显示全部内容</span>
-                <span @click="loadMoreRadio()" v-else>全部展开<i></i></span>
+              <div v-if="resourceInfoRadios.length>0">
+                <book-case-radios :resourceInfoRadios="resourceInfoRadios" v-if="resourceInfoRadios"></book-case-radios>
+                <div class="up-all">
+                  <span v-if="showMorePage == -1">已显示全部内容</span>
+                  <span @click="loadMoreRadio()" v-else>全部展开<i></i></span>
+                </div>
               </div>
               <div class="up-all" v-else>
-                <span >暂时没有课程相关资源</span>
+                <p class="course-related">
+                  <i></i>
+                  <span >暂时没有课程相关资源</span>
+                </p>
               </div>
             </div>
             <!-- 国家 -->
@@ -814,6 +817,31 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
+          }
+          .course-related {
+            width: 100%;
+            min-height: 445px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            i {
+              display: inline-block;
+              width: 145px;
+              height: 82px;
+              background-image: url('../../../../static/images/discovery/language-related.svg');
+              background-repeat: no-repeat;
+              background-position: center;
+              background-size: cover;
+            }
+            span {
+              padding-top: 18px;
+              font-size:16px;
+              font-family:PingFang-SC-Medium;
+              font-weight:500;
+              color:rgba(200,212,219,1);
+              line-height:22px;
+            }
           }
         }
       }
