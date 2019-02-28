@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="176px" height="98px" viewBox="0 0 176 98" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>矩形@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M5,4.94902263e-05 L155,4.94902263e-05 C157.761424,4.94902263e-05 160,2.23862574 160,5.00004949 L160,66.0000495 C160,68.7614732 157.761424,71.0000495 155,71.0000495 L77.1140128,71.0000495 L72.3023659,83.7191666 L67.9478736,71.0000495 L5,71.0000495 C2.23857625,71.0000495 1.18844963e-14,68.7614732 1.15463195e-14,66.0000495 L-8.8817842e-16,5.00004949 C-1.2263553e-15,2.23862574 2.23857625,4.94902263e-05 5,4.94902263e-05 Z" id="path-1"></path>
+        <filter x="-9.4%" y="-10.8%" width="118.8%" height="135.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="6" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0.347231414   0 0 0 0 0.408083546  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="世语图默认-未登录-未选择语种" transform="translate(-1062.000000, -176.000000)" fill-rule="nonzero">
+            <g id="语伴分布" transform="translate(323.000000, 178.000000)">
+                <g id="弹框-copy" transform="translate(747.000000, 0.000000)">
+                    <g id="矩形">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <use fill="#FFFFFF" xlink:href="#path-1"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

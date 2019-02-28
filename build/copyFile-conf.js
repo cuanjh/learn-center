@@ -23,6 +23,11 @@ var copyList = [
 		toType: 'file'
   },
   {
+		from: _from + '/InfoBox.min.js',
+    to: _to + '/InfoBox.min.js',
+		toType: 'file'
+  },
+  {
 		from: _from + '/images/favicon.ico',
     to: _to + '/images/favicon.ico',
 		toType: 'file'
