@@ -42,7 +42,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 37px 0 87px;
+  padding: 0 40px;
   height:76px;
   // background:linear-gradient(270deg,rgba(250,217,97,1) 0%,rgba(247,107,28,1) 100%);
   background-color: #E84C4CFF;

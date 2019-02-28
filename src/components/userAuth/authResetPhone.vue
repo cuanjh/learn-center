@@ -251,4 +251,7 @@ export default {
     top: 20px;
     background: url('./../../../static/images/authLogin/mark.svg') no-repeat center;
   }
+  .reset-box .item input:focus {
+    border-color: #2A9FE4FF;
+  }
 </style>

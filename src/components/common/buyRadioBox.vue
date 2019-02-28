@@ -13,7 +13,7 @@
           <div class="course">
             <p>{{itemRadio.title ||itemRadio.module_name}}</p>
             <div class="price">
-              <p>课程共计 50 课</p>
+              <p>课程共计 {{cardsCount}} 课</p>
               <p class="yuan">
                 <span>{{itemRadio.money}}</span>
                 <span>元/年</span>
@@ -90,6 +90,7 @@ export default {
   data () {
     return {
       itemRadio: {},
+      cardsCount: '',
       showBuyBox: false,
       contentShow: true,
       activeButton: false,
@@ -100,6 +101,7 @@ export default {
     bus.$on('showBuyRadio', (radio, cardsCount) => {
       console.log('当前要购买的人民币radio', radio, cardsCount)
       this.itemRadio = radio
+      this.cardsCount = cardsCount
       this.showBuyBox = true
     })
   },

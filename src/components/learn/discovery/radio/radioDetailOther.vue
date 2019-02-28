@@ -100,8 +100,6 @@ export default {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 .other-radio-item .author {
@@ -116,7 +114,6 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-left: 10px;
 }
 
 .other-radio-item .money {
@@ -128,6 +125,5 @@ export default {
   /* display: inline-block; */
   position: relative;
   margin-top: 10px;
-  margin-right: 10px;
 }
 </style>

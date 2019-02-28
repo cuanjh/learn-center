@@ -221,9 +221,6 @@ export default {
             _this.countryLanguages.push(item)
           }
         })
-        console.log('langInfos', _this.langInfos)
-        console.log('countryLanguagesNo', this.countryLanguagesNo)
-        console.log('countryLanguages', this.countryLanguages)
       })
     }
   }
@@ -237,13 +234,17 @@ a {
   width: 960px;
   margin: 0px auto 144px;
   .nav {
-    margin: 20px 0;
+    height: 40px;
+    line-height: 40px;
     font-weight: bold;
     display: inline-block;
     font-size: 16px;
     a {
       span {
         color: #999999;
+        &:hover{
+          color: #2A9FE4;
+        }
       }
     }
     .nav-current {

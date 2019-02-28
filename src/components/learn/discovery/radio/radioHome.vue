@@ -83,6 +83,9 @@
             <div class="radio-item" v-for="radio in recomendRadiosList" :key="radio.code">
               <div class="play-radio">
                 <img v-lazy="radio.cover" :key="radio.cover" alt="">
+                <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
+                  <span>会员免费</span>
+                </div> -->
                 <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                   <i class="play"></i>
                 </div>
@@ -113,6 +116,9 @@
             <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
               <div class="play-radio">
                 <img v-lazy="radio.cover" :key="radio.cover" alt="">
+                <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
+                  <span>会员免费</span>
+                </div> -->
                 <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                   <i class="play"></i>
                 </div>
@@ -326,13 +332,17 @@ export default {
   margin: 0 auto;
   min-height: 1000px;
   .nav {
-    margin: 24px 0 12px 0;
+    height: 40px;
+    line-height: 40px;
     font-weight: bold;
     display: inline-block;
     font-size: 16px;
     a {
       span {
         color: #999999;
+        &:hover{
+          color: #2A9FE4;
+        }
       }
     }
     .nav-current {
@@ -657,6 +667,16 @@ export default {
             display: block;
             width: 152px;
             height: 80px;
+          }
+          .free-vip {
+            display: none;
+            position: absolute;
+            top: 0;
+            display: inline-block;
+            font-size: 13px;
+            background: rgb(240, 142, 14);
+            padding: 2px 8px;
+            border-radius: 4px 0 4px 0;
           }
           .gradient-layer-play {
             cursor: pointer;

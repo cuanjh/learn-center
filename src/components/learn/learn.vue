@@ -148,6 +148,8 @@ export default {
       let name = route.name ? route.name.toLowerCase() : ''
       if (name === 'learnindex' || route.path.indexOf('/discovery/') > -1) {
         this.isShow = true
+      } else if (route.path.indexOf('/book-details/') > -1) {
+        this.isShow = true
       } else {
         this.isShow = false
       }

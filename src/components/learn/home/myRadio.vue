@@ -394,6 +394,8 @@ export default {
         // margin-top: 31px;
         margin-right: 40px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
         &:hover {
           color: #0581D1;
           i {
@@ -407,8 +409,7 @@ export default {
           background-image: url('../../../../static/images/learnIndex/icon-change.svg');
           background-repeat: no-repeat;
           background-size: cover;
-          margin-right: 4px;
-          margin-top: 3px;
+          margin-right: 10px;
         }
       }
     }

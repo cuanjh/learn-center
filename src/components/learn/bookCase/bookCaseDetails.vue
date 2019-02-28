@@ -143,7 +143,7 @@
             <div class="info-list" v-if="'info' == tabFlag">
               <book-case-info :langInfoObj="langInfoObj"></book-case-info>
               <div class="up-all">
-                <span>已经没有更多内容了</span>
+                <span>已展示全部内容</span>
               </div>
             </div>
             <!-- 资源 -->
@@ -152,7 +152,7 @@
               <div class="up-all" v-if="resourceInfoRadios.length>0">
                 <!-- <span @click="loadMoreRadio()" v-text="showMore?'全部展开':'已经没有更多内容了~~'" ></span>
                 <i v-show="showMore"></i> -->
-                <span v-if="showMore === -1">已显示全部内容</span>
+                <span v-if="showMorePage == -1">已显示全部内容</span>
                 <span @click="loadMoreRadio()" v-else>全部展开<i></i></span>
               </div>
               <div class="up-all" v-else>
@@ -193,6 +193,7 @@
         </video>
       </div>
     </div>
+    <!-- <voice-player/> -->
   </div>
 </template>
 <script>
@@ -205,13 +206,14 @@ import BookCaseInfo from './bookCaseInfo.vue'
 import BookCaseRadios from './bookCaseRadios.vue'
 import BookCaseCountry from './bookCaseCountry.vue'
 import Cookie from '../../../tool/cookie'
+// import VoicePlayer from '../../common/voicePlayer.vue'
 
 export default {
   data () {
     return {
       showRadioPlay: false,
       goLogin: true, // 登录的提示
-      showMore: 0, // true是展开，false是收起
+      showMorePage: 0,
       showMoreCountry: true,
       tabFlag: 'info', // true 语言信息 false 资源 电台
       defaultImg: 'this.src="/static/images/bookCase/default_course.png"',
@@ -263,6 +265,7 @@ export default {
     BookCaseInfo,
     BookCaseRadios,
     BookCaseCountry
+    // VoicePlayer
   },
   created () {
   },
@@ -277,7 +280,6 @@ export default {
       this.goLogin = false
     }
     document.addEventListener('click', (e) => {
-      console.log('e', e)
       if (e.target.className === 'video-box' && e.target.className !== 'video-dialog') {
         this.showRadioPlay = false
         $('#my-video')[0].pause()
@@ -310,7 +312,9 @@ export default {
     }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
-      this.showMore = true
+      if (this.resourceInfoRadios.length >= 10) {
+        this.showMorePage = 0
+      }
     },
     nationDetail (code, flag, name) {
       let OBJ = {
@@ -328,14 +332,13 @@ export default {
       _this.pageindex++
       _this.getShelfResList({ page: _this.pageindex }).then((res) => {
         console.log('resradio', res)
+        _this.resourceInfoRadios = _this.resourceInfoRadios.concat(res.resourceInfo.radios)
         if (res.resourceInfo.page === -1) {
-          _this.showMore = res.resourceInfo.page
-          return false
+          _this.showMorePage = res.resourceInfo.page
         }
-        res.resourceInfo.radios.forEach((item) => {
-          _this.resourceInfoRadios.push(item)
-        })
-        _this.resPage = res.page
+        // res.resourceInfo.radios.forEach((item) => {
+        //   _this.resourceInfoRadios.push(item)
+        // })
       })
     },
     // 点击展开，国家全部展开
@@ -388,6 +391,11 @@ export default {
         _this.countryLists = _this.allCountryLists.slice(0, 9)
         console.log('allCountryLists,countryLists', _this.allCountryLists, _this.countryLists)
         _this.resourceInfoRadios = res.resourceInfo.radios
+        console.log('====>', res.resourceInfo.page)
+        if (res.resourceInfo.page === -1) {
+          _this.showMorePage = res.resourceInfo.page
+        }
+        console.log('====>', _this.showMorePage)
         _this.allCountryLists.forEach(item => {
           _this.countryInfo({code: item.code}).then(data => {
             item.countryLangueInfos = data.country_info.langsInfo
@@ -409,14 +417,17 @@ export default {
   width: 960px;
   margin: 0px auto 144px;
   .nav {
-    margin: 20px 0;
+    height: 40px;
+    line-height: 40px;
     font-weight: bold;
     display: inline-block;
     font-size: 16px;
     a {
-      text-decoration:none;
       span {
         color: #999999;
+        &:hover{
+          color: #2A9FE4;
+        }
       }
     }
     .nav-current {

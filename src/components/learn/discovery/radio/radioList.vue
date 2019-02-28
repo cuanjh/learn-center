@@ -236,9 +236,7 @@ export default {
             preferred_lan_code: lanCode,
             sort: this.onActive
           }
-          console.log('点击加载更多params', params)
           this.getRadioList(params).then((res) => {
-            console.log('点击加载更多', res)
             this.lists = this.lists.concat(res.data.radios)
             if (res.data.page === -1) {
               this.showPage = -1
@@ -325,17 +323,20 @@ a {
     position: fixed;
     background-color: #f6f8f9;
     width: 100%;
-    height: 60px;
+    height: 40px;
+    line-height: 40px;
     font-size:14px;
     font-family:PingFang-SC-Medium;
     font-weight:500;
     color:rgba(60,91,111,1);
-    line-height:60px;
     z-index: 99;
     a {
       text-decoration:none;
       span {
         color: #3C5B6F;
+        &:hover {
+          color: #2A9FE4;
+        }
       }
     }
     .nav-current {
@@ -351,7 +352,7 @@ a {
       position: fixed;
       display: inline-block;
       width: 220px;
-      margin-top: 60px;
+      margin-top: 40px;
       .nav-list {
         background: #ffffff;
         width: 100%;
@@ -405,7 +406,7 @@ a {
       width: 960px;
       padding-bottom: 50px;
       background: #ffffff;
-      margin-top: 60px;
+      margin-top: 40px;
       .radio-in-content {
         width: 100%;
         height: 100%;

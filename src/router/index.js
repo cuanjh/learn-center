@@ -133,6 +133,7 @@ export default[
       },
       {
         path: 'book-details/:courseCode',
+        name: 'bookCaseDetails',
         component: bookCaseDetails
       },
       {

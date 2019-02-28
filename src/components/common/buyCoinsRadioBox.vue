@@ -29,7 +29,7 @@
         </div>
       </div>
       <!-- 了解会员 -->
-      <div class="vip-understand"  v-show="isVip !== 1 || (itemRadio.free_for_member !== 0 || itemRadio.free_for_member === true)">
+      <div class="vip-understand"  v-show="isVip !== 1 || itemRadio.free_for_member !== 0 || itemRadio.free_for_member === true">
         <div class="vip-cont">
           <div class="left">
             <i></i>

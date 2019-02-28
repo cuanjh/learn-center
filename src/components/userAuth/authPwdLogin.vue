@@ -10,6 +10,7 @@
             @blur.prevent="blurPEFn()"
             @keyup.enter="goLogin">
     <input  class="input_text"
+            id="password"
             type="password"
             placeholder="输入密码"
             v-model="userPwd"
@@ -112,7 +113,7 @@ export default {
       let _this = this
       if (_this.type === 1) {
         if (validation.phoneNumber(_this.userName) || _this.userName === '') {
-          $('input[type="text"]').css('border-color', '#E6EBEE')
+          // $('input[type="text"]').css('border-color', '#E6EBEE')
           _this.errText = ''
           return false
         }
@@ -120,7 +121,7 @@ export default {
     },
     blurPwdFn () {
       if (validation.pwd(this.userPwd)) {
-        $("input[type='password']").css('border-color', '#E6EBEE')
+        // $("input[type='password']").css('border-color', '#E6EBEE')
         this.errText = ''
         return false
       }
@@ -254,6 +255,7 @@ export default {
     background-color: #fff;
     padding: 10px 24px;
   }
+
   input::-webkit-input-placeholder {
     font-size: 14px;
     color: #D6DFE4;
@@ -441,5 +443,11 @@ export default {
     color:rgba(42,159,228,1);
     line-height: 14px;
     text-decoration: underline;
+  }
+  .user-login-pwd input[type="text"]:focus {
+    border-color: #2A9FE4FF;
+  }
+  .user-login-pwd input[type="password"]:focus {
+    border-color: #2A9FE4FF;
   }
 </style>
