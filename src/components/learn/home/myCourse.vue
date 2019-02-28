@@ -1,7 +1,7 @@
 <template>
   <div class="my-course">
     <div class="title">我的课程</div>
-    <div class="current-chapter">
+    <div class="current-chapter" v-if="userId">
       <img :src="curCourseObj['courseBg']" alt="">
       <div class="course-brief-shade">
         <div class="course-brief-title">
@@ -18,7 +18,15 @@
         <div class="start-learn" @click="startLearn()">开始学习</div>
       </div>
     </div>
-    <div class="current-course">
+    <div class="current-chapter-none" v-else>
+      <img alt="">
+      <div class="course-brief-shade">
+        <div class="course-brief-title">
+          <span>学习一门语言，了解一个新的世界</span>
+        </div>
+      </div>
+    </div>
+    <div class="current-course" v-if="userId">
       <dl @mouseleave="isShowSubscribeCourses = false">
         <dt><img :src="courseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
@@ -47,6 +55,10 @@
       <div class="learn-hours"><span>已学习 </span><span>{{ curArchiveCourse['learn_time']>0?parseInt(curArchiveCourse['learn_time']/(60*60))+' 小时':'0 小时' }}</span></div>
       <router-link class="all-courses" tag="div" :to="{path: '/app/course-list'}">全部课程</router-link>
     </div>
+    <div class="current-course-none" v-else>
+      <i></i>
+      <router-link :to="{path: '/app/book-case'}" class="add-course" @click="addCourse()">添加课程</router-link>
+    </div>
   </div>
 </template>
 
@@ -54,9 +66,11 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import LearnCourseList from '../../common/learnCourseList.vue'
 import bus from '../../../bus'
+import cookie from '../../../tool/cookie'
 export default {
   data () {
     return {
+      userId: '',
       curCourseObj: {
         courseLevel: '',
         courseNum: 1,
@@ -91,8 +105,10 @@ export default {
   },
   mounted () {
     // this.getUserInfo()
-
-    this.initData()
+    this.userId = cookie.getCookie('user_id')
+    if (this.userId) {
+      this.initData()
+    }
   },
   components: {
     LearnCourseList
@@ -348,6 +364,7 @@ export default {
     width: 820px;
     height: 360px;
     margin-right: 14px;
+    border-radius: 5px;
   }
 
   .current-chapter img {
@@ -362,7 +379,7 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
-    background-image: url('../../../../static/images/learnIndex/icon-course-bg.svg');
+    background-image: url('../../../../static/images/learnIndex/icon-course-bg.png');
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 5px;
@@ -396,7 +413,7 @@ export default {
 
   .change-course {
     float: left;
-    width: 110px;
+    width: 102px;
     height: 36px;
     margin-top: 125px;
     margin-left: 40px;
@@ -407,7 +424,6 @@ export default {
     height: 36px;
     width: 36px;
     border-radius: 50%;
-    background-color: rgba(0,0,0,0.4);
     text-align: center;
     /* margin-right: 30px; */
     cursor: pointer;
@@ -422,9 +438,8 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     display: inline-block;
-    width: 10px;
-    height: 16px;
-    margin-top: 9px;
+    width: 36px;
+    height: 36px;
   }
 
   .change-course .next {
@@ -435,9 +450,8 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     display: inline-block;
-    width: 10px;
-    height: 16px;
-    margin-top: 9px;
+    width: 36px;
+    height: 36px;
   }
 
   .start-learn {
@@ -638,5 +652,63 @@ export default {
   }
   .fade-enter, .fade-leave-to {
     opacity: 0;
+  }
+
+  .my-course .current-chapter-none {
+    position: relative;
+    display: inline-flex;
+    background-color: #D8D8D8;
+    width: 820px;
+    height: 360px;
+    margin-right: 14px;
+    border-radius: 5px;
+  }
+
+  .current-chapter-none img {
+    position: absolute;
+    width: 820px;
+    height: 360px;
+    object-fit: cover;
+    border-radius: 5px;
+    background-image: url('../../../../static/images/learnIndex/course-default.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .my-course .current-course-none{
+    display: inline-block;
+    width: 340px;
+    height: 360px;
+    padding: 32px 35px;
+    border-radius: 5px;
+    background: #ffffff;
+    text-align: center;
+    box-shadow:0px 3px 10px 0px rgba(5,43,52,0.03);
+  }
+
+  .current-course-none i {
+    display: inline-block;
+    width: 235px;
+    height: 105px;
+    background-image: url('../../../../static/images/learnIndex/add-course-default.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-top: 63px;
+  }
+
+  .add-course {
+    /* background-color: #2A9FE4; */
+    display: block;
+    background: rgba(5,129,209,1);
+    color: #ffffff;
+    border-radius: 21px;
+    width: 160px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 14px;
+    font-weight: 800;
+    text-align: center;
+    margin: 71px auto 0;
+    cursor: pointer;
   }
 </style>

@@ -49,7 +49,7 @@
           </section>
         </transition>
       </div>
-      <div class="right" @mouseleave="hideExit" v-if="userInfo.member_info">
+      <div class="right" @mouseleave="hideExit">
         <div class="container" v-show="false">
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <div class="search" @click="enterSearch"></div>
@@ -61,12 +61,12 @@
           <img class="nation" src="https://course-assets1.talkmate.com/course/icons/IND-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="国籍">
         </div> -->
         <div class='learn-user' @mouseenter="showExit" >
-          <router-link :to="{path: '/app/user/course'}">
-            <img :src='ui.photo' />
+          <router-link :to="{path: (ui ? '/app/user/course' : '/auth/login')}">
+            <img :src="ui ? ui.photo : './../../../static/images/learnIndex/user-photo.svg'"  />
             <span v-show="isActive" class="active"></span>
           </router-link>
           <transition name="fade">
-            <span class='user-login-out mycourse-loginout animated' v-show="showExitState">
+            <span class='user-login-out mycourse-loginout animated' v-show="showExitState && ui">
               <img class='arrow' src="./../../../static/images/course/learn-big-arrow.png">
               <router-link v-show="false" tag="span" :to="{ path: '/app/user/setting' }">设置</router-link>
               <span @click='jumpSystem()'>退出</span>
@@ -117,7 +117,10 @@ export default {
     // this.getLearnCourses()
     this.isAnonymous = cookie.getCookie('is_anonymous') === 'true'
     console.log(this.isAnonymous)
-    this.getUserInfo()
+    let userId = cookie.getCookie('user_id')
+    if (userId) {
+      this.getUserInfo()
+    }
     // console.log('订阅课程======', this.learnCourses)
   },
   computed: {
@@ -136,18 +139,28 @@ export default {
       return this.userInfo.member_info.member_type
     },
     ui () {
-      let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(sessionStorage.getItem('userInfo'))
+      let userId = cookie.getCookie('user_id')
+      if (userId) {
+        let ui = this.userInfo
+        if (Object.keys(ui).length === 0) {
+          ui = JSON.parse(sessionStorage.getItem('userInfo'))
+        }
+        return ui
+      } else {
+        return null
       }
-      return ui
     },
     userInfoImg () {
-      let photoURL = this.ui.photo
-      if (photoURL.indexOf(this.domainName) === -1) { // 没有出现
-        return this.domainName + '/' + photoURL
+      let userId = cookie.getCookie('user_id')
+      if (userId) {
+        let photoURL = this.ui.photo
+        if (photoURL.indexOf(this.domainName) === -1) { // 没有出现
+          return this.domainName + '/' + photoURL
+        }
+        return photoURL
+      } else {
+        return ''
       }
-      return photoURL
     }
   },
   watch: {
@@ -807,27 +820,27 @@ export default {
   position: absolute;
   top:15px;
   right:95px;
-  width: 220px;
+  width: 200px;
   height: 30px;
   color:#fff;
   line-height: 30px;
   text-align: center;
   border-radius: 100px;
   padding-left: 20px;
-  background-color: #7bc16b;
-  font-size: 16px;
+  background-color: #FFBE29;
+  font-size: 14px;
   cursor:pointer;
   background-image: url(../../../static/images/learn/learn-probation.svg);
   background-repeat:no-repeat;
-  background-position: 20px center;
+  background-position: 22px center;
 }
 .learn-login-right-tips-probation span {
   margin-left: 4px;
   text-decoration: underline;
 }
-.learn-login-right-tips-probation:hover{
+/* .learn-login-right-tips-probation:hover{
   background-color: #6ab359;
-}
+} */
 
 .learn-login-right-tips-probation-modify{
   float: right;

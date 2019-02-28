@@ -4,7 +4,16 @@
     <div class="hot-course-box">
       <p class="title">热门课程
       </p>
-      <div class="hot-courses">
+      <ul class="course-item">
+        <li v-for="(item, index) in hotCourse"
+          :key="'hot' + index" @click="routerGo(item)">
+          <div class="imgBox">
+            <img :src="qnUrl(item.flag)" alt="">
+          </div>
+          <p class="name"><span>{{ item.name }}</span></p>
+        </li>
+      </ul>
+      <!-- <div class="hot-courses" v-show="false">
         <div class="pre"><i @click="pre()"></i></div>
         <div class="list">
           <ul>
@@ -27,7 +36,7 @@
           </ul>
         </div>
         <div class="next"><i @click="next()"></i></div>
-      </div>
+      </div> -->
     </div>
     <div class="course-box">
       <div class="search">
@@ -57,10 +66,10 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
-import simplePinyin from 'simple-pinyin'
-import _ from 'lodash'
+import { mapState, mapActions, mapMutations } from 'vuex'
+// import simplePinyin from 'simple-pinyin'
 import VipPrompt from '../../common/vipPrompt.vue'
+import cookie from '../../../tool/cookie'
 // import Bus from '../../../bus'
 export default {
   data () {
@@ -83,22 +92,16 @@ export default {
     this.$parent.$emit('navItem', 'bookcase')
     let _this = this
     // 书架首页接口 热门课程、中国方言地图
-    this.bookCaseIndex().then(res => {
-      console.log('课程列表', res)
-      this.hotCourse = res.data.worldMapCourse.courses
-    })
+    // this.bookCaseIndex().then(res => {
+    //   console.log('课程列表', res)
+    //   this.hotCourse = res.data.worldMapCourse.courses
+    // })
 
-    this.getCourseList().then(res => {
+    this.getLangsList().then(res => {
       console.log('官方课程', res)
-      res.courseInfo.listCourses.forEach((item) => {
-        let obj = item
-        let name = item.name
-        let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
-        obj['pinyin'] = pinyin
-        obj['letter'] = pinyin.slice(0, 1).toUpperCase()
-        _this.courseLangs.push(obj)
-      })
-      this.defaultCourseLangs = this.courseLangs
+      _this.hotCourse = res.hotLangsInfo
+      _this.courseLangs = res.langsInfo
+      this.defaultCourseLangs = _this.courseLangs
     })
   },
   computed: {
@@ -107,9 +110,15 @@ export default {
     })
   },
   methods: {
+    ...mapMutations({
+      updateCurCourseCode: 'course/updateCurCourseCode'
+    }),
     ...mapActions({
       bookCaseIndex: 'course/bookCaseIndex',
-      getCourseList: 'getCourseList'
+      getLearnInfo: 'course/getLearnInfo',
+      getLearnCourses: 'course/getLearnCourses',
+      getLangsList: 'getLangsList',
+      postAnonyLogin: 'postAnonyLogin'
     }),
     qnUrl (url) {
       return url.split('?')[0] + '?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1'
@@ -168,10 +177,27 @@ export default {
       }
       return arr
     },
-    routerGo (item) {
+    async routerGo (item) {
       console.log('item', item)
-      let langCode = item['code']
-      this.$router.push({path: '/app/book-details/' + langCode})
+      let langCode = item['lan_code'].toUpperCase() + '-Basic'
+      let userId = cookie.getCookie('user_id')
+      if (userId) {
+        this.$router.push({path: '/app/book-details/' + langCode})
+      } else {
+        let params = {
+          preferLangs: langCode,
+          skillLangs: langCode
+        }
+
+        let res = await this.postAnonyLogin(params)
+        cookie.setCookie('user_id', res.result.user_id)
+        cookie.setCookie('verify', res.result.verify)
+        cookie.setCookie('is_anonymous', res.result.is_anonymous)
+        // this.updateCurCourseCode(langCode)
+        // await this.getLearnInfo(langCode)
+        await this.getLearnCourses()
+        this.$router.push({path: '/app/book-details/' + langCode})
+      }
     },
     search () {
       this.courseLangs = this.defaultCourseLangs.filter((item) => {
@@ -200,149 +226,214 @@ export default {
         font-weight: bold;
         text-align: center;
       }
-      .hot-courses {
+      // .hot-courses {
+      //   overflow: hidden;
+      //   .list {
+      //     width: 1074px;
+      //     height: 245px;
+      //     float:left;
+      //     overflow:hidden;
+      //     position:relative;
+      //     padding: 25px 0 20px;
+      //   }
+      //   .pre {
+      //     float:left;
+      //     font-size:16px;
+      //     width:35px;
+      //     text-align:center;
+      //     margin: 100px 10px;
+      //     i {
+      //       width: 18px;
+      //       height: 34px;
+      //       display: inline-block;
+      //       background-image: url('../../../../static/images/bookCase/pre-icon.svg');
+      //       background-repeat: no-repeat;
+      //       background-size: cover;
+      //       cursor: pointer;
+      //       &:hover {
+      //         background-image: url('../../../../static/images/bookCase/pre-icon-hover.svg');
+      //       }
+      //     }
+      //   }
+      //   .next {
+      //     float:left;
+      //     font-size:16px;
+      //     width:50px;
+      //     text-align:center;
+      //     margin: 100px 10px;
+      //     i {
+      //       width: 18px;
+      //       height: 34px;
+      //       display: inline-block;
+      //       background-image: url('../../../../static/images/bookCase/next-icon.svg');
+      //       background-repeat: no-repeat;
+      //       background-size: cover;
+      //       cursor: pointer;
+      //       &:hover{
+      //         background-image: url('../../../../static/images/bookCase/next-icon-hover.svg');
+      //       }
+      //     }
+      //   }
+      // }
+      // ul {
+      //   overflow: hidden;
+      //   width: 1200px;
+      //   li {
+      //     float: left;
+      //     width: 180px;
+      //     height: 200px;
+      //     overflow: hidden;
+      //     border-radius: 3px;
+      //     cursor: pointer;
+      //     background: #FFFFFF;
+      //     margin-right: 20px;
+      //     margin-bottom: 30px;
+      //     position: relative;
+      //     vertical-align:top;
+      //     line-height:30px;
+      //     padding:0 5px;
+      //     img {
+      //       position: absolute;
+      //       top: 20px;
+      //       right: 20px;
+      //       width:80px;
+      //       height:80px;
+      //       box-shadow:0px 4px 10px 0px rgba(81,120,135,0.18);
+      //       border-radius:6px;
+      //     }
+      //     .name {
+      //       margin-top: 126px;
+      //       margin-left: 16px;
+      //       font-size: 16px;
+      //       color: #333333;
+      //       font-weight: 600;
+      //     }
+      //     .number {
+      //       font-size: 12px;
+      //       color: #999999;
+      //       overflow: hidden;
+      //       margin-left: 16px;
+      //       background: url('./../../../../static/images/learn/person.png') no-repeat left center;
+      //       background-size: 13px 11px;
+      //       padding-left: 18px;
+      //       text-align: left;
+      //       font-weight: 400;
+      //     }
+      //     .details {
+      //       width: 100%;
+      //       height: 100%;
+      //       background-color: rgba(255,255,255,.97);
+      //       padding: 22px 18px 0px;
+      //       cursor: pointer;
+      //       position: absolute;
+      //       top: 0px;
+      //       bottom: 0px;
+      //       left: 0px;
+      //       .desc {
+      //         height: 86px;
+      //         font-size: 12px;
+      //         line-height: 18px;
+      //         color: #333333;
+      //         font-weight: 400;
+      //         overflow: hidden;
+      //         margin-bottom: 28px;
+      //         position: relative;
+      //         word-break: break-all;
+      //         display: -webkit-box;
+      //         -webkit-box-orient: vertical;
+      //         -webkit-line-clamp: 5;
+      //         overflow: hidden;
+      //       }
+      //       .time {
+      //         font-size:13px;
+      //         font-weight:500;
+      //         color:#999999;
+      //         line-height:17px;
+      //       }
+      //       .home-work {
+      //         font-size:13px;
+      //         font-weight:500;
+      //         color:#999999;
+      //         line-height:18px;
+      //       }
+      //       .btn {
+      //         height: 28px;
+      //         font-size: 13px;
+      //         font-weight: 600;
+      //         line-height: 28px;
+      //         text-align: center;
+      //         border-radius: 16px;
+      //         color:rgba(42,159,228,1);
+      //         position: absolute;
+      //         right: 20px;
+      //         bottom: 5px;
+      //         text-decoration: underline;
+      //       }
+      //     }
+      //   }
+      // }
+      .course-item {
+        width: 944px;
+        margin: 0 auto;
         overflow: hidden;
-        .list {
-          width: 1074px;
-          height: 245px;
-          float:left;
-          overflow:hidden;
-          position:relative;
-          padding: 25px 0 20px;
-        }
-        .pre {
-          float:left;
-          font-size:16px;
-          width:35px;
-          text-align:center;
-          margin: 100px 10px;
-          i {
-            width: 18px;
-            height: 34px;
-            display: inline-block;
-            background-image: url('../../../../static/images/bookCase/pre-icon.svg');
-            background-repeat: no-repeat;
-            background-size: cover;
-            cursor: pointer;
-            &:hover {
-              background-image: url('../../../../static/images/bookCase/pre-icon-hover.svg');
-            }
-          }
-        }
-        .next {
-          float:left;
-          font-size:16px;
-          width:50px;
-          text-align:center;
-          margin: 100px 10px;
-          i {
-            width: 18px;
-            height: 34px;
-            display: inline-block;
-            background-image: url('../../../../static/images/bookCase/next-icon.svg');
-            background-repeat: no-repeat;
-            background-size: cover;
-            cursor: pointer;
-            &:hover{
-              background-image: url('../../../../static/images/bookCase/next-icon-hover.svg');
-            }
-          }
-        }
-      }
-      ul {
-        overflow: hidden;
-        width: 1200px;
         li {
           float: left;
-          width: 180px;
-          height: 200px;
-          overflow: hidden;
-          border-radius: 3px;
           cursor: pointer;
-          background: #FFFFFF;
-          margin-right: 20px;
-          margin-bottom: 30px;
-          position: relative;
-          vertical-align:top;
-          line-height:30px;
-          padding:0 5px;
-          img {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width:80px;
-            height:80px;
-            box-shadow:0px 4px 10px 0px rgba(81,120,135,0.18);
-            border-radius:6px;
+          width: 100px;
+          height: 122px;
+          margin: 0 9px;
+          color: #666;
+          .imgBox {
+            width: 100%;
+            height: 80px;
+            line-height: 80px;
+            text-align: center;
+            position: relative;
+            img {
+              width: 68px;
+              height: 68px;
+              vertical-align: middle;
+              border: 3px solid #e1e1e1;
+              border-radius: 8px;
+              position: absolute;
+              right: 0;
+              bottom: 0;
+              left: 0;
+              margin: auto;
+              transition: all .3s;
+              -ms-transition: all .3s;
+              -o-transition: all .3s;
+              -moz-transition: all .3s;
+              -webkit-transition: all .3s;
+              transform-origin: 30px 60px;
+              -ms-transform-origin: 30px 60px;
+              -o-transform-origin: 30px 60px;
+              -moz-transform-origin: 30px 60px;
+              -webkit-transform-origin: 30px 60px;
+              cursor: pointer;
+              &:hover {
+                border: 3px solid #2A9FE4;
+              }
+            }
           }
           .name {
-            margin-top: 126px;
-            margin-left: 16px;
-            font-size: 16px;
-            color: #333333;
-            font-weight: 600;
-          }
-          .number {
-            font-size: 12px;
-            color: #999999;
-            overflow: hidden;
-            margin-left: 16px;
-            background: url('./../../../../static/images/learn/person.png') no-repeat left center;
-            background-size: 13px 11px;
-            padding-left: 18px;
-            text-align: left;
-            font-weight: 400;
-          }
-          .details {
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255,255,255,.97);
-            padding: 22px 18px 0px;
-            cursor: pointer;
-            position: absolute;
-            top: 0px;
-            bottom: 0px;
-            left: 0px;
-            .desc {
-              height: 86px;
-              font-size: 12px;
-              line-height: 18px;
-              color: #333333;
-              font-weight: 400;
-              overflow: hidden;
-              margin-bottom: 28px;
-              position: relative;
-              word-break: break-all;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 5;
-              overflow: hidden;
-            }
-            .time {
-              font-size:13px;
-              font-weight:500;
-              color:#999999;
-              line-height:17px;
-            }
-            .home-work {
-              font-size:13px;
-              font-weight:500;
-              color:#999999;
-              line-height:18px;
-            }
-            .btn {
-              height: 28px;
-              font-size: 13px;
-              font-weight: 600;
-              line-height: 28px;
-              text-align: center;
-              border-radius: 16px;
-              color:rgba(42,159,228,1);
+            height: 36px;
+            text-align: center;
+            position: relative;
+            span {
+              display: block;
+              width: 100%;
+              height: 16px;
+              font-size: 16px;
+              font-weight: 500;
               position: absolute;
-              right: 20px;
-              bottom: 5px;
-              text-decoration: underline;
+              top: 10px;
+              left: 0;
+              line-height: 16px;
             }
+          }
+          &:hover {
+            color: #2A9FE4;
           }
         }
       }
@@ -415,7 +506,6 @@ export default {
     }
     .course-item {
       width: 944px;
-      min-height: 300px;
       margin: 0 auto;
       overflow: hidden;
       li {

@@ -66,8 +66,9 @@ export default {
   },
   // 获取语言列表
   getLangsList ({commit}) {
-    httpNoLogin(config.umLangsListApi).then(res => {
+    return httpNoLogin(config.umLangsListApi).then(res => {
       commit('updateCourseLangsList', res.hotLangsInfo.concat(res.langsInfo))
+      return res
     })
   },
   // 动态获取token的方法

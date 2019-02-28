@@ -11,7 +11,7 @@
     <photo-uploader />
     <float-bar />
     <continue-learn />
-    <buy-chapter />
+    <buy-chapter v-if="isShowBuyChapter"/>
   </div>
 </template>
 <script>
@@ -25,11 +25,13 @@ import VoicePlayer from '../common/voicePlayer.vue'
 import ContinueLearn from '../common/continueLearn.vue'
 import BuyChapter from '../common/buyChapterConfirm.vue'
 import Bus from '../../bus'
+import cookie from '../../tool/cookie'
 
 export default {
   data () {
     return {
-      isShow: false
+      isShow: false,
+      isShowBuyChapter: false
     }
   },
   created () {
@@ -56,6 +58,10 @@ export default {
     BuyChapter
   },
   mounted () {
+    let userId = cookie.getCookie('user_id')
+    if (userId) {
+      this.isShowBuyChapter = true
+    }
     this.updateIsShowVoicePlayer(this.$route)
   },
   watch: {

@@ -15,7 +15,7 @@
         <!-- <span @click="removeMarks()"><i></i>remove</span> -->
         <span class="search-icon" @click="isShowSearch = true"><i></i></span>
       </div>
-      <transition name="slide-fade" mode="out-in">
+      <transition name="search">
         <div class="search-inner" v-show="isShowSearch">
           <i @click="search()"></i>
           <input type="text" @keyup.enter="search()" v-model="searchKey" placeholder="搜索官方课程或濒危语种">
@@ -109,7 +109,7 @@ export default {
   }
   .search {
     position: absolute;
-    width: 800px;
+    width: 700px;
     height: 50px;
     border-radius: 31px;
     background: rgba(5,129,209,.8);
@@ -128,12 +128,12 @@ export default {
 
   .search-inner-desc ul {
     display: inline-flex;
-    width: 720px;
+    width: 652px;
   }
 
   .search-inner-desc ul li{
     display: inline-block;
-    width: 240px;
+    width: 216px;
     text-align: center;
     color: #fff;
     font-weight: bold;
@@ -210,7 +210,7 @@ export default {
   }
 
   .search-inner {
-    width:785px;
+    width:685px;
     height:36px;
     background:rgba(248,250,251,1);
     border-radius:22px;
@@ -243,8 +243,8 @@ export default {
   }
 
   .search-inner > input {
-    height: 34px;
-    width: 720px;
+    height: 36px;
+    width: 618px;
     margin:0 auto;
   }
 
@@ -262,7 +262,7 @@ export default {
     border-radius: 0px 3px 3px 0;
     border: 1px solid #9fc9ed;
     margin-top: 50px;
-    margin-left: 51px;
+    margin-left: 24px;
     padding-top: 3px;
     ul {
       li {
@@ -338,31 +338,61 @@ export default {
 
   @keyframes show {
     0% {
-        opacity: 0;
-        height: 0;
+      opacity: 0;
+      height: 0;
     }
     100% {
-        opacity: 1;
-        height: 192px;
+      opacity: 1;
+      height: 192px;
     }
   }
-@keyframes hide {
+  @keyframes hide {
     0% {
-        opacity: 1;
-        height: 192px;
+      opacity: 1;
+      height: 192px;
     }
     100% {
-        opacity: 0;
-        height: 0;
+      opacity: 0;
+      height: 0;
     }
-}
-.show-enter-active {
+  }
+  .show-enter-active {
     animation: show .5s;
-}
-.show-leave-active {
+  }
+  .show-leave-active {
     animation: hide .5s;
-}
-.show-enter, .show-leave-to {
+  }
+  .show-enter, .show-leave-to {
     opacity: 0;
-}
+  }
+
+  @keyframes searchShow {
+    0% {
+      opacity: 0;
+      right: -100px;
+    }
+    100% {
+      opacity: 1;
+      right: 0;
+    }
+  }
+  @keyframes searchHide {
+    0% {
+      opacity: 1;
+      right: 0;
+    }
+    100% {
+      opacity: 0;
+      right: -100px;
+    }
+  }
+  .search-enter-active {
+    animation: searchShow .5s;
+  }
+  .search-leave-active {
+    animation: searchHide .5s;
+  }
+  .search-enter, .search-leave-to {
+    opacity: 0;
+  }
 </style>

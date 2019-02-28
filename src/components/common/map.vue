@@ -13,6 +13,7 @@ import mapData from '../../api/mapData'
 import cookie from '../../tool/cookie'
 
 var mp = null
+var lastInfoBox = null
 // import BMapSymbolSHAPEPOINT from 'BMap_Symbol_SHAPE_POINT'
 export default {
   props: ['data'],
@@ -178,26 +179,32 @@ export default {
       var p = e.target
       var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat)
       // 创建信息窗口对象
-      var infoWindow = new BMap.InfoWindow(content, {
-        offset: new BMap.Size(0, -25)
-      })
-      // var opt = {
-      //   boxStyle: {
-      //     width: '149px',
-      //     height: '82px',
-      //     background: '#fff',
-      //     boxShadow: '0px 6px 8px 0px rgba(0,89,104,0.2)',
-      //     padding: '12px',
-      //     borderRadius: '5px'
-      //   },
-      //   closeIconMargin: '10px 2px 0 0',
-      //   enableAutoPan: true,
-      //   alignBottom: false
-      // }
-      // var infoBox = new BMapLib.InfoBox(mp, content, opt)
-      // infoBox.open(point)
+      // var infoWindow = new BMap.InfoWindow(content, {
+      //   offset: new BMap.Size(0, -25)
+      // })
+      var opt = {
+        offset: new BMap.Size(-20, 22),
+        boxStyle: {
+          width: '176px',
+          height: '98px',
+          background: 'url("../../../../static/images/learnIndex/map/map-infowin-bg.svg") no-repeat center top',
+          padding: '12px',
+          borderRadius: '5px',
+          marginLeft: '6px'
+        },
+        closeIconMargin: '-4px 14px 0 0',
+        closeIconUrl: '../../../../static/images/learnIndex/map/map-infowin-close.svg',
+        enableAutoPan: true,
+        alignBottom: false
+      }
+      if (lastInfoBox) {
+        lastInfoBox.close()
+      }
+      var infoBox = new BMapLib.InfoBox(mp, content, opt)
+      lastInfoBox = infoBox
+      infoBox.open(point)
       // 开启信息窗口
-      mp.openInfoWindow(infoWindow, point)
+      // mp.openInfoWindow(infoWindow, point)
     },
     mapSearch (key) {
       console.log(key)
@@ -326,7 +333,7 @@ export default {
       }
       var sContent =
         '<div>' +
-          '<p>' +
+          '<p style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">' +
             '<span style="font-size:18px; font-weight:bold; color:#333333; line-height: 20px; margin-left: 5px;">' +
               item.en_name +
             '</span>' +
@@ -410,13 +417,13 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
       text = '个人主页'
       sContent =
         '<div>' +
-          '<p>' +
-            '<img style="float:left;margin:4px; border: 2px solid #E5E9DB; border-radius: 50%;" src="' + that._data.photo + '" width="32" height="32" title=""/>' +
-            '<span style="font-size:14px; font-weight:600; color:#333333; line-height: 40px; margin-left: 5px;">' +
+          '<p style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">' +
+            '<img style="float:left;margin-left:2px; border: 2px solid #E5E9DB; border-radius: 50%;" src="' + that._data.photo + '" width="32" height="32" title=""/>' +
+            '<span style="font-size:14px; font-weight:600; color:#333333; line-height: 32px; margin-left: 5px;">' +
               that._data.author_name +
             '</span>' +
           '</p>' +
-          '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 1px; text-decoration: underline;">' +
+          '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 4px; text-decoration: underline;">' +
             '<a href="./discovery/author-detail/' + that._data.user_id + '">' +
               text +
             '</a>' +
@@ -426,24 +433,46 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
       text = '了解详情'
       sContent =
         '<div>' +
-          '<p>' +
-            '<img style="width: 32px; height:32px; float:left;margin:4px; border-radius:6px; border: 2px solid rgba(229,233,219,1);" src="' + that._data.flag + '" width="50" height="50" title=""/>' +
-            '<span style="font-size:14px; font-weight:600; color:#333333; line-height: 38px; margin-left: 5px;">' +
+          '<p style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">' +
+            '<img style="width: 32px; height:32px; float:left;margin:0 4px; border-radius:6px; border: 2px solid rgba(229,233,219,1);" src="' + that._data.flag + '" width="50" height="50" title=""/>' +
+            '<span style="font-size:14px; font-weight:600; color:#333333; line-height: 32px; margin-left: 5px;">' +
               that._data.name +
             '</span>' +
           '</p>' +
-          '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 2px; text-decoration: underline;">' +
+          '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 4px; text-decoration: underline;">' +
             '<a href="./book-details/' + that._data.lan_code + '-Basic">' +
               text +
             '</a>' +
           '</p>' +
         '</div>'
     }
-    var infoWindow = new BMap.InfoWindow(sContent, {
-      offset: new BMap.Size(15, -25)
-    })
-    // 开启信息窗口
-    mp.openInfoWindow(infoWindow, that._point)
+    // var infoWindow = new BMap.InfoWindow(sContent, {
+    //   offset: new BMap.Size(15, -25)
+    // })
+    // // 开启信息窗口
+    // mp.openInfoWindow(infoWindow, that._point)
+
+    var opt = {
+      offset: new BMap.Size(0, 22),
+      boxStyle: {
+        width: '176px',
+        height: '98px',
+        background: 'url("../../../../static/images/learnIndex/map/map-infowin-bg.svg") no-repeat center top',
+        padding: '12px',
+        borderRadius: '5px',
+        marginLeft: '24px'
+      },
+      closeIconMargin: '-4px 14px 0 0',
+      closeIconUrl: '../../../../static/images/learnIndex/map/map-infowin-close.svg',
+      enableAutoPan: true,
+      alignBottom: false
+    }
+    if (lastInfoBox) {
+      lastInfoBox.close()
+    }
+    var infoBox = new BMapLib.InfoBox(mp, sContent, opt)
+    lastInfoBox = infoBox
+    infoBox.open(that._point)
   }
 
   div.onmouseout = function () {
