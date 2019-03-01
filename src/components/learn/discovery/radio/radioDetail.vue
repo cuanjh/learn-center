@@ -126,8 +126,8 @@
                   </p>
                 </div>
                 <p class="flowed" @click="relation()">
-                  <span v-if="authorInfo.has_followed === 0"><i></i>关注</span>
-                  <span v-else>取消关注</span>
+                  <a v-if="authorInfo.has_followed === 0"><i></i>关注</a>
+                  <a v-else>取消关注</a>
                 </p>
               </div>
             </div>
@@ -865,11 +865,11 @@ export default {
   background-size: cover;
   margin-right: 3px;
 }
-.author-info .author-info-right .passed .flowed span {
+.author-info .author-info-right .passed .flowed a {
   display: flex;
   align-items:center;
 }
-.author-info .author-info-right .passed .flowed span i{
+.author-info .author-info-right .passed .flowed a i{
   display: inline-block;
   width: 11px;
   height: 11px;

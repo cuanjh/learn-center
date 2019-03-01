@@ -278,6 +278,7 @@ export default {
               sort: this.onActive
             }
           }
+          console.log('页码', this.page, this.showPage)
           this.getRadioList(params).then((res) => {
             console.log('res', res)
             this.lists = this.lists.concat(res.data.radios)
@@ -335,15 +336,25 @@ export default {
     changeIsHot (item) {
       console.log('热度', item)
       console.log('selState', this.selState)
-
       this.onActive = item.type
       this.page = 1
-      let params = {
-        menu_type: this.menu_type,
-        menu_id: this.menu_id,
-        page: this.page,
-        preferred_lan_code: this.selState.lan_code,
-        sort: this.onActive
+      let params = {}
+      if (!this.userInfo) {
+        params = {
+          menu_type: this.menu_type,
+          menu_id: this.menu_id,
+          page: this.page,
+          preferred_lan_code: '',
+          sort: this.onActive
+        }
+      } else {
+        params = {
+          menu_type: this.menu_type,
+          menu_id: this.menu_id,
+          page: this.page,
+          preferred_lan_code: this.selState.lan_code,
+          sort: this.onActive
+        }
       }
       console.log('切换热度', params)
       this.getRadioList(params).then((res) => {

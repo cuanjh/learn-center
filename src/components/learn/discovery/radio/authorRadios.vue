@@ -39,7 +39,7 @@ import Bus from '../../../../bus'
 import $ from 'jquery'
 
 export default {
-  props: ['radios', 'isVip'],
+  props: ['radios'],
   data () {
     return {
     }

@@ -131,7 +131,7 @@
           </div>
         </div>
         <div class="author-content-box" v-if="'radios' == tabFlag">
-          <author-radios :radios="radios" :isVip="isVip"></author-radios>
+          <author-radios :radios="radios"></author-radios>
           <!-- 展开全部 -->
           <div class="up-all" v-if="radios.length > 0">
             <span v-if="showPage === -1">已显示全部内容</span>
