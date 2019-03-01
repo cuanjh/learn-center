@@ -12,7 +12,7 @@
     </div>
     <div class="link">
       <router-link :to="{path: '/app/introduce-app'}" target="_blank">
-        <span class="more">了解更多</span>
+        <a class="more">了解更多</a>
       </router-link>
     </div>
   </div>
@@ -82,6 +82,7 @@ export default {
       font-family: PingFang-SC;
       font-weight: 600;
       font-size: 14px;
+      color: #0A2B40;
       line-height: 20px;
       padding: 8px 38px;
       &:hover {

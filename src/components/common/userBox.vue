@@ -4,9 +4,9 @@
       <div class="bg-img"></div>
       <div class="info">
         <div class="user-img">
-          <img :src="ui.photo" alt="用户头像">
+          <img :src="ui?ui.photo:''" alt="用户头像">
           <p class="name">
-            <span>{{ui.nickname}}</span>
+            <span>{{ui?ui.nickname:''}}</span>
           </p>
         </div>
       </div>
@@ -14,19 +14,19 @@
         <ul>
           <li>
             <div class="num">
-              <p>{{ui.following_count}}</p>
+              <p>{{ui?ui.following_count:''}}</p>
               <p>关注</p>
             </div>
           </li>
           <li>
             <div class="num">
-              <p>{{ui.followed_count}}</p>
+              <p>{{ui?ui.followed_count:''}}</p>
               <p>粉丝</p>
             </div>
           </li>
           <li>
             <div class="num">
-              <p>{{ui.dynamic_num ? ui.dynamic_num : '0'}}</p>
+              <p>{{ui?(ui.dynamic_num ? ui.dynamic_num : '0'):''}}</p>
               <p>动态</p>
             </div>
           </li>
@@ -51,7 +51,7 @@ export default {
     }),
     ui () {
       let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
+      if (!ui) {
         ui = JSON.parse(sessionStorage.getItem('userInfo'))
       }
       return ui

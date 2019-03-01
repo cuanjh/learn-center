@@ -40,7 +40,7 @@
         </div>
         <ul>
           <li v-for="item in menus" :key="item.menu_id">
-            <span v-text="item.menu_title" @click="goRadioList(item)"></span>
+            <a v-text="item.menu_title" @click="goRadioList(item)"></a>
           </li>
         </ul>
       </div>
@@ -48,10 +48,10 @@
     <div class="radio-recommend">
       <div class="left">
         <div class="recommend-list">
-          <div @click="goRecommendRadio('hostRadio')" class="recommend-item"><i></i><span>热播电台</span></div>
-          <div @click="goRecommendRadio('learnRecom')" class="recommend-item"><i></i><span>学习推荐</span></div>
-          <div @click="goRecommendRadio('latestRelease')" class="recommend-item"><i></i><span>最新发布</span></div>
-          <router-link tag="div" :to="{path: 'radio-recom-teachers'}" class="recommend-item"><i></i><span>明星主播</span></router-link>
+          <a @click="goRecommendRadio('hostRadio')" class="recommend-item"><i></i><span>热播电台</span></a>
+          <a @click="goRecommendRadio('learnRecom')" class="recommend-item"><i></i><span>学习推荐</span></a>
+          <a @click="goRecommendRadio('latestRelease')" class="recommend-item"><i></i><span>最新发布</span></a>
+          <router-link :to="{path: 'radio-recom-teachers'}" class="recommend-item"><i></i><span>明星主播</span></router-link>
         </div>
         <!-- 根据学习课程推荐的电台 -->
         <get-random-radio :randomRadio="randomRadio" v-if="flag"></get-random-radio>
@@ -60,7 +60,7 @@
       </div>
       <div class="right">
         <!-- 用户信息 -->
-        <user-box></user-box>
+        <user-box v-show="userInfo"></user-box>
         <introduce-app-box></introduce-app-box>
       </div>
     </div>
@@ -100,17 +100,16 @@
             </div>
           </div>
           <div class="radio-type-bottom">
-            <p @click="changeBatch()">
-              <i></i>
-              <span>换一批</span>
-            </p>
+            <a @click="changeBatch()">
+              <i></i>换一批
+            </a>
           </div>
         </div>
         <div class="radio-type" v-for="(item, index) in menuRadios.slice(1, 4)" :key="index">
           <div class="radio-type-top">
             <span></span>
             <span v-text="item.menu_title"></span>
-            <span @click="goRadioList(item)">更多<i></i></span>
+            <a @click="goRadioList(item)">更多<i></i></a>
           </div>
           <div class="radio-list" v-if="item.radios">
             <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
@@ -156,7 +155,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import Bus from '../../../../bus'
 import $ from 'jquery'
 import Swiper from 'swiper'
@@ -214,6 +213,9 @@ export default {
     })
   },
   computed: {
+    ...mapState({
+      userInfo: state => state.userInfo
+    }),
     authorList () {
       console.log(this.startAuthorsIndex)
       console.log(this.authors.slice(this.startAuthorsIndex, 5))
@@ -427,16 +429,14 @@ export default {
           padding: 7px 21px;
           margin-top: 12px;
           margin-right: 11px;
-          span {
+          a {
             cursor: pointer;
             font-size: 14px;
             color: #4a4a4a;
             font-weight: 400;
-          }
-        }
-        li:hover {
-          span {
-            color: #2A9FE4;
+            &:hover {
+              color: #2A9FE4;
+            }
           }
         }
       }
@@ -595,26 +595,25 @@ export default {
             // margin-left: 10px;
             line-height: 20px;
           }
-          &:last-child{
-            cursor: pointer;
-            float:right;
-            color: #b8b8b8;
-            font-size: 15px;
-            i{
-              width: 8px;
-              height: 10px;
-              background-image: url('../../../../../static/images/more.svg');
-              background-repeat: no-repeat;
-              background-size: cover;
-              display: inline-block;
-              margin-top: 5px;
-              margin-left: 5px;
-            }
-            &:hover {
-              color: #2A9FE4;
-              i {
-                background-image: url('../../../../../static/images/morehover.svg');
-              }
+        }
+        a {
+          float:right;
+          color: #b8b8b8;
+          font-size: 15px;
+          i{
+            width: 8px;
+            height: 10px;
+            background-image: url('../../../../../static/images/more.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: inline-block;
+            margin-top: 5px;
+            margin-left: 5px;
+          }
+          &:hover {
+            color: #2A9FE4;
+            i {
+              background-image: url('../../../../../static/images/morehover.svg');
             }
           }
         }
@@ -623,7 +622,7 @@ export default {
         width: 100%;
         display: flex;
         justify-content: flex-end;
-        p {
+        a {
           -webkit-user-select:none;
           -moz-user-select:none;
           -ms-user-select:none;
@@ -645,7 +644,6 @@ export default {
             margin-right: 10px;
           }
           &:hover {
-            cursor: pointer;
             color: #2A9FE4FF;
             i {
               background-image: url('../../../../../static/images/learnIndex/icon-change-hover.svg');
@@ -687,7 +685,7 @@ export default {
             // background-repeat: no-repeat;
             // background-size: cover;
             bottom: 5px;
-            right: 5px;
+            right: 8px;
             text-align:  center;
             z-index: 2;
             .play {
@@ -714,9 +712,12 @@ export default {
             border-radius: 4px;
           }
           .subscribe {
-            position: relative;
+            height: 30px;
+            position: absolute;
             display: -webkit-box;
-            margin-top: -25px;
+            bottom: 0;
+            display: flex;
+            align-items: center;
             i {
               display: inline-block;
               margin: 0 8px;

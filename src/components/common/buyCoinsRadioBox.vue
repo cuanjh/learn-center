@@ -29,14 +29,14 @@
         </div>
       </div>
       <!-- 了解会员 -->
-      <div class="vip-understand"  v-show="isVip !== 1 || itemRadio.free_for_member !== 0 || itemRadio.free_for_member === true">
+      <div class="vip-understand" v-show="isVip !== 1 || itemRadio.free_for_member !== 0 || itemRadio.free_for_member === true">
         <div class="vip-cont">
           <div class="left">
             <i></i>
             <span>加入VIP，畅听更多"会员免费"课程！</span>
           </div>
-          <router-link tag="div" :to="{path: '/app/user/vip'}" class="right">
-            <span>了解会员</span>
+          <router-link :to="{path: '/app/user/vip'}" class="right">
+            了解会员
             <i></i>
           </router-link>
         </div>
@@ -258,7 +258,7 @@ export default {
           background-position: center;
           background-size: cover;
         }
-        span {
+        span, a {
           font-size:14px;
           font-family:PingFang-SC-Medium;
           font-weight:500;
@@ -278,19 +278,14 @@ export default {
         .right {
           display: flex;
           align-items: center;
-          span {
-            padding-right: 13px;
-          }
           i {
+            margin-left: 3px;
             width: 10px;
             height: 10px;
             background-image: url('../../../static/images/instrocevip.svg');
           }
           &:hover {
-            cursor: pointer;
-            span {
-              color:rgba(255,255,255,.5);
-            }
+            color:rgba(255,255,255,.5);
             i {
               background-image: url('../../../static/images/instroceviphover.svg');
             }

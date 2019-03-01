@@ -27,17 +27,21 @@
         <!-- 支付信息 -->
         <div class="pay">
           <div class="weixin">
-            <i></i>
+            <span class="erweima-box">
+              <img :src="weixinUrl" alt="微信支付二维码">
+            </span>
+            <i @mouseenter="mouseEnter()"
+               @mouseleave="mouseLeave()"></i>
             <span>微信扫码付款</span>
           </div>
           <div class="zhifubao">
             <i @click="goPayRadio()"></i>
-            <span>支付宝扫码付款</span>
+            <span>支付宝付款</span>
           </div>
         </div>
       </div>
       <!-- 了解会员 -->
-      <div class="vip-understand" v-show="isVip !== 1 && (itemRadio.free_for_member !== 0 || itemRadio.free_for_member === true)">
+      <div class="vip-understand" v-show="isVip !== 1 || itemRadio.free_for_member !== 0 || itemRadio.free_for_member === true">
         <div class="vip-cont">
           <div class="left">
             <i></i>
@@ -77,7 +81,11 @@
     <div class="pay-success" v-show="successBox">
       <div class="pay-content">
         <p class="bg-img"><i></i></p>
-        <p>你已支付成功并完成电台订阅</p>
+        <!-- <p>你已支付成功并完成电台订阅</p> -->
+        <p>
+          <span>未完成支付请先完成支付！</span>
+          <span>支付成功后请刷新页面。</span>
+        </p>
         <p><span @click="know()">知道了</span></p>
       </div>
     </div>
@@ -85,6 +93,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
+import $ from 'jquery'
 import bus from '../../bus'
 export default {
   data () {
@@ -107,6 +116,7 @@ export default {
       }
       console.log('创建订单', params)
       this.createAliRadioOrder(params)
+      this.createWeixinRadioOrder(params)
     })
     // 支付完成
     this.$on('successBox', (e) => {
@@ -119,10 +129,16 @@ export default {
   computed: {
     ...mapState({
       userInfo: state => state.userInfo, // 用户信息
-      pay: state => state.user.pay
+      pay: state => state.user.pay, // 支付宝订单数据
+      payWeixin: state => state.user.payWeixin // 微信支付订单数据
     }),
+    // 支付宝链接
     aliPayUrl () {
       return this.pay.aliWebPayUrl
+    },
+    // 微信链接
+    weixinUrl () {
+      return this.payWeixin.aliWebPayUrl
     },
     isVip () {
       if (!this.userInfo || !this.userInfo.member_info) {
@@ -133,7 +149,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      createAliRadioOrder: 'user/createAliRadioOrder'
+      createAliRadioOrder: 'user/createAliRadioOrder', // 创建支付宝订单
+      createWeixinRadioOrder: 'user/createWeixinRadioOrder' // 创建微信支付订单
     }),
     showActiveButton () {
       this.activeButton = true
@@ -148,10 +165,30 @@ export default {
     know () {
       this.$emit('successBox', false)
       this.showBuyBox = false
+      this.contentShow = true
+    },
+    // 微信移入
+    mouseEnter () {
+      // $('.erweima-box').addClass('active')
+      // $('.weixin i').css('background-image', 'url(' + this.weixinUrl + ')')
+      $('.weixin .erweima-box').animate({
+        height: '190px',
+        top: '-190px'
+      })
+    },
+    // 移出
+    mouseLeave () {
+      // $('.weixin i').css('background-image', 'url(../../../static/images/pay-icon/weixin.svg)')
+      $('.weixin .erweima-box').animate({
+        height: '0px',
+        top: '0px'
+      })
     },
     // 支付宝支付接口
     goPayRadio () {
       window.open(this.aliPayUrl)
+      this.$emit('successBox', true)
+      this.contentShow = false
     }
   }
 }
@@ -292,6 +329,7 @@ export default {
         justify-content: center;
         align-items: center;
         i {
+          cursor: pointer;
           display: inline-block;
           width: 94px;
           height: 94px;
@@ -308,6 +346,7 @@ export default {
           padding-top: 5px;
         }
         .weixin {
+          position: relative;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -315,6 +354,18 @@ export default {
           margin-right: 30px;
           i {
             background-image: url('../../../static/images/pay-icon/weixin.svg');
+          }
+          .erweima-box {
+            display: inline-block;
+            height: 0px;
+            overflow: hidden;
+            border-radius: 3px;
+            position: absolute;
+            top: 0px;
+            img {
+              width: 190px;
+              height: 190px;
+            }
           }
         }
         .zhifubao {
@@ -502,8 +553,8 @@ export default {
         width: 100%;
         i {
           display: inline-block;
-          width: 90px;
-          height: 90px;
+          width: 70px;
+          height: 70px;
           background: url('../../../static/images/discovery/pay-zhifubao-success.svg') no-repeat center;
           background-size: cover;
         }
@@ -514,6 +565,15 @@ export default {
         font-weight:bold;
         color:rgba(10,43,64,1);
         padding: 28px 0 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        span {
+          display: inline-block;
+          font-size: 14px;
+          color: #0A2B40FF;
+        }
       }
       p:last-child {
         font-size:14px;

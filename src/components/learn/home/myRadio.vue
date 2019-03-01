@@ -309,6 +309,12 @@ export default {
             margin-top: -89px;
             text-align: right;
             z-index: 2;
+            i {
+              display: inline-block;
+              position: absolute;
+              bottom: 5px;
+              right: 8px;
+            }
             .play {
               width: 24px;
               height: 24px;
@@ -316,8 +322,6 @@ export default {
               background-repeat: no-repeat;
               background-size: cover;
               display: inline-block;
-              margin-top: 58px;
-              margin-right: 8px;
               cursor: pointer;
             }
             .pause {
@@ -327,14 +331,16 @@ export default {
               background-repeat: no-repeat;
               background-size: cover;
               display: inline-block;
-              margin-top: 58px;
-              margin-right: 8px;
               cursor: pointer;
             }
           }
           .subscribe {
-            position: relative;
-            margin-top: -25px;
+            height: 30px;
+            position: absolute;
+            display: -webkit-box;
+            bottom: 0;
+            display: flex;
+            align-items: center;
             i:first-child {
               display: inline-block;
               margin: 0 8px;

@@ -34,6 +34,11 @@ const state = {
     tradeNo: '', // 订单号
     productId: '' // 套餐ID
   },
+  payWeixin: {
+    aliWebPayUrl: '', // 微信订单跳转地址
+    tradeNo: '', // 订单号
+    productId: '' // 套餐ID
+  },
   loadingMore: false, // 显示收支详细是否加载完成
   courseFilterAll: []
 }
@@ -126,7 +131,15 @@ const actions = {
   // 创建电台支付宝订单
   createAliRadioOrder ({commit}, params) {
     httpLogin(config.createAliWebOrder, params).then(result => {
+      result.productId = params.product_id
       commit('createAliWebOrderMutation', result)
+    })
+  },
+  // 创建电台微信支付订单
+  createWeixinRadioOrder ({commit}, params) {
+    httpLogin(config.createWxRadioOrderApi, params).then(result => {
+      result.productId = params.product_id
+      commit('createWeixinOrderMutation', result)
     })
   },
   // 会员产品接口的实现
@@ -227,11 +240,19 @@ const mutations = {
   getpayhide (state) {
     state.payShow = true
   },
+  // 创建支付宝订单
   createAliWebOrderMutation (state, response) {
     state.pay.aliWebPayUrl = response.redirect_url
     state.pay.productId = response.productId
     state.pay.tradeNo = response.trade_no
-    console.log('.......', state.pay)
+    console.log('创建支付宝订单返回', state.pay)
+  },
+  // 创建微信支付订单
+  createWeixinOrderMutation (state, response) {
+    state.payWeixin.aliWebPayUrl = 'http://dev.api.talkmate.com/qrcode.php?data=' + response.code_url
+    state.payWeixin.productId = response.productId
+    state.payWeixin.tradeNo = response.trade_no
+    console.log('创建微信支付订单返回', state.payWeixin)
   },
   updateMemberProductsList (state, response) {
     state.productList = response

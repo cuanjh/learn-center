@@ -3,11 +3,11 @@
     <div class="classification">
       <div class="nav">
         <router-link :to="{path: '/app/index'}">
-          <span>我的学习账户</span>
+          我的学习账户
         </router-link>
         >
         <router-link :to="{path: '/app/discovery/radio-home'}">
-          <span>电台</span>
+          电台
         </router-link>
         >
         <!-- <router-link :to="{path: '/app/discovery/home'}">
@@ -23,9 +23,8 @@
           <ul>
             <li v-for="(item, index) in menuRadioNavs"
                 :key="index"
-                :class="{active: item.list_order === isActive}"
                 @click="tabChange(item)">
-              <span>{{item.menu_title}}<i></i></span>
+              <a :class="{active: item.list_order === isActive}">{{item.menu_title}}<i></i></a>
             </li>
           </ul>
         </div>
@@ -38,22 +37,22 @@
             <div class="top">
               <p class="title">电台节目</p>
               <div class="tab">
-                <p  v-for="(item, index) in langCodesSel" :key="item.lan_code + index"
+                <a  v-for="(item, index) in langCodesSel" :key="item.lan_code + index"
                     :class="{'active': isSelStateCode == index }"
                     @click="changeState(item, index)">
-                  <span>{{item.text}}</span>
-                </p>
+                  {{item.text}}
+                </a>
               </div>
             </div>
             <div class="header-content">
               <span class="column">共{{count}}个电台节目</span>
               <div class="new">
-                <span
-                      v-for="(item, index) in isHot"
-                      :key="index"
-                      v-text="item.text"
-                      :class="{'active': onActive == item.type}"
-                      @click="changeIsHot(item)"></span>
+                <a
+                    v-for="(item, index) in isHot"
+                    :key="index"
+                    v-text="item.text"
+                    :class="{'active': onActive == item.type}"
+                    @click="changeIsHot(item)"></a>
               </div>
             </div>
           </div>
@@ -339,11 +338,9 @@ a {
     z-index: 99;
     a {
       text-decoration:none;
-      span {
-        color: #3C5B6F;
-        &:hover {
-          color: #2A9FE4;
-        }
+      color: #3C5B6F;
+      &:hover {
+        color: #2A9FE4;
       }
     }
     .nav-current {
@@ -368,25 +365,7 @@ a {
           width: 100%;
           height: 100%;
           li {
-            font-size:14px;
-            font-family:PingFang-SC-Medium;
-            color:rgba(60,91,111,1);
-            line-height:20px;
-            padding: 11px 26px;
-            border-bottom: 1px solid rgba(230,235,238,1);
-            &.active {
-              background: #2A9FE4;
-              color: #ffffff;
-              i {
-                background: url('../../../../../static/images/radioListjiantouhover.svg') no-repeat center;
-                background-size: cover;
-              }
-            }
-            &:hover {
-              cursor: pointer;
-              background: #EEF2F3FF;
-            }
-            span {
+            a {
               position: relative;
               display: block;
               width: 100%;
@@ -394,12 +373,29 @@ a {
               display: flex;
               align-items: center;
               justify-content: space-between;
+              font-size:14px;
+              font-family:PingFang-SC-Medium;
+              color:rgba(60,91,111,1);
+              line-height:20px;
+              padding: 11px 26px;
+              border-bottom: 1px solid rgba(230,235,238,1);
               i {
                 display: inline-block;
                 width: 8px;
                 height: 11px;
                 background: url('../../../../../static/images/radioListjiantou.svg') no-repeat center;
                 background-size: cover;
+              }
+              &:hover {
+                background: #EEF2F3FF;
+              }
+              &.active {
+                background: #2A9FE4;
+                color: #ffffff;
+                i {
+                  background: url('../../../../../static/images/radioListjiantouhover.svg') no-repeat center;
+                  background-size: cover;
+                }
               }
             }
           }
@@ -436,26 +432,21 @@ a {
               line-height:18px;
               margin: 20px 0 46px;
               display: flex;
-              p {
+              a {
                 margin-right: 10px;
                 padding: 8px 20px;
                 border:1px solid rgba(217,223,226,1);
                 border-radius: 5px;
                 &:hover {
                   border:1px solid #2A9FE4;
-                  span {
-                    color: #2A9FE4;
-                  }
+                  color: #2A9FE4;
                 }
                 &.active {
                   border:1px solid #2A9FE4;
-                  span {
-                    color: #2A9FE4;
-                  }
+                  color: #2A9FE4;
                 }
               }
-              span {
-                cursor: pointer;
+              a {
                 font-size:13px;
                 font-family:PingFang-SC-Medium;
                 font-weight:500;
@@ -477,14 +468,13 @@ a {
               color:rgba(144,162,174,1);
             }
             .new {
-              span {
+              a {
                 font-size:14px;
                 font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:#3C5B6FFF;
                 padding-right: 20px;
                 &:hover {
-                  cursor: pointer;
                   color: #2A9FE4FF;
                 }
                 &.active {

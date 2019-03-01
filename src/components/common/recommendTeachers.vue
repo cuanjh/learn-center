@@ -15,8 +15,8 @@
           </p> -->
           <div class="teacher-follow">
             <p class="button" @click="relation(author)">
-              <span v-if="author.has_followed === 0"><i></i>关注</span>
-              <span class="followed" v-else>已关注</span>
+              <a v-if="author.has_followed === 0"><i></i>关注</a>
+              <a class="followed" v-else>已关注</a>
             </p>
           </div>
         </li>
@@ -164,12 +164,23 @@ export default {
           background-size: cover;
           margin-right: 5px;
         }
-        span {
+        a {
           font-size: 14px;
           font-weight: 500;
           color: #0a2b40ff;
           display: flex;
           align-items: center;
+          &:hover {
+            color: #2a9fe4ff;
+            i {
+              display: inline-block;
+              width: 12px;
+              height: 12px;
+              background: url("../../../static/images/authorFllow.svg") no-repeat center;
+              background-size: cover;
+              margin-right: 5px;
+            }
+          }
         }
         .followed {
           font-size: 14px;
@@ -177,20 +188,6 @@ export default {
           color: #90A2AE;
           display: flex;
           align-items: center;
-        }
-      }
-      .button:hover {
-        cursor: pointer;
-        i {
-          display: inline-block;
-          width: 12px;
-          height: 12px;
-          background: url("../../../static/images/authorFllow.svg") no-repeat center;
-          background-size: cover;
-          margin-right: 5px;
-        }
-        span {
-          color: #2a9fe4ff;
         }
       }
     }
