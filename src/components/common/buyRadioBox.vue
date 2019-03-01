@@ -99,14 +99,19 @@ export default {
   created () {
     bus.$on('showBuyRadio', (radio) => {
       console.log('当前要购买的人民币radio', radio)
-      this.itemRadio = radio
+      this.itemRadio = radio.course_info
       this.showBuyBox = true
       let params = {
-        product_id: radio.product_id,
-        course_code: radio.code
+        product_id: radio.course_info.product_id,
+        course_code: radio.course_info.code
       }
       console.log('创建订单', params)
       this.createAliRadioOrder(params)
+    })
+    // 支付完成
+    this.$on('successBox', (e) => {
+      console.log('支付完成', e)
+      this.successBox = e
     })
   },
   mounted () {
@@ -139,7 +144,9 @@ export default {
     closeButton () {
       this.showBuyBox = false
     },
+    // 知道了
     know () {
+      this.$emit('successBox', false)
       this.showBuyBox = false
     },
     // 支付宝支付接口

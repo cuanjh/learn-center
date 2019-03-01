@@ -403,7 +403,7 @@ export default {
               index = 0
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', radio)
+                Bus.$emit('showBuyRadio', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -418,7 +418,7 @@ export default {
                 index = 0
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', radio)
+                  Bus.$emit('showBuyRadio', this.radioDetail)
                 } else if (radio.money_type === 'coins') {
                   // 金币提示
                   Bus.$emit('showBuyCoinsRadio', radio)

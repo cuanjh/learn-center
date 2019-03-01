@@ -356,14 +356,14 @@ export default {
     subscibe () {
       console.log('courseInfo', this.courseInfo)
       let radio = this.courseInfo
-      console.log('组件中的radio', radio)
+      console.log('组件中的radio', this.radioDetail)
       console.log('subscibenoInfo', this.subscibenoInfo)
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
           if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
             if (radio.money_type === 'CNY') {
               // 人民币提示
-              Bus.$emit('showBuyRadio', radio, radio.cards_count)
+              Bus.$emit('showBuyRadio', this.radioDetail)
             } else if (radio.money_type === 'coins') {
               // 金币提示
               Bus.$emit('showBuyCoinsRadio', radio)
@@ -375,7 +375,7 @@ export default {
             if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', radio, radio.cards_count)
+                Bus.$emit('showBuyRadio', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
