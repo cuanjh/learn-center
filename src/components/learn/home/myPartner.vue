@@ -54,11 +54,11 @@ export default {
     PartnerDynamic
   },
   mounted () {
-    for (let key in this.$emoji.EMOJI_MAP) {
-      this.emojiDataUTF.push(key) // 和后端交互时使用UTF码
-      this.emojiData.push(this.$emoji.unifiedToHTML(key))
-    }
-    this.getCommunity({excludeIds: []})
+    // for (let key in this.$emoji.EMOJI_MAP) {
+    //   this.emojiDataUTF.push(key) // 和后端交互时使用UTF码
+    //   this.emojiData.push(this.$emoji.unifiedToHTML(key))
+    // }
+    // this.getCommunity({excludeIds: []})
   },
   computed: {
     ...mapState({

@@ -7,7 +7,7 @@
       <div class="radio-player">
         <div class="title"><i></i>推荐电台</div>
         <div class="radio-control">
-          <div class="lang-sel" @mouseleave="isShowPanel = false">
+          <a class="lang-sel" @mouseleave="isShowPanel = false">
             <span @mouseenter="isShowPanel = true">{{ selStateText }} <i></i></span>
             <div class="lang-list" v-show="isShowPanel">
               <ul>
@@ -17,7 +17,7 @@
                   @click="changeState(item)">{{item.text}}</li>
               </ul>
             </div>
-          </div>
+          </a>
           <router-link target="_blank" :to="{path: '/app/discovery/radio-home'}" class="more">
             全部电台
             <i></i>
@@ -36,15 +36,15 @@
               <span v-text="item.buy_num"></span>
             </div>
           </div>
-          <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + item.code}" class="title" v-text="item.module_name"></router-link>
+          <router-link :to="{path: '/app/discovery/radio-detail/' + item.code}" class="title" v-text="item.module_name"></router-link>
           <div class="author" v-text="item.author.nickname"></div>
           <div class="money" v-text="(item.money === 0) ? $t('free') : (item.money_type === 'CNY') ? '￥' +item.money : $t('coins') + ' ' + item.money"></div>
         </div>
       </div>
-      <div class="change-batch" @click="changeBatch()">
+      <a class="change-batch" @click="changeBatch()">
         <i></i>
         换一批
-      </div>
+      </a>
     </div>
   </div>
 </template>
@@ -195,7 +195,7 @@ export default {
             margin-right: 37px;
             cursor: pointer;
             &:hover {
-              color: #0581D1;
+              color: #2A9FE4;
               i {
                 background-image: url('../../../../static/images/learnIndex/icon-more-hover.svg');
               }
@@ -219,7 +219,7 @@ export default {
         color: #3c5b6f;
         cursor: pointer;
         &:hover {
-          color: #0581D1;
+          color: #2A9FE4;
           i {
             background-image: url('../../../../static/images/learnIndex/icon-triangle-hover.svg');
           }
@@ -353,6 +353,7 @@ export default {
             }
           }
           .title {
+            display: block;
             margin: 10px 0 6px;
             color: #333333;
             font-weight: 500;
@@ -397,7 +398,7 @@ export default {
         display: flex;
         align-items: center;
         &:hover {
-          color: #0581D1;
+          color: #2A9FE4;
           i {
             background-image: url('../../../../static/images/learnIndex/icon-change-hover.svg');
           }

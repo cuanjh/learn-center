@@ -61,12 +61,12 @@
           <img class="nation" src="https://course-assets1.talkmate.com/course/icons/IND-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="国籍">
         </div> -->
         <div class='learn-user' @mouseenter="showExit" >
-          <router-link :to="{path: (ui ? '/app/user/course' : '/auth/login')}">
-            <img :src="ui ? ui.photo : './../../../static/images/learnIndex/user-photo.svg'"  />
+          <router-link :to="{path: (userInfo ? '/app/user/course' : '/auth/login')}">
+            <img :src="userInfo ? userInfo.photo : './../../../static/images/learnIndex/user-photo.svg'"  />
             <span v-show="isActive" class="active"></span>
           </router-link>
           <transition name="fade">
-            <span class='user-login-out mycourse-loginout animated' v-show="showExitState && ui">
+            <span class='user-login-out mycourse-loginout animated' v-show="showExitState && userInfo">
               <img class='arrow' src="./../../../static/images/course/learn-big-arrow.png">
               <router-link v-show="false" tag="span" :to="{ path: '/app/user/setting' }">设置</router-link>
               <span @click='jumpSystem()'>退出</span>
@@ -97,7 +97,6 @@ export default {
       searchUserCourse: '',
       courseDetailShow: false,
       isActive: false,
-      isAnonymous: false,
       domainName: 'https://uploadfile1.talkmate.com'
     }
   },
@@ -113,9 +112,9 @@ export default {
     // })
   },
   mounted () {
-    console.log('用户图片是否正常显示', this.userInfoImg)
     // this.getLearnCourses()
-    this.isAnonymous = cookie.getCookie('is_anonymous') === 'true'
+    let flag = cookie.getCookie('is_anonymous') === 'true'
+    this.updateIsAnonymous(flag)
     console.log(this.isAnonymous)
     let userId = cookie.getCookie('user_id')
     if (userId) {
@@ -126,13 +125,14 @@ export default {
   computed: {
     ...mapState({
       learnCourses: state => state.course.learnCourses,
-      userInfo: state => state.userInfo
+      userInfo: state => state.userInfo,
+      isAnonymous: state => state.isAnonymous
     }),
     ...mapGetters({
       langCode: 'user/langCode'
     }),
     isVip () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return 0
       }
       console.log('header', this.userInfo.member_info.member_type)
@@ -148,18 +148,6 @@ export default {
         return ui
       } else {
         return null
-      }
-    },
-    userInfoImg () {
-      let userId = cookie.getCookie('user_id')
-      if (userId) {
-        let photoURL = this.ui.photo
-        if (photoURL.indexOf(this.domainName) === -1) { // 没有出现
-          return this.domainName + '/' + photoURL
-        }
-        return photoURL
-      } else {
-        return ''
       }
     }
   },
@@ -205,7 +193,8 @@ export default {
     }),
     ...mapMutations({
       updateIsLogin: 'user/updateIsLogin',
-      updateCurCourseCode: 'course/updateCurCourseCode'
+      updateCurCourseCode: 'course/updateCurCourseCode',
+      updateIsAnonymous: 'updateIsAnonymous'
     }),
     navChangeCourse () {
       this.navArrowDown = false

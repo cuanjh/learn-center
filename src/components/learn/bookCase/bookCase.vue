@@ -111,14 +111,16 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCurCourseCode: 'course/updateCurCourseCode'
+      updateCurCourseCode: 'course/updateCurCourseCode',
+      updateIsAnonymous: 'updateIsAnonymous'
     }),
     ...mapActions({
       bookCaseIndex: 'course/bookCaseIndex',
       getLearnInfo: 'course/getLearnInfo',
       getLearnCourses: 'course/getLearnCourses',
       getLangsList: 'getLangsList',
-      postAnonyLogin: 'postAnonyLogin'
+      postAnonyLogin: 'postAnonyLogin',
+      getUserInfo: 'getUserInfo'
     }),
     qnUrl (url) {
       return url.split('?')[0] + '?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1'
@@ -179,7 +181,7 @@ export default {
     },
     async routerGo (item) {
       console.log('item', item)
-      let langCode = item['lan_code'].toUpperCase() + '-Basic'
+      let langCode = item['lan_code']
       let userId = cookie.getCookie('user_id')
       if (userId) {
         this.$router.push({path: '/app/book-details/' + langCode})
@@ -193,10 +195,12 @@ export default {
         cookie.setCookie('user_id', res.result.user_id)
         cookie.setCookie('verify', res.result.verify)
         cookie.setCookie('is_anonymous', res.result.is_anonymous)
+        this.updateIsAnonymous(res.result.is_anonymous)
+        await this.getUserInfo()
         // this.updateCurCourseCode(langCode)
         // await this.getLearnInfo(langCode)
         await this.getLearnCourses()
-        this.$router.push({path: '/app/book-details/' + langCode})
+        this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
       }
     },
     search () {

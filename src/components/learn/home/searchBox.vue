@@ -116,7 +116,7 @@ export default {
     // top:0;
     left: 0;
     right: 0;
-    bottom: 70px;
+    bottom: 50px;
     margin: 0 auto;
   }
 
@@ -138,10 +138,12 @@ export default {
     color: #fff;
     font-weight: bold;
     font-size: 14px;
+    cursor: pointer;
   }
 
-  .search-inner-desc span {
-    cursor: pointer;
+  .search-inner-desc li:hover {
+    color: rgba(255, 255, 255, .8);
+    opacity: .8;
   }
 
   .search-inner-desc .endangered-languages i {

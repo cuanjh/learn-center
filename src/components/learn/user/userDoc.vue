@@ -3,7 +3,7 @@
     <div class="userDoc-top">
       <ol>
         <li><i></i>学习档案</li>
-        <li><span>金币</span><span v-text="userInfo.coins"></span></li>
+        <li><span>金币</span><span v-text="userInfo ? userInfo.coins : ''"></span></li>
         <li><span>排行榜</span><span>暂无数据</span></li>
         <li><span>累计学习时长</span><span>{{ learnDays>0?learnDays+'天':'暂无数据' }}</span></li>
       </ol>

@@ -26,7 +26,7 @@ export default {
       userInfo: state => state.userInfo
     }),
     isVip () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return 0
       }
       console.log('header', this.userInfo.member_info.member_type)

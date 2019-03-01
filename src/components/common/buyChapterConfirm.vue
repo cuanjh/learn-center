@@ -4,7 +4,7 @@
       <!-- 提示花费金币弹出框 -->
       <div class='vip-update-success-logo learn-begin-study-warn-logo animated tada'></div>
       <p>{{ $t("courseList.pay.title") }} <span>150<em>{{ $t("courseList.pay.num") }}</em></span></p>
-      <p>{{ $t("courseList.pay.balan") }} <span v-text='ui.coins'></span></p>
+      <p>{{ $t("courseList.pay.balan") }} <span v-text="userCoins"></span></p>
       <p>
         <span class='learn-begin-study-warn-cancel' @click="btnCancel">{{ $t("button.cancel") }}</span>
         <span class='learn-begin-study-warn-confirm active' @click='buyChapter()'>{{ $t("button.confirm") }}</span>
@@ -16,7 +16,7 @@
       <div class='vip-update-success-logo animated tada'></div>
       <p>哦!你的金币余额不足啦 !</p>
       <p>获取此课程需要150金币</p>
-      <p>金币余额: {{ ui.coins }}</p>
+      <p>金币余额: {{ userCoins }}</p>
       <p>
         <span class='learn-begin-study-warn-cancel' @click="gotoWallet">去充值</span>
       </p>
@@ -50,7 +50,7 @@ export default {
       console.log(code)
       console.log(this.lanCode)
       console.log(this.selectLevel)
-      if (this.ui.coins >= 150) {
+      if (this.userInfo.coins >= 150) {
         this.costAlert = true
       } else {
         this.goldShortage = true
@@ -73,12 +73,12 @@ export default {
       userInfo: state => state.userInfo,
       buyHide: state => state.course.buyHide
     }),
-    ui () {
-      let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(sessionStorage.getItem('userInfo'))
+    userCoins () {
+      if (!this.userInfo) {
+        return 0
+      } else {
+        return this.userInfo.coins
       }
-      return ui
     }
   },
   methods: {

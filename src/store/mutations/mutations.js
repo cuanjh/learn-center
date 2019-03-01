@@ -56,5 +56,9 @@ export default {
   },
   updateRecommendRadioPage (state, page) {
     state.recommendRadioPage = page
+  },
+  // 更新匿名状态
+  updateIsAnonymous (state, flag) {
+    state.isAnonymous = flag
   }
 }

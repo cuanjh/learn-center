@@ -4,7 +4,7 @@
       <div class='userVip-top-logo'></div>
       <div class='userVip-top-tips'>
         <p>现有金币:</p>
-        <p>{{ userInfo.coins }}</p>
+        <p>{{ userInfo ? userInfo.coins : '' }}</p>
       </div>
       <div class='userVip-top-btns'>
       </div>

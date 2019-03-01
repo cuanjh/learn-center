@@ -125,7 +125,7 @@ export default {
       return this.pay.aliWebPayUrl
     },
     isVip () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return 0
       }
       return this.userInfo.member_info.member_type
