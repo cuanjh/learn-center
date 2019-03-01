@@ -83,7 +83,7 @@ export default {
       userInfo: state => state.userInfo // 用户信息
     }),
     isVip () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return 0
       }
       return this.userInfo.member_info.member_type

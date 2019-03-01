@@ -92,7 +92,7 @@ export default {
     },
     // 统计vip的时间
     vipEndDate () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return
       }
       let endTime = this.userInfo.member_info.end_time * 1000
@@ -100,7 +100,7 @@ export default {
     },
     // 是否是vip
     isVip () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return 0
       }
       return this.userInfo.member_info.member_type

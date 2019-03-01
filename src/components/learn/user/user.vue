@@ -5,13 +5,13 @@
         <div class='user-left-userDetail'>
           <ol>
             <li id="crop-avatar">
-              <img :src="userInfo.photo" class="avatar-view" id='defaultUserImg' @click='uploadPicBtn' >
+              <img :src="userInfo ? userInfo.photo : ''" class="avatar-view" id='defaultUserImg' @click='uploadPicBtn' >
             </li>
-            <li v-text='userInfo.nickname'></li>
-            <li>全球说ID:<span v-text='userInfo.talkmate_id'></span></li>
+            <li v-text="userInfo ? userInfo.nickname : ''"></li>
+            <li>全球说ID:<span v-text="userInfo ? userInfo.talkmate_id : ''"></span></li>
             <li>
-              <span>{{ userInfo.following_count }}<em> 关注</em></span>
-              <span>{{ userInfo.followed_count }}<em> 粉丝</em></span>
+              <span>{{ userInfo ? userInfo.following_count : '' }}<em> 关注</em></span>
+              <span>{{ userInfo ? userInfo.followed_count : '' }}<em> 粉丝</em></span>
               <i></i>
             </li>
           </ol>

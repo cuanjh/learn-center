@@ -15,7 +15,7 @@
           <span class="pre" @click="pre()" v-show="isShowPre"><i></i></span>
           <span class="next" @click="next()" v-show="isShowNext"><i></i></span>
         </div>
-        <div class="start-learn" @click="startLearn()">开始学习</div>
+        <a class="start-learn" @click="startLearn()">开始学习</a>
       </div>
     </div>
     <div class="current-chapter-none" v-else>
@@ -30,10 +30,10 @@
       <dl @mouseleave="isShowSubscribeCourses = false">
         <dt><img :src="courseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
-          <p :class="{'active': isShowSubscribeCourses}" @mouseenter="isShowSubscribeCourses = true">
+          <a :class="{'active': isShowSubscribeCourses}" @mouseenter="isShowSubscribeCourses = true">
             <span>{{ courseBaseInfo.name }}</span>
             <i></i>
-          </p>
+          </a>
           <p>世界语言地图官方课程</p>
           <transition name="fade">
             <learn-course-list :type="'index'" class="subscribe-courses" v-show="isShowSubscribeCourses" />
@@ -53,7 +53,7 @@
         </div>
       </div>
       <div class="learn-hours"><span>已学习 </span><span>{{ curArchiveCourse['learn_time']>0?parseInt(curArchiveCourse['learn_time']/(60*60))+' 小时':'0 小时' }}</span></div>
-      <router-link class="all-courses" tag="div" :to="{path: '/app/course-list'}">全部课程</router-link>
+      <router-link class="all-courses" :to="{path: '/app/course-list'}">全部课程</router-link>
     </div>
     <div class="current-course-none" v-else>
       <i></i>
@@ -471,6 +471,14 @@ export default {
     cursor: pointer;
   }
 
+  .start-learn:hover {
+    background-color: #2A9FE4;
+  }
+
+  .start-learn:active {
+    background: rgba(5,129,209,1);
+  }
+
   .my-course .current-course {
     display: inline-block;
     width: 340px;
@@ -516,7 +524,7 @@ export default {
     position: relative;
   }
 
-  .current-course dd p:nth-of-type(1) {
+  .current-course dd a {
     font-size: 24px;
     line-height:48px;
     color: #333333;
@@ -525,10 +533,9 @@ export default {
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;
-    cursor: pointer;
   }
 
-  .current-course dd p:nth-of-type(1) i {
+  .current-course dd a i {
     margin-top: 20px;
     width: 12px;
     height: 9px;
@@ -539,14 +546,14 @@ export default {
   }
 
   .current-course dd .active span {
-    color: #0581D1 !important;
+    color: #2A9FE4 !important;
   }
 
   .current-course dd .active i {
       background-image: url('../../../../static/images/learnIndex/icon-triangle-hover.svg') !important;
   }
 
-  .current-course dd p:nth-of-type(2) {
+  .current-course dd p:nth-of-type(1) {
     height:18px;
     font-size:13px;
     font-weight:400;

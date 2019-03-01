@@ -111,7 +111,7 @@ export default {
       productList: state => state.user.productList
     }),
     vipJudge () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return
       }
       var tempJunge = this.userInfo.member_info.member_type || 0
@@ -124,7 +124,7 @@ export default {
       }
     },
     startTime () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return
       }
       var startTime = this.userInfo.member_info.start_time * 1000 || 0
@@ -135,7 +135,7 @@ export default {
       return Y + M + D
     },
     endTime () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return
       }
       var endTime = this.userInfo.member_info.end_time * 1000 || 0
@@ -146,7 +146,7 @@ export default {
       return Y + M + D
     },
     cardKind () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return
       }
       var month = this.userInfo.member_info['month_num']

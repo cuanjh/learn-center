@@ -4,13 +4,16 @@
     <learn-header ref="header"></learn-header>
     <div class="learn-cover learn-all-hide-cover" v-show="coverShow" @click="coverHide"></div> <!-- 遮罩 -->
     <div class="learn-cover learn-all-hide-cover" v-show="anonymousCover"></div>
-    <router-view></router-view>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
     <!-- 底部 -->
     <voice-player v-show="isShow" />
     <learn-bottom />
     <photo-uploader />
     <float-bar />
     <continue-learn />
+    <goto-bind />
     <buy-chapter v-if="isShowBuyChapter"/>
   </div>
 </template>
@@ -24,6 +27,7 @@ import FloatBar from '../common/floatBar.vue'
 import VoicePlayer from '../common/voicePlayer.vue'
 import ContinueLearn from '../common/continueLearn.vue'
 import BuyChapter from '../common/buyChapterConfirm.vue'
+import GotoBind from '../common/gotoBind.vue'
 import Bus from '../../bus'
 import cookie from '../../tool/cookie'
 
@@ -55,7 +59,8 @@ export default {
     FloatBar,
     VoicePlayer,
     ContinueLearn,
-    BuyChapter
+    BuyChapter,
+    GotoBind
   },
   mounted () {
     let userId = cookie.getCookie('user_id')
@@ -174,5 +179,13 @@ export default {
     left: 0;
     z-index: 99;
     overflow: hidden;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0
   }
 </style>

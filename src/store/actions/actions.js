@@ -1,5 +1,6 @@
 import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken } from '../../api/api'
 import config from '../../api/config'
+import cookie from '../../tool/cookie'
 
 export default {
   // 新登录接口手机快速登录
@@ -85,9 +86,16 @@ export default {
   },
   // 获取推荐的电台主播
   getRecommendTeachers ({commit}, params) {
-    httpLogin(config.recommendRadioTeachersApi).then(res => {
-      commit('updatereCommendRadioTeachers', res.data)
-    })
+    let userId = cookie.getCookie('user_id')
+    if (userId) {
+      httpLogin(config.recommendRadioTeachersApi).then(res => {
+        commit('updatereCommendRadioTeachers', res.data)
+      })
+    } else {
+      httpNoLogin(config.recommendRadioTeachersApi).then(res => {
+        commit('updatereCommendRadioTeachers', res.data)
+      })
+    }
   },
   // 获取和课程相关的电台主播
   getLearnRecommendTeachers ({commit}, params) {

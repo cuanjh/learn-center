@@ -175,12 +175,6 @@
         </div>
       <!-- </transition> -->
     </div>
-    <div class="nolock-test-check" v-show="anonymousCheckShow">
-      <p class="animated flipInX">快去注册，<br>开启全球说学习之旅吧！
-        <i></i>
-        <span class="goBackCore" @click="goToRegister">去注册</span>
-      </p>
-    </div>
   </div>
 </template>
 
@@ -196,7 +190,6 @@ export default {
       isCoreCompleted: 0,
       chapterProgress: 0,
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
-      anonymousCheckShow: false,
       isShow: true,
       isHistory: false,
       tips: ''
@@ -453,7 +446,7 @@ export default {
       return retObj
     },
     isVip () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return
       }
       return this.userInfo.member_info['member_type']
@@ -466,7 +459,7 @@ export default {
     jumpToCourse (chapterCode) {
       let isAnonymous = cookie.getCookie('is_anonymous')
       if (isAnonymous) {
-        this.anonymousCheckShow = true
+        bus.$emit('showBindWin')
         return false
       }
       if (this.unlockCourses.indexOf(chapterCode) === -1) {
@@ -607,10 +600,6 @@ export default {
     },
     switchShow () {
       this.isShow = false
-    },
-    goToRegister () {
-      let langCode = this.userInfo['current_course_code'].split('-')[0]
-      this.$router.push({ path: '/auth/register/' + langCode })
     }
   }
 }
