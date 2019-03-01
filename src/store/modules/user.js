@@ -123,6 +123,12 @@ const actions = {
       commit('getpayhide')
     })
   },
+  // 创建电台支付宝订单
+  createAliRadioOrder ({commit}, params) {
+    httpLogin(config.createAliWebOrder, params).then(result => {
+      commit('createAliWebOrderMutation', result)
+    })
+  },
   // 会员产品接口的实现
   getMemberProductsList ({commit, state}) {
     commit('showLoading')
@@ -229,6 +235,7 @@ const mutations = {
   },
   updateMemberProductsList (state, response) {
     state.productList = response
+    console.log('productList', state.productList)
   },
   updatePurchaseIconPay (state, flag) {
     state.purchaseIconPay = flag

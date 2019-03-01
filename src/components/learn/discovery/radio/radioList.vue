@@ -89,7 +89,14 @@
             </div>
           </div>
           <div class="no-content" v-show="lists.length === 0">
-            <span>没有相关电台的课程</span>
+            <p class="language-related" v-if="isSelStateCode === 0">
+              <i></i>
+              <span>暂没有相关的电台节目</span>
+            </p>
+            <p class="tongue-related" v-else>
+              <i></i>
+              <span>暂没有相关的电台节目</span>
+            </p>
           </div>
         </div>
       </div>
@@ -611,19 +618,45 @@ a {
               cursor: pointer;
             }
           }
-          // 没有内容
-          .no-content {
-            width: 100%;
-            min-height: 700px;
-            font-size: 20px;
-            color: rgba(7, 7, 7, .5);
-            text-align: center;
-            line-height: 700px;
-          }
         }
         // 没有相关电台
         .no-content {
+          min-height: 445px;
           padding: 0 43px;
+          p {
+            width: 100%;
+            min-height: 445px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            i {
+              display: inline-block;
+              width: 145px;
+              height: 82px;
+              background-repeat: no-repeat;
+              background-position: center;
+              background-size: cover;
+            }
+            span {
+              padding-top: 18px;
+              font-size:16px;
+              font-family:PingFang-SC-Medium;
+              font-weight:500;
+              color:rgba(200,212,219,1);
+              line-height:22px;
+            }
+          }
+          .language-related {
+            i {
+              background-image: url('../../../../../static/images/discovery/language-related.svg')
+            }
+          }
+          .tongue-related {
+            i {
+              background-image: url('../../../../../static/images/discovery/tongue-related.svg')
+            }
+          }
         }
       }
     }

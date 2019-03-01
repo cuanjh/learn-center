@@ -318,9 +318,9 @@ export default {
         width: 100%;
         i {
           display: inline-block;
-          width: 92px;
-          height: 58px;
-          background: url('../../../static/images/android.svg') no-repeat center;
+          width: 70px;
+          height: 70px;
+          background: url('../../../static/images/discovery/subscribe-success.svg') no-repeat center;
           background-size: cover;
         }
       }

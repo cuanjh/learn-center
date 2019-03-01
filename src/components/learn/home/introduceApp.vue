@@ -230,7 +230,7 @@ export default {
         .iphone {
           width: 71px;
           height: 141px;
-          background: url('../../../../static/images/introduceApp/iPhone.png') no-repeat center;
+          background: url('../../../../static/images/introduceApp/iPhonenew.png') no-repeat center;
           background-size: 100%;
           margin-right: 58px;
         }

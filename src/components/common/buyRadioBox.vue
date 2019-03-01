@@ -13,7 +13,7 @@
           <div class="course">
             <p>{{itemRadio.title ||itemRadio.module_name}}</p>
             <div class="price">
-              <p>课程共计 {{cardsCount}} 课</p>
+              <p>课程共计 {{itemRadio.cards_count}} 课</p>
               <p class="yuan">
                 <span>{{itemRadio.money}}</span>
                 <span>元/年</span>
@@ -31,7 +31,7 @@
             <span>微信扫码付款</span>
           </div>
           <div class="zhifubao">
-            <i></i>
+            <i @click="goPayRadio()"></i>
             <span>支付宝扫码付款</span>
           </div>
         </div>
@@ -84,13 +84,12 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import bus from '../../bus'
 export default {
   data () {
     return {
       itemRadio: {},
-      cardsCount: '',
       showBuyBox: false,
       contentShow: true,
       activeButton: false,
@@ -98,19 +97,28 @@ export default {
     }
   },
   created () {
-    bus.$on('showBuyRadio', (radio, cardsCount) => {
-      console.log('当前要购买的人民币radio', radio, cardsCount)
+    bus.$on('showBuyRadio', (radio) => {
+      console.log('当前要购买的人民币radio', radio)
       this.itemRadio = radio
-      this.cardsCount = cardsCount
       this.showBuyBox = true
+      let params = {
+        product_id: radio.product_id,
+        course_code: radio.code
+      }
+      console.log('创建订单', params)
+      this.createAliRadioOrder(params)
     })
   },
   mounted () {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo // 用户信息
+      userInfo: state => state.userInfo, // 用户信息
+      pay: state => state.user.pay
     }),
+    aliPayUrl () {
+      return this.pay.aliWebPayUrl
+    },
     isVip () {
       if (!this.userInfo || !this.userInfo.member_info) {
         return 0
@@ -119,6 +127,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      createAliRadioOrder: 'user/createAliRadioOrder'
+    }),
     showActiveButton () {
       this.activeButton = true
     },
@@ -130,6 +141,10 @@ export default {
     },
     know () {
       this.showBuyBox = false
+    },
+    // 支付宝支付接口
+    goPayRadio () {
+      window.open(this.aliPayUrl)
     }
   }
 }
@@ -480,9 +495,9 @@ export default {
         width: 100%;
         i {
           display: inline-block;
-          width: 92px;
-          height: 58px;
-          background: url('../../../static/images/android.svg') no-repeat center;
+          width: 90px;
+          height: 90px;
+          background: url('../../../static/images/discovery/pay-zhifubao-success.svg') no-repeat center;
           background-size: cover;
         }
       }

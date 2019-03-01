@@ -361,7 +361,7 @@ export default {
         }
       })
       await _this.getUserInfo()
-      // {phonenumber: this.phone, codeLen: '6'}
+      // {phonenumber: this.phone, codeLen: '4'}
       // await _this.userExistsPhone(params).then((data) => {
       //   console.log('data', data)
       //   if (data.success) {
