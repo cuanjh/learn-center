@@ -24,8 +24,8 @@ export const httpLogin = (_url, _params) => { // 已经登录
   _params.timeStamp = Moment().format('YYYYMMDDHHmmss')
   _params.reqId = randomString(16)
   _params.device_id = Cookie.getCookie('device_id')
-  _params.user_id = Cookie.getCookie('user_id')
-  _params.verify = Cookie.getCookie('verify')
+  _params.user_id = Cookie.getCookie('user_id') ? Cookie.getCookie('user_id') : ''
+  _params.verify = Cookie.getCookie('verify') ? Cookie.getCookie('verify') : ''
   // let paramsStr = ''
   let str = ''
   let keys = Object.keys(_params).sort()

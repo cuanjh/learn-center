@@ -1,7 +1,7 @@
 <template>
   <div class="my-course">
     <div class="title">我的课程</div>
-    <div class="current-chapter" v-if="userId">
+    <div class="current-chapter" v-if="userId && curCourseCode">
       <img :src="curCourseObj['courseBg']" alt="">
       <div class="course-brief-shade">
         <div class="course-brief-title">
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class="current-course" v-if="userId">
+    <div class="current-course" v-if="userId && curChapterCode">
       <dl @mouseleave="isShowSubscribeCourses = false">
         <dt><img :src="courseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
@@ -71,6 +71,7 @@ export default {
   data () {
     return {
       userId: '',
+      curCourseCode: '',
       curCourseObj: {
         courseLevel: '',
         courseNum: 1,
@@ -108,6 +109,8 @@ export default {
     this.userId = cookie.getCookie('user_id')
     if (this.userId) {
       this.initData()
+    } else {
+      bus.$emit('loadRecommendRadio', '')
     }
   },
   components: {
@@ -126,13 +129,6 @@ export default {
       userInfo: state => state.userInfo,
       historyCourseRecord: state => state.course.historyCourseRecord
     }),
-    ui () {
-      let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(sessionStorage.getItem('userInfo'))
-      }
-      return ui
-    },
     isVip () {
       if (!this.userInfo.member_info) {
         return
@@ -162,56 +158,60 @@ export default {
       var _this = this
       let res = await this.getUserInfo()
       console.log(res)
-      let curCourseCode = res.info.current_course_code
+      this.curCourseCode = res.info.current_course_code
       if (courseCode) {
-        curCourseCode = courseCode
+        this.curCourseCode = courseCode
       }
-      await _this.getLearnInfo(curCourseCode)
-      await _this.getUnlockChapter(curCourseCode).then((res) => {
-        _this.updateUnlockCourseList(res)
-      })
-      this.curChapterCode = this.learnInfo.current_chapter_code
+      if (this.curCourseCode) {
+        await _this.getLearnInfo(this.curCourseCode)
+        await _this.getUnlockChapter(this.curCourseCode).then((res) => {
+          _this.updateUnlockCourseList(res)
+        })
+        this.curChapterCode = this.learnInfo.current_chapter_code
 
-      console.log('learnInfo', _this.learnInfo)
-      console.log('courseBaseInfo', _this.courseBaseInfo)
-      this.maxLevelNum = _this.courseBaseInfo.level_num
-      let contentUrl = _this.courseBaseInfo.content_config.content_url
-      await _this.getCourseContent(contentUrl)
+        console.log('learnInfo', _this.learnInfo)
+        console.log('courseBaseInfo', _this.courseBaseInfo)
+        this.maxLevelNum = _this.courseBaseInfo.level_num
+        let contentUrl = _this.courseBaseInfo.content_config.content_url
+        await _this.getCourseContent(contentUrl)
 
-      await this.setCurrentChapter(this.curChapterCode)
-      bus.$emit('loadRecommendRadio')
-      let obj = this.chapters.filter((item) => {
-        return item.code === this.curChapterCode
-      })[0]
-      this.curCourseObj['courseLevel'] = this.levelObj[this.curChapterCode.split('-')[2]]
-      this.curCourseObj['courseNum'] = parseInt(obj.code.split('-')[3].split('').pop() - 1) * 6 + parseInt(obj.code.split('-')[4].split('').pop())
-      this.curCourseObj['courseCore'] = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
-      this.curCourseObj['courseDesc'] = obj.info['zh-cn'].describe
-      this.curCourseObj['courseWords'] = obj.info['zh-cn'].words.split('/').join('、')
-      this.curCourseObj['courseBg'] = this.assetsUrl + obj.image.replace('200x200', '1200x488')
-      this.curCourseObj['purchased'] = obj.purchased
-      console.log(this.curCourseObj)
-
-      _this.updateChapterDes(this.curChapterCode)
-      _this.curChapterCorrectRate = '0%'
-      let arr = this.curChapterCode.split('-')
-      _this.learnInfo.correct_rates.forEach(item => {
-        if (item.level_code === arr[2]) {
-          item.rates.forEach(rate => {
-            if (rate.unit === arr[3] && rate.chapter === arr[4]) {
-              _this.curChapterCorrectRate = rate.correct_rate * 100 + '%'
-              _this.curChapterDesc = '当前为' + _this.chapterDes[1].replace(' ', '') + _this.chapterDes[2]
-            }
-          })
-        }
-      })
-
-      await _this.getCourseArchives().then((res) => {
-        _this.curArchiveCourse = res.archives.filter(item => {
-          return item.course_code === curCourseCode
+        await this.setCurrentChapter(this.curChapterCode)
+        bus.$emit('loadRecommendRadio', this.curCourseCode)
+        let obj = this.chapters.filter((item) => {
+          return item.code === this.curChapterCode
         })[0]
-        console.log('curArchiveCourse', _this.curArchiveCourse)
-      })
+        this.curCourseObj['courseLevel'] = this.levelObj[this.curChapterCode.split('-')[2]]
+        this.curCourseObj['courseNum'] = parseInt(obj.code.split('-')[3].split('').pop() - 1) * 6 + parseInt(obj.code.split('-')[4].split('').pop())
+        this.curCourseObj['courseCore'] = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
+        this.curCourseObj['courseDesc'] = obj.info['zh-cn'].describe
+        this.curCourseObj['courseWords'] = obj.info['zh-cn'].words.split('/').join('、')
+        this.curCourseObj['courseBg'] = this.assetsUrl + obj.image.replace('200x200', '1200x488')
+        this.curCourseObj['purchased'] = obj.purchased
+        console.log(this.curCourseObj)
+
+        _this.updateChapterDes(this.curChapterCode)
+        _this.curChapterCorrectRate = '0%'
+        let arr = this.curChapterCode.split('-')
+        _this.learnInfo.correct_rates.forEach(item => {
+          if (item.level_code === arr[2]) {
+            item.rates.forEach(rate => {
+              if (rate.unit === arr[3] && rate.chapter === arr[4]) {
+                _this.curChapterCorrectRate = rate.correct_rate * 100 + '%'
+                _this.curChapterDesc = '当前为' + _this.chapterDes[1].replace(' ', '') + _this.chapterDes[2]
+              }
+            })
+          }
+        })
+
+        await _this.getCourseArchives().then((res) => {
+          _this.curArchiveCourse = res.archives.filter(item => {
+            return item.course_code === this.curCourseCode
+          })[0]
+          console.log('curArchiveCourse', _this.curArchiveCourse)
+        })
+      } else {
+        bus.$emit('loadRecommendRadio', this.curCourseCode)
+      }
     },
     pre () {
       this.isShowNext = true
