@@ -55,13 +55,15 @@ export default {
 <style lang="less" scoped>
 .map_statistics_box {
   position: relative;
+  width: 1180px;
+  margin: 0 auto;
   z-index: 99;
   .map_statistics_wrap {
     position: absolute;
     height: 210px;
     width: 170px;
     bottom: 0;
-    right: 100px;
+    right: 0;
     overflow: hidden;
   }
   .map_statistics {

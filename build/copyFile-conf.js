@@ -41,6 +41,11 @@ var copyList = [
 		from: _from + '/images/bookCase/default_course.png',
     to: _to + '/images/bookCase/default_course.png',
 		toType: 'file'
+  },
+  {
+		from: _from + '/images/learnIndex/user-photo.svg',
+    to: _to + '/images/learnIndex/user-photo.svg',
+		toType: 'file'
 	},
 	{
 		from: _from + '/images/learnIndex/map',
