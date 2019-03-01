@@ -63,6 +63,7 @@ const userGuide = r => require.ensure([], () => r(require('@/components/learnSys
 
 // 下载页面
 const download = r => require.ensure([], () => r(require('@/components/common/download.vue')), 'download')
+const paySuccess = r => require.ensure([], () => r(require('@/components/learn/home/paySuccess.vue')), 'paySuccess')
 
 export default[
   {
@@ -279,6 +280,10 @@ export default[
         path: 'headline-search',
         name: 'headlineSearch',
         component: headlineSearch
+      },
+      {
+        path: 'pay-success',
+        component: paySuccess
       }
     ]
   },
