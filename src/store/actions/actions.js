@@ -50,11 +50,16 @@ export default {
   },
   // 语言设置状态接口
   getLangsState ({commit, dispatch}, params) {
-    httpLogin(config.umLangsStateApi).then(res => {
-      commit('updateLangsState', res.state)
-      let curLanCode = res.state.currentLang['lan_code']
-      dispatch('getRecommendRadios', {'lan_code': curLanCode, limit: 6, page: 1})
-    })
+    let userId = cookie.getCookie('user_id')
+    if (userId) {
+      httpLogin(config.umLangsStateApi).then(res => {
+        commit('updateLangsState', res.state)
+        let curLanCode = res.state.currentLang['lan_code']
+        dispatch('getRecommendRadios', {'lan_code': curLanCode, limit: 6, page: 1})
+      })
+    } else {
+      dispatch('getRecommendRadios', {'lan_code': '', limit: 6, page: 1})
+    }
   },
   // 获取语言接口
   getLangCodes ({commit}, params) {

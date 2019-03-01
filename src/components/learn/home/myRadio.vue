@@ -7,7 +7,7 @@
       <div class="radio-player">
         <div class="title"><i></i>推荐电台</div>
         <div class="radio-control">
-          <a class="lang-sel" @mouseleave="isShowPanel = false">
+          <a class="lang-sel" @mouseleave="isShowPanel = false" v-if="userId && curCourseCode">
             <span @mouseenter="isShowPanel = true">{{ selStateText }} <i></i></span>
             <div class="lang-list" v-show="isShowPanel">
               <ul>
@@ -53,25 +53,30 @@
 import $ from 'jquery'
 import Bus from '../../../bus'
 import { mapState, mapActions } from 'vuex'
+import cookie from '../../../tool/cookie'
 
 export default {
   data () {
     return {
       selState: {},
       radios: [],
-      isShowPanel: false
+      isShowPanel: false,
+      userId: '',
+      curCourseCode: ''
     }
   },
   created () {
-    Bus.$on('loadRecommendRadio', () => {
+    Bus.$on('loadRecommendRadio', (code) => {
       this.getLangsState()
+      this.curCourseCode = code
     })
   },
   mounted () {
-    // this.getLangsState()
+    this.userId = cookie.getCookie('user_id')
   },
   computed: {
     ...mapState({
+      userInfo: state => state.userInfo,
       langsStateSel: state => state.langsStateSel,
       recommendRadios: state => state.recommendRadios,
       recommendRadioPage: state => state.recommendRadioPage
