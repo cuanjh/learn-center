@@ -44,9 +44,14 @@ export default {
   // 更新相关课程
   updateLangCodes (state, data) {
     let arr = []
-    arr.push({'lan_code': data.currentLang.lan_code, 'text': data.currentLang.name + '相关'})
-    arr.push({'lan_code': data.skillLang.lan_code, 'text': '母语相关'})
-    state.langCodesSel = arr
+    console.log('data', data)
+    if (!data) {
+      state.langCodesSel = []
+    } else {
+      arr.push({'lan_code': data.currentLang.lan_code, 'text': data.currentLang.name + '相关'})
+      arr.push({'lan_code': data.skillLang.lan_code, 'text': '母语相关'})
+      state.langCodesSel = arr
+    }
     console.log('语言相关', state.langCodesSel)
   },
   updateRecommendRadios (state, res) {

@@ -36,7 +36,7 @@
           <div class="header-describe">
             <div class="top">
               <p class="title">电台节目</p>
-              <div class="tab">
+              <div class="tab" v-if="userId">
                 <a  v-for="(item, index) in langCodesSel" :key="item.lan_code + index"
                     :class="{'active': isSelStateCode == index }"
                     @click="changeState(item, index)">
@@ -106,10 +106,12 @@
 import { mapState, mapActions } from 'vuex'
 import Bus from '../../../../bus'
 import $ from 'jquery'
+import cookie from '../../../../tool/cookie.js'
 
 export default {
   data () {
     return {
+      userId: '',
       isHot: [{type: 'hot', text: '热播', id: 0}, {type: 'new', text: '最新', id: 1}],
       onActive: 'hot',
       isSelStateCode: 0,
@@ -128,6 +130,7 @@ export default {
     }
   },
   mounted () {
+    this.userId = cookie.getCookie('user_id')
     this.isActive = this.courseOrder ? this.courseOrder : 410
     this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
@@ -179,12 +182,23 @@ export default {
       _this.isActive = item.list_order
       _this.menu_type = item.menu_type
       _this.menu_id = item.menu_id
-      let params = {
-        menu_type: _this.menu_type,
-        menu_id: _this.menu_id,
-        page: _this.page,
-        preferred_lan_code: _this.selState.lan_code,
-        sort: _this.onActive
+      let params = {}
+      if (!_this.userInfo) {
+        params = {
+          menu_type: _this.menu_type,
+          menu_id: _this.menu_id,
+          page: _this.page,
+          preferred_lan_code: '',
+          sort: _this.onActive
+        }
+      } else {
+        params = {
+          menu_type: _this.menu_type,
+          menu_id: _this.menu_id,
+          page: _this.page,
+          preferred_lan_code: _this.selState.lan_code,
+          sort: _this.onActive
+        }
       }
       console.log('params', params)
       _this.getRadioList(params).then((res) => {
@@ -205,12 +219,23 @@ export default {
       }
       let lanCode = this.selState['lan_code']
       this.page++
-      let params = {
-        menu_type: this.menu_type,
-        menu_id: this.menu_id,
-        page: this.page,
-        preferred_lan_code: lanCode,
-        sort: this.onActive
+      let params = {}
+      if (!this.userInfo) {
+        params = {
+          menu_type: this.menu_type,
+          menu_id: this.menu_id,
+          page: this.page,
+          preferred_lan_code: '',
+          sort: this.onActive
+        }
+      } else {
+        params = {
+          menu_type: this.menu_type,
+          menu_id: this.menu_id,
+          page: this.page,
+          preferred_lan_code: lanCode,
+          sort: this.onActive
+        }
       }
       console.log('点击加载更多params', params)
       this.getRadioList(params).then((res) => {
@@ -230,19 +255,31 @@ export default {
           if (this.showPage === -1) {
             return false
           }
-          if (Object.keys(this.selState).length === 0) {
-            this.selState = this.langCodesSel[0]
-          }
-          let lanCode = this.selState['lan_code']
           this.page++
-          let params = {
-            menu_type: this.menu_type,
-            menu_id: this.menu_id,
-            page: this.page,
-            preferred_lan_code: lanCode,
-            sort: this.onActive
+          let params = {}
+          if (!this.userInfo) {
+            params = {
+              menu_type: this.menu_type,
+              menu_id: this.menu_id,
+              page: this.page,
+              preferred_lan_code: '',
+              sort: this.onActive
+            }
+          } else {
+            if (Object.keys(this.selState).length === 0) {
+              this.selState = this.langCodesSel[0]
+            }
+            let lanCode = this.selState['lan_code']
+            params = {
+              menu_type: this.menu_type,
+              menu_id: this.menu_id,
+              page: this.page,
+              preferred_lan_code: lanCode,
+              sort: this.onActive
+            }
           }
           this.getRadioList(params).then((res) => {
+            console.log('res', res)
             this.lists = this.lists.concat(res.data.radios)
             if (res.data.page === -1) {
               this.showPage = -1
