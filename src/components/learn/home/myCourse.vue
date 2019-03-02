@@ -401,15 +401,6 @@ export default {
     line-height: 22px;
     font-weight: 500;
     margin: 30px 0 0 40px;
-    animation: animated_core 5s 1;
-  }
-
-  .animated-core {
-    animation: animated_core 5s 1;
-  }
-
-  .course-brief-core span {
-    /* animation: animated_core 5s 1; */
   }
 
   .course-brief-words {
@@ -732,32 +723,5 @@ export default {
   }
   .add-course:active {
     background: rgba(5,129,209,1);
-  }
-
-  @keyframes animated_core {
-    0% {
-      transform: rotate(0deg);
-      left: 0px;
-    }
-    25% {
-      transform: rotate(20deg);
-      left: 0px;
-    }
-    50% {
-      transform: rotate(0deg);
-      left: 500px;
-    }
-    55% {
-      transform: rotate(0deg);
-      left: 500px;
-    }
-    70% {
-      transform: rotate(0deg);
-      left: 500px
-    }
-    100%{
-      transform: rotate(-360px);
-      left: 0px;
-    }
   }
 </style>
