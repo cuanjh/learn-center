@@ -346,6 +346,9 @@ export default {
     },
     // 播放按钮
     play () {
+      if (this.radioList.length === 0) {
+        return false
+      }
       if (this.isEnd) {
         this.curTime = 0
         this.isEnd = false

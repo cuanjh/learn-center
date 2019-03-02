@@ -174,7 +174,7 @@ export default {
         this.maxLevelNum = _this.courseBaseInfo.level_num
         let contentUrl = _this.courseBaseInfo.content_config.content_url
         await _this.getCourseContent(contentUrl)
-
+        await _this.getLearnCourses()
         await this.setCurrentChapter(this.curChapterCode)
         bus.$emit('loadRecommendRadio', this.curCourseCode)
         let obj = this.chapters.filter((item) => {
@@ -395,12 +395,21 @@ export default {
     margin-left: 40px;
   }
 
-  .course-brief-core{
+  .course-brief-core {
     font-size: 16px;
     color: #ffffff;
     line-height: 22px;
     font-weight: 500;
     margin: 30px 0 0 40px;
+    animation: animated_core 5s 1;
+  }
+
+  .animated-core {
+    animation: animated_core 5s 1;
+  }
+
+  .course-brief-core span {
+    /* animation: animated_core 5s 1; */
   }
 
   .course-brief-words {
@@ -723,5 +732,32 @@ export default {
   }
   .add-course:active {
     background: rgba(5,129,209,1);
+  }
+
+  @keyframes animated_core {
+    0% {
+      transform: rotate(0deg);
+      left: 0px;
+    }
+    25% {
+      transform: rotate(20deg);
+      left: 0px;
+    }
+    50% {
+      transform: rotate(0deg);
+      left: 500px;
+    }
+    55% {
+      transform: rotate(0deg);
+      left: 500px;
+    }
+    70% {
+      transform: rotate(0deg);
+      left: 500px
+    }
+    100%{
+      transform: rotate(-360px);
+      left: 0px;
+    }
   }
 </style>
