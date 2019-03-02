@@ -2,11 +2,11 @@
   <div class="teachers">
     <div class="nav">
       <router-link :to="{path: '/app/index'}">
-        <span>我的学习账户</span>
+        我的学习账户
       </router-link>
       >
       <router-link :to="{path: '/app/discovery/radio-home'}">
-        <span>电台课程</span>
+        电台课程
       </router-link>
       >
       <div class="nav-current">
@@ -29,8 +29,8 @@
                 </div>
                 <div class="teacher-right">
                   <p class="button" @click="relation(teacher)">
-                    <span v-if="teacher.has_followed === 0"><i></i>关注</span>
-                    <span v-else>取消关注</span>
+                    <a v-if="teacher.has_followed === 0"><i></i>关注</a>
+                    <a v-else>已关注</a>
                   </p>
                   <p class="hidden-button" @click="hidden(index)" v-show="false">
                     <span>隐藏</span>
@@ -40,13 +40,9 @@
             </div>
             <div class="change-batch">
               <div class="p" @click="changeBatch()">
-                <p>
-                  <i ></i>
-                  <span>换一批</span>
-                </p>
-                <p v-show="false">
-                  <span>没有跟多了</span>
-                </p>
+                <a>
+                  <i ></i>换一批
+                </a>
               </div>
             </div>
           </div>
@@ -65,8 +61,8 @@
                 </div>
                 <div class="teacher-right">
                   <p class="button" @click="relation(teacher)">
-                    <span v-if="teacher.has_followed === 0"><i></i>关注</span>
-                    <span v-else>取消关注</span>
+                    <a v-if="teacher.has_followed === 0"><i></i>关注</a>
+                    <a v-else>已关注</a>
                   </p>
                   <p class="hidden-button" @click="hidden(index)" v-show="false">
                     <span>隐藏</span>
@@ -76,10 +72,9 @@
             </div>
             <div class="change-batch">
               <div class="p" @click="changeBatchOther()">
-                <p >
-                  <i ></i>
-                  <span>换一批</span>
-                </p>
+                <a >
+                  <i ></i>换一批
+                </a>
               </div>
             </div>
           </div>
@@ -94,7 +89,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      teachers: [], // 老师
+      teachers: [], // 主播老师
       teacherLists: [] // 其他老师
     }
   },
@@ -104,6 +99,7 @@ export default {
       this.teacherLists = this.randArray(res.data.authors)
       console.log('随机老师', this.teacherLists)
     })
+    // 1是语言相关, 0和语言无关
     this.getLearnRecommendTeachers({'study_related': 1}).then(res => {
       console.log('res=====>', res)
       this.teachers = res.data
@@ -193,11 +189,9 @@ export default {
     display: inline-block;
     font-size: 16px;
     a {
-      span {
-        color: #999999;
-        &:hover {
-          color: #2A9FE4;
-        }
+      color: #999999;
+      &:hover {
+        color: #2A9FE4;
       }
     }
     .nav-current {
@@ -288,35 +282,31 @@ export default {
                 }
               }
               p:nth-child(1) {
-                // width: 86px;
-                padding: 3px 17px;
-                background-color: #fff;
-                border-radius: 15px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: 1px solid #E6EBEEFF;
-                margin-right: 10px;
                 i {
                   background: url("../../../../../static/images/follow.svg");
                 }
-                span {
+                a {
+                  padding: 3px 17px;
+                  background-color: #fff;
+                  border-radius: 15px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  border: 1px solid #E6EBEEFF;
+                  margin-right: 10px;
                   display: flex;
                   align-items: center;
                   font-size: 14px;
                   font-weight: 500;
                   color: #7E929FFF;
-                }
-                &:hover {
-                  cursor: pointer;
-                  background-color: #2A9FE4FF;
-                  i {
-                    background: url("../../../../../static/images/followhover.svg");
-                  }
-                  span {
+                  &:hover {
+                    background-color: #2A9FE4FF;
                     font-size: 14px;
                     font-weight: 500;
                     color: #ffffff;
+                    i {
+                      background: url("../../../../../static/images/followhover.svg");
+                    }
                   }
                 }
               }
@@ -356,15 +346,18 @@ export default {
           .p {
             float: right;
             display: inline-block;
-            cursor: pointer;
             -webkit-user-select:none;
             -moz-user-select:none;
             -ms-user-select:none;
             user-select:none;
-            &:hover {
-              color: #0581D1;
-              i {
-                background-image: url('../../../../../static/images/learnIndex/icon-change-hover.svg');
+            a {
+              display: flex;
+              align-items: center;
+              &:hover {
+                color: #0581D1;
+                i {
+                  background-image: url('../../../../../static/images/learnIndex/icon-change-hover.svg');
+                }
               }
             }
           }
@@ -376,7 +369,6 @@ export default {
             background-repeat: no-repeat;
             background-size: cover;
             margin-right: 4px;
-            margin-top: 5px;
           }
         }
       }

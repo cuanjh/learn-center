@@ -62,7 +62,7 @@
                       </div>
                     </div>
                     <div class="radio-num">
-                      <span>共{{hostRadios.length}}个电台节目</span>
+                      <span>共{{hotCountNum}}个电台节目</span>
                     </div>
                   </div>
                   <div class="up-all">
@@ -96,7 +96,7 @@
                         <i></i>
                       </div>
                       <div class="radio-num">
-                        <span>共{{recommendRadios.length}}个电台节目</span>
+                        <span>共{{recommendCountNum}}个电台节目</span>
                       </div>
                     </div>
                   </div>
@@ -130,7 +130,7 @@
                       </div>
                     </div>
                     <div class="radio-num">
-                      <span>共{{releaseRadio.length}}个电台节目</span>
+                      <span>共{{latestCountNum}}个电台节目</span>
                     </div>
                   </div>
                   <div class="up-all">
@@ -167,10 +167,13 @@ export default {
       navFlag: 'hostRadio',
       hostRadioLists: {}, // 热播电台
       hostRadios: [],
+      hotCountNum: '',
       latestReleaseRadio: {}, // 最新发布
       releaseRadio: [],
+      latestCountNum: '',
       teacherLists: [], // 主播推荐
       recommendRadios: [],
+      recommendCountNum: '',
       page: 1
     }
   },
@@ -187,9 +190,24 @@ export default {
       _this.initHotRadio(this.hostRadioLists)
       _this.initReleaseRadio(this.latestReleaseRadio)
     })
-    _this.getRecommendRadiosIndex({'lan_code': _this.langCode.lan_code, limit: 10, page: _this.page}).then(res => {
+    let params = {}
+    if (!_this.userInfo) {
+      params = {
+        lan_code: '',
+        limit: 10,
+        page: _this.page
+      }
+    } else {
+      params = {
+        lan_code: _this.langCode.lan_code,
+        limit: 10,
+        page: _this.page
+      }
+    }
+    _this.getRecommendRadiosIndex(params).then(res => {
       console.log('推荐电台数据', res)
       this.recommendRadios = res.data
+      this.recommendCountNum = res.count
       this.showMore = res.page
     })
   },
@@ -199,7 +217,8 @@ export default {
   },
   computed: {
     ...mapState({
-      langsStateSel: state => state.langsStateSel // 优先课程
+      langsStateSel: state => state.langsStateSel, // 优先课程
+      userInfo: state => state.userInfo // 用户信息
       // recommendRadioPage: state => state.recommendRadioPage, // 页数
       // recommendRadios: state => state.recommendRadios // 推荐的电台
     }),
@@ -264,8 +283,9 @@ export default {
         page: this.page
       }
       this.getRadioList(params).then(res => {
-        console.log('列表', res)
+        console.log('热播列表', res)
         this.hostRadios = res.data.radios
+        this.hotCountNum = res.data.count
         this.showMoreHost = res.data.page
       })
     },
@@ -296,7 +316,21 @@ export default {
         return false
       }
       this.page++
-      this.getRecommendRadiosIndex({'lan_code': this.langCode.lan_code, limit: 10, page: this.page}).then(res => {
+      let params = {}
+      if (!this.userInfo) {
+        params = {
+          lan_code: '',
+          limit: 10,
+          page: this.page
+        }
+      } else {
+        params = {
+          lan_code: this.langCode.lan_code,
+          limit: 10,
+          page: this.page
+        }
+      }
+      this.getRecommendRadiosIndex(params).then(res => {
         console.log('推荐电台数据', res)
         this.recommendRadios = this.recommendRadios.concat(res.data)
         if (res.page === -1) {
@@ -313,8 +347,9 @@ export default {
         page: this.page
       }
       this.getRadioList(params).then(res => {
-        console.log('列表', res)
+        console.log('最新发布列表', res)
         this.releaseRadio = res.data.radios
+        this.latestCountNum = res.data.count
         this.showMoreRelease = res.data.page
       })
     },

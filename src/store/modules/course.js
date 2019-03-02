@@ -400,7 +400,6 @@ const mutations = {
   },
   updateRadioCourses (state, course) {
     state.radioCourses.push(course)
-    console.log('radioCourse', state.radioCourses)
   },
   updateCurCourseCode (state, data) {
     state.currentCourseCode = data

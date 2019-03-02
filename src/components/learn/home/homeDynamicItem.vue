@@ -23,8 +23,8 @@
         </div>
       <div class="attention">
         <div class="relation" @click="relation()">
-          <span v-if="dynamic.info.has_followed === false">关注</span>
-          <span v-else>取消关注</span>
+          <a v-if="dynamic.info.has_followed === false">关注</a>
+          <a v-else>已关注</a>
         </div>
         <div class="jiantou">
           <i></i>
@@ -377,7 +377,7 @@ export default {
       display: flex;
       .relation {
         margin-right: 15px;
-        span {
+        a {
           font-size:12px;
           font-family:PingFang-SC-Bold;
           font-weight:bold;

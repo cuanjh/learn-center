@@ -1,16 +1,13 @@
 <template>
   <div class="nation-details">
     <div class="nav">
-      <router-link :to="{path: '/app/index'}">
-        <span>我的学习账户</span>
+      <router-link :to="{path: '/app/index'}">我的学习账户
       </router-link>
       >
-      <router-link :to="{path: '/app/book-case'}">
-        <span>添加语言</span>
+      <router-link :to="{path: '/app/book-case'}">添加语言
       </router-link>
       >
-      <router-link :to="{path: '/app/book-details/' + naInfo.courseCode}">
-        <span>语言详情</span>
+      <router-link :to="{path: '/app/book-details/' + naInfo.courseCode}">语言详情
       </router-link>
       >
       <div class="nav-current">
@@ -240,11 +237,9 @@ a {
     display: inline-block;
     font-size: 16px;
     a {
-      span {
-        color: #999999;
-        &:hover{
-          color: #2A9FE4;
-        }
+      color: #999999;
+      &:hover{
+        color: #2A9FE4;
       }
     }
     .nav-current {
@@ -265,9 +260,9 @@ a {
   .nation-header-content {
     width: 100%;
     height: 100%;
-    // padding: 40px 30px 16px;
     display: flex;
     justify-content: space-between;
+    padding: 0 20px;
     .logo-img {
       width: 167px;
       height: 60px;

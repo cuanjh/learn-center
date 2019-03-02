@@ -86,6 +86,7 @@
                 <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
                   <span>会员免费</span>
                 </div> -->
+                <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="mask"></router-link>
                 <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                   <i class="play"></i>
                 </div>
@@ -94,7 +95,7 @@
                   <span v-text="radio.buy_num"></span>
                 </div>
               </div>
-              <router-link tag="div" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
+              <router-link class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
               <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
               <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
             </div>
@@ -115,6 +116,7 @@
             <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
               <div class="play-radio">
                 <img v-lazy="radio.cover" :key="radio.cover" alt="">
+                <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="mask"></router-link>
                 <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
                   <span>会员免费</span>
                 </div> -->
@@ -126,7 +128,7 @@
                   <span v-text="radio.buy_num"></span>
                 </div>
               </div>
-              <router-link tag="div" class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
+              <router-link class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
               <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
               <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
             </div>
@@ -665,6 +667,16 @@ export default {
             display: block;
             width: 152px;
             height: 80px;
+            .mask {
+              cursor: pointer;
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              bottom: 0;
+              background: url('../../../../../static/images/discovery/mask.svg') no-repeat center;
+              background-size: cover;
+              border-radius: 3px;
+            }
           }
           .free-vip {
             display: none;
@@ -687,7 +699,7 @@ export default {
             bottom: 5px;
             right: 8px;
             text-align:  center;
-            z-index: 2;
+            z-index: 9;
             .play {
               width: 24px;
               height:24px;
@@ -712,18 +724,19 @@ export default {
             border-radius: 4px;
           }
           .subscribe {
-            height: 30px;
+            height: 23px;
             position: absolute;
             display: -webkit-box;
             bottom: 0;
             display: flex;
             align-items: center;
+            z-index: 9;
             i {
               display: inline-block;
               margin: 0 8px;
               width: 14px;
-              height: 14px;
-              background-image: url('../../../../../static/images/discovery/home-radio.png');
+              height: 9px;
+              background-image: url('../../../../../static/images/discovery/home-radio.svg');
               background-repeat: no-repeat;
               background-size: cover;
             }
@@ -731,12 +744,9 @@ export default {
               color: #ffffff;
               font-size: 12px;
               display: inline-block;
-              margin-top: -1px;
-              margin-left: -3px;
             }
           }
           .title {
-            cursor: pointer;
             color: #333333FF;
             font-size: 14px;
             margin-top: 10px;
@@ -747,6 +757,9 @@ export default {
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
             overflow: hidden;
+            &:hover {
+              color: #2A9FE4;
+            }
           }
           .author {
             color: #B8B8B8;

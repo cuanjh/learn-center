@@ -176,7 +176,7 @@ export default {
       return this.phone && this.time === 60
     },
     isGoLogin () {
-      return validation.phoneNumber(this.phone) && this.phoneCode
+      return validation.phoneNumber(this.phone) && validation.verfiyCode(this.phoneCode)
     }
   },
   methods: {

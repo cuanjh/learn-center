@@ -15,6 +15,8 @@
     <continue-learn />
     <goto-bind />
     <buy-chapter v-if="isShowBuyChapter"/>
+    <!-- 匿名用户听电台提示弹框 -->
+    <user-login-regist-box></user-login-regist-box>
   </div>
 </template>
 <script>
@@ -30,6 +32,7 @@ import BuyChapter from '../common/buyChapterConfirm.vue'
 import GotoBind from '../common/gotoBind.vue'
 import Bus from '../../bus'
 import cookie from '../../tool/cookie'
+import UserLoginRegistBox from '../common/userLoginRegistBox.vue'
 
 export default {
   data () {
@@ -60,7 +63,8 @@ export default {
     VoicePlayer,
     ContinueLearn,
     BuyChapter,
-    GotoBind
+    GotoBind,
+    UserLoginRegistBox
   },
   mounted () {
     let userId = cookie.getCookie('user_id')

@@ -65,6 +65,7 @@ export default {
   width: 280px;
   display: inline-block;
   background: #fff;
+  margin-bottom: 20px;
   .content {
     position: relative;
     width: 100%;

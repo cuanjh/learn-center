@@ -23,8 +23,8 @@
               <span><i></i>对话</span>
             </p>
             <p class="follow" @click="relation()">
-              <span v-if="authorInfo.has_followed === false"><i></i>关注</span>
-              <span v-else>取消关注</span>
+              <a v-if="authorInfo.has_followed === false"><i></i>关注</a>
+              <a v-else>已关注</a>
             </p>
           </div>
           <div class="introduce">
@@ -343,15 +343,23 @@ export default {
           padding: 9px 0 11px;
           p {
             display: inline-block;
-            padding: 3px 15px;
-            font-size:14px;
-            font-family:PingFang-SC-Medium;
-            font-weight:500;
-            color:rgba(255,255,255,1);
-            border-radius: 13px;
-            span {
+            a {
+              padding: 3px 15px;
+              font-size:14px;
+              font-family:PingFang-SC-Medium;
+              font-weight:500;
+              color:rgba(255,255,255,1);
+              border-radius: 13px;
               display: flex;
               align-items: center;
+              background: #2A9FE4FF;
+              i {
+                background-image: url('../../../../../static/images/authorfllowrit.svg');
+                margin-right: 5px;
+              }
+              &:hover {
+                background: #2a9fe4ff;
+              }
             }
           }
           .talk {
@@ -359,14 +367,6 @@ export default {
             margin-right: 9px;
             i {
               background-image: url('../../../../../static/images/authordialogue.svg');
-              margin-right: 5px;
-            }
-          }
-          .follow {
-            cursor: pointer;
-            background: #2A9FE4FF;
-            i {
-              background-image: url('../../../../../static/images/authorfllowrit.svg');
               margin-right: 5px;
             }
           }

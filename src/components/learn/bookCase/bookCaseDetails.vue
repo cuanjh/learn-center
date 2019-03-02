@@ -1,12 +1,10 @@
 <template>
   <div class="book-details">
     <div class="nav">
-      <router-link :to="{path: '/app/index'}">
-        <span>我的学习账户</span>
+      <router-link :to="{path: '/app/index'}">我的学习账户
       </router-link>
       >
-      <router-link :to="{path: '/app/book-case'}">
-        <span>添加课程</span>
+      <router-link :to="{path: '/app/book-case'}">添加课程
       </router-link>
       >
       <div class="nav-current">
@@ -373,6 +371,7 @@ export default {
       let _this = this
       var params = {}
       let arr = _this.courseCode.split('-')
+      console.log('arr', arr)
       if (arr.length > 1) {
         params = {
           course_code: _this.courseCode
@@ -426,11 +425,9 @@ export default {
     display: inline-block;
     font-size: 16px;
     a {
-      span {
-        color: #999999;
-        &:hover{
-          color: #2A9FE4;
-        }
+      color: #999999;
+      &:hover{
+        color: #2A9FE4;
       }
     }
     .nav-current {

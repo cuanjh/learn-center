@@ -3,15 +3,15 @@
     <div class="radio-container">
       <div class="nav">
         <router-link :to="{path: '/app/user/course'}">
-          <span>个人账户</span>
+          个人账户
         </router-link>
         >
         <router-link :to="{path: '/app/discovery/radio-home'}">
-          <span>电台</span>
+          电台
         </router-link>
         >
         <router-link :to="{path: '/app/discovery/radio-list'}">
-          <span>分类</span>
+          分类
         </router-link>
         >
         <div class="nav-current">
@@ -127,7 +127,7 @@
                 </div>
                 <p class="flowed" @click="relation()">
                   <a v-if="authorInfo.has_followed === 0"><i></i>关注</a>
-                  <a v-else>取消关注</a>
+                  <a v-else>已关注</a>
                 </p>
               </div>
             </div>
@@ -451,10 +451,10 @@ export default {
 .nav a {
   text-decoration:none;
 }
-.nav a span {
+.nav a {
   color: #999999;
 }
-.nav a span:hover {
+.nav a:hover {
   color: #2A9FE4;
 }
 .nav .nav-current {
@@ -994,16 +994,16 @@ export default {
   opacity: 0.6;
 }
 .course-item .course-play-img .gradient-layer-play .play {
-  width: 31px;
-  height: 31px;
+  width: 24px;
+  height: 24px;
   background-image: url('../../../../../static/images/discovery/noplay.svg');
   background-repeat: no-repeat;
   background-size: cover;
   display: inline-block;
 }
 .course-item .course-play-img .gradient-layer-play .pause {
-  width: 31px;
-  height: 31px;
+  width: 24px;
+  height: 24px;
   background-image: url('../../../../../static/images/discovery/play.svg');
   background-repeat: no-repeat;
   background-size: cover;

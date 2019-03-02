@@ -718,4 +718,10 @@ export default {
     margin: 71px auto 0;
     cursor: pointer;
   }
+  .add-course:hover {
+    background: #2A9FE4;
+  }
+  .add-course:active {
+    background: rgba(5,129,209,1);
+  }
 </style>

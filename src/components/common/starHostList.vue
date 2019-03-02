@@ -20,8 +20,8 @@
             <div class="list-right">
               <p class="button" @click="relation(teacher)">
                 <i></i>
-                <span v-if="teacher.has_followed === 0">关注</span>
-                <span v-else>取消关注</span>
+                <a v-if="teacher.has_followed === 0">关注</a>
+                <a v-else>已关注</a>
               </p>
             </div>
           </div>
@@ -82,6 +82,7 @@ export default {
     display: flex;
     justify-content: space-between;
     padding: 30px 0 10px;
+    margin-bottom: 20px;
     .more {
       font-size: 14px;
       color: #7e929fff;
@@ -154,10 +155,6 @@ export default {
             }
           }
           .list-right {
-            padding: 4px 12px;
-            background-color: #fff;
-            border-radius: 18px;
-            border: 1px solid #E6EBEEFF;
             p {
               display: flex;
               justify-content: center;
@@ -172,24 +169,25 @@ export default {
               background-size: cover;
               margin-right: 5px;
             }
-            span {
+            a {
               font-size: 14px;
               font-weight: 500;
               color: #0a2b40ff;
-            }
-          }
-          .list-right:hover {
-            cursor: pointer;
-            i {
-              display: inline-block;
-              width: 12px;
-              height: 12px;
-              background: url("../../../static/images/authorFllow.svg") no-repeat center;
-              background-size: cover;
-              margin-right: 5px;
-            }
-            span {
-              color: #2a9fe4ff;
+              padding: 4px 12px;
+              background-color: #fff;
+              border-radius: 18px;
+              border: 1px solid #E6EBEEFF;
+              &:hover {
+                color: #2a9fe4ff;
+                i {
+                  display: inline-block;
+                  width: 12px;
+                  height: 12px;
+                  background: url("../../../static/images/authorFllow.svg") no-repeat center;
+                  background-size: cover;
+                  margin-right: 5px;
+                }
+              }
             }
           }
         }

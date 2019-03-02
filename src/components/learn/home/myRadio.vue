@@ -28,8 +28,9 @@
         <div class="radio-item" v-for="item in recommendRadios.slice(0, 6)" :key="item.code">
           <div class="play-radio">
             <img v-lazy="item.cover" :key="item.cover" alt="">
-            <div class="gradient-layer-play">
-              <i class="play" @click="loadRadioList($event, item)"></i>
+            <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + item.code}" class="mask"></router-link>
+            <div class="gradient-layer-play" @click="loadRadioList($event, item)">
+              <i class="play"></i>
             </div>
             <div class="subscribe">
               <i></i>
@@ -277,6 +278,7 @@ export default {
         margin-top: 40px;
         padding-left: 15px;
         .radio-item {
+          position: relative;
           display: inline-block;
           width: 160px;
           height: 89px;
@@ -296,6 +298,16 @@ export default {
             display: block;
             width: 160px;
             height: 89px;
+            .mask {
+              cursor: pointer;
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              bottom: 0;
+              background: url('../../../../static/images/discovery/mask.svg') no-repeat center;
+              background-size: cover;
+              border-radius: 3px;
+            }
           }
           img {
             width: 100%;
@@ -305,20 +317,17 @@ export default {
             z-index: 1;
           }
           .gradient-layer-play {
-            width: 160px;
-            height: 89px;
+            width: 24px;
+            height: 24px;
             position: absolute;
             // background-image: url('../../../../static/images/discovery/radio-gradient-layer.png');
             // background-repeat: no-repeat;
             // background-size: cover;
-            margin-top: -89px;
-            text-align: right;
-            z-index: 2;
+            bottom: 5px;
+            right: 8px;
+            z-index: 9;
             i {
               display: inline-block;
-              position: absolute;
-              bottom: 5px;
-              right: 8px;
             }
             .play {
               width: 24px;
@@ -340,18 +349,19 @@ export default {
             }
           }
           .subscribe {
-            height: 30px;
+            height: 23px;
             position: absolute;
             display: -webkit-box;
             bottom: 0;
             display: flex;
             align-items: center;
+            z-index: 9;
             i:first-child {
               display: inline-block;
               margin: 0 8px;
               width: 14px;
-              height: 14px;
-              background-image: url('../../../../static/images/discovery/home-radio.png');
+              height: 9px;
+              background-image: url('../../../../static/images/discovery/home-radio.svg');
               background-repeat: no-repeat;
               background-size: cover;
             }
@@ -359,8 +369,6 @@ export default {
               color: #ffffff;
               font-size: 12px;
               display: inline-block;
-              margin-top: -1px;
-              margin-left: -3px;
             }
           }
           .title {

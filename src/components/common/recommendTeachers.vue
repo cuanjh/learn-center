@@ -22,8 +22,8 @@
         </li>
         <li v-show="showMoreAuthor">
           <div class="view-more">
-            <router-link tag="p" :to="{path: 'radio-recom-teachers'}">
-              <span>查看更多</span>
+            <router-link :to="{path: 'radio-recom-teachers'}">
+              查看更多
               <i></i>
             </router-link>
           </div>
@@ -65,11 +65,17 @@ export default {
       if (this.startAuthorsIndex === 0) {
         return
       }
+      if (this.showMoreAuthor) {
+        this.showMoreAuthor = false
+      }
       this.startAuthorsIndex--
     },
     // 下一个
     radioAuthorNext () {
       if (this.startAuthorsIndex === this.authors.length - 5) {
+        return
+      }
+      if (this.showMoreAuthor) {
         return
       }
       this.startAuthorsIndex++
@@ -113,7 +119,7 @@ export default {
     li {
       display: inline-block;
       width: 158px;
-      background-color: #eef2f3;
+      background-color: #F6F8F9;
       border-radius: 5px;
       margin-right: 14px;
       text-align: center;
@@ -127,9 +133,11 @@ export default {
       }
       .author_name {
         font-size: 14px;
+        height: 23px;
         font-weight: bold;
         color: #103044;
         margin-top: 14px;
+        line-height: 23px;
         // width: 100px;
         overflow: hidden;
         white-space: nowrap;
@@ -138,6 +146,8 @@ export default {
       .title {
         color: #7E929FFF;
         padding-top: 4px;
+        height: 27px;
+        line-height: 27px;
         font-size: 14px;
         font-weight: 500;
         overflow: hidden;
@@ -157,16 +167,14 @@ export default {
         margin: 22px auto 0;
         i {
           display: inline-block;
-          width: 12px;
-          height: 12px;
-          background: url("../../../static/images/follow.svg") no-repeat
-            center;
+          width: 11px;
+          height: 11px;
+          background: url("../../../static/images/follow.svg") no-repeat center;
           background-size: cover;
           margin-right: 5px;
         }
         a {
           font-size: 14px;
-          font-weight: 500;
           color: #0a2b40ff;
           display: flex;
           align-items: center;
@@ -174,8 +182,8 @@ export default {
             color: #2a9fe4ff;
             i {
               display: inline-block;
-              width: 12px;
-              height: 12px;
+              width: 11px;
+              height: 11px;
               background: url("../../../static/images/authorFllow.svg") no-repeat center;
               background-size: cover;
               margin-right: 5px;
@@ -193,7 +201,7 @@ export default {
     }
     li:last-child {
       width: 158px;
-      height: 234px;
+      height: 229px;
       background-color: #ffffff;
       margin-right: 0px;
       text-align: center;
@@ -202,17 +210,15 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        p {
+        a {
           width: 158px;
           display: flex;
           justify-content: center;
           align-items: center;
-          span {
-            font-size: 14px;
-            color: #b2c0c9;
-            line-height: 20px;
-            padding-right: 8px;
-          }
+          font-size: 14px;
+          color: #b2c0c9;
+          line-height: 20px;
+          padding-right: 8px;
           i {
             display: inline-block;
             width: 8px;
@@ -221,14 +227,12 @@ export default {
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
+            margin-left: 4px;
           }
           &:hover {
-            cursor: pointer;
+            color: #2A9FE4FF;
             i {
               background-image: url("../../../static/images/morehover.svg");
-            }
-            span {
-              color: #2A9FE4FF;
             }
           }
         }

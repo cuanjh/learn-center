@@ -29,7 +29,6 @@ export default {
   width: 280px;
   height: 200px;
   display: inline-block;
-  margin-top: 20px;
   background: #fff;
   .introduce-app-cont {
     width: 280px;

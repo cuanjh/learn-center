@@ -8,7 +8,7 @@ export default {
     return /^[A-Za-z0-9]{6,15}$/.test(string)
   },
   verfiyCode (string) {
-    return /^\d{5,6}$/.test(string)
+    return /^\d{4,6}$/.test(string)
   },
   email (string) {
     return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+$/.test(string)
