@@ -85,7 +85,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-
+import Bus from '../../../../bus.js'
 export default {
   data () {
     return {
@@ -108,6 +108,9 @@ export default {
   },
   computed: {
     ...mapState({
+      ...mapState({
+        userInfo: state => state.userInfo // 用户信息
+      })
     })
   },
   methods: {
@@ -142,6 +145,10 @@ export default {
     },
     // 关注取消关注
     relation (teacher) {
+      if (!this.userInfo) {
+        Bus.$emit('showGoLoginBox')
+        return
+      }
       let followId = teacher.user_id
       if (teacher.has_followed === 1) { // 关注了
         console.log('关注了')

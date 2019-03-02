@@ -142,7 +142,7 @@
           <ul>
             <li v-for="(item, index) in hotRadiosList.slice(0, 9)" :key="index">
               <div class="moods-item">
-                <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + item.code}">{{item.title}}</router-link>
+                <router-link :to="{path: '/app/discovery/radio-detail/' + item.code}">{{item.title}}</router-link>
                 <p>订阅量 {{item.buy_num}}次</p>
               </div>
               <div class="gradient-layer-play" @click="loadRadioList($event, item)">
@@ -817,17 +817,17 @@ export default {
             align-items: center;
             margin-bottom: 10px;
             .moods-item {
-              p {
+              a {
                 font-size:16px;
                 font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(74,74,74,1);
                 line-height:22px;
+                &:hover {
+                  color: #2A9FE4;
+                }
               }
-              p:nth-child(1) {
-                cursor: pointer;
-              }
-              p:nth-child(2) {
+              p {
                 font-size:12px;
                 color:rgba(153,153,153,1);
                 padding-top: 4px;

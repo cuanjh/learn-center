@@ -149,7 +149,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import authorItem from './authorItem'
-// import Bus from '../../../../bus'
+import Bus from '../../../../bus'
 // import $ from 'jquery'
 import AuthorRadios from './authorRadios.vue'
 
@@ -222,6 +222,10 @@ export default {
     },
     // 关注
     relation () {
+      if (!this.userInfo) {
+        Bus.$emit('showGoLoginBox')
+        return
+      }
       let _this = this
       let followId = _this.authorInfo.user_id
       if (_this.authorInfo.has_followed === true) { // 关注了

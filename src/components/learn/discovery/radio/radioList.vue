@@ -423,7 +423,7 @@ a {
               justify-content: space-between;
               font-size:14px;
               font-family:PingFang-SC-Medium;
-              color:rgba(60,91,111,1);
+              color:#0581D1;
               line-height:20px;
               padding: 11px 26px;
               border-bottom: 1px solid rgba(230,235,238,1);
@@ -436,6 +436,14 @@ a {
               }
               &:hover {
                 background: #EEF2F3FF;
+              }
+              &:active {
+                background: #0581D1;
+                color: #ffffff;
+                i {
+                  background: url('../../../../../static/images/radioListjiantouhover.svg') no-repeat center;
+                  background-size: cover;
+                }
               }
               &.active {
                 background: #2A9FE4;

@@ -19,8 +19,7 @@
             </div>
             <div class="list-right">
               <p class="button" @click="relation(teacher)">
-                <i></i>
-                <a v-if="teacher.has_followed === 0">关注</a>
+                <a v-if="teacher.has_followed === 0"><i></i>关注</a>
                 <a v-else>已关注</a>
               </p>
             </div>
@@ -31,8 +30,8 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
-
+import { mapState, mapActions } from 'vuex'
+import Bus from '../../bus.js'
 export default {
   props: ['teacherLists'],
   data () {
@@ -41,6 +40,9 @@ export default {
   mounted () {
   },
   computed: {
+    ...mapState({
+      userInfo: state => state.userInfo // 用户信息
+    })
   },
   methods: {
     ...mapActions({
@@ -49,6 +51,10 @@ export default {
     }),
     // 关注取消关注
     relation (teacher) {
+      if (!this.userInfo) {
+        Bus.$emit('showGoLoginBox')
+        return
+      }
       let followId = teacher.user_id
       if (teacher.has_followed === 1) { // 关注了
         console.log('关注了')
@@ -162,16 +168,18 @@ export default {
             }
             i {
               display: inline-block;
-              width: 12px;
-              height: 12px;
+              width: 11px;
+              height: 11px;
               background: url("../../../static/images/follow.svg") no-repeat
                 center;
               background-size: cover;
               margin-right: 5px;
             }
             a {
+              display: flex;
+              justify-content: center;
+              align-items: center;
               font-size: 14px;
-              font-weight: 500;
               color: #0a2b40ff;
               padding: 4px 12px;
               background-color: #fff;
@@ -179,10 +187,11 @@ export default {
               border: 1px solid #E6EBEEFF;
               &:hover {
                 color: #2a9fe4ff;
+                border: 1px solid #2a9fe4ff;
                 i {
                   display: inline-block;
-                  width: 12px;
-                  height: 12px;
+                  width: 11px;
+                  height: 11px;
                   background: url("../../../static/images/authorFllow.svg") no-repeat center;
                   background-size: cover;
                   margin-right: 5px;

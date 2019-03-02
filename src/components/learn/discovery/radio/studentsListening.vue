@@ -6,7 +6,7 @@
         <ul class="lists">
           <li class="lists-item" v-for="(item, index) in studentsListening.slice(0, 4)" :key="index">
             <div class="nickname">
-              <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + item.code}">{{item.author.nickname}}</router-link>
+              <router-link :to="{path: '/app/discovery/radio-detail/' + item.code}">{{item.author.nickname}}</router-link>
               <p>订阅量 {{item.buy_num}}次</p>
             </div>
             <div class="gradient-layer-play" @click="loadRadioList($event, item)">
@@ -80,10 +80,12 @@ export default {
             font-family:PingFang-SC-Medium;
             font-weight:500;
             color:rgba(74,74,74,1);
-            p:nth-child(1) {
-              cursor: pointer;
+            a {
+              &:hover {
+                color: #2A9FE4;
+              }
             }
-            p:nth-child(2) {
+            p {
               font-size:12px;
               font-family:PingFang-SC-Medium;
               font-weight:500;

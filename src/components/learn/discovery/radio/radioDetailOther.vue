@@ -10,7 +10,7 @@
         <i></i>
         <span v-text="radio.buy_num"></span>
       </div>
-      <div class="title" v-text="radio.module_name"></div>
+      <a class="title" v-text="radio.module_name"></a>
       <div class="author" v-text="radio.author_info.nickname"></div>
       <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
     </router-link>
@@ -100,6 +100,9 @@ export default {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+}
+.other-radio-item .title:hover {
+  color: #2A9FE4
 }
 
 .other-radio-item .author {
