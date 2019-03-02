@@ -5,15 +5,15 @@
         <span>现在成为会员，12月圣诞好礼，新用户8折！！！</span>
     </div>
     <!-- <router-link class="vip-btn" :to="{path: 'vip-index'}"></router-link> -->
-    <router-link tag="div" :to="{path: userInfo ? '/app/user/vip' : '/auth/login'}" class="vip-btn">
+    <div @click="goVip()" class="vip-btn">
       <span v-if="isVip === 0">成为会员</span>
       <span v-if="isVip === 1">升级会员</span>
-    </router-link>
+    </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-
+import Bus from '../../bus.js'
 export default {
   data () {
     return {}
@@ -31,6 +31,15 @@ export default {
       }
       console.log('header', this.userInfo.member_info.member_type)
       return this.userInfo.member_info.member_type
+    }
+  },
+  methods: {
+    goVip () {
+      if (!this.userInfo) {
+        Bus.$emit('showGoLoginBox')
+        return
+      }
+      this.$router.push({ path: '/app/user/vip' })
     }
   }
 }
