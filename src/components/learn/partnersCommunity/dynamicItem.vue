@@ -218,7 +218,7 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import Cookie from '../../../tool/cookie'
 import Bus from '../../../bus'
 import SoundCtrl from '../../../plugins/soundCtrl'
@@ -245,6 +245,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      userInfo: state => state.userInfo // 用户信息
+    })
   },
   created () {
     Bus.$on('radioPlay', () => {
@@ -359,6 +362,10 @@ export default {
     },
     // 关注
     relation () {
+      if (!this.userInfo) {
+        Bus.$emit('showGoLoginBox')
+        return
+      }
       let _this = this
       let followId = _this.dynamic.info.user_id
       if (_this.dynamic.info.has_followed === true) {

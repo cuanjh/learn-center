@@ -2,7 +2,7 @@
   <div class="radio-wrap">
     <div class="radio-container">
       <div class="nav">
-        <router-link :to="{path: '/app/user/course'}">
+        <router-link :to="{path: '/app/index'}">
           个人账户
         </router-link>
         >
@@ -116,7 +116,7 @@
             </div>
             <div class="author-info-right">
               <div class="nickname">
-                <span v-text="authorInfo.nickname"></span>
+                <a @click="goToUser(authorInfo.user_id)" v-text="authorInfo.nickname"></a>
               </div>
               <div class="passed">
                 <div class="passed-user">
@@ -252,6 +252,9 @@ export default {
       languagueHander: state => state.course.languagueHander
     }),
     isVip () {
+      if (!this.userInfo) {
+        return
+      }
       if (!this.userInfo.member_info) {
         return 0
       }
@@ -283,6 +286,10 @@ export default {
     },
     // 关注
     relation () {
+      if (!this.userInfo) {
+        Bus.$emit('showGoLoginBox')
+        return
+      }
       let _this = this
       let followId = _this.authorInfo.user_id
       if (_this.authorInfo.has_followed === 1) { // 关注了
@@ -358,6 +365,10 @@ export default {
       let radio = this.courseInfo
       console.log('组件中的radio', this.radioDetail)
       console.log('subscibenoInfo', this.subscibenoInfo)
+      if (!this.userInfo) {
+        Bus.$emit('showGoLoginBox')
+        return
+      }
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
           if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
@@ -844,6 +855,9 @@ export default {
   font-size: 20px;
   padding: 0 12px;
   border-radius: 4px;
+}
+.author-info .author-info-right .nickname a:hover {
+  color: #2A9FE4;
 }
 .author-info .author-info-right .passed {
   margin-top: 10px;

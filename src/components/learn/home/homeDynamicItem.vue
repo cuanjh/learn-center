@@ -151,7 +151,7 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import Cookie from '../../../tool/cookie'
 import Bus from '../../../bus'
 import SoundCtrl from '../../../plugins/soundCtrl'
@@ -190,6 +190,11 @@ export default {
       this.emojiDataUTF.push(key) // 和后端交互时使用UTF码
       this.emojiData.push(this.$emoji.unifiedToHTML(key))
     }
+  },
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo // 用户信息
+    })
   },
   methods: {
     ...mapActions({
@@ -287,6 +292,10 @@ export default {
     },
     // 关注
     relation () {
+      if (!this.userInfo) {
+        Bus.$emit('showGoLoginBox')
+        return
+      }
       let _this = this
       let followId = _this.dynamic.info.user_id
       if (_this.dynamic.info.has_followed === true) {

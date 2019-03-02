@@ -39,7 +39,8 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import Bus from '../../bus.js'
 
 export default {
   props: ['authors'],
@@ -48,6 +49,11 @@ export default {
       showMoreAuthor: false,
       startAuthorsIndex: 0
     }
+  },
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo // 用户信息
+    })
   },
   methods: {
     ...mapActions({
@@ -86,6 +92,10 @@ export default {
     },
     // 关注取消关注
     relation (teacher) {
+      if (!this.userInfo) {
+        Bus.$emit('showGoLoginBox')
+        return
+      }
       let followId = teacher.user_id
       if (teacher.has_followed === 1) { // 关注了
         console.log('关注了')
