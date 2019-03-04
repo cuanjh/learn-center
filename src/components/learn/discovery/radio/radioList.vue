@@ -423,10 +423,12 @@ a {
               justify-content: space-between;
               font-size:14px;
               font-family:PingFang-SC-Medium;
-              color:#0581D1;
+              font-weight:bold;
+              color:rgba(60,91,111,1);
               line-height:20px;
-              padding: 11px 26px;
-              border-bottom: 1px solid rgba(230,235,238,1);
+              line-height:20px;
+              padding: 8px 26px;
+              border-bottom:1px solid rgba(246,248,249,1);
               i {
                 display: inline-block;
                 width: 8px;
@@ -638,7 +640,7 @@ a {
                     font-size:12px;
                     font-family:PingFang-SC-Medium;
                     font-weight:500;
-                    color:rgba(153,153,153,1);
+                    color:rgba(184,184,184,1);
                     line-height:17px;
                     span:nth-child(2) {
                       display: inline-block;
@@ -646,6 +648,11 @@ a {
                       overflow: hidden;
                       text-overflow:ellipsis;
                       white-space:nowrap;
+                      font-size:12px;
+                      font-family:PingFang-SC-Medium;
+                      font-weight:500;
+                      color:rgba(153,153,153,1);
+                      line-height:17px;
                     }
                   }
                 }

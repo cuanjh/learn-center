@@ -155,10 +155,19 @@
       <div class="voice-overflow">
         <div class="voice-player-list-content">
           <ul>
-            <li class="clearfix" v-for="(card, index) in radioList" :key="index" @click="goPlay(index)">
-              <div class="col1" v-text="index + 1"></div>
+            <li class="clearfix"
+                :class="{'current': index === curIndex}"
+                v-for="(card, index) in radioList"
+                :key="index" @click="goPlay(index)">
+              <div class="triangle"></div>
+              <div class="col-content">
+                <div class="col1" v-text="index + 1"></div>
+                <div class="col2" v-text="card.title"></div>
+                <div class="col3" v-text="toParseTime(card.sound_time)"></div>
+              </div>
+              <!-- <div class="col1" v-text="index + 1"></div>
               <div class="col2" :class="{'current': index === curIndex}" v-text="card.title"></div>
-              <div class="col3" v-text="toParseTime(card.sound_time)"></div>
+              <div class="col3" v-text="toParseTime(card.sound_time)"></div> -->
             </li>
           </ul>
         </div>
@@ -317,7 +326,7 @@ export default {
       console.log('===>', this.curIndex)
       if (!this.userInfo && this.curIndex > 2) {
         Bus.$emit('showGoLoginBox')
-        this.pause()
+        return
       }
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
@@ -839,7 +848,7 @@ export default {
     // box-shadow: 0 -2px 4px 0 rgba(0,0,0,.2);
     // border-radius: 3px 3px 0 0;
     // width:1180px;
-    height:427px;
+    max-height:427px;
     background:linear-gradient(180deg,rgba(0,22,55,0.9) 0%,rgba(15,144,198,0.74) 100%);
     border-radius:8px 8px 0px 0px;
     z-index: 90;
@@ -849,7 +858,7 @@ export default {
     user-select: none;
     .voice-player-list-head {
       width: 1080px;
-      padding: 0 20px;
+      padding: 0 40px;
       height: 55px;
       line-height: 55px;
       color: #fff;
@@ -869,7 +878,7 @@ export default {
       overflow: hidden;
     }
     .voice-player-list-content {
-      height: 340px;
+      max-height: 340px;
       width: 1100px;
       overflow-y: auto;
       ul {
@@ -882,27 +891,54 @@ export default {
           -o-transition: all .2s;
           transition: all .2s;
           font-size: 14px;
+          display: flex;
+          align-items: center;
+          &.current {
+            .col1, .col2, .col3 {
+              color: #F5A623FF;
+            }
+            .triangle {
+              background: url('../../../static/images/discovery/bofang.svg') no-repeat center;
+            }
+          }
+          .col-content {
+            width: 100%;
+            margin-top: 0px;
+          }
           .col1 {
             display: inline-block;
             text-align: center;
             color: #B4B4B4;
-            width: 40px;
+            // width: 40px;
             text-align: center;
-            margin-left: 10px;
+            // margin-left: 10px;
           }
           .col2 {
             display: inline-block;
             width: 560px;
             color: #fff;
-            margin-left: 45px;
+            margin-left: 15px;
           }
           .col3 {
             float: right;
             margin-right: 30px;
             color: #a3a3ac;
           }
-          .current {
-            color: #FFD343;
+          .triangle {
+            width: 9px;
+            height: 9px;
+            // background: url('../../../static/images/discovery/radio-clock.png') no-repeat center;
+            background-size: cover;
+            margin-left: 20px;
+          }
+        }
+        li:hover {
+          background:rgba(0,16,51,.2);
+          color: #fff;
+          .triangle {
+            width: 9px;
+            height: 9px;
+            background: url('../../../static/images/discovery/bofanghover.svg') no-repeat center;
           }
         }
       }
