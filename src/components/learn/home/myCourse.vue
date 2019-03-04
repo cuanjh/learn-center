@@ -174,7 +174,7 @@ export default {
         this.maxLevelNum = _this.courseBaseInfo.level_num
         let contentUrl = _this.courseBaseInfo.content_config.content_url
         await _this.getCourseContent(contentUrl)
-        await _this.getLearnCourses()
+        // await _this.getLearnCourses()
         await this.setCurrentChapter(this.curChapterCode)
         bus.$emit('loadRecommendRadio', this.curCourseCode)
         let obj = this.chapters.filter((item) => {
@@ -214,6 +214,9 @@ export default {
       }
     },
     pre () {
+      /* eslint-disable */
+      $('.course-brief-core').css({marginLeft: '150px'})
+      /* eslint-enable */
       this.isShowNext = true
       let coreNum = this.curCourseObj['courseCore']
       if (coreNum === 1) {
@@ -254,9 +257,15 @@ export default {
       } else {
         this.curCourseObj['courseCore'] = coreNum - 1
       }
+      /* eslint-disable */
+      $('.course-brief-core').animate({marginLeft: '40px'}, "linear")
+      /* eslint-enable */
     },
     next () {
       this.isShowPre = true
+      /* eslint-disable */
+      $('.course-brief-core').css({marginLeft: '150px'})
+      /* eslint-enable */
       let coreNum = this.curCourseObj['courseCore']
       if (coreNum === 5) {
         let arr = this.curChapterCode.split('-')
@@ -296,6 +305,9 @@ export default {
       } else {
         this.curCourseObj['courseCore'] = coreNum + 1
       }
+      /* eslint-disable */
+      $('.course-brief-core').animate({marginLeft: '40px'}, "linear")
+      /* eslint-enable */
     },
     startLearn () {
       let tips = ''
@@ -492,7 +504,7 @@ export default {
   .current-course .subscribe-courses {
     left: 13px;
     top: 46px;
-    width: 302px;
+    width: 292px;
   }
 
   .subscribe-courses>img {

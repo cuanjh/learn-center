@@ -20,7 +20,7 @@ export default {
   data () {
     return {
       statisticsInfo: {},
-      isStretch: false
+      isStretch: true
     }
   },
   mounted () {
@@ -74,7 +74,7 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     // border-radius: 5px;
-    bottom: -155px;
+    bottom: 0px;
   }
   i {
     float: right;

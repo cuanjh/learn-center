@@ -318,7 +318,7 @@ export default {
   width: 220px;
   min-width: 220px;
   height: 223px;
-  margin-top: 20px;
+  margin-top: 18px;
   margin-right: 20px;
   background: #ffffff;
   box-shadow: 1px 2px 8px rgba(218, 230, 243, .56);

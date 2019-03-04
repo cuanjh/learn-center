@@ -657,7 +657,7 @@ export default {
         width: 100%;
         .radio-item {
           display: inline-block;
-          margin-top: 20px;
+          margin-top: 18px;
           margin-right: 15px;
           width: 152px;
           // height: 159px;

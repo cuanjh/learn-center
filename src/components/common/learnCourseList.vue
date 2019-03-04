@@ -17,9 +17,6 @@
                   </a>
                 </dt>
                 <dd>
-                  <span>
-                    <!-- <a>全球说</a> -->
-                  </span>
                   <span class='mycourse-lang'>
                     <a href="">{{ !course.name ? '' : course.name['zh-CN'] }}</a>
                   </span>
@@ -28,7 +25,7 @@
             </li>
             <li class='learn-courseList-add-more'>
               <router-link :to="{path: '/app/book-case'}">
-                <img src="../../../static/images/course/add-learn-course.svg">
+                <i />
               </router-link>
             </li>
           </ul>
@@ -95,6 +92,8 @@ export default {
 .mycourse-wrap {
   position: absolute;
   width: 460px;
+  height: 246px;
+  overflow-y: auto;
   border-radius: 4px;
   background-color: #ffffff;
   box-shadow: 0 2px 9px 0 rgba(112, 112, 112, 0.5);
@@ -123,7 +122,7 @@ export default {
   left: 127px;
 }
 .mycourse-container {
-  padding: 30px 30px 0;
+  padding: 30px 0px 0 30px;
   overflow: hidden;
 }
 // .mycourse-container > p {
@@ -136,7 +135,7 @@ export default {
 //   font-weight: bold;
 // }
 .mycourse-container > section ul {
-  display: flex;
+  // display: flex;
   flex-flow: row wrap;
   align-content: flex-start;
 }
@@ -145,10 +144,11 @@ export default {
   flex: 0 0 20%;
   cursor: pointer;
   margin-bottom: 30px;
+  margin-right: 30px;
 }
 
 .mycourse-container > section ul > li.disable dl {
-  width: 80px;
+  // width: 80px;
 }
 .mycourse-container > section ul > li.disable dl dt img {
   -webkit-filter: grayscale(100%);
@@ -166,17 +166,30 @@ export default {
   text-align: center;
   cursor: pointer;
   border: none;
-  height: 100px;
+  height: 50px;
 }
 .mycourse-container > section ul > li.learn-courseList-add-more a {
   display: inline-block;
   width: 50px;
   height: 50px;
 }
-.mycourse-container > section ul > li.learn-courseList-add-more a img {
+.mycourse-container > section ul > li.learn-courseList-add-more a i {
   width: 50px;
   height: 50px;
+  display: inline-block;
+  background-image: url('../../../static/images/course/add-learn-course.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
+
+.mycourse-container > section ul > li.learn-courseList-add-more a i:hover {
+  background-image: url('../../../static/images/course/add-learn-course-hover.svg');
+}
+
+.mycourse-container > section ul > li.learn-courseList-add-more a i:active {
+  background-image: url('../../../static/images/course/add-learn-course-active.svg');
+}
+
 .mycourse-container > section ul > li dl dt {
   text-align: center;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="left-side">
+  <div class="left-side" @mouseleave="showMyCourse()">
     <div class="lang-overview">
       <dl>
         <dt><img :src="courseBaseInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
@@ -8,7 +8,7 @@
               <span v-text='courseBaseInfo.name'></span>
             <p>
               <!-- :class="{active:isActive}" -->
-              <i :class="{active:isActive}" @click="showMyCourse()"></i>
+              <i :class="{active:isActive}" @mouseenter="showMyCourse()"></i>
               <!-- <transition name="fade">
                 <img v-show="trigangleShow" src="../../../../static/images/course/learn-big-arrow.png" alt="dddd">
               </transition> -->
@@ -345,14 +345,23 @@ export default {
 .lang-overview ul {
   width: 100%;
   background: #ffffff;
-  padding: 0 50px;
+  padding: 0 15px;
   border-radius: 0 0 4px 4px;
+  position: absolute;
 }
 
 .lang-overview ul li {
   border-bottom: 1px solid #f5f5f5;
-  padding: 28px 0;
+  color: #333333;
+  padding: 10px 0;
   cursor: pointer;
+  margin: 20px 0;
+  /* background-color: #90A2AE; */
+}
+
+.lang-overview ul li:hover {
+  background-color: #F6F8F9;
+  color: #2A9FE4;
 }
 
 .lang-overview ul li:last-child {
@@ -363,7 +372,6 @@ export default {
   margin: 0 auto;
   text-align: center;
   font-size: 14px;
-  color: #333333;
   font-weight: 400px;
 }
 

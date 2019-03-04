@@ -711,7 +711,7 @@ export default {
       width: 100%;
       padding: 23px 0 0;
       .tab-box {
-        height: 100px;
+        height: 80px;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
