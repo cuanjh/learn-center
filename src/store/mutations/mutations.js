@@ -46,10 +46,15 @@ export default {
     let arr = []
     console.log('data', data)
     if (!data) {
-      state.langCodesSel = []
+      state.langCodesSel = [{'lan_code': '', 'text': '全部'}]
     } else {
-      arr.push({'lan_code': data.currentLang.lan_code, 'text': data.currentLang.name + '相关'})
-      arr.push({'lan_code': data.skillLang.lan_code, 'text': '母语相关'})
+      arr.push({'lan_code': '', 'text': '全部'})
+      if (data.currentLang.hasSet) {
+        arr.push({'lan_code': data.currentLang.lan_code, 'text': data.currentLang.name + '相关'})
+      }
+      if (data.skillLang.hasSet) {
+        arr.push({'lan_code': data.skillLang.lan_code, 'text': '母语相关'})
+      }
       state.langCodesSel = arr
     }
     console.log('语言相关', state.langCodesSel)

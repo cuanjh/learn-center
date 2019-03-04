@@ -342,11 +342,9 @@ export default {
     display: inline-block;
     font-size: 14px;
     a {
-      span {
-        color: #999999;
-        &:hover{
-          color: #2A9FE4;
-        }
+      color: #7E929F;
+      &:hover{
+        color: #2A9FE4;
       }
     }
     .nav-current {

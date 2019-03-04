@@ -386,8 +386,8 @@ a {
   margin-top: 9px;
 }
 
-.nav span {
-  color: #999999;
+.nav a {
+  color: #7E929F;
 }
 
 .nav-current {

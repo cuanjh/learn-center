@@ -2,12 +2,15 @@
   <div class="mobile-apps">
     <div class="background-img"></div>
     <div class="content">
-      <p class="title">Tallkmate Mobile Apps</p>
+      <!-- <p class="title">Tallkmate Mobile Apps</p> -->
+      <p>Talkmate-全球说移动应用程序</p>
       <p class="text">
-        <span>You can learn with talkmate on your smartphone or tablet.</span>
+        <!-- <span>You can learn with talkmate on your smartphone or tablet.</span>
         <span>Collaborative learning and topic group chat rooms from</span>
         <span>more than 100 countries,</span>
-        <span>this will make learning easier.</span>
+        <span>this will make learning easier.</span> -->
+        <span>你可以通过智能手机或平板电脑与语伴学习。</span>
+        <span>来自一百多个国家的语伴学习互助和主题群聊室，让学习更容易。</span>
       </p>
     </div>
     <div class="link">
@@ -43,7 +46,7 @@ export default {
   .content {
     position: absolute;
     top: 49px;
-    left: 422px;
+    left: 382px;
     p {
       display: inline-block;
       height:80px;
@@ -58,10 +61,8 @@ export default {
       }
     }
     p:nth-child(1) {
-      width:386px;
-      width:175px;
-      height:22px;
-      font-size:16px;
+      height:30px;
+      font-size:18px;
       font-family:PingFangSC-Semibold;
       font-weight:600;
       color:rgba(51,51,51,1);

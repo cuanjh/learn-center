@@ -82,12 +82,12 @@
           <!-- 收听订阅分享等 -->
           <div class="subscription">
             <div class="bottom">
-              <div class="gradient-layer-play">
-                <i class="play" @click="loadRadioList($event, courseInfo)"></i>
+              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo)">
+                <i class="play"></i>
                 <span>立即收听</span>
               </div>
               <div class="subscibeno-play">
-                <p class="have-course" v-if="subscibenoInfo.purchased_state == 1">
+                <p class="have-course" v-if="subscibenoInfo.purchased_state == 4">
                   <i class="subscibe"></i>
                   <span>已订阅</span>
                 </p>
@@ -121,7 +121,7 @@
               <div class="passed">
                 <div class="passed-user">
                   <span><i></i>认证用户</span>
-                  <p>
+                  <p v-show="false">
                     <span>英语外教</span>
                   </p>
                 </div>
@@ -148,7 +148,7 @@
               </div>
             </div>
             <div class="course-item-right">
-              <div class="course-title"><span>试听</span><span>{{card.title}}</span></div>
+              <div class="course-title"><span class="audition" v-if="courseInfo.money != 0">试听</span><span>{{card.title}}</span></div>
               <div class="course-desc" v-text="card.description"></div>
               <div class="course-bottom">
                 <p>
@@ -451,7 +451,9 @@ export default {
 
 <style scope="less" scoped>
 .vip-width {
+  margin: 10px 0 !important;
   width: 100%;
+  height: 60px !important;
 }
 .nav {
   height: 40px;
@@ -463,7 +465,7 @@ export default {
   text-decoration:none;
 }
 .nav a {
-  color: #999999;
+  color: #7E929F;
 }
 .nav a:hover {
   color: #2A9FE4;
@@ -515,9 +517,9 @@ export default {
   color:rgba(113,191,247,1);
 }
 .radio-left .course .introduce .introduce-content .tags span {
-  padding: 2px 7px;
+  padding: 0px 7px;
   border-radius:4px;
-  border:1px solid rgba(200,212,219,1);
+  border:1px solid #C8D4DB;
   margin-right: 10px;
 }
 .radio-left .course .introduce .introduce-content .title {
@@ -546,7 +548,7 @@ export default {
 .radio-left .course .course-right {
   width: 504px;
   height: 124px;
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   justify-content: space-around;
 }
@@ -564,13 +566,13 @@ export default {
 
 .radio-left .course .count {
   color: #999999;
-  font-size: 16px;
-  margin-top: 20px;
+  font-size: 14px;
+  margin-top: 38px;
   width: 100%;
 }
 
 .radio-left .course .count span:first-child {
-  margin-right: 20px;
+  margin-right: 25px;
 }
 /* 免费 */
  .member .money-nopay {
@@ -692,10 +694,10 @@ export default {
   border-radius:21px;
   padding: 8px 24px;
   margin-right: 17px;
+  cursor: pointer;
 }
 
 .course .subscription .bottom .gradient-layer-play i {
-  cursor: pointer;
   width: 14px;
   height: 14px;
   background-repeat: no-repeat;
@@ -814,7 +816,7 @@ export default {
   font-size:16px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
-  color:rgba(144,162,174,1);
+  color:#333;
 }
 .author-brief .author-info {
   display: flex;
@@ -827,8 +829,8 @@ export default {
   height: 100%;
 }
 .author-brief .author-info .author-info-left img {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   object-fit: cover;
   border-radius: 50%;
 }
@@ -837,7 +839,7 @@ export default {
   height: 60px;
 }
 .author-info .author-info-right .nickname {
-  font-size:20px;
+  font-size:16px;
   font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:rgba(51,51,51,1);
@@ -860,7 +862,7 @@ export default {
   color: #2A9FE4;
 }
 .author-info .author-info-right .passed {
-  margin-top: 10px;
+  margin-top: 4px;
   line-height: 15px;
   display: flex;
   align-items: center;
@@ -903,6 +905,11 @@ export default {
 .author-info .author-info-right .passed .passed-user {
   display: flex;
   align-items: center;
+}
+
+.author-info .author-info-right .passed .passed-user span {
+  font-size: 14px;
+  color: #999;
 }
 
 .author-info .author-info-right .passed .passed-user span i{
@@ -955,13 +962,13 @@ export default {
   width: 880px;
   height: auto;
   background-color: #ffffff;
-  margin-top: 25px;
+  /* margin-top: 25px; */
   border-radius: 3px;
   padding: 16px 40px 44px;
 }
 
 .radio-left .course-list .title {
-  font-size:18px;
+  font-size:16px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
   color:rgba(68,68,68,1);
@@ -980,13 +987,13 @@ export default {
 }
 .course-item .course-play-img {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   margin-right: 20px;
 }
 .course-item .course-play-img .gradient-layer-play {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   display: inline-block;
   position: absolute;
   top: 0;
@@ -1033,26 +1040,26 @@ export default {
 
 .radio-left .course-list .course-item img {
   /* float: left; */
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
   /* display: inline-block; */
-  border-radius: 7px;
+  border-radius: 8px;
 }
 
 .radio-left .course-list .course-item .course-title {
-  font-size:16px;
+  font-size:14px;
   font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:rgba(51,51,51,1);
-  width: 160px;
+  /* width: 160px; */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   display: flex;
   align-items: center;
 }
-.radio-left .course-list .course-item .course-title span:nth-child(1) {
+.radio-left .course-list .course-item .course-title .audition {
   font-size:11px;
   font-family:PingFang-SC-Medium;
   font-weight:500;
@@ -1064,7 +1071,7 @@ export default {
   margin-right: 8px;
 }
 .radio-left .course-list .course-item .course-desc {
-  width: 70%;
+  width: 368px;
   font-size:14px;
   font-family:PingFangSC-Regular;
   font-weight:400;
@@ -1079,7 +1086,7 @@ export default {
   position: relative;
   font-size:14px;
   font-family:Helvetica;
-  color:rgba(153,153,153,1);
+  color:#b8b8b8;
   display: flex;
   justify-content: space-between;
 }

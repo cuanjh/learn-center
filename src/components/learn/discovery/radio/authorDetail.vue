@@ -560,14 +560,14 @@ export default {
         flex-direction: column;
         i {
           display: inline-block;
-          width: 300px;
-          height: 160px;
+          width: 145px;
+          height: 81px;
           background: url('../../../../../static/images/noradios.png') no-repeat center;
           background-size: cover;
         }
         span {
           padding-top: 30px;
-          font-size: 24px;
+          font-size: 16px;
           color: #b8b3b2;
         }
       }

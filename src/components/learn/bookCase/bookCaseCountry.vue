@@ -15,8 +15,8 @@
               <p>
                 <span v-for="(el, index) in item.countryLangueInfos" :key="index">{{el.name}},</span>
               </p>
-              <p>
-                <span>Learn more</span>
+              <p @click="nationDetail(item.code, item.flag, item.name)">
+                <span>了解更多</span>
               </p>
             </div>
           </div>

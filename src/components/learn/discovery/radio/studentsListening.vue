@@ -68,7 +68,7 @@ export default {
         width: 100%;
         .lists-item {
           margin-top: 10px;
-          padding: 16px 20px;
+          padding: 13px 20px;
           background:rgba(255,255,255,1);
           border-radius:8px;
           border:1px solid rgba(230,235,238,1);
@@ -76,7 +76,7 @@ export default {
           justify-content: space-between;
           align-items: center;
           .nickname {
-            font-size:16px;
+            font-size:14px;
             font-family:PingFang-SC-Medium;
             font-weight:500;
             color:rgba(74,74,74,1);

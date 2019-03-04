@@ -210,13 +210,13 @@ export default {
       console.log(key)
       console.log(mp)
       let _this = this
-      // 课程检索
-      let lanlist = this.courseLangsList.filter((item) => {
-        return item.letter.toUpperCase() === key.toUpperCase() || item.pinyin.indexOf(key) > -1 || item.name.indexOf(key) > -1 || item.lan_code.toUpperCase() === key.toUpperCase()
-      })
-      if (lanlist.length > 0) {
-        _this.courseLangsMap(lanlist)
-      }
+      // // 课程检索
+      // let lanlist = this.courseLangsList.filter((item) => {
+      //   return item.letter.toUpperCase() === key.toUpperCase() || item.pinyin.indexOf(key) > -1 || item.name.indexOf(key) > -1 || item.lan_code.toUpperCase() === key.toUpperCase()
+      // })
+      // if (lanlist.length > 0) {
+      //   _this.courseLangsMap(lanlist)
+      // }
 
       // 濒危语言检索
       _this.getEndangeredMap({keyword: key}).then(res => {
@@ -424,7 +424,7 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
             '</span>' +
           '</p>' +
           '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 4px; text-decoration: underline;">' +
-            '<a href="./discovery/author-detail/' + that._data.user_id + '">' +
+            '<a href="./discovery/author-detail/' + that._data.user_id + '" target="_blank">' +
               text +
             '</a>' +
           '</p>' +

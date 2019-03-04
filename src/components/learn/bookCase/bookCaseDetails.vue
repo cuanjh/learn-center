@@ -64,7 +64,7 @@
                     <a v-if="subscribeCourses && subscribeCourses.indexOf(courseCode) > -1 && courseInfo.has_course" @click="startLearn()" href="javascript:void(0)" class="button">
                       <span>开始学习</span>
                     </a>
-                    <a v-else-if="(subscribeCourses && subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course) || !userId" @click="subscribeCourse()" href="javascript:void(0)" class="button">
+                    <a v-else-if="(subscribeCourses && subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course) || (courseCode.indexOf('-Basic') > -1 && !userId)" @click="subscribeCourse()" href="javascript:void(0)" class="button">
                       <span>订阅课程</span>
                     </a>
                     <a v-else href="javascript:void(0)" class="button locked">
@@ -421,7 +421,7 @@ export default {
     display: inline-block;
     font-size: 14px;
     a {
-      color: #999999;
+      color: #7E929F;
       &:hover{
         color: #2A9FE4;
       }
@@ -572,6 +572,10 @@ export default {
           }
           .button:hover {
             background: rgba(11, 108, 224, .6)
+          }
+          .locked {
+            background-color: #90A2AE;
+            box-shadow: 0 0 0 0;
           }
         }
       }
@@ -760,7 +764,7 @@ export default {
             font-family:PingFang-SC-Heavy;
             font-weight:800;
             margin-left: 7px;
-            color:rgba(216,216,216,1);
+            color:#B9CDE2;
           }
         }
       }

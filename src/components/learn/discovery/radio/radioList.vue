@@ -70,7 +70,7 @@
                   <div class="right-describe">
                     <router-link tag="p" class="name" :to="{path: '/app/discovery/radio-detail/' + radio.code}">{{radio.title}}</router-link>
                     <p class="num">
-                      <span><i></i>{{radio.buy_num}}次试听</span>
+                      <span><i></i>{{radio.buy_num}}次订阅</span>
                       <span v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></span>
                     </p>
                     <p class="author">
@@ -177,7 +177,6 @@ export default {
       _this.selState = _this.langCodesSel[0]
       _this.isSelStateCode = 0
       _this.page = 1
-      _this.onActive = 'hot'
       _this.flag = true
       _this.isActive = item.list_order
       _this.menu_type = item.menu_type
@@ -317,7 +316,6 @@ export default {
       this.selState = item
       this.isSelStateCode = index
       this.page = 1
-      this.onActive = 'hot'
       let params = {
         menu_type: this.menu_type,
         menu_id: this.menu_id,
@@ -386,7 +384,7 @@ a {
     z-index: 99;
     a {
       text-decoration:none;
-      color: #3C5B6F;
+      color: #7E929F;
       &:hover {
         color: #2A9FE4;
       }
@@ -423,10 +421,10 @@ a {
               justify-content: space-between;
               font-size:14px;
               font-family:PingFang-SC-Medium;
-              color:#0581D1;
-              line-height:20px;
-              padding: 11px 26px;
-              border-bottom: 1px solid rgba(230,235,238,1);
+              color:#3C5B6F;
+              line-height:19px;
+              padding: 8px 26px;
+              border-bottom: 1px solid #F6F8F9;
               i {
                 display: inline-block;
                 width: 8px;
@@ -470,7 +468,7 @@ a {
         width: 100%;
         height: 100%;
         .header-describe {
-          padding: 19px 43px 23px;
+          padding: 20px 43px 24px;
           .top {
             width: 100%;
             .title {
@@ -486,11 +484,11 @@ a {
               font-weight:500;
               color:rgba(60,91,111,1);
               line-height:18px;
-              margin: 20px 0 46px;
+              margin: 10px 0 28px;
               display: flex;
               a {
                 margin-right: 10px;
-                padding: 8px 20px;
+                padding: 3px 20px;
                 border:1px solid rgba(217,223,226,1);
                 border-radius: 5px;
                 &:hover {
@@ -565,8 +563,8 @@ a {
                   border-radius:5px;
                   margin-top: 5px;
                   img {
-                    width: 100%;
-                    height: 100%;
+                    width:170px;
+                    height:90px;
                     border-radius:5px;
                     object-fit: cover;
                   }
@@ -597,7 +595,7 @@ a {
                   }
                 }
                 .right-describe {
-                  padding: 10px 0 10px 10px;
+                  padding: 10px 0 0px 10px;
                   width: 280px;
                   .name {
                     cursor: pointer;
@@ -686,9 +684,9 @@ a {
             }
             span {
               padding-top: 18px;
-              font-size:16px;
+              font-size:15px;
               font-family:PingFang-SC-Medium;
-              font-weight:500;
+              font-weight:400;
               color:rgba(200,212,219,1);
               line-height:22px;
             }

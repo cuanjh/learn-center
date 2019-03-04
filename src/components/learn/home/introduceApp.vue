@@ -6,8 +6,10 @@
         <div class="bg-img"></div>
         <div class="bg-img2"></div>
         <div class="text">
-          <p>Where did you go to learn where?</p>
-          <p>Talkmate-Global says mobile applications support offline downloading of learning language courses, and related radio courses are played in one click, allowing you to learn anytime, anywhere, and 5 times more efficient than traditional foreign language learning!</p>
+          <!-- <p>Where did you go to learn where?</p>
+          <p>Talkmate-Global says mobile applications support offline downloading of learning language courses, and related radio courses are played in one click, allowing you to learn anytime, anywhere, and 5 times more efficient than traditional foreign language learning!</p> -->
+          <p>走到哪里，学到哪里</p>
+          <p>Talkmate-全球说移动应用程序支持离线下载学习语言课程；你还可以发现那些非常丰富的电台课程资源，只需点击一下即可播放相关的电台课程，让你随时随地学习走到哪里学到哪里，比传统外语学习效率提高5倍！</p>
         </div>
       </div>
       <!-- 精品推荐 -->
@@ -94,8 +96,14 @@
         <div class="learn-cont">
           <p>屡获殊荣的多语言学习平台</p>
           <div class="learn-icon">
-            <i class="red-icon"></i>
-            <i class="blue-icon"></i>
+            <div class="item">
+              <i class="red-icon"></i>
+              <p>中华人民共和国教育部最佳合作伙伴</p>
+            </div>
+            <div class="item">
+              <i class="blue-icon"></i>
+              <p>联合国教科文组织世界语言地图全球伙伴</p>
+            </div>
           </div>
         </div>
       </div>
@@ -121,7 +129,7 @@
                   </div>
                 </div>
                 <div class="text">
-                  <p>最nice的全球说的电台配套课程了，讲解透彻易懂，还更多了解了很多语种所在国家的风情文化！还有很多国外的同学，一起聊天一起分享各自的履历！</p>
+                  <p>最nice的就是全球说的电台配套课程了，讲解透彻易懂，还了解了很多语种所在国家的风情文化！还有很多国外的同学，大家一起聊天，一起分享各自的履历！</p>
                 </div>
               </li>
               <li>
@@ -137,7 +145,7 @@
                   </div>
                 </div>
                 <div class="text">
-                  <p>在固定的时间在web端学习，沉浸感很强！移动APP的应用场景更加丰富，使用入门相对简单，两端结合学习，灵活也高效。</p>
+                  <p>固定的时间里在web端学习，沉浸感很强！移动APP的应用场景更加丰富，使用入门相对简单，两端结合学习，灵活又高效。</p>
                 </div>
               </li>
             </ul>
@@ -235,9 +243,9 @@ export default {
           margin-right: 58px;
         }
         .icon {
-          width: 142px;
-          height: 99px;
-          background: url('../../../../static/images/introduceApp/icon.png') no-repeat center;
+          width: 110px;
+          height: 80px;
+          background: url('../../../../static/images/introduceApp/icon.svg') no-repeat center;
           background-size: 100%;
           margin-right:73px;
         }
@@ -302,7 +310,7 @@ export default {
             display: inline-block;
             width: 160px;
             height: 48px;
-            background: url('../../../../static/images/introduceApp/iosapp.png') no-repeat center;
+            background: url('../../../../static/images/introduceApp/iosapp.svg') no-repeat center;
             background-size: cover;
             cursor: pointer;
             border-radius: 5px;
@@ -330,7 +338,7 @@ export default {
             display: inline-block;
             width: 160px;
             height: 48px;
-            background: url('../../../../static/images/introduceApp/google.png') no-repeat center;
+            background: url('../../../../static/images/introduceApp/google.svg') no-repeat center;
             background-size: cover;
             margin-right: 10px;
             cursor: pointer;
@@ -341,7 +349,7 @@ export default {
             display: inline-block;
             width: 160px;
             height: 48px;
-            background: url('../../../../static/images/introduceApp/androoid.png') no-repeat center;
+            background: url('../../../../static/images/introduceApp/androoid.svg') no-repeat center;
             background-size: cover;
             cursor: pointer;
             border-radius: 5px;
@@ -467,20 +475,33 @@ export default {
           width: 100%;
           padding-top: 50px;
           text-align: center;
-          .red-icon {
+          .item {
+            text-align: center;
             display: inline-block;
-            width: 235px;
-            height: 146px;
-            margin-right: 99px;
-            background: url('../../../../static/images/redlearn.png') no-repeat center;
-            background-size: cover;
-          }
-          .blue-icon {
-            display: inline-block;
-            width: 151px;
-            height: 135px;
-            background: url('../../../../static/images/bluelearn.png') no-repeat center;
-            background-size: cover;
+            margin-left: 25px;
+            margin-right: 50px;
+            p {
+              color: #3C5B6F;
+              font-size: 16px;
+              line-height: 24px;
+              width: 180px;
+              margin-top: 16px;
+              font-weight: 500;
+            }
+            .red-icon {
+              display: inline-block;
+              width: 116px;
+              height: 96px;
+              background: url('../../../../static/images/introduceApp/redlearn.png') no-repeat center;
+              background-size: cover;
+            }
+            .blue-icon {
+              display: inline-block;
+              width: 116px;
+              height: 96px;
+              background: url('../../../../static/images/introduceApp/bluelearn.svg') no-repeat center;
+              background-size: cover;
+            }
           }
         }
       }

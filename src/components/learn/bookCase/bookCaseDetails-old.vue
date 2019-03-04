@@ -271,13 +271,13 @@ export default {
     height: 6px;
     width: 6px;
     border-radius: 50%;
-    background-color: #999999;
+    background-color: #7E929F;
     display: inline-block;
     margin-top: 9px;
   }
 
-  .nav span {
-    color: #999999;
+  .nav a {
+    color: #7E929F;
   }
 
   .nav-current {

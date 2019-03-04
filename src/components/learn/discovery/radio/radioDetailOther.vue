@@ -6,11 +6,14 @@
           :to="{path: '/app/discovery/radio-detail/' + radio.code}"
           >
       <img v-lazy="radio.cover" :key="radio.cover" alt="">
+      <div class="mask"></div>
       <div class="subscribe">
         <i></i>
         <span v-text="radio.buy_num"></span>
       </div>
-      <a class="title" v-text="radio.module_name"></a>
+      <div class="title">
+        <a v-text="radio.module_name"></a>
+      </div>
       <div class="author" v-text="radio.author_info.nickname"></div>
       <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
     </router-link>
@@ -42,12 +45,13 @@ export default {
 }
 
 .radio-content .other-radio-item {
+  position: relative;
   cursor: pointer;
   width: 100%;
-  height: 241px;
+  /* height: 241px; */
   margin-top: 10px;
   background: #ffffff;
-  padding: 23px 20px;
+  padding: 22px 20px;
   border-radius: 3px;
   /* border-bottom: 1px dotted #8E8E8E; */
 }
@@ -67,12 +71,12 @@ export default {
 .other-radio-item .subscribe {
   position: relative;
   display: -webkit-box;
-  margin-top: -25px;
+  margin-top: -20px;
 }
 
 .other-radio-item .subscribe i {
   display: inline-block;
-  margin: 0 8px;
+  margin: 0 8px 0 10px;
   width: 14px;
   height: 14px;
   background-image: url('../../../../../static/images/discovery/home-radio.png');
@@ -84,24 +88,29 @@ export default {
   color: #ffffff;
   font-size: 12px;
   display: inline-block;
-  margin-top: -5px;
+  margin-top: -1px;
   margin-left: -3px;
 }
 
 .other-radio-item .title {
+  margin-top: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.other-radio-item .title a{
   font-size:14px;
   font-family:PingFang-SC-Medium;
   font-weight:500;
   color:rgba(68,68,68,1);
   margin-top: 15px;
   line-height: 20px;
-  word-break: break-all;
-  display: -webkit-box;
+  /* word-break: break-all; */
+  /* display: -webkit-box; */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
+  /* -webkit-line-clamp: 2; */
 }
-.other-radio-item .title:hover {
+.other-radio-item .title a:hover {
   color: #2A9FE4
 }
 
@@ -112,7 +121,7 @@ export default {
   color:rgba(153,153,153,1);
   display: inline-block;
   position: relative;
-  margin-top: 10px;
+  margin-top: 3px;
   width: 90px;
   white-space: nowrap;
   overflow: hidden;
@@ -127,6 +136,17 @@ export default {
   float: right;
   /* display: inline-block; */
   position: relative;
-  margin-top: 10px;
+  margin-top: 3px;
+}
+
+.mask {
+  cursor: pointer;
+  width: 240px;
+  height: 128px;
+  position: absolute;
+  top: 24px;
+  background: url('../../../../../static/images/discovery/mask.svg') no-repeat center;
+  background-size: cover;
+  border-radius: 3px;
 }
 </style>

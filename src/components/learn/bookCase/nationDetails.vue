@@ -237,7 +237,7 @@ a {
     display: inline-block;
     font-size: 14px;
     a {
-      color: #999999;
+      color: #7E929F;
       &:hover{
         color: #2A9FE4;
       }

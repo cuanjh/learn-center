@@ -18,7 +18,7 @@
       <transition name="search">
         <div class="search-inner" v-show="isShowSearch">
           <i @click="search()"></i>
-          <input type="text" @keyup.enter="search()" v-model="searchKey" placeholder="搜索官方课程或濒危语种">
+          <input type="text" @keyup.enter="search()" v-model="searchKey" placeholder="搜索你要输入的语种">
           <i @click="cancelSearch()"></i>
         </div>
       </transition>

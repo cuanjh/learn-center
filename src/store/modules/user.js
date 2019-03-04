@@ -123,6 +123,8 @@ const actions = {
       /**
        * 先临时这么处理, 这里不应该使用vuex进行数据的传递, 这是根本问题
        */
+      console.log(process.env)
+      result.redirect_url = result.redirect_url + '&redirect_url=' + process.env.REDIRECT_URL
       result.productId = productId
       commit('createAliWebOrderMutation', result)
       commit('getpayhide')
@@ -131,6 +133,7 @@ const actions = {
   // 创建电台支付宝订单
   createAliRadioOrder ({commit}, params) {
     httpLogin(config.createAliWebOrder, params).then(result => {
+      result.redirect_url = result.redirect_url + '&redirect_url=' + process.env.REDIRECT_URL
       result.productId = params.product_id
       commit('createAliWebOrderMutation', result)
     })

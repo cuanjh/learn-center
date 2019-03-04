@@ -2,7 +2,7 @@
   <div class="vip-content">
     <div  class="prompt">
       <i class="vip-img"></i>
-        <span>现在成为会员，12月圣诞好礼，新用户8折！！！</span>
+        <span>成为VIP会员，开启畅学新体验！</span>
     </div>
     <!-- <router-link class="vip-btn" :to="{path: 'vip-index'}"></router-link> -->
     <div @click="goVip()" class="vip-btn">
@@ -82,10 +82,13 @@ export default {
     border-radius: 20px;
     font-size:14px;
     font-family:PingFang-SC-Bold;
-    font-weight:500;
+    font-weight:600;
     color:#A92222FF;
     text-align: center;
     line-height: 36px;
+    &:hover {
+      background: rgba(255, 255, 255, .8);
+    }
   }
 }
 </style>

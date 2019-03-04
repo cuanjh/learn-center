@@ -214,7 +214,7 @@ export default {
     },
     search () {
       this.courseLangs = this.defaultCourseLangs.filter((item) => {
-        return item.letter.toUpperCase() === this.searchVal.toUpperCase() || item.pinyin.indexOf(this.searchVal) > -1 || item.name.indexOf(this.searchVal) > -1 || item.code.toUpperCase() === this.searchVal.toUpperCase()
+        return item.letter.toUpperCase() === this.searchVal.toUpperCase() || item.pinyin.indexOf(this.searchVal) > -1 || item.name.indexOf(this.searchVal) > -1 || item.lan_code.toUpperCase() === this.searchVal.toUpperCase()
       })
     }
   }
@@ -229,7 +229,7 @@ export default {
     display: inline-block;
     font-size: 14px;
     a {
-      color: #999999;
+      color: #7E929F;
       &:hover {
         color: #2A9FE4;
       }

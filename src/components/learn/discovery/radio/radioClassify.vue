@@ -389,11 +389,9 @@ export default {
     display: inline-block;
     font-size: 14px;
     a {
-      span {
-        color: #999999;
-        &:hover{
-          color: #2A9FE4;
-        }
+      color: #7E929F;
+      &:hover{
+        color: #2A9FE4;
       }
     }
     .nav-current {
@@ -542,7 +540,7 @@ export default {
                               background-image: url('../../../../../static/images/listening.png');
                               background-repeat: no-repeat;
                               background-size: cover;
-                              margin: 6px 10px 0 0;
+                              margin: 2px 10px 0 0;
                             }
                           }
                         }
