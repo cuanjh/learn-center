@@ -372,7 +372,7 @@ export default {
     })
   },
   mounted () {
-    let isAnonymous = Cookie.getCookie('is_anonymous')
+    let isAnonymous = Cookie.getCookie('is_anonymous') === 'true'
     console.log('isAnonymous--->', isAnonymous)
     if (isAnonymous) {
       this.initAnonymousData()

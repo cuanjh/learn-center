@@ -1,5 +1,14 @@
 <template>
   <div class="book-case">
+    <div class="nav">
+      <router-link :to="{path: '/app/index'}">
+        我的学习账户
+      </router-link>
+      >
+      <div class="nav-current">
+        官方课程
+      </div>
+    </div>
     <vip-prompt class="vip"/>
     <div class="hot-course-box">
       <p class="title">热门课程
@@ -69,7 +78,7 @@
 import { mapState, mapActions, mapMutations } from 'vuex'
 // import simplePinyin from 'simple-pinyin'
 import VipPrompt from '../../common/vipPrompt.vue'
-import cookie from '../../../tool/cookie'
+// import cookie from '../../../tool/cookie'
 // import Bus from '../../../bus'
 export default {
   data () {
@@ -182,26 +191,26 @@ export default {
     async routerGo (item) {
       console.log('item', item)
       let langCode = item['lan_code']
-      let userId = cookie.getCookie('user_id')
-      if (userId) {
-        this.$router.push({path: '/app/book-details/' + langCode})
-      } else {
-        let params = {
-          preferLangs: langCode,
-          skillLangs: langCode
-        }
+      // let userId = cookie.getCookie('user_id')
+      // if (userId) {
+      this.$router.push({path: '/app/book-details/' + langCode})
+      // } else {
+      //   let params = {
+      //     preferLangs: langCode,
+      //     skillLangs: langCode
+      //   }
 
-        let res = await this.postAnonyLogin(params)
-        cookie.setCookie('user_id', res.result.user_id)
-        cookie.setCookie('verify', res.result.verify)
-        cookie.setCookie('is_anonymous', res.result.is_anonymous)
-        this.updateIsAnonymous(res.result.is_anonymous)
-        await this.getUserInfo()
-        // this.updateCurCourseCode(langCode)
-        // await this.getLearnInfo(langCode)
-        await this.getLearnCourses()
-        this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
-      }
+      //   let res = await this.postAnonyLogin(params)
+      //   cookie.setCookie('user_id', res.result.user_id)
+      //   cookie.setCookie('verify', res.result.verify)
+      //   cookie.setCookie('is_anonymous', res.result.is_anonymous)
+      //   this.updateIsAnonymous(res.result.is_anonymous)
+      //   await this.getUserInfo()
+      //   // this.updateCurCourseCode(langCode)
+      //   // await this.getLearnInfo(langCode)
+      //   await this.getLearnCourses()
+      //   this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
+      // }
     },
     search () {
       this.courseLangs = this.defaultCourseLangs.filter((item) => {
@@ -213,12 +222,30 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  .nav {
+    height: 40px;
+    line-height: 40px;
+    font-weight: bold;
+    display: inline-block;
+    font-size: 14px;
+    a {
+      color: #999999;
+      &:hover {
+        color: #2A9FE4;
+      }
+    }
+    .nav-current {
+      display: inline-block;
+      color: #2A9FE4;
+    }
+  }
   .book-case {
     width: 1200px;
     margin: 0px auto;
     padding-bottom: 144px;
     .vip {
-      margin-top: 40px;
+      margin: 40px auto 0;
+      width: 900px;
     }
     .hot-course-box {
       margin-top: 40px;
@@ -428,7 +455,7 @@ export default {
               display: block;
               width: 100%;
               height: 16px;
-              font-size: 16px;
+              font-size: 14px;
               font-weight: 500;
               position: absolute;
               top: 10px;
@@ -494,6 +521,7 @@ export default {
         line-height: 26px;
       }
       .all {
+        font-size: 14px;
         width:52px;
         height:26px;
         background:#0581D1;
@@ -560,7 +588,7 @@ export default {
             display: block;
             width: 100%;
             height: 16px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
             position: absolute;
             top: 10px;

@@ -176,7 +176,6 @@ export default {
   transition: opacity .5s;
 }
 .fade-enter, .fade-leave-to {
-  transform: translateY(-10px);
   opacity: 0;
 }
 @media screen and (max-width: 1024px) {

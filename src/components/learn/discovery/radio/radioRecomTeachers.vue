@@ -194,7 +194,7 @@ export default {
     line-height: 40px;
     font-weight: bold;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     a {
       color: #999999;
       &:hover {

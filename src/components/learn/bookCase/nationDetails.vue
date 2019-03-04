@@ -47,10 +47,10 @@
           <div class="nation-left-tab">
             <div class="left">
               <p v-bind:class="{'active': 'info' == tabFlag}" @click="tabChange('info')">
-                <span>National data</span>
+                <span>国家详情</span>
               </p>
               <p v-bind:class="{'active': 'language' == tabFlag}" @click="tabChange('language')">
-                <span>Own language</span>
+                <span>拥有语言</span>
               </p>
               <p v-show="false" v-bind:class="{'active': 'news' == tabFlag}" @click="tabChange('news')">
                 <span>全球头条</span>
@@ -86,7 +86,7 @@
                 <div class="country-out-language" v-show="'language' == tabFlag">
                   <ul class="country-language">
                     <li class="country-img" v-for="item in countryLanguages" :key="item.lang_code">
-                      <div class="have-img">
+                      <router-link :to="{path: '/app/book-details/' + item.courseCode}" class="have-img">
                         <div class="country-img">
                           <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="语言图片">
                         </div>
@@ -95,18 +95,18 @@
                           <p>{{item.location}}</p>
                         </div>
                         <!-- <div class="country-icon"></div> -->
-                      </div>
+                      </router-link>
                     </li>
                   </ul>
                   <ul class="country-language">
                     <li class="country-no-img" v-for="item in countryLanguagesNo.slice(0, 10)" :key="item.lang_code">
-                      <div class="no-img">
+                      <router-link :to="{path: '/app/book-details/' + item.lang_code}" class="no-img">
                         <div class="country-title">
                           <p>{{item.name}}</p>
                           <p>{{item.location}}</p>
                         </div>
                         <!-- <div class="country-icon"></div> -->
-                      </div>
+                      </router-link>
                     </li>
                   </ul>
                 </div>
@@ -235,7 +235,7 @@ a {
     line-height: 40px;
     font-weight: bold;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     a {
       color: #999999;
       &:hover{
