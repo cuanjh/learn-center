@@ -37,6 +37,12 @@
             <div class="top">
               <p class="title">电台节目</p>
               <div class="tab" v-if="userId">
+                <!-- <a  v-for="(item, index) in langCodesSel" :key="item.lan_code + index"
+                    :class="{'active': isSelStateCode == index }"
+                    @click="changeState(item, index)">
+                  {{item.text}}
+                </a> -->
+                <a @click="changeAll()" :class="{'active': isAll == 'all'}">全部</a>
                 <a  v-for="(item, index) in langCodesSel" :key="item.lan_code + index"
                     :class="{'active': isSelStateCode == index }"
                     @click="changeState(item, index)">
@@ -47,7 +53,13 @@
             <div class="header-content">
               <span class="column">共{{count}}个电台节目</span>
               <div class="new">
-                <a
+                <!-- <a
+                    v-for="(item, index) in isHot"
+                    :key="index"
+                    v-text="item.text"
+                    :class="{'active': onActive == item.type}"
+                    @click="changeIsHot(item)"></a> -->
+                    <a
                     v-for="(item, index) in isHot"
                     :key="index"
                     v-text="item.text"
@@ -113,8 +125,9 @@ export default {
     return {
       userId: '',
       isHot: [{type: 'hot', text: '热播', id: 0}, {type: 'new', text: '最新', id: 1}],
-      onActive: 'hot',
-      isSelStateCode: 0,
+      onActive: '',
+      isSelStateCode: -1,
+      isAll: '',
       selState: {},
       flag: true,
       buyCoins: false,
@@ -175,30 +188,19 @@ export default {
       console.log('langCodesSel====', this.langCodesSel)
       let _this = this
       _this.selState = _this.langCodesSel[0]
-      _this.isSelStateCode = 0
+      _this.isSelStateCode = -1
       _this.page = 1
-      _this.onActive = 'hot'
+      _this.onActive = ''
       _this.flag = true
       _this.isActive = item.list_order
       _this.menu_type = item.menu_type
       _this.menu_id = item.menu_id
-      let params = {}
-      if (!_this.userInfo) {
-        params = {
-          menu_type: _this.menu_type,
-          menu_id: _this.menu_id,
-          page: _this.page,
-          preferred_lan_code: '',
-          sort: _this.onActive
-        }
-      } else {
-        params = {
-          menu_type: _this.menu_type,
-          menu_id: _this.menu_id,
-          page: _this.page,
-          preferred_lan_code: _this.selState.lan_code,
-          sort: _this.onActive
-        }
+      let params = {
+        menu_type: _this.menu_type,
+        menu_id: _this.menu_id,
+        page: _this.page,
+        preferred_lan_code: '',
+        sort: ''
       }
       console.log('params', params)
       _this.getRadioList(params).then((res) => {
@@ -209,6 +211,45 @@ export default {
         console.log('==>>>>>>>', _this.showPage)
       })
     },
+    // tabChange (item) {
+    //   console.log('item', item)
+    //   console.log('langCodesSel====', this.langCodesSel)
+    //   let _this = this
+    //   _this.selState = _this.langCodesSel[0]
+    //   // _this.isSelStateCode = 0
+    //   _this.page = 1
+    //   _this.onActive = 'hot'
+    //   _this.flag = true
+    //   _this.isActive = item.list_order
+    //   _this.menu_type = item.menu_type
+    //   _this.menu_id = item.menu_id
+    //   let params = {}
+    //   if (!_this.userInfo) {
+    //     params = {
+    //       menu_type: _this.menu_type,
+    //       menu_id: _this.menu_id,
+    //       page: _this.page,
+    //       preferred_lan_code: '',
+    //       sort: _this.onActive
+    //     }
+    //   } else {
+    //     params = {
+    //       menu_type: _this.menu_type,
+    //       menu_id: _this.menu_id,
+    //       page: _this.page,
+    //       preferred_lan_code: _this.selState.lan_code,
+    //       sort: _this.onActive
+    //     }
+    //   }
+    //   console.log('params', params)
+    //   _this.getRadioList(params).then((res) => {
+    //     console.log('切换导航电台列表返回', res)
+    //     _this.count = res.data.count
+    //     _this.lists = res.data.radios
+    //     _this.showPage = res.data.page
+    //     console.log('==>>>>>>>', _this.showPage)
+    //   })
+    // },
     // 加载更多
     loadMore () {
       if (this.showPage === -1) {
@@ -311,13 +352,33 @@ export default {
       }
       this.isPlay = !this.isPlay
     },
+    // 全部
+    changeAll () {
+      this.isSelStateCode = -1
+      this.page = 1
+      this.onActive = ''
+      this.isAll = 'all'
+      let params = {
+        menu_type: this.menu_type,
+        menu_id: this.menu_id,
+        page: this.page,
+        preferred_lan_code: '',
+        sort: ''
+      }
+      console.log('全部', params)
+      this.getRadioList(params).then((res) => {
+        this.count = res.data.count
+        this.lists = res.data.radios
+      })
+    },
     // 切换课程
     changeState (item, index) {
       console.log(this.menu_type, this.menu_id, item.lan_code)
       this.selState = item
       this.isSelStateCode = index
       this.page = 1
-      this.onActive = 'hot'
+      this.onActive = ''
+      this.isAll = ''
       let params = {
         menu_type: this.menu_type,
         menu_id: this.menu_id,
