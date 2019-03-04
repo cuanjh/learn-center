@@ -457,7 +457,7 @@ export default {
   height: 40px;
   line-height: 40px;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
 }
 .nav a {
   text-decoration:none;

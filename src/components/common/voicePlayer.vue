@@ -325,8 +325,9 @@ export default {
       let radio = this.radioDetail.course_info
       console.log('===>', this.curIndex)
       if (!this.userInfo && this.curIndex > 2) {
+        this.pause()
         Bus.$emit('showGoLoginBox')
-        return
+        return false
       }
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员

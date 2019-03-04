@@ -159,7 +159,7 @@ export default {
     margin: 20px 0;
     font-weight: bold;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .nav-circle {

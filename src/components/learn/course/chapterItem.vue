@@ -457,7 +457,7 @@ export default {
       updateHistoryCourseRecord: 'course/updateHistoryCourseRecord'
     }),
     jumpToCourse (chapterCode) {
-      let isAnonymous = cookie.getCookie('is_anonymous')
+      let isAnonymous = cookie.getCookie('is_anonymous') === 'true'
       if (isAnonymous) {
         bus.$emit('showBindWin')
         return false

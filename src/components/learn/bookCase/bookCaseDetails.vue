@@ -61,10 +61,10 @@
                     <div class="buy-button" v-show="false">
                       <span>购买</span>
                     </div>
-                    <a v-if="subscribeCourses.indexOf(courseCode) > -1 && courseInfo.has_course" @click="startLearn()" href="javascript:void(0)" class="button">
+                    <a v-if="subscribeCourses && subscribeCourses.indexOf(courseCode) > -1 && courseInfo.has_course" @click="startLearn()" href="javascript:void(0)" class="button">
                       <span>开始学习</span>
                     </a>
-                    <a v-else-if="subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course" @click="subscribeCourse()" href="javascript:void(0)" class="button">
+                    <a v-else-if="(subscribeCourses && subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course) || !userId" @click="subscribeCourse()" href="javascript:void(0)" class="button">
                       <span>订阅课程</span>
                     </a>
                     <a v-else href="javascript:void(0)" class="button locked">
@@ -179,8 +179,6 @@
             </div>
           </div>
         </div>
-        <!-- 登录 -->
-        <login-box v-show="goLogin"></login-box>
         <!-- vip提示 -->
         <vip-prompt></vip-prompt>
       </div>
@@ -212,8 +210,8 @@ import Cookie from '../../../tool/cookie'
 export default {
   data () {
     return {
+      userId: '',
       showRadioPlay: false,
-      goLogin: true, // 登录的提示
       showMorePage: 0,
       showMoreCountry: true,
       tabFlag: 'info', // true 语言信息 false 资源 电台
@@ -271,15 +269,9 @@ export default {
   created () {
   },
   mounted () {
+    this.userId = Cookie.getCookie('user_id')
     console.log('courseCode', this.courseCode)
     this.initDataDetails()
-    let userId = Cookie.getCookie('user_id')
-    console.log('userId', userId)
-    if (!userId) {
-      this.goLogin = true
-    } else {
-      this.goLogin = false
-    }
     document.addEventListener('click', (e) => {
       if (e.target.className === 'video-box' && e.target.className !== 'video-dialog') {
         this.showRadioPlay = false
@@ -361,6 +353,10 @@ export default {
       }, 1000)
     },
     subscribeCourse () {
+      if (!this.userId) {
+        Bus.$emit('showGoLoginBox')
+        return false
+      }
       let arr = this.courseCode.split('-')
       let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
       this.postPurchaseCourse({ code: courseCode }).then((res) => {
@@ -423,7 +419,7 @@ export default {
     line-height: 40px;
     font-weight: bold;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     a {
       color: #999999;
       &:hover{
