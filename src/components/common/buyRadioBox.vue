@@ -27,12 +27,9 @@
         <!-- 支付信息 -->
         <div class="pay">
           <div class="weixin">
-            <span class="erweima-box">
-              <img :src="weixinUrl" alt="微信支付二维码">
-            </span>
-            <i @mouseenter="mouseEnter()"
-               @mouseleave="mouseLeave()"></i>
-            <span>微信扫码付款</span>
+            <img id="qrCode" :src="weixinUrl" alt="微信支付二维码">
+            <!-- <i></i> -->
+            <span>微信付款</span>
           </div>
           <div class="zhifubao">
             <i @click="goPayRadio()"></i>
@@ -169,19 +166,14 @@ export default {
     },
     // 微信移入
     mouseEnter () {
-      // $('.erweima-box').addClass('active')
-      // $('.weixin i').css('background-image', 'url(' + this.weixinUrl + ')')
-      $('.weixin .erweima-box').animate({
-        height: '190px',
-        top: '-190px'
+      $('#qrCode').animate({
+        top: '0px'
       })
     },
     // 移出
     mouseLeave () {
-      // $('.weixin i').css('background-image', 'url(../../../static/images/pay-icon/weixin.svg)')
-      $('.weixin .erweima-box').animate({
-        height: '0px',
-        top: '0px'
+      $('#qrCode').animate({
+        top: '-98px'
       })
     },
     // 支付宝支付接口
@@ -328,20 +320,11 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        i {
-          cursor: pointer;
-          display: inline-block;
-          width: 94px;
-          height: 94px;
-          background-repeat: no-repeat;
-          background-position: center;
-          background-size: cover;
-        }
         span {
           font-size:12px;
           font-family:PingFang-SC-Medium;
           font-weight:500;
-          color:rgba(60,91,111,1);
+          color:#7E929F;
           line-height:17px;
           padding-top: 5px;
         }
@@ -351,21 +334,22 @@ export default {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          margin-right: 30px;
-          i {
-            background-image: url('../../../static/images/pay-icon/weixin.svg');
+          margin-right: 50px;
+          img {
+            width: 90px;
+            height: 90px;
+            background-repeat: no-repeat;
+            background-size: cover;
           }
-          .erweima-box {
-            display: inline-block;
-            height: 0px;
-            overflow: hidden;
-            border-radius: 3px;
+          i {
             position: absolute;
-            top: 0px;
-            img {
-              width: 190px;
-              height: 190px;
-            }
+            width: 22px;
+            height: 22px;
+            display: inline-block;
+            background-image: url('../../../static/images/pay-icon/icon-wx.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin-top: -10px;
           }
         }
         .zhifubao {
@@ -374,7 +358,17 @@ export default {
           justify-content: center;
           align-items: center;
           i {
-            background-image: url('../../../static/images/pay-icon/zhifubao.svg');
+            cursor: pointer;
+            display: inline-block;
+            width: 84px;
+            height: 84px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-image: url('../../../static/images/pay-icon/icon-alipay.svg');
+          }
+          span {
+            margin-top: 4px;
           }
         }
       }

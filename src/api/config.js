@@ -69,6 +69,7 @@ export default {
   courseListApi: '/studyv1/course/list',
   shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
   chinaLangMapApi: '/studyv1/shelf/china_lang_map', // 中国方言课程地图接口
+  countryLanguagesApi: '/studyv1/shelf/v2/country_languages', // 获取国家所拥有的语言
 
   // 动态
   qiniuFilesToken: '/qiniu_token/uploadfiles', // 获取上传的token

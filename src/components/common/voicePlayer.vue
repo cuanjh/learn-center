@@ -98,8 +98,8 @@
           </a>
         </div>
         <div class="play-body">
-          <div class="play-body-title" v-show="false">
-            <span v-text="curRadio.title"></span>
+          <div class="play-body-title">
+            <span v-text="curRadio.title ? curRadio.title : '全球说电台'"></span>
           </div>
           <div class="play-body-progress">
             <div id="voice-player-progress" class="progress">
@@ -155,10 +155,19 @@
       <div class="voice-overflow">
         <div class="voice-player-list-content">
           <ul>
-            <li class="clearfix" v-for="(card, index) in radioList" :key="index" @click="goPlay(index)">
-              <div class="col1" v-text="index + 1"></div>
+            <li class="clearfix"
+                :class="{'current': index === curIndex}"
+                v-for="(card, index) in radioList"
+                :key="index" @click="goPlay(index)">
+              <div class="triangle"></div>
+              <div class="col-content">
+                <div class="col1" v-text="index + 1"></div>
+                <div class="col2" v-text="card.title"></div>
+                <div class="col3" v-text="toParseTime(card.sound_time)"></div>
+              </div>
+              <!-- <div class="col1" v-text="index + 1"></div>
               <div class="col2" :class="{'current': index === curIndex}" v-text="card.title"></div>
-              <div class="col3" v-text="toParseTime(card.sound_time)"></div>
+              <div class="col3" v-text="toParseTime(card.sound_time)"></div> -->
             </li>
           </ul>
         </div>
@@ -212,7 +221,7 @@ export default {
       userInfo: state => state.userInfo // 用户信息
     }),
     isVip () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return 0
       }
       return this.userInfo.member_info.member_type
@@ -316,7 +325,6 @@ export default {
       let radio = this.radioDetail.course_info
       console.log('===>', this.curIndex)
       if (!this.userInfo && this.curIndex > 2) {
-        this.pause()
         Bus.$emit('showGoLoginBox')
         return false
       }
@@ -405,6 +413,11 @@ export default {
     goPlay (index) {
       let radio = this.radioDetail.course_info
       console.log('播放器中的radio', radio)
+      if (!this.userInfo && index > 2) {
+        Bus.$emit('showGoLoginBox')
+        this.pause()
+        return false
+      }
       if (radio.money !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
           if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
@@ -570,8 +583,8 @@ export default {
             position: absolute;
           }
           &:hover {
-            stroke: #f86442;
-            fill: #f86442;
+            stroke: rgba(255, 255, 255, .6);
+            fill: rgba(255, 255, 255, .6);
           }
         }
       }
@@ -607,8 +620,8 @@ export default {
       .btns {
         display: inline-block;
         .pre {
-          width: 14px;
-          height: 16px;
+          width: 11px;
+          height: 12px;
           display: inline-block;
           vertical-align: middle;
           margin-left: 27px;
@@ -620,7 +633,7 @@ export default {
             position: absolute;
           }
           &:hover{
-            fill: #f86442;
+            fill: rgba(255, 255, 255, .6);
           }
         }
         .play {
@@ -639,13 +652,13 @@ export default {
             position: absolute;
           }
           &:hover {
-            stroke: #f86442;
-            fill: #f86442;
+            stroke: rgba(255, 255, 255, .6);
+            fill: rgba(255, 255, 255, .6);
           }
         }
         .next {
-          width: 14px;
-          height: 16px;
+          width: 11px;
+          height: 12px;
           display: inline-block;
           vertical-align: middle;
           fill: #ffffff;
@@ -656,7 +669,7 @@ export default {
             position: absolute;
           }
           &:hover {
-            fill: #f86442;
+            fill: rgba(255, 255, 255, .6);
           }
         }
       }
@@ -667,8 +680,9 @@ export default {
         display: inline-block;
         .play-body-title{
           display: block;
-          // height: 36px;
+          height: 34px;
           line-height: 30px;
+          margin-top: -10px;
           font-size: 12px;
           color: #ffffff;
         }
@@ -726,53 +740,53 @@ export default {
         display: inline-block;
         margin-left: 100px;
         .volume {
-          width: 18px;
-          height: 16px;
+          width: 22px;
+          height: 18px;
           display: inline-block;
           vertical-align: middle;
           stroke: #FFFFFF;
           fill: #ffffff;
           svg {
-            width: 18px;
-            height: 16px;
+            width: 22px;
+            height: 18px;
             position: absolute;
           }
           &:hover {
-            stroke: #f86442;
-            fill: #f86442;
+            stroke: rgba(255, 255, 255, .6);
+            fill: rgba(255, 255, 255, .6);
           }
         }
         .sort {
           width: 22px;
-          height: 16px;
+          height: 18px;
           display: inline-block;
           vertical-align: middle;
           margin-left: 20px;
           stroke: #FFFFFF;
           svg {
             width: 22px;
-            height: 16px;
+            height: 18px;
             position: absolute;
           }
           &:hover {
-            stroke: #f86442;
+            stroke: rgba(255, 255, 255, .6);
           }
         }
         .list {
-          width: 16px;
-          height: 13px;
+          width: 22px;
+          height: 18px;
           display: inline-block;
           vertical-align: middle;
           margin-left: 20px;
           margin-top: 3px;
           fill: #FFFFFF;
           svg {
-            width: 16px;
-            height: 13px;
+            width: 22px;
+            height: 18px;
             position: absolute;
           }
           &:hover {
-            fill: #f86442;
+            fill: rgba(255, 255, 255, .6);
           }
         }
         .player-volume-wrapper {
@@ -840,7 +854,7 @@ export default {
     // box-shadow: 0 -2px 4px 0 rgba(0,0,0,.2);
     // border-radius: 3px 3px 0 0;
     // width:1180px;
-    height:427px;
+    max-height:427px;
     background:linear-gradient(180deg,rgba(0,22,55,0.9) 0%,rgba(15,144,198,0.74) 100%);
     border-radius:8px 8px 0px 0px;
     z-index: 90;
@@ -850,7 +864,7 @@ export default {
     user-select: none;
     .voice-player-list-head {
       width: 1080px;
-      padding: 0 20px;
+      padding: 0 40px;
       height: 55px;
       line-height: 55px;
       color: #fff;
@@ -870,7 +884,7 @@ export default {
       overflow: hidden;
     }
     .voice-player-list-content {
-      height: 340px;
+      max-height: 340px;
       width: 1100px;
       overflow-y: auto;
       ul {
@@ -883,27 +897,54 @@ export default {
           -o-transition: all .2s;
           transition: all .2s;
           font-size: 14px;
+          display: flex;
+          align-items: center;
+          &.current {
+            .col1, .col2, .col3 {
+              color: #F5A623FF;
+            }
+            .triangle {
+              background: url('../../../static/images/discovery/bofang.svg') no-repeat center;
+            }
+          }
+          .col-content {
+            width: 100%;
+            margin-top: 0px;
+          }
           .col1 {
             display: inline-block;
             text-align: center;
             color: #B4B4B4;
-            width: 40px;
+            // width: 40px;
             text-align: center;
-            margin-left: 10px;
+            // margin-left: 10px;
           }
           .col2 {
             display: inline-block;
             width: 560px;
             color: #fff;
-            margin-left: 45px;
+            margin-left: 15px;
           }
           .col3 {
             float: right;
             margin-right: 30px;
             color: #a3a3ac;
           }
-          .current {
-            color: #FFD343;
+          .triangle {
+            width: 9px;
+            height: 9px;
+            // background: url('../../../static/images/discovery/radio-clock.png') no-repeat center;
+            background-size: cover;
+            margin-left: 20px;
+          }
+        }
+        li:hover {
+          background:rgba(0,16,51,.2);
+          color: #fff;
+          .triangle {
+            width: 9px;
+            height: 9px;
+            background: url('../../../static/images/discovery/bofanghover.svg') no-repeat center;
           }
         }
       }

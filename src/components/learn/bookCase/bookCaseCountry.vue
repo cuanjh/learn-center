@@ -13,7 +13,7 @@
             <div class="languages">
               <p>Principal Languages:</p>
               <p>
-                <span v-for="(el, index) in item.countryLangueInfos" :key="index">{{el.name}},</span>
+                {{ countryLangs[item.code].join(',') }}
               </p>
               <p @click="nationDetail(item.code, item.flag, item.name)">
                 <span>了解更多</span>
@@ -21,14 +21,14 @@
             </div>
           </div>
         </div>
+        <div class="line" v-if="(index + 1) % 3"></div>
       </li>
     </ul>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
 export default {
-  props: ['countryLists', 'courseCode'],
+  props: ['countryLists', 'courseCode', 'countryLangs'],
   data () {
     return {
       langsInfoList: '',
@@ -38,9 +38,6 @@ export default {
   mounted () {
   },
   methods: {
-    ...mapActions({
-      countryInfo: 'course/countryInfo' // 国家详情
-    }),
     getTextByJs (arr) {
       for (var i = 0; i < arr.length; i++) {
         this.langsInfoList += arr[i].name + ','
@@ -79,15 +76,25 @@ export default {
   flex: auto;
 }
 .book-nation li {
+  position: relative;
   width: 318px;
   padding: 25px 0;
   // border-bottom: 1px solid #EBEBEB;
   cursor: pointer;
+  .line {
+    position: absolute;
+    width: 1px;
+    height: 218px;
+    background: #eef2f3;
+    margin-top: -218px;
+    margin-left: 318px;
+  }
 }
+
 .book-nation li .nation-li {
   width: 100%;
   padding: 0 0 0 89px;
-  border-right: 1px solid #EEF2F3FF;
+  // border-right: 1px solid #EEF2F3FF;
 }
 .book-nation li .nation-img {
   width: 53px;

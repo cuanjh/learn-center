@@ -1,23 +1,7 @@
 <template>
   <div class="radio-wrap">
     <div class="radio-container">
-      <div class="nav">
-        <router-link :to="{path: '/app/index'}">
-          个人账户
-        </router-link>
-        >
-        <router-link :to="{path: '/app/discovery/radio-home'}">
-          电台
-        </router-link>
-        >
-        <router-link :to="{path: '/app/discovery/radio-list'}">
-          分类
-        </router-link>
-        >
-        <div class="nav-current">
-          课程详情
-        </div>
-      </div>
+      <nav-comp />
       <div class="radio-left">
         <div class="course">
           <div class="top-course">
@@ -199,6 +183,7 @@ import $ from 'jquery'
 import bounceBox from '../../../common/bounceBox'
 import { formatDate } from '../../../../tool/date.js'
 import VipPrompt from '../../../common/vipPrompt.vue'
+import NavComp from '../../../common/nav.vue'
 import RadioDetailOther from './radioDetailOther.vue'
 import StudentsListening from './studentsListening.vue'
 // import BuyCoinsRadioBox from '../../../common/buyCoinsRadioBox.vue'
@@ -222,7 +207,8 @@ export default {
     RadioDetailOther,
     VipPrompt,
     StudentsListening,
-    bounceBox
+    bounceBox,
+    NavComp
   },
   filters: {
     formatDate (time) {
@@ -239,6 +225,13 @@ export default {
     }
   },
   mounted () {
+    let navList = [
+      {id: 1, path: '/app/index', text: '我的学习账户'},
+      {id: 2, path: '/app/discovery/radio-home', text: '电台'},
+      {id: 3, path: '/app/discovery/radio-list', text: '分类'},
+      {id: 4, path: '', text: '电台详情'}
+    ]
+    Bus.$emit('loadNavData', navList)
     this.loadData()
     this.getOtherRecommends({current_radio_code: this.$route.params.code}).then(res => {
       console.log('其他人也在听', res)
@@ -455,25 +448,6 @@ export default {
   width: 100%;
   height: 60px !important;
 }
-.nav {
-  height: 40px;
-  line-height: 40px;
-  font-weight: bold;
-  font-size: 14px;
-}
-.nav a {
-  text-decoration:none;
-}
-.nav a {
-  color: #7E929F;
-}
-.nav a:hover {
-  color: #2A9FE4;
-}
-.nav .nav-current {
-  display: inline-block;
-  color: #2A9FE4;
-}
 .radio-wrap {
   /* background: #ecf4f7; */
   width: 100%;
@@ -486,6 +460,7 @@ export default {
 }
 
 .radio-left {
+  margin-top: 8px;
   width: 880px;
   height: auto;
   display: inline-block;
@@ -1199,6 +1174,7 @@ export default {
 }
 
 .radio-right {
+  margin-top: 8px;
   width: 280px;
   height: auto;
   display: inline-block;

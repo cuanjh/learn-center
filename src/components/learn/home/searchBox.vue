@@ -9,7 +9,7 @@
             </span>
             <i :class="['arrow', {'active': isShowEndangerPanel}]"></i>
           </li>
-          <li><span class="wal-courses" @click="loadCourses()"><i></i>课程</span></li>
+          <li><span class="wal-courses" @click="loadCourses()"><i></i>课程分布</span></li>
           <li><span class="wal-partners" @click="loadRecommendTeachers()"><i></i>电台主播</span></li>
         </ul>
         <!-- <span @click="removeMarks()"><i></i>remove</span> -->
@@ -76,7 +76,9 @@ export default {
     // 点击电台主播
     loadRecommendTeachers () {
       this.isShowEndangerPanel = false
-      this.$parent.$refs.map.$emit('loadRecommendTeachers')
+      this.getRecommendTeachers().then(res => {
+        this.$parent.$refs.map.$emit('loadRecommendTeachers', res)
+      })
     },
     loadCourses () {
       this.isShowEndangerPanel = false

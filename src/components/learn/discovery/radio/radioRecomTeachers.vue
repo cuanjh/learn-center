@@ -1,18 +1,6 @@
 <template>
   <div class="teachers">
-    <div class="nav">
-      <router-link :to="{path: '/app/index'}">
-        我的学习账户
-      </router-link>
-      >
-      <router-link :to="{path: '/app/discovery/radio-home'}">
-        电台课程
-      </router-link>
-      >
-      <div class="nav-current">
-        分类
-      </div>
-    </div>
+    <nav-comp></nav-comp>
     <div class="teacher-container">
       <div class="teacher-content">
         <div class="left">
@@ -86,6 +74,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import Bus from '../../../../bus.js'
+import NavComp from '../../../common/nav.vue'
 export default {
   data () {
     return {
@@ -93,7 +82,16 @@ export default {
       teacherLists: [] // 其他老师
     }
   },
+  components: {
+    NavComp
+  },
   mounted () {
+    let navList = [
+      {id: 1, path: '/app/index', text: '我的学习账户'},
+      {id: 2, path: '/app/discovery/radio-home', text: '电台'},
+      {id: 3, path: '', text: '推荐主播'}
+    ]
+    Bus.$emit('loadNavData', navList)
     this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
       this.teacherLists = this.randArray(res.data.authors)
@@ -189,25 +187,9 @@ export default {
 .teachers {
   width: 1200px;
   margin: 0 auto;
-  .nav {
-    height: 40px;
-    line-height: 40px;
-    font-weight: bold;
-    display: inline-block;
-    font-size: 14px;
-    a {
-      color: #999999;
-      &:hover {
-        color: #2A9FE4;
-      }
-    }
-    .nav-current {
-      display: inline-block;
-      color: #2A9FE4;
-    }
-  }
   .teacher-container {
     width: 100%;
+    margin-top: 8px;
     .teacher-content {
       display: flex;
       justify-content: space-between;

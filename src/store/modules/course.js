@@ -97,6 +97,7 @@ const actions = {
   getLearnInfo ({ commit }, courseCode) {
     return httpLogin(config.learnInfo, { course_code: courseCode }).then((res) => {
       commit('updateCourseInfo', res)
+      return res
     })
   },
   getCourseContent ({ commit, state }, contentUrl) {

@@ -51,9 +51,9 @@ export default {
       this.removeMarks()
     })
 
-    this.$on('loadRecommendTeachers', () => {
+    this.$on('loadRecommendTeachers', (data) => {
       this.removeMarks()
-      this.loadRecommendTeachers()
+      this.loadRecommendTeachers(data)
     })
 
     this.$on('loadEndangerMap', (data) => {

@@ -1,18 +1,6 @@
 <template>
   <div class="radio-classify">
-    <div class="nav">
-      <router-link :to="{path: '/app/index'}">
-        <span>我的学习账户</span>
-      </router-link>
-      >
-      <router-link :to="{path: '/app/discovery/radio-home'}">
-        <span>电台课程</span>
-      </router-link>
-      >
-      <div class="nav-current">
-        分类
-      </div>
-    </div>
+    <nav-comp></nav-comp>
     <div class="classify-container">
       <div class="radio-content">
         <div class="left">
@@ -156,6 +144,7 @@ import Bus from '../../../../bus'
 import $ from 'jquery'
 import StarHostList from '../../../common/starHostList.vue'
 import IntroduceAppBox from '../../../common/introduceAppBox.vue'
+import NavComp from '../../../common/nav.vue'
 
 export default {
   data () {
@@ -178,6 +167,12 @@ export default {
     }
   },
   mounted () {
+    let navList = [
+      {id: 1, path: '/app/index', text: '我的学习账户'},
+      {id: 2, path: '/app/discovery/radio-home', text: '电台课程'},
+      {id: 3, path: '', text: '分类'}
+    ]
+    Bus.$emit('loadNavData', navList)
     let _this = this
     console.log('课程', _this.langCode)
     _this.getLangsState()
@@ -213,7 +208,8 @@ export default {
   },
   components: {
     StarHostList,
-    IntroduceAppBox
+    IntroduceAppBox,
+    NavComp
   },
   computed: {
     ...mapState({
@@ -382,25 +378,9 @@ export default {
   width: 1200px;
   margin: 0 auto;
   min-height: 1000px;
-  .nav {
-    height: 40px;
-    line-height: 40px;
-    font-weight: bold;
-    display: inline-block;
-    font-size: 14px;
-    a {
-      color: #7E929F;
-      &:hover{
-        color: #2A9FE4;
-      }
-    }
-    .nav-current {
-      display: inline-block;
-      color: #2A9FE4;
-    }
-  }
   .classify-container {
     width: 100%;
+    margin-top: 8px;
     .radio-content {
       width: 100%;
       display: flex;

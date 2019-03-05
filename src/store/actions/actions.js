@@ -91,16 +91,10 @@ export default {
   },
   // 获取推荐的电台主播
   getRecommendTeachers ({commit}, params) {
-    let userId = cookie.getCookie('user_id')
-    if (userId) {
-      httpLogin(config.recommendRadioTeachersApi).then(res => {
-        commit('updatereCommendRadioTeachers', res.data)
-      })
-    } else {
-      httpNoLogin(config.recommendRadioTeachersApi).then(res => {
-        commit('updatereCommendRadioTeachers', res.data)
-      })
-    }
+    return httpLogin(config.recommendRadioTeachersApi, {num: 50}).then(res => {
+      commit('updatereCommendRadioTeachers', res.data)
+      return res.data
+    })
   },
   // 获取和课程相关的电台主播
   getLearnRecommendTeachers ({commit}, params) {
@@ -135,5 +129,9 @@ export default {
   // 获取更多订阅课程，包括电台课程
   getMoreLearnCourses ({commit}, params) {
     return httpLogin(config.moreLearnCoursesApi, params)
+  },
+  // 获取国家所拥有的语言
+  getCountryLanguages ({commit}, params) {
+    return httpLogin(config.countryLanguagesApi, params)
   }
 }

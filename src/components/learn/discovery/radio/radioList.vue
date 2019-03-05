@@ -1,22 +1,7 @@
 <template>
   <div class="radio-classification">
     <div class="classification">
-      <div class="nav">
-        <router-link :to="{path: '/app/index'}">
-          我的学习账户
-        </router-link>
-        >
-        <router-link :to="{path: '/app/discovery/radio-home'}">
-          电台
-        </router-link>
-        >
-        <!-- <router-link :to="{path: '/app/discovery/home'}">
-          <span>以前的电台首页</span>
-        </router-link> -->
-        <div class="nav-current">
-          分类
-        </div>
-      </div>
+      <nav-comp />
       <!-- 左边导航 -->
       <div class="radio-nav">
         <div class="nav-list">
@@ -47,7 +32,13 @@
             <div class="header-content">
               <span class="column">共{{count}}个电台节目</span>
               <div class="new">
-                <a
+                <!-- <a
+                    v-for="(item, index) in isHot"
+                    :key="index"
+                    v-text="item.text"
+                    :class="{'active': onActive == item.type}"
+                    @click="changeIsHot(item)"></a> -->
+                    <a
                     v-for="(item, index) in isHot"
                     :key="index"
                     v-text="item.text"
@@ -107,6 +98,7 @@ import { mapState, mapActions } from 'vuex'
 import Bus from '../../../../bus'
 import $ from 'jquery'
 import cookie from '../../../../tool/cookie.js'
+import NavComp from '../../../common/nav.vue'
 
 export default {
   data () {
@@ -129,7 +121,16 @@ export default {
       buyRadio: {}
     }
   },
+  components: {
+    NavComp
+  },
   mounted () {
+    let navList = [
+      {id: 1, path: '/app/index', text: '我的学习账户'},
+      {id: 2, path: '/app/discovery/radio-home', text: '电台'},
+      {id: 3, path: '', text: '分类'}
+    ]
+    Bus.$emit('loadNavData', navList)
     this.userId = cookie.getCookie('user_id')
     this.isActive = this.courseOrder ? this.courseOrder : 410
     this.postDisvRadio().then((res) => {
@@ -181,23 +182,12 @@ export default {
       _this.isActive = item.list_order
       _this.menu_type = item.menu_type
       _this.menu_id = item.menu_id
-      let params = {}
-      if (!_this.userInfo) {
-        params = {
-          menu_type: _this.menu_type,
-          menu_id: _this.menu_id,
-          page: _this.page,
-          preferred_lan_code: '',
-          sort: _this.onActive
-        }
-      } else {
-        params = {
-          menu_type: _this.menu_type,
-          menu_id: _this.menu_id,
-          page: _this.page,
-          preferred_lan_code: _this.selState.lan_code,
-          sort: _this.onActive
-        }
+      let params = {
+        menu_type: _this.menu_type,
+        menu_id: _this.menu_id,
+        page: _this.page,
+        preferred_lan_code: '',
+        sort: this.onActive
       }
       console.log('params', params)
       _this.getRadioList(params).then((res) => {
@@ -208,6 +198,45 @@ export default {
         console.log('==>>>>>>>', _this.showPage)
       })
     },
+    // tabChange (item) {
+    //   console.log('item', item)
+    //   console.log('langCodesSel====', this.langCodesSel)
+    //   let _this = this
+    //   _this.selState = _this.langCodesSel[0]
+    //   // _this.isSelStateCode = 0
+    //   _this.page = 1
+    //   _this.onActive = 'hot'
+    //   _this.flag = true
+    //   _this.isActive = item.list_order
+    //   _this.menu_type = item.menu_type
+    //   _this.menu_id = item.menu_id
+    //   let params = {}
+    //   if (!_this.userInfo) {
+    //     params = {
+    //       menu_type: _this.menu_type,
+    //       menu_id: _this.menu_id,
+    //       page: _this.page,
+    //       preferred_lan_code: '',
+    //       sort: _this.onActive
+    //     }
+    //   } else {
+    //     params = {
+    //       menu_type: _this.menu_type,
+    //       menu_id: _this.menu_id,
+    //       page: _this.page,
+    //       preferred_lan_code: _this.selState.lan_code,
+    //       sort: _this.onActive
+    //     }
+    //   }
+    //   console.log('params', params)
+    //   _this.getRadioList(params).then((res) => {
+    //     console.log('切换导航电台列表返回', res)
+    //     _this.count = res.data.count
+    //     _this.lists = res.data.radios
+    //     _this.showPage = res.data.page
+    //     console.log('==>>>>>>>', _this.showPage)
+    //   })
+    // },
     // 加载更多
     loadMore () {
       if (this.showPage === -1) {
@@ -310,6 +339,24 @@ export default {
       }
       this.isPlay = !this.isPlay
     },
+    // 全部
+    changeAll () {
+      this.isSelStateCode = 0
+      this.page = 1
+      this.onActive = ''
+      let params = {
+        menu_type: this.menu_type,
+        menu_id: this.menu_id,
+        page: this.page,
+        preferred_lan_code: '',
+        sort: ''
+      }
+      console.log('全部', params)
+      this.getRadioList(params).then((res) => {
+        this.count = res.data.count
+        this.lists = res.data.radios
+      })
+    },
     // 切换课程
     changeState (item, index) {
       console.log(this.menu_type, this.menu_id, item.lan_code)
@@ -374,25 +421,15 @@ a {
   .nav {
     position: fixed;
     background-color: #f6f8f9;
+    margin-top: 0px;
     width: 100%;
-    height: 40px;
-    line-height: 40px;
+    height: 46px;
+    line-height: 58px;
     font-size:14px;
     font-family:PingFang-SC-Medium;
     font-weight:500;
     color:rgba(60,91,111,1);
     z-index: 99;
-    a {
-      text-decoration:none;
-      color: #7E929F;
-      &:hover {
-        color: #2A9FE4;
-      }
-    }
-    .nav-current {
-      display: inline-block;
-      color: #2A9FE4;
-    }
   }
   .classification {
     // margin-top: 20px;
@@ -402,7 +439,7 @@ a {
       position: fixed;
       display: inline-block;
       width: 220px;
-      margin-top: 40px;
+      margin-top: 46px;
       .nav-list {
         background: #ffffff;
         width: 100%;
@@ -463,7 +500,7 @@ a {
       width: 960px;
       padding-bottom: 50px;
       background: #ffffff;
-      margin-top: 40px;
+      margin-top: 46px;
       .radio-in-content {
         width: 100%;
         height: 100%;
@@ -636,7 +673,7 @@ a {
                     font-size:12px;
                     font-family:PingFang-SC-Medium;
                     font-weight:500;
-                    color:rgba(153,153,153,1);
+                    color:rgba(184,184,184,1);
                     line-height:17px;
                     span:nth-child(2) {
                       display: inline-block;
@@ -644,6 +681,11 @@ a {
                       overflow: hidden;
                       text-overflow:ellipsis;
                       white-space:nowrap;
+                      font-size:12px;
+                      font-family:PingFang-SC-Medium;
+                      font-weight:500;
+                      color:rgba(153,153,153,1);
+                      line-height:17px;
                     }
                   }
                 }

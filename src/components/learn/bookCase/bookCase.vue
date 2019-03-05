@@ -1,14 +1,6 @@
 <template>
   <div class="book-case">
-    <div class="nav">
-      <router-link :to="{path: '/app/index'}">
-        我的学习账户
-      </router-link>
-      >
-      <div class="nav-current">
-        官方课程
-      </div>
-    </div>
+    <nav-comp />
     <vip-prompt class="vip"/>
     <div class="hot-course-box">
       <p class="title">热门课程
@@ -78,8 +70,9 @@
 import { mapState, mapActions, mapMutations } from 'vuex'
 // import simplePinyin from 'simple-pinyin'
 import VipPrompt from '../../common/vipPrompt.vue'
+import NavComp from '../../common/nav.vue'
 // import cookie from '../../../tool/cookie'
-// import Bus from '../../../bus'
+import Bus from '../../../bus'
 export default {
   data () {
     return {
@@ -95,9 +88,15 @@ export default {
     }
   },
   components: {
-    VipPrompt
+    VipPrompt,
+    NavComp
   },
   mounted () {
+    let navList = [
+      {id: 1, path: '/app/index', text: '我的学习账户'},
+      {id: 2, path: '', text: '官方课程'}
+    ]
+    Bus.$emit('loadNavData', navList)
     this.$parent.$emit('navItem', 'bookcase')
     let _this = this
     // 书架首页接口 热门课程、中国方言地图
@@ -145,7 +144,7 @@ export default {
       this.showDetailsHot = this.showDetailsChina = null
     },
     goDetails (courseCode) {
-      this.$router.push({path: '/app/book-details/' + courseCode})
+      this.$router.push({path: '/app/book-details/' + courseCode + '-Basic'})
     },
     // 数字每三位添加逗号
     toThousands (num) {
@@ -191,26 +190,7 @@ export default {
     async routerGo (item) {
       console.log('item', item)
       let langCode = item['lan_code']
-      // let userId = cookie.getCookie('user_id')
-      // if (userId) {
-      this.$router.push({path: '/app/book-details/' + langCode})
-      // } else {
-      //   let params = {
-      //     preferLangs: langCode,
-      //     skillLangs: langCode
-      //   }
-
-      //   let res = await this.postAnonyLogin(params)
-      //   cookie.setCookie('user_id', res.result.user_id)
-      //   cookie.setCookie('verify', res.result.verify)
-      //   cookie.setCookie('is_anonymous', res.result.is_anonymous)
-      //   this.updateIsAnonymous(res.result.is_anonymous)
-      //   await this.getUserInfo()
-      //   // this.updateCurCourseCode(langCode)
-      //   // await this.getLearnInfo(langCode)
-      //   await this.getLearnCourses()
-      //   this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
-      // }
+      this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
     },
     search () {
       this.courseLangs = this.defaultCourseLangs.filter((item) => {
@@ -222,23 +202,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .nav {
-    height: 40px;
-    line-height: 40px;
-    font-weight: bold;
-    display: inline-block;
-    font-size: 14px;
-    a {
-      color: #7E929F;
-      &:hover {
-        color: #2A9FE4;
-      }
-    }
-    .nav-current {
-      display: inline-block;
-      color: #2A9FE4;
-    }
-  }
   .book-case {
     width: 1200px;
     margin: 0px auto;

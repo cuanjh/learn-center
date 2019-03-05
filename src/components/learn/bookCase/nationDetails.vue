@@ -1,19 +1,6 @@
 <template>
   <div class="nation-details">
-    <div class="nav">
-      <router-link :to="{path: '/app/index'}">我的学习账户
-      </router-link>
-      >
-      <router-link :to="{path: '/app/book-case'}">添加语言
-      </router-link>
-      >
-      <router-link :to="{path: '/app/book-details/' + naInfo.courseCode}">语言详情
-      </router-link>
-      >
-      <div class="nav-current">
-        国家介绍
-      </div>
-    </div>
+    <nav-comp />
     <!-- 内容区域 -->
     <div class="nation-details-content">
       <!-- 上面分享的部分 -->
@@ -123,7 +110,8 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import VipPrompt from '../../../components/common/vipPrompt'
-
+import NavComp from '../../common/nav.vue'
+import Bus from '../../../bus'
 export default {
   data () {
     return {
@@ -170,9 +158,17 @@ export default {
     }
   },
   components: {
-    VipPrompt
+    VipPrompt,
+    NavComp
   },
   mounted () {
+    let navList = [
+      {id: 1, path: '/app/index', text: '我的学习账户'},
+      {id: 2, path: '/app/book-case', text: '添加课程'},
+      {id: 3, path: '/app/book-details/' + this.naInfo.courseCode, text: '课程详情'},
+      {id: 4, path: '', text: '国家介绍'}
+    ]
+    Bus.$emit('loadNavData', navList)
     console.log('==========>', this.naInfo)
     console.log('==========>', this.countryCode)
     this.initDataCountryInfo()
@@ -230,27 +226,11 @@ a {
 .nation-details {
   width: 960px;
   margin: 0px auto 144px;
-  .nav {
-    height: 40px;
-    line-height: 40px;
-    font-weight: bold;
-    display: inline-block;
-    font-size: 14px;
-    a {
-      color: #7E929F;
-      &:hover{
-        color: #2A9FE4;
-      }
-    }
-    .nav-current {
-      display: inline-block;
-      color: #2A9FE4;
-    }
-  }
 }
 .nation-details-content {
   width: 100%;
   height: auto;
+  margin-top: 8px;
   margin-bottom: 23px;
 }
 .nation-header {

@@ -163,16 +163,13 @@ export default {
         this.curCourseCode = courseCode
       }
       if (this.curCourseCode) {
-        await _this.getLearnInfo(this.curCourseCode)
+        let res1 = await _this.getLearnInfo(this.curCourseCode)
         await _this.getUnlockChapter(this.curCourseCode).then((res) => {
           _this.updateUnlockCourseList(res)
         })
-        this.curChapterCode = this.learnInfo.current_chapter_code
-
-        console.log('learnInfo', _this.learnInfo)
-        console.log('courseBaseInfo', _this.courseBaseInfo)
-        this.maxLevelNum = _this.courseBaseInfo.level_num
-        let contentUrl = _this.courseBaseInfo.content_config.content_url
+        this.curChapterCode = res1.info.learnInfo.current_chapter_code
+        this.maxLevelNum = res1.info.courseBaseInfo.level_num
+        let contentUrl = res1.info.courseBaseInfo.content_config.content_url
         await _this.getCourseContent(contentUrl)
         // await _this.getLearnCourses()
         await this.setCurrentChapter(this.curChapterCode)
@@ -181,12 +178,12 @@ export default {
           return item.code === this.curChapterCode
         })[0]
         this.curCourseObj['courseLevel'] = this.levelObj[this.curChapterCode.split('-')[2]]
-        this.curCourseObj['courseNum'] = parseInt(obj.code.split('-')[3].split('').pop() - 1) * 6 + parseInt(obj.code.split('-')[4].split('').pop())
+        this.curCourseObj['courseNum'] = obj ? parseInt(obj.code.split('-')[3].split('').pop() - 1) * 6 + parseInt(obj.code.split('-')[4].split('').pop()) : 1
         this.curCourseObj['courseCore'] = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
-        this.curCourseObj['courseDesc'] = obj.info['zh-cn'].describe
-        this.curCourseObj['courseWords'] = obj.info['zh-cn'].words.split('/').join('、')
-        this.curCourseObj['courseBg'] = this.assetsUrl + obj.image.replace('200x200', '1200x488')
-        this.curCourseObj['purchased'] = obj.purchased
+        this.curCourseObj['courseDesc'] = obj ? obj.info['zh-cn'].describe : ''
+        this.curCourseObj['courseWords'] = obj ? obj.info['zh-cn'].words.split('/').join('、') : ''
+        this.curCourseObj['courseBg'] = this.assetsUrl + (obj ? obj.image.replace('200x200', '1200x488') : '')
+        this.curCourseObj['purchased'] = obj ? obj.purchased : false
         console.log(this.curCourseObj)
 
         _this.updateChapterDes(this.curChapterCode)

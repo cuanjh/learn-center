@@ -1,21 +1,21 @@
 <template>
-  <div class="recommend-radio">
+  <div class="recommend-radio" v-show="isShow">
     <div class="recommend-content">
       <div class="recommend-content-left">
         <div class="round">
           <div class="bg-img">
-            <img :src="randomRadioLists.cover" alt="">
+            <img :src="randomRadio.cover" alt="">
           </div>
         </div>
         <div class="radio-text">
           <div class="radio-info">
-            <p class="radio-name">{{randomRadioLists.title}}</p>
-            <p class="author" v-if="randomRadioLists.user">
-              <span>作者：{{randomRadioLists.user.nickname}}</span>
+            <p class="radio-name">{{randomRadio.title}}</p>
+            <p class="author" v-if="randomRadio.user">
+              <span>作者：{{randomRadio.user.nickname}}</span>
             </p>
           </div>
           <div class="radio-play">
-            <div class="gradient-layer-play"  @click="loadRadioList($event, randomRadioLists)">
+            <div class="gradient-layer-play"  @click="loadRadioList($event, randomRadio)">
               <i class="play"></i>
             </div>
             <div class="swiper-list" v-if="radioCardsLists">
@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="subscribe">
-          <span>订阅 {{randomRadioLists.buy_num}}万次</span>
+          <span>订阅 {{randomRadio.buy_num}}万次</span>
         </div>
       </div>
     </div>
@@ -46,21 +46,33 @@
 import Bus from '../../bus.js'
 import $ from 'jquery'
 import vueSeamlessScroll from 'vue-seamless-scroll'
+import { mapActions } from 'vuex'
 
 export default {
-  props: ['randomRadio'],
+  // props: ['randomRadio'],
   data () {
     return {
       animate: false,
-      randomRadioLists: this.randomRadio,
-      radioCardsLists: this.randomRadio.cards
+      isShow: false,
+      randomRadio: [],
+      radioCardsLists: []
     }
   },
   components: {
     vueSeamlessScroll
   },
   mounted () {
-    console.log('randomRadioLists=====>', this.randomRadioLists)
+    // 随机推荐单个电台
+    this.getRandomRadio().then(res => {
+      console.log('随机推荐单个电台', res)
+      if (res.success) {
+        this.isShow = true
+        this.randomRadio = res.data
+        this.radioCardsLists = this.randomRadio.cards
+      } else {
+        this.isShow = false
+      }
+    })
     console.log('randomRadioLists=====>', this.radioCardsLists)
   },
   updated () {
@@ -78,8 +90,18 @@ export default {
         waitTime: 1000 // 单步运动停止的时间(默认值1000ms)
       }
     }
+    // ,
+    // radioCardsLists () {
+    //   if (this.randomradio) {
+    //     return this.randomRadio.cards
+    //   }
+    //   return []
+    // }
   },
   methods: {
+    ...mapActions([
+      'getRandomRadio'
+    ]),
     // 点击播放电台
     loadRadioList (e, radio) {
       console.log('e', e)

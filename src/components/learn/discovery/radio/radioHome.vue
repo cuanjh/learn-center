@@ -1,14 +1,6 @@
 <template>
   <div class="radio-wrap">
-    <div class="nav">
-      <router-link :to="{path: '/app/index'}">
-        <span>我的学习账户</span>
-      </router-link>
-      >
-      <div class="nav-current">
-        电台
-      </div>
-    </div>
+    <nav-comp />
     <div class="radio-swiper">
       <div class="left">
         <div class="swiper-container">
@@ -54,7 +46,7 @@
           <router-link :to="{path: 'radio-recom-teachers'}" class="recommend-item"><i></i><span>明星主播</span></router-link>
         </div>
         <!-- 根据学习课程推荐的电台 -->
-        <get-random-radio :randomRadio="randomRadio" v-if="flag"></get-random-radio>
+        <get-random-radio />
         <!-- 推荐的老师 -->
         <recommend-teachers :authors="authors"></recommend-teachers>
       </div>
@@ -76,7 +68,7 @@
         <div class="radio-type">
           <div class="radio-type-top">
             <span></span>
-            <span v-text="recomendRadios.menu_title"></span>
+            <span v-text="recomendRadios.menu_title ? recomendRadios.menu_title.replace('推荐课程','猜你喜欢') : '猜你喜欢'"></span>
             <span @click="goRadioList(item)" v-show="false">更多<i></i></span>
           </div>
           <div class="radio-list">
@@ -137,7 +129,7 @@
       </div>
       <!-- 人气电台推荐 -->
       <div class="moods-radios">
-        <div class="recommend-radios"><span>人气电台推荐</span></div>
+        <div class="recommend-radios"><span>人气热搜</span></div>
         <div class="moods-lists">
           <ul>
             <li v-for="(item, index) in hotRadiosList.slice(0, 9)" :key="index">
@@ -166,6 +158,7 @@ import UserBox from '../../../common/userBox.vue'
 import IntroduceAppBox from '../../../common/introduceAppBox.vue'
 import RecommendTeachers from '../../../common/recommendTeachers.vue'
 import GetRandomRadio from '../../../common/getRandomRadio.vue'
+import NavComp from '../../../common/nav.vue'
 
 export default {
   data () {
@@ -186,9 +179,15 @@ export default {
     UserBox,
     GetRandomRadio,
     IntroduceAppBox,
-    RecommendTeachers
+    RecommendTeachers,
+    NavComp
   },
   mounted () {
+    let navList = [
+      {id: 1, path: '/app/index', text: '我的学习账户'},
+      {id: 2, path: '', text: '电台'}
+    ]
+    Bus.$emit('loadNavData', navList)
     let _this = this
     _this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
@@ -201,12 +200,6 @@ export default {
       console.log('this.recomendRadiosList', _this.recomendRadiosList)
       console.log('老师', this.authors)
       _this.swiperInit()
-    })
-    // 随机推荐单个电台
-    _this.getRandomRadio().then(res => {
-      console.log('随机推荐单个电台', res)
-      _this.randomRadio = res.data
-      this.flag = true
     })
     // 热门电台
     _this.getHotRadios({limit: 10}).then(res => {
@@ -227,7 +220,6 @@ export default {
   methods: {
     ...mapActions({
       postDisvRadio: 'course/postDisvRadio',
-      getRandomRadio: 'getRandomRadio', // 随机推荐单个电台
       getHotRadios: 'getHotRadios' // 热门电台
     }),
     loadRadioList (e, radio) {
@@ -335,25 +327,8 @@ export default {
   width: 1200px;
   margin: 0 auto;
   min-height: 1000px;
-  .nav {
-    height: 40px;
-    line-height: 40px;
-    font-weight: bold;
-    display: inline-block;
-    font-size: 14px;
-    a {
-      color: #7E929F;
-      &:hover{
-        color: #2A9FE4;
-      }
-    }
-    .nav-current {
-      display: inline-block;
-      color: #2A9FE4;
-    }
-  }
   .radio-swiper {
-    margin: 0px auto 16px;
+    margin: 8px auto 16px;
     height: 300px;
     .left {
       float: left;

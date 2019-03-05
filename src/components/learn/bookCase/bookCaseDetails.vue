@@ -1,16 +1,6 @@
 <template>
   <div class="book-details">
-    <div class="nav">
-      <router-link :to="{path: '/app/index'}">我的学习账户
-      </router-link>
-      >
-      <router-link :to="{path: '/app/book-case'}">添加课程
-      </router-link>
-      >
-      <div class="nav-current">
-        课程详情
-      </div>
-    </div>
+    <nav-comp />
     <div class="details-header">
       <div class="details-header-content">
         <div class="details-header-left">
@@ -162,7 +152,7 @@
             </div>
             <!-- 国家 -->
             <div class="nation-list" v-if="'nation' == tabFlag">
-              <book-case-country :countryLists="countryLists" :courseCode="courseCode"></book-case-country>
+              <book-case-country :countryLists="countryLists" :courseCode="courseCode" :countryLangs="countryLangs"></book-case-country>
               <div class="up-all" v-if="countryLists.length>0">
                 <div class="up-all-content" v-if="allCountryLists.length>9">
                   <span @click="loadMoreNation()" v-text="showMoreCountry?'全部展开':'收起'"></span>
@@ -192,7 +182,6 @@
         </video>
       </div>
     </div>
-    <!-- <voice-player/> -->
   </div>
 </template>
 <script>
@@ -201,11 +190,11 @@ import Bus from '../../../bus'
 import $ from 'jquery'
 import VipPrompt from '../../../components/common/vipPrompt.vue'
 import LoginBox from '../../../components/common/loginBox.vue'
+import NavComp from '../../common/nav.vue'
 import BookCaseInfo from './bookCaseInfo.vue'
 import BookCaseRadios from './bookCaseRadios.vue'
 import BookCaseCountry from './bookCaseCountry.vue'
 import Cookie from '../../../tool/cookie'
-// import VoicePlayer from '../../common/voicePlayer.vue'
 
 export default {
   data () {
@@ -255,6 +244,7 @@ export default {
       resourceInfoRadios: [], // 资源电台
       allCountryLists: [], // 接收后端的所有数据
       countryLists: [], // 页面刚加载的时候只显示9条数据
+      countryLangs: [], // 国家所拥有的语言
       pageindex: 1 // 当前页
     }
   },
@@ -263,12 +253,18 @@ export default {
     LoginBox,
     BookCaseInfo,
     BookCaseRadios,
-    BookCaseCountry
-    // VoicePlayer
+    BookCaseCountry,
+    NavComp
   },
   created () {
   },
   mounted () {
+    let navList = [
+      {id: 1, path: '/app/index', text: '我的学习账户'},
+      {id: 2, path: '/app/book-case', text: '添加课程'},
+      {id: 3, path: '', text: '课程详情'}
+    ]
+    Bus.$emit('loadNavData', navList)
     this.userId = Cookie.getCookie('user_id')
     console.log('courseCode', this.courseCode)
     this.initDataDetails()
@@ -297,11 +293,11 @@ export default {
   methods: {
     ...mapActions({
       langInfoDetails: 'course/langInfoDetails', // 语言详情
-      countryInfo: 'course/countryInfo', // 国家详情
       getShelfResList: 'course/getShelfResList',
       postPurchaseCourse: 'course/postPurchaseCourse',
       getLearnCourses: 'course/getLearnCourses',
-      getEndangeredDetail: 'getEndangeredDetail'
+      getEndangeredDetail: 'getEndangeredDetail',
+      getCountryLanguages: 'getCountryLanguages'
     }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
@@ -346,10 +342,10 @@ export default {
     // 点开始学习
     startLearn () {
       let arr = this.courseCode.split('-')
-      let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
-      Bus.$emit('changeCourseCode', courseCode)
+      let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase()
+      Bus.$emit('loadIndexCourse', courseCode)
       setTimeout(() => {
-        this.$router.push({path: '/app/course-list'})
+        this.$router.push({path: '/app/index'})
       }, 1000)
     },
     subscribeCourse () {
@@ -394,10 +390,13 @@ export default {
           _this.showMorePage = res.resourceInfo.page
         }
         console.log('====>', _this.showMorePage)
+        let arrCountryCode = []
         _this.allCountryLists.forEach(item => {
-          _this.countryInfo({code: item.code}).then(data => {
-            item.countryLangueInfos = data.country_info.langsInfo
-          })
+          arrCountryCode.push(item.code)
+        })
+        _this.getCountryLanguages({country_codes: arrCountryCode.join(',')}).then(res => {
+          console.log(res)
+          _this.countryLangs = res.data
         })
       })
     },
@@ -414,26 +413,10 @@ export default {
 .book-details {
   width: 960px;
   margin: 0px auto 144px;
-  .nav {
-    height: 40px;
-    line-height: 40px;
-    font-weight: bold;
-    display: inline-block;
-    font-size: 14px;
-    a {
-      color: #7E929F;
-      &:hover{
-        color: #2A9FE4;
-      }
-    }
-    .nav-current {
-      display: inline-block;
-      color: #2A9FE4;
-    }
-  }
 }
 .details-header {
   width: 100%;
+  margin-top: 8px;
   border-radius: 3px;
   .details-header-content {
     width: 100%;
@@ -490,7 +473,8 @@ export default {
                 // border-bottom: 1px solid #EBEBEB;
                 .item {
                   width: 380px;
-                  padding: 8px 50px;
+                  line-height: 26px;
+                  padding: 5px 50px;
                   background: #F6F8F9FF;
                   border-radius: 80px;
                   font-size:14px;
