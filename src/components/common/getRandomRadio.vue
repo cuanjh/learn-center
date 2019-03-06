@@ -172,6 +172,10 @@ export default {
           .radio-name {
             font-size: 22px;
             color: #0a2b40ff;
+            width: 450px;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
             font-weight: bold;
             line-height: 30px;
             padding-bottom: 8px;
@@ -180,6 +184,7 @@ export default {
             font-size: 14px;
             color: #90a2aeff;
             line-height: 20px;
+            font-weight: 400;
           }
         }
         .radio-play {

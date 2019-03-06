@@ -37,18 +37,111 @@
         </ul>
       </div>
     </div>
-    <div class="radio-recommend">
-      <div class="left">
-        <div class="recommend-list">
-          <a @click="goRecommendRadio('hostRadio')" class="recommend-item"><i></i><span>热播电台</span></a>
-          <a @click="goRecommendRadio('learnRecom')" class="recommend-item"><i></i><span>学习推荐</span></a>
-          <a @click="goRecommendRadio('latestRelease')" class="recommend-item"><i></i><span>最新发布</span></a>
-          <router-link :to="{path: 'radio-recom-teachers'}" class="recommend-item"><i></i><span>明星主播</span></router-link>
+    <div class="radio-left-container">
+      <div class="radio-left-content">
+        <div class="radio-recommend">
+          <div class="left">
+            <div class="recommend-list">
+              <a @click="goRecommendRadio('hostRadio')" class="recommend-item"><i></i><span>热播电台</span></a>
+              <a @click="goRecommendRadio('learnRecom')" class="recommend-item"><i></i><span>学习推荐</span></a>
+              <a @click="goRecommendRadio('latestRelease')" class="recommend-item"><i></i><span>最新发布</span></a>
+              <router-link :to="{path: 'radio-recom-teachers'}" class="recommend-item"><i></i><span>明星主播</span></router-link>
+            </div>
+            <!-- 根据学习课程推荐的电台 -->
+            <get-random-radio />
+            <!-- 推荐的老师 -->
+            <recommend-teachers :authors="authors"></recommend-teachers>
+          </div>
         </div>
-        <!-- 根据学习课程推荐的电台 -->
-        <get-random-radio />
-        <!-- 推荐的老师 -->
-        <recommend-teachers :authors="authors"></recommend-teachers>
+        <div class="radio-container">
+          <div class="radio-title" v-show="false">电台课程</div>
+          <div class="radio-menu" v-show="false">
+            <div class="radio-menu-item" v-for="(item, index) in menus" :key="item.menu_id">
+              <span v-text="item.menu_title" @click="goRadioList(item)"></span>
+              <span v-show="!((index === menus.length - 1) || (index === 10))"></span>
+            </div>
+          </div>
+          <div v-if="menuRadios">
+            <div class="radio-type">
+              <div class="radio-type-top">
+                <span></span>
+                <span v-text="recomendRadios.menu_title ? recomendRadios.menu_title.replace('推荐课程','猜你喜欢') : '猜你喜欢'"></span>
+                <span @click="goRadioList(item)" v-show="false">更多<i></i></span>
+              </div>
+              <div class="radio-list">
+                <div class="radio-item" v-for="radio in recomendRadiosList" :key="radio.code">
+                  <div class="play-radio">
+                    <img v-lazy="radio.cover" :key="radio.cover" alt="">
+                    <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
+                      <span>会员免费</span>
+                    </div> -->
+                    <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="mask"></router-link>
+                    <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
+                      <i class="play"></i>
+                    </div>
+                    <div class="subscribe">
+                      <i></i>
+                      <span v-text="radio.buy_num"></span>
+                    </div>
+                  </div>
+                  <router-link class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
+                  <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
+                  <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
+                </div>
+              </div>
+              <div class="radio-type-bottom">
+                <a @click="changeBatch()">
+                  <i></i>换一批
+                </a>
+              </div>
+            </div>
+            <div class="radio-type" v-for="(item, index) in menuRadios.slice(1, 4)" :key="index">
+              <div class="radio-type-top">
+                <span></span>
+                <span v-text="item.menu_title"></span>
+                <a @click="goRadioList(item)">更多<i></i></a>
+              </div>
+              <div class="radio-list" v-if="item.radios">
+                <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
+                  <div class="play-radio">
+                    <img v-lazy="radio.cover" :key="radio.cover" alt="">
+                    <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="mask"></router-link>
+                    <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
+                      <span>会员免费</span>
+                    </div> -->
+                    <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
+                      <i class="play"></i>
+                    </div>
+                    <div class="subscribe">
+                      <i></i>
+                      <span v-text="radio.buy_num"></span>
+                    </div>
+                  </div>
+                  <router-link class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
+                  <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
+                  <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 人气电台推荐 -->
+          <div class="moods-radios">
+            <div class="recommend-radios"><span>人气热搜</span></div>
+            <div class="moods-lists">
+              <ul>
+                <li v-for="(item, index) in hotRadiosList.slice(0, 9)" :key="index">
+                  <div class="moods-item">
+                    <router-link :to="{path: '/app/discovery/radio-detail/' + item.code}">{{item.title}}</router-link>
+                    <p>订阅量 {{item.buy_num}}次</p>
+                  </div>
+                  <div class="gradient-layer-play" @click="loadRadioList($event, item)">
+                    <i class="play"></i>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="right">
         <!-- 用户信息 -->
@@ -56,98 +149,8 @@
         <introduce-app-box></introduce-app-box>
       </div>
     </div>
-    <div class="radio-container">
-      <div class="radio-title" v-show="false">电台课程</div>
-      <div class="radio-menu" v-show="false">
-        <div class="radio-menu-item" v-for="(item, index) in menus" :key="item.menu_id">
-          <span v-text="item.menu_title" @click="goRadioList(item)"></span>
-          <span v-show="!((index === menus.length - 1) || (index === 10))"></span>
-        </div>
-      </div>
-      <div v-if="menuRadios">
-        <div class="radio-type">
-          <div class="radio-type-top">
-            <span></span>
-            <span v-text="recomendRadios.menu_title ? recomendRadios.menu_title.replace('推荐课程','猜你喜欢') : '猜你喜欢'"></span>
-            <span @click="goRadioList(item)" v-show="false">更多<i></i></span>
-          </div>
-          <div class="radio-list">
-            <div class="radio-item" v-for="radio in recomendRadiosList" :key="radio.code">
-              <div class="play-radio">
-                <img v-lazy="radio.cover" :key="radio.cover" alt="">
-                <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
-                  <span>会员免费</span>
-                </div> -->
-                <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="mask"></router-link>
-                <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
-                  <i class="play"></i>
-                </div>
-                <div class="subscribe">
-                  <i></i>
-                  <span v-text="radio.buy_num"></span>
-                </div>
-              </div>
-              <router-link class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
-              <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
-              <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
-            </div>
-          </div>
-          <div class="radio-type-bottom">
-            <a @click="changeBatch()">
-              <i></i>换一批
-            </a>
-          </div>
-        </div>
-        <div class="radio-type" v-for="(item, index) in menuRadios.slice(1, 4)" :key="index">
-          <div class="radio-type-top">
-            <span></span>
-            <span v-text="item.menu_title"></span>
-            <a @click="goRadioList(item)">更多<i></i></a>
-          </div>
-          <div class="radio-list" v-if="item.radios">
-            <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
-              <div class="play-radio">
-                <img v-lazy="radio.cover" :key="radio.cover" alt="">
-                <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="mask"></router-link>
-                <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
-                  <span>会员免费</span>
-                </div> -->
-                <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
-                  <i class="play"></i>
-                </div>
-                <div class="subscribe">
-                  <i></i>
-                  <span v-text="radio.buy_num"></span>
-                </div>
-              </div>
-              <router-link class="title" :to="{path: '/app/discovery/radio-detail/' + radio.code}" v-text="radio.title"></router-link>
-              <div class="author" v-text="radio.author_name ? radio.author_name : '用户' + radio.talkmate_id"></div>
-              <div class="money" v-text="(radio.money === 0) ? $t('free') : (radio.money_type === 'CNY') ? '￥' +radio.money : $t('coins') + ' ' + radio.money"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- 人气电台推荐 -->
-      <div class="moods-radios">
-        <div class="recommend-radios"><span>人气热搜</span></div>
-        <div class="moods-lists">
-          <ul>
-            <li v-for="(item, index) in hotRadiosList.slice(0, 9)" :key="index">
-              <div class="moods-item">
-                <router-link :to="{path: '/app/discovery/radio-detail/' + item.code}">{{item.title}}</router-link>
-                <p>订阅量 {{item.buy_num}}次</p>
-              </div>
-              <div class="gradient-layer-play" @click="loadRadioList($event, item)">
-                <i class="play"></i>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
-
 <script>
 import { mapActions, mapState } from 'vuex'
 import Bus from '../../../../bus'
@@ -289,7 +292,6 @@ export default {
     goRecommendRadio (navNum) {
       console.log(navNum)
       this.$router.push({name: 'radioClassify', params: { isActive: navNum }})
-      // this.$router.push({path: 'radio-classify'})
     },
     // 点击换一批
     changeBatch () {
@@ -332,7 +334,7 @@ export default {
     height: 300px;
     .left {
       float: left;
-      margin-right: 23px;
+      margin-right: 20px;
       .swiper-container {
         width: 880px;
         height: 300px;
@@ -417,10 +419,21 @@ export default {
       }
     }
   }
+  .radio-left-container {
+    width: 100%;
+    display: flex;
+    .right {
+      margin-left: 20px;
+    }
+  }
+  .radio-left-content {
+    display: inline-block;
+    width: 880px;
+  }
   .radio-recommend {
     display: inline-block;
     .left{
-      float: left;
+      // float: left;
       background-color: #fff;
       .recommend-list {
         font-size: 0;
@@ -496,12 +509,6 @@ export default {
           }
         }
       }
-    }
-    // 右边
-    .right {
-      display: inline-block;
-      width: 280px;
-      margin-left: 23px;
     }
   }
   .radio-container {

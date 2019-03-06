@@ -58,7 +58,7 @@
                     <span @click="changeHostRadio(hostRadioLists)" v-else>全部展开<i></i></span>
                   </div>
                 </div>
-                <!-- 推荐课程 -->
+                <!-- 学习推荐 -->
                 <div class="switch-radio" v-if="'learnRecom' == navFlag">
                   <div class="host-content">
                     <div class="radio-li" v-for="(radio, index) in recommendRadios" :key="index">
@@ -174,7 +174,6 @@ export default {
     ]
     Bus.$emit('loadNavData', navList)
     let _this = this
-    console.log('课程', _this.langCode)
     _this.getLangsState()
     _this.navFlag = _this.paramsFlag ? _this.paramsFlag : 'hostRadio'
     _this.postDisvRadio().then((res) => {
@@ -185,26 +184,7 @@ export default {
       _this.initHotRadio(this.hostRadioLists)
       _this.initReleaseRadio(this.latestReleaseRadio)
     })
-    let params = {}
-    if (!_this.userInfo) {
-      params = {
-        lan_code: '',
-        limit: 10,
-        page: _this.page
-      }
-    } else {
-      params = {
-        lan_code: _this.langCode.lan_code,
-        limit: 10,
-        page: _this.page
-      }
-    }
-    _this.getRecommendRadiosIndex(params).then(res => {
-      console.log('推荐电台数据', res)
-      this.recommendRadios = res.data
-      this.recommendCountNum = res.count
-      this.showMore = res.page
-    })
+    this.initRecommendRadios()
   },
   components: {
     StarHostList,
@@ -215,24 +195,16 @@ export default {
     ...mapState({
       langsStateSel: state => state.langsStateSel, // 优先课程
       userInfo: state => state.userInfo // 用户信息
-      // recommendRadioPage: state => state.recommendRadioPage, // 页数
-      // recommendRadios: state => state.recommendRadios // 推荐的电台
     }),
     paramsFlag () {
       return this.$route.params.isActive
     },
-    langCode () {
-      if (!Object.keys(this.langsStateSel).length) {
-        return []
-      }
-      return this.langsStateSel[0]
-    },
-    selStateText () {
+    selStateCode () {
       if (Object.keys(this.selState).length > 0) {
-        return this.selState['text']
+        return this.selState['lan_code']
       } else {
         if (this.langsStateSel && this.langsStateSel.length > 0) {
-          return this.langsStateSel[0]['text']
+          return this.langsStateSel[0]['lan_code']
         } else {
           return ''
         }
@@ -248,6 +220,31 @@ export default {
     }),
     tabChange (tabFlag) {
       this.navFlag = tabFlag
+    },
+    // 学习推荐的电台
+    async initRecommendRadios () {
+      let lanCode = this.selStateCode
+      let params = {}
+      if (!this.userInfo) {
+        params = {
+          lan_code: '',
+          limit: 10,
+          page: this.page
+        }
+      } else {
+        params = {
+          lan_code: lanCode,
+          limit: 10,
+          page: this.page
+        }
+      }
+      console.log('params====>', params)
+      await this.getRecommendRadiosIndex(params).then(res => {
+        console.log('推荐电台数据', res)
+        this.recommendRadios = res.data
+        this.recommendCountNum = res.count
+        this.showMore = res.page
+      })
     },
     // 点击播放电台
     loadRadioList (e, radio) {
@@ -311,6 +308,7 @@ export default {
       if (this.showMore === -1) {
         return false
       }
+      let lanCode = this.selStateCode
       this.page++
       let params = {}
       if (!this.userInfo) {
@@ -321,7 +319,7 @@ export default {
         }
       } else {
         params = {
-          lan_code: this.langCode.lan_code,
+          lan_code: lanCode,
           limit: 10,
           page: this.page
         }

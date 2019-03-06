@@ -81,6 +81,11 @@ export default {
             font-weight:500;
             color:rgba(74,74,74,1);
             a {
+              display: inline-block;
+              width: 140px;
+              overflow:hidden;
+              text-overflow:ellipsis;
+              white-space:nowrap;
               &:hover {
                 color: #2A9FE4;
               }

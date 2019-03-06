@@ -71,7 +71,7 @@
                 <span>立即收听</span>
               </div>
               <div class="subscibeno-play">
-                <p class="have-course" v-if="subscibenoInfo.purchased_state == 4">
+                <p class="have-course" v-if="subscibenoInfo.purchased_state == 4 || subscibenoInfo.purchased_state == 1">
                   <i class="subscibe"></i>
                   <span>已订阅</span>
                 </p>

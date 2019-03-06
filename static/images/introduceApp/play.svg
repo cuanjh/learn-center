@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="58px" height="58px" viewBox="0 0 58 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>播放</title>
+    <desc>Created with Sketch.</desc>
+    <g id="世界语言地图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="移动APP产品介绍及下载页-Copy-4" transform="translate(-1230.000000, -223.000000)" fill-rule="nonzero">
+            <g id="播放" transform="translate(1230.000000, 223.000000)">
+                <circle id="椭圆形" fill="#121212" opacity="0.415387835" cx="29" cy="29" r="29"></circle>
+                <circle id="椭圆形" stroke="#FFFFFF" stroke-width="2.5" cx="29" cy="29" r="27.75"></circle>
+                <path d="M19.6006987,21.9970834 L34.049396,19.107344 C35.3581654,18.8455901 36.6313261,19.6943639 36.89308,21.0031333 C36.9556533,21.3160002 36.9556533,21.638161 36.89308,21.9510279 L34.0033405,36.3997252 C33.6892358,37.9702485 32.161443,38.988777 30.5909197,38.6746724 C30.0295055,38.5623895 29.5138885,38.2864397 29.1090469,37.8815981 L18.1188258,26.8913771 C16.9863054,25.7588566 16.9863054,23.9226782 18.1188258,22.7901577 C18.5236674,22.3853161 19.0392844,22.1093663 19.6006987,21.9970834 Z" id="矩形" fill="#FFFFFF" transform="translate(27.000000, 29.000466) rotate(-315.000000) translate(-27.000000, -29.000466) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

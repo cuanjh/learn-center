@@ -6,7 +6,7 @@
           v-for="author in this.authors.slice(this.startAuthorsIndex, this.startAuthorsIndex + 5)"
           :key="author.user_id"
         >
-          <img @click="goToUser(author.user_id)" :src="author.photo" alt="老师头像">
+          <img @click="goToUser(author.user_id)" :src="author.photo !=='' ?author.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="老师头像">
           <p class="author_name" v-text="author.author_name"></p>
           <p class="title" v-text="'《'+ author.title +'》'"></p>
           <!-- <p class="button">
@@ -122,7 +122,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .recommend-teachers {
-  margin: 16px 0 43px;
+  padding: 16px 0 43px;
   position: relative;
   ul {
     margin-left: 17px;
