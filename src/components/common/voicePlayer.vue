@@ -177,6 +177,8 @@
     <buy-radio-box></buy-radio-box>
     <!-- 金币付费课程弹框 -->
     <buy-coins-radio-box/>
+    <!-- 金币不足 -->
+    <user-coins-box></user-coins-box>
   </div>
 </template>
 
@@ -187,6 +189,7 @@ import Bus from '../../bus'
 import SoundCtrl from '../../plugins/soundCtrl'
 import BuyRadioBox from './buyRadioBox.vue'
 import BuyCoinsRadioBox from './buyCoinsRadioBox.vue'
+import UserCoinsBox from './userCoinsBox.vue'
 
 export default {
   data () {
@@ -215,7 +218,7 @@ export default {
       radioDetail: {} // 当前电台的详情
     }
   },
-  components: {BuyRadioBox, BuyCoinsRadioBox},
+  components: {BuyRadioBox, BuyCoinsRadioBox, UserCoinsBox},
   computed: {
     ...mapState({
       userInfo: state => state.userInfo // 用户信息

@@ -6,8 +6,8 @@
         <div class="bg-img"></div>
         <div class="text">
           <div class="text-introduce">
-            <p>Where did you go to learn where?</p>
-            <p>Talkmate-Global says mobile applications support offline downloading of learning language courses, and related radio courses are played in one click, allowing you to learn anytime, anywhere, and 5 times more efficient than traditional foreign language learning!</p>
+            <p>走到哪里，学到哪！</p>
+            <p>Talkmate-全球说移动应用程序支持离线下载学习语言课程；你还可以发现那些非常丰富的电台课程资源，只需点击一下即可播放相关的电台课程，让你随时随地学习走到哪里学到哪里，比传统外语学习效率提高5倍！</p>
           </div>
           <!-- 视频 -->
           <div class="video-box">
@@ -165,9 +165,9 @@
                         <div  class="language">
                           <p>Brashae Hello（法国.里昂）</p>
                           <p>
-                            <span>英语<i></i></span> >
+                            <span>汉语<i></i></span> >
                             <span>日语<i></i><i></i></span>、
-                            <span>阿拉伯语<i></i><i></i></span>
+                            <span>西班牙语<i></i><i></i></span>
                           </p>
                         </div>
                       </div>
@@ -181,34 +181,34 @@
                   <ul>
                     <li>
                       <div class="top">
-                        <div class="img"></div>
+                        <div class="img3"></div>
                         <div  class="language">
-                          <p>特丽莎-梅梅（中国.厦门）</p>
+                          <p>Tough (美国.亚特兰大)</p>
                           <p>
-                            <span>英语<i></i></span> >
+                            <span>法语<i></i></span> >
                             <span>日语<i></i><i></i></span>、
-                            <span>阿拉伯语<i></i><i></i></span>
+                            <span>俄语<i></i><i></i></span>
                           </p>
                         </div>
                       </div>
                       <div class="text">
-                        <p>最nice的就是全球说的电台配套课程了，讲解透彻易懂，还了解了很多语种所在国家的风情文化！还有很多国外的同学，大家一起聊天，一起分享各自的履历！</p>
+                        <p>全球说优势很明显，移动APP使用简单，体验愉悦，根据说母语的习惯来学习语言，还有语伴的纠正和帮助，让我感觉不是一个人在孤独地学习！</p>
                       </div>
                     </li>
                     <li>
                       <div class="top">
-                        <div class="img2"></div>
+                        <div class="img4"></div>
                         <div  class="language">
-                          <p>Brashae Hello（法国.里昂）</p>
+                          <p>往事如风（中国.天津）</p>
                           <p>
                             <span>英语<i></i></span> >
-                            <span>日语<i></i><i></i></span>、
-                            <span>阿拉伯语<i></i><i></i></span>
+                            <span>韩语<i></i><i></i></span>、
+                            <span>西班牙语<i></i><i></i></span>
                           </p>
                         </div>
                       </div>
                       <div class="text">
-                        <p>固定的时间里在web端学习，沉浸感很强！移动APP的应用场景更加丰富，使用入门相对简单，两端结合学习，灵活又高效。</p>
+                        <p>非常好用！只要跟着进度来学习，不会担心没有金币换课程，一节课程通过图片加语音加自己说的方式来学习，反复记忆，灵活使用，印象更深刻。</p>
                       </div>
                     </li>
                   </ul>
@@ -217,34 +217,34 @@
                   <ul>
                     <li>
                       <div class="top">
-                        <div class="img"></div>
+                        <div class="img5"></div>
                         <div  class="language">
-                          <p>特丽莎-梅梅（中国.厦门）</p>
+                          <p>Evangeline（英国.伦敦）</p>
                           <p>
-                            <span>英语<i></i></span> >
-                            <span>日语<i></i><i></i></span>、
-                            <span>阿拉伯语<i></i><i></i></span>
+                            <span>日语<i></i></span> >
+                            <span>西班牙语<i></i><i></i></span>、
+                            <span>意大利语<i></i><i></i></span>
                           </p>
                         </div>
                       </div>
                       <div class="text">
-                        <p>最nice的就是全球说的电台配套课程了，讲解透彻易懂，还了解了很多语种所在国家的风情文化！还有很多国外的同学，大家一起聊天，一起分享各自的履历！</p>
+                        <p>系统会根据我学习的语种，为我推荐关于提升语言认知的文章和新闻，这样让我的学习过程增加了趣味性和丰富性，我很喜欢！</p>
                       </div>
                     </li>
                     <li>
                       <div class="top">
-                        <div class="img2"></div>
+                        <div class="img6"></div>
                         <div  class="language">
-                          <p>Brashae Hello（法国.里昂）</p>
+                          <p>Marie Alfred Cornu（法国.奥尔良）</p>
                           <p>
-                            <span>英语<i></i></span> >
-                            <span>日语<i></i><i></i></span>、
-                            <span>阿拉伯语<i></i><i></i></span>
+                            <span>韩语<i></i></span> >
+                            <span>阿拉伯语<i></i><i></i></span>、
+                            <span>葡萄牙语<i></i><i></i></span>
                           </p>
                         </div>
                       </div>
                       <div class="text">
-                        <p>固定的时间里在web端学习，沉浸感很强！移动APP的应用场景更加丰富，使用入门相对简单，两端结合学习，灵活又高效。</p>
+                        <p>界面风格干净简洁，没有过多的信息来干扰我，反而让我更加有坚持学习下去的动力，期待能在这里学习到更多有用的语言。</p>
                       </div>
                     </li>
                   </ul>
@@ -442,8 +442,9 @@ export default {
           top: 0;
           width: 410px;
           height: 230px;
-          background: url('../../../../static/images/introduceApp/videomoren.svg') no-repeat center;
+          background: url('../../../../static/images/introduceApp/videomoren.png') no-repeat center;
           background-size: cover;
+          object-fit: cover;
           z-index: 9;
         }
         .video-dialog {
@@ -870,6 +871,38 @@ export default {
                   height: 72px;
                   border-radius: 50%;
                   background: url('../../../../static/images/introduceApp/frach.svg') no-repeat center;
+                  background-size: cover;
+                  margin-right: 24px;
+                }
+                .img3 {
+                  width: 72px;
+                  height: 72px;
+                  border-radius: 50%;
+                  background: url('../../../../static/images/introduceApp/1.svg') no-repeat center;
+                  background-size: cover;
+                  margin-right: 24px;
+                }
+                .img4 {
+                  width: 72px;
+                  height: 72px;
+                  border-radius: 50%;
+                  background: url('../../../../static/images/introduceApp/2.svg') no-repeat center;
+                  background-size: cover;
+                  margin-right: 24px;
+                }
+                .img5 {
+                  width: 72px;
+                  height: 72px;
+                  border-radius: 50%;
+                  background: url('../../../../static/images/introduceApp/3.svg') no-repeat center;
+                  background-size: cover;
+                  margin-right: 24px;
+                }
+                .img6 {
+                  width: 72px;
+                  height: 72px;
+                  border-radius: 50%;
+                  background: url('../../../../static/images/introduceApp/4.svg') no-repeat center;
                   background-size: cover;
                   margin-right: 24px;
                 }

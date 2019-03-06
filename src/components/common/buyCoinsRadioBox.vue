@@ -68,9 +68,14 @@ export default {
   },
   created () {
     Bus.$on('showBuyCoinsRadio', (radio) => {
-      this.showBuyCoinsBox = true
       console.log('当前要购买的金币radio', radio)
       this.itemRadio = radio
+      console.log('user.coins', this.userInfo.coins)
+      if (this.userInfo.coins < radio.money) {
+        Bus.$emit('showUserCoins', this.userInfo.coins, radio.money)
+      } else {
+        this.showBuyCoinsBox = true
+      }
     })
     Bus.$on('hiddenBuyCoinsBox', (radioDetail) => {
       console.log('组件传过来的radio的详情页面', radioDetail)
