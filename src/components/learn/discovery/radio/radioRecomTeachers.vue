@@ -9,7 +9,7 @@
             <div class="teacher-list-content" v-if="teachers && teachers.length > 0">
               <div class="teacher-item" v-for="(teacher, index) in teachers.slice(0, 6)" :key="index">
                 <div class="teacher-left">
-                  <img :src="teacher.photo" alt="头像">
+                  <img :src="teacher.photo !==''?teacher.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="头像">
                   <div class="text">
                     <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + teacher.code}">{{teacher.author_name}}</router-link>
                     <p>{{teacher.followed_count}}粉丝</p>
@@ -46,7 +46,7 @@
             <div class="teacher-list-content" v-if="teacherLists && teacherLists.length > 0">
               <div class="teacher-item" v-for="(teacher, index) in teacherLists.slice(0, 6)" :key="index">
                 <div class="teacher-left">
-                  <img :src="teacher.photo" alt="头像">
+                  <img :src="teacher.photo !=='' ?teacher.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="头像">
                   <div class="text">
                     <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + teacher.code}">{{teacher.author_name}}</router-link>
                     <p>{{teacher.followed_count}}粉丝</p>
@@ -120,6 +120,8 @@ export default {
       this.teachers = res.data
       console.log('老师', this.teachers)
     })
+    this.initLearnRecommendTeachers()
+    this.initLearnOtherTeachers()
   },
   computed: {
     ...mapState({
@@ -136,6 +138,36 @@ export default {
       getOnlyLangsState: 'getOnlyLangsState',
       getLearnRecommendTeachers: 'getLearnRecommendTeachers' // 课程相关的电台主播
     }),
+    async initLearnRecommendTeachers () {
+      let params = {}
+      if (!this.userInfo) {
+        params = {
+          study_related: 1,
+          num: 16
+        }
+      } else {
+        params = {
+          study_related: 0,
+          num: 16
+        }
+      }
+      await this.getLearnRecommendTeachers(params).then(res => {
+        console.log('res=====>', res)
+        this.teachers = res.data
+        console.log('老师', this.teachers)
+      })
+    },
+    // 获取其他电台
+    async initLearnOtherTeachers () {
+      let params = {
+        study_related: 0,
+        num: 16
+      }
+      await this.getLearnRecommendTeachers(params).then(res => {
+        this.teacherLists = res.data
+        console.log('老师', this.teacherLists)
+      })
+    },
     // 数组随机排序函数
     randArray (data) {
       /* eslint-disable */
@@ -192,11 +224,11 @@ export default {
     },
     // 换一批主播
     changeBatch () {
-      this.teachers = this.randArray(this.teachers)
+      this.initLearnRecommendTeachers()
     },
     // 换一批其他老师
     changeBatchOther () {
-      this.teacherLists = this.randArray(this.teacherLists)
+      this.initLearnOtherTeachers()
     }
   }
 }

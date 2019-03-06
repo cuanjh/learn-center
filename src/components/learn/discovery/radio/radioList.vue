@@ -32,12 +32,6 @@
             <div class="header-content">
               <span class="column">共{{count}}个电台节目</span>
               <div class="new">
-                <!-- <a
-                    v-for="(item, index) in isHot"
-                    :key="index"
-                    v-text="item.text"
-                    :class="{'active': onActive == item.type}"
-                    @click="changeIsHot(item)"></a> -->
                     <a
                     v-for="(item, index) in isHot"
                     :key="index"
@@ -177,6 +171,7 @@ export default {
       let _this = this
       _this.selState = _this.langCodesSel[0]
       _this.isSelStateCode = 0
+      _this.onActive = 'hot'
       _this.page = 1
       _this.flag = true
       _this.isActive = item.list_order
@@ -198,88 +193,50 @@ export default {
         console.log('==>>>>>>>', _this.showPage)
       })
     },
-    // tabChange (item) {
-    //   console.log('item', item)
-    //   console.log('langCodesSel====', this.langCodesSel)
-    //   let _this = this
-    //   _this.selState = _this.langCodesSel[0]
-    //   // _this.isSelStateCode = 0
-    //   _this.page = 1
-    //   _this.onActive = 'hot'
-    //   _this.flag = true
-    //   _this.isActive = item.list_order
-    //   _this.menu_type = item.menu_type
-    //   _this.menu_id = item.menu_id
+    // 加载更多
+    // loadMore () {
+    //   if (this.showPage === -1) {
+    //     return false
+    //   }
+    //   if (Object.keys(this.selState).length === 0) {
+    //     this.selState = this.langCodesSel[0]
+    //   }
+    //   let lanCode = this.selState['lan_code']
+    //   this.page++
     //   let params = {}
-    //   if (!_this.userInfo) {
+    //   if (!this.userInfo) {
     //     params = {
-    //       menu_type: _this.menu_type,
-    //       menu_id: _this.menu_id,
-    //       page: _this.page,
+    //       menu_type: this.menu_type,
+    //       menu_id: this.menu_id,
+    //       page: this.page,
     //       preferred_lan_code: '',
-    //       sort: _this.onActive
+    //       sort: this.onActive
     //     }
     //   } else {
     //     params = {
-    //       menu_type: _this.menu_type,
-    //       menu_id: _this.menu_id,
-    //       page: _this.page,
-    //       preferred_lan_code: _this.selState.lan_code,
-    //       sort: _this.onActive
+    //       menu_type: this.menu_type,
+    //       menu_id: this.menu_id,
+    //       page: this.page,
+    //       preferred_lan_code: lanCode,
+    //       sort: this.onActive
     //     }
     //   }
-    //   console.log('params', params)
-    //   _this.getRadioList(params).then((res) => {
-    //     console.log('切换导航电台列表返回', res)
-    //     _this.count = res.data.count
-    //     _this.lists = res.data.radios
-    //     _this.showPage = res.data.page
-    //     console.log('==>>>>>>>', _this.showPage)
+    //   console.log('点击加载更多params', params)
+    //   this.getRadioList(params).then((res) => {
+    //     console.log('点击加载更多', res)
+    //     this.lists = this.lists.concat(res.data.radios)
+    //     if (res.data.page === -1) {
+    //       this.showPage = res.data.page
+    //     }
     //   })
     // },
-    // 加载更多
-    loadMore () {
-      if (this.showPage === -1) {
-        return false
-      }
-      if (Object.keys(this.selState).length === 0) {
-        this.selState = this.langCodesSel[0]
-      }
-      let lanCode = this.selState['lan_code']
-      this.page++
-      let params = {}
-      if (!this.userInfo) {
-        params = {
-          menu_type: this.menu_type,
-          menu_id: this.menu_id,
-          page: this.page,
-          preferred_lan_code: '',
-          sort: this.onActive
-        }
-      } else {
-        params = {
-          menu_type: this.menu_type,
-          menu_id: this.menu_id,
-          page: this.page,
-          preferred_lan_code: lanCode,
-          sort: this.onActive
-        }
-      }
-      console.log('点击加载更多params', params)
-      this.getRadioList(params).then((res) => {
-        console.log('点击加载更多', res)
-        this.lists = this.lists.concat(res.data.radios)
-        if (res.data.page === -1) {
-          this.showPage = res.data.page
-        }
-      })
-    },
+    // 鼠标滚动
     handleScroll () {
       let before = $(window).scrollTop() // 判断滚动条向下滚动
       $(window).scroll(() => {
         let after = $(window).scrollTop()
         if (before < after) {
-          before = after
+          // before = after
           if (this.showPage === -1) {
             return false
           }
@@ -306,6 +263,7 @@ export default {
               sort: this.onActive
             }
           }
+          console.log('params==>', params)
           console.log('页码', this.page, this.showPage)
           this.getRadioList(params).then((res) => {
             console.log('res', res)

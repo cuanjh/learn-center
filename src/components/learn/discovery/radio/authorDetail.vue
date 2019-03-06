@@ -356,13 +356,13 @@ export default {
               border-radius: 13px;
               display: flex;
               align-items: center;
-              background: #2A9FE4FF;
+              background: #0581D1;
               i {
                 background-image: url('../../../../../static/images/authorfllowrit.svg');
                 margin-right: 5px;
               }
               &:hover {
-                background: #2a9fe4ff;
+                background: #2A9FE4;
               }
             }
           }

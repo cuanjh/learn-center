@@ -507,7 +507,7 @@ export default {
   .current-course .subscribe-courses {
     left: 13px;
     top: 46px;
-    width: 292px;
+    width: 300px;
   }
 
   .subscribe-courses>img {

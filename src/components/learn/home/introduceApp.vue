@@ -4,12 +4,24 @@
       <!-- 上部分 -->
       <div class="introduce-header">
         <div class="bg-img"></div>
-        <div class="bg-img2"></div>
         <div class="text">
-          <!-- <p>Where did you go to learn where?</p>
-          <p>Talkmate-Global says mobile applications support offline downloading of learning language courses, and related radio courses are played in one click, allowing you to learn anytime, anywhere, and 5 times more efficient than traditional foreign language learning!</p> -->
-          <p>走到哪里，学到哪里</p>
-          <p>Talkmate-全球说移动应用程序支持离线下载学习语言课程；你还可以发现那些非常丰富的电台课程资源，只需点击一下即可播放相关的电台课程，让你随时随地学习走到哪里学到哪里，比传统外语学习效率提高5倍！</p>
+          <div class="text-introduce">
+            <p>Where did you go to learn where?</p>
+            <p>Talkmate-Global says mobile applications support offline downloading of learning language courses, and related radio courses are played in one click, allowing you to learn anytime, anywhere, and 5 times more efficient than traditional foreign language learning!</p>
+          </div>
+          <!-- 视频 -->
+          <div class="video-box">
+            <div class="video-play" @click="playRadio($event)">
+              <i class="play"></i>
+            </div>
+            <div class="video-img" v-show="videoImg"></div>
+            <div class="video-dialog">
+              <video class="vjs-tech" id="my-video" controls="controls">
+                <!-- <source src="/i/movie.ogg" type="video/ogg" /> -->
+                <source src="https://mobile-static.talkmate.com/video/talkmate-introduce.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
         </div>
       </div>
       <!-- 精品推荐 -->
@@ -94,15 +106,27 @@
       <!-- 学习平台 -->
       <div class="learn">
         <div class="learn-cont">
-          <p>屡获殊荣的多语言学习平台</p>
+          <p>我们的合作伙伴和给予的权威推荐</p>
           <div class="learn-icon">
             <div class="item">
               <i class="red-icon"></i>
-              <p>中华人民共和国教育部最佳合作伙伴</p>
+              <p class="red">中华人民共和国教育部 最佳合作伙伴</p>
             </div>
             <div class="item">
               <i class="blue-icon"></i>
-              <p>联合国教科文组织世界语言地图全球伙伴</p>
+              <p class="blue">联合国教科文组织<br>世界语言地图语言学习<br>与语言社区承载平台</p>
+            </div>
+            <div class="item">
+              <i class="soil-icon"></i>
+              <p class="soil">2019年联合国“国际本土语言年” 合作伙伴</p>
+            </div>
+            <div class="item">
+              <i class="research-icon"></i>
+              <p class="research">中国语言资源保护研究中心 官方战略合作伙伴</p>
+            </div>
+            <div class="item">
+              <i class="app-store-icon"></i>
+              <p class="app">苹果商店精华推荐</p>
             </div>
           </div>
         </div>
@@ -115,7 +139,121 @@
             <p>在过去的一段时间里我们陆续收到了很多国家的语言学习者发来的e-mail，留言和信件！</p>
           </div>
           <div class="comments-list">
-            <ul>
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <ul>
+                    <li>
+                      <div class="top">
+                        <div class="img"></div>
+                        <div  class="language">
+                          <p>特丽莎-梅梅（中国.厦门）</p>
+                          <p>
+                            <span>英语<i></i></span> >
+                            <span>日语<i></i><i></i></span>、
+                            <span>阿拉伯语<i></i><i></i></span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="text">
+                        <p>最nice的就是全球说的电台配套课程了，讲解透彻易懂，还了解了很多语种所在国家的风情文化！还有很多国外的同学，大家一起聊天，一起分享各自的履历！</p>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="top">
+                        <div class="img2"></div>
+                        <div  class="language">
+                          <p>Brashae Hello（法国.里昂）</p>
+                          <p>
+                            <span>英语<i></i></span> >
+                            <span>日语<i></i><i></i></span>、
+                            <span>阿拉伯语<i></i><i></i></span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="text">
+                        <p>固定的时间里在web端学习，沉浸感很强！移动APP的应用场景更加丰富，使用入门相对简单，两端结合学习，灵活又高效。</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="swiper-slide">
+                  <ul>
+                    <li>
+                      <div class="top">
+                        <div class="img"></div>
+                        <div  class="language">
+                          <p>特丽莎-梅梅（中国.厦门）</p>
+                          <p>
+                            <span>英语<i></i></span> >
+                            <span>日语<i></i><i></i></span>、
+                            <span>阿拉伯语<i></i><i></i></span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="text">
+                        <p>最nice的就是全球说的电台配套课程了，讲解透彻易懂，还了解了很多语种所在国家的风情文化！还有很多国外的同学，大家一起聊天，一起分享各自的履历！</p>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="top">
+                        <div class="img2"></div>
+                        <div  class="language">
+                          <p>Brashae Hello（法国.里昂）</p>
+                          <p>
+                            <span>英语<i></i></span> >
+                            <span>日语<i></i><i></i></span>、
+                            <span>阿拉伯语<i></i><i></i></span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="text">
+                        <p>固定的时间里在web端学习，沉浸感很强！移动APP的应用场景更加丰富，使用入门相对简单，两端结合学习，灵活又高效。</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="swiper-slide">
+                  <ul>
+                    <li>
+                      <div class="top">
+                        <div class="img"></div>
+                        <div  class="language">
+                          <p>特丽莎-梅梅（中国.厦门）</p>
+                          <p>
+                            <span>英语<i></i></span> >
+                            <span>日语<i></i><i></i></span>、
+                            <span>阿拉伯语<i></i><i></i></span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="text">
+                        <p>最nice的就是全球说的电台配套课程了，讲解透彻易懂，还了解了很多语种所在国家的风情文化！还有很多国外的同学，大家一起聊天，一起分享各自的履历！</p>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="top">
+                        <div class="img2"></div>
+                        <div  class="language">
+                          <p>Brashae Hello（法国.里昂）</p>
+                          <p>
+                            <span>英语<i></i></span> >
+                            <span>日语<i></i><i></i></span>、
+                            <span>阿拉伯语<i></i><i></i></span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="text">
+                        <p>固定的时间里在web端学习，沉浸感很强！移动APP的应用场景更加丰富，使用入门相对简单，两端结合学习，灵活又高效。</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- 分页器 -->
+              <div id="swiper-pagination" class="swiper-pagination"></div>
+            </div>
+            <!-- <ul>
               <li>
                 <div class="top">
                   <div class="img"></div>
@@ -148,7 +286,7 @@
                   <p>固定的时间里在web端学习，沉浸感很强！移动APP的应用场景更加丰富，使用入门相对简单，两端结合学习，灵活又高效。</p>
                 </div>
               </li>
-            </ul>
+            </ul> -->
           </div>
         </div>
       </div>
@@ -156,10 +294,47 @@
   </div>
 </template>
 <script>
+import $ from 'jquery'
+import Swiper from 'swiper'
+import 'swiper/dist/css/swiper.min.css'
+
 export default {
   data () {
     return {
+      showRadioPlay: false,
+      videoImg: true
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      /* eslint-disable no-new */
+      new Swiper('.swiper-container', {
+        loop: true,
+        initialSlide: 0,
+        observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+        observeParents: true, // 修改swiper的父元素时，自动初始化swiper
+        notNextTick: true,
+        // speed: 1000,
+        autoplayStopOnLast: true,
+        autoplay: {
+          delay: 3000, // 3秒切换一次
+          stopOnLastSlide: false,
+          disableOnInteraction: false
+        },
+        paginationClickable: true,
+        mousewheelControl: true,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true
+        }
+      })
+    })
+    document.addEventListener('click', (e) => {
+      if (e.target.className === 'video-box' && e.target.className !== 'video-dialog') {
+        this.showRadioPlay = false
+        $('#my-video')[0].pause()
+      }
+    })
   },
   methods: {
     goDownLoadIos () {
@@ -167,6 +342,14 @@ export default {
     },
     goDownLoadGoogle () {
       window.open('https://play.google.com/store/apps/details?id=com.kuyu')
+    },
+    // 播放视频
+    playRadio (e) {
+      console.log('e', e)
+      $(e.target).removeClass('play')
+      this.videoImg = false
+      $('#my-video')[0].play()
+      this.showRadioPlay = true
     }
   }
 }
@@ -179,25 +362,33 @@ export default {
     // 上部分
     .introduce-header {
       position: relative;
+      width: 100%;
+      height: 344px;
       .bg-img {
+        position: absolute;
+        top: 0;
+        bottom: 0;
         width: 100%;
         height: 344px;
         background: url('../../../../static/images/introduceApp/headimg.png') no-repeat center;
-        background-size: cover;
+        background-size: 100% 100%;
+        z-index: 1;
       }
       .text {
         width: 1200px;
         display: flex;
-        flex-direction: column;
-        padding-top: 75px;
-        position: absolute;
-        margin: auto;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        margin: 0 auto;
+        z-index: 9;
+        .text-introduce {
+          display: inline-block;
+          width: 517px;
+          z-index: 2;
+          padding-top: 81px;
+          display: flex;
+          flex-direction: column;
+        }
         p {
-          width: 700px;
+          width: 517px;
           font-size: 14px;
           color: #ffffff;
           line-height: 20px;
@@ -208,9 +399,85 @@ export default {
           line-height: 46px;
         }
       }
+      // 视频
+      .video-box {
+        position: relative;
+        width: 422px;
+        height: 242px;
+        border: 6px #fff solid;
+        box-shadow:0px 2px 13px 1px rgba(11,53,80,0.54);
+        box-sizing: border-box;
+        z-index: 2;
+        margin-left: 112px;
+        margin-top: 52px;
+        .video-play {
+          width: 58px;
+          height: 58px;
+          cursor: pointer;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+          z-index: 99;
+          i {
+            cursor: pointer;
+            display: inline-block;
+            width: 58px;
+            height: 58px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+          }
+          .play {
+            background: url('../../../../static/images/introduceApp/play.svg');
+          }
+          .pause {
+            background: url('../../../../static/images/introduceApp/blacktuijian.png');
+          }
+        }
+        .video-img {
+          position: absolute;
+          top: 0;
+          width: 410px;
+          height: 230px;
+          background: url('../../../../static/images/introduceApp/videomoren.svg') no-repeat center;
+          background-size: cover;
+          z-index: 9;
+        }
+        .video-dialog {
+          display: block;
+          vertical-align: top;
+          box-sizing: border-box;
+          color: #fff;
+          background-color: #000;
+          position: relative;
+          padding: 0;
+          font-size: 10px;
+          line-height: 1;
+          font-weight: normal;
+          font-style: normal;
+          font-family: Arial, Helvetica, sans-serif;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          width:410px;
+          height: 230px;
+          .vjs-tech {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
     }
     // 精品推荐
     .quality-goods {
+      // margin-top: 237px;
       width: 100%;
       height: 312px;
       background: #ffffff;
@@ -475,31 +742,75 @@ export default {
           width: 100%;
           padding-top: 50px;
           text-align: center;
+          display: flex;
+          justify-content: center;
           .item {
             text-align: center;
-            display: inline-block;
-            margin-left: 25px;
             margin-right: 50px;
             p {
-              color: #3C5B6F;
-              font-size: 16px;
-              line-height: 24px;
-              width: 180px;
-              margin-top: 16px;
-              font-weight: 500;
+              width: 232px;
+              font-size:16px;
+              font-family:PingFang-SC-Medium;
+              font-weight:500;
+              color:rgba(51,51,51,1);
+              line-height:22px;
+            }
+            .red {
+              width: 170px;
+              padding-top: 21px;
+            }
+            .blue {
+              width: 162px;
+              padding-top: 23px;
+            }
+            .soil {
+              padding-top: 21px;
+            }
+            .research {
+              width: 192px;
+              padding-top: 25px;
+            }
+            .app {
+              width: 128px;
+              padding-top: 22px;
+            }
+            i {
+              display: inline-block;
+              height: 96px;
             }
             .red-icon {
               display: inline-block;
-              width: 116px;
-              height: 96px;
+              width: 68px;
+              height: 72px;
               background: url('../../../../static/images/introduceApp/redlearn.png') no-repeat center;
               background-size: cover;
             }
             .blue-icon {
               display: inline-block;
-              width: 116px;
-              height: 96px;
+              width: 87px;
+              height: 68px;
               background: url('../../../../static/images/introduceApp/bluelearn.svg') no-repeat center;
+              background-size: cover;
+            }
+            .soil-icon {
+              display: inline-block;
+              width: 156px;
+              height: 72px;
+              background: url('../../../../static/images/introduceApp/soilicon.svg') no-repeat center;
+              background-size: cover;
+            }
+            .research-icon {
+              display: inline-block;
+              width: 65px;
+              height: 65px;
+              background: url('../../../../static/images/introduceApp/researchicon.svg') no-repeat center;
+              background-size: cover;
+            }
+            .app-store-icon {
+              display: inline-block;
+              width: 70px;
+              height: 70px;
+              background: url('../../../../static/images/introduceApp/App-store.svg') no-repeat center;
               background-size: cover;
             }
           }
@@ -530,15 +841,17 @@ export default {
           line-height: 20px;
         }
         .comments-list {
-          width: 100%;
+          width: 1070px;
+          height: 314px;
           margin-top: 56px;
           ul {
             width: 100%;
             display: flex;
             li {
               display: inline-block;
-              box-shadow: 0px 3px 8px 0px #0A2B4014;
-              padding: 54px 110px;
+              box-shadow:0px 5px 15px 0px rgba(10,43,64,0.08);
+              border-radius:10px;
+              padding: 54px 52px 59px 110px;
               margin-right: 26px;
               .top {
                 display: flex;
@@ -614,9 +927,21 @@ export default {
               }
               .text {
                 padding-top: 16px;
-                width: 384px;
+                width: 360px;
                 font-weight: 500;
               }
+            }
+          }
+        }
+        .swiper-container {
+          width: 100%;
+          height: 100%;
+          .swiper-wrapper {
+            width: 100%;
+            height: 100%;
+            .swiper-slide {
+              width: 100%;
+              height: 256px;
             }
           }
         }
@@ -624,4 +949,5 @@ export default {
     }
   }
 }
+
 </style>

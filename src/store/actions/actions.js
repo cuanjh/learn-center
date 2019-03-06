@@ -105,7 +105,7 @@ export default {
   },
   // 推荐所有的电台主播
   getAllRadioTeachers ({commit}, params) {
-    return httpLogin(config.allRadioTeachersApi, {num: 500}).then(res => {
+    return httpLogin(config.allRadioTeachersApi, {num: 50}).then(res => {
       commit('updatereCommendRadioTeachers', res.data)
       return res.data
     })

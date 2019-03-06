@@ -6,8 +6,8 @@
     </div>
     <!-- <router-link class="vip-btn" :to="{path: 'vip-index'}"></router-link> -->
     <div @click="goVip()" class="vip-btn">
-      <span v-if="isVip === 0">成为会员</span>
-      <span v-if="isVip === 1">升级会员</span>
+      <a v-if="isVip === 0">成为会员</a>
+      <a v-if="isVip === 1">升级会员</a>
     </div>
   </div>
 </template>
@@ -78,16 +78,21 @@ export default {
     cursor: pointer;
     width: 140px;
     height: 36px;
-    background: #fff;
-    border-radius: 20px;
-    font-size:14px;
-    font-family:PingFang-SC-Bold;
-    font-weight:600;
-    color:#A92222FF;
-    text-align: center;
-    line-height: 36px;
-    &:hover {
-      background: rgba(255, 255, 255, .8);
+    a {
+      display: inline-block;
+      width: 140px;
+      height: 36px;
+      background: #fff;
+      border-radius: 20px;
+      font-size:14px;
+      font-family:PingFang-SC-Bold;
+      font-weight:600;
+      color:#A92222FF;
+      text-align: center;
+      line-height: 36px;
+      &:hover {
+        background: rgba(255, 255, 255, .8);
+      }
     }
   }
 }

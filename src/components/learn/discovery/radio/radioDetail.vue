@@ -17,14 +17,14 @@
           <!-- 价钱 -->
            <div class="member">
              <!-- 免费课程 -->
-            <div class="money-nopay" v-if="courseInfo.money === 0">
+            <div class="money-nopay" v-if="courseInfo.money == 0">
               <span v-text="$t('free')"></span>
             </div>
             <!-- 花钱 -->
             <div class="money-pay" v-else>
               <!-- 会员不免费 -->
-              <div class="money" v-if="courseInfo.free_for_member === 0 || courseInfo.free_for_member === false">
-                <p class="cny" v-if="courseInfo.money_type === 'CNY'">
+              <div class="money" v-if="courseInfo.free_for_member == 0 || courseInfo.free_for_member == false">
+                <p class="cny" v-if="courseInfo.money_type == 'CNY'">
                   <span v-text="'￥' + courseInfo.money"></span>
                   <span>元/年</span>
                 </p>
@@ -34,12 +34,12 @@
               </div>
               <!-- 会员免费 -->
               <div class="vip-free" v-else>
-                <p class="cny" v-if="courseInfo.money_type === 'CNY'">
+                <p class="cny" v-if="courseInfo.money_type == 'CNY'">
                   <span v-text="'￥' + courseInfo.money"></span>
                   <span>元/年</span>
                   <span>会员免费</span>
                 </p>
-                <p class="cny" v-else-if="courseInfo.money_type === 'USD'">
+                <p class="cny" v-else-if="courseInfo.money_type == 'USD'">
                   <span v-text="courseInfo.money*(3.03030303)"></span>
                   <span>元/年</span>
                   <span>会员免费</span>
@@ -71,7 +71,7 @@
                 <span>立即收听</span>
               </div>
               <div class="subscibeno-play">
-                <p class="have-course" v-if="subscibenoInfo.purchased_state == 4">
+                <p class="have-course" v-if="subscibenoInfo.purchased_state == 4 || subscibenoInfo.purchased_state == 1">
                   <i class="subscibe"></i>
                   <span>已订阅</span>
                 </p>
