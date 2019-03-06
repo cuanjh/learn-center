@@ -182,7 +182,9 @@ export default {
         let info = res.result
         Cookie.setCookie('isChecked', _this.isSaveLoginState)
         Cookie.setCookie('user_id', info.user_id)
+        Cookie.setCookieAuto('user_id', info.user_id)
         Cookie.setCookie('verify', info.verify)
+        Cookie.setCookieAuto('verify', info.verify)
         Cookie.setCookie('is_anonymous', info.is_anonymous)
         Cookie.setCookie('hasPhone', info.hasPhone)
         this.updateIsLogin('1')

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="144px" height="81px" viewBox="0 0 144 81" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>icon_无正式团员</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="-12.2634118%" x2="50%" y2="154.140854%" id="linearGradient-1">
+            <stop stop-color="#F6F6F6" offset="0%"></stop>
+            <stop stop-color="#D7D7D7" offset="99.4550834%"></stop>
+            <stop stop-color="#D6D6D6" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#F5F5F5" offset="0%"></stop>
+            <stop stop-color="#E8E8E8" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-3" cx="98.0941176" cy="48.0941176" r="11.0941176"></circle>
+        <pattern id="pattern-4" width="8.00000057" height="8.00000057" x="78.9999994" y="28.9999994" patternUnits="userSpaceOnUse">
+            <use xlink:href="#image-5" transform="scale(0.160000011,0.160000011)"></use>
+        </pattern>
+        <image id="image-5" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAEGWlDQ1BrQ0dDb2xvclNwYWNlR2VuZXJpY1JHQgAAOI2NVV1oHFUUPrtzZyMkzlNsNIV0qD8NJQ2TVjShtLp/3d02bpZJNtoi6GT27s6Yyc44M7v9oU9FUHwx6psUxL+3gCAo9Q/bPrQvlQol2tQgKD60+INQ6Ium65k7M5lpurHeZe58853vnnvuuWfvBei5qliWkRQBFpquLRcy4nOHj4g9K5CEh6AXBqFXUR0rXalMAjZPC3e1W99Dwntf2dXd/p+tt0YdFSBxH2Kz5qgLiI8B8KdVy3YBevqRHz/qWh72Yui3MUDEL3q44WPXw3M+fo1pZuQs4tOIBVVTaoiXEI/MxfhGDPsxsNZfoE1q66ro5aJim3XdoLFw72H+n23BaIXzbcOnz5mfPoTvYVz7KzUl5+FRxEuqkp9G/Ajia219thzg25abkRE/BpDc3pqvphHvRFys2weqvp+krbWKIX7nhDbzLOItiM8358pTwdirqpPFnMF2xLc1WvLyOwTAibpbmvHHcvttU57y5+XqNZrLe3lE/Pq8eUj2fXKfOe3pfOjzhJYtB/yll5SDFcSDiH+hRkH25+L+sdxKEAMZahrlSX8ukqMOWy/jXW2m6M9LDBc31B9LFuv6gVKg/0Szi3KAr1kGq1GMjU/aLbnq6/lRxc4XfJ98hTargX++DbMJBSiYMIe9Ck1YAxFkKEAG3xbYaKmDDgYyFK0UGYpfoWYXG+fAPPI6tJnNwb7ClP7IyF+D+bjOtCpkhz6CFrIa/I6sFtNl8auFXGMTP34sNwI/JhkgEtmDz14ySfaRcTIBInmKPE32kxyyE2Tv+thKbEVePDfW/byMM1Kmm0XdObS7oGD/MypMXFPXrCwOtoYjyyn7BV29/MZfsVzpLDdRtuIZnbpXzvlf+ev8MvYr/Gqk4H/kV/G3csdazLuyTMPsbFhzd1UabQbjFvDRmcWJxR3zcfHkVw9GfpbJmeev9F08WW8uDkaslwX6avlWGU6NRKz0g/SHtCy9J30o/ca9zX3Kfc19zn3BXQKRO8ud477hLnAfc1/G9mrzGlrfexZ5GLdn6ZZrrEohI2wVHhZywjbhUWEy8icMCGNCUdiBlq3r+xafL549HQ5jH+an+1y+LlYBifuxAvRN/lVVVOlwlCkdVm9NOL5BE4wkQ2SMlDZU97hX86EilU/lUmkQUztTE6mx1EEPh7OmdqBtAvv8HdWpbrJS6tJj3n0CWdM6busNzRV3S9KTYhqvNiqWmuroiKgYhshMjmhTh9ptWhsF7970j/SbMrsPE1suR5z7DMC+P/Hs+y7ijrQAlhyAgccjbhjPygfeBTjzhNqy28EdkUh8C+DU9+z2v/oyeH791OncxHOs5y2AtTc7nb/f73TWPkD/qwBnjX8BoJ98VQNcC+8AAADKSURBVGgF7ZgxCsQwDATjvMb/f41/k1QGF9oikWBBzDU5lpwUzejAZFwfPnPOZ9++1hr7e+X1b4+78iGctRjEST/qjZGIijPDiJN+1BsjERVn1sbIOI8ETqLZ3m2MtBnk0wn2XENOv9k/g/h9m9ViEGHYFmPEhl40xogAY4sxYkMvGmNEgLHFGLGhF40xIsDYYozY0IvGGBFgbHEbI7ygs+2QaNxntcSAYcwLuhBLbdhmtRikdjHy1TCSZ1hbASO1PPPVMJJnWFvhBRthG07MMgb9AAAAAElFTkSuQmCC"></image>
+        <linearGradient x1="50%" y1="125.073726%" x2="50%" y2="0%" id="linearGradient-6">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#E0E0E0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="69.0597794%" x2="45.8202596%" y2="-229.741101%" id="linearGradient-7">
+            <stop stop-color="#EBEBEB" offset="0%"></stop>
+            <stop stop-color="#898989" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="-49.1339219%" y2="-114.982884%" id="linearGradient-8">
+            <stop stop-color="#F0F0F0" offset="0%"></stop>
+            <stop stop-color="#BCBCBC" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="-157.069338%" y2="199.411713%" id="linearGradient-9">
+            <stop stop-color="#F0F0F0" offset="0%"></stop>
+            <stop stop-color="#CBCBCB" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="186.477893%" id="linearGradient-10">
+            <stop stop-color="#F7F7F7" offset="0%"></stop>
+            <stop stop-color="#D7D7D7" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon" transform="translate(-133.000000, -2140.000000)">
+            <g id="icon_无正式团员" transform="translate(133.000000, 2140.000000)">
+                <g id="彩灯" transform="translate(76.429996, 26.421348) scale(-1, 1) translate(-76.429996, -26.421348) translate(13.929996, 1.921348)">
+                    <ellipse id="Oval-7-Copy-3" fill="#E0E0E0" opacity="0.200000003" cx="113.434555" cy="31.4293154" rx="3.43455497" ry="3.42931539"></ellipse>
+                    <ellipse id="Oval-7-Copy-4" fill="#F3F3F3" opacity="0.5" cx="119.151832" cy="20.1439731" rx="5.15183246" ry="5.14397308"></ellipse>
+                    <ellipse id="Oval-7-Copy-5" fill="#E0E0E0" opacity="0.300000012" cx="11.8638743" cy="44.8579798" rx="3.86387435" ry="3.85797981"></ellipse>
+                    <ellipse id="Oval-7-Copy-6" fill="#E0E0E0" opacity="0.300000012" cx="27.5038197" cy="2.5" rx="2.5038197" ry="2.5"></ellipse>
+                    <ellipse id="Oval-7-Copy-7" fill="#E0E0E0" opacity="0.200000003" cx="2.5038197" cy="27.5" rx="2.5038197" ry="2.5"></ellipse>
+                </g>
+                <path d="M56.1252528,65.825095 C55.6168352,65.825095 55.1084176,65.825095 54.6,65.825095 C52.4688306,65.825095 50.7411765,64.0974408 50.7411765,61.9662714 L50.7411765,33.6941176 C50.7411765,31.5629483 52.4688306,29.8352941 54.6,29.8352941 L109.588235,29.8352941 C113.850574,29.8352941 117.305882,33.2906024 117.305882,37.5529412 L117.288235,60.7117693 C117.288231,63.9085209 114.696752,66.5 111.5,66.5 C111.259631,66.5 111.019495,66.4850272 110.780988,66.4551687 C110.567873,66.4284889 99.3750712,64.1693594 89,63.5 C73.5,62.5 61.5,61.9662714 57,61.9662714" id="Rectangle-2" stroke="url(#linearGradient-2)" stroke-width="2.89411765" fill="url(#linearGradient-1)"></path>
+                <path d="M131,32 C131,23.163444 123.836556,16 115,16" id="Oval-4" stroke="#F1F1F1" stroke-width="2.5" stroke-linecap="round"></path>
+                <path d="M126,32 C126,25.9248678 121.075132,21 115,21" id="Oval-4-Copy" stroke="#F1F1F1" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M121,32 C121,28.6862915 118.313708,26 115,26" id="Oval-4-Copy" stroke="#F1F1F1" stroke-width="1.3" stroke-linecap="round"></path>
+                <g id="Oval-2">
+                    <use fill="#ECECEC" xlink:href="#path-3"></use>
+                    <use stroke="#F4F4F4" stroke-width="2.89411765" fill-opacity="0.0399999991" fill="url(#pattern-4)" xlink:href="#path-3"></use>
+                </g>
+                <circle id="Oval-2-Copy" fill="#DBDBDB" cx="111.094118" cy="60.0941176" r="2.59411765"></circle>
+                <path d="M68.7483871,80.1703739 C108.512889,80.1703739 144,80.0278465 144,80.1703739 C144,77.0444726 115.454741,64 72,64 C28.5452586,64 0,76.2152226 0,80.1703739 C0,80.466766 28.9838851,80.1703739 68.7483871,80.1703739 Z" id="Oval" fill="url(#linearGradient-6)"></path>
+                <g id="中间人物" transform="translate(23.168539, 0.764045)">
+                    <path d="M30.6708106,64.2359551 C39.0665288,64.2359551 54.3314607,64.6040841 54.3314607,64.2359551 C54.3314607,51.2177369 44.3195554,39.2378631 31.3819638,39.2378631 C18.4443721,39.2378631 7.83146067,53.2177369 7.83146067,66.2359551 C7.83146067,66.2849065 22.2750925,64.2359551 30.6708106,64.2359551 Z" id="Oval-3-Copy-3" fill="url(#linearGradient-7)"></path>
+                    <path d="M47.2595289,37.8656274 L47.2595289,37.8656274 C50.8285197,37.8656274 53.7217584,40.7588661 53.7217584,44.3278569 L53.7217584,62.6724952 C53.7217584,66.2414861 50.8285197,69.1347248 47.2595289,69.1347248 L47.2595289,69.1347248 C43.6905381,69.1347248 40.7972994,66.2414861 40.7972994,62.6724952 L40.7972994,44.3278569 C40.7972994,40.7588661 43.6905381,37.8656274 47.2595289,37.8656274 Z" id="Rectangle-13-Copy" fill="url(#linearGradient-8)" transform="translate(47.259529, 53.500176) scale(-1, 1) rotate(42.000000) translate(-47.259529, -53.500176) "></path>
+                    <path d="M15.3522707,37.8656274 L15.3522707,37.8656274 C18.9212615,37.8656274 21.8145002,40.7588661 21.8145002,44.3278569 L21.8145002,62.6724952 C21.8145002,66.2414861 18.9212615,69.1347248 15.3522707,69.1347248 L15.3522707,69.1347248 C11.7832799,69.1347248 8.89004118,66.2414861 8.89004118,62.6724952 L8.89004118,44.3278569 C8.89004118,40.7588661 11.7832799,37.8656274 15.3522707,37.8656274 Z" id="Rectangle-13-Copy" fill="url(#linearGradient-8)" transform="translate(15.352271, 53.500176) rotate(42.000000) translate(-15.352271, -53.500176) "></path>
+                    <path d="M45.7973363,47.8777276 L45.7973363,47.8777276 C48.3625485,47.8777276 50.4420638,49.9572429 50.4420638,52.5224551 L50.4420638,70.0628315 C50.4420638,72.6280437 48.3625485,74.707559 45.7973363,74.707559 L45.7973363,74.707559 C43.2321242,74.707559 41.1526089,72.6280437 41.1526089,70.0628315 L41.1526089,52.5224551 C41.1526089,49.9572429 43.2321242,47.8777276 45.7973363,47.8777276 Z" id="Rectangle-13-Copy-2" fill="#F4F4F4" transform="translate(45.797336, 61.292643) scale(-1, 1) rotate(-276.358687) translate(-45.797336, -61.292643) "></path>
+                    <path d="M16.3134142,47.8777276 L16.3134142,47.8777276 C18.8786263,47.8777276 20.9581416,49.9572429 20.9581416,52.5224551 L20.9581416,70.0628315 C20.9581416,72.6280437 18.8786263,74.707559 16.3134142,74.707559 L16.3134142,74.707559 C13.748202,74.707559 11.6686867,72.6280437 11.6686867,70.0628315 L11.6686867,52.5224551 C11.6686867,49.9572429 13.748202,47.8777276 16.3134142,47.8777276 Z" id="Rectangle-13-Copy-3" fill="#F4F4F4" transform="translate(16.313414, 61.292643) scale(-1, 1) rotate(-264.633395) translate(-16.313414, -61.292643) "></path>
+                    <ellipse id="Oval-6" fill="url(#linearGradient-9)" cx="36.4800216" cy="60.6230012" rx="4.64472746" ry="4.67005999"></ellipse>
+                    <ellipse id="Oval-6-Copy" fill="url(#linearGradient-9)" cx="26.8329628" cy="60.6230012" rx="4.64472746" ry="4.67005999"></ellipse>
+                    <ellipse id="Oval-3" fill="url(#linearGradient-10)" cx="31.354969" cy="22.8708987" rx="22.7292511" ry="22.8708987"></ellipse>
+                    <path d="M24.5881231,33.1605123 C26.8678661,34.2416016 29.1476075,34.7821463 31.4273474,34.7821463 C33.7221734,34.7821463 36.016999,34.2344239 38.3118242,33.138979 L38.3118278,33.1389867 C38.9641151,32.8276145 39.7453155,33.1039808 40.0566877,33.7562681 C40.1407331,33.9323331 40.1843516,34.1249612 40.1843516,34.3200573 L40.1843481,35.7457261 C40.1843481,36.231822 39.9215895,36.6799484 39.4973882,36.9173141 C36.8073767,38.4225344 34.1173631,39.1751446 31.4273474,39.1751446 C28.737325,39.1751446 26.0473021,38.4225307 23.3572786,36.9173029 L23.3572867,36.9172885 C22.9330897,36.6799251 22.6703336,36.2318031 22.6703336,35.7457121 L22.6703203,34.3735755 C22.6703203,33.632106 23.2714002,33.0310261 24.0128698,33.0310261 C24.2118471,33.0310261 24.4083367,33.0752548 24.5881231,33.1605123 Z" id="Rectangle-5" fill="#FFFFFF" opacity="0.429302548"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

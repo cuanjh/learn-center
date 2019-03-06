@@ -21,8 +21,8 @@ export default {
 
 <style scoped>
 .discovery-wrap {
-  /* background: #ecf4f7; */
   width: 100%;
+  /* height: -webkit-fill-available; */
   min-height: 1000px;
   /* margin-top: -12px; */
 }

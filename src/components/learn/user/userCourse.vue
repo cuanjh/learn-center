@@ -10,7 +10,7 @@
           <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
           <ol>
             <router-link tag="li" :to="{path: '/app/book-details/' + item.code}"><span>{{item.name[languagueHander]}}</span></router-link>
-            <li><span v-text="levelDes[item.currentLevel]"></span>-<span v-text="item.currentChapter.replace('Chapter', '课程')"></span></li>
+            <li><span v-text="levelDes[item.currentLevel]"></span>-<span v-text="'课程' + (parseInt(item.currentUnit.replace('Unit', '')) * parseInt(item.currentChapter.replace('Chapter', '')))"></span></li>
             <li><span :style="{ width: item['complateRate'] }"></span></li>
             <span class='user-course-del-btn-tag' v-show='showIdx === index ? delBtn : false' @click='deleteCourse(item.code)'><i></i>删除课程</span>
           </ol>

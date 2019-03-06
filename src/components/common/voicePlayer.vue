@@ -602,18 +602,19 @@ export default {
       justify-content: center;
       align-items: center;
       .voice-player-cover {
-        width: 30px;
-        height: 30px;
-        background-image: url('./../../../static/images/discovery/radio-player-bg.png');
+        width: 34px;
+        height: 34px;
+        margin-top: 2px;
+        background-image: url('./../../../static/images/discovery/radio-player-bg.svg');
         background-repeat: no-repeat;
         background-size: cover;
         display: inline-block;
         vertical-align: middle;
-        border-radius: 7px;
+        border-radius: 5px;
         img {
           border-radius: 7px;
-          width: 30px;
-          height: 30px;
+          width: 34px;
+          height: 34px;
           object-fit: cover;
         }
       }

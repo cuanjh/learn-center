@@ -99,7 +99,9 @@ export default {
           //   Cookie.setCookieSession('verify', res.verify)
           // }
           Cookie.setCookie('user_id', res.user_id)
+          Cookie.setCookieAuto('user_id', res.user_id)
           Cookie.setCookie('verify', res.verify)
+          Cookie.setCookieAuto('verify', res.verify)
           let UserId = Cookie.getCookie('user_id')
           let lastUserId = localStorage.getItem('last_user_id')
           if (lastUserId !== UserId) {

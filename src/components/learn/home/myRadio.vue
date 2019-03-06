@@ -325,7 +325,7 @@ export default {
             // background-size: cover;
             bottom: 5px;
             right: 8px;
-            z-index: 9;
+            // z-index: 9;
             i {
               display: inline-block;
             }

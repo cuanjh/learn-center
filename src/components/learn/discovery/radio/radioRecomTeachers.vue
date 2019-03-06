@@ -4,10 +4,10 @@
     <div class="teacher-container">
       <div class="teacher-content">
         <div class="left">
-          <div class="head-top"><span>主播推荐</span></div>
+          <div class="head-top"><span>{{curLangName}}主播推荐</span></div>
           <div class="teacher-list">
-            <div class="teacher-list-content">
-              <div class="teacher-item" v-for="(teacher, index) in teachers" :key="index">
+            <div class="teacher-list-content" v-if="teachers && teachers.length > 0">
+              <div class="teacher-item" v-for="(teacher, index) in teachers.slice(0, 6)" :key="index">
                 <div class="teacher-left">
                   <img :src="teacher.photo" alt="头像">
                   <div class="text">
@@ -24,6 +24,11 @@
                     <span>隐藏</span>
                   </p>
                 </div>
+              </div>
+            </div>
+            <div class="teacher-list-content" v-else>
+              <div class="default-bg">
+                <p>暂没有主播推荐</p>
               </div>
             </div>
             <div class="change-batch">
@@ -36,10 +41,10 @@
           </div>
         </div>
         <div class="right">
-          <div class="head-top"><span>其他</span></div>
+          <div class="head-top"><span>更多明星主播</span></div>
           <div class="teacher-list">
-            <div class="teacher-list-content">
-              <div class="teacher-item" v-for="(teacher, index) in teacherLists" :key="index">
+            <div class="teacher-list-content" v-if="teacherLists && teacherLists.length > 0">
+              <div class="teacher-item" v-for="(teacher, index) in teacherLists.slice(0, 6)" :key="index">
                 <div class="teacher-left">
                   <img :src="teacher.photo" alt="头像">
                   <div class="text">
@@ -56,6 +61,11 @@
                     <span>隐藏</span>
                   </p>
                 </div>
+              </div>
+            </div>
+            <div class="teacher-list-content" v-else>
+              <div class="default-bg">
+                <p>暂没有主播推荐</p>
               </div>
             </div>
             <div class="change-batch">
@@ -78,6 +88,7 @@ import NavComp from '../../../common/nav.vue'
 export default {
   data () {
     return {
+      curLangName: '',
       teachers: [], // 主播老师
       teacherLists: [] // 其他老师
     }
@@ -92,6 +103,12 @@ export default {
       {id: 3, path: '', text: '推荐主播'}
     ]
     Bus.$emit('loadNavData', navList)
+    this.getOnlyLangsState().then(res => {
+      console.log(res)
+      if (res.state && res.state.currentLang.hasSet) {
+        this.curLangName = res.state.currentLang.name
+      }
+    })
     this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
       this.teacherLists = this.randArray(res.data.authors)
@@ -116,6 +133,7 @@ export default {
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
       remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
       postDisvRadio: 'course/postDisvRadio', // 电台首页
+      getOnlyLangsState: 'getOnlyLangsState',
       getLearnRecommendTeachers: 'getLearnRecommendTeachers' // 课程相关的电台主播
     }),
     // 数组随机排序函数
@@ -216,7 +234,26 @@ export default {
         background: #ffffff;
         .teacher-list-content {
           width: 100%;
+          min-height: 540px;
           padding: 6px 40px 0px;
+          .default-bg {
+            position: relative;
+            margin: 0 auto;
+            top: 100px;
+            width: 144px;
+            height: 81px;
+            background-image: url('../../../../../static/images/default/default-recom-teacher-bg.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            p {
+              position: relative;
+              top: 100px;
+              left: 24px;
+              color: #C8D4DB;
+              font-size: 14px;
+              font-weight: 500;
+            }
+          }
           .teacher-item {
             display: flex;
             justify-content: space-between;

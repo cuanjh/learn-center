@@ -117,6 +117,7 @@ export default {
   endangeredMapListApi: '/studyv1/shelf/v2/endangered_map', // 濒危语言列表
   endangeredLangDetailApi: '/studyv1/shelf/v2/endangered_lang', // 濒危语言详情
   recommendRadioTeachersApi: '/disv1/radio/recommend_teachers', // 推荐的电台主播
+  allRadioTeachersApi: '/disv1/radio/teachers', // 推荐所有的电台主播
   langMapInfoApi: '/studyv1/learn_info/v2/lang_map_info', // 语言地图统计数据
 
   // 学习系统

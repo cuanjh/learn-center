@@ -67,6 +67,9 @@ export default {
       commit('updateLangCodes', res.state)
     })
   },
+  getOnlyLangsState ({commit}, params) {
+    return httpLogin(config.umLangsStateApi)
+  },
   getCourseList ({commit}) {
     return httpLogin(config.courseListApi)
   },
@@ -91,7 +94,7 @@ export default {
   },
   // 获取推荐的电台主播
   getRecommendTeachers ({commit}, params) {
-    return httpLogin(config.recommendRadioTeachersApi, {num: 50}).then(res => {
+    return httpLogin(config.recommendRadioTeachersApi, {num: 100}).then(res => {
       commit('updatereCommendRadioTeachers', res.data)
       return res.data
     })
@@ -99,6 +102,13 @@ export default {
   // 获取和课程相关的电台主播
   getLearnRecommendTeachers ({commit}, params) {
     return httpLogin(config.recommendRadioTeachersApi, params)
+  },
+  // 推荐所有的电台主播
+  getAllRadioTeachers ({commit}, params) {
+    return httpLogin(config.allRadioTeachersApi, {num: 500}).then(res => {
+      commit('updatereCommendRadioTeachers', res.data)
+      return res.data
+    })
   },
   // 获取推荐的电台
   getRecommendRadios ({commit}, params) {

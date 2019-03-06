@@ -385,6 +385,7 @@ const mutations = {
     let course = payload.course
     var arr = payload.data.current_chapter_code.split('-')
     course['currentLevel'] = arr[2]
+    course['currentUnit'] = arr[3]
     course['currentChapter'] = arr[4]
     let unlockCourses = []
     Object.keys(payload.data.unlock).map(key => {

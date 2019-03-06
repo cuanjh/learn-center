@@ -59,8 +59,8 @@ export default {
   mounted () {
     // 加载官方课程
     this.getLangsList()
-    // 加载推荐的主播
-    this.getRecommendTeachers()
+    // 加载所有推荐的主播
+    this.getAllRadioTeachers()
   },
   computed: {
     ...mapState({
@@ -71,12 +71,12 @@ export default {
     ...mapActions([
       'getLangsList',
       'getEndangeredMap',
-      'getRecommendTeachers'
+      'getAllRadioTeachers'
     ]),
     // 点击电台主播
     loadRecommendTeachers () {
       this.isShowEndangerPanel = false
-      this.getRecommendTeachers().then(res => {
+      this.getAllRadioTeachers().then(res => {
         this.$parent.$refs.map.$emit('loadRecommendTeachers', res)
       })
     },

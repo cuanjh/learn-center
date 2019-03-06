@@ -672,7 +672,7 @@ export default {
             bottom: 5px;
             right: 8px;
             text-align:  center;
-            z-index: 9;
+            // z-index: 9;
             .play {
               width: 24px;
               height:24px;

@@ -101,6 +101,7 @@ export default {
   },
   created () {
     bus.$on('loadIndexCourse', (code) => {
+      this.isShowSubscribeCourses = false
       this.initData(code)
     })
   },
@@ -108,7 +109,11 @@ export default {
     // this.getUserInfo()
     this.userId = cookie.getCookie('user_id')
     if (this.userId) {
-      this.initData()
+      let courseCode = ''
+      if (cookie.getCookie('purchaseCourseCode')) {
+        courseCode = cookie.getCookie('purchaseCourseCode')
+      }
+      this.initData(courseCode)
     } else {
       bus.$emit('loadRecommendRadio', '')
     }
@@ -209,6 +214,7 @@ export default {
       } else {
         bus.$emit('loadRecommendRadio', this.curCourseCode)
       }
+      cookie.delCookieTalkmate('purchaseCourseCode')
     },
     pre () {
       /* eslint-disable */

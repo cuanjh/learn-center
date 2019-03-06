@@ -54,7 +54,7 @@
                     <a v-if="subscribeCourses && subscribeCourses.indexOf(courseCode) > -1 && courseInfo.has_course" @click="startLearn()" href="javascript:void(0)" class="button">
                       <span>开始学习</span>
                     </a>
-                    <a v-else-if="(subscribeCourses && subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course) || (courseCode.indexOf('-Basic') > -1 && !userId)" @click="subscribeCourse()" href="javascript:void(0)" class="button">
+                    <a v-else-if="(subscribeCourses && subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course) || (courseCode.indexOf('-Basic') > -1)" @click="subscribeCourse()" href="javascript:void(0)" class="button">
                       <span>订阅课程</span>
                     </a>
                     <a v-else href="javascript:void(0)" class="button locked">
