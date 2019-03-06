@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>分组 8</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="1.85829118%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#0089D1" offset="0%"></stop>
+            <stop stop-color="#28BDFF" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="34" height="34"></rect>
+    </defs>
+    <g id="世界语言地图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="电台详情" transform="translate(-368.000000, -2232.000000)">
+            <rect fill="#F1F5F8" x="0" y="0" width="1920" height="2277"></rect>
+            <g id="Group" transform="translate(0.000000, 2204.000000)">
+                <g id="底部播放">
+                    <g id="分组-7" fill="url(#linearGradient-1)" fill-opacity="0.8" opacity="0.95">
+                        <path d="M0,17 L1484,17 L1491.10012,4.92979873 C1492.89682,1.87541178 1496.17582,-1.20383863e-12 1499.71946,-1.12265752e-12 L1524.28054,-1.06759046e-12 C1527.82418,-1.15007348e-12 1531.10318,1.87541178 1532.89988,4.92979873 L1540,17 L1920,17 L1920,73 L0,73 L0,17 Z" id="Rectangle-17"></path>
+                    </g>
+                    <g id="合并形状" transform="translate(368.000000, 28.000000)">
+                        <g id="分组-8">
+                            <mask id="mask-3" fill="white">
+                                <use xlink:href="#path-2"></use>
+                            </mask>
+                            <use id="Mask" fill="#E6F3FB" xlink:href="#path-2"></use>
+                            <g id="听说" mask="url(#mask-3)">
+                                <g transform="translate(5.000000, 4.000000)">
+                                    <path d="M2.05714286,13.0876581 C2.4421875,4.73940303 5.87075893,0.604920504 12.3428571,0.684210526 C12.3428571,0.684210526 21.811942,-0.474403783 21.811942,13.0876581 C21.811942,13.0876581 21.2841518,13.0876581 20.2285714,13.0876581 C20.2285714,5.77849898 17.6,2.12391942 12.3428571,2.12391942 C12.3428571,2.12391942 4.15680804,0.916067023 3.58342634,13.0876581 C3.58342634,13.0876581 3.07466518,13.0876581 2.05714286,13.0876581 Z" id="Path-2" stroke="none" fill="#A5CFEA" fill-rule="evenodd"></path>
+                                    <path d="M20.5714286,20.1190476 L20.5714286,23.2142857 C20.5714286,23.8980668 20.1109215,24.452381 19.5428571,24.452381 L13.7142857,24.452381" id="Rectangle-8" stroke="#A5CFEA" stroke-width="0.685714286" fill="none"></path>
+                                    <rect id="Rectangle-9" stroke="none" fill="#719AB6" fill-rule="evenodd" x="11.4857143" y="23.2142857" width="4.11428571" height="2.47619048" rx="1.23809524"></rect>
+                                    <g id="左" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(0.000000, 12.315789)">
+                                        <path d="M3.11282655,0.401217329 L3.11282655,0.401217329 C4.04462672,0.401217329 4.8,1.15659061 4.8,2.08839077 L4.8,8.26587898 C4.8,9.21265284 4.03248814,9.9801647 3.08571429,9.9801647 L3.11282655,0.401217329 Z" id="Rectangle-7" fill="#8CB8D6"></path>
+                                        <path d="M2.74285714,0.401217329 L2.74285714,9.9801647 L2.74285714,9.9801647 C1.22801897,9.9801647 1.07369259e-15,8.75214573 8.8817842e-16,7.23730755 L0,3.14407447 C-1.85514172e-16,1.6292363 1.22801897,0.401217329 2.74285714,0.401217329 Z" id="Rectangle-7" fill="#8CB8D6"></path>
+                                    </g>
+                                    <g id="右" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(19.200000, 12.315789)">
+                                        <path d="M0,0.401217329 L-3.14909177e-16,0.401217329 C0.946773857,0.401217329 1.71428571,1.16872919 1.71428571,2.11550304 L1.71428571,8.28013874 C1.71428571,9.21903715 0.953158169,9.9801647 0.0142597611,9.9801647 L0,0.401217329 Z" id="Rectangle-7-Copy" fill="#8CB8D6" transform="translate(0.857143, 5.190691) scale(-1, 1) translate(-0.857143, -5.190691) "></path>
+                                        <path d="M4.8,0.401217329 L4.8,9.9801647 L4.8,9.9801647 C3.28516183,9.9801647 2.05714286,8.75214573 2.05714286,7.23730755 L2.05714286,3.14407447 C2.05714286,1.6292363 3.28516183,0.401217329 4.8,0.401217329 Z" id="Rectangle-7-Copy" fill="#8CB8D6" transform="translate(3.428571, 5.190691) scale(-1, 1) translate(-3.428571, -5.190691) "></path>
+                                    </g>
+                                    <rect id="Rectangle-6" stroke="none" fill="#B5D6EC" fill-rule="evenodd" x="5.82857143" y="8.21052632" width="12.3428571" height="13.6842105" rx="4.11428571"></rect>
+                                    <path d="M12,19.8421053 C14.0829025,19.8421053 15.7714286,18.6167793 15.7714286,17.1052632 C15.7238839,17.1052632 8.20345982,17.1052632 8.22850868,17.1052632 C8.22857143,18.6167793 9.91709752,19.8421053 12,19.8421053 Z" id="Oval-6" stroke="none" fill="#D8ECF9" fill-rule="evenodd"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

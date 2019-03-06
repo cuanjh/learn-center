@@ -4,11 +4,19 @@
     <learn-header ref="header"></learn-header>
     <div class="learn-cover learn-all-hide-cover" v-show="coverShow" @click="coverHide"></div> <!-- 遮罩 -->
     <div class="learn-cover learn-all-hide-cover" v-show="anonymousCover"></div>
-    <router-view></router-view>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
     <!-- 底部 -->
-    <learn-bottom></learn-bottom>
-    <photo-uploader></photo-uploader>
-    <rocket></rocket>
+    <voice-player v-show="isShow" />
+    <learn-bottom />
+    <photo-uploader />
+    <float-bar />
+    <continue-learn />
+    <goto-bind />
+    <buy-chapter v-if="isShowBuyChapter"/>
+    <!-- 匿名用户听电台提示弹框 -->
+    <user-login-regist-box></user-login-regist-box>
   </div>
 </template>
 <script>
@@ -17,16 +25,23 @@ import $ from 'jquery'
 import learnHeader from './learnHeader.vue'
 import learnBottom from './learnBottom.vue'
 import PhotoUploader from '../common/user/photoUploader.vue'
-import Rocket from '../common/rocket.vue'
+import FloatBar from '../common/floatBar.vue'
+import VoicePlayer from '../common/voicePlayer.vue'
+import ContinueLearn from '../common/continueLearn.vue'
+import BuyChapter from '../common/buyChapterConfirm.vue'
+import GotoBind from '../common/gotoBind.vue'
 import Bus from '../../bus'
+import cookie from '../../tool/cookie'
+import UserLoginRegistBox from '../common/userLoginRegistBox.vue'
 
 export default {
   data () {
     return {
+      isShow: false,
+      isShowBuyChapter: false
     }
   },
   created () {
-    this.getUserInfo()
     this.$on('initLayout', () => {
       this.changeWrapHeight()
     })
@@ -34,7 +49,7 @@ export default {
       this.$refs.header.$emit('activeNavItem', item)
     })
     Bus.$on('changeCourseCode', (courseCode) => {
-      this.$router.push({ path: '/app/course-list' })
+      // this.$router.push({ path: '/app/course-list' })
       this.$nextTick(() => {
         this.changeCourseCode(courseCode)
       })
@@ -44,11 +59,27 @@ export default {
     learnHeader,
     learnBottom,
     PhotoUploader,
-    Rocket
+    FloatBar,
+    VoicePlayer,
+    ContinueLearn,
+    BuyChapter,
+    GotoBind,
+    UserLoginRegistBox
+  },
+  mounted () {
+    let userId = cookie.getCookie('user_id')
+    if (userId) {
+      this.isShowBuyChapter = true
+    }
+    this.updateIsShowVoicePlayer(this.$route)
+  },
+  watch: {
+    $route (to, from) {
+      this.updateIsShowVoicePlayer(to)
+    }
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
       currentChapterCode: state => state.course.currentChapterCode,
       contentUrl: state => state.course.contentUrl,
       coverShow: state => state.course.coverShow,
@@ -57,7 +88,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      getUserInfo: 'user/getUserInfo',
       getLearnInfo: 'course/getLearnInfo',
       getUnlockChapter: 'course/getUnlockChapter',
       getCourseContent: 'course/getCourseContent',
@@ -65,11 +95,11 @@ export default {
       getChapterContent: 'course/getChapterContent',
       getRecord: 'course/getRecord',
       getCourseTestRanking: 'course/getCourseTestRanking',
-      homeworkContent: 'course/homeworkContent'
+      homeworkContent: 'course/homeworkContent',
+      setCurrentChapter: 'course/setCurrentChapter'
     }),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
-      updateCoverState: 'course/updateCoverState',
       updatePurchaseIconPay: 'user/updatePurchaseIconPay',
       updateConfirmAlert: 'user/updateConfirmAlert',
       updateSuccessAlert: 'user/updateSuccessAlert',
@@ -104,8 +134,11 @@ export default {
 
       await that.getChapterContent()
 
-      let top = $('#' + that.currentChapterCode).offset().top - 90
-      $('body,html').animate({ scrollTop: top }, 100, 'linear')
+      await this.setCurrentChapter(that.currentChapterCode)
+      if ($('#' + that.currentChapterCode).length > 0) {
+        let top = $('#' + that.currentChapterCode).offset().top - 90
+        $('body,html').animate({ scrollTop: top }, 100, 'linear')
+      }
 
       await that.getRecord(that.currentChapterCode + '-A0')
       await that.getProgress(that.currentChapterCode)
@@ -114,12 +147,21 @@ export default {
       that.hideLoading()
     },
     coverHide () {
-      this.updateCoverState(false)
       this.updatePurchaseIconPay(false)
       this.updateConfirmAlert(false)
       this.updateSuccessAlert(false)
       this.updateErrorTip(false)
       this.updateAlertType('')
+    },
+    updateIsShowVoicePlayer (route) {
+      let name = route.name ? route.name.toLowerCase() : ''
+      if (name === 'learnindex' || route.path.indexOf('/discovery/') > -1) {
+        this.isShow = true
+      } else if (route.path.indexOf('/book-details/') > -1) {
+        this.isShow = true
+      } else {
+        this.isShow = false
+      }
     }
   }
 }
@@ -127,19 +169,27 @@ export default {
 
 <style scoped>
   .learn-wrap {
-    padding-top: 80px;
-    background: #f1f5f8;
+    height: 100%;
+    padding-top: 62px;
+    background: #f6f8f9;
   }
 
   .learn-cover {
     width: 100%;
     height: 100%;
-    opacity: .9;
-    background-color: #003d5a;
+    background-color: rgba(0, 0, 0, .4);
     position: fixed;
     top: 0;
     left: 0;
     z-index: 99;
     overflow: hidden;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0
   }
 </style>

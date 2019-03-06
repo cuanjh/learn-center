@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="28px" viewBox="0 0 16 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>不安全型</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="33.6007254%" x2="50%" y2="117.243304%" id="linearGradient-1">
+            <stop stop-color="#FFE75F" offset="0%"></stop>
+            <stop stop-color="#527803" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-636.000000, -1088.000000)" fill="url(#linearGradient-1)">
+            <path d="M644,1116 C649.333333,1105.88381 652,1099.30463 652,1096.26247 C652,1091.69924 648.418278,1088 644,1088 C639.581722,1088 636,1091.69924 636,1096.26247 C636,1099.30463 638.666667,1105.88381 644,1116 Z" id="不安全型"></path>
+        </g>
+    </g>
+</svg>

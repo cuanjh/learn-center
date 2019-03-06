@@ -49,7 +49,7 @@ export default {
     width: 900px;
     height: 60px;
     /* border-radius: 4px; */
-    background-color: rgb(241,245,248);
+    background-color: #f6f8f9;
     margin-top: -16px;
     margin-left: 285px;
     position: fixed;

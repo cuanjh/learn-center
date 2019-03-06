@@ -2,15 +2,15 @@
   <div class="details">
     <div class="details-content">
       <div class="details-left">
-        <div class="left-content">
+        <div class="left-content" v-if="detail">
           <div class="left-title">
             <span>{{detail.title}}</span>
           </div>
           <!-- 发布者信息 -->
           <div class="user">
-            <div class="user-img">
+            <div class="user-img" v-if="author">
               <!-- <img src="https://gw.alicdn.com/tfs/TB1yopEdgoQMeJjy1XaXXcSsFXa-640-302.png" alt=""> -->
-              <img v-lazy="author.photo" alt="头像">
+              <img :src="author.photo" alt="头像">
             </div>
             <div class="user-name">
               <span class="new-type">{{author.nickname}}</span>
@@ -22,8 +22,8 @@
           <div class="key-bottom">
             <!--关键词 begin-->
             <div class="keywords">
-              <ul class="keywords-list">
-                <li v-for="(item, index) in tags_info" :key="index">
+              <ul class="keywords-list" v-if="tagsInfo">
+                <li v-for="(item, index) in tagsInfo" :key="index">
                   <!-- :to="{ name: 'stage', params: {id: 'A0' + i}}" -->
                   <router-link :to="{ name: 'headlineSearch', params: {val: item}}">
                     <span>#</span>
@@ -53,10 +53,13 @@
             <span class="line"></span>
           </p>
           <div class="recommend-list">
-            <ul>
-              <li v-for="(item, index) in relatedNews" :key="index">
+            <ul v-if="relatedNews">
+              <router-link  tag="li"
+                            v-for="(item, index) in relatedNews"
+                            :key="index"
+                            :to="{path: '/app/headline-details/' + item.id}">
                 <div class="img">
-                  <img v-lazy="item.banner_img" alt="推荐图片">
+                  <img :src="item.banner_img ? item.banner_img : item.thumbs[0]" alt="推荐图片">
                 </div>
                 <div class="news_item">
                   <div class="news_item_row1">
@@ -67,7 +70,7 @@
                     <span class="reading">阅读&nbsp;{{item.hits}}</span>
                   </div>
                 </div>
-              </li>
+              </router-link>
             </ul>
           </div>
         </div>
@@ -82,7 +85,7 @@
         <div class="comment-list">
           <div class="comment-item">
             <div class="comment-pic">
-              <img v-lazy="userInfo.photo" alt="当前用户头像">
+              <img :src="userInfo.photo" alt="当前用户头像">
             </div>
             <div class="text">
               <!-- 说点什么吧... -->
@@ -166,11 +169,10 @@ export default {
       detail: {},
       author: {}, // 作者
       html: '', // 内容
-      tags_info: [], // 关键字
-      relatedNews: [], // 相关新闻，推荐
+      tagsInfo: [], // 关键字
+      relatedNews: [], // 相关新闻其他推荐
       commentLists: [], // 评论列表
       introduct: '', // 输入的内容
-      id: '',
       page: 1,
       arrReport: [
         {id: 1, item_des: '内容虚假', isEdit: '0'},
@@ -188,29 +190,44 @@ export default {
     }
   },
   components: {},
+  beforeRouteUpdate (to, from, next) {
+    if (to.name === 'headlineDetails') {
+      next()
+      this.initHeadDetail()
+    } else {
+      next()
+    }
+  },
+  created () {
+  },
   mounted () {
-    this.id = this.$route.params.id
-    console.log('id', this.id)
+    console.log('id======', this.headlineId)
+    this.initHeadDetail()
+    this.initCommLists()
+    // this.$router.go(0)
+    // window.location.reload()
+    // setTimeout(() => {
+    //   // location.replace(location)
+    //   window.location.reload()
+    // }, 1000)
     // 头条详情页面
-    this.headlineDetail({id: this.id}).then((data) => {
-      console.log('data', data)
+    /* this.headlineDetail({id: this.headlineId}).then((data) => {
+      console.log('头条详情页面', data)
       this.detail = data.detail
       this.author = data.detail.author
       this.html = data.detail.content
-      this.tags_info = data.detail.tags_info
+      this.tagsInfo = data.detail.tags_info
       this.relatedNews = data.detail.related_news
-      // this.initComment(id)
-    })
+    }) */
     // 评论列表
-    this.commentList({hid: this.id, page: this.page}).then((res) => {
+    /* this.commentList({hid: this.headlineId, page: this.page}).then((res) => {
       console.log('commentList评论列表', res)
       if (res.data.comments.length === 0) {
         this.flag = false
         this.btnText = '暂时没有评论内容'
       }
       this.commentLists = res.data.comments
-    })
-    // this.initComments()
+    }) */
     this.$nextTick(() => {
       this.removeStyle()
     })
@@ -220,8 +237,12 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
-    })
+      userInfo: state => state.userInfo,
+      headDetail: state => state.course.headDetail
+    }),
+    headlineId () {
+      return this.$route.params.id
+    }
   },
   methods: {
     ...mapActions({
@@ -230,15 +251,49 @@ export default {
       comments: 'course/comments',
       reportList: 'course/reportList'
     }),
+    shua () {
+      window.location.reload()
+    },
     showReport () {
       this.isShow = true
     },
     hidePanel () {
-      // qing kong
+      // 清空
       this.checkboxList = []
       this.reportContents = ''
       this.isShow = false
       this.showTextSuccess = false
+    },
+    // 头条详情页面
+    initHeadDetail () {
+      console.log('id', this.headlineId)
+      // 头条详情页面
+      let id = this.headlineId
+      this.headlineDetail({id: id}).then((data) => {
+        console.log('头条详情页面', data)
+        if (data.success) {
+          this.detail = data.detail
+          console.log('detail', this.detail)
+          this.author = data.detail.author
+          console.log('detail', this.author)
+          this.html = data.detail.content
+          this.tagsInfo = data.detail.tags_info
+          console.log('tagsInfo', this.tagsInfo)
+          this.relatedNews = data.detail.related_news
+          console.log('relatedNews', this.relatedNews)
+        }
+      })
+    },
+    // 评论列表
+    initCommLists () {
+      this.commentList({hid: this.headlineId, page: this.page}).then((res) => {
+        console.log('commentList评论列表', res)
+        if (res.data.comments.length === 0) {
+          this.flag = false
+          this.btnText = '暂时没有评论内容'
+        }
+        this.commentLists = res.data.comments
+      })
     },
     // 评论
     review () {
@@ -250,12 +305,12 @@ export default {
         alert('请输入内容')
         return
       }
-      this.comments({hid: this.id, content: this.introduct}).then((data) => {
+      this.comments({hid: this.headlineId, content: this.introduct}).then((data) => {
         console.log('comments评论的内容', data)
         data['content'] = this.introduct
         this.commentLists.unshift(data)
         // console.log('this.commentLists', this.commentLists)
-        this.commentList({hid: this.id, page: 1}).then((res) => {
+        this.commentList({hid: this.headlineId, page: 1}).then((res) => {
           this.introduct = ''
           console.log('res评论后返回的', res)
           if (res.data.page === -1) {
@@ -282,7 +337,7 @@ export default {
         if (_this.reportContents) {
           _this.list += _this.reportContents
         }
-        _this.reportList({id: _this.id, report: _this.list}).then((data) => {
+        _this.reportList({id: _this.headlineId, report: _this.list}).then((data) => {
           console.log('reportdata', data)
           _this.showTextSuccess = true
           $('.toast2').addClass('toast-fadeOut')
@@ -311,7 +366,7 @@ export default {
       }
       this.page++
       console.log('this.page', this.page)
-      this.commentList({hid: this.id, page: this.page}).then((res) => {
+      this.commentList({hid: this.headlineId, page: this.page}).then((res) => {
         console.log('res', res)
         this.commentLists = this.commentLists.concat(res.data.comments)
         console.log('commentLists', this.commentLists)
@@ -592,6 +647,7 @@ ul,li {
       margin-top: 17px;
       ul {
         li {
+          cursor: pointer;
           border-bottom: 1px dashed #EAEAEA;
           margin-top: 20px;
           .img {

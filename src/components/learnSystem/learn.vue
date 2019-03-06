@@ -53,11 +53,18 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       contentUrl: state => state.course.contentUrl,
       currentChapterCode: state => state.course.currentChapterCode,
       'sndEff': state => state.learn.sndEff
-    })
+    }),
+    ui () {
+      let ui = this.userInfo
+      if (Object.keys(ui).length === 0) {
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
+      }
+      return ui
+    }
   },
   methods: {
     ...mapActions({
@@ -76,7 +83,8 @@ export default {
     async initAnonymousData () {
       await this.getUserInfo()
       console.log(this.userInfo)
-      let curCourseCode = this.userInfo.current_course_code
+      // let curCourseCode = this.userInfo.current_course_code
+      let curCourseCode = this.ui.current_course_code
       await this.getLearnInfo(curCourseCode)
       await this.getUnlockChapter(curCourseCode).then((res) => {
         this.updateUnlockCourseList(res)

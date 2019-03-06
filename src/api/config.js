@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 export default {
   // apiUrl: 'http://api.200h.com:81',
   URL: {
@@ -33,9 +34,10 @@ export default {
   resetAnonymous: '/user/reset_password_anonymous', // 匿名账号重置
   unbindIdentity: '/user/unbind_identity', // 解除邮箱或者手机号绑定
   uploadUserPhoto: '/user/upload_user_photo', // 上传用户头像(需要登录)
+  // 登录新的接口
 
   // 课程
-  getMoreLearnCourses: '/study/more_learn_courses', // 获取更多的订阅课程
+  moreLearnCoursesApi: '/study/more_learn_courses', // 获取更多的订阅课程
   currentCourse: '/study/current_course', // 获取一个课程的详情
   learnInfo: '/studyv1/learn_info/index', // 1.一门课程基本配置 2.用户针对此课程学习基本配置 3.学习信息
   unlockChapter: '/chapters_state/get_unlock_chapter', // 最新的接口加入A0-A8是否完成的数据结构；返回正在学习的chapter编码；
@@ -64,12 +66,22 @@ export default {
   languageMap: '/studyv1/shelf/v2/lang_map', // 世界语言地图
   countryInfo: '/studyv1/shelf/v2/country_info', // 国家信息
   courseLangs: '/info/course_langs', // 获取和课程相关的语言列表信息
+  courseListApi: '/studyv1/course/list',
   shelfSearchApi: '/studyv1/shelf/search', // 书架搜索接口
   chinaLangMapApi: '/studyv1/shelf/china_lang_map', // 中国方言课程地图接口
+  countryLanguagesApi: '/studyv1/shelf/v2/country_languages', // 获取国家所拥有的语言
+
+  // 动态
+  qiniuFilesToken: '/qiniu_token/uploadfiles', // 获取上传的token
+  communityApi: '/feedv1/dynamic/v5/index', // 动态首页接口
+  dynamicListsApi: '/feedv1/dynamic/v5/list', // 动态列表接口
+  dynamicPubApi: '/feedv1/dynamic/pub', // 动态发布接口
+  topicsListsApi: '/feedv1/topics/v3/list', // 话题列表接口
 
   // 发现
   disvHomeApi: '/disv1/home', // 发现首页接口
   disvRadioApi: '/disv1/radio', // 发现电台首页接口
+  radioListsApi: '/disv1/radio/list', // 发现，电台，更多电台列表
   radioDetailApi: '/topic_course/detail/<course_code>/', // 用户电台明细
   radioCardListApi: '/user_course/card_list/{course_code}/{list_order}/{page}/{pagesize}', // 课程卡片列表接口
   radioAuthorDetailApi: '/feedv1/partner/detail', // 电台作者详情接口
@@ -81,6 +93,13 @@ export default {
   radioAuthorCommentPub: '/feedv1/comment/pub', // 发表动态评论、批改作业接口
   radioAuthorCommentRewardList: '/feedv1/dynamic/detail', // 动态、作业详情接口 动态打赏列表rewards取出
   radioAuthorCommentReward: '/feedv1/dynamic/reward', // 动态奖励接口
+  disvRecommendRadiosApi: '/disv1/radio/recommends', // 电台推荐接口
+  getRandomRadioApi: '/disv1/radio/recommend_one', // 电台首页随机推荐电台
+  getOtherRecommendsApi: '/disv1/radio/recommends', // 其他人也在听
+  getHotRadiosApi: '/disv1/radio/hot', // 热门电台
+  // 电台支付相关接口
+  createWxRadioOrderApi: '/pay/wx_qrcode_order', // 电台微信支付
+
   // 头条
   headlineHome: '/disv1/headline/home', // 头条首页接口
   headlineList: '/disv1/headline/list', // 头条列表接口
@@ -95,6 +114,11 @@ export default {
    */
   partnerListApi: '/feedv1/partner/list', // 语伴列表接口
   partnerSearchApi: '/feedv1/partner/search', // 语伴搜索接口
+  endangeredMapListApi: '/studyv1/shelf/v2/endangered_map', // 濒危语言列表
+  endangeredLangDetailApi: '/studyv1/shelf/v2/endangered_lang', // 濒危语言详情
+  recommendRadioTeachersApi: '/disv1/radio/recommend_teachers', // 推荐的电台主播
+  allRadioTeachersApi: '/disv1/radio/teachers', // 推荐所有的电台主播
+  langMapInfoApi: '/studyv1/learn_info/v2/lang_map_info', // 语言地图统计数据
 
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token
@@ -109,5 +133,23 @@ export default {
   getGradeContent: '/level_grade/get_content', // 用来获取课程定级的内容
   postGradeResult: '/level_grade/grade_result', // 用来接收用户在定级的过程中学习的结果
   getRecordCourseList: '/study_info/record_course_list', // 获取用户录音课程
-  getRecordCourse: '/study_info/record_course' // 获取用户录音课程
+  getRecordCourse: '/study_info/record_course', // 获取用户录音课程
+
+  /**
+   * 新登录接口
+   */
+  // umThirdLoginApi: 'http://talkmate.com', // 第三方登录的测试域名
+  // umThirdLoginCallBackApi: 'http://beat-study.talkmate.com/app/index',
+  umUserSnsLoginApi: '/umv1/user/web/sns/login', // 第三方登录接口
+  umUserLoginApi: '/umv1/user/login', // 快速登录接口
+  umUserPwdLoginApi: '/umv1/user/login/pwd', // 密码登录接口
+  umUserEditPwdApi: '/umv1/user/edit/pwd', // 用户信息里面修改密码
+  umSendCodeApi: '/umv1/sms/send', // 发送验证码接口
+  umUserInfoApi: '/umv1/user/info', // 获取用户信息接口
+  umUpdateUserInfoApi: '/umv1/user/edit/info', // 修改用户信息
+  umUserBindPhoneApi: '/umv1/user/sns/bind/phone', // 绑定手机号码
+  umUserExistsPhoneApi: '/umv1/user/exists/phone', // 验证手机号是否存在接口
+  umLangsListApi: '/umv1/langs/lists', // 语言列表接口
+  umLangsStateApi: '/umv1/langs/state', // 语言设置状态接口
+  umUserAnonyApi: '/umv1/user/anony' // 匿名登录
 }

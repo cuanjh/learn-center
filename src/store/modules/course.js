@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 import _ from 'lodash'
 import Cookie from 'js-cookie'
 
@@ -9,6 +11,7 @@ const state = {
   language: 'chinese',
   languagueHander: 'zh-CN', // 默认不同的level的实现方式
   learnCourses: [], // 已订阅的课程
+  radioCourses: [], // 订阅的电台课程
   subscribeCoursesStr: '',
   loading: false, // 用来判断加载状态程序
   currentCourseCode: '',
@@ -30,7 +33,7 @@ const state = {
     'Level5': '高级 C1',
     'Level6': '高级 C1'
   },
-  chapterDes: '',
+  chapterDes: [],
   contentUrl: '',
   assetsUrl: '',
   chapters: {},
@@ -61,7 +64,9 @@ const state = {
   feedInfos: [], // 动态列表
   radioRewardList: [],
   courseLangs: {}, // 官方课程
-  partnerList: {} // 语伴列表
+  partnerList: {}, // 语伴列表
+  dynamicsLists: [], // 动态列表
+  DynamicIndex: [] // 动态首页数据
 }
 
 const actions = {
@@ -71,13 +76,17 @@ const actions = {
     })
   },
   getLearnCourses ({commit, state, dispatch}) {
-    return httpLogin(config.getMoreLearnCourses).then((res) => {
+    state.learnCourses = []
+    state.radioCourses = []
+    return httpLogin(config.moreLearnCoursesApi).then((res) => {
       commit('clearMoreCourses')
       _.map(res.learn_courses, (course) => {
-        if (course['course_type'] === 0) {
-          dispatch('getUnlockChapter', course['code']).then((data) => {
+        if (course.course_type === 0) {
+          dispatch('getUnlockChapter', course.code).then((data) => {
             commit('updateLearnCourses', { course, data })
           })
+        } else if (course.course_type === 1) {
+          commit('updateRadioCourses', course)
         }
       })
     })
@@ -88,6 +97,7 @@ const actions = {
   getLearnInfo ({ commit }, courseCode) {
     return httpLogin(config.learnInfo, { course_code: courseCode }).then((res) => {
       commit('updateCourseInfo', res)
+      return res
     })
   },
   getCourseContent ({ commit, state }, contentUrl) {
@@ -173,8 +183,17 @@ const actions = {
     return httpLogin(config.bookCaseIndex)
   },
   // 语言课程信息接口
-  langInfo ({ commit }, params) {
+  langInfoDetails ({ commit, dispatch }, params) {
     return httpLogin(config.langInfo, params)
+    // return httpLogin(config.langInfo, params).then((res) => {
+    //   commit('updateCourseDetails', res)
+    //   res.countryInfo.forEach(item => {
+    //     state.countrysInfoLists = []
+    //     dispatch('countryInfo', {code: item.code}).then((res) => {
+    //       item.countryLangueInfos = res.country_info.langsInfo
+    //     })
+    //   })
+    // })
   },
   // 获取课程资源列表
   getShelfResList ({ commit }, params) {
@@ -187,6 +206,7 @@ const actions = {
   worldLanguageMap ({ commit }, params) {
     return httpLogin(config.languageMap, params)
   },
+  // 国家详情接口
   countryInfo ({ commit }, params) {
     return httpLogin(config.countryInfo, params)
   },
@@ -203,6 +223,37 @@ const actions = {
     return httpLogin(config.chinaLangMapApi)
   },
   /**
+   * 动态相关
+   */
+  // 动态首页数据
+  getCommunity ({commit, dispatch}, params) {
+    state.DynamicIndex = []
+    return httpLogin(config.communityApi, params).then((data) => {
+      commit('updateDynamicIndex', data)
+    })
+  },
+  getDynamicLists ({commit, dispatch}, params) {
+    state.dynamicsLists = []
+    return httpLogin(config.dynamicListsApi, params).then(res => {
+      console.log('params', params)
+      res.dynamicList.dynamics.forEach(item => {
+        let id = item.info.id
+        dispatch('radioAuthorCommentRewardList', {id: id}).then((res) => {
+          item.rewardLists = res.detail.rewards
+          commit('updateDynamicsLists', item)
+        })
+      })
+    })
+  },
+  // 发布动态
+  getDynamic ({commit}, params) {
+    return httpLogin(config.dynamicPubApi, params)
+  },
+  // 动态话题列表
+  getTopicsLists ({commit}, params) {
+    return httpLogin(config.topicsListsApi, params)
+  },
+  /**
    * 发现相关
    */
   postDisvHome ({commit}) {
@@ -214,6 +265,9 @@ const actions = {
   postRadioDetail ({commit}, code) {
     let api = config.radioDetailApi.replace('<course_code>', code)
     return httpLogin(api)
+  },
+  getRadioList ({commit}, params) {
+    return httpLogin(config.radioListsApi, params)
   },
   getRadioCardList ({commit}, params) {
     let api = config.radioCardListApi.replace('{course_code}', params.code)
@@ -312,11 +366,26 @@ const actions = {
 }
 
 const mutations = {
+  // 更新课程列表
+  // updateCourseDetails (state, data) {
+  //   console.log('课程列表', data)
+  //   state.bookCaseDetails = data
+  //   // 处理信息
+  //   for (var item in data.langInfo) {
+  //     if (state.langInfoObj[item]) {
+  //       state.langInfoObj[item]['info'] = data.langInfo[item]['info']
+  //     }
+  //   }
+  //   state.countrysInfoLists = data.countryInfo // 国家
+  //   sessionStorage.setItem('countrysInfoLists', JSON.stringify(state.countrysInfoLists))
+  //   console.log('课程详情mutations==>', state.bookCaseDetails)
+  // },
   // 更新更多订阅课程
   updateLearnCourses (state, payload) {
     let course = payload.course
     var arr = payload.data.current_chapter_code.split('-')
     course['currentLevel'] = arr[2]
+    course['currentUnit'] = arr[3]
     course['currentChapter'] = arr[4]
     let unlockCourses = []
     Object.keys(payload.data.unlock).map(key => {
@@ -331,12 +400,15 @@ const mutations = {
     localStorage.setItem('subscribeCoursesStr', subscribeCoursesStr)
     localStorage.setItem('learnMoreCourses', JSON.stringify(state.learnCourses))
   },
+  updateRadioCourses (state, course) {
+    state.radioCourses.push(course)
+  },
   updateCurCourseCode (state, data) {
     state.currentCourseCode = data
     localStorage.setItem('currentCourseCode', state.currentCourseCode)
   },
   updateCourseInfo (state, data) {
-    // console.log('updateCourseInfo', data)
+    console.log('updateCourseInfo', data)
     state.courseBaseInfo = data.info.courseBaseInfo
     localStorage.setItem('courseBaseInfo', JSON.stringify(state.courseBaseInfo))
     state.learnInfo = data.info.learnInfo
@@ -355,9 +427,7 @@ const mutations = {
   },
   updateChapters (state, data) {
     state.chapters = courseMethod.getCourseStructure(data.themes, state.unlock)
-    // state.chapters.map((item) => {
-    //   console.log(item)
-    // })
+    console.log('theme chapters', state.chapters)
     state.curLevelChapters = []
     state.chapters
       .filter((item) => { return item.code.indexOf(state.curLevel) > -1 })
@@ -633,6 +703,7 @@ const mutations = {
   },
   clearMoreCourses (state) {
     state.learnCourses = []
+    state.radioCourses = []
     state.subscribeCoursesStr = ''
     localStorage.setItem('subscribeCoursesStr', '')
   },
@@ -641,9 +712,6 @@ const mutations = {
   },
   hideLoading (state) {
     state.loading = false
-  },
-  updateCoverState (state, flag) {
-    state.coverShow = flag
   },
   updateChapterDes (state, chapterCode) {
     let arr = chapterCode.split('-')
@@ -654,13 +722,30 @@ const mutations = {
     let course = learnMoreCourse.filter((item) => {
       return item.lan_code === arr[0]
     })
-    state.chapterDes = course[0].name['zh-CN'] + '.' + state.levelDes[arr[2]] + '.' + arr[4].replace('Chapter', '课程')
+    state.chapterDes.push(course[0].name['zh-CN'])
+    state.chapterDes.push(state.levelDes[arr[2]])
+    let unitNum = parseInt(arr[3].replace('Unit', ''))
+    let chapterNum = parseInt(arr[4].replace('Chapter', ''))
+    state.chapterDes.push('课程' + ((unitNum - 1) * 6 + chapterNum))
   },
   updateHomeworkContent (state, data) {
     state.homeworkContent = data
   },
   updateHistoryCourseRecord (state, data) {
     state.historyCourseRecord = data
+  },
+  // 动态首页的列表
+  updateDynamicIndex (state, data) {
+    state.DynamicIndex = data
+    console.log('动态首页数据', state.DynamicIndex)
+  },
+  // 动态列表
+  updateDynamicsLists (state, item) {
+    state.dynamicsLists.push(item)
+    // state.dynamicsLists.forEach(i => {
+    //   console.log('item', i)
+    // })
+    console.log('动态列表', state.dynamicsLists)
   },
   // 电台动态
   updateRadioDynamic (state, data) {

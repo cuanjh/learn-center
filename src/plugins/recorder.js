@@ -1,6 +1,9 @@
 /* eslint-disable */
 import bus from '../bus'
-import Cookie from '../tool/cookie' 
+import Cookie from '../tool/cookie'
+import { userInfo } from 'os';
+import { Upload } from 'element-ui';
+import { resolve, reject } from 'any-promise';
 var qiniu = require('qiniu-js')
 // or
 // import * as qiniu from 'qiniu-js'
@@ -80,7 +83,6 @@ class Recorder {
                         data.setUint8(offset + i, str.charCodeAt(i));
                     }
                 }
-
                 // 资源交换文件标识符
                 writeString('RIFF');
                 offset += 4;
@@ -134,21 +136,17 @@ class Recorder {
                         data.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
                     }
                 }
-
                 return new Blob([data], {
                     type: 'audio/wav'
                 });
             }
         };
-
         //音频采集
         this.recorder.onaudioprocess = e => {
             this.audioData.input(e.inputBuffer.getChannelData(0));
             bus.$emit("record_setVolume", [e.inputBuffer.getChannelData(0)]);
         }
-
     }
-
     //开始录音
     start() {
         this.audioData.buffer = [];
@@ -156,25 +154,21 @@ class Recorder {
         this.audioInput.connect(this.recorder);
         this.recorder.connect(this.context.destination);
     }
-
     //停止
     stop() {
         this.audioInput.disconnect(0);
         this.recorder.disconnect(0);
     }
-
     //获取音频文件
     getBlob() {
         this.stop();
         return this.audioData.encodeWAV();
     }
-
     //回放
     play(audio) {
         audio.src = window.URL.createObjectURL(this.getBlob());
         audio.play();
     }
-
     getSoundTime(cb) {
         let audio = new Audio;
         audio.src = window.URL.createObjectURL(this.getBlob());
@@ -185,9 +179,7 @@ class Recorder {
         audio.onloadedmetadata = function () {
             cb(audio.duration)
         }
-
     }
-
     //上传
     upload(url, callback) {
         let fd = new FormData();
@@ -230,50 +222,109 @@ class Recorder {
         },
         mimeType: [] || null
       };
-
       var key = this.GetKey(code);
-
       var next = function(res) {
         console.log(res)
       }
-
       var error = function(err) {
         console.log(err)
       }
-
       var complete = function(res) {
         console.log(res);
       }
-
       var observer = {
         next: next,
         error: error,
         complete: complete
       };
-
-      var observable = qiniu.upload(this.getBlob(), key, token, putExtra, config);
-      var subscription = observable.subscribe(observer);
+        var observable = qiniu.upload(this.getBlob(), key, token, putExtra, config);
+        var subscription = observable.subscribe(observer);
+        console.log('observable--------',observable)
+        console.log('subscription------',subscription)
       // subscription.unsubscribe();
 
     }
-
     GetKey (code) {
-      var date = new Date()
-      var d = date.format('yyyy/MM/dd');
-      var userId = Cookie.getCookie('user_id');
-      var time = date.getTime()
-
-      return d + '/' + code + '/' + userId + '/' + time + '.wav';
+        var date = new Date()
+        var d = date.format('yyyy/MM/dd');
+        var userId = Cookie.getCookie('user_id');
+        var time = date.getTime()
+        return d + '/' + code + '/' + userId + '/' + time + '.wav';
     }
 
+    uploadQiniuVoice (token, fileKey, callback) {
+        var that = this;
+        return new Promise(function(resolve, reject) {
+            var config = {
+                useCdnDomain: true,
+                region: qiniu.region.z0
+            }
+            var putExtra = {
+                fname: '',
+                params: {},
+                mimeType: [] || null
+            }
+            var next = function(res) {
+                console.log(res)
+            }
+            var error = function(err) {
+                reject(err)
+            }
+            var complete = function(res) {
+                resolve(res)
+            }
+            var observer = {
+                next: next,
+                error: error,
+                complete: complete
+            }
+            // var fileKey = that.GetFileKey();
+            var observable = qiniu.upload(that.getBlob(), fileKey, token, putExtra, config)
+            var subscription = observable.subscribe(observer);
+        })
+    }
+
+    GetBlobVideo (file) {
+        var blob = new Blob([file],{type:file});
+        return blob
+    }
+    uploadQiniuVideo (file, token, fileKey, callback) {
+        var that = this;
+        return new Promise(function(resolve, reject) {
+            var config = {
+                useCdnDomain: true,
+                region: qiniu.region.z0
+            }
+            var putExtra = {
+                fname: '',
+                params: {},
+                mimeType: [] || null
+            }
+            var next = function(res) {
+                console.log(res)
+            }
+            var error = function(err) {
+                reject(err)
+            }
+            var complete = function(res) {
+                resolve(res)
+            }
+            var observer = {
+                next: next,
+                error: error,
+                complete: complete
+            }
+            var blobVideo = that.GetBlobVideo(file);
+            var observable = qiniu.upload(blobVideo, fileKey, token, putExtra, config)
+            var subscription = observable.subscribe(observer);
+        })
+    }
     // 抛出异常
     static throwError(message) {
         console.log(message);
     }
 
 }
-
-
 // 获取录音机
 let init = (callback, config) => {
     let userMedia = navigator.getUserMedia;
@@ -327,8 +378,16 @@ export default {
             } else {
                 this.recorder = false;
             }
-
         });
+    },
+    uploadQiniuVoice: function(token, callback){
+        return this.recorder.uploadQiniuVoice(token)
+    },
+    uploadQiniuVideo: function(file, token, fileKey, callback) {
+        return this.recorder.uploadQiniuVideo(file, token, fileKey)
+    },
+    getBlobData: function (file) {
+        return this.recorder ? this.recorder.GetBlobVideo(file) : null;
     },
     startRecording: function () {
         if (this.recorder) {
@@ -368,14 +427,11 @@ export default {
     },
     // 是否激活
     isActivity: function (speakwork, canRecord) {
-
         if (speakwork) {
             if (this.recorder) return true;
         } else {
             if (this.recorder && canRecord) return true;
         }
-
         return false;
     }
-
 }

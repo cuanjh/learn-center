@@ -372,7 +372,7 @@ export default {
     })
   },
   mounted () {
-    let isAnonymous = Cookie.getCookie('is_anonymous')
+    let isAnonymous = Cookie.getCookie('is_anonymous') === 'true'
     console.log('isAnonymous--->', isAnonymous)
     if (isAnonymous) {
       this.initAnonymousData()
@@ -401,7 +401,7 @@ export default {
       tips: state => state.learn.tips,
       formScores: state => state.course.formScores,
       canRecord: state => state.learn.canRecord,
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       totalCoin: state => state.user.totalCoin,
       contentUrl: state => state.course.contentUrl
     }),
@@ -429,6 +429,13 @@ export default {
         curChapterCode = this.currentChapterCode
       }
       return curChapterCode
+    },
+    ui () {
+      let ui = this.userInfo
+      if (Object.keys(ui).length === 0) {
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
+      }
+      return ui
     }
   },
   watch: {
@@ -603,7 +610,9 @@ export default {
       console.log(4444)
       await this.getUserInfo()
       console.log('userInfo===>', this.userInfo)
-      let curCourseCode = this.userInfo.current_course_code
+      // let curCourseCode = this.userInfo.current_course_code
+
+      let curCourseCode = this.ui.current_course_code
       this.updateCurCourseCode(curCourseCode)
       await this.getLearnInfo(curCourseCode)
       await this.getUnlockChapter(curCourseCode).then((res) => {

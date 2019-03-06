@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-box">
+  <div class="bottom-box" v-show="false">
     <div class="content">
       <div class="left">
         <p>2018 @ talkmate</p>
@@ -23,8 +23,9 @@ export default {
 <style scoped>
   .bottom-box {
     width: 100%;
-    height: 90px;
+    height: 60px;
     background-color: #fff;
+    border-top: 1px solid rgba(106,135,142,0.28);
     position: relative;
     left: 0;
     right: 0;
@@ -32,7 +33,7 @@ export default {
   }
   .content {
     width: 1200px;
-    height: 90px;
+    height: 60px;
     font-size: 14px;
     color: #333333;
     line-height: 90px;
@@ -56,10 +57,14 @@ export default {
     height: 30px;
     background: url('./../../../static/images/learn/logo-icon.png');
     background-size: 100%;
-    margin-top: 30px;
+    margin-top: 15px;
     margin-left: 30px;
   }
 
+  p {
+    height: 60px;
+    line-height: 60px;
+  }
   @media screen and (max-width: 1024px) {
     .content {
       width: 960px;

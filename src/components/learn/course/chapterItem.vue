@@ -14,7 +14,7 @@
             <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
           </div>
           <div class="current-learn-course-describe">{{ item['info']['zh-cn']['describe'] }}</div>
-          <div class="current-learn-course-gold" v-show="(parseInt(userInfo.member_info.member_type) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)" :class="{'courseIsLock': (parseInt(userInfo.member_info.member_type) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
+          <div class="current-learn-course-gold" v-show="(parseInt(isVip) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)" :class="{'courseIsLock': (parseInt(isVip) === 1) ? false :  (buyChapters.indexOf(item.code) === -1)}">
             <i></i>
             150金币
           </div>
@@ -175,27 +175,14 @@
         </div>
       <!-- </transition> -->
     </div>
-    <div class="nolock-test-check" v-show="nolockTestCheckShow">
-      <p class="animated flipInX" v-show="nolockTestCheckShow">
-        <span v-html="tips"></span>
-        <i></i>
-        <span class="goBackCore" @click="goBackLearn">继续学习</span>
-      </p>
-    </div>
-    <div class="nolock-test-check" v-show="anonymousCheckShow">
-      <p class="animated flipInX">快去注册，<br>开启全球说学习之旅吧！
-        <i></i>
-        <span class="goBackCore" @click="goToRegister">去注册</span>
-      </p>
-    </div>
-    <buy-chapter ref='buyChapter' />
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
-import BuyChapter from './buyChapterConfirm.vue'
+import bus from '../../../bus'
+import cookie from '../../../tool/cookie'
 export default {
   props: ['currentCourseCode', 'item'],
   data () {
@@ -203,15 +190,10 @@ export default {
       isCoreCompleted: 0,
       chapterProgress: 0,
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
-      nolockTestCheckShow: false,
-      anonymousCheckShow: false,
       isShow: true,
       isHistory: false,
       tips: ''
     }
-  },
-  components: {
-    BuyChapter
   },
   created () {
     this.$on('draw', this.drawProgress)
@@ -234,7 +216,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       'currentChapterCode': state => state.course.currentChapterCode,
       'unlockCourses': state => state.course.unlockCourses,
       'buyChapters': state => state.course.buyChapters,
@@ -370,7 +352,7 @@ export default {
               obj['isActive'] = 1
             }
           }
-          if (parseInt(this.userInfo.member_info.member_type) !== 1) {
+          if (parseInt(this.isVip) !== 1) {
             obj['isCompleted'] = 0
             obj['isActive'] = 0
             obj['completedRate'] = ''
@@ -462,6 +444,12 @@ export default {
       }
       this.$emit('draw', 'homework', retObj)
       return retObj
+    },
+    isVip () {
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return
+      }
+      return this.userInfo.member_info['member_type']
     }
   },
   methods: {
@@ -469,18 +457,18 @@ export default {
       updateHistoryCourseRecord: 'course/updateHistoryCourseRecord'
     }),
     jumpToCourse (chapterCode) {
-      let isAnonymous = this.userInfo['is_anonymous']
+      let isAnonymous = cookie.getCookie('is_anonymous') === 'true'
       if (isAnonymous) {
-        this.anonymousCheckShow = true
+        bus.$emit('showBindWin')
         return false
       }
       if (this.unlockCourses.indexOf(chapterCode) === -1) {
         this.tips = '完成上一课“核心课程”, <br>才能开启本课程！'
-        this.nolockTestCheckShow = true
+        bus.$emit('setContinueLearn', this.tips)
         return false
       }
-      if (this.buyChapters.indexOf(chapterCode) === -1 && parseInt(this.userInfo.member_info.member_type) !== 1) {
-        this.$refs['buyChapter'].$emit('buyCoin', chapterCode)
+      if (this.buyChapters.indexOf(chapterCode) === -1 && parseInt(this.isVip) !== 1) {
+        bus.$emit('showBuyChapterPanel', chapterCode)
         return false
       }
 
@@ -489,7 +477,7 @@ export default {
           this.isShow = !this.isShow
         } else {
           this.isShow = !this.isShow
-          let top = $('#' + chapterCode).offset().top - 138
+          let top = $('#' + chapterCode).offset().top - 116
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }
 
@@ -501,7 +489,7 @@ export default {
         }
         this.isShow = false
         setTimeout(() => {
-          let top = $('#' + chapterCode).offset().top - 138
+          let top = $('#' + chapterCode).offset().top - 126
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, time)
 
@@ -530,13 +518,13 @@ export default {
         this.$router.push({ name: 'stage', params: {id: id} })
       } else {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-        this.nolockTestCheckShow = true
+        bus.$emit('setContinueLearn', this.tips)
       }
     },
     startTest (isCoreCompleted) {
       if (!isCoreCompleted) {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-        this.nolockTestCheckShow = true
+        bus.$emit('setContinueLearn', this.tips)
       } else {
         this.$router.push({ path: '/learn/pk' })
       }
@@ -544,25 +532,22 @@ export default {
     startHomework (isCoreCompleted) {
       if (!isCoreCompleted) {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-        this.nolockTestCheckShow = true
+        bus.$emit('setContinueLearn', this.tips)
       } else {
         this.$router.push({ path: '/app/homework' })
       }
     },
     jumpVipPage (isActive, id) {
-      if (parseInt(this.userInfo.member_info.member_type) !== 1) {
+      if (parseInt(this.isVip) !== 1) {
         this.$router.push({ path: '/app/user/vip' })
       } else {
         if (isActive) {
           this.$router.push({ name: 'stage', params: {id: id} })
         } else {
           this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-          this.nolockTestCheckShow = true
+          bus.$emit('setContinueLearn', this.tips)
         }
       }
-    },
-    goBackLearn () {
-      this.nolockTestCheckShow = false
     },
     drawProgress (type, retObj) {
       console.log(retObj)
@@ -615,10 +600,6 @@ export default {
     },
     switchShow () {
       this.isShow = false
-    },
-    goToRegister () {
-      let langCode = this.userInfo['current_course_code'].split('-')[0]
-      this.$router.push({ path: '/auth/register/' + langCode })
     }
   }
 }
@@ -712,7 +693,7 @@ export default {
     color: #616161;
     font-size: 12px;
     line-height: 15px;
-    margin-top: 39px;
+    margin-top: 18px;
   }
 
  .current-learn-course-gold i{
@@ -772,10 +753,6 @@ export default {
     transform: translateY(-10px);
     opacity: 0;
   } */
-
-  .course-item-detail {
-
-  }
 
   .course-item-detail ul > li:not(:first-child) {
     padding: 24px 24px 0;
@@ -1233,7 +1210,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 61, 90, .9);
+    background-color: rgba(0, 0, 0, .4);
     z-index:99999999;
     overflow: hidden;
   }
@@ -1284,7 +1261,7 @@ export default {
     border-radius: 20px;
     line-height: 40px;
     text-align: center;
-    background-color: #fd8469;
+    background-color: #2A9FE4;
   }
 
   canvas {

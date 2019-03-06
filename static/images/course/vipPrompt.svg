@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="56px" viewBox="0 0 70 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>分组</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFE000" offset="0%"></stop>
+            <stop stop-color="#FFBE00" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="43.2776477%" y1="54.32424%" x2="67.8513973%" y2="80.3054613%" id="linearGradient-2">
+            <stop stop-color="#FFE000" offset="0%"></stop>
+            <stop stop-color="#FFBE00" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="世界语言地图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="世界地图语言-默认" transform="translate(-448.000000, -2377.000000)">
+            <g id="成为会员" transform="translate(370.000000, 2361.000000)">
+                <g id="分组" transform="translate(78.000000, 16.000000)">
+                    <polygon id="Fill-1" fill="url(#linearGradient-1)" points="48.4875128 29.521193 35.5133338 9.72998881 22.2613333 29.521193 4.46820818 17.7902924 12.811936 45.9987878 35.5133338 45.9987878 58.2147316 45.9987878 66.1082709 17.7902924"></polygon>
+                    <polygon id="Fill-1" fill="url(#linearGradient-2)" points="48.3269969 29.4835119 35.3528179 9.69230769 12.6514201 45.9611067 35.3528179 45.9611067"></polygon>
+                    <path d="M19.1261333,55.9509675 L51.4877705,55.9509675 C55.0589763,55.9509675 57.9540107,53.0559332 57.9540107,49.4847273 L12.659893,49.4847273 L12.659893,49.4847273 C12.659893,53.0559332 15.5549274,55.9509675 19.1261333,55.9509675 Z" id="Fill-3" fill="#FFBE00"></path>
+                    <polygon id="Fill-4" fill="#C4570A" points="12.8121844 48.4641804 58.1063021 48.4641804 58.1063021 45.9991236 12.8121844 45.9991236"></polygon>
+                    <circle id="椭圆形" fill="#FFDE00" fill-rule="nonzero" cx="35.5384615" cy="5.38461538" r="5.38461538"></circle>
+                    <ellipse id="椭圆形-copy-3" fill="#FFDE00" fill-rule="nonzero" cx="3.29411765" cy="16.2366864" rx="3.29411765" ry="3.31360947"></ellipse>
+                    <ellipse id="椭圆形-copy-4" fill="#FFDE00" fill-rule="nonzero" cx="66.7058824" cy="16.2366864" rx="3.29411765" ry="3.31360947"></ellipse>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

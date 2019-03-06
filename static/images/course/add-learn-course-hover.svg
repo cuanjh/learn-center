@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>hover</title>
+    <desc>Created with Sketch.</desc>
+    <g id="切图-+-杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="iPhone-SE" transform="translate(-681.000000, -243.000000)" fill-rule="nonzero" stroke="#2A9FE4">
+            <g id="hover" transform="translate(681.000000, 243.000000)">
+                <rect id="矩形-copy-4" stroke-width="3.26086957" x="1.63043478" y="1.63043478" width="46.7391304" height="46.7391304" rx="5.43478261"></rect>
+                <path d="M14.7256729,25.1035197 L34.9637681,25.1035197" id="直线-2" stroke-width="2.38095238" stroke-linecap="round"></path>
+                <path d="M14.7256729,25.1035197 L34.9637681,25.1035197" id="直线-2" stroke-width="2.38095238" stroke-linecap="round" transform="translate(24.844720, 25.103520) rotate(-90.000000) translate(-24.844720, -25.103520) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="28px" viewBox="0 0 16 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>肯定濒危型</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="127.28899%" id="linearGradient-1">
+            <stop stop-color="#FFDB55" offset="0%"></stop>
+            <stop stop-color="#EA0B0B" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-601.000000, -1088.000000)" fill="url(#linearGradient-1)">
+            <path d="M609,1116 C614.333333,1105.88381 617,1099.30463 617,1096.26247 C617,1091.69924 613.418278,1088 609,1088 C604.581722,1088 601,1091.69924 601,1096.26247 C601,1099.30463 603.666667,1105.88381 609,1116 Z" id="肯定濒危型"></path>
+        </g>
+    </g>
+</svg>

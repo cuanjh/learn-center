@@ -8,7 +8,7 @@
         </p>
         <img :src="photo" alt="">
         <p v-text="nickname"></p>
-        <p v-text="chapterDes"></p>
+        <p v-text="chapterDes.join('·')"></p>
         <div class="head-praise-count">
           <p>
             <span v-text="praiseCount"></span>
@@ -152,7 +152,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       levelDes: state => state.course.levelDes,
       chapterDes: state => state.course.chapterDes
     })

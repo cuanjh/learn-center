@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="modal learn-photo-upload" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
+  <div class="mark-box-bg" id="avatar-modal">
+    <div class="modal learn-photo-upload" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <form class="avatar-form" v-bind:action="uploadPhotoUrl" enctype="multipart/form-data" method="post">
@@ -76,7 +76,6 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState'
     }),
     ...mapActions({
       getUploadPhotoUrl: 'user/getUploadPhotoUrl'
@@ -84,17 +83,27 @@ export default {
     // 用于隐藏图片
     hidePicture () {
       $('#avatar-modal').hide()
-      this.updateCoverState(false)
     },
     closeUploadView () {
       $('#avatar-modal').hide()
-      this.updateCoverState(false)
     }
   }
 }
 </script>
 
 <style>
+.mark-box-bg {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .4);
+  z-index: 105044455555;
+  display: none;
+}
 .cropper-container {
   position: relative;
   overflow: hidden;
@@ -477,8 +486,8 @@ export default {
   right: 50%;
   margin-top: -300px;
   margin-right: -460px;
-  z-index: 105044455555;
-  display: none;
+  /* z-index: 105044455555;
+  display: none; */
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
   outline: 0;

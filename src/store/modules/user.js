@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 import { httpLogin, httpNoLogin, httpLoginUrl } from '../../api/api'
 import config from '../../api/config'
 import * as useMethod from './userMethod'
@@ -33,6 +34,11 @@ const state = {
     tradeNo: '', // 订单号
     productId: '' // 套餐ID
   },
+  payWeixin: {
+    aliWebPayUrl: '', // 微信订单跳转地址
+    tradeNo: '', // 订单号
+    productId: '' // 套餐ID
+  },
   loadingMore: false, // 显示收支详细是否加载完成
   courseFilterAll: []
 }
@@ -58,7 +64,7 @@ const actions = {
     return httpNoLogin(config.anonymousRegisterApi, params)
   },
   getUserInfo ({commit}) {
-    return httpLogin(config.userInfo).then((res) => {
+    httpLogin(config.userInfo).then((res) => {
       commit('updateUserInfo', res)
     })
   },
@@ -117,9 +123,26 @@ const actions = {
       /**
        * 先临时这么处理, 这里不应该使用vuex进行数据的传递, 这是根本问题
        */
+      console.log(process.env)
+      result.redirect_url = result.redirect_url + '&redirect_url=' + process.env.REDIRECT_URL
       result.productId = productId
       commit('createAliWebOrderMutation', result)
       commit('getpayhide')
+    })
+  },
+  // 创建电台支付宝订单
+  createAliRadioOrder ({commit}, params) {
+    httpLogin(config.createAliWebOrder, params).then(result => {
+      result.redirect_url = result.redirect_url + '&redirect_url=' + process.env.REDIRECT_URL
+      result.productId = params.product_id
+      commit('createAliWebOrderMutation', result)
+    })
+  },
+  // 创建电台微信支付订单
+  createWeixinRadioOrder ({commit}, params) {
+    httpLogin(config.createWxRadioOrderApi, params).then(result => {
+      result.productId = params.product_id
+      commit('createWeixinOrderMutation', result)
     })
   },
   // 会员产品接口的实现
@@ -173,14 +196,10 @@ const actions = {
 }
 
 const mutations = {
-  updateUserInfo: function (state, data) {
-    // console.log(data)
+  updateUserInfo (state, data) {
+    console.log('=======旧的userInfo', data)
     state.userInfo = data
     state.totalCoin = data.coins
-    let isAnonymous = Cookie.getCookie('is_anonymous')
-    if (isAnonymous) {
-      state.userInfo['is_anonymous'] = true
-    }
     localStorage.setItem('userInfo', JSON.stringify(data))
     Cookie.setCookie('isVip', data.member_info.member_type)
   },
@@ -224,13 +243,23 @@ const mutations = {
   getpayhide (state) {
     state.payShow = true
   },
+  // 创建支付宝订单
   createAliWebOrderMutation (state, response) {
     state.pay.aliWebPayUrl = response.redirect_url
     state.pay.productId = response.productId
     state.pay.tradeNo = response.trade_no
+    console.log('创建支付宝订单返回', state.pay)
+  },
+  // 创建微信支付订单
+  createWeixinOrderMutation (state, response) {
+    state.payWeixin.aliWebPayUrl = 'http://dev.api.talkmate.com/qrcode.php?data=' + response.code_url
+    state.payWeixin.productId = response.productId
+    state.payWeixin.tradeNo = response.trade_no
+    console.log('创建微信支付订单返回', state.payWeixin)
   },
   updateMemberProductsList (state, response) {
     state.productList = response
+    console.log('productList', state.productList)
   },
   updatePurchaseIconPay (state, flag) {
     state.purchaseIconPay = flag
@@ -261,14 +290,10 @@ const mutations = {
   },
   modefiyEmailMemberInfo (state, param) {
     state.userInfo['email'] = param.email
-    state.userInfo['is_anonymous'] = false
-    Cookie.delCookieTalkmate('is_anonymous')
   },
   modefiyPhoneMemberInfo (state, param) {
     state.userInfo['phonenumber'] = param.phoneNumber
     state.userInfo['email'] = ''
-    state.userInfo['is_anonymous'] = false
-    Cookie.delCookieTalkmate('is_anonymous')
   },
   updateTotalCoin (state, coins) {
     state.totalCoin = coins

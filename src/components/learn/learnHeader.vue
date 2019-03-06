@@ -2,18 +2,21 @@
   <div class="header-box">
     <div class="content" >
       <div class="left" @mouseleave='navChangeCourseTwo'>
-        <p><img src="./../../../static/images/home/logo.png" alt=""></p>
-        <p :class="{ 'header-box-left-active': activeItem === 'course' }" @mouseenter='navChangeCourse' @click='jumpCourse()'>
+        <router-link tag="p" :to="{path: '/app/index'}"><img src="./../../../static/images/home/logo.png" alt=""></router-link>
+        <p v-show="false" :class="{ 'header-box-left-active': activeItem === 'course' }" @mouseenter='navChangeCourse' @click='jumpCourse()'>
           学习
           <i class='' :class="{ 'animate-down': navArrowDown, 'animate-up':navArrowUp }"></i>
         </p>
-        <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'discovery'  }"  :to="{path: '/app/discovery'}">
-            发现
+        <router-link v-show="false" tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'discovery'  }"  :to="{path: '/app/discovery'}">
+          发现
         </router-link>
-        <router-link tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
-            我的
+        <router-link v-show="false" :class="{ 'header-box-left-active': activeItem === 'bookcase' }" tag="p" class="nav-find-btn" :to="{path: '/app/book-case'}">
+          书架
         </router-link>
-        <router-link tag="span"  :to="{ path: '/auth/register/' + langCode }" class='learn-login-right-tips-probation learn-login-right-tips-probation-modify' v-show="userInfo.is_anonymous">您是试用账号<span>去注册</span></router-link>
+        <router-link v-show="false" tag="p" class="nav-find-btn" :class="{ 'header-box-left-active': activeItem === 'user'  }"  :to="{path: '/app/user'}">
+          我的
+        </router-link>
+        <router-link tag="span"  :to="{ path: '/app/user/bind' }" class='learn-login-right-tips-probation learn-login-right-tips-probation-modify' v-show="isAnonymous">您是试用账号<span>去绑定</span></router-link>
         <!-- 课程列表 -->
         <transition name="fade">
           <section class='mycourse-wrap mycourse-loginout animated' v-show="navCourse">
@@ -46,8 +49,8 @@
           </section>
         </transition>
       </div>
-      <div class="right" @mouseleave="hideExit" v-if="userInfo.member_info">
-        <div class="container">
+      <div class="right" @mouseleave="hideExit">
+        <div class="container" v-show="false">
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <div class="search" @click="enterSearch"></div>
         </div>
@@ -58,11 +61,14 @@
           <img class="nation" src="https://course-assets1.talkmate.com/course/icons/IND-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="国籍">
         </div> -->
         <div class='learn-user' @mouseenter="showExit" >
-          <a><img :src='userInfo.photo'></a>
+          <router-link :to="{path: (userInfo ? '/app/user/course' : '/auth/login')}">
+            <img :src="userInfo ? userInfo.photo : './../../../static/images/learnIndex/user-photo.svg'"  />
+            <span v-show="isActive" class="active"></span>
+          </router-link>
           <transition name="fade">
-            <span class='user-login-out mycourse-loginout animated' v-show="showExitState">
+            <span class='user-login-out mycourse-loginout animated' v-show="showExitState && userInfo">
               <img class='arrow' src="./../../../static/images/course/learn-big-arrow.png">
-              <router-link tag="span" :to="{ path: '/app/user/setting' }">设置</router-link>
+              <router-link v-show="false" tag="span" :to="{ path: '/app/user/setting' }">设置</router-link>
               <span @click='jumpSystem()'>退出</span>
             </span>
           </transition>
@@ -76,6 +82,7 @@
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import Bus from '../../bus'
+import cookie from '../../tool/cookie'
 import SearchCourse from '../common/find/searchCourse'
 
 export default {
@@ -88,7 +95,9 @@ export default {
       showExitState: false,
       learnCourse: [],
       searchUserCourse: '',
-      courseDetailShow: false
+      courseDetailShow: false,
+      isActive: false,
+      domainName: 'https://uploadfile1.talkmate.com'
     }
   },
   components: {
@@ -103,26 +112,43 @@ export default {
     // })
   },
   mounted () {
-    this.getLearnCourses()
-    console.log('订阅课程======', this.learnCourses)
+    // this.getLearnCourses()
+    let flag = cookie.getCookie('is_anonymous') === 'true'
+    this.updateIsAnonymous(flag)
+    console.log(this.isAnonymous)
+    let userId = cookie.getCookie('user_id')
+    if (userId) {
+      this.getUserInfo()
+    }
+    // console.log('订阅课程======', this.learnCourses)
   },
   computed: {
     ...mapState({
       learnCourses: state => state.course.learnCourses,
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo,
+      isAnonymous: state => state.isAnonymous
     }),
     ...mapGetters({
       langCode: 'user/langCode'
     }),
-    languagueHander () {
-      return this.userInfo.sys_lang
-    },
     isVip () {
-      if (!this.userInfo.member_info) {
+      if (!this.userInfo || !this.userInfo.member_info) {
         return 0
       }
       console.log('header', this.userInfo.member_info.member_type)
       return this.userInfo.member_info.member_type
+    },
+    ui () {
+      let userId = cookie.getCookie('user_id')
+      if (userId) {
+        let ui = this.userInfo
+        if (Object.keys(ui).length === 0) {
+          ui = JSON.parse(sessionStorage.getItem('userInfo'))
+        }
+        return ui
+      } else {
+        return null
+      }
     }
   },
   watch: {
@@ -147,17 +173,28 @@ export default {
       } else {
         this.courseDetailShow = true
       }
+    },
+    // 监听路由变化
+    $route (to, from) {
+      console.log('监听路由变化：', this.$route.path)
+      if (this.$route.path.indexOf('/user/') > -1) {
+        this.isActive = true
+      } else {
+        this.isActive = false
+      }
     }
   },
   methods: {
     ...mapActions({
       getLearnCourses: 'course/getLearnCourses',
       getCurrentCourse: 'course/getCurrentCourse',
-      logout: 'user/logout'
+      logout: 'user/logout',
+      getUserInfo: 'getUserInfo'
     }),
     ...mapMutations({
       updateIsLogin: 'user/updateIsLogin',
-      updateCurCourseCode: 'course/updateCurCourseCode'
+      updateCurCourseCode: 'course/updateCurCourseCode',
+      updateIsAnonymous: 'updateIsAnonymous'
     }),
     navChangeCourse () {
       this.navArrowDown = false
@@ -209,27 +246,27 @@ export default {
 <style scoped>
 .header-box {
   width: 100%;
-  height: 68px;
-  background: #2A9FE4;
+  height: 62px;
+  background: #0581D1;
   position: fixed;
   top: 0px;
   z-index: 99999;
 }
 .header-box .content {
   width: 1200px;
-  height: 68px;
+  height: 62px;
   margin: 0px auto;
   position: relative;
 }
 
 .header-box .left{
   display: inline-block;
-  height: 68px;
+  height: 62px;
 }
 .header-box .right{
   display: inline-block;
   width: 133px;
-  height: 68px;
+  height: 62px;
   margin-right: 18px;
 }
 .header-box .left>p{
@@ -541,7 +578,7 @@ export default {
 .mycourse-wrap .mycourse-wrap-arrow {
   position: absolute;
   top: -10px;
-  left: 2.1%;
+  left: 6%;
 }
 
 .mycourse-wrap > img{
@@ -680,6 +717,7 @@ export default {
   -o-filter: grayscale(0%) !important;
   filter: grayscale(0%) !important;
   filter: white !important;
+  transform:scale(1.2);
   -webkit-transform:scale(1.2);
 }
 
@@ -695,20 +733,24 @@ export default {
   height: 34px;
   position: absolute;
   right: 0;
-  top: 17px;
+  top: 16px;
 }
 
-.right .learn-user img {
+.right .learn-user a img {
   width: 34px;
   height: 34px;
   border-radius: 50%;
+  border: 2px solid #fff;
 }
-.right p.learn-user a {
-  width: 34px;
-  height: 34px;
-  display: inline-block;
-  border-radius: 100px;
-  overflow: hidden;
+
+.learn-user .active {
+  height: 4px;
+  width: 4px;
+  background-color: #fff;
+  position: absolute;
+  margin-left: 215px;
+  margin-top: 4px;
+  border-radius: 50%;
 }
 
 .right .user-login-out {
@@ -767,33 +809,32 @@ export default {
   position: absolute;
   top:15px;
   right:95px;
-  width: 220px;
+  width: 200px;
   height: 30px;
   color:#fff;
   line-height: 30px;
   text-align: center;
   border-radius: 100px;
   padding-left: 20px;
-  background-color: #7bc16b;
-  font-size: 16px;
+  background-color: #FFBE29;
+  font-size: 14px;
   cursor:pointer;
   background-image: url(../../../static/images/learn/learn-probation.svg);
   background-repeat:no-repeat;
-  background-position: 20px center;
+  background-position: 22px center;
 }
 .learn-login-right-tips-probation span {
   margin-left: 4px;
   text-decoration: underline;
 }
-.learn-login-right-tips-probation:hover{
+/* .learn-login-right-tips-probation:hover{
   background-color: #6ab359;
-}
+} */
 
 .learn-login-right-tips-probation-modify{
-  position: static !important;
   float: right;
-  margin-top: 25px;
-  margin-right:5px;
+  margin-top: 3px;
+  margin-right: 50px;
 }
 
 @media screen and (max-width: 1024px) {

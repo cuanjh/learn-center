@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="148px" height="82px" viewBox="0 0 148 82" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>矩形@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="49.9642292%" y1="-37.0419125%" x2="50%" y2="104.908726%" id="linearGradient-1">
+            <stop stop-color="#000000" stop-opacity="0.01" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0" offset="59.0744246%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.0375661512" offset="78.119479%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.308565444" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="发现" transform="translate(-737.000000, -1042.000000)" fill="url(#linearGradient-1)" fill-rule="nonzero">
+            <g id="特别推荐" transform="translate(370.000000, 980.000000)">
+                <g id="分组-8" transform="translate(367.000000, 62.000000)">
+                    <rect id="矩形" x="0" y="0" width="148" height="82"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

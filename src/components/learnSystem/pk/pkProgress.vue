@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       pkTime: state => state.learn.pkTime
     }),
     coupleLength () {
@@ -64,7 +64,7 @@ export default {
     ui () {
       let ui = this.userInfo
       if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
       }
       return ui
     }

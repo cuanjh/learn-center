@@ -1,1 +1,21 @@
-<svg height="15" viewBox="0 0 67 15" width="67" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0" stop-color="#00395b"/><stop offset="1" stop-color="#002942"/></linearGradient><path d="m1587 15 8.59607-12.78919239c.92884-1.38193033 2.48467-2.21080761 4.14975-2.21080761h40.62767c1.6515 0 3.19646.81549759 4.12822 2.17904747l8.76099 12.82095253z" fill="url(#a)" fill-opacity=".8" fill-rule="evenodd" transform="translate(-1587)"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="14px" viewBox="0 0 64 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>底部播放@2x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="1.85829118%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#0089D1" offset="0%"></stop>
+            <stop stop-color="#28BDFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.8" opacity="0.95">
+        <g id="电台详情" transform="translate(-1476.000000, -2207.000000)" fill="url(#linearGradient-1)">
+            <g id="Group" transform="translate(0.000000, 2207.000000)">
+                <g id="底部播放">
+                    <path d="M0,14 L1476,14 L1483.60708,3.35009445 C1485.10877,1.24772547 1487.53333,9.18851087e-13 1490.11694,9.18376486e-13 L1525.88306,-8.8817842e-15 C1528.46667,-8.27869648e-14 1530.89123,1.24772547 1532.39292,3.35009445 L1540,14 L1920,14 L1920,70 L0,70 L0,14 Z" id="Rectangle-17"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="28px" viewBox="0 0 16 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>已经消失型</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#383838" offset="0%"></stop>
+            <stop stop-color="#9F9F9F" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-496.000000, -1088.000000)" fill="url(#linearGradient-1)">
+            <path d="M504,1116 C509.333333,1106.25557 512,1099.79614 512,1096.62171 C512,1091.86007 508.418278,1088 504,1088 C499.581722,1088 496,1091.86007 496,1096.62171 C496,1099.79614 498.666667,1106.25557 504,1116 Z" id="已经消失型"></path>
+        </g>
+    </g>
+</svg>

@@ -5,13 +5,13 @@
         <div class='user-left-userDetail'>
           <ol>
             <li id="crop-avatar">
-              <img :src="memberInfo.photo" class="avatar-view" id='defaultUserImg' @click='uploadPicBtn' >
+              <img :src="userInfo ? userInfo.photo : ''" class="avatar-view" id='defaultUserImg' @click='uploadPicBtn' >
             </li>
-            <li v-text='memberInfo.nickname'></li>
-            <li>全球说ID:<span v-text='memberInfo.talkmate_id'></span></li>
+            <li v-text="userInfo ? userInfo.nickname : ''"></li>
+            <li>全球说ID:<span v-text="userInfo ? userInfo.talkmate_id : ''"></span></li>
             <li>
-              <span>{{ memberInfo.following_count }}<em> 关注</em></span>
-              <span>{{ memberInfo.followed_count }}<em> 粉丝</em></span>
+              <span>{{ userInfo ? userInfo.following_count : '' }}<em> 关注</em></span>
+              <span>{{ userInfo ? userInfo.followed_count : '' }}<em> 粉丝</em></span>
               <i></i>
             </li>
           </ol>
@@ -42,7 +42,7 @@
               <router-link tag="p" :to="{ path:'/app/user/setting' }" ><i></i>设置</router-link>
             </li>
           </ul>
-          <ul class='spe-bind' v-if="false">
+          <ul class='spe-bind' v-if="isAnonymous">
             <li :class="{'active': activeItem === 'bind' }">
               <router-link tag="p" :to="{ path:'/app/user/bind' }" ><i></i>绑定</router-link>
             </li>
@@ -53,25 +53,20 @@
         <router-view></router-view>
       </div>
     </div>
-    <rocket v-show="rocketShow"></rocket>
   </div>
 </template>
 
 <script>
-import Rocket from '../../common/rocket.vue'
 import $ from 'jquery'
+import cookie from '../../../tool/cookie'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   data () {
     return {
       activeItem: '',
-      judgeVip: false,
-      rocketShow: false
+      judgeVip: false
     }
-  },
-  components: {
-    Rocket
   },
   created () {
     this.$on('activeNavUserItem', (e) => {
@@ -91,23 +86,14 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo
     }),
-    memberInfo () {
-      // if (this.$store.state.course.memberInfo.member_info !== undefined) {
-      //   this.judgeVip =
-      //     this.$store.state.course.memberInfo.member_info.member_type === 1
-      // }
-      let ui = this.userInfo
-      if (!ui) {
-        ui = localStorage.getItem('userInfo')
-      }
-      return ui
+    isAnonymous () {
+      return cookie.getCookie('is_anonymous') === 'true'
     }
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState'
     }),
     ...mapActions({
       getTradeRecord: 'user/getTradeRecord',
@@ -117,7 +103,6 @@ export default {
     uploadPicBtn () {
       $('#avatar-modal').fadeIn()
       console.log(window.location.href)
-      this.updateCoverState(true)
     }
   }
 }
@@ -125,7 +110,7 @@ export default {
 
 <style scoped>
 .user-wrap {
-  background: #ecf4f7;
+  /* background: #ecf4f7; */
   width: 100%;
   /*height: 1000px;*/
   min-height: 1000px;
@@ -137,7 +122,7 @@ export default {
 .user-left-bar {
   width: 320px;
   height: 100%;
-  background: #ecf4f7;
+  /* background: #ecf4f7; */
   float: left;
 }
 .user-left-userDetail {

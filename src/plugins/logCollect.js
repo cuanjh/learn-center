@@ -48,7 +48,7 @@ function _reportLearn(businessNo, otherInfo) {
 function _report(businessNo, otherInfo) {
 	//如果是教师进入不再提交日志信息
 	// if(Config.userData.is_teacher){ return }
-  var userInfo = JSON.parse(localStorage.getItem('userInfo'))
+  var userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 	var _businessNo = businessNo;
 	var	_userId = Cookie.getCookie('user_id');
 	var	_memberType = userInfo.member_info.member_type;

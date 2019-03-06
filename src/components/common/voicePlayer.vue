@@ -99,36 +99,35 @@
         </div>
         <div class="play-body">
           <div class="play-body-title">
-            <span v-text="curRadio.title"></span>
+            <span v-text="curRadio.title ? curRadio.title : '全球说电台'"></span>
           </div>
           <div class="play-body-progress">
-            <div class="progress" @mousedown="downProgress($event)">
+            <div id="voice-player-progress" class="progress">
               <i class="progress-load" style="width: 0%;"></i>
-              <i class="progress-cur" :style="{'width': curProgress}">
-                <span class="progress-btn">
+              <i class="progress-cur"  :style="{'width': curProgress + 'px'}">
+                <span id="progressCurBtn" class="progress-btn" @mousedown="onMouseDownProgress($event)" :style="{'left': curProgress + 'px'}">
                 </span>
               </i>
             </div>
             <div class="playtime">
-              <span>00:{{toParseTime(curTime)}}</span>
-              <!-- 00:{{toParseTime(curTime)}} -->
-              <span>/</span>
+              <span>00:{{toParseTime(curTime)}} </span>
+              <span>&nbsp;/&nbsp;</span>
               <span>00:{{toParseTime(duration)}}</span>
             </div>
           </div>
         </div>
-        <div class="play-controls">
+        <div class="play-controls" @mouseleave="isShowVolume = false">
           <div class="player-volume-wrapper" v-show="isShowVolume">
             <div class="player-volume">
               <div class="player-volume-progress" ref="trunk">
                 <i class="player-volume-cur" :style="{'height': volumeHeight}">
-                  <span class="player-volume-btn"  @mousemove="moveVolume($event)">
+                  <span id='playerVolumeBtn' class="player-volume-btn"  @mousedown="mousedownVolume($event)">
                   </span>
                 </i>
               </div>
             </div>
           </div>
-          <a class="volume" @click="isShowVolume = !isShowVolume">
+          <a class="volume" @mouseenter="isShowVolume = true">
             <svg>
               <use xlink:href="#icon-volume"></use>
             </svg>
@@ -141,7 +140,7 @@
               <use xlink:href="#icon-single"></use>
             </svg>
           </a>
-          <a class="list" @click="isShowList = !isShowList">
+          <a id="voicePlayerListBtn" class="list" @click="isShowList = !isShowList">
             <svg>
               <use xlink:href="#icon-list"></use>
             </svg>
@@ -149,31 +148,37 @@
         </div>
       </div>
     </div>
-    <div class="voice-player-list" v-show="isShowList">
+    <div id="voicePlayerList" class="voice-player-list" v-show="isShowList">
       <div class="voice-player-list-head clearfix">
         <h4>播放列表({{radioList.length}})</h4>
       </div>
       <div class="voice-overflow">
         <div class="voice-player-list-content">
           <ul>
-            <li class="clearfix" v-for="(card, index) in radioList" :key="index" @click="goPlay(index)">
-              <div class="col1" v-text="index + 1"></div>
+            <li class="clearfix"
+                :class="{'current': index === curIndex}"
+                v-for="(card, index) in radioList"
+                :key="index" @click="goPlay(index)">
+              <div class="triangle"></div>
+              <div class="col-content">
+                <div class="col1" v-text="index + 1"></div>
+                <div class="col2" v-text="card.title"></div>
+                <div class="col3" v-text="toParseTime(card.sound_time)"></div>
+              </div>
+              <!-- <div class="col1" v-text="index + 1"></div>
               <div class="col2" :class="{'current': index === curIndex}" v-text="card.title"></div>
-              <div class="col3" v-text="toParseTime(card.sound_time)"></div>
+              <div class="col3" v-text="toParseTime(card.sound_time)"></div> -->
             </li>
           </ul>
         </div>
       </div>
-      <!-- <div class="voice-player-list-content">
-        <ul>
-          <li class="clearfix" v-for="(card, index) in radioList" :key="index" @click="goPlay(index)">
-            <div class="col1" v-text="index + 1"></div>
-            <div class="col2" :class="{'current': index === curIndex}" v-text="card.title"></div>
-            <div class="col3" v-text="toParseTime(card.sound_time)"></div>
-          </li>
-        </ul>
-      </div> -->
     </div>
+    <!-- 人民币付费课程弹框 -->
+    <buy-radio-box></buy-radio-box>
+    <!-- 金币付费课程弹框 -->
+    <buy-coins-radio-box/>
+    <!-- 金币不足 -->
+    <user-coins-box></user-coins-box>
   </div>
 </template>
 
@@ -182,6 +187,9 @@ import { mapState, mapActions } from 'vuex'
 import $ from 'jquery'
 import Bus from '../../bus'
 import SoundCtrl from '../../plugins/soundCtrl'
+import BuyRadioBox from './buyRadioBox.vue'
+import BuyCoinsRadioBox from './buyCoinsRadioBox.vue'
+import UserCoinsBox from './userCoinsBox.vue'
 
 export default {
   data () {
@@ -194,6 +202,7 @@ export default {
       curIndex: 0,
       curTime: 0,
       curProgress: 0,
+      progressWidth: 0,
       interval: null,
       duration: 0,
       isPlay: false,
@@ -203,70 +212,39 @@ export default {
       isLoop: true,
       isLock: true,
       tagVolume: false,
-      thunk: null, // 拖拽DOM元素
       volumeHeight: '50%',
       isHand: true,
-      sndctr: SoundCtrl
+      sndctr: SoundCtrl,
+      radioDetail: {} // 当前电台的详情
     }
   },
+  components: {BuyRadioBox, BuyCoinsRadioBox, UserCoinsBox},
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
-    })
+      userInfo: state => state.userInfo // 用户信息
+    }),
+    isVip () {
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
+    }
   },
   created () {
     Bus.$on('getRadioCardList', (item) => {
-      console.log('item', item)
-      let params = {
-        code: item.code,
-        listOrder: this.listOrder,
-        page: this.page,
-        pageSize: this.pageSize
-      }
-      console.log('params', params)
-      this.getRadioCardList(params).then((res) => {
-        console.log('res电台列表', res)
-        console.log('userInfo', this.userInfo)
-        this.page = res.page
-        if (res.cards.length > 0) {
-          // 判断是否免费，免费就是加载全部列表，收费判断vip只加载前三条
-          if (item.money === 0) {
-            // 免费就是加载全部列表
-            this.radioList = res.cards
-          } else {
-            // 收费的列表判断是否是会员
-            if (this.userInfo.member_info.member_type !== 1) {
-              this.radioList = res.cards.slice(0, 3)
-            } else {
-              this.radioList = res.cards
-            }
-          }
-          // this.radioList = res.cards
-          this.curIndex = 0
-          this.playRadio()
-        }
-        console.log(res)
-      })
+      console.log('item电台====》', item)
+      $('.voice-player-cover').css('background-image', '')
+      this.initRadioDetail(item)
+      this.initrRadioCardList(item)
     })
-
     Bus.$on('radioPlay', () => {
       this.play()
     })
-
     Bus.$on('radioPause', () => {
       this.pause()
     })
   },
   mounted () {
-    this.thunk = this.$refs.trunk
-    this.thunkBtn = this.$refs.trunk_btn
-    this.thunk.onmousedown = (e) => {
-      this.downVolume(e)
-      document.onmouseup = () => {
-        document.onmousemove = document.onmouseup = null
-      }
-      return false
-    }
     let that = this
     $('.voice-player').mouseenter(() => {
       if (!that.isLock) {
@@ -279,11 +257,53 @@ export default {
         that.isHand = false
       }
     })
+    this.progressWidth = $('#voice-player-progress').width()
+    $('body').click((e) => {
+      e = e || window.event
+      let elem = e.target || e.srcElement
+      while (elem) {
+        if (elem.id && (elem.id === 'voicePlayerList' || elem.id === 'voicePlayerListBtn')) {
+          return
+        }
+        elem = elem.parentNode
+      }
+      this.isShowList = false
+    })
   },
   methods: {
     ...mapActions({
-      getRadioCardList: 'course/getRadioCardList'
+      postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
+      postRadioDetail: 'course/postRadioDetail', // 电台详情
+      getRadioCardList: 'course/getRadioCardList' // 电台列表
     }),
+    // 获取这个电台的列表
+    async initrRadioCardList (radio) {
+      let params = {
+        code: radio.code,
+        listOrder: this.listOrder,
+        page: this.page,
+        pageSize: this.pageSize
+      }
+      console.log('params', params)
+      await this.getRadioCardList(params).then((res) => {
+        console.log('电台列表', res)
+        this.page = res.page
+        if (res.cards.length > 0) {
+          this.radioList = res.cards
+          this.curIndex = 0
+          this.playRadio()
+        }
+      })
+    },
+    // 获取电台详情
+    async initRadioDetail (radio) {
+      await this.postRadioDetail(radio.code).then((res) => {
+        console.log('电台返回', res)
+        this.radioDetail = res.result
+        this.subscibenoInfo = res.result.relation
+        console.log('subscibenoInfo', this.subscibenoInfo)
+      })
+    },
     toParseTime (data) {
       let m = parseInt(data / 60)
       if (m < 10) {
@@ -302,15 +322,43 @@ export default {
       }
       this.playRadio()
     },
+    // 下一条自动播放
     next () {
       this.curIndex++
+      let radio = this.radioDetail.course_info
+      console.log('===>', this.curIndex)
+      if (!this.userInfo && this.curIndex > 2) {
+        Bus.$emit('showGoLoginBox')
+        return false
+      }
+      if (radio.money !== 0) { // 收费
+        if (this.isVip !== 1) { // 不是会员
+          if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+            if (this.curIndex > 2) {
+              this.curIndex = 0
+            }
+          }
+        } else { // 是会员
+          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
+            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+              if (this.curIndex > 2) {
+                this.curIndex = 0
+              }
+            }
+          }
+        }
+      }
       if (this.curIndex === this.radioList.length) {
         this.curIndex = 0
         this.playRadio()
       }
       this.playRadio()
     },
+    // 播放按钮
     play () {
+      if (this.radioList.length === 0) {
+        return false
+      }
       if (this.isEnd) {
         this.curTime = 0
         this.isEnd = false
@@ -320,8 +368,7 @@ export default {
       } else {
         this.interval = setInterval(() => {
           this.curTime++
-          this.curProgress = (this.curTime / this.duration).toFixed(4) * 100 + '%'
-          console.log(this.curProgress)
+          this.curProgress = (this.curTime / this.duration).toFixed(4) * this.progressWidth
         }, 1000)
         this.sndctr.play(() => {
           this.end()
@@ -331,7 +378,7 @@ export default {
     },
     end () {
       this.isPlay = false
-      this.curProgress = '100%'
+      this.curProgress = this.progressWidth
       this.isEnd = true
       clearInterval(this.interval)
       if (this.isLoop) {
@@ -353,7 +400,7 @@ export default {
         _this.duration = Math.round(_this.sndctr.getDuration())
         _this.interval = setInterval(() => {
           _this.curTime++
-          _this.curProgress = (_this.curTime / _this.duration).toFixed(4) * 100 + '%'
+          _this.curProgress = (_this.curTime / _this.duration).toFixed(4) * _this.progressWidth
         }, 1000)
       })
       _this.isPlay = true
@@ -365,36 +412,83 @@ export default {
         }
       })
     },
+    // 点击播放
     goPlay (index) {
+      let radio = this.radioDetail.course_info
+      console.log('播放器中的radio', radio)
+      if (!this.userInfo && index > 2) {
+        Bus.$emit('showGoLoginBox')
+        this.pause()
+        return false
+      }
+      if (radio.money !== 0) { // 收费
+        if (this.isVip !== 1) { // 不是会员
+          if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+            if (index > 2) {
+              index = 0
+              if (radio.money_type === 'CNY') {
+                // 人民币提示
+                Bus.$emit('showBuyRadio', this.radioDetail)
+              } else if (radio.money_type === 'coins') {
+                // 金币提示
+                Bus.$emit('showBuyCoinsRadio', radio)
+                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+              }
+            }
+          }
+        } else { // 是会员
+          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
+            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+              if (index > 2) {
+                index = 0
+                if (radio.money_type === 'CNY') {
+                  // 人民币提示
+                  Bus.$emit('showBuyRadio', this.radioDetail)
+                } else if (radio.money_type === 'coins') {
+                  // 金币提示
+                  Bus.$emit('showBuyCoinsRadio', radio)
+                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                }
+              }
+            }
+          }
+        }
+      }
+      // if (radio.money_type === 'CNY') {
+      //   // 人民币提示
+      //   Bus.$emit('showBuyRadio', radio, this.cardsCount)
+      // } else if (radio.money_type === 'coins') {
+      //   // 金币提示
+      //   Bus.$emit('showBuyCoinsRadio', radio)
+      //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+      // }
       this.curIndex = index
       this.playRadio()
     },
     loopPlay () {
       this.isLoop = !this.isLoop
-      // if (this.isEnd) {
-      //   this.next()
-      // }
-    },
-    moveVolume (e) {
-      this.downVolume(e)
-    },
-    downVolume (e) {
-      let height = $('.player-volume-progress').offset().top + 90 - e.pageY
-      if (height > 90 || height < 0) {
-        return
+      if (this.isEnd) {
+        this.next()
       }
-      this.volumeHeight = (height * 1.0 / 90 * 100).toFixed(2) + '%'
-      this.sndctr.setVolume(height * 1.0 / 90)
-      console.log(height)
     },
-    downProgress (e) {
-      let width = e.pageX - $('.progress').offset().left
-      if (width > 540 || width < 0) {
-        return
+    mousedownVolume (ev) {
+      var _this = this
+      document.onmousemove = (ev) => {
+        let height = $('.player-volume-progress').offset().top + 90 - ev.pageY
+        if (height > 90 || height < 0) {
+          return
+        }
+        _this.volumeHeight = (height * 1.0 / 90 * 100).toFixed(2) + '%'
+        _this.sndctr.setVolume(height * 1.0 / 90)
+        console.log(height)
       }
-      this.curProgress = (width * 1.0 / 540 * 100).toFixed(2) + '%'
-      this.curTime = Math.round((width * 1.0 / 540) * this.duration)
-      this.sndctr.setCurrentTime(this.curTime)
+
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
+
+      return false
     },
     setLock () {
       this.isLock = !this.isLock
@@ -403,6 +497,38 @@ export default {
       } else {
         this.isHand = true
       }
+    },
+    onMouseDownProgress (ev) {
+      let _this = this
+      let progressCur = document.getElementById('progressCurBtn')
+      let oevent = ev || event
+      let distanceX = oevent.clientX - progressCur.offsetLeft
+
+      document.onmousemove = (ev) => {
+        let oevent = ev || event
+        let left = oevent.clientX - distanceX
+        if (left < 0) {
+          left = 0
+        }
+        if (_this.progressWidth >= left) {
+          _this.curProgress = left
+        } else {
+          _this.curProgress = _this.progressWidth
+        }
+        let time = left / _this.progressWidth * _this.duration
+        if (time > _this.duration) {
+          time = _this.duration
+        }
+        _this.curTime = time
+        _this.sndctr.setCurrentTime(_this.curTime)
+      }
+
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
+
+      return false
     }
   }
 }
@@ -415,10 +541,14 @@ export default {
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 50px;
-    line-height: 50px;
+    height: 56px;
+    line-height: 56px;
     transition: all .2s;
-    background-color: rgba(0, 57, 91, .8);
+    // background-color: rgba(0, 57, 91, .8);
+    // background:linear-gradient(90deg,rgba(0,145,209,1) 0%,rgba(65,196,255,1) 100%);
+    background-image: url(./../../../static/images/learnIndex/icon-voice-player-bg.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
     z-index: 999;
     .voice-player-hand {
       position: absolute;
@@ -434,12 +564,11 @@ export default {
       .voice-player-lock {
         position: absolute;
         right: 40px;
-        top: -14px;
-        width: 64px;
-        height: 14px;
-        background: url('./../../../static/images/discovery/radio-player-lock-bg.svg') center no-repeat;
+        top: -17px;
+        width: 56px;
+        height: 17px;
+        background: url('./../../../static/images/learnIndex/icon-voice-player-lock-bg.svg') center no-repeat;
         background-size: 100%;
-        opacity: .95;
         text-align: center;
         cursor: pointer;
         z-index: 99;
@@ -447,7 +576,7 @@ export default {
           width: 10px;
           height: 10px;
           display: inline-block;
-          margin-top: 2px;
+          margin-top: 4px;
           stroke: #FFFFFF;
           fill: #ffffff;
           margin-left: -10px;
@@ -457,8 +586,8 @@ export default {
             position: absolute;
           }
           &:hover {
-            stroke: #f86442;
-            fill: #f86442;
+            stroke: rgba(255, 255, 255, .6);
+            fill: rgba(255, 255, 255, .6);
           }
         }
       }
@@ -476,24 +605,27 @@ export default {
       justify-content: center;
       align-items: center;
       .voice-player-cover {
-        width: 30px;
-        height: 30px;
-        background-image: url('./../../../static/images/discovery/radio-player-bg.png');
+        width: 34px;
+        height: 34px;
+        margin-top: 2px;
+        background-image: url('./../../../static/images/discovery/radio-player-bg.svg');
         background-repeat: no-repeat;
         background-size: cover;
         display: inline-block;
         vertical-align: middle;
+        border-radius: 5px;
         img {
-          width: 30px;
-          height: 30px;
+          border-radius: 7px;
+          width: 34px;
+          height: 34px;
           object-fit: cover;
         }
       }
       .btns {
         display: inline-block;
         .pre {
-          width: 14px;
-          height: 16px;
+          width: 11px;
+          height: 12px;
           display: inline-block;
           vertical-align: middle;
           margin-left: 27px;
@@ -505,7 +637,7 @@ export default {
             position: absolute;
           }
           &:hover{
-            fill: #f86442;
+            fill: rgba(255, 255, 255, .6);
           }
         }
         .play {
@@ -524,13 +656,13 @@ export default {
             position: absolute;
           }
           &:hover {
-            stroke: #f86442;
-            fill: #f86442;
+            stroke: rgba(255, 255, 255, .6);
+            fill: rgba(255, 255, 255, .6);
           }
         }
         .next {
-          width: 14px;
-          height: 16px;
+          width: 11px;
+          height: 12px;
           display: inline-block;
           vertical-align: middle;
           fill: #ffffff;
@@ -541,7 +673,7 @@ export default {
             position: absolute;
           }
           &:hover {
-            fill: #f86442;
+            fill: rgba(255, 255, 255, .6);
           }
         }
       }
@@ -552,8 +684,9 @@ export default {
         display: inline-block;
         .play-body-title{
           display: block;
-          // height: 36px;
+          height: 34px;
           line-height: 30px;
+          margin-top: -10px;
           font-size: 12px;
           color: #ffffff;
         }
@@ -565,7 +698,7 @@ export default {
             position: relative;
             width: 540px;
             height: 2px;
-            background: transparent linear-gradient(to right,rgba(0,0,0,.85),rgba(0,0,0,.95));
+            background-color: rgba(255, 255, 255, .2);
             .progress-load {
               height: 100%;
               width: 0%;
@@ -579,7 +712,8 @@ export default {
               display: block;
               height: 100%;
               width: 0%;
-              background-color: #FFD343;
+              // background-color: #FFD343;
+              background-color: #fff;
               z-index: 1;
               .progress-btn{
                 position: absolute;
@@ -610,64 +744,65 @@ export default {
         display: inline-block;
         margin-left: 100px;
         .volume {
-          width: 18px;
-          height: 16px;
+          width: 22px;
+          height: 18px;
           display: inline-block;
           vertical-align: middle;
           stroke: #FFFFFF;
           fill: #ffffff;
           svg {
-            width: 18px;
-            height: 16px;
+            width: 22px;
+            height: 18px;
             position: absolute;
           }
           &:hover {
-            stroke: #f86442;
-            fill: #f86442;
+            stroke: rgba(255, 255, 255, .6);
+            fill: rgba(255, 255, 255, .6);
           }
         }
         .sort {
           width: 22px;
-          height: 16px;
+          height: 18px;
           display: inline-block;
           vertical-align: middle;
           margin-left: 20px;
           stroke: #FFFFFF;
           svg {
             width: 22px;
-            height: 16px;
+            height: 18px;
             position: absolute;
           }
           &:hover {
-            stroke: #f86442;
+            stroke: rgba(255, 255, 255, .6);
           }
         }
         .list {
-          width: 16px;
-          height: 13px;
+          width: 22px;
+          height: 18px;
           display: inline-block;
           vertical-align: middle;
           margin-left: 20px;
           margin-top: 3px;
           fill: #FFFFFF;
           svg {
-            width: 16px;
-            height: 13px;
+            width: 22px;
+            height: 18px;
             position: absolute;
           }
           &:hover {
-            fill: #f86442;
+            fill: rgba(255, 255, 255, .6);
           }
         }
         .player-volume-wrapper {
           position: absolute;
-          bottom: 50px;
+          bottom: 56px;
           margin-left: -18px;
           .player-volume {
             display: block;
             width: 46px;
             height: 134px;
-            background-color: rgba(0, 57, 91, .8);
+            background-color: #0F90C6;
+            opacity: .7;
             .player-volume-progress {
               position: absolute;
               top: 16px;
@@ -675,7 +810,7 @@ export default {
               margin-left: -1px;
               width: 2px;
               height: 90px;
-              background: #40404c;
+              background: rgba(255, 255, 255, .2);
               .player-volume-cur {
                 position: absolute;
                 left: 0;
@@ -683,7 +818,7 @@ export default {
                 display: block;
                 height: 0%;
                 width: 100%;
-                background-color: #f86442;
+                background-color: #fff;
                 .player-volume-btn {
                   position: absolute;
                   right: -4px;
@@ -716,12 +851,16 @@ export default {
   .voice-player-list {
     position: fixed;
     left: 50%;
-    bottom: 50px;
+    bottom: 56px;
     width: 1080px;
     margin-left: -540px;
-    background: rgba(0,17,26,.8);
-    box-shadow: 0 -2px 4px 0 rgba(0,0,0,.2);
-    border-radius: 3px 3px 0 0;
+    // background: rgba(0,17,26,.8);
+    // box-shadow: 0 -2px 4px 0 rgba(0,0,0,.2);
+    // border-radius: 3px 3px 0 0;
+    // width:1180px;
+    max-height:427px;
+    background:linear-gradient(180deg,rgba(0,22,55,0.9) 0%,rgba(15,144,198,0.74) 100%);
+    border-radius:8px 8px 0px 0px;
     z-index: 90;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -729,7 +868,7 @@ export default {
     user-select: none;
     .voice-player-list-head {
       width: 1080px;
-      padding: 0 20px;
+      padding: 0 40px;
       height: 55px;
       line-height: 55px;
       color: #fff;
@@ -749,7 +888,7 @@ export default {
       overflow: hidden;
     }
     .voice-player-list-content {
-      height: 260px;
+      max-height: 340px;
       width: 1100px;
       overflow-y: auto;
       ul {
@@ -762,27 +901,54 @@ export default {
           -o-transition: all .2s;
           transition: all .2s;
           font-size: 14px;
+          display: flex;
+          align-items: center;
+          &.current {
+            .col1, .col2, .col3 {
+              color: #F5A623FF;
+            }
+            .triangle {
+              background: url('../../../static/images/discovery/bofang.svg') no-repeat center;
+            }
+          }
+          .col-content {
+            width: 100%;
+            margin-top: 0px;
+          }
           .col1 {
             display: inline-block;
             text-align: center;
             color: #B4B4B4;
-            width: 40px;
+            // width: 40px;
             text-align: center;
-            margin-left: 10px;
+            // margin-left: 10px;
           }
           .col2 {
             display: inline-block;
             width: 560px;
             color: #fff;
-            margin-left: 45px;
+            margin-left: 15px;
           }
           .col3 {
             float: right;
             margin-right: 30px;
             color: #a3a3ac;
           }
-          .current {
-            color: #FFD343;
+          .triangle {
+            width: 9px;
+            height: 9px;
+            // background: url('../../../static/images/discovery/radio-clock.png') no-repeat center;
+            background-size: cover;
+            margin-left: 20px;
+          }
+        }
+        li:hover {
+          background:rgba(0,16,51,.2);
+          color: #fff;
+          .triangle {
+            width: 9px;
+            height: 9px;
+            background: url('../../../static/images/discovery/bofanghover.svg') no-repeat center;
           }
         }
       }

@@ -4,7 +4,7 @@
       <div class='userVip-top-logo'></div>
       <div class='userVip-top-tips'>
         <p>现有金币:</p>
-        <p>{{ userInfo.coins }}</p>
+        <p>{{ userInfo ? userInfo.coins : '' }}</p>
       </div>
       <div class='userVip-top-btns'>
       </div>
@@ -53,7 +53,7 @@
       </div>
     </div>
     <div></div>
-    <pay-alert ref="pay"></pay-alert>
+    <pay-alert ref="payAlert"></pay-alert>
   </section>
 </template>
 
@@ -76,17 +76,14 @@ export default {
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'wallet')
     this.$parent.$emit('navItem', 'user')
-    let ui = this.userInfo
-    if (Object.keys(ui).length === 0) {
-      ui = JSON.parse(localStorage.getItem('userInfo'))
-    }
+    let ui = JSON.parse(sessionStorage.getItem('userInfo'))
+
     var _memberType = ui.member_info.member_type
     var _entryPage = this.$router.currentRoute.fullPath
     LogCollect.payCoinEnter(_memberType, _entryPage)
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState',
       updatePurchaseIconPay: 'user/updatePurchaseIconPay'
     }),
     ...mapActions({
@@ -94,12 +91,11 @@ export default {
       createAliWebOrder: 'user/createAliWebOrder'
     }),
     close () {
-      this.updateCoverState(false)
     },
     purchaseIconPay (productId) {
       this.createAliWebOrder(productId)
       this.updatePurchaseIconPay(true)
-      this.updateCoverState(true)
+      this.$refs['payAlert'].$emit('isShowPayAlert', true)
     },
     swapVipTab () {
       this.activeTab = true
@@ -121,7 +117,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       record: state => state.user.record,
       coinsProduct: state => state.user.coinsProduct,
       showLoading: state => state.user.showLoading,

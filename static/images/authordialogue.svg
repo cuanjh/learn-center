@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>对话</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="电台主播个人信息" transform="translate(-622.000000, -182.000000)" fill-rule="nonzero">
+            <g id="分组-4" transform="translate(606.000000, 176.000000)">
+                <g id="对话" transform="translate(16.000000, 6.000000)">
+                    <rect id="矩形" fill="#FFFFFF" x="1" y="1" width="2" height="12" rx="1"></rect>
+                    <rect id="矩形-copy-7" fill="#FFFFFF" x="11" y="5" width="2" height="8.5" rx="1"></rect>
+                    <rect id="矩形-copy-8" fill="#FFFFFF" x="11" y="2" width="2" height="2" rx="1"></rect>
+                    <path d="M2,12.5 L2,9 C2,7.34314575 3.34314575,6 5,6 C6.65685425,6 8,7.34314575 8,9 L8,12.5" id="路径" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

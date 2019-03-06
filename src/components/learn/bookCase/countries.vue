@@ -14,8 +14,8 @@
         </div>
       </div>
       <div class="country-scroll">
-        <div class="country-content">
-          <div class="country-list" v-if="countryList.length > 0" v-for="(item , index) in countryList" :key="index">
+        <div class="country-content" v-if="countryList">
+          <div class="country-list" v-for="(item , index) in countryList" :key="index">
             <a :id="item.letter" class="letter-gray">{{item.letter}}</a>
             <ul>
               <li @click="nationDetail(item.code, item.flag, item.name, item.pName2)" v-for="(item , index) in item.lists" :key="index">

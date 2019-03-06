@@ -28,7 +28,8 @@ module.exports = {
   },
   externals: {
     'BMap': 'BMap',
-    'BMap_Symbol_SHAPE_POINT': 'BMap_Symbol_SHAPE_POINT'
+    'BMap_Symbol_SHAPE_POINT': 'BMap_Symbol_SHAPE_POINT',
+    'BMapLib': 'BMapLib'
   },
   output: {
     path: config.build.assetsRoot,

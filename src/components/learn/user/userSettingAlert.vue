@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="setting-alert-container" v-show="isShow">
     <section class='vip-update-success vip-update-confirm animated flipInX slow user-alert-two-btns setting-alert' v-show="alertType=='bindSuccess'">
       <div class='vip-update-success-logo animated tada'></div>
       <p>{{ alertMessage }}</p>
@@ -110,11 +110,17 @@ export default {
   ],
   data () {
     return {
+      isShow: false,
       isBindPhoneError: false, // 绑定手机号是否有错误
       verificationCode: '', // 绑定手机的短信验证码
       resendPhone: true, // 重新发送短信
       verPhoneSecond: 60 // 60秒倒计时
     }
+  },
+  created () {
+    this.$on('isShowSetAlert', (flag) => {
+      this.isShow = flag
+    })
   },
   watch: {
     // 监听弹窗显示类型,当有弹窗时触发全屏黑幕
@@ -128,7 +134,6 @@ export default {
         this.verificationCode = ''
         this.resendPhone = true
         this.verPhoneSecond = 60
-        this.updateCoverState(true)
         if (this.alertType === 'bindPhone') {
           this.sixtyPhoneReveres()
         }
@@ -137,28 +142,29 @@ export default {
         }
       } else {
         this.verPhoneSecond = 60
-        this.updateCoverState(false)
       }
     }
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState',
       updateAlertType: 'user/updateAlertType',
       modefiyPhoneMemberInfo: 'user/modefiyPhoneMemberInfo'
     }),
     ...mapActions({
-      getUserInfo: 'user/getUserInfo',
-      bindPhoneNumber: 'user/bindPhoneNumber',
+      // getUserInfo: 'user/getUserInfo',
+      getUserInfo: 'getUserInfo', // 获取用户信息
+      // bindPhoneNumber: 'user/bindPhoneNumber',
+      userBindPhone: 'userBindPhone', // 绑定手机号
       resetAnonymous: 'user/resetAnonymous',
-      sendCode: 'user/sendCode',
+      // sendCode: 'user/sendCode',
+      sendCode: 'getSendCode', // 发送手机验证码
       unbindIdentity: 'user/unbindIdentity'
     }),
     // 关闭本页面
     closeView () {
-      this.updateCoverState(false)
+      this.updateAlertType('')
       // 告诉父组件,自己需要关闭
-      this.$emit('close', '')
+      this.$emit('close')
     },
     jumpBind () {
       this.updateAlertType('')
@@ -167,7 +173,6 @@ export default {
     },
     closeViewJump () {
       this.updateAlertType('')
-      this.updateCoverState(false)
       // 告诉父组件,自己需要关闭
       this.$emit('close')
       this.$router.go('/v2/user/setting')
@@ -177,9 +182,8 @@ export default {
       var _this = this
       var params = {}
       params.phonenumber = this.bindPhoneNum
-      params.verification_code = this.verificationCode
-
-      await _this.bindPhoneNumber(params).then((res) => {
+      params.code = this.verificationCode
+      await _this.userBindPhone(params).then((res) => {
         if (res.success) {
           _this.updateAlertType('bindSuccess')
           _this.$emit('updateAlertMessage', '恭喜您绑定手机成功！')
@@ -215,6 +219,7 @@ export default {
       var params = {}
       params.phonenumber = this.bindPhoneNum
       params.type = 'bind_phonenumber'
+      params.codeLen = '6'
       this.sendCode(params)
       this.sixtyPhoneReveres()
     },
@@ -237,10 +242,11 @@ export default {
       params.identity_type = this.bindConfirmType
       var _this = this
       await _this.unbindIdentity(params).then((res) => {
+        console.log('解绑信息', res)
         if (res.success) {
           _this.closeView()
         } else {
-          this.showAlertView(res)
+          _this.showAlertView(res)
         }
       })
       await _this.getUserInfo()
@@ -260,6 +266,18 @@ export default {
 </script>
 
 <style scoped>
+.setting-alert-container {
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .4);
+  z-index:99999999;
+  overflow: hidden;
+}
 .vip-update-success {
   width: 424px;
   height: 284px;
@@ -310,7 +328,7 @@ export default {
   border-radius: 100px;
   display: inline-block;
   line-height: 40px;
-  background-color: #fd8469;
+  background-color: #2A9FE4;
   cursor: pointer;
   color: #fff;
   margin: 54px 25px;

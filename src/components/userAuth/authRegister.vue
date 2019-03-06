@@ -2,7 +2,7 @@
   <div class="bg-box">
     <div class="resigter-box">
       <div class="mail-resigter">
-        <h2>注册!</h2>
+        <h2>邮箱登录!</h2>
         <div class="item">
           <input type="text" placeholder="邮箱账号" v-model="registerInfo.email">
         </div>
@@ -16,6 +16,7 @@
           <p>已有账号</p>
         </router-link>
         <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
+        <button @click="goLogin" v-bind:disabled="!isGoLogin">注册<i></i></button>
         <router-link tag="div" to="/auth/login" class="go-email-register">
           <span>手机注册</span>
         </router-link>
@@ -41,8 +42,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .bg-box {
+    min-height: 630px;
     /* background-color: #fcf1d5; */
     background-size: cover;
     padding: 80px 0;
@@ -64,23 +66,35 @@ export default {
     font-size: 26px;
     font-weight: 600;
     text-align: center;
-    color: #299fe4;
+    color: #333333;
+  }
+  input {
+    display: block;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    color: #333333;
+    line-height: 20px;
+    border: 1px solid #E6EBEE;
+    border-radius: 20px;
+    background-color: #fff;
+    padding: 10px 24px;
   }
   input::-webkit-input-placeholder {
     font-size: 14px;
-    color: #b8b8b8;
+    color: #D8D8D8;
   }
   input::-moz-placeholder {
     font-size: 14px;
-    color: #b8b8b8;
+    color: #D8D8D8;
   }
   input:-moz-placeholder {
     font-size: 14px;
-    color: #b8b8b8;
+    color: #D8D8D8;
   }
   input:-ms-placeholder {
     font-size: 14px;
-    color: #b8b8b8;
+    color: #D8D8D8;
   }
   .phone-resigter .item, .mail-resigter .item {
     margin-top: 15px;
@@ -95,12 +109,45 @@ export default {
     line-height: 20px;
     font-size: 14px;
     font-weight: 500;
-    color: #000;
-    border:1px solid rgba(235,235,235,1);
+    color: #333333;
+    border:1px solid #E6EBEE;
     border-radius: 84px;
     background-color: #fff;
     padding: 10px 0 10px 21px;
     position: relative;
+  }
+  .phone-resigter .item input:focus, .mail-resigter .item input:focus {
+    border-color: #2A9FE4FF;
+  }
+  button {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 84px;
+    background-color: #74C105;
+    &:hover p {
+      display: block;
+    }
+    p {
+      display: none;
+      width: 20px;
+      height: 20px;
+      background: url('../../../static/images/authLogin/going.svg') no-repeat center;
+      background-size: cover;
+      position: absolute;
+      top: 26%;
+      left: 60%;
+    }
+  }
+  button:disabled {
+    background-color: #D6DFE4;
+    cursor: not-allowed;
+    &:hover p {
+      display: none;
+    }
   }
   .go-email-register {
     padding: 31px 0 21px 0;
@@ -131,5 +178,9 @@ export default {
     float: right;
     margin-right: 10px;
     padding: 10px 0 25px 0;
+    user-select:none;
+    &:hover {
+      color: #2A9FE4;
+    }
   }
 </style>

@@ -105,7 +105,7 @@ export default {
       direction: state => state.learn.direction,
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       qiniuToken: state => state.learn.qiniuToken
     }),
     dir () {
@@ -236,6 +236,7 @@ export default {
         // 上传七牛云
         this.getQiniuToken().then((res) => {
           this.updateQiniuToken(res)
+          console.log('res======>', res)
           Recorder.uploadQiniu(this.qiniuToken, code, sentence)
           let recorderUrl = Recorder.recorderUrl
           // 请求后端接口

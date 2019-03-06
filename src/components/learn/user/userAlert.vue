@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="user-alert-container" v-show="isShow">
     <section class='vip-update-success vip-update-confirm animated flipInX slow user-alert-two-btns' v-show='confirmAlert'>
       <div class='vip-update-success-logo animated tada'></div>
       <p>您确定使用激活码激活会员？</p>
@@ -19,7 +19,6 @@
       <p></p>
       <span class='vip-back-tolearn' @click="close">返回</span>
     </section>
-    <pay-alert ref="pay"></pay-alert>
     <section class='vip-update-success animated flipInX slow charge-success-alert' v-show='purchaseSuccess'>
       <div class='vip-update-success-logo animated tada'></div>
       <p class='charge-success'>您的充值操作已完成请点击刷新后查看！</p>
@@ -31,14 +30,11 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import LogCollect from '../../../tool/logCollect'
-import PayAlert from './userPayAlert.vue'
 
 export default {
-  components: {
-    PayAlert
-  },
   data () {
     return {
+      isShow: false,
       codeNum: '',
       purchaseAlert: false,
       judgeBackLearn: false,
@@ -46,6 +42,10 @@ export default {
     }
   },
   created () {
+    this.$on('isShowAlert', (flag) => {
+      this.isShow = flag
+    })
+
     this.$on('ifConfirmShow', (e) => {
       this.updateConfirmAlert(e)
     })
@@ -72,12 +72,12 @@ export default {
       successAlert: state => state.user.updateSuccessAlert,
       errorTip: state => state.user.errorTip,
       purchaseSuccess: state => state.user.purchaseSuccess,
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.userInfo
     }),
     ui () {
       let ui = this.userInfo
       if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
       }
       return ui
     }
@@ -93,7 +93,6 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState',
       updateConfirmAlert: 'user/updateConfirmAlert',
       updateErrorTip: 'user/updateErrorTip',
       updateSuccessAlert: 'user/updateSuccessAlert',
@@ -110,7 +109,6 @@ export default {
         if (res.success) {
           this.updateSuccessAlert(true)
           _this.updateConfirmAlert(false)
-          _this.updateCoverState(true)
           LogCollect.payMemberCard(
             _memberType,
             _this.codeNum,
@@ -120,7 +118,6 @@ export default {
         } else {
           _this.errorMessage = res.errorMsg
           _this.updateErrorTip(true)
-          _this.updateCoverState(true)
           _this.updateConfirmAlert(false)
           LogCollect.payMemberCard(_memberType, _this.codeNum, 0, 0)
         }
@@ -131,7 +128,7 @@ export default {
       this.updateSuccessAlert(false)
       this.updatePurchaseSuccess(false)
       this.updateConfirmAlert(false)
-      this.updateCoverState(false)
+      this.isShow = false
       this.getUserInfo()
     }
     // ,
@@ -144,6 +141,18 @@ export default {
 </script>
 
 <style scoped>
+.user-alert-container {
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .4);
+  z-index:99999999;
+  overflow: hidden;
+}
 .vip-update-success {
   width: 424px;
   height: 284px;
@@ -188,7 +197,7 @@ export default {
   width: 168px;
   height: 40px;
   border-radius: 100px;
-  background-color: #fd8469;
+  background-color: #2A9FE4;
   text-align: center;
   line-height: 40px;
   color:#fff;
@@ -196,7 +205,7 @@ export default {
   cursor: pointer;
 }
 .vip-update-success .vip-back-tolearn:hover{
-  background-color: #FA6F50;
+  background-color: #2A9FE4;
 }
 
 .vip-update-confirm span {
@@ -205,7 +214,7 @@ export default {
   border-radius: 100px;
   display: inline-block;
   line-height: 40px;
-  background-color: #fd8469;
+  background-color: #2A9FE4;
   cursor: pointer;
   color: #fff;
   margin: 54px 25px;

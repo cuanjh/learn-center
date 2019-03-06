@@ -46,15 +46,12 @@ export default {
     this.$parent.$emit('initLayout')
     this.$parent.$emit('navItem', 'course')
     // this.showLoading()
-    let curCourseCode = this.currentCourseCode
-    if (!curCourseCode) {
-      curCourseCode = localStorage.getItem('currentCourseCode')
-    }
-    this.initData(curCourseCode)
+
+    this.initData()
   },
   computed: {
     ...mapState({
-      'userInfo': state => state.user.userInfo,
+      'userInfo': state => state.userInfo,
       'currentCourseCode': state => state.course.currentCourseCode,
       'currentChapterCode': state => state.course.currentChapterCode,
       'curLevel': state => state.course.curLevel,
@@ -79,7 +76,8 @@ export default {
       getChapterContent: 'course/getChapterContent',
       setCurrentChapter: 'course/setCurrentChapter',
       getCourseTestRanking: 'course/getCourseTestRanking',
-      homeworkContent: 'course/homeworkContent'
+      homeworkContent: 'course/homeworkContent',
+      getUserInfo: 'getUserInfo'
     }),
     ...mapMutations({
       updateUnlockCourseList: 'course/updateUnlockCourseList',
@@ -112,13 +110,15 @@ export default {
 
         setTimeout(() => {
           this.$refs['chapterItem'].$emit('changeIsShow', true)
-          let top = $('#' + chapterCode).offset().top - 138
+          let top = $('#' + chapterCode).offset().top - 116
           $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, 0)
         // $('body,html').scrollTop(top)
       }
     },
-    async initData (curCourseCode) {
+    async initData () {
+      let res = await this.getUserInfo()
+      let curCourseCode = res.info.current_course_code
       console.log('courselist initData', curCourseCode)
       this.$refs['chapterItem'].$emit('changeIsHistory', false)
       await this.getLearnInfo(curCourseCode)
@@ -134,7 +134,7 @@ export default {
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)
 
-      let top = $('#' + this.currentChapterCode).offset().top - 138
+      let top = $('#' + this.currentChapterCode).offset().top - 116
       $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
       // this.hideLoading()
@@ -176,7 +176,6 @@ export default {
   transition: opacity .5s;
 }
 .fade-enter, .fade-leave-to {
-  transform: translateY(-10px);
   opacity: 0;
 }
 @media screen and (max-width: 1024px) {

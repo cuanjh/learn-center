@@ -110,8 +110,8 @@
                       <span class="news_item_title">{{item.title}}</span>
                     </div>
                   <div class="thumb_little two_img">
-                    <img v-lazy="item.thumbs[0]" :class="item.thumbs[0]" alt="列表图片"/>
-                    <img v-lazy="item.thumbs[1]" :class="item.thumbs[1]" alt="列表图片">
+                    <img v-lazy="item.thumbs[0]" :key="item.thumbs[0]" :class="item.thumbs[0]" alt="列表图片"/>
+                    <img v-lazy="item.thumbs[1]" :key="item.thumbs[1]" :class="item.thumbs[1]" alt="列表图片">
                   </div>
                   <div class="news_item_right_row2">
                     <span class="news_item_type">{{item.tag_title}}</span>
@@ -190,33 +190,6 @@ export default {
         _this.categories = data.categories
         _this.headlinesLists = data.headlines.list
         _this.tabNav(_this.categories[0].catid)
-        /* this.$nextTick(() => {
-          // eslint-disable no-new
-          new Swiper('.swiper-container', {
-            loop: true,
-            initialSlide: 0,
-            observer: true, // 修改swiper自己或子元素时，自动初始化swiper
-            observeParents: true, // 修改swiper的父元素时，自动初始化swiper
-            notNextTick: true,
-            // speed: 1000,
-            autoplayStopOnLast: true,
-            autoplay: {
-              delay: 3000, // 3秒切换一次
-              stopOnLastSlide: false,
-              disableOnInteraction: false
-            },
-            paginationClickable: true,
-            mousewheelControl: true,
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev'
-            },
-            pagination: {
-              el: '.swiper-pagination',
-              clickable: true
-            }
-          })
-        }) */
         _this.swiperInit()
       })
     },
@@ -263,6 +236,7 @@ export default {
         _this.lists = data.headlines.list
       })
     },
+    // 跳转详情页面
     get (id) {
       this.$router.push({
         path: `/app/headline-details/${id}`

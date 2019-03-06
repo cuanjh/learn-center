@@ -153,7 +153,7 @@ export default {
       http.checkCaption({caption: this.registerInfo.imgCode}).then(res => {
         if (res.success) {
           if (res.result) {
-            let isAnonymous = Cookie.getCookie('is_anonymous')
+            let isAnonymous = Cookie.getCookie('is_anonymous') === 'true'
             console.log('isAnonymous', isAnonymous)
             if (isAnonymous) {
               console.log('anonymousRegister')
@@ -283,6 +283,7 @@ export default {
 
 <style scoped>
   .bg-box {
+    min-height: 765px;
     /* background-color: #fcf1d5; */
     background-size: cover;
     padding: 80px 0;

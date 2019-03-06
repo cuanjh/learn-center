@@ -164,8 +164,8 @@
           </div>
         </div>
         <div class="country-scroll">
-          <div class="country-content">
-            <div class="country-list" v-if="arr.length > 0 && item.lists.length > 0" v-for="(item , index) in arr" :key="index">
+          <div class="country-content" v-if="arr.length > 0 && item.lists.length > 0">
+            <div class="country-list" v-for="(item , index) in arr" :key="index">
               <a :id="item.letter" class="letter-gray">{{item.letter}}</a>
               <ul>
                 <li v-for="(item , index) in item.lists" :key="index"  @click="nationDetail(item.code, item.flag, item.name, item.pName2)">
@@ -374,7 +374,7 @@ a {
   margin: 20px 0;
   font-weight: bold;
   display: inline-block;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .nav-circle {
@@ -386,8 +386,8 @@ a {
   margin-top: 9px;
 }
 
-.nav span {
-  color: #999999;
+.nav a {
+  color: #7E929F;
 }
 
 .nav-current {

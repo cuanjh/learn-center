@@ -15,7 +15,7 @@
               <span v-text="'阅读 ' + item.hits"></span>
             </div>
           </div>
-          <div class="headline-item2" v-for="(item, index) in headlines.slice(1)" :key="'headline-item2' + index" @click="get(item.id)">
+          <div class="headline-item2" v-for="(item, index) in headlines.slice(1, 9)" :key="'headline-item2' + index" @click="get(item.id)">
             <img v-lazy="item.thumb" :key="item.thumb" alt="">
             <div class="title" v-text="item.title"></div>
             <div class="headline-item2-bottom">
@@ -157,7 +157,7 @@ export default {
 
 <style scoped>
 .discovery-wrap {
-  background: #ecf4f7;
+  /* background: #ecf4f7; */
   width: 100%;
   min-height: 1000px;
 }
@@ -318,7 +318,7 @@ export default {
   width: 220px;
   min-width: 220px;
   height: 223px;
-  margin-top: 20px;
+  margin-top: 18px;
   margin-right: 20px;
   background: #ffffff;
   box-shadow: 1px 2px 8px rgba(218, 230, 243, .56);

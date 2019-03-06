@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="30px" viewBox="0 0 32 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>国家默认</title>
+    <desc>Created with Sketch.</desc>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-849.000000, -1210.000000)">
+            <g id="国家" transform="translate(849.000000, 1210.000000)">
+                <g id="icon-" transform="translate(1.000000, 1.000000)">
+                    <ellipse id="Oval" stroke="#B9CDE2" stroke-width="2" cx="15.0535714" cy="14" rx="14.1160714" ry="14"></ellipse>
+                    <path d="M16.6285212,27.590334 C19.8146179,23.9504385 21.7430556,19.1985728 21.7430556,14 C21.7430556,9.37237619 20.2149497,5.09872589 17.6318904,1.64831077 C17.3015902,1.20710043 16.9540404,0.779350938 16.5902301,0.36604346" id="Path" stroke="#B9CDE2" stroke-width="2"></path>
+                    <path d="M8.26344183,27.590334 C11.4495386,23.9504385 13.3779762,19.1985728 13.3779762,14 C13.3779762,9.37237619 11.8498704,5.09872589 9.26681099,1.64831077 C8.93651087,1.20710043 8.58896104,0.779350938 8.22515078,0.36604346" id="Path" stroke="#B9CDE2" stroke-width="2" transform="translate(10.801563, 13.978189) scale(-1, 1) translate(-10.801563, -13.978189) "></path>
+                    <path d="M4.7667839,4.19407694 C7.67715296,6.12997346 11.178818,7.25925926 14.9464286,7.25925926 C18.7094171,7.25925926 22.2071121,6.13274257 25.1153593,4.20119817" id="Path" stroke="#B9CDE2" stroke-width="2"></path>
+                    <path d="M4.7667839,20.7346011 C7.67715296,22.6704976 11.178818,23.7997834 14.9464286,23.7997834 C18.7094171,23.7997834 22.2071121,22.6732667 25.1153593,20.7417223" id="Path" stroke="#B9CDE2" stroke-width="2" transform="translate(14.941072, 22.267192) scale(1, -1) translate(-14.941072, -22.267192) "></path>
+                    <rect id="Rectangle" fill="#B9CDE2" x="14.1160714" y="0" width="2" height="28"></rect>
+                    <polygon id="Rectangle" fill="#B9CDE2" transform="translate(15.066667, 14.053333) rotate(90.000000) translate(-15.066667, -14.053333) " points="14.0666667 -0.0627380952 16.0666667 -0.0627380952 16.0666667 28.1694048 14.0666667 28.1694048"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

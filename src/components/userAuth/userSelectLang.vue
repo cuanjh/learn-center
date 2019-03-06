@@ -1,5 +1,6 @@
 <style scoped>
   .bg-box {
+    min-height: 630px;
     padding: 50px 0px;
     background-color: #fff;
   }

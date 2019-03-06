@@ -29,7 +29,7 @@
           <div class='userVip-tabItem-active'>
             <p>会员卡激活：</p>
             <p><input type="text" placeholder='输入激活码' id='vip-codeNum-user'>
-              <span @click='showConfirm' >激活</span>
+              <span @click='showConfirm()' >激活</span>
             </p>
           </div>
           <div class='userVip-tabItem-purchase'>
@@ -42,7 +42,7 @@
                 <li><span>{{ item.money }}</span><em>￥/月</em></li>
                 <li><!-- <span>赠送</span>{{ item.gave_coins }}<span>金币</span> --></li>
                 <li><span>合计：</span>{{ item.total_money }}<span>元</span></li>
-                <li @click='purchase( item.product_id )'>点击购买</li>
+                <li @click='purchase(item.product_id)'>点击购买</li>
               </ol>
             </div>
             <i class='user-vip-clearboth'></i>
@@ -69,7 +69,8 @@
         </div>
       </div>
     </div>
-    <user-alert ref="alert"></user-alert>
+    <user-alert ref="userAlert"></user-alert>
+    <pay-alert ref="payAlert"></pay-alert>
   </section>
 </template>
 
@@ -79,10 +80,11 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import I18nLocales from '../../../vueI18/locale'
 import LogCollect from '../../../tool/logCollect'
 import UserAlert from './userAlert.vue'
-
+import PayAlert from './userPayAlert.vue'
 export default {
   components: {
-    UserAlert
+    UserAlert,
+    PayAlert
   },
   data () {
     return {
@@ -98,27 +100,21 @@ export default {
     this.$parent.$emit('activeNavUserItem', 'vip')
     this.$parent.$emit('navItem', 'user')
 
-    var _memberType = this.ui.member_info.member_type
+    let ui = JSON.parse(sessionStorage.getItem('userInfo'))
+    var _memberType = ui.member_info.member_type
     var _entryPage = this.$router.currentRoute.fullPath
     LogCollect.payMemberEnter(_memberType, _entryPage)
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       productList: state => state.user.productList
     }),
-    ui () {
-      let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
-      }
-      return ui
-    },
     vipJudge () {
-      var tempJunge = 0
-      if (this.ui.member_info !== undefined) {
-        tempJunge = this.ui.member_info.member_type || 0
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return
       }
+      var tempJunge = this.userInfo.member_info.member_type || 0
       if (tempJunge === 0) {
         return 'no-Vip'
       } else if (tempJunge === 1) {
@@ -128,10 +124,10 @@ export default {
       }
     },
     startTime () {
-      var startTime = 0
-      if (this.ui.member_info !== undefined) {
-        startTime = this.ui.member_info.start_time * 1000 || 0
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return
       }
+      var startTime = this.userInfo.member_info.start_time * 1000 || 0
       var date = new Date(startTime)
       var Y = date.getFullYear() + '-'
       var M = date.getMonth() + 1 + '-'
@@ -139,10 +135,10 @@ export default {
       return Y + M + D
     },
     endTime () {
-      var endTime = 0
-      if (this.ui.member_info !== undefined) {
-        endTime = this.ui.member_info.end_time * 1000 || 0
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return
       }
+      var endTime = this.userInfo.member_info.end_time * 1000 || 0
       var date = new Date(endTime)
       var Y = date.getFullYear() + '-'
       var M = date.getMonth() + 1 + '-'
@@ -150,23 +146,23 @@ export default {
       return Y + M + D
     },
     cardKind () {
-      if (this.ui.member_info) {
-        var month = this.ui.member_info['month_num']
-        if (month === 1) {
-          return '(月卡)'
-        } else if (month === 3) {
-          return '(季卡)'
-        } else if (month === 6) {
-          return '(半年卡)'
-        } else if (month === 12) {
-          return '(年卡)'
-        }
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return
+      }
+      var month = this.userInfo.member_info['month_num']
+      if (month === 1) {
+        return '(月卡)'
+      } else if (month === 3) {
+        return '(季卡)'
+      } else if (month === 6) {
+        return '(半年卡)'
+      } else if (month === 12) {
+        return '(年卡)'
       }
     }
   },
   methods: {
     ...mapMutations({
-      updateCoverState: 'course/updateCoverState',
       updatePurchaseIconPay: 'user/updatePurchaseIconPay'
     }),
     ...mapActions({
@@ -180,17 +176,17 @@ export default {
     },
     showConfirm () {
       this.codeNum = document.getElementById('vip-codeNum-user').value
-      this.$refs.alert.$emit('UserVipCode', this.codeNum)
+      this.$refs['userAlert'].$emit('isShowAlert', true)
+      this.$refs['userAlert'].$emit('UserVipCode', this.codeNum)
       if (!this.codeNum) {
         return
       }
-      this.$refs.alert.$emit('ifConfirmShow', true)
-      this.updateCoverState(true)
+      this.$refs['userAlert'].$emit('ifConfirmShow', true)
     },
     purchase (productId) {
+      this.$refs['payAlert'].$emit('isShowPayAlert', true)
       this.createAliWebOrder(productId)
       this.updatePurchaseIconPay(true)
-      this.updateCoverState(true)
     }
   }
 }
@@ -413,7 +409,7 @@ input:-ms-input-placeholder {
   text-align: center;
   color: #9b9b9b;
   font-size: 14px;
-  padding: 15px 0 26px 0;
+  padding: 15px 0 5px 0;
 }
 .userVip-tabItem-purchase div ol li:nth-of-type(4) {
   font-size: 12px;
@@ -556,7 +552,7 @@ input:-ms-input-placeholder {
   /*width:22px;*/
 }
 .vip-wrap-tips ul>li:nth-of-type(2) dl dt{
-  background-image: url(../../../../static/images/learn/learn-youxian.svg);
+  /* background-image: url(../../../../static/images/learn/learn-youxian.svg); */
   height:22px;
 }
 .vip-wrap-tips ul>li:nth-of-type(3) dl dt{

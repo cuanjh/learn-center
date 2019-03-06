@@ -25,8 +25,8 @@
       </div>
       <div class="hot-scroll">
         <div class="hot-content">
-          <div class="hot-list">
-            <div class="section" v-if="group.list.length > 0" v-for="group in groupCourseLangs" :key="group.letter">
+          <div class="hot-list" v-if="group.list">
+            <div class="section" v-for="group in groupCourseLangs" :key="group.letter">
               <a :id="group.letter" class="letter-gray">{{ group.letter }}</a>
               <ul>
                 <li v-for="item in group.list" :key="item.lan_code" @click="routerGo(item)">
@@ -149,6 +149,7 @@ export default {
       })
     },
     routerGo (item) {
+      console.log('item', item)
       let langCode = item['lan_code']
       // if (this.subscribeCoursesStr.length === 0) {
       //   this.$router.push({path: '/app/book-details/' + langCode})
@@ -178,7 +179,7 @@ export default {
     margin: 20px 0;
     font-weight: bold;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .nav-circle {
@@ -190,8 +191,8 @@ export default {
     margin-top: 9px;
   }
 
-  .nav span {
-    color: #999999;
+  .nav a {
+    color: #7E929F;
   }
 
   .nav-current {

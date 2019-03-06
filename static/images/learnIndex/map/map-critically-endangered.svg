@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="28px" viewBox="0 0 16 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>极度濒危型@3x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="91.7619978%" x2="50%" y2="-8.59026228%" id="linearGradient-1">
+            <stop stop-color="#391098" offset="0%"></stop>
+            <stop stop-color="#D156E6" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="杂项" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-531.000000, -1088.000000)" fill="url(#linearGradient-1)">
+            <path d="M539,1116 C544.333333,1106.25557 547,1099.79614 547,1096.62171 C547,1091.86007 543.418278,1088 539,1088 C534.581722,1088 531,1091.86007 531,1096.62171 C531,1099.79614 533.666667,1106.25557 539,1116 Z" id="极度濒危型"></path>
+        </g>
+    </g>
+</svg>

@@ -37,7 +37,7 @@
             <input type="text" placeholder='请填写邮箱账号' :class="['reg-input', {'error':!mailValidator}]" v-model="email">
             <template v-if="emailConfirmedStatus == 0">
               <em class='bind-logical-textState adjust'>未绑定</em>
-              <span class='bind-logical-btnState adjust' @click="bindEmail(email)" v-show="!mailValidator&&email">绑定邮箱</span>
+              <span class='bind-logical-btnState adjust bindEmail' @click="bindEmail(email)" v-show="mailValidator&&email">绑定邮箱</span>
             </template>
             <template v-if="emailConfirmedStatus == 1">
               <em class='bind-logical-textState adjust'>未验证</em>
@@ -77,7 +77,7 @@
         </div>
 
         <div class='expertLang-box' :class="{'error':!languageSkill}">
-          <span style='position:relative;vertical-align: top;line-height: 40px;'>精通语言</span>
+          <span style='position:relative;vertical-align: top;line-height: 40px;'>我的母语</span>
           <div class="selsex sellang">
             <language-skill-selector ref="langSkill" :value="languageSkill" @update="updateLanguageSkill"></language-skill-selector>
           </div>
@@ -94,7 +94,7 @@
     </div>
     <div class="user-fixpassword" v-show="activeTab === false">
       <form action="" style='padding-bottom: 20px;'>
-        <p v-if="!ui['is_anonymous']">
+        <p v-if="!isAnonymous">
           <span>原密码</span>
           <input type="password" placeholder='请输入原始密码' v-model="oldPsw" />
           <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
@@ -102,22 +102,23 @@
         <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码输入错误，请重新输入</div>
         <p :class="{'error':false}">
           <span>新密码</span>
-          <input type="password" placeholder='请输入新密码' v-model="newPsw1">
+          <input type="password" placeholder='请输入新密码' v-on:input="comparePwd()" v-model="newPsw1">
           <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
         </p>
         <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码不符合规范，请重新输入</div>
         <p>
           <span>确认密码</span>
-          <input type="password" placeholder='请确认新密码' v-model="newPsw2">
+          <input type="password" placeholder='请确认新密码' v-on:input="comparePwd()" v-model="newPsw2">
           <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
         </p>
-        <div class='learn-setting-error-tips-settingpage' v-show="newPsw1!=newPsw2"><i></i>您两次输入的密码不同，请重新输入</div>
+        <div class='learn-setting-error-tips-settingpage' v-show="!isSame"><i></i>您两次输入的密码不同，请重新输入</div>
         <div class='submit' @click="modifyPsw">保存修改</div>
         <p class='bindPhone-error-tips' style='bottom:-1px;top:initial;left:28px;' v-show='noticePsw'><i class='user error psw-user-error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p>
       </form>
     </div>
   </section>
   <set-alert
+    ref="setAlert"
     :alert-type="alertType"
     :bind-phone-num="phone"
     :alert-message="alertMessage"
@@ -135,6 +136,7 @@
 <script>
 import $ from 'jquery'
 import { mapState, mapMutations, mapActions } from 'vuex'
+import cookie from '../../../tool/cookie'
 
 import Constant from '../../../api/constant'
 import SetAlert from './userSettingAlert.vue'
@@ -163,6 +165,7 @@ export default {
       country: {}, // 用户的国籍信息
       languageSkill: [], // 精通语言
       desc: '', // 用户的描述信息
+      // description: '',
       descMaxLeng: 30, // 描述的最大长度
       /**
        * 弹出框类型,详见UserSettingAlertView.vue
@@ -174,6 +177,7 @@ export default {
       oldPsw: '', // 原密码
       newPsw1: '', // 新密码1
       newPsw2: '', // 新密码2
+      isSame: true, // 判断新密码两次输入是否一致
       noticePsw: false, // 密码没填全提示信息
       end: 'not use', // 没用
       noticeSetting: false
@@ -187,16 +191,18 @@ export default {
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'setting')
     this.$parent.$emit('navItem', 'user')
+    // let ui = JSON.parse(sessionStorage.getItem('userInfo'))
     this.loadData()
-    console.log(this.ui)
-    if (this.ui['is_anonymous']) {
-      this.updateUserAnonymous(true)
+    let isAnonymous = cookie.getCookie('is_anonymous') === 'true'
+    if (isAnonymous) {
+      // this.updateUserAnonymous(true)
+      this.$refs['setAlert'].$emit('isShowSetAlert', true)
       this.updateAlertType('bindAccount')
     }
   },
   computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo,
+      userInfo: state => state.userInfo,
       alertType: state => state.user.alertType
     }),
     nicknameError () {
@@ -207,7 +213,7 @@ export default {
       }
     },
     phoneNumberValidator () {
-      return /^1(3|4|5|7|8)\d{9}$/.test(this.phone)
+      return /^1(3|4|5|6|7|8)\d{9}$/.test(this.phone)
     },
     mailValidator () {
       return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.email)
@@ -215,15 +221,11 @@ export default {
     passowrdValidator (pwd) {
       return /^(\w){6,15}$/.test(pwd) // 字母数字下划线 6-15位
     },
-    ui () {
-      let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(localStorage.getItem('userInfo'))
-      }
-      return ui
-    },
     languageHandler () {
       return this.$store.state.user.languageHandler
+    },
+    isAnonymous () {
+      return cookie.getCookie('is_anonymous') === 'true'
     }
   },
   methods: {
@@ -232,16 +234,25 @@ export default {
       updateAlertType: 'user/updateAlertType'
     }),
     ...mapActions({
-      getUserInfo: 'user/getUserInfo',
-      sendCode: 'user/sendCode',
+      getUserInfo: 'getUserInfo', // 获取用户信息
+      // sendCode: 'user/sendCode',
+      sendCode: 'getSendCode', // 发送验证码
+      userExistsPhone: 'userExistsPhone', // 验证手机号是否存在
       bindEmail: 'user/bindEmail',
-      updateInfo: 'user/updateInfo',
+      // updateInfo: 'user/updateInfo',
+      updateInfo: 'updateUserInfo',
       resetPwd: 'user/resetPwd',
       changePwd: 'user/changePwd'
+      // getUserInfos: 'user/getUserInfo'
     }),
     loadData () {
       var _this = this
-      var result = _this.ui
+      var result = JSON.parse(sessionStorage.getItem('userInfo'))
+      if (result.member_info['is_anonymous'] === 'true') {
+        // _this.updateUserAnonymous(true)
+        // _this.updateAlertType('bindAccount')
+      }
+      console.log('result', result)
       if (result.nickname === undefined) {
         _this.nickname = ''
       } else {
@@ -266,7 +277,6 @@ export default {
         _this.emailConfirmedStatus = 2
         _this.email = result.email
       }
-
       if (result.gender === undefined || result.gender === '') {
         _this.gender = Constant.getGenderSelectorDataByCode('')
       } else {
@@ -278,13 +288,14 @@ export default {
       if (result.birthday === undefined || result.birthday < 1000) {
         _this.birthday = ''
       } else {
-        var _date = new Date(result.birthday * 1000)
-        _this.birthday =
-          _date.getFullYear() +
-          '-0' +
-          (_date.getMonth() + 1) +
-          '-0' +
-          _date.getDate()
+        // var _date = new Date(result.birthday * 1000)
+        // _this.birthday =
+        //   _date.getFullYear() +
+        //   '-0' +
+        //   (_date.getMonth() + 1) +
+        //   '-0' +
+        //   _date.getDate()
+        _this.birthday = result.birthday
       }
 
       this.$refs['datePicker'].$emit('initDate', _this.birthday)
@@ -292,20 +303,20 @@ export default {
       if (result.country) {
         var _tmp = {}
         _tmp.language = result.country.country_code
-        _tmp.name = result.country.country_name[_this.languageHandler]
+        _tmp.name = result.country.country_name
         _this.country = _tmp
       }
 
       _this.$refs['country'].$emit('init', _this.country)
 
       _this.languageSkill = []
-      if (result.mother_tongue === undefined) {
+      if (result.skill_langs === undefined) {
         _this.languageSkill = []
       } else {
-        result.mother_tongue.forEach((value, index, array) => {
+        result.skill_langs.forEach((value, index, array) => {
           var _tmp = {}
-          _tmp.language = value.lan_code
-          _tmp.name = value.name[_this.languageHandler]
+          _tmp.lan_code = value.lan_code
+          _tmp.name = value.name
           _this.languageSkill.push(_tmp)
         })
       }
@@ -330,22 +341,49 @@ export default {
       // this.learnDoc = false
       // this.setUpSuccess = false
     },
+    // 解除绑定
     unbindIdentity (type) {
       this.updateAlertType('bindConfirm')
       this.bindConfirmType = type
     },
-    bindPhoneNumber (phonenumber) {
+    // 绑定手机号
+    async bindPhoneNumber (phonenumber) {
       var _this = this
       var params = {}
       params.phonenumber = phonenumber
       params.type = 'bind_phonenumber'
-      this.sendCode(params).then((res) => {
+      params.codeLen = '6'
+      await _this.sendCode(params).then((res) => {
         if (res.success) {
           _this.updateAlertType('bindPhone')
         } else {
           _this.showAlertView(res)
         }
       })
+      await _this.getUserInfo()
+      // {phonenumber: this.phone, codeLen: '4'}
+      // await _this.userExistsPhone(params).then((data) => {
+      //   console.log('data', data)
+      //   if (data.success) {
+      //     if (!data.exists) {
+      //       // 手机号存在
+      //       _this.showAlertView(data)
+      //       _this.alertMessage = '该手机号已经存在'
+      //       _this.alertButton = '确定'
+      //     } else {
+      //       // 手机号不存在
+      //       _this.sendCode(params).then((res) => {
+      //         if (res.success) {
+      //           _this.updateAlertType('bindPhone')
+      //         } else {
+      //           _this.showAlertView(res)
+      //         }
+      //       })
+      //     }
+      //   } else {
+      //     _this.showAlertView(data)
+      //   }
+      // })
     },
     showAlertView (errorinfo) {
       this.updateAlertType('showMessage')
@@ -391,20 +429,20 @@ export default {
     motherTogue () {
       if (
         (this.languageSkill.length ===
-          this.ui['mother_tongue'].length) &
-        (this.ui['mother_tongue'].length === 0)
+          this.ui['skillLangs'].length) &
+        (this.ui['skillLangs'].length === 0)
       ) {
         return 1
       }
       if (
-        this.languageSkill.length === this.ui['mother_tongue'].length
+        this.languageSkill.length === this.ui['skillLangs'].length
       ) {
         var num = 0
         for (var i = 0; i < this.languageSkill.length; i++) {
-          for (var j = 0; j < this.ui['mother_tongue'].length; j++) {
+          for (var j = 0; j < this.ui['skillLangs'].length; j++) {
             if (
               this.languageSkill[i].language ===
-              this.ui['mother_tongue'][j]['lan_code']
+              this.ui['skillLangs'][j]['lan_code']
             ) {
               num = num + 1
             }
@@ -438,6 +476,7 @@ export default {
     saveNotice () {
       this.updateAlertType('saveNotice')
     },
+    // 保存修改用户信息
     async saveUserInfo () {
       var _params = {}
       if (this.nickname !== '') {
@@ -460,11 +499,9 @@ export default {
       } else {
         return this.alertMessageNotFull()
       }
-      if (this.languageSkill.length > 0) {
-        _params.mother_tongue = []
-        this.languageSkill.forEach((value, index, array) => {
-          _params.mother_tongue.push(value.language)
-        })
+      // 精通语言
+      if (this.languageSkill) {
+        _params.skillLangs = this.languageSkill['language']
       } else {
         return this.alertMessageNotFull()
       }
@@ -473,11 +510,11 @@ export default {
       }
       var photoUrl = $('#defaultUserImg').attr('src')
       if (photoUrl) {
-        _params.photo_url = photoUrl
+        _params.photo_url = photoUrl.split('/').slice(3).join('/')
       }
-      // console.log(JSON.stringify(this.$data))
       var _this = this
       await _this.updateInfo(_params).then((res) => {
+        console.log('修改用户信息', res)
         if (res.success) {
           _this.updateAlertType('showMessage')
           _this.alertMessage = '信息修改成功'
@@ -492,12 +529,13 @@ export default {
     modifyPsw () {
       var _this = this
       var _params = {}
-      if (this.ui['is_anonymous']) {
+      if (this.isAnonymous) {
         if (this.newPsw1.length === 0 || this.newPsw2.length === 0) {
           this.noticePsw = true
           return
         }
         _params.password = this.newPsw2
+        console.log('=====', _params)
         _this.resetPwd(_params).then((res) => {
           if (res.success) {
             _this.updateAlertType('showMessage')
@@ -509,11 +547,7 @@ export default {
           }
         })
       } else {
-        if (
-          this.oldPsw.length === 0 ||
-          this.newPsw1.length === 0 ||
-          this.newPsw2.length === 0
-        ) {
+        if (this.oldPsw.length === 0 || this.newPsw1.length === 0 || this.newPsw2.length === 0) {
           this.noticePsw = true
           return
         }
@@ -534,12 +568,24 @@ export default {
     },
     closeWin () {
       this.updateAlertType('')
+      this.$refs['setAlert'].$emit('isShowSetAlert', false)
     },
     updateAlertMessage (msg) {
       this.alertMessage = msg
     },
     updateAlertButton (text) {
       this.alertButton = text
+    },
+    comparePwd () {
+      if (!this.newPsw2) {
+        this.isSame = true
+        return
+      }
+      if (this.newPsw1 && this.newPsw2 && this.newPsw1 === this.newPsw2) {
+        this.isSame = true
+      } else {
+        this.isSame = false
+      }
     }
   }
 }
@@ -887,6 +933,9 @@ input {
   right: 56px;
   line-height: 40px;
 }
+.user-setting-form form .bindEmail {
+  line-height: 30px;
+}
 .user-right-wrap {
   position: relative;
 }
@@ -941,7 +990,7 @@ input {
 }
 .user-fixpassword p.error > input {
   border-color: #e46773;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 .user-setting-wrap .user-setting-form .multiselect__input,
 .user-setting-wrap .user-setting-form .multiselect__single {
