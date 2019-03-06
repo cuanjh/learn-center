@@ -12,7 +12,7 @@
                   <img :src="teacher.photo !==''?teacher.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="头像">
                   <div class="text">
                     <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + teacher.code}">{{teacher.author_name}}</router-link>
-                    <p>{{teacher.followed_count}}粉丝</p>
+                    <p v-show="false">{{teacher.followed_count}}粉丝</p>
                   </div>
                 </div>
                 <div class="teacher-right">
@@ -49,7 +49,7 @@
                   <img :src="teacher.photo !=='' ?teacher.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="头像">
                   <div class="text">
                     <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + teacher.code}">{{teacher.author_name}}</router-link>
-                    <p>{{teacher.followed_count}}粉丝</p>
+                    <p v-show="false">{{teacher.followed_count}}粉丝</p>
                   </div>
                 </div>
                 <div class="teacher-right">
