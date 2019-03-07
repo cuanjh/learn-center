@@ -8,7 +8,8 @@
         <div class="title"><i></i>推荐电台</div>
         <div class="radio-control">
           <a class="lang-sel" @mouseleave="isShowPanel = false" v-if="userId && curCourseCode">
-            <span @mouseenter="isShowPanel = true">{{ selStateText }} <i></i></span>
+            <p @mouseenter="isShowPanel = true"><span>{{ selStateText }}</span><i></i></p>
+            <!-- <span @mouseenter="isShowPanel = true">{{ selStateText }} <i></i></span> -->
             <div class="lang-list" v-show="isShowPanel">
               <ul>
                 <li @mouseenter="selState = {'lan_code':item.lan_code, 'text': item.text}" :class="{'active': selStateCode == item.lan_code }"
@@ -230,9 +231,17 @@ export default {
             background-image: url('../../../../static/images/learnIndex/icon-triangle-hover.svg');
           }
         }
-        span{
-          font-size: 14px;
-          font-weight: 500;
+        p {
+          display: inline-block;
+          span{
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            max-width: 64px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
           i {
             margin-top: 17px;
             width: 9px;
@@ -263,6 +272,7 @@ export default {
               line-height: 32px;
               color: #103044;
               text-align: center;
+              overflow: hidden;
               cursor: pointer;
             }
             .active {

@@ -1,17 +1,13 @@
 <template>
-  <div class="left-side" @mouseleave="showMyCourse()">
+  <div class="left-side" @mouseleave="navCourse = false">
     <div class="lang-overview">
       <dl>
         <dt><img :src="courseBaseInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
           <div class="triangle">
               <span v-text='courseBaseInfo.name'></span>
-            <p>
-              <!-- :class="{active:isActive}" -->
-              <i :class="{active:isActive}" @mouseenter="showMyCourse()"></i>
-              <!-- <transition name="fade">
-                <img v-show="trigangleShow" src="../../../../static/images/course/learn-big-arrow.png" alt="dddd">
-              </transition> -->
+            <p >
+              <i :class="{active:navCourse}" @mouseenter="navCourse = true"></i>
             </p>
           </div>
           <p class="course-old">{{$t('course.finished')}}&nbsp;<span v-text="finishedChapter + '/' + chapterNum"></span>&nbsp;{{$t('course.classHour')}}</p>
@@ -69,7 +65,6 @@ export default {
   data () {
     return {
       trigangleShow: false,
-      isActive: false,
       navCourse: false,
       learnCourse: []
     }
@@ -118,12 +113,6 @@ export default {
       localStorage.setItem('lastCourseCode', courseCode)
       this.updateCurCourseCode(courseCode)
       Bus.$emit('changeCourseCode', courseCode)
-    },
-    // 点击三角形展开我订阅的课程再次点击收起
-    showMyCourse () {
-      this.isActive = !this.isActive
-      this.navCourse = !this.navCourse
-      this.trigangleShow = !this.trigangleShow
     }
   }
 }

@@ -21,6 +21,8 @@
         <div class="item phone-code">
           <input  id="phoneCode"
                   type="text"
+                  readonly="readonly"
+                  @focus="onFocus()"
                   placeholder="手机验证码"
                   v-model="phoneCode"
                   @keyup.enter="goLogin">
@@ -155,6 +157,7 @@ export default {
     AuthPwdLogin
   },
   mounted () {
+    // $('#phoneCode').val('')
     this.postAnonyLogin({preferLangs: 'ENG', skillLangs: 'ENG'}).then(res => {
       console.log(res)
     })
@@ -193,6 +196,9 @@ export default {
       postAnonyLogin: 'postAnonyLogin',
       getUserInfo: 'getUserInfo'
     }),
+    onFocus () {
+      $('#phoneCode').removeAttr('readOnly')
+    },
     // 更新type
     updateType (type) {
       this.type = type

@@ -7,7 +7,7 @@
           :key="author.user_id"
         >
           <img @click="goToUser(author.user_id)" :src="author.photo !=='' ?author.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="老师头像">
-          <p class="author_name" v-text="author.author_name"></p>
+          <router-link tag="p" :to="{path: 'author-detail/' + author.user_id}" class="author_name" v-text="author.author_name"></router-link>
           <p class="title" v-text="'《'+ author.title +'》'"></p>
           <!-- <p class="button">
             <i></i>
@@ -142,6 +142,7 @@ export default {
         cursor: pointer;
       }
       .author_name {
+        cursor: pointer;
         font-size: 14px;
         height: 23px;
         font-weight: bold;

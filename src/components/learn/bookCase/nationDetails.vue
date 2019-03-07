@@ -339,9 +339,11 @@ a {
           color:rgba(153,153,153,1);
           span {
             padding-left: 25px;
+            border-left: 4px solid #f6f8f9;
           }
           &.active {
             color:#0A2B40FF;
+            font-weight:500;
             span {
               display: inline-block;
               border-left: 4px solid #2A9FE4FF;
@@ -418,7 +420,7 @@ a {
                   width: 32px;
                   height: 36px;
                   background: url('../../../../static/images/bookCase/personName.svg') no-repeat center;
-                  background-size: cover;
+                  background-size: 100%;
                 }
               }
             }

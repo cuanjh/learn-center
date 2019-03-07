@@ -31,7 +31,7 @@
                     <div class="radio-li" v-for="(radio, index) in hostRadios" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
-                          <img :src="radio.cover" alt="背景图片">
+                          <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
                           <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                             <i class="play"></i>
                           </div>
@@ -64,7 +64,7 @@
                     <div class="radio-li" v-for="(radio, index) in recommendRadios" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
-                          <img v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
+                          <img  @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
                           <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                             <i class="play"></i>
                           </div>
@@ -99,7 +99,7 @@
                     <div class="radio-li" v-for="(radio, index) in releaseRadio" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
-                          <img :src="radio.cover" alt="背景图片">
+                          <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
                           <div class="gradient-layer-play"  @click="loadRadioList($event, radio)">
                             <i class="play"></i>
                           </div>
@@ -367,6 +367,12 @@ export default {
           return false
         }
       })
+    },
+    // 详情页面
+    goDetail (code) {
+      this.$router.push({
+        path: `/app/discovery/radio-detail/${code}`
+      })
     }
   }
 }
@@ -404,15 +410,15 @@ export default {
               .tab {
                 position: relative;
                 display: inline-block;
-                width: 80px;
+                // width: 80px;
                 margin-right: 34px;
                 span {
-                  position: absolute;
+                  // position: absolute;
                   font-size: 12px;
                   line-height: 20px;
                   font-weight: bold;
                   color: #0A2B40FF;
-                  padding-bottom: 8px;
+                  padding-bottom: 3px;
                   cursor: pointer;
                   &.active {
                     border-bottom: 4px solid #2A9FE4FF;
@@ -432,7 +438,7 @@ export default {
                 .host-content {
                   .radio-li {
                     padding: 20px 0;
-                    border-bottom: 1px solid #EEF2F3FF;
+                    border-top: 1px solid #EEF2F3FF;
                     .radio-li-left {
                       // display: inline-block;
                       display: flex;
@@ -445,6 +451,7 @@ export default {
                         height: 80px;
                         margin-right: 16px;
                         img {
+                          cursor: pointer;
                           width: 100%;
                           height: 100%;
                           border-radius: 4px;
@@ -538,9 +545,10 @@ export default {
                   }
                   .radio-li:first-child {
                     padding-top: 0px;
+                    border-top: 0px;
                   }
                   .radio-li:last-child {
-                    border-bottom: none;
+                    border-bottom: 0px solid #ffffff;
                   }
                 }
                 .radio-num {
@@ -553,6 +561,7 @@ export default {
                 .up-all {
                   position: absolute;
                   bottom: 0;
+                  left: 0;
                   cursor: pointer;
                   width: 100%;
                   background: rgba(221, 221, 221, .1);

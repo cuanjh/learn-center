@@ -47,7 +47,7 @@
               <ul>
                 <li v-for="(radio, index) in lists" :key="index+radio.code">
                   <div class="item-img">
-                    <img v-lazy="radio.cover" :key="radio.cover" alt="电台的图片">
+                    <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="电台的图片">
                     <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                       <i class="play"></i>
                     </div>
@@ -193,43 +193,6 @@ export default {
         console.log('==>>>>>>>', _this.showPage)
       })
     },
-    // 加载更多
-    // loadMore () {
-    //   if (this.showPage === -1) {
-    //     return false
-    //   }
-    //   if (Object.keys(this.selState).length === 0) {
-    //     this.selState = this.langCodesSel[0]
-    //   }
-    //   let lanCode = this.selState['lan_code']
-    //   this.page++
-    //   let params = {}
-    //   if (!this.userInfo) {
-    //     params = {
-    //       menu_type: this.menu_type,
-    //       menu_id: this.menu_id,
-    //       page: this.page,
-    //       preferred_lan_code: '',
-    //       sort: this.onActive
-    //     }
-    //   } else {
-    //     params = {
-    //       menu_type: this.menu_type,
-    //       menu_id: this.menu_id,
-    //       page: this.page,
-    //       preferred_lan_code: lanCode,
-    //       sort: this.onActive
-    //     }
-    //   }
-    //   console.log('点击加载更多params', params)
-    //   this.getRadioList(params).then((res) => {
-    //     console.log('点击加载更多', res)
-    //     this.lists = this.lists.concat(res.data.radios)
-    //     if (res.data.page === -1) {
-    //       this.showPage = res.data.page
-    //     }
-    //   })
-    // },
     // 鼠标滚动
     handleScroll () {
       let before = $(window).scrollTop() // 判断滚动条向下滚动
@@ -263,10 +226,7 @@ export default {
               sort: this.onActive
             }
           }
-          console.log('params==>', params)
-          console.log('页码', this.showPage)
           this.getRadioList(params).then((res) => {
-            console.log('res', res)
             this.lists = this.lists.concat(res.data.radios)
             if (res.data.page === -1) {
               this.showPage = -1
@@ -367,6 +327,12 @@ export default {
         this.count = res.data.count
         this.lists = res.data.radios
         this.showPage = res.data.page
+      })
+    },
+    // 详情页面
+    goDetail (code) {
+      this.$router.push({
+        path: `/app/discovery/radio-detail/${code}`
       })
     }
   }
@@ -561,6 +527,7 @@ a {
                   border-radius:5px;
                   margin-top: 5px;
                   img {
+                    cursor: pointer;
                     width:170px;
                     height:90px;
                     border-radius:5px;
