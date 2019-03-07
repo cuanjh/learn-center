@@ -6,8 +6,8 @@
     </div>
     <!-- <router-link class="vip-btn" :to="{path: 'vip-index'}"></router-link> -->
     <div @click="goVip()" class="vip-btn">
-      <a v-if="isVip === 0">成为会员</a>
-      <a v-if="isVip === 1">升级会员</a>
+      <a v-if="isVip == 1">升级会员</a>
+      <a v-else>成为会员</a>
     </div>
   </div>
 </template>

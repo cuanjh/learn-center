@@ -593,7 +593,7 @@ export default {
             top: 0;
             text-align: center;
             line-height: 120px;
-            font-size: 20px;
+            font-size: 16px;
             color: #ffffff;
             border-radius: 3px;
           }
@@ -707,6 +707,7 @@ export default {
           flex-direction: row;
           justify-content: center;
           align-items: center;
+          border-bottom: 6px solid #ffffff;
           &.active {
             border-bottom: 6px solid #2A9FE4FF;
             span {

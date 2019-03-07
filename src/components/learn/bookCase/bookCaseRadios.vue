@@ -3,7 +3,7 @@
     <ul class="book-resource">
       <li v-for="(item, index) in resourceInfoRadios" :key="index">
         <div class="book-img">
-          <img v-lazy="item.cover" :key="item.cover" alt="资源图片">
+          <img @click="goDetail(item.code)" v-lazy="item.cover" :key="item.cover" alt="资源图片">
           <div class="gradient-layer-play" @click="loadRadioList($event, item)">
             <i class="play"></i>
           </div>
@@ -55,6 +55,12 @@ export default {
         }
       }
       this.isPlay = !this.isPlay
+    },
+    // 详情页面
+    goDetail (code) {
+      this.$router.push({
+        path: `/app/discovery/radio-detail/${code}`
+      })
     }
   }
 }
@@ -73,6 +79,7 @@ export default {
   border-bottom:1px solid rgba(234,234,234,1);
 }
 .book-resource li .book-img {
+  cursor: pointer;
   position: relative;
   display: inline-block;
   width:160px;
@@ -115,7 +122,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: 23px;
+    padding-left: 12px;
 }
 .book-resource li .book-content .book-title {
   height: 80px;

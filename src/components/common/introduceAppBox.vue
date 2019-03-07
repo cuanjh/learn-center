@@ -35,9 +35,9 @@ export default {
     background: #fff;
     .introduce-app-img {
       width: 280px;
-      height: 220px;
+      height: 215px;
       background: url('../../../static/images/introduceApp/introduceappimg.png') no-repeat center;
-      background-size: cover;
+      background-size: 100% 100%;
     }
     .ios-google {
       width: 100%;

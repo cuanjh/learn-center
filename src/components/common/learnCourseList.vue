@@ -161,6 +161,11 @@ export default {
 .mycourse-container > section ul > li.disable dl dd span a {
   cursor: default;
   color: #666;
+  display: inline-block;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .mycourse-container > section ul > li.learn-courseList-add-more {
   text-align: center;

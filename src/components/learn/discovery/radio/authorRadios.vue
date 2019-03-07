@@ -6,7 +6,7 @@
           <li v-for="(radio, index) in radios" :key="index+radio.code">
             <div class="item">
               <div class="item-img">
-                <img v-lazy="radio.cover" :key="radio.cover" alt="电台的图片">
+                <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="电台的图片">
                 <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                   <i class="play"></i>
                 </div>
@@ -72,6 +72,12 @@ export default {
         }
       }
       this.isPlay = !this.isPlay
+    },
+    // 详情页面
+    goDetail (code) {
+      this.$router.push({
+        path: `/app/discovery/radio-detail/${code}`
+      })
     }
   }
 }
@@ -93,7 +99,7 @@ export default {
         .item {
           width: 100%;
           display: flex;
-          justify-content: space-between;
+          // justify-content: space-between;
         }
         .item-img {
           position: relative;
@@ -102,6 +108,7 @@ export default {
           border-radius: 5px;
           margin-top: 5px;
           img {
+            cursor: pointer;
             width: 100%;
             height: 100%;
             border-radius: 5px;
@@ -134,7 +141,7 @@ export default {
           }
         }
         .right-describe {
-          padding: 10px 0 10px 10px;
+          padding: 10px 0 10px 12px;
           width: 280px;
           .name {
             cursor: pointer;

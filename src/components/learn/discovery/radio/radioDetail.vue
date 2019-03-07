@@ -111,7 +111,7 @@
                 </div>
                 <p class="flowed" @click="relation()">
                   <a v-if="authorInfo.has_followed === 0"><i></i>关注</a>
-                  <a v-else>已关注</a>
+                  <a class="followed" v-else>已关注</a>
                 </p>
               </div>
             </div>
@@ -265,6 +265,18 @@ export default {
       remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
       getOtherRecommends: 'getOtherRecommends' // 其他人也在听
     }),
+    // 作者详情页面
+    goToUser (userId) {
+      this.$router.push({
+        path: `/app/discovery/author-detail/${userId}`
+      })
+    },
+    // 跳转vip
+    toVip () {
+      this.$router.push({
+        path: '/app/user/vip'
+      })
+    },
     // 处理radio的时间
     toParseTime (data) {
       let m = parseInt(data / 60)
@@ -304,18 +316,6 @@ export default {
           }
         })
       }
-    },
-    // 作者详情页面
-    goToUser (userId) {
-      this.$router.push({
-        path: `/app/discovery/author-detail/${userId}`
-      })
-    },
-    // 跳转vip
-    toVip () {
-      this.$router.push({
-        path: '/app/user/vip'
-      })
     },
     // 发请求获取radio的详情页面
     async loadData () {
@@ -386,47 +386,13 @@ export default {
                 Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
               }
             }
+          } else {
+            this.initSubscibe(radio)
           }
         }
       } else {
         this.initSubscibe(radio)
       }
-      // if (radio.money_type === 'CNY') {
-      //   // 人民币提示
-      //   Bus.$emit('showBuyRadio', radio, radio.cards_count)
-      // } else if (radio.money_type === 'coins') {
-      //   // 金币提示
-      //   Bus.$emit('showBuyCoinsRadio', radio)
-      //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-      // }
-      // if (radio.money !== 0) { // 收费
-      //   if (this.isVip !== 1) { // 不是会员
-      //     if (radio.money_type !== 'CNY') { // 不是会员 金币收费课程
-      //       if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-      //         alert('不是会员 金币收费')
-      //         Bus.$emit('showBuyCoinsRadio', radio)
-      //         Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-      //       }
-      //     } else { // 不是会员 人民币收费课程
-      //       if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-      //         alert('不是会员 人民币收费课程')
-      //         Bus.$emit('showBuyRadio', radio, radio.cards_count)
-      //       }
-      //     }
-      //   } else { // 是会员
-      //     if (radio.money_type === 'CNY') {
-      //       if (radio.free_for_member === 0) {
-      //         console.log('这是会员不免费课程')
-      //         if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-      //           alert('是会员 人民币收费课程')
-      //           Bus.$emit('showBuyRadio', radio, radio.cards_count)
-      //         }
-      //       }
-      //     }
-      //   }
-      // } else if (radio.money === 0 || radio.free_for_member === 1) { // 免费 会员免费
-      //   this.subscibenoInfo.purchased_state = 1
-      // }
     },
     // 初始化订阅的状态
     async initSubscibe (radio) {
@@ -530,10 +496,11 @@ export default {
 .radio-left .course .module-name {
   color: #333333;
   word-break: break-all;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 32px;
   margin-top: 8px;
   width: 200px;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -784,7 +751,7 @@ export default {
   width: 880px;
   background-color: #ffffff;
   border-radius: 3px;
-  padding: 40px;
+  padding: 30px 40px;
   margin-top: 10px;
 }
 .radio-left .author-brief .title {
@@ -868,6 +835,9 @@ export default {
   background-size: cover;
   margin-right: 3px;
 }
+.author-info .author-info-right .passed .flowed .followed {
+  color: #90A2AE;
+}
 .author-info .author-info-right .passed p {
   font-size:14px;
   font-family:PingFangSC-Semibold;
@@ -939,7 +909,7 @@ export default {
   background-color: #ffffff;
   /* margin-top: 25px; */
   border-radius: 3px;
-  padding: 16px 40px 44px;
+  padding: 30px 40px 44px;
 }
 
 .radio-left .course-list .title {
@@ -1108,7 +1078,7 @@ export default {
   background-color: #ffffff;
   margin-top: 25px;
   border-radius: 3px;
-  padding: 29px 30px;
+  padding: 30px 40px;
 }
 
 .radio-left .comments .title {
