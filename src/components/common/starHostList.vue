@@ -11,7 +11,7 @@
         <li v-for="(teacher, index) in teacherLists.slice(0, 4)" :key="index">
           <div class="list-cont">
             <div class="list-left">
-              <img :src="teacher.photo" alt="头像">
+              <img @click="goUserDetail(teacher.user_id)" :src="teacher.photo" alt="头像">
               <div class="list-text">
                 <router-link tag="span" :to="{path: '/app/discovery/author-detail/' + teacher.user_id}">{{teacher.author_name}}</router-link>
                 <span>{{teacher.followed_count}}粉丝</span>
@@ -20,7 +20,7 @@
             <div class="list-right">
               <p class="button" @click="relation(teacher)">
                 <a v-if="teacher.has_followed === 0"><i></i>关注</a>
-                <a v-else>已关注</a>
+                <a class="followed" v-else>已关注</a>
               </p>
             </div>
           </div>
@@ -73,12 +73,19 @@ export default {
           }
         })
       }
+    },
+    // 老师详情页面
+    goUserDetail (userId) {
+      this.$router.push({
+        path: `/app/discovery/author-detail/${userId}`
+      })
     }
   }
 }
 </script>
 <style lang="less" scoped>
 .star-host {
+  margin-bottom: 10px;
   .name {
     font-size: 16px;
     font-weight: 600;
@@ -87,8 +94,7 @@ export default {
     font-weight: Semibold;
     display: flex;
     justify-content: space-between;
-    padding: 30px 0 10px;
-    margin-bottom: 20px;
+    padding: 12px 0 10px;
     .more {
       font-size: 14px;
       color: #7e929fff;
@@ -131,6 +137,7 @@ export default {
           .list-left {
             display: flex;
             img {
+              cursor: pointer;
               width: 46px;
               height: 46px;
               border-radius: 50%;
@@ -142,7 +149,7 @@ export default {
               }
               span:nth-child(1) {
                 cursor: pointer;
-                font-size: 16px;
+                font-size: 14px;
                 color: #0a2b40ff;
                 line-height: 22px;
                 font-weight: bold;
@@ -197,6 +204,9 @@ export default {
                   margin-right: 5px;
                 }
               }
+            }
+            .followed {
+              color: #90A2AE;
             }
           }
         }

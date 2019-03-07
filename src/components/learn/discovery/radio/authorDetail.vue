@@ -24,7 +24,7 @@
             </p>
             <p class="follow" @click="relation()">
               <a v-if="authorInfo.has_followed === false"><i></i>关注</a>
-              <a v-else>已关注</a>
+              <a class="followed" v-else>已关注</a>
             </p>
           </div>
           <div class="introduce">
@@ -37,7 +37,7 @@
     <div class="author-radio">
       <div class="tab-item">
         <span v-bind:class="{'active': 'authorInfo' == tabFlag}" @click="tabChange('authorInfo')">个人信息</span>
-        <span v-bind:class="{'active': 'radios' == tabFlag}" @click="tabChange('radios')">他的电台</span>
+        <span v-bind:class="{'active': 'radios' == tabFlag}" @click="tabChange('radios')">{{authorInfo.gender === 'female'?'她':'他'}}的电台</span>
       </div>
       <div class="author-content">
         <div class="author-content-box" v-if="'authorInfo' == tabFlag">
@@ -51,14 +51,14 @@
             </div>
             <div class="personal-dynamic">
               <div class="content">
-                <p>他的粉丝</p>
+                <p>{{authorInfo.gender === 'female'?'她':'他'}}的粉丝</p>
                 <p><span>{{authorInfo.be_followed_num}}</span></p>
                 <p v-show="false"><i></i><span></span></p>
               </div>
             </div>
             <div class="personal-dynamic">
               <div class="content">
-                <p>他的关注</p>
+                <p>{{authorInfo.gender === 'female'?'她':'他'}}的关注</p>
                 <p><span>{{authorInfo.follow_num}}</span></p>
                 <p v-show="false"><span>关注他们</span></p>
               </div>
@@ -363,6 +363,21 @@ export default {
               }
               &:hover {
                 background: #2A9FE4;
+              }
+            }
+            .followed {
+              padding: 3px 15px;
+              font-size:14px;
+              font-family:PingFang-SC-Medium;
+              font-weight:500;
+              color:#90A2AE;
+              border-radius: 13px;
+              display: flex;
+              align-items: center;
+              background: #ECF0F3;
+              &:hover {
+                color:#2A9FE4;
+                background: #ECF0F3;
               }
             }
           }

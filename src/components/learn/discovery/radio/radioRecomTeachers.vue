@@ -9,16 +9,16 @@
             <div class="teacher-list-content" v-if="teachers && teachers.length > 0">
               <div class="teacher-item" v-for="(teacher, index) in teachers.slice(0, 6)" :key="index">
                 <div class="teacher-left">
-                  <img :src="teacher.photo !==''?teacher.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="头像">
+                  <img @click="goUserDetail(teacher.user_id)" :src="teacher.photo !==''?teacher.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="头像">
                   <div class="text">
-                    <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + teacher.code}">{{teacher.author_name}}</router-link>
+                    <router-link tag="p" :to="{path: '/app/discovery/author-detail/' + teacher.user_id}">{{teacher.author_name}}</router-link>
                     <p v-show="false">{{teacher.followed_count}}粉丝</p>
                   </div>
                 </div>
                 <div class="teacher-right">
                   <p class="button" @click="relation(teacher)">
-                    <a v-if="teacher.has_followed === 0"><i></i>关注</a>
-                    <a v-else>已关注</a>
+                    <a class="following" v-if="teacher.has_followed === 0"><i></i>关注</a>
+                    <a class="followed" v-else>已关注</a>
                   </p>
                   <p class="hidden-button" @click="hidden(index)" v-show="false">
                     <span>隐藏</span>
@@ -46,16 +46,16 @@
             <div class="teacher-list-content" v-if="teacherLists && teacherLists.length > 0">
               <div class="teacher-item" v-for="(teacher, index) in teacherLists.slice(0, 6)" :key="index">
                 <div class="teacher-left">
-                  <img :src="teacher.photo !=='' ?teacher.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="头像">
+                  <img @click="goUserDetail(teacher.user_id)" :src="teacher.photo !=='' ?teacher.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="头像">
                   <div class="text">
-                    <router-link tag="p" :to="{path: '/app/discovery/radio-detail/' + teacher.code}">{{teacher.author_name}}</router-link>
+                    <router-link tag="p" :to="{path: '/app/discovery/author-detail/' + teacher.user_id}">{{teacher.author_name}}</router-link>
                     <p v-show="false">{{teacher.followed_count}}粉丝</p>
                   </div>
                 </div>
                 <div class="teacher-right">
                   <p class="button" @click="relation(teacher)">
-                    <a v-if="teacher.has_followed === 0"><i></i>关注</a>
-                    <a v-else>已关注</a>
+                    <a class="following" v-if="teacher.has_followed === 0"><i></i>关注</a>
+                    <a class="followed" v-else>已关注</a>
                   </p>
                   <p class="hidden-button" @click="hidden(index)" v-show="false">
                     <span>隐藏</span>
@@ -229,6 +229,12 @@ export default {
     // 换一批其他老师
     changeBatchOther () {
       this.initLearnOtherTeachers()
+    },
+    // 老师详情页面
+    goUserDetail (userId) {
+      this.$router.push({
+        path: `/app/discovery/author-detail/${userId}`
+      })
     }
   }
 }
@@ -297,6 +303,7 @@ export default {
               display: flex;
               align-items: center;
               img {
+                cursor: pointer;
                 width: 60px;
                 height: 60px;
                 border-radius: 50%;
@@ -356,7 +363,7 @@ export default {
                   align-items: center;
                   font-size: 14px;
                   font-weight: 500;
-                  color: #7E929FFF;
+                  color: #0a2b40ff;
                   &:hover {
                     background-color: #2A9FE4FF;
                     font-size: 14px;
@@ -366,6 +373,9 @@ export default {
                       background: url("../../../../../static/images/followhover.svg");
                     }
                   }
+                }
+                .followed {
+                  color: #90A2AE;
                 }
               }
               p:nth-child(2) {

@@ -615,7 +615,7 @@ export default {
         vertical-align: middle;
         border-radius: 5px;
         img {
-          border-radius: 7px;
+          border-radius: 5px;
           width: 34px;
           height: 34px;
           object-fit: cover;

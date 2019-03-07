@@ -2,7 +2,7 @@
   <div class="map_statistics_box">
     <div class="map_statistics_wrap">
       <div class="map_statistics">
-        <i @click="stretchToggle()"></i>
+        <i :class="{'active': isActive}" @click="stretchToggle()"></i>
         <ul>
           <li>语言 {{statisticsInfo.langNum }} 种</li>
           <li>语言电台 {{statisticsInfo.radioNum }} 个</li>
@@ -20,7 +20,8 @@ export default {
   data () {
     return {
       statisticsInfo: {},
-      isStretch: true
+      isStretch: true,
+      isActive: false
     }
   },
   mounted () {
@@ -42,10 +43,12 @@ export default {
         elem.stop().animate({
           bottom: 0
         })
+        this.isActive = false
       } else {
         elem.stop().animate({
           bottom: '-155px'
         })
+        this.isActive = true
       }
     }
   }
@@ -86,12 +89,15 @@ export default {
     margin-right: 7px;
     margin-top: 7px;
     cursor: pointer;
+    &.active {
+      background-image: url('../../../../static/images/learnIndex/upOn.svg');
+    }
   }
   ul {
     margin-left: 23px;
-    margin-top: 110px;
+    margin-top: 118px;
     li {
-      margin-top: 8px;
+      margin-top: 4px;
       font-size: 12px;
       font-weight: 500;
       color: #0A2B40;
