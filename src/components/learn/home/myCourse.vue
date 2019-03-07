@@ -549,6 +549,13 @@ export default {
     text-overflow:ellipsis;
     white-space: nowrap;
   }
+  .current-course dd a span {
+    display: inline-block;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
 
   .current-course dd a i {
     margin-top: 20px;
