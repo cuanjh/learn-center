@@ -217,11 +217,14 @@ export default {
     },
     jumpSystem () {
       this.logout().then((res) => {
-        localStorage.removeItem('device_id')
-        localStorage.removeItem('user_id')
-        localStorage.removeItem('verify')
-        this.$router.push({ path: '/' })
+        cookie.delCookie('device_id')
+        cookie.delCookie('user_id')
+        cookie.delCookie('verify')
+        cookie.delCookieTalkmate('device_id')
+        cookie.delCookieTalkmate('user_id')
+        cookie.delCookieTalkmate('verify')
         this.updateIsLogin('0')
+        this.$router.push({ path: '/' })
       })
     },
     changeCourseCode (courseCode) {
