@@ -503,7 +503,6 @@ export default {
       let progressCur = document.getElementById('progressCurBtn')
       let oevent = ev || event
       let distanceX = oevent.clientX - progressCur.offsetLeft
-
       document.onmousemove = (ev) => {
         let oevent = ev || event
         let left = oevent.clientX - distanceX
