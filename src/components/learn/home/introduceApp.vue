@@ -386,24 +386,25 @@ export default {
           padding-top: 81px;
           display: flex;
           flex-direction: column;
-        }
-        p {
-          width: 517px;
-          font-size: 14px;
-          color: #ffffff;
-          line-height: 20px;
-        }
-        p:nth-child(1) {
-          font-size: 32px;
-          font-weight: bold;
-          line-height: 46px;
+          p {
+            width: 517px;
+            font-size: 14px;
+            color: #ffffff;
+            line-height: 20px;
+          }
+          p:nth-child(1) {
+            font-size: 32px;
+            font-weight: bold;
+            line-height: 46px;
+            padding-bottom: 16px;
+          }
         }
       }
       // 视频
       .video-box {
         position: relative;
         width: 422px;
-        height: 242px;
+        height: 248px;
         border: 6px #fff solid;
         box-shadow:0px 2px 13px 1px rgba(11,53,80,0.54);
         box-sizing: border-box;
@@ -441,7 +442,7 @@ export default {
           position: absolute;
           top: 0;
           width: 410px;
-          height: 230px;
+          height: 236px;
           background: url('../../../../static/images/introduceApp/videomoren.png') no-repeat center;
           background-size: cover;
           object-fit: cover;
@@ -465,7 +466,7 @@ export default {
           -ms-user-select: none;
           user-select: none;
           width:410px;
-          height: 230px;
+          height: 236px;
           .vjs-tech {
             position: absolute;
             top: 0;
@@ -499,7 +500,7 @@ export default {
         .mini {
           width:128px;
           height: 182px;
-          background: url('../../../../static/images/mini.svg') no-repeat center;
+          background: url('../../../../static/images/introduceApp/mini.svg') no-repeat center;
           background-size: 100%;
           margin-right: 27px;
         }

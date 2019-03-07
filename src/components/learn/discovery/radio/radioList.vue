@@ -68,12 +68,12 @@
             </div>
             <!-- 点击加载更多 -->
             <div class="load-more">
-              <span v-if="showPage === -1">已显示全部内容</span>
+              <span v-if="showPage == -1">已显示全部内容</span>
               <!-- <span @click="loadMore()" v-else>点击加载更多</span> -->
             </div>
           </div>
-          <div class="no-content" v-show="lists.length === 0">
-            <p class="language-related" v-if="isSelStateCode === 0">
+          <div class="no-content" v-show="lists.length == 0">
+            <p class="language-related" v-if="isSelStateCode == 0">
               <i></i>
               <span>暂没有相关的电台节目</span>
             </p>
@@ -264,7 +264,7 @@ export default {
             }
           }
           console.log('params==>', params)
-          console.log('页码', this.page, this.showPage)
+          console.log('页码', this.showPage)
           this.getRadioList(params).then((res) => {
             console.log('res', res)
             this.lists = this.lists.concat(res.data.radios)
@@ -333,10 +333,12 @@ export default {
         console.log('切换母语', res)
         this.count = res.data.count
         this.lists = res.data.radios
+        this.showPage = res.data.page
       })
     },
     // 切换热度
     changeIsHot (item) {
+      console.log('====>', this.page, this.showPage)
       console.log('热度', item)
       console.log('selState', this.selState)
       this.onActive = item.type
@@ -364,6 +366,7 @@ export default {
         console.log('切换热度', res)
         this.count = res.data.count
         this.lists = res.data.radios
+        this.showPage = res.data.page
       })
     }
   }
