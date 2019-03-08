@@ -385,7 +385,6 @@ export default {
           this.curTime++
           this.curProgress = (this.curTime / this.duration).toFixed(4) * this.progressWidth
         }, 1000)
-        // this.sndctr.setCurrentTime(this.curTime)
         this.playRadio(this.curTime)
         this.isPlay = false
         this.sndctr.play(() => {
@@ -418,13 +417,15 @@ export default {
       } else {
         _this.curTime = 0
       }
-      _this.sndctr.setCurrentTime(_this.curTime)
+      // _this.sndctr.setCurrentTime(_this.curTime)
       _this.isEnd = false
       clearInterval(_this.interval)
       _this.sndctr.setSndCallback(_this.curRadio.sound_url, () => {
         _this.duration = Math.round(_this.sndctr.getDuration())
         _this.interval = setInterval(() => {
+          _this.sndctr.setCurrentTime(_this.curTime)
           _this.curTime++
+          // _this.sndctr.setCurrentTime(_this.curTime)
           _this.curProgress = (_this.curTime / _this.duration).toFixed(4) * _this.progressWidth
           // console.log('当前时间', _this.curTime)
           let radioObj = {
