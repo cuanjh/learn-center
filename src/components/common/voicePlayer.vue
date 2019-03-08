@@ -246,13 +246,27 @@ export default {
     })
   },
   mounted () {
+    console.log('radioList', this.radioList)
+    let rl = JSON.parse(localStorage.getItem('currentRadioList'))
+    if (rl) {
+      this.radioList = rl
+      let currentItem = JSON.parse(localStorage.getItem('radioObj'))
+      console.log('radioObj', currentItem)
+      this.radioDetail = currentItem.plauRadioDetail
+      this.subscibenoInfo = currentItem.plauRadioDetail.relation
+      this.curIndex = currentItem.positionIndex
+      this.curRadio = currentItem.playKey
+      this.curTime = currentItem.currentPlayTime
+      this.duration = currentItem.endTime
+      this.curProgress = (this.curTime / this.duration).toFixed(4) * ($('#voice-player-progress').width())
+    }
+    console.log('radioList', this.radioList)
     let that = this
     $('.voice-player').mouseenter(() => {
       if (!that.isLock) {
         that.isHand = true
       }
     })
-
     $('.voice-player').mouseleave(() => {
       if (!that.isLock) {
         that.isHand = false
@@ -293,6 +307,7 @@ export default {
           this.radioList = res.cards
           this.curIndex = 0
           this.playRadio()
+          localStorage.setItem('currentRadioList', JSON.stringify(this.radioList))
         }
       })
     },
@@ -347,23 +362,6 @@ export default {
           }
         }
       }
-      // if (radio.money !== 0) { // 收费
-      //   if (this.isVip !== 1) { // 不是会员
-      //     if (this.subscibenoInfo.purchased_state !== 1 || this.subscibenoInfo.purchased_state !== 4) { // 没订阅
-      //       if (this.curIndex > 2) {
-      //         this.curIndex = 0
-      //       }
-      //     }
-      //   } else { // 是会员
-      //     if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
-      //       if (this.subscibenoInfo.purchased_state !== 1 || this.subscibenoInfo.purchased_state !== 4) { // 没订阅
-      //         if (this.curIndex > 2) {
-      //           this.curIndex = 0
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
       if (this.curIndex === this.radioList.length) {
         this.curIndex = 0
         this.playRadio()
@@ -372,6 +370,7 @@ export default {
     },
     // 播放按钮
     play () {
+      console.log('curTime', this.curTime)
       if (this.radioList.length === 0) {
         return false
       }
@@ -386,6 +385,9 @@ export default {
           this.curTime++
           this.curProgress = (this.curTime / this.duration).toFixed(4) * this.progressWidth
         }, 1000)
+        // this.sndctr.setCurrentTime(this.curTime)
+        this.playRadio(this.curTime)
+        this.isPlay = false
         this.sndctr.play(() => {
           this.end()
         })
@@ -406,10 +408,17 @@ export default {
       this.isPlay = false
       clearInterval(this.interval)
     },
-    playRadio () {
+    playRadio (time) {
       let _this = this
       _this.curRadio = _this.radioList[_this.curIndex]
-      _this.curTime = 0
+      // _this.curTime = 0
+      // _this.curTime = time
+      if (time) {
+        _this.curTime = time
+      } else {
+        _this.curTime = 0
+      }
+      _this.sndctr.setCurrentTime(_this.curTime)
       _this.isEnd = false
       clearInterval(_this.interval)
       _this.sndctr.setSndCallback(_this.curRadio.sound_url, () => {
@@ -417,6 +426,15 @@ export default {
         _this.interval = setInterval(() => {
           _this.curTime++
           _this.curProgress = (_this.curTime / _this.duration).toFixed(4) * _this.progressWidth
+          // console.log('当前时间', _this.curTime)
+          let radioObj = {
+            positionIndex: _this.curIndex,
+            playKey: _this.curRadio,
+            plauRadioDetail: _this.radioDetail,
+            currentPlayTime: _this.curTime,
+            endTime: _this.duration
+          }
+          localStorage.setItem('radioObj', JSON.stringify(radioObj))
         }, 1000)
       })
       _this.isPlay = true
@@ -427,6 +445,10 @@ export default {
           _this.playRadio()
         }
       })
+      console.log('当前播放那一条', _this.curIndex)
+      console.log('当前播放详情', _this.curRadio)
+      console.log('radioDetail', _this.radioDetail)
+      console.log('subscibenoInfo', _this.subscibenoInfo)
     },
     // 点击播放
     goPlay (index) {
@@ -468,47 +490,6 @@ export default {
           }
         }
       }
-      // if (radio.money !== 0) { // 收费
-      //   if (this.isVip !== 1) { // 不是会员
-      //     if (this.subscibenoInfo.purchased_state !== 1 || this.subscibenoInfo.purchased_state !== 4) { // 没订阅
-      //       if (index > 2) {
-      //         index = 0
-      //         if (radio.money_type === 'CNY') {
-      //           // 人民币提示
-      //           Bus.$emit('showBuyRadio', this.radioDetail)
-      //         } else if (radio.money_type === 'coins') {
-      //           // 金币提示
-      //           Bus.$emit('showBuyCoinsRadio', radio)
-      //           Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-      //         }
-      //       }
-      //     }
-      //   } else { // 是会员
-      //     if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
-      //       if (this.subscibenoInfo.purchased_state !== 1 || this.subscibenoInfo.purchased_state !== 4) { // 没订阅
-      //         if (index > 2) {
-      //           index = 0
-      //           if (radio.money_type === 'CNY') {
-      //             // 人民币提示
-      //             Bus.$emit('showBuyRadio', this.radioDetail)
-      //           } else if (radio.money_type === 'coins') {
-      //             // 金币提示
-      //             Bus.$emit('showBuyCoinsRadio', radio)
-      //             Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
-      // if (radio.money_type === 'CNY') {
-      //   // 人民币提示
-      //   Bus.$emit('showBuyRadio', radio, this.cardsCount)
-      // } else if (radio.money_type === 'coins') {
-      //   // 金币提示
-      //   Bus.$emit('showBuyCoinsRadio', radio)
-      //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-      // }
       this.curIndex = index
       this.playRadio()
     },
