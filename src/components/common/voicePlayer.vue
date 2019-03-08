@@ -110,9 +110,9 @@
               </i>
             </div>
             <div class="playtime">
-              <span>00:{{toParseTime(curTime)}} </span>
+              <span>00:{{convertTimeMMSS(curTime)}} </span>
               <span>&nbsp;/&nbsp;</span>
-              <span>00:{{toParseTime(duration)}}</span>
+              <span>00:{{convertTimeMMSS(duration)}}</span>
             </div>
           </div>
         </div>
@@ -203,7 +203,6 @@ export default {
       curTime: 0,
       curProgress: 0,
       progressWidth: 0,
-      interval: null,
       duration: 0,
       isPlay: false,
       isEnd: false,
@@ -236,7 +235,7 @@ export default {
       console.log('item电台====》', item)
       $('.voice-player-cover').css('background-image', '')
       this.initRadioDetail(item)
-      this.initrRadioCardList(item)
+      this.initRadioCardList(item)
     })
     Bus.$on('radioPlay', () => {
       this.play()
@@ -247,18 +246,20 @@ export default {
   },
   mounted () {
     console.log('radioList', this.radioList)
+    let _this = this
     let rl = JSON.parse(localStorage.getItem('currentRadioList'))
     if (rl) {
       this.radioList = rl
       let currentItem = JSON.parse(localStorage.getItem('radioObj'))
       console.log('radioObj', currentItem)
-      this.radioDetail = currentItem.plauRadioDetail
-      this.subscibenoInfo = currentItem.plauRadioDetail.relation
+      this.radioDetail = currentItem.playRadioDetail
+      this.subscibenoInfo = currentItem.playRadioDetail.relation
       this.curIndex = currentItem.positionIndex
       this.curRadio = currentItem.playKey
       this.curTime = currentItem.currentPlayTime
       this.duration = currentItem.endTime
       this.curProgress = (this.curTime / this.duration).toFixed(4) * ($('#voice-player-progress').width())
+      _this.setCurRadio()
     }
     console.log('radioList', this.radioList)
     let that = this
@@ -292,7 +293,7 @@ export default {
       getRadioCardList: 'course/getRadioCardList' // 电台列表
     }),
     // 获取这个电台的列表
-    async initrRadioCardList (radio) {
+    async initRadioCardList (radio) {
       let params = {
         code: radio.code,
         listOrder: this.listOrder,
@@ -381,10 +382,6 @@ export default {
       if (this.isPlay) {
         this.pause()
       } else {
-        this.interval = setInterval(() => {
-          this.curTime++
-          this.curProgress = (this.curTime / this.duration).toFixed(4) * this.progressWidth
-        }, 1000)
         this.playRadio(this.curTime)
         this.isPlay = false
         this.sndctr.play(() => {
@@ -397,7 +394,6 @@ export default {
       this.isPlay = false
       this.curProgress = this.progressWidth
       this.isEnd = true
-      clearInterval(this.interval)
       if (this.isLoop) {
         this.next()
       }
@@ -405,39 +401,25 @@ export default {
     pause () {
       this.sndctr.pause()
       this.isPlay = false
-      clearInterval(this.interval)
     },
     playRadio (time) {
       let _this = this
       _this.curRadio = _this.radioList[_this.curIndex]
-      // _this.curTime = 0
-      // _this.curTime = time
       if (time) {
         _this.curTime = time
       } else {
         _this.curTime = 0
       }
-      // _this.sndctr.setCurrentTime(_this.curTime)
+
       _this.isEnd = false
-      clearInterval(_this.interval)
-      _this.sndctr.setSndCallback(_this.curRadio.sound_url, () => {
-        _this.duration = Math.round(_this.sndctr.getDuration())
-        _this.interval = setInterval(() => {
-          _this.sndctr.setCurrentTime(_this.curTime)
-          _this.curTime++
-          // _this.sndctr.setCurrentTime(_this.curTime)
-          _this.curProgress = (_this.curTime / _this.duration).toFixed(4) * _this.progressWidth
-          // console.log('当前时间', _this.curTime)
-          let radioObj = {
-            positionIndex: _this.curIndex,
-            playKey: _this.curRadio,
-            plauRadioDetail: _this.radioDetail,
-            currentPlayTime: _this.curTime,
-            endTime: _this.duration
-          }
-          localStorage.setItem('radioObj', JSON.stringify(radioObj))
-        }, 1000)
-      })
+
+      if (this.curTime) {
+        _this.sndctr.play(() => {
+          _this.end()
+        })
+      } else {
+        _this.setCurRadio()
+      }
       _this.isPlay = true
       _this.sndctr.play(() => {
         _this.end()
@@ -450,6 +432,28 @@ export default {
       console.log('当前播放详情', _this.curRadio)
       console.log('radioDetail', _this.radioDetail)
       console.log('subscibenoInfo', _this.subscibenoInfo)
+    },
+    setCurRadio () {
+      let _this = this
+      _this.sndctr.setSndCallback(_this.curRadio.sound_url, () => {
+        _this.duration = Math.round(_this.sndctr.getDuration())
+        _this.sndctr.setCurrentTime(_this.curTime)
+        _this.curProgress = (_this.curTime / _this.duration).toFixed(4) * _this.progressWidth
+        _this.sndctr.Audio.addEventListener('timeupdate', () => {
+          console.log(_this.convertTimeMMSS(_this.sndctr.Audio.currentTime))
+          _this.curTime = _this.sndctr.Audio.currentTime
+          _this.curProgress = (_this.curTime / this.duration).toFixed(4) * _this.progressWidth
+
+          let radioObj = {
+            positionIndex: _this.curIndex,
+            playKey: _this.curRadio,
+            playRadioDetail: _this.radioDetail,
+            currentPlayTime: _this.curTime,
+            endTime: _this.duration
+          }
+          localStorage.setItem('radioObj', JSON.stringify(radioObj))
+        })
+      })
     },
     // 点击播放
     goPlay (index) {
@@ -557,6 +561,9 @@ export default {
       }
 
       return false
+    },
+    convertTimeMMSS (seconds) {
+      return new Date(seconds * 1000).toISOString().substr(14, 5)
     }
   }
 }
