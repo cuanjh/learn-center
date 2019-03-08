@@ -53,7 +53,7 @@
         </div>
       </div>
       <div class="learn-hours"><span>已学习 </span><span>{{ curArchiveCourse['learn_time']>0?parseInt(curArchiveCourse['learn_time']/(60*60))+' 小时':'0 小时' }}</span></div>
-      <router-link class="all-courses" :to="{path: '/app/course-list'}">全部课程</router-link>
+      <a class="all-courses" @click="goCourseList()">全部课程</a>
     </div>
     <div class="current-course-none" v-else>
       <i></i>
@@ -351,6 +351,10 @@ export default {
         await this.homeworkContent(chapterCode + '-A8')
       }
       this.$router.push({path: '/learn/stage/A0' + this.curCourseObj['courseCore']})
+    },
+    goCourseList () {
+      bus.$emit('radioPause')
+      this.$router.push({ path: '/app/course-list' })
     }
   }
 }
