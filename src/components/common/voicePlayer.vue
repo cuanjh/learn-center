@@ -215,7 +215,8 @@ export default {
       volumeHeight: '50%',
       isHand: true,
       sndctr: SoundCtrl,
-      radioDetail: {} // 当前电台的详情
+      radioDetail: {}, // 当前电台的详情
+      subscibenoInfo: {}
     }
   },
   components: {BuyRadioBox, BuyCoinsRadioBox, UserCoinsBox},
@@ -331,16 +332,14 @@ export default {
         Bus.$emit('showGoLoginBox')
         return false
       }
-      if (radio.money !== 0) { // 收费
-        if (this.isVip !== 1) { // 不是会员
-          if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+      if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+        if (radio.money !== 0) { // 收费
+          if (this.isVip !== 1) { // 不是会员
             if (this.curIndex > 2) {
               this.curIndex = 0
             }
-          }
-        } else { // 是会员
-          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
-            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+          } else { // 是会员
+            if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
               if (this.curIndex > 2) {
                 this.curIndex = 0
               }
@@ -348,6 +347,23 @@ export default {
           }
         }
       }
+      // if (radio.money !== 0) { // 收费
+      //   if (this.isVip !== 1) { // 不是会员
+      //     if (this.subscibenoInfo.purchased_state !== 1 || this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+      //       if (this.curIndex > 2) {
+      //         this.curIndex = 0
+      //       }
+      //     }
+      //   } else { // 是会员
+      //     if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
+      //       if (this.subscibenoInfo.purchased_state !== 1 || this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+      //         if (this.curIndex > 2) {
+      //           this.curIndex = 0
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
       if (this.curIndex === this.radioList.length) {
         this.curIndex = 0
         this.playRadio()
@@ -421,9 +437,9 @@ export default {
         this.pause()
         return false
       }
-      if (radio.money !== 0) { // 收费
-        if (this.isVip !== 1) { // 不是会员
-          if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+      if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+        if (radio.money !== 0) { // 收费
+          if (this.isVip !== 1) { // 不是会员
             if (index > 2) {
               index = 0
               if (radio.money_type === 'CNY') {
@@ -435,10 +451,8 @@ export default {
                 Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
               }
             }
-          }
-        } else { // 是会员
-          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
-            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+          } else { // 是会员
+            if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
               if (index > 2) {
                 index = 0
                 if (radio.money_type === 'CNY') {
@@ -454,6 +468,39 @@ export default {
           }
         }
       }
+      // if (radio.money !== 0) { // 收费
+      //   if (this.isVip !== 1) { // 不是会员
+      //     if (this.subscibenoInfo.purchased_state !== 1 || this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+      //       if (index > 2) {
+      //         index = 0
+      //         if (radio.money_type === 'CNY') {
+      //           // 人民币提示
+      //           Bus.$emit('showBuyRadio', this.radioDetail)
+      //         } else if (radio.money_type === 'coins') {
+      //           // 金币提示
+      //           Bus.$emit('showBuyCoinsRadio', radio)
+      //           Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+      //         }
+      //       }
+      //     }
+      //   } else { // 是会员
+      //     if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
+      //       if (this.subscibenoInfo.purchased_state !== 1 || this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+      //         if (index > 2) {
+      //           index = 0
+      //           if (radio.money_type === 'CNY') {
+      //             // 人民币提示
+      //             Bus.$emit('showBuyRadio', this.radioDetail)
+      //           } else if (radio.money_type === 'coins') {
+      //             // 金币提示
+      //             Bus.$emit('showBuyCoinsRadio', radio)
+      //             Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
       // if (radio.money_type === 'CNY') {
       //   // 人民币提示
       //   Bus.$emit('showBuyRadio', radio, this.cardsCount)
