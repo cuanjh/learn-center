@@ -335,9 +335,8 @@ export default {
     // 立即收听
     loadRadioList (e, radio, index) {
       if (this.isPlay && radio.code === this.lastCode) {
-        // $('.gradient-layer-play i').removeClass('pause')
-        $(e.target).removeClass('pause')
-        $(e.target).addClass('play')
+        $('.gradient-layer-play i').removeClass('pause')
+        $('.gradient-layer-play i').addClass('play')
         Bus.$emit('radioPause')
       } else {
         $('.gradient-layer-play i').removeClass('pause')
