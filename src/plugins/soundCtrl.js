@@ -3,6 +3,7 @@ var audio = new Audio();
 var endedHandler = null;
 var loadHandler = null
 var sndLoaded = false;
+var curTime = 0;
 var interval_sndLoaded;
 
 audio.onloadedmetadata = function () {
@@ -80,6 +81,7 @@ function setCurrentTime (time) {
 
 
 export default {
+  Audio: audio,
   getDuration: getDuration,
   setSndCallback: setSndCallback,
   play: play,

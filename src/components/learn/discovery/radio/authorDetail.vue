@@ -3,7 +3,7 @@
     <div class="author-top">
       <div class="author-top-content">
         <div class="author-img">
-          <img :src="authorInfo.photo" alt="作者头像">
+          <img :src="authorInfo.photo !== ''?authorInfo.photo:'https://uploadfile1.talkmate.com/uploadfiles/avatar/random/0.png?v=3'" alt="作者头像">
           <i class="vip-img" v-show="authorInfo.is_member == true"></i>
         </div>
         <div class="author-text">

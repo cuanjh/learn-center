@@ -124,10 +124,10 @@
         <!-- 课程列表 -->
         <div class="course-list">
           <div class="title">课程列表</div>
-          <div class="course-item" v-for="card in cards" :key="card.card_id">
+          <div class="course-item" v-for="(card, index) in cards" :key="card.card_id">
             <div class="course-play-img">
               <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
-              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo)">
+              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo, index)">
                 <i class="play"></i>
               </div>
             </div>
@@ -333,10 +333,10 @@ export default {
       })
     },
     // 立即收听
-    loadRadioList (e, radio) {
+    loadRadioList (e, radio, index) {
       if (this.isPlay && radio.code === this.lastCode) {
         $('.gradient-layer-play i').removeClass('pause')
-        $(e.target).addClass('play')
+        $('.gradient-layer-play i').addClass('play')
         Bus.$emit('radioPause')
       } else {
         $('.gradient-layer-play i').removeClass('pause')
@@ -347,7 +347,7 @@ export default {
           Bus.$emit('getRadioCardList', radio)
           this.lastCode = radio.code
         } else {
-          Bus.$emit('radioPlay')
+          Bus.$emit('radioPlay', index)
         }
       }
       this.isPlay = !this.isPlay
@@ -362,37 +362,34 @@ export default {
         Bus.$emit('showGoLoginBox')
         return
       }
-      if (radio.money !== 0) { // 收费
+      if (parseInt(radio.money) !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
-          if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
+          if (radio.money_type === 'CNY') {
+            // 人民币提示
+            Bus.$emit('showBuyRadio', this.radioDetail)
+            return false
+          } else if (radio.money_type === 'coins') {
+            // 金币提示
+            Bus.$emit('showBuyCoinsRadio', radio)
+            Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+            return false
+          }
+        } else { // 是会员
+          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
             if (radio.money_type === 'CNY') {
               // 人民币提示
               Bus.$emit('showBuyRadio', this.radioDetail)
+              return false
             } else if (radio.money_type === 'coins') {
               // 金币提示
               Bus.$emit('showBuyCoinsRadio', radio)
               Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+              return false
             }
-          }
-        } else { // 是会员
-          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
-            if (this.subscibenoInfo.purchased_state !== 1) { // 没订阅
-              if (radio.money_type === 'CNY') {
-                // 人民币提示
-                Bus.$emit('showBuyRadio', this.radioDetail)
-              } else if (radio.money_type === 'coins') {
-                // 金币提示
-                Bus.$emit('showBuyCoinsRadio', radio)
-                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-              }
-            }
-          } else {
-            this.initSubscibe(radio)
           }
         }
-      } else {
-        this.initSubscibe(radio)
       }
+      this.initSubscibe(radio)
     },
     // 初始化订阅的状态
     async initSubscibe (radio) {

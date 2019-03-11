@@ -162,7 +162,7 @@ export default {
   cursor: default;
   color: #666;
   display: inline-block;
-  max-width: 80px;
+  max-width: 60px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
