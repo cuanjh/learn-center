@@ -214,6 +214,7 @@ export default {
       volumeHeight: '50%',
       isHand: true,
       sndctr: SoundCtrl,
+      item: {},
       radioDetail: {}, // 当前电台的详情
       subscibenoInfo: {}
     }
@@ -233,14 +234,19 @@ export default {
   created () {
     Bus.$on('getRadioCardList', (item) => {
       console.log('item电台====》', item)
+      this.item = item
+      console.log('item.......', this.item)
       $('.voice-player-cover').css('background-image', '')
       this.initRadioDetail(item)
       this.initRadioCardList(item)
     })
-    Bus.$on('radioPlay', (index) => {
+    Bus.$on('radioPlay', () => {
+      this.play()
+    })
+    Bus.$on('radioPlayList', (index) => {
       console.log('========>', index)
       this.curIndex = index
-      this.play()
+      this.goPlay(index)
     })
     Bus.$on('radioPause', () => {
       this.pause()
@@ -346,6 +352,10 @@ export default {
     next () {
       this.curIndex++
       let radio = this.radioDetail.course_info
+      console.log('radio', radio)
+      console.log('this.curRadio', this.curRadio)
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
       console.log('===>', this.curIndex)
       if (!this.userInfo && this.curIndex > 2) {
         Bus.$emit('showGoLoginBox')
@@ -384,6 +394,10 @@ export default {
       }
       if (this.isPlay) {
         this.pause()
+        $('#' + this.item.code + ' .gradient-layer-play i').removeClass('pause')
+        $('#' + this.item.code + ' .gradient-layer-play i').addClass('play')
+        $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+        $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
       } else {
         this.playRadio(this.curTime)
         this.isPlay = false
@@ -391,6 +405,10 @@ export default {
           this.end()
         })
         this.isPlay = !this.isPlay
+        $('#' + this.item.code + ' .gradient-layer-play i').removeClass('play')
+        $('#' + this.item.code + ' .gradient-layer-play i').addClass('pause')
+        $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('play')
+        $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('pause')
       }
     },
     end () {
@@ -433,6 +451,8 @@ export default {
       })
       console.log('当前播放那一条', _this.curIndex)
       console.log('当前播放详情', _this.curRadio)
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('play')
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('pause')
       console.log('radioDetail', _this.radioDetail)
       console.log('subscibenoInfo', _this.subscibenoInfo)
     },
@@ -460,7 +480,10 @@ export default {
     },
     // 点击播放
     goPlay (index) {
+      this.curIndex = index
+      let order = index + 1
       let radio = this.radioDetail.course_info
+      console.log('=====>', index)
       console.log('播放器中的radio', radio)
       if (!this.userInfo && index > 2) {
         Bus.$emit('showGoLoginBox')
@@ -498,8 +521,21 @@ export default {
           }
         }
       }
-      this.curIndex = index
-      this.playRadio()
+      console.log('order, radio.list_order', order, this.curRadio, this.curRadio.list_order)
+      if (order === this.curRadio.list_order) {
+        if (this.isPlay) {
+          this.pause()
+        } else {
+          this.playRadio(this.curTime)
+          this.isPlay = false
+          this.sndctr.play(() => {
+            this.end()
+          })
+          this.isPlay = !this.isPlay
+        }
+      } else {
+        this.playRadio()
+      }
     },
     loopPlay () {
       this.isLoop = !this.isLoop

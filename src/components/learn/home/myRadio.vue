@@ -26,13 +26,13 @@
         </div>
       </div>
       <div class="radio-list">
-        <div class="radio-item" v-for="item in recommendRadios.slice(0, 6)" :key="item.code">
+        <div class="radio-item" :id="item.code" v-for="item in recommendRadios.slice(0, 6)" :key="item.code">
           <div class="play-radio">
             <img v-lazy="item.cover" :key="item.cover" alt="">
             <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + item.code}" class="mask"></router-link>
-            <!--  @click="loadRadioList($event, item)" this.$emit('clickPlay') -->
             <div class="gradient-layer-play" @click="loadRadioList($event, item)">
               <i class="play"></i>
+              <!-- <i class="pause"></i> -->
             </div>
             <div class="subscribe">
               <i></i>
@@ -61,7 +61,6 @@ import cookie from '../../../tool/cookie'
 export default {
   data () {
     return {
-      // isPlayShow: false,
       selState: {},
       radios: [],
       isShowPanel: false,
