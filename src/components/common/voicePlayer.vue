@@ -237,7 +237,9 @@ export default {
       this.initRadioDetail(item)
       this.initRadioCardList(item)
     })
-    Bus.$on('radioPlay', () => {
+    Bus.$on('radioPlay', (index) => {
+      console.log('========>', index)
+      this.curIndex = index
       this.play()
     })
     Bus.$on('radioPause', () => {
@@ -294,6 +296,7 @@ export default {
     }),
     // 获取这个电台的列表
     async initRadioCardList (radio) {
+      this.page = 1
       let params = {
         code: radio.code,
         listOrder: this.listOrder,
@@ -349,7 +352,7 @@ export default {
         return false
       }
       if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
-        if (radio.money !== 0) { // 收费
+        if (parseInt(radio.money) !== 0) { // 收费
           if (this.isVip !== 1) { // 不是会员
             if (this.curIndex > 2) {
               this.curIndex = 0
@@ -412,12 +415,12 @@ export default {
       }
 
       _this.isEnd = false
-
+      // 如果有播放的时间就继续播放
       if (this.curTime) {
         _this.sndctr.play(() => {
           _this.end()
         })
-      } else {
+      } else { // 如果没有播放的时间就重新加载url
         _this.setCurRadio()
       }
       _this.isPlay = true
@@ -440,7 +443,7 @@ export default {
         _this.sndctr.setCurrentTime(_this.curTime)
         _this.curProgress = (_this.curTime / _this.duration).toFixed(4) * _this.progressWidth
         _this.sndctr.Audio.addEventListener('timeupdate', () => {
-          console.log(_this.convertTimeMMSS(_this.sndctr.Audio.currentTime))
+          // console.log(_this.convertTimeMMSS(_this.sndctr.Audio.currentTime))
           _this.curTime = _this.sndctr.Audio.currentTime
           _this.curProgress = (_this.curTime / this.duration).toFixed(4) * _this.progressWidth
 
@@ -465,7 +468,7 @@ export default {
         return false
       }
       if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
-        if (radio.money !== 0) { // 收费
+        if (parseInt(radio.money) !== 0) { // 收费
           if (this.isVip !== 1) { // 不是会员
             if (index > 2) {
               index = 0

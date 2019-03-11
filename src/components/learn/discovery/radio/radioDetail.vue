@@ -124,10 +124,10 @@
         <!-- 课程列表 -->
         <div class="course-list">
           <div class="title">课程列表</div>
-          <div class="course-item" v-for="card in cards" :key="card.card_id">
+          <div class="course-item" v-for="(card, index) in cards" :key="card.card_id">
             <div class="course-play-img">
               <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
-              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo)">
+              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo, index)">
                 <i class="play"></i>
               </div>
             </div>
@@ -333,9 +333,10 @@ export default {
       })
     },
     // 立即收听
-    loadRadioList (e, radio) {
+    loadRadioList (e, radio, index) {
       if (this.isPlay && radio.code === this.lastCode) {
-        $('.gradient-layer-play i').removeClass('pause')
+        // $('.gradient-layer-play i').removeClass('pause')
+        $(e.target).removeClass('pause')
         $(e.target).addClass('play')
         Bus.$emit('radioPause')
       } else {
@@ -347,7 +348,7 @@ export default {
           Bus.$emit('getRadioCardList', radio)
           this.lastCode = radio.code
         } else {
-          Bus.$emit('radioPlay')
+          Bus.$emit('radioPlay', index)
         }
       }
       this.isPlay = !this.isPlay
@@ -362,7 +363,7 @@ export default {
         Bus.$emit('showGoLoginBox')
         return
       }
-      if (radio.money !== 0 && radio.money !== '0') { // 收费
+      if (parseInt(radio.money) !== 0) { // 收费
         if (this.isVip !== 1) { // 不是会员
           if (radio.money_type === 'CNY') {
             // 人民币提示
