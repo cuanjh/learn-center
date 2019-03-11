@@ -290,9 +290,9 @@ export default[
   {
     path: '/learn',
     component: learnSystem,
-    meta: {
-      auth: true
-    },
+    // meta: {
+    //   auth: true
+    // },
     children: [
       {
         path: 'stage/:id',
