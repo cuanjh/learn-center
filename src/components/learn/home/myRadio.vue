@@ -30,6 +30,7 @@
           <div class="play-radio">
             <img v-lazy="item.cover" :key="item.cover" alt="">
             <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + item.code}" class="mask"></router-link>
+            <!--  @click="loadRadioList($event, item)" this.$emit('clickPlay') -->
             <div class="gradient-layer-play" @click="loadRadioList($event, item)">
               <i class="play"></i>
             </div>
@@ -60,6 +61,7 @@ import cookie from '../../../tool/cookie'
 export default {
   data () {
     return {
+      // isPlayShow: false,
       selState: {},
       radios: [],
       isShowPanel: false,
@@ -112,6 +114,7 @@ export default {
       'getRecommendRadios'
     ]),
     loadRadioList (e, radio) {
+      console.log('isPlay', this.isPlay)
       if (this.isPlay && radio.code === this.lastCode) {
         $('.gradient-layer-play i').removeClass('pause')
         $(e.target).addClass('play')
