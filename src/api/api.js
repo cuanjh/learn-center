@@ -52,7 +52,7 @@ export const httpLogin = (_url, _params) => { // 已经登录
       } else {
         if (res['data']['code'][0] === '1005') {
           Cookie.setCookie('isLogin', 0)
-          window.location.href = './' // 回到登录
+          window.location.href = process.env.LOGIN_URL // 回到登录
         } else {
           return new Promise((resolve, reject) => {
             let code = res['data']['code'][0]
@@ -137,7 +137,7 @@ export const httpNoLogin = (_url, _params) => { // 未登录
       } else {
         if (res['data']['code'][0] === '1005') {
           Cookie.setCookie('isLogin', 0)
-          window.location.href = './' // 回到登录
+          window.location.href = process.env.LOGIN_URL // 回到登录
         } else {
           return new Promise((resolve, reject) => {
             let code = res['data']['code'][0]
@@ -192,7 +192,7 @@ export const httpSnsUrl = (_url, _params) => {
     let _deviceId = deviceId()
     _params.deviceid = _deviceId
   }
-  _params.loginurl = process.env.LOGIN_URL
+  _params.loginurl = process.env.HOME_URL
 
   let url = process.env.API_HOST + _url + '?'
   Object.keys(_params).forEach((key) => {
