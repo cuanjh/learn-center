@@ -64,9 +64,9 @@
             </div>
           </div>
           <!-- 收听订阅分享等 -->
-          <div class="subscription">
+          <div class="subscription" :id="courseInfo.code">
             <div class="bottom">
-              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo)">
+              <div class="gradient-layer-play" @click="loadRadioLists($event, courseInfo)">
                 <i class="play"></i>
                 <span>立即收听</span>
               </div>
@@ -124,7 +124,7 @@
         <!-- 课程列表 -->
         <div class="course-list">
           <div class="title">课程列表</div>
-          <div class="course-item" v-for="(card, index) in cards" :key="card.card_id">
+          <div class="course-item" :id="card.card_id" v-for="(card, index) in cards" :key="card.card_id">
             <div class="course-play-img">
               <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
               <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo, index)">
@@ -169,7 +169,7 @@
       <!-- 右边的内容 -->
       <div class="radio-right">
         <radio-detail-other :otherRadios="otherRadios" v-if="otherRadios"></radio-detail-other>
-        <students-listening :studentsListening="studentsListening"></students-listening>
+        <students-listening :studentsListening="studentsListening" v-if="studentsListening"></students-listening>
       </div>
       <!-- <bounceBox @hidden="hiddenShow" v-show="isShowBox"></bounceBox> -->
       <!-- <buy-coins-radio-box @hidBuyCoinsBox="hiddenBuyCoinsBox"/> -->
@@ -333,10 +333,10 @@ export default {
       })
     },
     // 立即收听
-    loadRadioList (e, radio, index) {
+    loadRadioLists (e, radio) {
       if (this.isPlay && radio.code === this.lastCode) {
         $('.gradient-layer-play i').removeClass('pause')
-        $('.gradient-layer-play i').addClass('play')
+        $(e.target).addClass('play')
         Bus.$emit('radioPause')
       } else {
         $('.gradient-layer-play i').removeClass('pause')
@@ -347,7 +347,28 @@ export default {
           Bus.$emit('getRadioCardList', radio)
           this.lastCode = radio.code
         } else {
-          Bus.$emit('radioPlay', index)
+          Bus.$emit('radioPlay')
+        }
+      }
+      this.isPlay = !this.isPlay
+    },
+    // 播放列表
+    loadRadioList (e, radio, index) {
+      if (this.isPlay && radio.code === this.lastCode) {
+        $('.course-play-img .gradient-layer-play i').removeClass('pause')
+        $('.course-play-img .gradient-layer-play i').addClass('play')
+        $(e.target).addClass('play')
+        Bus.$emit('radioPause')
+      } else {
+        $('.course-play-img .gradient-layer-play i').removeClass('pause')
+        $('.course-play-img .gradient-layer-play i').addClass('play')
+        $(e.target).removeClass('play')
+        $(e.target).addClass('pause')
+        if (radio.code !== this.lastCode) {
+          Bus.$emit('getRadioCardList', radio)
+          this.lastCode = radio.code
+        } else {
+          Bus.$emit('radioPlayList', index)
         }
       }
       this.isPlay = !this.isPlay

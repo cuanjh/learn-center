@@ -216,6 +216,7 @@ export default {
       this.showExitState = false
     },
     jumpSystem () {
+      Bus.$emit('radioPause')
       this.logout().then((res) => {
         cookie.delCookie('device_id')
         cookie.delCookie('user_id')

@@ -140,6 +140,7 @@ export default {
         background-color: #b2c0c9;
         border-radius: 50%;
         cursor: pointer;
+        object-fit: cover;
       }
       .author_name {
         cursor: pointer;
