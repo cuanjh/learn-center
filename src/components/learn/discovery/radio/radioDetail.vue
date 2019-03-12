@@ -169,7 +169,7 @@
       <!-- 右边的内容 -->
       <div class="radio-right">
         <radio-detail-other :otherRadios="otherRadios" v-if="otherRadios"></radio-detail-other>
-        <students-listening :studentsListening="studentsListening"></students-listening>
+        <students-listening :studentsListening="studentsListening" v-if="studentsListening"></students-listening>
       </div>
       <!-- <bounceBox @hidden="hiddenShow" v-show="isShowBox"></bounceBox> -->
       <!-- <buy-coins-radio-box @hidBuyCoinsBox="hiddenBuyCoinsBox"/> -->
