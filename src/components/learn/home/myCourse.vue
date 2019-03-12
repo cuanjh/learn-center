@@ -178,6 +178,7 @@ export default {
         await _this.getCourseContent(contentUrl)
         // await _this.getLearnCourses()
         await this.setCurrentChapter(this.curChapterCode)
+        await this.getChapterContent()
         bus.$emit('loadRecommendRadio', this.curCourseCode)
         let obj = this.chapters.filter((item) => {
           return item.code === this.curChapterCode
