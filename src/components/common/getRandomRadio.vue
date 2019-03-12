@@ -14,7 +14,7 @@
               <span>作者：{{randomRadio.user.nickname}}</span>
             </p>
           </div>
-          <div class="radio-play">
+          <div class="radio-play" :id="randomRadio.code">
             <div class="gradient-layer-play"  @click="loadRadioList($event, randomRadio)">
               <i class="play"></i>
             </div>
@@ -90,13 +90,6 @@ export default {
         waitTime: 1000 // 单步运动停止的时间(默认值1000ms)
       }
     }
-    // ,
-    // radioCardsLists () {
-    //   if (this.randomradio) {
-    //     return this.randomRadio.cards
-    //   }
-    //   return []
-    // }
   },
   methods: {
     ...mapActions([
@@ -104,17 +97,15 @@ export default {
     ]),
     // 点击播放电台
     loadRadioList (e, radio) {
-      console.log('e', e)
-      console.log('radio', radio)
       if (this.isPlay && radio.code === this.lastCode) {
         $('.gradient-layer-play i').removeClass('pause')
-        $(e.target).addClass('play')
+        $(e.target, $('#' + radio.code)).addClass('play')
         Bus.$emit('radioPause')
       } else {
         $('.gradient-layer-play i').removeClass('pause')
         $('.gradient-layer-play i').addClass('play')
-        $(e.target).removeClass('play')
-        $(e.target).addClass('pause')
+        $(e.target, $('#' + radio.code)).removeClass('play')
+        $(e.target, $('#' + radio.code)).addClass('pause')
         if (radio.code !== this.lastCode) {
           Bus.$emit('getRadioCardList', radio)
           this.lastCode = radio.code

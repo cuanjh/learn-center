@@ -4,7 +4,7 @@
       <div class="title">同学都在听</div>
       <div class="listening-lists">
         <ul class="lists">
-          <li class="lists-item" v-for="(item, index) in studentsListening.slice(0, 4)" :key="index">
+          <li class="lists-item" :id="item.code" v-for="(item, index) in studentsListening.slice(0, 4)" :key="index">
             <div class="nickname">
               <router-link :to="{path: '/app/discovery/radio-detail/' + item.code}">{{item.author.nickname}}</router-link>
               <p>订阅量 {{item.buy_num}}次</p>

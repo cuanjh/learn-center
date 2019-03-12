@@ -216,6 +216,7 @@ export default {
       this.showExitState = false
     },
     jumpSystem () {
+      Bus.$emit('radioPause')
       this.logout().then((res) => {
         localStorage.removeItem('device_id')
         localStorage.removeItem('user_id')

@@ -298,6 +298,8 @@ export default {
   cursor: pointer;
 }
 .lang-overview dd .no-vip {
+  display: flex;
+  align-items: center;
   position: absolute;
   bottom: -10px;
 }
@@ -314,7 +316,7 @@ export default {
 }
 
 .lang-overview dd .no-vip span:first-child {
-  height:18px;
+  /* height:18px; */
   font-size:12px;
   font-weight:500;
   color:#ffffff;
