@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul class="book-resource">
-      <li v-for="(item, index) in resourceInfoRadios" :key="index">
+      <li :id="item.code" v-for="(item, index) in resourceInfoRadios" :key="index">
         <div class="book-img">
           <img @click="goDetail(item.code)" v-lazy="item.cover" :key="item.cover" alt="资源图片">
           <div class="gradient-layer-play" @click="loadRadioList($event, item)">

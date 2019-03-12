@@ -109,11 +109,6 @@ export default {
         this.curLangName = res.state.currentLang.name
       }
     })
-    this.postDisvRadio().then((res) => {
-      console.log('电台首页', res)
-      this.teacherLists = this.randArray(res.data.authors)
-      console.log('随机老师', this.teacherLists)
-    })
     // 1是语言相关, 0和语言无关
     this.getLearnRecommendTeachers({'study_related': 1}).then(res => {
       console.log('res=====>', res)
@@ -125,16 +120,13 @@ export default {
   },
   computed: {
     ...mapState({
-      ...mapState({
-        userInfo: state => state.userInfo // 用户信息
-      })
+      userInfo: state => state.userInfo // 用户信息
     })
   },
   methods: {
     ...mapActions({
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
       remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
-      postDisvRadio: 'course/postDisvRadio', // 电台首页
       getOnlyLangsState: 'getOnlyLangsState',
       getLearnRecommendTeachers: 'getLearnRecommendTeachers' // 课程相关的电台主播
     }),

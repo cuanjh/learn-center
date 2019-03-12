@@ -69,7 +69,7 @@
                 <span @click="goRadioList(item)" v-show="false">更多<i></i></span>
               </div>
               <div class="radio-list">
-                <div class="radio-item" v-for="radio in recomendRadiosList" :key="radio.code">
+                <div class="radio-item" :id="radio.code" v-for="radio in recomendRadiosList" :key="radio.code">
                   <div class="play-radio">
                     <img v-lazy="radio.cover" :key="radio.cover" alt="">
                     <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
@@ -102,7 +102,7 @@
                 <a @click="goRadioList(item)">更多<i></i></a>
               </div>
               <div class="radio-list" v-if="item.radios">
-                <div class="radio-item" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
+                <div class="radio-item" :id="radio.code" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
                   <div class="play-radio">
                     <img v-lazy="radio.cover" :key="radio.cover" alt="">
                     <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="mask"></router-link>
@@ -129,7 +129,7 @@
             <div class="recommend-radios"><span>人气热搜</span></div>
             <div class="moods-lists">
               <ul>
-                <li v-for="(item, index) in hotRadiosList.slice(0, 9)" :key="index">
+                <li :id="item.code" v-for="(item, index) in hotRadiosList.slice(0, 9)" :key="index">
                   <div class="moods-item">
                     <router-link :to="{path: '/app/discovery/radio-detail/' + item.code}">{{item.title}}</router-link>
                     <p>订阅量 {{item.buy_num}}次</p>
@@ -228,13 +228,13 @@ export default {
     loadRadioList (e, radio) {
       if (this.isPlay && radio.code === this.lastCode) {
         $('.gradient-layer-play i').removeClass('pause')
-        $(e.target).addClass('play')
+        $(e.target, $('#' + radio.code)).addClass('play')
         Bus.$emit('radioPause')
       } else {
         $('.gradient-layer-play i').removeClass('pause')
         $('.gradient-layer-play i').addClass('play')
-        $(e.target).removeClass('play')
-        $(e.target).addClass('pause')
+        $(e.target, $('#' + radio.code)).removeClass('play')
+        $(e.target, $('#' + radio.code)).addClass('pause')
         if (radio.code !== this.lastCode) {
           Bus.$emit('getRadioCardList', radio)
           this.lastCode = radio.code
@@ -737,6 +737,10 @@ export default {
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
             overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            display: inline-block;
+            width: 100%;
             &:hover {
               color: #2A9FE4;
             }
