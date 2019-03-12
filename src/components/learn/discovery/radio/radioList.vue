@@ -45,7 +45,7 @@
           <div class="describe-content" v-if="lists.length > 0">
             <div class="describe-lists">
               <ul>
-                <li v-for="(radio, index) in lists" :key="index+radio.code">
+                <li :id="radio.code" v-for="(radio, index) in lists" :key="index+radio.code">
                   <div class="item-img">
                     <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="电台的图片">
                     <div class="gradient-layer-play" @click="loadRadioList($event, radio)">

@@ -26,9 +26,9 @@
             <div class="classify-switch">
               <div class="switch-content">
                 <!-- 热播电台 -->
-                <div class="switch-radio" v-if="'hostRadio' == navFlag">
+                <div class="switch-radio" v-show="'hostRadio' == navFlag">
                   <div class="host-content" v-if="hostRadios">
-                    <div class="radio-li" v-for="(radio, index) in hostRadios" :key="index">
+                    <div class="radio-li" :id="radio.code" v-for="(radio, index) in hostRadios" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
                           <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
@@ -59,9 +59,9 @@
                   </div>
                 </div>
                 <!-- 学习推荐 -->
-                <div class="switch-radio" v-if="'learnRecom' == navFlag">
+                <div class="switch-radio" v-show="'learnRecom' == navFlag">
                   <div class="host-content">
-                    <div class="radio-li" v-for="(radio, index) in recommendRadios" :key="index">
+                    <div class="radio-li" :id="radio.code" v-for="(radio, index) in recommendRadios" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
                           <img  @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
@@ -94,9 +94,9 @@
                   </div>
                 </div>
                 <!-- 最新发布 -->
-                <div class="switch-radio" v-if="'latestRelease' == navFlag">
+                <div class="switch-radio" v-show="'latestRelease' == navFlag">
                   <div class="host-content" v-if="releaseRadio">
-                    <div class="radio-li" v-for="(radio, index) in releaseRadio" :key="index">
+                    <div class="radio-li" :id="radio.code" v-for="(radio, index) in releaseRadio" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
                           <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
@@ -223,6 +223,7 @@ export default {
     },
     // 学习推荐的电台
     async initRecommendRadios () {
+      console.log('this.selStateCode', this.selStateCode)
       let lanCode = this.selStateCode
       let params = {}
       if (!this.userInfo) {
@@ -255,6 +256,7 @@ export default {
         $(e.target).addClass('play')
         Bus.$emit('radioPause')
       } else {
+        console.log('=======', $('#' + radio.code + ' .gradient-layer-play i'))
         $('.gradient-layer-play i').removeClass('pause')
         $('.gradient-layer-play i').addClass('play')
         $(e.target).removeClass('play')
@@ -327,6 +329,7 @@ export default {
       this.getRecommendRadiosIndex(params).then(res => {
         console.log('推荐电台数据', res)
         this.recommendRadios = this.recommendRadios.concat(res.data)
+        this.recommendCountNum = res.count
         if (res.page === -1) {
           this.showMore = res.page
           return false
