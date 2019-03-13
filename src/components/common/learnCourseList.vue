@@ -6,7 +6,7 @@
         <!-- <p class="my-course">我订阅的课程</p> -->
         <section>
           <ul>
-            <li  v-for='(course, index) in learnCourse' :key="index"
+            <li  v-for='(course, index) in subscribeLangCourses' :key="index"
               class='mycourse-container-gray disable'
               :class="{'mycourse-container-light': true }">
               <dl>
@@ -35,22 +35,17 @@
   </transition>
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import Bus from '../../bus'
 export default {
-  props: ['type'],
+  props: ['type', 'subscribeLangCourses'],
   data () {
     return {
       learnCourse: []
     }
   },
-  computed: {
-    ...mapState({
-      learnCourses: state => state.course.learnCourses
-    })
-  },
   mounted () {
-    this.getLearnCourses()
+    // this.getLearnCourses()
   },
   methods: {
     ...mapActions({
@@ -69,22 +64,6 @@ export default {
         Bus.$emit('changeCourseCode', courseCode)
       }
     }
-  },
-  watch: {
-    // 后订阅的在前显示
-    learnCourses (newData, oldData) {
-      if (newData !== oldData) {
-        var _object = []
-        for (var i in newData) {
-          if (newData[i].code) {
-            _object.unshift(newData[i])
-          }
-        }
-        this.learnCourse = _object
-      } else {
-        this.learnCourse = oldData
-      }
-    }
   }
 }
 </script>
@@ -93,7 +72,7 @@ export default {
   position: absolute;
   width: 460px;
   height: 246px;
-  overflow-y: auto;
+  // overflow-y: auto;
   border-radius: 4px;
   background-color: #ffffff;
   box-shadow: 0 2px 9px 0 rgba(112, 112, 112, 0.5);
@@ -118,12 +97,14 @@ export default {
   width: 22px;
   height: 22px;
   position: absolute;
-  top: -12px;
+  top: -9px;
   left: 127px;
 }
 .mycourse-container {
   padding: 30px 0px 0 30px;
-  overflow: hidden;
+  // overflow: hidden;
+  height: 246px;
+  overflow-y: auto;
 }
 // .mycourse-container > p {
 //   width: 100%;
