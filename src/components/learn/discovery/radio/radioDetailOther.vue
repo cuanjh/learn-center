@@ -2,7 +2,7 @@
   <div class="radio-content">
     <div class="other-radio">该老师的其他电台</div>
     <router-link tag="div"  class="other-radio-item"
-          v-for="(radio, index) in otherRadios.slice(0, 3)" :key="'other-radio' + index"
+          v-for="(radio, index) in otherRadios" :key="'other-radio' + index"
           :to="{path: '/app/discovery/radio-detail/' + radio.code}"
           >
       <img v-lazy="radio.cover" :key="radio.cover" alt="">
