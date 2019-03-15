@@ -49,13 +49,13 @@
         <span>学习指南</span>
       </li>
     </ul> -->
-    <learn-course-list  v-show="navCourse"></learn-course-list>
+    <learn-course-list :subscribeLangCourses="subscribeLangCourses"  v-show="navCourse"></learn-course-list>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import moment from 'moment'
 import Bus from '../../../bus'
 import LearnCourseList from '../../common/learnCourseList.vue'
@@ -66,13 +66,27 @@ export default {
     return {
       trigangleShow: false,
       navCourse: false,
-      learnCourse: []
+      learnCourse: [],
+      subscribeLangCourses: []
     }
   },
   components: {
     LearnCourseList
   },
-  mounted () {},
+  mounted () {
+    this.getMoreLearnCourses().then(res => {
+      if (res.success) {
+        let learnCourses = res.learn_courses
+        learnCourses.forEach(item => {
+          if (!parseInt(item.course_type)) {
+            this.subscribeLangCourses.push(item)
+          }
+        })
+        this.subscribeLangCourses = this.subscribeLangCourses.reverse()
+        console.log('订阅的官方课程', this.subscribeLangCourses)
+      }
+    })
+  },
   computed: {
     ...mapState({
       courseBaseInfo: state => state.course.courseBaseInfo,
@@ -102,6 +116,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getMoreLearnCourses'
+    ]),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode'
     }),

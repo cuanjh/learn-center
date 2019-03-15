@@ -115,12 +115,20 @@ router.afterEach((to, from, next) => {
   setTimeout(() => {
     var _hmt = _hmt || [];
     (function() {
-      // 每次执行前，先移除上次插入的代码
-      document.getElementById('baidu_tj') && document.getElementById('baidu_tj').remove();
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?63f5cae7e57f0bf60c94cc92a03d2ed3";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
+      var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+      var cnzz_s_tag = document.createElement("script");
+      cnzz_s_tag.type = "text/javascript"
+      cnzz_s_tag.async = true;
+      cnzz_s_tag.charset = "utf-8";
+      cnzz_s_tag.src = cnzz_protocol + "s23.cnzz.com/z_stat.php?id=1276550549&async=1";
+      var root_s = document.getElementsByTagName('script')[0];
+      root_s.parentNode.insertBefore(cnzz_s_tag, root_s)
+      // // 每次执行前，先移除上次插入的代码
+      // document.getElementById('baidu_tj') && document.getElementById('baidu_tj').remove();
+      // var hm = document.createElement("script");
+      // hm.src = "https://hm.baidu.com/hm.js?63f5cae7e57f0bf60c94cc92a03d2ed3";
+      // var s = document.getElementsByTagName("script")[0];
+      // s.parentNode.insertBefore(hm, s);
     })()
   }, 0)
 })

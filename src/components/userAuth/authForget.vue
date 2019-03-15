@@ -100,6 +100,7 @@ export default {
           console.log('忘记手机密码', res)
           if (res.success) {
             if (res.exists) {
+              window._czc.push(['_trackEvent', '学习系统', '找回密码', '忘记手机密码', '', 'button'])
               this.$router.push({path: `/auth/reset-phone/${this.userName}`})
             } else {
               this.loading = false
@@ -115,6 +116,7 @@ export default {
           console.log('忘记邮箱密码', res)
           if (res.success) {
             if (res.exists) {
+              window._czc.push(['_trackEvent', '学习系统', '找回密码', '忘记邮箱密码', '', 'button'])
               this.sendMail()
             } else {
               this.loading = false

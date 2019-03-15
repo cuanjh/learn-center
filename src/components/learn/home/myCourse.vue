@@ -36,7 +36,7 @@
           </a>
           <p>世界语言地图官方课程</p>
           <transition name="fade">
-            <learn-course-list :type="'index'" class="subscribe-courses" v-show="isShowSubscribeCourses" />
+            <learn-course-list :type="'index'" :subscribeLangCourses="subscribeLangCourses" class="subscribe-courses" v-show="isShowSubscribeCourses" />
           </transition>
         </dd>
       </dl>
@@ -57,7 +57,7 @@
     </div>
     <div class="current-course-none" v-else>
       <i></i>
-      <router-link :to="{path: '/app/book-case'}" class="add-course" @click="addCourse()">添加课程</router-link>
+      <router-link :to="{path: '/app/book-case'}" class="add-course">添加课程</router-link>
     </div>
   </div>
 </template>
@@ -92,11 +92,11 @@ export default {
       curChapterCode: '',
       maxLevelNum: 6,
       curChapterCorrectRate: '',
-      curChapterDesc: '',
       curArchiveCourse: {},
       isShowSubscribeCourses: false,
       isShowNext: true,
-      isShowPre: true
+      isShowPre: true,
+      subscribeLangCourses: []
     }
   },
   created () {
@@ -108,6 +108,18 @@ export default {
   mounted () {
     // this.getUserInfo()
     this.userId = cookie.getCookie('user_id')
+    this.getMoreLearnCourses().then(res => {
+      if (res.success) {
+        let learnCourses = res.learn_courses
+        learnCourses.forEach(item => {
+          if (!parseInt(item.course_type)) {
+            this.subscribeLangCourses.push(item)
+          }
+        })
+        this.subscribeLangCourses = this.subscribeLangCourses.reverse()
+        console.log('订阅的官方课程', this.subscribeLangCourses)
+      }
+    })
     if (this.userId) {
       let courseCode = ''
       if (cookie.getCookie('purchaseCourseCode')) {
@@ -143,13 +155,13 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateChapterDes: 'course/updateChapterDes',
       updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
       setCurrentChapter: 'course/setCurrentChapter',
       getLearnCourses: 'course/getLearnCourses',
+      getMoreLearnCourses: 'getMoreLearnCourses',
       getUnlockChapter: 'course/getUnlockChapter',
       getCourseContent: 'course/getCourseContent',
       getProgress: 'course/getProgress',
@@ -192,7 +204,6 @@ export default {
         this.curCourseObj['purchased'] = obj ? obj.purchased : false
         console.log(this.curCourseObj)
 
-        _this.updateChapterDes(this.curChapterCode)
         _this.curChapterCorrectRate = '0%'
         let arr = this.curChapterCode.split('-')
         _this.learnInfo.correct_rates.forEach(item => {
@@ -200,7 +211,6 @@ export default {
             item.rates.forEach(rate => {
               if (rate.unit === arr[3] && rate.chapter === arr[4]) {
                 _this.curChapterCorrectRate = rate.correct_rate * 100 + '%'
-                _this.curChapterDesc = '当前为' + _this.chapterDes[1].replace(' ', '') + _this.chapterDes[2]
               }
             })
           }
@@ -335,6 +345,7 @@ export default {
         return false
       }
 
+      window._czc.push(['_trackEvent', '学习系统', '首页', '开始学习', '', '.start-learn'])
       if (this.curChapterCode === this.learnInfo.current_chapter_code) {
         this.$router.push({path: '/learn/stage/A0' + this.curCourseObj['courseCore']})
       } else {
@@ -355,6 +366,7 @@ export default {
     },
     goCourseList () {
       bus.$emit('radioPause')
+      window._czc.push(['_trackEvent', '学习系统', '首页', '全部课程', '', '.all-courses'])
       this.$router.push({ path: '/app/course-list' })
     }
   }
