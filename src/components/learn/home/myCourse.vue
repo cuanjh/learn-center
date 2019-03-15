@@ -57,7 +57,7 @@
     </div>
     <div class="current-course-none" v-else>
       <i></i>
-      <router-link :to="{path: '/app/book-case'}" class="add-course" @click="addCourse()">添加课程</router-link>
+      <router-link :to="{path: '/app/book-case'}" class="add-course">添加课程</router-link>
     </div>
   </div>
 </template>
@@ -345,6 +345,7 @@ export default {
         return false
       }
 
+      window._czc.push(['_trackEvent', '学习系统', '首页', '开始学习', '', '.start-learn'])
       if (this.curChapterCode === this.learnInfo.current_chapter_code) {
         this.$router.push({path: '/learn/stage/A0' + this.curCourseObj['courseCore']})
       } else {
@@ -365,6 +366,7 @@ export default {
     },
     goCourseList () {
       bus.$emit('radioPause')
+      window._czc.push(['_trackEvent', '学习系统', '首页', '全部课程', '', '.all-courses'])
       this.$router.push({ path: '/app/course-list' })
     }
   }

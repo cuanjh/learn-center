@@ -283,6 +283,7 @@ export default {
 
         this.updateIsLogin('1')
         await this.getUserInfo()
+        window._czc.push(['_trackEvent', '学习系统', '登录', '手机验证码登录', '', '.register-btn'])
         _this.$router.push({path: '/app/index'})
       } else {
         _this.errText = errCode[_this.loginInfo.code]
@@ -292,6 +293,7 @@ export default {
     weixinGoLogin () {
       this.delCommonCookie()
       this.userSnsLogin({ty: 'wx'}).then((res) => {
+        window._czc.push(['_trackEvent', '学习系统', '登录', '微信第三方登录', '', '.weixin'])
         console.log('res', res)
         window.location.href = res
       })
@@ -299,6 +301,7 @@ export default {
     weiboGoLogin () {
       this.delCommonCookie()
       this.userSnsLogin({ty: 'wb'}).then((res) => {
+        window._czc.push(['_trackEvent', '学习系统', '登录', '微博第三方登录', '', '.weibo'])
         console.log('res', res)
         window.location.href = res
       })
@@ -306,6 +309,7 @@ export default {
     qqGoLogin () {
       this.delCommonCookie()
       this.userSnsLogin({ty: 'qq'}).then((res) => {
+        window._czc.push(['_trackEvent', '学习系统', '登录', 'qq第三方登录', '', '.qq'])
         console.log('res', res)
         window.location.href = res
       })

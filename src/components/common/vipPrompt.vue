@@ -39,6 +39,11 @@ export default {
         Bus.$emit('showGoLoginBox')
         return
       }
+      let desc = '成为会员'
+      if (this.isVip === 1) {
+        desc = '升级会员'
+      }
+      window._czc.push(['_trackEvent', '学习系统', 'VIP banner', desc, '', '.vip-btn'])
       this.$router.push({ path: '/app/user/vip' })
     }
   }

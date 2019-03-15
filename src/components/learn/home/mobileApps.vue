@@ -14,16 +14,22 @@
       </p>
     </div>
     <div class="link">
-      <router-link :to="{path: '/app/introduce-app'}" target="_blank">
-        <a class="more">了解更多</a>
-      </router-link>
+      <a href="javascript:;" @click="learnMore()" class="more">
+        <span>了解更多</span>
+      </a>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-
+  methods: {
+    learnMore () {
+      window._czc.push(['_trackEvent', '学习系统', '首页', 'app了解更多', '', '.more'])
+      let routeData = this.$router.resolve({path: '/app/introduce-app'})
+      window.open(routeData.href, '_blank')
+    }
+  }
 }
 </script>
 
