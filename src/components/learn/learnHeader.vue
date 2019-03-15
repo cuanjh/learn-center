@@ -54,7 +54,7 @@
           <input type="text" placeholder="在此搜索需要的语言" v-model.trim="searchUserCourse" @keyup.enter="enterSearch">
           <div class="search" @click="enterSearch"></div>
         </div>
-        <router-link :to="{path: '/app/user/vip'}"  :class="{'vip-img': isVip === 1, 'unvip-img': isVip !== 1}"></router-link>
+        <a href="javascript:;" @click="gotoVIP()" :class="{'vip-img': isVip === 1, 'unvip-img': isVip !== 1}"></a>
         <search-course ref="search" :searchUserCourse="searchUserCourse" v-show="courseDetailShow" @hideLangList="hideLangList"></search-course>
         <!-- <div class="head-nation" style="display:none">
           <img class="head" src="https://course-assets1.talkmate.com/course/icons/FRE-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1" alt="头像">
@@ -216,6 +216,7 @@ export default {
       this.showExitState = false
     },
     jumpSystem () {
+      window._czc.push(['_trackEvent', '学习系统', 'header', '退出', '', '.user-login-out'])
       Bus.$emit('radioPause')
       this.logout().then((res) => {
         cookie.delCookie('device_id')
@@ -242,6 +243,10 @@ export default {
     hideLangList () {
       this.searchUserCourse = ''
       this.courseDetailShow = false
+    },
+    gotoVIP () {
+      window._czc.push(['_trackEvent', '学习系统', 'header', '跳转到会员', '', 'VIP'])
+      this.$router.push({path: '/app/user/vip'})
     }
   }
 }

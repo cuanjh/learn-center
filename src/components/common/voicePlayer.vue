@@ -233,6 +233,7 @@ export default {
   },
   created () {
     Bus.$on('getRadioCardList', (item) => {
+      window._czc.push(['_trackEvent', '学习系统', '电台播放器', '标题：' + item.module_name, '', 'radio-voice-player'])
       console.log('item电台====》', item)
       this.item = item
       console.log('item.......', this.item)

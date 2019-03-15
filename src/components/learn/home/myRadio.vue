@@ -147,12 +147,14 @@ export default {
       }
       let lanCode = this.selState['lan_code']
       this.getRecommendRadios({'lan_code': lanCode, limit: 6, page: this.recommendRadioPage})
+      window._czc.push(['_trackEvent', '学习系统', '首页', '电台换一批', '', '.change-batch'])
     },
     // 切换课程
     changeState (item) {
       this.selState = item
       let lanCode = this.selState['lan_code']
       this.getRecommendRadios({'lan_code': lanCode, limit: 6, page: 1})
+      window._czc.push(['_trackEvent', '学习系统', '首页', '电台优先切换', '', 'li'])
     }
   }
 }
