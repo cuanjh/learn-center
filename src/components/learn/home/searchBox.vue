@@ -75,12 +75,14 @@ export default {
     ]),
     // 点击电台主播
     loadRecommendTeachers () {
+      window._czc.push(['_trackEvent', '学习系统', '首页', '电台主播', '', '.wal-partners'])
       this.isShowEndangerPanel = false
       this.getAllRadioTeachers().then(res => {
         this.$parent.$refs.map.$emit('loadRecommendTeachers', res)
       })
     },
     loadCourses () {
+      window._czc.push(['_trackEvent', '学习系统', '首页', '课程分布', '', '.wal-courses'])
       this.isShowEndangerPanel = false
       this.$parent.$refs.map.$emit('loadCourseLangs', this.courseLangsList)
     },
@@ -89,10 +91,12 @@ export default {
       this.isShowSearch = false
     },
     search () {
+      window._czc.push(['_trackEvent', '学习系统', '首页', '语种搜索', '', '.search'])
       let key = this.searchKey
       Bus.$emit('mapSearch', key)
     },
     selectEndanger (item) {
+      window._czc.push(['_trackEvent', '学习系统', '首页', '濒危语种：' + item.text, '', '.endangered'])
       this.activeEndanger = item.val
       this.getEndangeredMap({degree: this.activeEndanger}).then(res => {
         if (res.success) {

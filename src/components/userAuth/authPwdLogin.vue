@@ -189,6 +189,11 @@ export default {
         Cookie.setCookie('hasPhone', info.hasPhone)
         this.updateIsLogin('1')
         await this.getUserInfo()
+        let desc = '邮箱密码登录'
+        if (_this.type === 1) {
+          desc = '手机密码登录'
+        }
+        window._czc.push(['_trackEvent', '学习系统', '登录', desc, '', 'button'])
         _this.$router.push({path: '/app/index'})
       } else {
         _this.errText = errCode[res.code]
