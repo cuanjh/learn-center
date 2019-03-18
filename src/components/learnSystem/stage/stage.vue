@@ -401,7 +401,7 @@ export default {
       tips: state => state.learn.tips,
       formScores: state => state.course.formScores,
       canRecord: state => state.learn.canRecord,
-      userInfo: state => state.userInfo,
+      userInfo: state => state.user.userInfo,
       totalCoin: state => state.user.totalCoin,
       contentUrl: state => state.course.contentUrl
     }),
