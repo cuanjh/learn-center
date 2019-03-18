@@ -10,8 +10,7 @@
       <div class='vip-update-success-logo animated tada'></div>
       <p>{{ $t("vip.alert.p1") }}</p>
       <p>{{ $t("vip.alert.p2") }}</p>
-      <router-link tag="span" class='vip-back-tolearn' @click="close" v-show='!judgeBackLearn' :to="{path: '/app/book-case'}">{{ $t("vip.alert.back") }}</router-link>
-      <router-link tag="span" class='vip-back-tolearn' @click="close" v-show='judgeBackLearn' :to="{path: '/app/index'}">{{ $t("vip.alert.back") }}</router-link>
+      <router-link tag="span" class='vip-back-tolearn' @click="close" :to="{path: '/app/index'}">{{ $t("vip.alert.back") }}</router-link>
     </section>
     <section class='vip-update-success animated flipInX slow vip-error-notice' v-show='errorTip'>
       <div class='vip-update-success-logo animated tada'></div>
@@ -37,7 +36,6 @@ export default {
       isShow: false,
       codeNum: '',
       purchaseAlert: false,
-      judgeBackLearn: false,
       errorMessage: ''
     }
   },
@@ -69,7 +67,7 @@ export default {
   computed: {
     ...mapState({
       confirmAlert: state => state.user.confirmAlert,
-      successAlert: state => state.user.updateSuccessAlert,
+      successAlert: state => state.user.successAlert,
       errorTip: state => state.user.errorTip,
       purchaseSuccess: state => state.user.purchaseSuccess,
       userInfo: state => state.userInfo
@@ -81,15 +79,6 @@ export default {
       }
       return ui
     }
-    // backLearn () {
-    //   var learnCourses = this.$store.state.course.learnCourses
-    //   if (learnCourses.length <= 0) {
-    //     this.judgeBackLearn = false
-    //   } else {
-    //     this.judgeBackLearn = true
-    //     return learnCourses[0]
-    //   }
-    // }
   },
   methods: {
     ...mapMutations({
@@ -131,11 +120,6 @@ export default {
       this.isShow = false
       this.getUserInfo()
     }
-    // ,
-    // backLearn () {
-    //   this.successAlert = false
-    //   this.$dispatch('coverState', this.successAlert)
-    // }
   }
 }
 </script>
@@ -184,18 +168,19 @@ export default {
 }
 .vip-update-success p{
   margin-top: 65px;
-  font-size: 20px;
+  font-size: 16px;
   color: #4a4a4a;
 }
 .vip-update-success p:nth-of-type(1){
   padding-top: 54px;
 }
 .vip-update-success p:nth-of-type(2){
-
+  margin-top: 10px;
 }
 .vip-update-success .vip-back-tolearn{
   width: 168px;
   height: 40px;
+  margin-top: 40px;
   border-radius: 100px;
   background-color: #2A9FE4;
   text-align: center;
