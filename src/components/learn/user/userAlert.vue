@@ -10,8 +10,8 @@
       <div class='vip-update-success-logo animated tada'></div>
       <p>{{ $t("vip.alert.p1") }}</p>
       <p>{{ $t("vip.alert.p2") }}</p>
-      <router-link tag="span" class='vip-back-tolearn' @click="close" v-show='!judgeBackLearn' :to="{path: '/app/find'}">{{ $t("vip.alert.back") }}</router-link>
-      <router-link tag="span" class='vip-back-tolearn' @click="close" v-show='judgeBackLearn' :to="{path: ''}">{{ $t("vip.alert.back") }}</router-link>
+      <router-link tag="span" class='vip-back-tolearn' @click="close" v-show='!judgeBackLearn' :to="{path: '/app/book-case'}">{{ $t("vip.alert.back") }}</router-link>
+      <router-link tag="span" class='vip-back-tolearn' @click="close" v-show='judgeBackLearn' :to="{path: '/app/index'}">{{ $t("vip.alert.back") }}</router-link>
     </section>
     <section class='vip-update-success animated flipInX slow vip-error-notice' v-show='errorTip'>
       <div class='vip-update-success-logo animated tada'></div>
@@ -99,7 +99,7 @@ export default {
       updatePurchaseSuccess: 'user/updatePurchaseSuccess'
     }),
     ...mapActions({
-      getUserInfo: 'user/getUserInfo',
+      getUserInfo: 'getUserInfo',
       getMemberCard: 'user/getMemberCard'
     }),
     activateCode () {
