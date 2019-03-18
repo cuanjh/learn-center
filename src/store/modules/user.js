@@ -160,7 +160,7 @@ const actions = {
   },
   // 会员卡激活账号
   getMemberCard ({commit, state}, codeNum) {
-    return httpLogin(config.getMemberCard, { card_no: this.codeNum })
+    return httpLogin(config.getMemberCard, { card_no: codeNum })
   },
   updateInfo ({commit}, params) {
     return httpLogin(config.updateInfo, params)
