@@ -653,11 +653,12 @@ export default {
   .course-item {
     background-color:#fff;
     margin-top: 14px;
-    padding: 14px;
+    padding: 14px 14px 0 14px;
     border-radius: 5px;
   }
 
   .current-learn-course-info{
+    margin-bottom: 14px;
     cursor: pointer;
     overflow:hidden;
     /* -webkit-transition: all .3s ease-in-out;
