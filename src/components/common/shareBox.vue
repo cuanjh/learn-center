@@ -89,10 +89,6 @@ export default {
             "bdSize":"24",
           },
           "share":{},
-          "image":{
-            "viewList":["weixin","tsina","sqq","qzone"],
-            "viewText":"分享到：","viewSize":"16"
-          },
           "selectShare":{
             "bdContainerClass":null,
             "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
@@ -112,38 +108,12 @@ export default {
             "bdSize":"24",
           },
           "share":{},
-          "image":{
-            "viewList":["weixin","tsina","sqq","qzone"],
-            "viewText":"分享到：","viewSize":"16"
-          },
           "selectShare":{
             "bdContainerClass":null,
             "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
           }
         }
       }
-      // window._bd_share_config = {
-      //   "common":{
-      //     "bdSnsKey":{},
-      //     "bdDesc": "全球说电台课程", //分享时的标题
-      //     "bdText":"我在听#全球说#配套课程"+radio.module_name+"，随时随地学语言，走到哪里，学到哪里！",//分享时的文本摘要
-      //     "bdMini":"1",
-      //     "bdMiniList":false,
-      //     "bdPic":radio.cover, //此处为分享时自带的图片
-      //     "bdUrl":'http://share.talkmate.com/course/' + radio.code, //此处为后台要进行分享的内容的定义
-      //     "bdStyle":"1",
-      //     "bdSize":"24",
-      //   },
-      //   "share":{},
-      //   "image":{
-      //     "viewList":["weixin","tsina","sqq","qzone"],
-      //     "viewText":"分享到：","viewSize":"16"
-      //   },
-      //   "selectShare":{
-      //     "bdContainerClass":null,
-      //     "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
-      //   }
-      // }
       const s = document.createElement('script')
       s.type = 'text/javascript'
       s.src = '/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)

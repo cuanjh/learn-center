@@ -124,12 +124,12 @@
             <div class="course-item" :id="card.card_id" v-for="(card, index) in pageCards" :key="card.card_id">
               <div class="course-play-img">
                 <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
-                <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo, index)">
+                <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo,index, card)">
                   <i class="play"></i>
                 </div>
               </div>
               <div class="course-item-right">
-                <a class="course-title" @click="goCardDetail(card.card_id, index)">
+                <a class="course-title" @click="goCardDetail(card.card_id, card.list_order)">
                   <span class="audition" v-if="courseInfo.money != 0 && index < 3 && currentPage == 1" >试听</span>
                   <span class="card-title">{{card.title}}</span>
                 </a>
@@ -372,6 +372,7 @@ export default {
       this.currentPage = num
       console.log('currentPage', this.currentPage)
       this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage*this.pagesize)
+      console.log('this.pageCards', this.pageCards)
     },
     // 点击上一页
     jumpOnPage () {
@@ -474,7 +475,39 @@ export default {
       this.isPlay = !this.isPlay
     },
     // 播放列表
-    loadRadioList (e, radio, index) {
+    loadRadioList (e, radio, index, card) {
+      console.log(' radio, order',  radio, index, card)
+      if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+        if (parseInt(radio.money) !== 0) { // 收费
+          if (this.isVip !== 1) { // 不是会员
+            if (card.list_order > 3) {
+              if (radio.money_type === 'CNY') {
+                // 人民币提示
+                Bus.$emit('showBuyRadio', this.radioDetail)
+              } else if (radio.money_type === 'coins') {
+                // 金币提示
+                Bus.$emit('showBuyCoinsRadio', radio)
+                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+              }
+              return false
+            }
+          } else { // 是会员
+            if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
+              if (card.list_order > 3) {
+                if (radio.money_type === 'CNY') {
+                  // 人民币提示
+                  Bus.$emit('showBuyRadio', this.radioDetail)
+                } else if (radio.money_type === 'coins') {
+                  // 金币提示
+                  Bus.$emit('showBuyCoinsRadio', radio)
+                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                }
+                return false
+              }
+            }
+          }
+        }
+      }
       if (this.isPlay && radio.code === this.lastCode) {
         $('.course-play-img .gradient-layer-play i').removeClass('pause')
         $('.course-play-img .gradient-layer-play i').addClass('play')
@@ -489,7 +522,7 @@ export default {
           Bus.$emit('getRadioCardList', radio)
           this.lastCode = radio.code
         } else {
-          Bus.$emit('radioPlayList', index)
+          Bus.$emit('radioPlayList', card.list_order)
         }
       }
       this.isPlay = !this.isPlay
@@ -544,11 +577,11 @@ export default {
       })
     },
     // 去卡片详情页面
-    goCardDetail (cardId, index) {
+    goCardDetail (cardId, order) {
       let OBJ = {
         'id': cardId,
         'radioCode': this.radioCode,
-        'index': index
+        'order': order
       }
       let jsonStr = JSON.stringify(OBJ)
       sessionStorage.setItem('routerParams', jsonStr)

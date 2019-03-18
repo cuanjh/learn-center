@@ -19,15 +19,15 @@
           <ul>
             <li>
               <i class="collection"></i>
-              <span>143</span>
+              <span>{{authorDetail.follow_num}}</span>
             </li>
             <li>
               <i class="radio"></i>
-              <span>33</span>
+              <span>{{authorDetail.course_count}}</span>
             </li>
             <li>
               <i class="fans"></i>
-              <span>365</span>
+              <span>{{authorDetail.be_followed_num}}</span>
             </li>
           </ul>
         </div>
@@ -52,7 +52,7 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
-  props: ['courseInfo'],
+  props: ['authorDetail', 'courseInfo'],
   data () {
     return {
     }
@@ -160,7 +160,8 @@ export default {
         border-bottom: 1px solid #EAEAEAFF;
         ul {
           display: flex;
-          justify-content: center;
+          justify-content: flex-start;
+          padding: 0 6px;
           li {
             display: flex;
             align-items: center;
@@ -169,21 +170,28 @@ export default {
               background-position: center;
               background-repeat: no-repeat;
               background-size: cover;
+              margin-right: 4px;
+            }
+            span {
+              font-size:14px;
+              font-family:PingFang-SC-Medium;
+              font-weight:400;
+              color:rgba(10,43,64,1);
             }
             .collection {
-              width: 14px;
-              height: 14px;
-              background-image: url('../../../../../static/images/radioicon.svg');
+              width: 16px;
+              height: 15px;
+              background-image: url('../../../../../static/images/discovery/follow.svg');
             }
             .radio {
               width: 14px;
-              height: 14px;
-              background-image: url('../../../../../static/images/radioicon.svg');
+              height: 13px;
+              background-image: url('../../../../../static/images/discovery/radio.svg');
             }
             .fans {
-              width: 18px;
-              height: 14px;
-              background-image: url('../../../../../static/images/radioicon.svg');
+              width: 16px;
+              height: 15px;
+              background-image: url('../../../../../static/images/discovery/be-follow.svg');
             }
           }
           li:nth-child(2) {
@@ -226,6 +234,10 @@ export default {
               text-overflow:ellipsis;
               white-space:nowrap;
               line-height: 36px;
+              font-size:14px;
+              font-family:PingFang-SC-Medium;
+              font-weight:500;
+              color:rgba(51,51,51,1);
             }
           }
           li:last-child {

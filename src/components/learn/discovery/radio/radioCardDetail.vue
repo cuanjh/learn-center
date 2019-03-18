@@ -6,8 +6,8 @@
       <div class="card-radio">
         <div class="card-content">
           <div class="radio-left">
-            <div class="round">
-              <div class="bg-img">
+            <div class="round-img">
+              <div class="background-img">
                 <img :src="cardDetail.cover_url" alt="">
               </div>
             </div>
@@ -114,7 +114,7 @@
                 <!-- 评论成功的弹框 -->
                 <div class="success-box" v-show="showSuccessBox">
                   <div class="success-content">
-                    <span>删除评论成功！</span>
+                    <span>评论成功！</span>
                   </div>
                 </div>
               </div>
@@ -151,9 +151,9 @@
           </div>
           <!-- 右边部分 -->
           <div class="card-content-right">
-            <radio-card-star :courseInfo="courseInfo" v-if="courseInfo"></radio-card-star>
+            <radio-card-star :authorDetail="authorDetail" :courseInfo="courseInfo" v-if="courseInfo"></radio-card-star>
             <radio-detail-other :otherRadios="otherRadios" v-if="otherRadios"></radio-detail-other>
-             <students-listening :studentsListening="studentsListening" v-if="studentsListening"></students-listening>
+            <students-listening :studentsListening="studentsListening" v-if="studentsListening"></students-listening>
           </div>
         </div>
       </div>
@@ -164,6 +164,7 @@
 import { mapState, mapActions } from 'vuex'
 import Bus from '../../../../bus.js'
 import $ from 'jquery'
+import cookie from '../../../../tool/cookie'
 import { formatDate } from '../../../../tool/date.js'
 import NavComp from '../../../common/nav.vue'
 import ShareBox from '../../../common/shareBox'
@@ -178,9 +179,12 @@ export default {
       showUnfold: true,
       type: '2',
       cardDetail: {},
+      radioDetail: {},
       courseInfo: {},
       authorInfo: {},
       otherRadios: [],
+      authorDetail: {},
+      subscibenoInfo: {},
       studentsListening: [],
       showEmoji: false, // 笑脸表情
       dataList: [], // 输入的内容评论列表
@@ -214,6 +218,15 @@ export default {
       userInfo: state => state.userInfo, // 用户信息
       languagueHander: state => state.course.languagueHander
     }),
+    isVip () {
+      if (!this.userInfo) {
+        return
+      }
+      if (!this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
+    },
     radioCardParams () {
       let routerParams = JSON.parse(sessionStorage.getItem('routerParams'))
       return routerParams
@@ -245,6 +258,8 @@ export default {
   methods: {
     ...mapActions({
       postRadioDetail: 'course/postRadioDetail', // 电台详情
+      getAuthorDetail: 'course/getAuthorDetail', // 作者的详情
+      getRadioAuthorList: 'course/getRadioAuthorList', // 作者电台
       getRadioCardDetail: 'course/getRadioCardDetail', // 卡片详情
       getRadioCardCommentLists: 'course/getRadioCardCommentLists', // 卡片评论列表
       getRadioCommentCard: 'course/getRadioCommentCard', // 评论课程卡片
@@ -265,12 +280,17 @@ export default {
     // 发请求获取radio的详情页面
     async loadData () {
       let _this = this
-      console.log('电台详情的参数', this.radioCardParams.radioCode)
-      await _this.postRadioDetail(this.radioCardParams.radioCode).then((res) => {
+      console.log('电台详情的参数', _this.radioCardParams.radioCode)
+      await _this.postRadioDetail(_this.radioCardParams.radioCode).then((res) => {
         console.log('电台详情返回', res)
-        this.courseInfo = res.result.course_info
-        this.authorInfo = res.result.course_info.author_info
-        this.otherRadios = res.result.realated_courses.slice(0, 1)
+        if (res.success) {
+          _this.radioDetail = res.result
+          _this.courseInfo = res.result.course_info
+          _this.authorInfo = res.result.course_info.author_info
+          _this.otherRadios = res.result.realated_courses.slice(0, 1)
+          _this.subscibenoInfo = res.result.relation
+          _this.initAuthorInfo(res.result.course_info.author_info.user_id)
+        }
       })
     },
     // 获取卡片评论列表
@@ -278,6 +298,7 @@ export default {
       let params = {
         code: this.radioCardParams.radioCode,
         card_id: this.radioCardParams.id,
+        start_time: 0,
         page_size: pageSize
       }
       await this.getRadioCardCommentLists(params).then(res => {
@@ -295,20 +316,39 @@ export default {
       })
     },
     // 发表评论
-    async commentCard () {
+    commentCard () {
+      let userId = cookie.getCookie('user_id')
+      if (!userId) {
+        Bus.$emit('showGoLoginBox')
+        this.desc = ''
+        this.remnant = 0
+        return false
+      }
       let that = this
       let params = {
         code: that.radioCardParams.radioCode,
         card_id: that.radioCardParams.id,
         comment: that.desc
       }
-      await that.getRadioCommentCard(params).then(res => {
+      that.getRadioCommentCard(params).then(res => {
         console.log('res====>', res)
         if (res.success) {
-          that.initCommentList()
           console.log('========>', that.commentLists)
           that.desc = ''
+          that.remnant = 0
+          that.showSuccessBox = true
+          setTimeout(() => {
+            that.showSuccessBox = false
+            that.initCommentList(10)
+          }, 1000)
         }
+      })
+    },
+    // 作者详情
+    async initAuthorInfo (authorId) {
+      await this.getAuthorDetail({partner_user_id: authorId}).then(res => {
+        console.log('作者返回', res)
+        this.authorDetail = res.detail
       })
     },
     // 查看更多评论列表
@@ -333,6 +373,38 @@ export default {
     },
     // 收听列表
     loadRadioList (e, radio) {
+      console.log('卡片详情==》', radio)
+      if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+        if (parseInt(radio.money) !== 0) { // 收费
+          if (this.isVip !== 1) { // 不是会员
+            if (this.radioCardParams.order > 3) {
+              if (radio.money_type === 'CNY') {
+                // 人民币提示
+                Bus.$emit('showBuyRadio', this.radioDetail)
+              } else if (radio.money_type === 'coins') {
+                // 金币提示
+                Bus.$emit('showBuyCoinsRadio', radio)
+                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+              }
+              return false
+            }
+          } else { // 是会员
+            if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
+              if (this.radioCardParams.order > 3) {
+                if (radio.money_type === 'CNY') {
+                  // 人民币提示
+                  Bus.$emit('showBuyRadio', this.radioDetail)
+                } else if (radio.money_type === 'coins') {
+                  // 金币提示
+                  Bus.$emit('showBuyCoinsRadio', radio)
+                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                }
+                return false
+              }
+            }
+          }
+        }
+      }
       if (this.isPlay && radio.code === this.lastCode) {
         $('.gradient-layer-play i').removeClass('pause')
         $('.gradient-layer-play i').addClass('play')
@@ -347,7 +419,7 @@ export default {
           Bus.$emit('getRadioCardList', radio)
           this.lastCode = radio.code
         } else {
-          Bus.$emit('radioPlayList', this.radioCardParams.index)
+          Bus.$emit('radioPlayList', this.radioCardParams.order)
         }
       }
       this.isPlay = !this.isPlay
@@ -410,13 +482,13 @@ export default {
     .radio-left {
       display: flex;
       align-items: center;
-      .round {
+      .round-img {
         width: 141px;
         height: 141px;
         display: flex;
         justify-content: center;
         align-items: center;
-        .bg-img {
+        .background-img {
           width: 141px;
           height: 141px;
           border-radius: 50%;
@@ -471,6 +543,7 @@ export default {
                 padding: 2px 7px;
                 border-radius:4px;
                 border:1px solid rgba(178,192,201,1);
+                margin-right: 10px;
               }
             }
           }
@@ -673,6 +746,10 @@ export default {
                 right: 0;
                 top: 15px;
                 right: 20px;
+                font-size:14px;
+                font-family:PingFangSC-Regular;
+                font-weight:400;
+                color:rgba(144,162,174,1);
               }
               .two-button {
                 display: flex;

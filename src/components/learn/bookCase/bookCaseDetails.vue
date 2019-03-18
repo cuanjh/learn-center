@@ -81,7 +81,7 @@
               </div>
             </div>
             <!-- 分享 -->
-            <share-box></share-box>
+            <share-box v-show="false"></share-box>
           </div>
         </div>
       </div>
