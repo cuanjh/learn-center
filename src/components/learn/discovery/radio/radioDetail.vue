@@ -81,12 +81,8 @@
                 </p>
               </div>
             </div>
-            <div class="share" v-show="false">
-              <div class="li weixin"></div>
-              <div class="li weibo"></div>
-              <div class="li friend"></div>
-              <div class="li qq"></div>
-            </div>
+            <!-- 分享 -->
+            <share-box :type="type"/>
           </div>
         </div>
         <!-- 作者介绍 -->
@@ -124,23 +120,44 @@
         <!-- 课程列表 -->
         <div class="course-list">
           <div class="title">课程列表</div>
-          <div class="course-item" :id="card.card_id" v-for="(card, index) in cards" :key="card.card_id">
-            <div class="course-play-img">
-              <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
-              <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo, index)">
-                <i class="play"></i>
+          <div class="course-card-box">
+            <div class="course-item" :id="card.card_id" v-for="(card, index) in pageCards" :key="card.card_id">
+              <div class="course-play-img">
+                <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
+                <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo,index, card)">
+                  <i class="play"></i>
+                </div>
+              </div>
+              <div class="course-item-right">
+                <a class="course-title" @click="goCardDetail(card.card_id, card.list_order)">
+                  <span class="audition" v-if="courseInfo.money != 0 && index < 3 && currentPage == 1" >试听</span>
+                  <span class="card-title">{{card.title}}</span>
+                </a>
+                <div class="course-desc" v-text="card.description"></div>
+                <div class="course-bottom">
+                  <p>
+                    <span><i></i>{{toParseTime(card.sound_time)}}</span>
+                    <span><i></i>{{card.comment_count}}</span>
+                  </p>
+                  <span>{{card.create_time | formatDate}}</span>
+                </div>
               </div>
             </div>
-            <div class="course-item-right">
-              <div class="course-title"><span class="audition" v-if="courseInfo.money != 0">试听</span><span>{{card.title}}</span></div>
-              <div class="course-desc" v-text="card.description"></div>
-              <div class="course-bottom">
-                <p>
-                  <span><i></i>{{toParseTime(card.sound_time)}}</span>
-                  <span><i></i>{{card.comment_count}}</span>
-                </p>
-                <span>{{card.create_time | formatDate}}</span>
-              </div>
+          </div>
+          <!-- 分页 -->
+          <div class="page" v-show="show">
+            <div class="pagelist">
+              <a class="jump" :class="{disabled:pstart}" @click="jumpOnPage()">上一页</a>
+              <a v-show="currentPage>5" class="jump" @click="jumpPage(1)">1</a>
+              <span class="ellipsis" v-show="efont">...</span>
+              <a class="jump"
+                    :class="{bgprimary:currentPage==num}"
+                    v-for="(num, index) in indexs"
+                    :key="index"
+                    @click="jumpPage(num)"
+                    >{{num}}</a>
+              <span class="ellipsis" v-show="ebehind">...</span>
+              <a class="jump" :class="{disabled:pend}" @click="jumpDowPage()">下一页</a>
             </div>
           </div>
         </div>
@@ -178,24 +195,34 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import Bus from '../../../../bus'
+import Bus from '../../../../bus.js'
 import $ from 'jquery'
+import cookie from '../../../../tool/cookie'
 import bounceBox from '../../../common/bounceBox'
 import { formatDate } from '../../../../tool/date.js'
 import VipPrompt from '../../../common/vipPrompt.vue'
 import NavComp from '../../../common/nav.vue'
 import RadioDetailOther from './radioDetailOther.vue'
 import StudentsListening from './studentsListening.vue'
+import ShareBox from '../../../common/shareBox'
 // import BuyCoinsRadioBox from '../../../common/buyCoinsRadioBox.vue'
 
 export default {
   data () {
     return {
+      type: '1',
+      total: 0, // 获取后端的数据总条数
+      pagesize: 5, // 一页显示5条
+      currentPage: 1, // 当前页
+      listOrder: 1, // 排序方向， 默认值是1＝从小到大;-1=从大到小
+      page: 1, // 页码， 默认值是1
+      AllpageSize: 500, // 每一页的数量，默认值是16
       isShowBox: false,
       radioDetail: {},
       courseInfo: {},
       authorInfo: {},
       cards: [],
+      pageCards: [],
       subscibenoInfo: {},
       comments: [],
       otherRadios: [],
@@ -208,7 +235,8 @@ export default {
     VipPrompt,
     StudentsListening,
     bounceBox,
-    NavComp
+    NavComp,
+    ShareBox
   },
   filters: {
     formatDate (time) {
@@ -233,6 +261,7 @@ export default {
     ]
     Bus.$emit('loadNavData', navList)
     this.loadData()
+    this.initRadioCardList()
     this.getOtherRecommends({current_radio_code: this.$route.params.code}).then(res => {
       console.log('其他人也在听', res)
       this.studentsListening = res.data
@@ -255,16 +284,123 @@ export default {
     },
     radioCode () {
       return this.$route.params.code
+    },
+    pages () { // 总页数
+      return Math.ceil(this.total * 1 / this.pagesize)
+    },
+    // 显示页码条
+    show () {
+      return this.pages && this.pages !== 1
+    },
+    // 限制上一页不能点击
+    pstart () {
+      return this.currentPage === 1
+    },
+    // 限制下一页不能点击
+    pend () {
+      return this.currentPage === this.pages
+    },
+    // ...的显示
+    efont () {
+      if (this.pages <= 7) return false
+      return this.currentPage > 5
+    },
+    // ...的隐藏
+    ebehind () {
+      if (this.pages <= 7) return false
+      var nowAy = this.indexs
+      return nowAy[nowAy.length - 1] !== this.pages
+    },
+    /* eslint-disable */
+    // 一共有多少页
+    indexs () {
+      var left = 1
+      var right = this.pages
+      var ar = []
+      if (this.pages >= 7) {
+        if (this.currentPage > 5 && this.currentPage < this.pages - 4) {
+          left = Number(this.currentPage) - 3
+          right = Number(this.currentPage) + 3
+        } else {
+          if (this.currentPage <= 5) {
+            left = 1
+            right = 7
+          } else {
+            right = this.pages
+            left = this.pages - 6
+          }
+        }
+      }
+      while (left <= right) {
+        ar.push(left)
+        left++
+      }
+      return ar
     }
+    /* eslint-disable */
   },
   methods: {
     ...mapActions({
       postRadioDetail: 'course/postRadioDetail', // 电台详情
+      getRadioCardList: 'course/getRadioCardList', // 电台列表
       postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
       getRadioRelationFollow: 'course/getRadioRelationFollow', // 关注
       remRadioRelationCancel: 'course/remRadioRelationCancel', // 取消关注
       getOtherRecommends: 'getOtherRecommends' // 其他人也在听
     }),
+    // 获取这个电台的列表
+    async initRadioCardList () {
+      let params = {
+        code: this.radioCode,
+        listOrder: this.listOrder,
+        page: this.page,
+        pageSize: this.AllpageSize
+      }
+      console.log('params', params)
+      await this.getRadioCardList(params).then((res) => {
+        console.log('电台列表', res)
+        if (res.cards.length > 0) {
+          this.cards = res.cards
+          this.pageCards = this.cards.slice(0, this.pagesize)
+          console.log('cards=====', this.cards)
+        }
+      })
+    },
+    // 前端加分页调用的方法
+    jumpPage (num) {
+      console.log('this.currentPage', this.currentPage)
+      this.currentPage = num
+      console.log('currentPage', this.currentPage)
+      this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage*this.pagesize)
+      console.log('this.pageCards', this.pageCards)
+    },
+    // 点击上一页
+    jumpOnPage () {
+      this.currentPage--
+      this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage*this.pagesize)
+    },
+    // 点击下一页
+    jumpDowPage () {
+      this.currentPage++
+      this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage*this.pagesize)
+    },
+    // 发请求获取radio的详情页面
+    async loadData () {
+      let _this = this
+      console.log('电台详情的参数', _this.radioCode)
+      await _this.postRadioDetail(_this.radioCode).then((res) => {
+        console.log('电台详情返回', res)
+        _this.radioDetail = res.result
+        _this.total = res.result.course_info.cards_count
+        _this.courseInfo = res.result.course_info
+        _this.authorInfo = res.result.course_info.author_info
+        // _this.cards = res.result.course_info.cards
+        _this.comments = res.result.course_info.comments
+        _this.otherRadios = res.result.realated_courses.slice(0, 4)
+        _this.subscibenoInfo = res.result.relation
+        Bus.$emit('shareCardContent', _this.courseInfo)
+      })
+    },
     // 作者详情页面
     goToUser (userId) {
       this.$router.push({
@@ -291,7 +427,8 @@ export default {
     },
     // 关注
     relation () {
-      if (!this.userInfo) {
+      let userId = cookie.getCookie('user_id')
+      if (!userId) {
         Bus.$emit('showGoLoginBox')
         return
       }
@@ -317,21 +454,6 @@ export default {
         })
       }
     },
-    // 发请求获取radio的详情页面
-    async loadData () {
-      let _this = this
-      console.log('电台详情的参数', _this.radioCode)
-      await _this.postRadioDetail(_this.radioCode).then((res) => {
-        console.log('电台详情返回', res)
-        _this.radioDetail = res.result
-        _this.courseInfo = res.result.course_info
-        _this.authorInfo = res.result.course_info.author_info
-        _this.cards = res.result.course_info.cards
-        _this.comments = res.result.course_info.comments
-        _this.otherRadios = res.result.realated_courses
-        _this.subscibenoInfo = res.result.relation
-      })
-    },
     // 立即收听
     loadRadioLists (e, radio) {
       if (this.isPlay && radio.code === this.lastCode) {
@@ -353,7 +475,39 @@ export default {
       this.isPlay = !this.isPlay
     },
     // 播放列表
-    loadRadioList (e, radio, index) {
+    loadRadioList (e, radio, index, card) {
+      console.log(' radio, order',  radio, index, card)
+      if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+        if (parseInt(radio.money) !== 0) { // 收费
+          if (this.isVip !== 1) { // 不是会员
+            if (card.list_order > 3) {
+              if (radio.money_type === 'CNY') {
+                // 人民币提示
+                Bus.$emit('showBuyRadio', this.radioDetail)
+              } else if (radio.money_type === 'coins') {
+                // 金币提示
+                Bus.$emit('showBuyCoinsRadio', radio)
+                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+              }
+              return false
+            }
+          } else { // 是会员
+            if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
+              if (card.list_order > 3) {
+                if (radio.money_type === 'CNY') {
+                  // 人民币提示
+                  Bus.$emit('showBuyRadio', this.radioDetail)
+                } else if (radio.money_type === 'coins') {
+                  // 金币提示
+                  Bus.$emit('showBuyCoinsRadio', radio)
+                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                }
+                return false
+              }
+            }
+          }
+        }
+      }
       if (this.isPlay && radio.code === this.lastCode) {
         $('.course-play-img .gradient-layer-play i').removeClass('pause')
         $('.course-play-img .gradient-layer-play i').addClass('play')
@@ -368,7 +522,7 @@ export default {
           Bus.$emit('getRadioCardList', radio)
           this.lastCode = radio.code
         } else {
-          Bus.$emit('radioPlayList', index)
+          Bus.$emit('radioPlayList', card.list_order)
         }
       }
       this.isPlay = !this.isPlay
@@ -421,12 +575,23 @@ export default {
           this.subscibenoInfo.purchased_state = 1
         }
       })
+    },
+    // 去卡片详情页面
+    goCardDetail (cardId, order) {
+      let OBJ = {
+        'id': cardId,
+        'radioCode': this.radioCode,
+        'order': order
+      }
+      let jsonStr = JSON.stringify(OBJ)
+      sessionStorage.setItem('routerParams', jsonStr)
+      this.$router.push({ path: '/app/discovery/radio-card-detail' })
     }
   }
 }
 </script>
 
-<style scope="less" scoped>
+<style lang="less" scoped>
 .vip-width {
   margin: 10px 0 !important;
   width: 100%;
@@ -681,6 +846,8 @@ export default {
   background:rgba(245,247,248,1);
   border-radius:21px;
   padding: 8px 24px;
+  /* color:#ffffff;
+  background:linear-gradient(90deg,rgba(136,192,0,1) 0%,rgba(214,236,81,1) 100%); */
 }
 .have-no-course {
   cursor: pointer;
@@ -703,32 +870,6 @@ export default {
   background-image: url('../../../../../static/images/subscibe.svg');
 }
 
-.course .subscription .share {
-  display: flex;
-}
-.course .subscription .share .li {
-  width: 26px;
-  height: 26px;
-  background: pink;
-  cursor: pointer;
-  margin-right: 11px;
-}
-.course .subscription .share .weixin {
-  background: url('../../../../../static/images/discovery/radio-play.png') no-repeat center;
-  background-size: cover;
-}
-.course .subscription .share .weibo {
-  background: url('../../../../../static/images/discovery/radio-play.png') no-repeat center;
-  background-size: cover;
-}
-.course .subscription .share .friend {
-  background: url('../../../../../static/images/discovery/radio-play.png') no-repeat center;
-  background-size: cover;
-}
-.course .subscription .share .qq {
-  background: url('../../../../../static/images/discovery/radio-play.png') no-repeat center;
-  background-size: cover;
-}
 .radio-left .apply-vip {
   width: 880px;
   height: 60px;
@@ -927,7 +1068,41 @@ export default {
   background-color: #ffffff;
   /* margin-top: 25px; */
   border-radius: 3px;
-  padding: 30px 40px 44px;
+  padding: 30px 40px 36px;
+}
+.course-list {
+  .page {
+    width: 100%;
+    .pagelist {
+      width: 100%;
+      text-align: center;
+      padding-top: 47px;
+      span, .jump {
+        font-size:14px;
+        font-family:PingFangSC-Regular;
+        font-weight:400;
+        color:rgba(51,51,51,1);
+        text-align: center;
+        line-height: 16px;
+        margin: 0 19px 0 0;
+        &:hover {
+          color: #0581D1FF;
+        }
+      }
+      .bgprimary {
+        cursor: default;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        color: #fff;
+        background: #2A9FE4FF;
+        border-radius: 2px;
+      }
+      .jump.disabled {
+        pointer-events: none;
+      }
+    }
+  }
 }
 
 .radio-left .course-list .title {
@@ -938,7 +1113,10 @@ export default {
   padding-bottom: 15px;
   border-bottom: 1px solid #EAEAEA;
 }
-
+.radio-left .course-list .course-card-box {
+  width: 100%;
+  height: 100%;
+}
 .radio-left .course-list .course-item {
   position: relative;
   display: flex;
@@ -1011,16 +1189,26 @@ export default {
 }
 
 .radio-left .course-list .course-item .course-title {
+  display: inline-block;
   font-size:14px;
   font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:rgba(51,51,51,1);
-  /* width: 160px; */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   display: flex;
   align-items: center;
+}
+.radio-left .course-list .course-item .course-title .card-title {
+  display: inline-block;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.radio-left .course-list .course-item .course-title .card-title:hover {
+  color: #2A9FE4;
 }
 .radio-left .course-list .course-item .course-title .audition {
   font-size:11px;

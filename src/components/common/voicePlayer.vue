@@ -158,7 +158,7 @@
             <li class="clearfix"
                 :class="{'current': index === curIndex}"
                 v-for="(card, index) in radioList"
-                :key="index" @click="goPlay(index)">
+                :key="index" @click="goPlay(card.list_order)">
               <div class="triangle"></div>
               <div class="col-content">
                 <div class="col1" v-text="index + 1"></div>
@@ -244,10 +244,10 @@ export default {
     Bus.$on('radioPlay', () => {
       this.play()
     })
-    Bus.$on('radioPlayList', (index) => {
-      console.log('========>', index)
-      this.curIndex = index
-      this.goPlay(index)
+    Bus.$on('radioPlayList', (order) => {
+      console.log('========>', order)
+      this.curIndex = order - 1
+      this.goPlay(order)
     })
     Bus.$on('radioPause', () => {
       this.pause()
@@ -355,8 +355,6 @@ export default {
       let radio = this.radioDetail.course_info
       console.log('radio', radio)
       console.log('this.curRadio', this.curRadio)
-      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
-      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
       console.log('===>', this.curIndex)
       if (!this.userInfo && this.curIndex > 2) {
         Bus.$emit('showGoLoginBox')
@@ -381,6 +379,8 @@ export default {
         this.curIndex = 0
         this.playRadio()
       }
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
       this.playRadio()
     },
     // 播放按钮
@@ -480,13 +480,16 @@ export default {
       })
     },
     // 点击播放
-    goPlay (index) {
-      this.curIndex = index
-      let order = index + 1
+    goPlay (order) {
+      // this.curIndex = index
+      // let order = index + 1
+      let index = order - 1
       let radio = this.radioDetail.course_info
-      console.log('=====>', index)
+      console.log('=====>', order)
       console.log('播放器中的radio', radio)
-      if (!this.userInfo && index > 2) {
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
+      if (!this.userInfo && index > 3) {
         Bus.$emit('showGoLoginBox')
         this.pause()
         return false
@@ -495,7 +498,6 @@ export default {
         if (parseInt(radio.money) !== 0) { // 收费
           if (this.isVip !== 1) { // 不是会员
             if (index > 2) {
-              index = 0
               if (radio.money_type === 'CNY') {
                 // 人民币提示
                 Bus.$emit('showBuyRadio', this.radioDetail)
@@ -504,11 +506,12 @@ export default {
                 Bus.$emit('showBuyCoinsRadio', radio)
                 Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
               }
+              index = 0
+              return false
             }
           } else { // 是会员
             if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
               if (index > 2) {
-                index = 0
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
                   Bus.$emit('showBuyRadio', this.radioDetail)
@@ -517,6 +520,8 @@ export default {
                   Bus.$emit('showBuyCoinsRadio', radio)
                   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
                 }
+                index = 0
+                return false
               }
             }
           }
@@ -535,6 +540,7 @@ export default {
           this.isPlay = !this.isPlay
         }
       } else {
+        this.curIndex = index
         this.playRadio()
       }
     },

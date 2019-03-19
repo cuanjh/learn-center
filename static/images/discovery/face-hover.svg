@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>表情 默认</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="电台详情-copy" transform="translate(-463.000000, -660.000000)" fill-rule="nonzero">
+            <g id="分组-6" transform="translate(410.000000, 509.000000)">
+                <g id="分组-4" transform="translate(16.000000, 82.000000)">
+                    <g id="表情-默认" transform="translate(37.906250, 70.000000)">
+                        <ellipse id="椭圆形" fill="#2A9FE4" cx="4.546875" cy="7.5" rx="1.515625" ry="1.5"></ellipse>
+                        <ellipse id="椭圆形-copy" fill="#2A9FE4" cx="13.640625" cy="7.5" rx="1.515625" ry="1.5"></ellipse>
+                        <ellipse id="椭圆形" stroke="#2A9FE4" cx="9.09375" cy="9" rx="9.09375" ry="9"></ellipse>
+                        <path d="M5.05208333,11 C5.52125223,12.7260032 7.15834322,14 9.10584905,14 C11.0211901,14 12.6362852,12.767738 13.1354167,11.0851459" id="路径" stroke="#2A9FE4" stroke-linecap="round"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
