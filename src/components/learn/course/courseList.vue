@@ -12,7 +12,7 @@
         <chapter-item
           :currentCourseCode="currentCourseCode"
           @loadChapterInfo="loadChapterInfo"
-          v-show="isShow"
+          v-if="isShow"
           ref="chapterItem"
         />
       </transition>
@@ -23,7 +23,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import $ from 'jquery'
+// import $ from 'jquery'
 import Loading from '../../common/loading.vue'
 import LeftSide from './leftSide.vue'
 import LevelTabs from './levelTabs.vue'
@@ -93,9 +93,10 @@ export default {
           await this.setCurrentChapter(chapterCode)
           this.$refs['chapterItem'].$emit('changeIsShow', true)
         } else {
-          this.showLoading()
+          // this.showLoading()
           this.$refs['chapterItem'].$emit('changeIsHistory', false)
           await this.setCurrentChapter(chapterCode)
+          this.$refs['chapterItem'].$emit('changeIsShow', true)
           await this.getChapterContent()
 
           await this.getProgress(chapterCode)
@@ -104,16 +105,14 @@ export default {
 
           await this.homeworkContent(this.currentChapterCode + '-A8')
 
-          this.hideLoading()
+          // this.hideLoading()
           this.$refs['chapterItem'].$emit('saveHistoryCourseData')
         }
 
         setTimeout(() => {
-          this.$refs['chapterItem'].$emit('changeIsShow', true)
-          let top = $('#' + chapterCode).offset().top - 116
-          $('body,html').animate({ scrollTop: top }, 300, 'linear')
+          // let top = $('#' + chapterCode).offset().top - 116
+          // $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, 0)
-        // $('body,html').scrollTop(top)
       }
     },
     async initData () {
