@@ -483,6 +483,7 @@ const mutations = {
       .forEach((item) => {
         state.curLevelChapters.push(item)
       })
+    console.log(level, state.curLevelChapters)
     localStorage.setItem('curLevelChapters', JSON.stringify(state.curLevelChapters))
     state.curLevel = level
   },

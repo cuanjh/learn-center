@@ -136,8 +136,8 @@ export default {
 
       await this.setCurrentChapter(that.currentChapterCode)
       if ($('#' + that.currentChapterCode).length > 0) {
-        let top = $('#' + that.currentChapterCode).offset().top - 90
-        $('body,html').animate({ scrollTop: top }, 100, 'linear')
+        // let top = $('#' + that.currentChapterCode).offset().top - 90
+        // $('body,html').animate({ scrollTop: top }, 100, 'linear')
       }
 
       await that.getRecord(that.currentChapterCode + '-A0')

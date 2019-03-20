@@ -31,7 +31,9 @@
         </div>
       </div>
       <!-- </transition> -->
-      <div :class="['course-item-detail', {'cur-course': isShow && currentChapterCode == item.code, 'cur-course-shrink': !(isShow && currentChapterCode === item.code)}]">
+      <transition name="expand" mode="out-in">
+      <div class="course-item-detail"
+        v-show="isShow && currentChapterCode == item.code">
         <ul>
           <li class="course-brief">
             <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
@@ -174,6 +176,7 @@
           </li>
         </ul>
       </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -604,14 +607,11 @@ export default {
 </script>
 
 <style scoped>
-  .cur-course {
-    width: 100%;
-    height: 720px;
-    overflow: hidden;
-    animation:myfirst 1s linear;
-    -moz-animation:myfirst 1s linear; /* Firefox */
-    -webkit-animation:myfirst 1s linear; /* Safari and Chrome */
-    -o-animation:myfirst 1s linear; /* Opera */
+  .expand-enter-active {
+    animation: myfirst .3s;
+  }
+  .expand-leave-active {
+    animation: myfirst .1s reverse;
   }
 
   @keyframes myfirst
@@ -621,27 +621,6 @@ export default {
     }
     to {
       height: 720px;
-    }
-  }
-
-  .cur-course-shrink {
-    width: 100%;
-    height: 0px;
-    padding: 0px !important;
-    overflow: hidden;
-    animation:mySecond .3s linear;
-    -moz-animation:mySecond .3s linear; /* Firefox */
-    -webkit-animation:mySecond .3s linear; /* Safari and Chrome */
-    -o-animation:mySecond .3s linear; /* Opera */
-  }
-
-  @keyframes mySecond
-  {
-    from {
-      height: 720px;
-    }
-    to {
-      height: 0px;
     }
   }
 
@@ -655,6 +634,7 @@ export default {
     margin-top: 14px;
     padding: 14px 14px 0 14px;
     border-radius: 5px;
+    overflow: hidden;
   }
 
   .current-learn-course-info{
