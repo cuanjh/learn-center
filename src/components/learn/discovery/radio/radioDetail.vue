@@ -123,7 +123,7 @@
           <div class="course-card-box">
             <div class="course-item" :id="card.card_id" v-for="(card, index) in pageCards" :key="card.card_id">
               <div class="course-play-img">
-                <img v-lazy="card.cover_url" :key="card.cover_url" alt="">
+                <img :src="card.cover_url" alt="">
                 <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo,index, card)">
                   <i class="play"></i>
                 </div>
@@ -248,6 +248,7 @@ export default {
     if (to.name === 'radioDetail') {
       next()
       this.loadData()
+      this.initRadioCardList()
     } else {
       next()
     }
@@ -396,7 +397,7 @@ export default {
         _this.authorInfo = res.result.course_info.author_info
         // _this.cards = res.result.course_info.cards
         _this.comments = res.result.course_info.comments
-        _this.otherRadios = res.result.realated_courses.slice(0, 4)
+        _this.otherRadios = res.result.realated_courses
         _this.subscibenoInfo = res.result.relation
         Bus.$emit('shareCardContent', _this.courseInfo)
       })
