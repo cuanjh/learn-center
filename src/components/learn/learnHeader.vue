@@ -226,7 +226,7 @@ export default {
         cookie.delCookieTalkmate('user_id')
         cookie.delCookieTalkmate('verify')
         this.updateIsLogin('0')
-        this.$router.push({ path: '/' })
+        window.location.href = 'http://www.talkmate.com'
       })
     },
     changeCourseCode (courseCode) {
