@@ -80,27 +80,8 @@
                 <span>扫一扫下载全球说App</span>
               </div>
             </div>
-            <div class="flicking" v-show="false">
-              <p><span>扫一扫下载全球说App</span></p>
-              <div class="third-party">
-                <div class="weixin">
-                  <i></i>
-                  <!-- <div class="weixin-img"></div> -->
-                </div>
-                <div class="weibo">
-                  <i></i>
-                  <!-- <div class="weibo-img"></div> -->
-                </div>
-                <div class="friend">
-                  <i></i>
-                  <!-- <div class="friend-img"></div> -->
-                </div>
-                <div class="qq">
-                  <i></i>
-                  <!-- <div class="qq-img"></div> -->
-                </div>
-              </div>
-            </div>
+            <!-- 分享 -->
+            <share-box :type="type"/>
           </div>
         </div>
       </div>
@@ -195,10 +176,12 @@ import BookCaseInfo from './bookCaseInfo.vue'
 import BookCaseRadios from './bookCaseRadios.vue'
 import BookCaseCountry from './bookCaseCountry.vue'
 import Cookie from '../../../tool/cookie'
+import ShareBox from '../../common/shareBox'
 
 export default {
   data () {
     return {
+      type: '3',
       userId: '',
       showRadioPlay: false,
       showMorePage: 0,
@@ -254,7 +237,8 @@ export default {
     BookCaseInfo,
     BookCaseRadios,
     BookCaseCountry,
-    NavComp
+    NavComp,
+    ShareBox
   },
   created () {
   },
@@ -380,9 +364,11 @@ export default {
             _this.langInfoObj[item]['info'] = res.langInfo[item]['info']
           }
         }
+        console.log('========>', _this.langInfoObj)
         _this.courseInfo = res.courseInfo
         _this.allCountryLists = res.countryInfo
         _this.countryLists = _this.allCountryLists.slice(0, 9)
+        Bus.$emit('shareCardContent', _this.courseInfo)
         console.log('allCountryLists,countryLists', _this.allCountryLists, _this.countryLists)
         _this.resourceInfoRadios = res.resourceInfo.radios
         console.log('====>', res.resourceInfo.page)
@@ -601,84 +587,20 @@ export default {
         .add-btn {
           width: 100%;
           .img-cont {
-            padding: 36px 0 0;
+            padding: 24px 0 20px;
             text-align: center;
             .img {
-              width: 120px;
-              height: 120px;
+              width: 67px;
+              height: 66px;
               background: url('../../../../static/images/qrcode.png') no-repeat center;
               background-size: cover;
               margin: 0 auto;
-              margin-bottom: 36px;
+              margin-bottom: 10px;
             }
             span {
               font-size: 12px;
               color: #7E929FFF;
               line-height: 12px;
-            }
-          }
-        }
-        // 第三方登录
-        .flicking {
-          padding-top: 10px;
-          p {
-            font-size:12px;
-            font-family:PingFang-SC-Medium;
-            font-weight:500;
-            color:rgba(186,195,205,1);
-            text-align: center;
-          }
-          .third-party {
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            margin-top: 26px;
-            i {
-              cursor: pointer;
-              display: inline-block;
-              width: 30px;
-              height: 30px;
-            }
-            .weixin {
-              position: relative;
-              i {
-                background: url('../../../../static/images/authLogin/weixin.svg') no-repeat center;
-                background-size: cover;
-              }
-              // &:hover .weixin-img {
-              //   display: block;
-              // }
-              // .weixin-img {
-              //   display: none;
-              //   position: absolute;
-              //   left: -31px;
-              //   top: 36px;
-              //   width: 100px;
-              //   height: 100px;
-              //   background: url('https://course-assets1.talkmate.com/course/icons/CHI-3x.webp?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1') no-repeat center;
-              //   background-size: cover;
-              // }
-            }
-            .weibo {
-              position: relative;
-              i {
-                background: url('../../../../static/images/authLogin/weixin.svg') no-repeat center;
-                background-size: cover;
-              }
-            }
-            .friend {
-              position: relative;
-              i {
-                background: url('../../../../static/images/authLogin/weixin.svg') no-repeat center;
-                background-size: cover;
-              }
-            }
-            .qq {
-              position: relative;
-              i {
-                background: url('../../../../static/images/authLogin/weixin.svg') no-repeat center;
-                background-size: cover;
-              }
             }
           }
         }

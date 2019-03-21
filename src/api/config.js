@@ -84,6 +84,9 @@ export default {
   radioListsApi: '/disv1/radio/list', // 发现，电台，更多电台列表
   radioDetailApi: '/topic_course/detail/<course_code>/', // 用户电台明细
   radioCardListApi: '/user_course/card_list/{course_code}/{list_order}/{page}/{pagesize}', // 课程卡片列表接口
+  radioCardDetailApi: '/user_course/get_course_card_detail', // 课程卡片详情接口
+  radioCardCommentListsApi: '/user_course/get_more_course_card_comments', // 课程卡片列表接口
+  radioCommentCardApi: '/user_course/comment_course_card', // 课程卡片评论接口
   radioAuthorDetailApi: '/feedv1/partner/detail', // 电台作者详情接口
   radioRelationFollow: '/relation/follow', // 关注接口
   radioRelationCancel: '/relation/cancel', // 取消关注接口

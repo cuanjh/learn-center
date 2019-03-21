@@ -276,6 +276,18 @@ const actions = {
       .replace('{pagesize}', params.pageSize)
     return httpLogin(api)
   },
+  // 获取电台课程卡片详情
+  getRadioCardDetail ({commit}, params) {
+    return httpLogin(config.radioCardDetailApi, params)
+  },
+  // 获取电台卡片详情评论列表
+  getRadioCardCommentLists ({commit}, params) {
+    return httpLogin(config.radioCardCommentListsApi, params)
+  },
+  // 评论课程卡片
+  getRadioCommentCard ({commit}, params) {
+    return httpLogin(config.radioCommentCardApi, params)
+  },
   // 作者详情
   getAuthorDetail ({ commit }, params) {
     return httpLogin(config.radioAuthorDetailApi, params)
