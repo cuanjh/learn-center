@@ -62,8 +62,8 @@ window._bd_share_main.F.module("trans/trans_weixin", function (n, i) {
         r = (a - t) / 2 + n,
         c = (d - i) / 2;
       var offset = $('.bds_weixin').offset()
-      c = offset.left - 85;
-      r = offset.top - 162;
+      c = offset.left - 81;
+      r = offset.top - 140;
       r = 0 > r ? 0 : r, c = 0 > c ? 0 : c, o.width(i).height(t).css({
         left: c,
         top: r

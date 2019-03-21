@@ -5,7 +5,7 @@
         <ul class="gb_resItms">
           <li>
             <!--  @mouseenter=""  -->
-            <a title="分享到微信" href="javascript:;" class="bds_weixin" data-cmd="weixin" @mouseenter="isWeixinShare(shareCourse)" >
+            <a title="分享到微信" href="javascript:;" class="bds_weixin" data-cmd="weixin" @click="shareCourseCard(shareCourse)" @mouseleave="leaveWX()">
             </a>
           </li>
           <li> <a title="分享到新浪微博" href="javascript:;" class="bds_tsina" data-cmd="tsina" @click="shareCourseCard(shareCourse)"></a></li>
@@ -18,7 +18,7 @@
 </template>
 <script>
 import Bus from '../../bus.js'
-// import $ from 'jquery'
+import $ from 'jquery'
 import cookie from '../../tool/cookie'
 export default {
   props: ['type'], // 1: 电台详情分享 2: 电台卡片分享 3: 官方课程详情分享
@@ -46,9 +46,8 @@ export default {
     console.log('type', this.type)
   },
   methods: {
-    isWeixinShare (course) {
-      console.log('ooooooo')
-      this.shareCourseCard(course)
+    leaveWX () {
+      $('#bdshare_weixin_qrcode_dialog').hide()
     },
     shareCourseCard (course) {
       console.log('course', course)
