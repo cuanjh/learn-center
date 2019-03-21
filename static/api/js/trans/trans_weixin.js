@@ -5,7 +5,7 @@ window._bd_share_main.F.module("trans/trans_weixin", function (n, i) {
     c = {},
     p = n("base/tangram").T,
     u = (n("conf/const").URLS, function (n) {
-      var i = Math.round(96 / n.length);
+      var i = Math.round(70 / n.length);
       i = 2 > i ? 2 : i, r = i * n.length;
       var e = '<table style="direction:ltr;border: 0; width:' + r + 'px; border-collapse: collapse;background-color:#fff;margin:0 auto;" align="center">',
         o = [e],
@@ -41,7 +41,7 @@ window._bd_share_main.F.module("trans/trans_weixin", function (n, i) {
     h = function () {
       if (e = p("#" + d), o = p("#" + d + "_bg"), e.length < 1) {
         var n = '<iframe id="' + d + '_bg" class="bd_weixin_popup_bg"></iframe>',
-          i = ['<div id="' + d + '" class="bd_weixin_popup">', '<div class="bd_weixin_popup_head">', "<span>分享到微信朋友圈</span>", '<a href="#" onclick="return false;" class="bd_weixin_popup_close">&times;</a>', "</div>", '<div id="' + d + '_qr" class="bd_weixin_popup_main"></div>', '<div class="bd_weixin_popup_foot">打开微信，点击底部的“发现”，<br>使用“扫一扫”即可将网页分享至朋友圈。</div>', "</div>"].join("");
+          i = ['<div id="' + d + '" class="bd_weixin_popup">', '<div class="bd_weixin_popup_head">', "<span>分享到微信朋友圈</span>", '<a href="#" onclick="return false;" class="bd_weixin_popup_close">&times;</a>', "</div>", '<div id="' + d + '_qr" class="bd_weixin_popup_main"></div>', '<div class="bd_weixin_popup_foot">打开微信“扫一扫”<br>分享给朋友或到<br>朋友圈。</div>', "</div>"].join("");
         o = p(n).appendTo("body"), e = p(i).appendTo("body"), l()
       }
       t = e.find("#" + d + "_qr"), b()
@@ -62,8 +62,8 @@ window._bd_share_main.F.module("trans/trans_weixin", function (n, i) {
         r = (a - t) / 2 + n,
         c = (d - i) / 2;
       var offset = $('.bds_weixin').offset()
-      c = offset.left - 80;
-      r = offset.top + 40;
+      c = offset.left - 85;
+      r = offset.top - 162;
       r = 0 > r ? 0 : r, c = 0 > c ? 0 : c, o.width(i).height(t).css({
         left: c,
         top: r

@@ -4,7 +4,8 @@
       <div class="bdsharebuttonbox">
         <ul class="gb_resItms">
           <li>
-            <a title="分享到微信" href="javascript:;" class="bds_weixin" data-cmd="weixin" @click="shareCourseCard(shareCourse)" >
+            <!--  @mouseenter=""  -->
+            <a title="分享到微信" href="javascript:;" class="bds_weixin" data-cmd="weixin" @mouseenter="isWeixinShare(shareCourse)" >
             </a>
           </li>
           <li> <a title="分享到新浪微博" href="javascript:;" class="bds_tsina" data-cmd="tsina" @click="shareCourseCard(shareCourse)"></a></li>
@@ -45,6 +46,10 @@ export default {
     console.log('type', this.type)
   },
   methods: {
+    isWeixinShare (course) {
+      console.log('ooooooo')
+      this.shareCourseCard(course)
+    },
     shareCourseCard (course) {
       console.log('course', course)
       setTimeout(() => {
