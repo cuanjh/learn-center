@@ -313,6 +313,7 @@ export default {
   height: 80px;
   border-radius: 4px;
   background-color: #E8E8E8;
+  object-fit: cover;
 }
 .play {
   position: absolute;

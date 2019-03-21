@@ -43,10 +43,10 @@
               </a>
             </li>
             <li>
-              <div class="zhifubao" @click="purchase()">
+              <a class="zhifubao" @click="purchase()">
                 <i></i>
                 <span>ZhiFuBao payment</span>
-              </div>
+              </a>
             </li>
           </ul>
         </div>
@@ -66,8 +66,8 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      ckeckVal: false,
-      message: '支付宝协议《xxxx-用户协议》支付后即可申请发票'
+      ckeckVal: true,
+      message: '支付即同意《xxxx-用户协议》支付后即可申请发票'
     }
   },
   mounted () {
@@ -117,7 +117,6 @@ export default {
 <style lang="less" scoped>
 .user-buy {
   width: 100%;
-  background: pink;
   .user-content {
     width: 1200px;
     margin: 20px auto 30px;
@@ -248,8 +247,6 @@ export default {
           li {
             width:300px;
             height:70px;
-            background:rgba(126,211,33,1);
-            border-radius:8px;
             margin-right: 50px;
             span {
               font-size:16px;
@@ -260,11 +257,12 @@ export default {
               margin-left: 20px;
             }
             .weixin {
-              cursor: pointer;
               width: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+              background:rgba(126,211,33,1);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              border-radius:8px;
               i {
                 display: inline-block;
                 width: 35px;
@@ -274,12 +272,15 @@ export default {
               }
             }
             .zhifubao {
-              cursor: pointer;
               width: 100%;
               display: flex;
               justify-content: center;
               align-items: center;
-              background: #2A9FE4FF;
+              background:#2A9FE4;
+              border-radius:8px;
+              &:hover {
+                background:#3FADEF;
+              }
               i {
                 display: inline-block;
                 width: 38px;

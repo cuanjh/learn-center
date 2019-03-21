@@ -30,7 +30,7 @@
                   <ul>
                     <li v-for='(item, index) in items' :key="index">
                       <div class="session">
-                        <div class="icon"></div>
+                        <div class="icon-content"><i class="icon"></i></div>
                         <div class="title"><span>{{ item.red }}</span></div>
                       </div>
                       <div class="pitch">
@@ -206,6 +206,7 @@ export default {
   mounted () {
     this.getMemberProductsList()
     console.log('------>', this.productList)
+    console.log('会员功能', this.items)
   },
   computed: {
     ...mapState({
@@ -328,30 +329,45 @@ export default {
                   font-family:PingFangSC-Semibold;
                   font-weight:600;
                   color:rgba(51,51,51,1);
+                  padding-right: 9px;
                   span:nth-child(1) {
-                    margin-right: 70px;
+                    margin-right: 84px;
                   }
                 }
               }
               .list-items {
                 width: 100%;
                 margin-top: 42px;
+                height: 375px;
+                overflow-y: scroll;
                 ul {
-                  height: 375px;
-                  overflow:hidden;
                   li {
                     display: flex;
                     justify-content: space-between;
                     margin-bottom: 14px;
+                    align-items: center;
                     .session {
                       display: flex;
                       width: 60%;
-                      .icon {
+                      align-items: center;
+                      .icon-content {
+                        position: relative;
                         width: 34px;
                         height: 34px;
-                        background: url('../../../../static/images/learn/learn-diqiu.svg') no-repeat center;
-                        background-size: cover;
                         margin-right: 20px;
+                        i {
+                          display: inline-block;
+                          position: absolute;
+                          top: 50%;
+                          left: 50%;
+                          transform: translate(-50%, -50%);
+                          width: 20px;
+                          height: 20px;
+                          background-image: url('../../../../static/images/learn/learn-diqiu.svg');
+                          background-position: center;
+                          background-repeat: no-repeat;
+                          background-size: cover;
+                        }
                       }
                       .title {
                         font-size:14px;
@@ -379,30 +395,79 @@ export default {
                     }
                   }
                   li:nth-child(1) .session .icon{
-                    background: url('../../../../static/images/learn/learn-diqiu.svg') no-repeat center;
+                    background-image: url('../../../../static/images/learn/learn-diqiu.svg');
                   }
                   li:nth-child(2) .session .icon{
-                    background: url('../../../../static/images/learn/learn-youxian.svg') no-repeat center;
+                    background-image: url('../../../../static/images/learn/learn-youxian.svg');
                   }
                   li:nth-child(3) .session .icon{
-                    background: url('../../../../static/images/learn/learn-tingli.svg') no-repeat center;
+                    width: 17px;
+                    height: 14px;
+                    background-image: url('../../../../static/images/learn/learn-tingli.svg');
                   }
                   li:nth-child(4) .session .icon{
-                    background: url('../../../../static/images/learn/learn-kouyu.svg') no-repeat center;
+                    background-image: url('../../../../static/images/learn/learn-kouyu.svg');
                   }
                   li:nth-child(5) .session .icon{
-                    background: url('../../../../static/images/learn/learn-yuedu.svg') no-repeat center;
+                    width: 18px;
+                    height: 16px;
+                    background-image: url('../../../../static/images/learn/learn-yuedu.svg');
                   }
                   li:nth-child(6) .session .icon{
-                    background: url('../../../../static/images/learn/learn-gangbi.svg') no-repeat center;
+                    background-image: url('../../../../static/images/learn/learn-gangbi.svg');
                   }
                   li:nth-child(7) .session .icon{
-                    background: url('../../../../static/images/learn/learn-dengpao.svg') no-repeat center;
+                    width: 17px;
+                    background-image: url('../../../../static/images/learn/learn-dengpao.svg');
                   }
                   li:nth-child(8) .session .icon{
-                    background: url('../../../../static/images/learn/learn-tingshuo.svg') no-repeat center;
+                    width: 19px;
+                    background-image: url('../../../../static/images/learn/learn-tingshuo.svg');
+                  }
+                  li:nth-child(9) .session .icon{
+                    height: 17px;
+                    background-image: url(../../../../static/images/learn/learn-huangguan-red.svg);
+                  }
+                  li:nth-child(10) .session .icon{
+                    background-image: url(../../../../static/images/learn/learn-jiangpai.svg);
+                  }
+                  li:nth-child(11) .session .icon{
+                    background-image: url(../../../../static/images/learn/learn-pengyouquan.svg);
+                  }
+                  li:nth-child(12) .session .icon{
+                    background-image: url(../../../../static/images/learn/learn-fanyi.svg);
+                  }
+                  li:nth-child(13) .session .icon{
+                    width: 21px;
+                    height: 16px;
+                    background-image: url(../../../../static/images/learn/learn-xiazai.svg);
+                  }
+                  li:nth-child(14) .session .icon{
+                    width: 22px;
+                    height: 16px;
+                    background-image: url(../../../../static/images/learn/learn-pingfen.svg);
+                  }
+                  li:nth-child(15) .session .icon{
+                    width: 24px;
+                    height: 13px;
+                    background-image: url(../../../../static/images/learn/learn-diy.svg);
                   }
                 }
+              }
+              /*滚动条样式*/
+              .list-items::-webkit-scrollbar {/*滚动条整体样式*/
+                width: 8px;     /*高宽分别对应横竖滚动条的尺寸*/
+                height: 4px;
+              }
+              .list-items::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+                border-radius: 5px;
+                -webkit-box-shadow: inset 0 0 5px #fff;
+                background: #fff;
+              }
+              .list-items::-webkit-scrollbar-track {/*滚动条里面轨道*/
+                -webkit-box-shadow: inset 0 0 5px rgba(255,255,255,1);
+                border-radius: 0;
+                background: rgba(255,255,255,1);
               }
             }
           }

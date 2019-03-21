@@ -222,6 +222,8 @@ export default {
         localStorage.removeItem('device_id')
         localStorage.removeItem('user_id')
         localStorage.removeItem('verify')
+        localStorage.removeItem('currentRadioList')
+        localStorage.removeItem('radioObj')
         this.$router.push({ path: '/' })
         this.updateIsLogin('0')
       })
