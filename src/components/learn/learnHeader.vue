@@ -225,8 +225,10 @@ export default {
         cookie.delCookieTalkmate('device_id')
         cookie.delCookieTalkmate('user_id')
         cookie.delCookieTalkmate('verify')
+        localStorage.removeItem('currentRadioList')
+        localStorage.removeItem('radioObj')
         this.updateIsLogin('0')
-        this.$router.push({ path: '/' })
+        window.location.href = 'http://www.talkmate.com'
       })
     },
     changeCourseCode (courseCode) {

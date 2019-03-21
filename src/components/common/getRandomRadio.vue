@@ -30,7 +30,7 @@
                 </ul>
               </vueSeamlessScroll>
             </div>
-            <div class="no-cards" v-if="radioCardsLists === null">
+            <div class="no-cards" v-else>
               <span>暂时没有数据~~~</span>
             </div>
           </div>
@@ -187,21 +187,18 @@ export default {
             text-align: center;
             z-index: 2;
             padding-right: 14px;
-            .play {
+            i {
+              display: inline-block;
               width: 36px;
               height: 36px;
-              background-image: url("../../../static/images/tuijianradio.svg");
               background-repeat: no-repeat;
               background-size: cover;
-              display: inline-block;
+            }
+            .play {
+              background-image: url("../../../static/images/tuijianradio.svg");
             }
             .pause {
-              width: 36px;
-              height: 36px;
               background-image: url("../../../static/images/tuijianradioplay.svg");
-              background-repeat: no-repeat;
-              background-size: cover;
-              display: inline-block;
             }
           }
           .swiper-list {

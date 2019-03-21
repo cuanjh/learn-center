@@ -51,6 +51,11 @@ var copyList = [
 		from: _from + '/images/learnIndex/map',
     to: _to + '/images/learnIndex/map',
 		toType: 'dir'
+	},
+	{
+		from: _from + '/api',
+    to: _to + '/api',
+		toType: 'dir'
 	}
 ]
 module.exports = copyList;

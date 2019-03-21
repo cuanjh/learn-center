@@ -665,9 +665,10 @@ export default {
     float:left;
     width:168px;
     height:80px;
-    border-radius: 2.73px;
+    border-radius: 3px;
     overflow:hidden;
     position:relative;
+    background-color: #F5F7F8;
   }
 
   .current-learn-course-flag img{

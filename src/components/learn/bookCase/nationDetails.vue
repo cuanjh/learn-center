@@ -178,7 +178,7 @@ export default {
       subscribeCoursesStr: state => state.course.subscribeCoursesStr
     }),
     naInfo () {
-      let nationInfos = JSON.parse(localStorage.getItem('nationInfos'))
+      let nationInfos = JSON.parse(localStorage.getItem('routerParams'))
       return nationInfos
     },
     countryCode () {
