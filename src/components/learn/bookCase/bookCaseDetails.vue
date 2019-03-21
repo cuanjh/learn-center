@@ -81,7 +81,7 @@
               </div>
             </div>
             <!-- 分享 -->
-            <share-box v-show="false"></share-box>
+            <share-box :type="type"/>
           </div>
         </div>
       </div>
@@ -181,6 +181,7 @@ import ShareBox from '../../common/shareBox'
 export default {
   data () {
     return {
+      type: '3',
       userId: '',
       showRadioPlay: false,
       showMorePage: 0,
@@ -363,9 +364,11 @@ export default {
             _this.langInfoObj[item]['info'] = res.langInfo[item]['info']
           }
         }
+        console.log('========>', _this.langInfoObj)
         _this.courseInfo = res.courseInfo
         _this.allCountryLists = res.countryInfo
         _this.countryLists = _this.allCountryLists.slice(0, 9)
+        Bus.$emit('shareCardContent', _this.courseInfo)
         console.log('allCountryLists,countryLists', _this.allCountryLists, _this.countryLists)
         _this.resourceInfoRadios = res.resourceInfo.radios
         console.log('====>', res.resourceInfo.page)

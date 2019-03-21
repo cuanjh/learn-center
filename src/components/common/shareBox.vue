@@ -4,12 +4,12 @@
       <div class="bdsharebuttonbox">
         <ul class="gb_resItms">
           <li>
-            <a title="分享到微信" href="#" class="bds_weixin" data-cmd="weixin" @click="shareWeixin(shareRadio)" >
+            <a title="分享到微信" href="javascript:;" class="bds_weixin" data-cmd="weixin" @click="shareCourseCard(shareCourse)" >
             </a>
           </li>
-          <li> <a title="分享到新浪微博" href="#" class="bds_tsina" data-cmd="tsina" @click="shareWeibo(shareRadio)"></a></li>
-          <li> <a title="分享到QQ好友" href="#" class="bds_sqq" data-cmd="sqq" @click="shareQQ(shareRadio)"></a></li>
-          <li> <a title="分享到QQ空间" href="#" class="bds_qzone" data-cmd="qzone" @click="shareSpace(shareRadio)"></a></li>
+          <li> <a title="分享到新浪微博" href="javascript:;" class="bds_tsina" data-cmd="tsina" @click="shareCourseCard(shareCourse)"></a></li>
+          <li> <a title="分享到QQ好友" href="javascript:;" class="bds_sqq" data-cmd="sqq" @click="shareCourseCard(shareCourse)"></a></li>
+          <li> <a title="分享到QQ空间" href="javascript:;" class="bds_qzone" data-cmd="qzone" @click="shareCourseCard(shareCourse)"></a></li>
         </ul>
       </div>
     </div>
@@ -23,7 +23,7 @@ export default {
   props: ['type'],
   data () {
     return {
-      shareRadio: {}
+      shareCourse: {}
     }
   },
   beforeCreate () {
@@ -32,8 +32,8 @@ export default {
     Bus.$on('shareCardContent', (shareCard) => {
       let userId = cookie.getCookie('user_id')
       console.log('当前要分享的卡片', shareCard)
-      this.shareRadio = shareCard
-      console.log('=====>', this.shareRadio)
+      this.shareCourse = shareCard
+      console.log('=====>', this.shareCourse)
       if (userId) {
         setTimeout(() => {
           this.setShare(shareCard)
@@ -45,29 +45,13 @@ export default {
     console.log('type', this.type)
   },
   methods: {
-    shareWeixin (radio) {
-      console.log('radio', radio)
+    shareCourseCard (course) {
+      console.log('course', course)
       setTimeout(() => {
-        this.setShare(radio)
+        this.setShare(course)
       }, 0)
     },
-    shareWeibo (radio) {
-      console.log('radio', radio)
-      setTimeout(() => {
-        this.setShare(radio)
-      }, 0)
-    },
-    shareQQ (radio) {
-      setTimeout(() => {
-        this.setShare(radio)
-      }, 0)
-    },
-    shareSpace (radio) {
-      setTimeout(() => {
-        this.setShare(radio)
-      }, 0)
-    },
-    setShare (radio) {
+    setShare (course) {
       let userId = cookie.getCookie('user_id')
       if (!userId) {
         Bus.$emit('showGoLoginBox')
@@ -80,11 +64,30 @@ export default {
           "common":{
             "bdSnsKey":{},
             "bdDesc": "全球说电台课程", //分享时的标题
-            "bdText":"我在听#全球说#配套课程"+radio.module_name+"，随时随地学语言，走到哪里，学到哪里！",//分享时的文本摘要
+            "bdText":"我在听#全球说#配套课程"+course.module_name+"，随时随地学语言，走到哪里，学到哪里！",//分享时的文本摘要
             "bdMini":"1",
             "bdMiniList":false,
-            "bdPic":radio.cover, //此处为分享时自带的图片
-            "bdUrl":'http://share.talkmate.com/course/' + radio.code, //此处为后台要进行分享的内容的定义
+            "bdPic":course.cover, //此处为分享时自带的图片
+            "bdUrl":'http://share.talkmate.com/course/' + course.code, //此处为后台要进行分享的内容的定义
+            "bdStyle":"1",
+            "bdSize":"24",
+          },
+          "share":{},
+          "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
+          }
+        }
+      } else if (this.type === '2') {
+        window._bd_share_config = {
+          "common":{
+            "bdSnsKey":{},
+            "bdDesc": "全球说电台课程", //分享时的标题
+            "bdText":"我在听#全球说#配套课程"+course.description+"，随时随地学语言，走到哪里，学到哪里！",//分享时的文本摘要
+            "bdMini":"1",
+            "bdMiniList":false,
+            "bdPic":course.cover_url, //此处为分享时自带的图片
+            "bdUrl":'http://share.talkmate.com/card/' + course.course_code + '/' + course.card_id, //此处为后台要进行分享的内容的定义
             "bdStyle":"1",
             "bdSize":"24",
           },
@@ -96,14 +99,15 @@ export default {
         }
       } else {
         window._bd_share_config = {
+          // 我从#全球说-世界语言地图#中推荐了乌尔都语，传承语言文化，扩充语言知识！我在全球说，跟随世界语言地图学习多样语言，传承多样文化
           "common":{
             "bdSnsKey":{},
-            "bdDesc": "全球说电台课程", //分享时的标题
-            "bdText":"我在听#全球说#配套课程"+radio.description+"，随时随地学语言，走到哪里，学到哪里！",//分享时的文本摘要
+            "bdDesc": "全球说-WAL世界语言地图", //分享时的标题
+            "bdText":"我从#全球说-世界语言地图#中推荐了"+course.name+"，传承语言文化，扩充语言知识！我在全球说，跟随世界语言地图学习多样语言，传承多样文化",//分享时的文本摘要
             "bdMini":"1",
             "bdMiniList":false,
-            "bdPic":radio.cover_url, //此处为分享时自带的图片
-            "bdUrl":'http://share.talkmate.com/card/' + radio.course_code + '/' + radio.card_id, //此处为后台要进行分享的内容的定义
+            "bdPic":course.flag, //此处为分享时自带的图片
+            "bdUrl":'http://share.talkmate.com/course_new/' + course.course_code, //此处为后台要进行分享的内容的定义
             "bdStyle":"1",
             "bdSize":"24",
           },

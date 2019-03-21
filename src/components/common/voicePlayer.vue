@@ -485,7 +485,7 @@ export default {
       // let order = index + 1
       let index = order - 1
       let radio = this.radioDetail.course_info
-      console.log('=====>', order)
+      console.log('order, index', order, index)
       console.log('播放器中的radio', radio)
       $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
       $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
@@ -531,6 +531,8 @@ export default {
       if (order === this.curRadio.list_order) {
         if (this.isPlay) {
           this.pause()
+          $('#' + this.item.code + ' .gradient-layer-play i').removeClass('pause')
+          $('#' + this.item.code + ' .gradient-layer-play i').addClass('play')
         } else {
           this.playRadio(this.curTime)
           this.isPlay = false
@@ -538,6 +540,8 @@ export default {
             this.end()
           })
           this.isPlay = !this.isPlay
+          $('#' + this.item.code + ' .gradient-layer-play i').removeClass('play')
+          $('#' + this.item.code + ' .gradient-layer-play i').addClass('pause')
         }
       } else {
         this.curIndex = index
