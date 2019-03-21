@@ -20,7 +20,7 @@ import Bus from '../../bus.js'
 // import $ from 'jquery'
 import cookie from '../../tool/cookie'
 export default {
-  props: ['type'],
+  props: ['type'], // 1: 电台详情分享 2: 电台卡片分享 3: 官方课程详情分享
   data () {
     return {
       shareCourse: {}
@@ -72,11 +72,11 @@ export default {
             "bdStyle":"1",
             "bdSize":"24",
           },
-          "share":{},
-          "selectShare":{
-            "bdContainerClass":null,
-            "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
-          }
+          "share":{}
+          // "selectShare":{
+          //   "bdContainerClass":null,
+          //   "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
+          // }
         }
       } else if (this.type === '2') {
         window._bd_share_config = {
@@ -91,11 +91,11 @@ export default {
             "bdStyle":"1",
             "bdSize":"24",
           },
-          "share":{},
-          "selectShare":{
-            "bdContainerClass":null,
-            "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
-          }
+          "share":{}
+          // "selectShare":{
+          //   "bdContainerClass":null,
+          //   "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
+          // }
         }
       } else {
         window._bd_share_config = {
@@ -111,11 +111,11 @@ export default {
             "bdStyle":"1",
             "bdSize":"24",
           },
-          "share":{},
-          "selectShare":{
-            "bdContainerClass":null,
-            "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
-          }
+          "share":{}
+          // "selectShare":{
+          //   "bdContainerClass":null,
+          //   "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
+          // }
         }
       }
       const s = document.createElement('script')
@@ -172,15 +172,5 @@ export default {
       background-image: url('../../../static/images/shareImg/qq-space-hover.svg');
     }
   }
-  .bd_weixin_popup .bd_weixin_popup_foot {
-    position: relative; top: -12px;
-  }
-}
-.bdshare_weixin_qrcode_dialog_bg {
-  width: 262px!important;
-  height: 297px!important;
-  left: 517.5px!important;
-  top: 324.5px!important;
-  display: block!important;
 }
 </style>

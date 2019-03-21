@@ -1,6 +1,7 @@
 <template>
   <div class="course-list">
-    <div class="course-item" v-for="(item, index) in curLevelChapters" :key="index" :id="item.code">
+    <div :class="['course-item']" v-for="(item, index) in curLevelChapters" :key="'item' + index" :id="item.code">
+      <!-- <transition name="fade" mode="out-in"> -->
       <div class="current-learn-course-info"
           :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
           @click="jumpToCourse(item.code)"  v-if="isShow ? currentChapterCode !== item.code : !isShow">
@@ -29,164 +30,164 @@
           </div>
         </div>
       </div>
-      <!-- <transition name="fade" mode="out-in"> -->
-        <div class="course-item-detail" v-if="isShow && currentChapterCode === item.code">
-          <ul>
-            <li class="course-brief">
-              <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
-              <div class="course-brief-shade">
-                <div class="course-brief-title">
-                  <span>课程</span>
-                  <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
+      <!-- </transition> -->
+      <div :class="['course-item-detail', {'cur-course': isShow && currentChapterCode == item.code, 'cur-course-shrink': !(isShow && currentChapterCode === item.code)}]">
+        <ul>
+          <li class="course-brief">
+            <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
+            <div class="course-brief-shade">
+              <div class="course-brief-title">
+                <span>课程</span>
+                <span>{{ parseInt(item.code.split('-')[3].split("").pop()-1)*6 + parseInt(item.code.split('-')[4].split("").pop()) }}</span>
+              </div>
+              <div class="course-brief-describe">{{ item['info']['zh-cn']['describe'] }}</div>
+              <div class="course-brief-progress-title">学习进度：</div>
+              <div class="course-brief-progress-area">
+                <div class="course-brief-progress-bg">
+                  <div class="course-brief-progress" :style="{width: item.progress+'%'}"></div>
                 </div>
-                <div class="course-brief-describe">{{ item['info']['zh-cn']['describe'] }}</div>
-                <div class="course-brief-progress-title">学习进度：</div>
-                <div class="course-brief-progress-area">
-                  <div class="course-brief-progress-bg">
-                    <div class="course-brief-progress" :style="{width: item.progress+'%'}"></div>
-                  </div>
-                  <div class="course-brief-progress-val">
-                    {{ (item.progress ? item.progress : 0)+'%'}}
-                  </div>
-                </div>
-                <div class="course-brief-shrink">
-                  <i class="shrink" @click="switchShow()"></i>
+                <div class="course-brief-progress-val">
+                  {{ (item.progress ? item.progress : 0)+'%'}}
                 </div>
               </div>
-            </li>
-            <li class="course-core">
-              <div class="course-core-name">
-                <span>核心课程</span>
+              <div class="course-brief-shrink">
+                <i class="shrink" @click="switchShow()"></i>
               </div>
-              <div class="course-item-box" v-for="i in 5" :key="i">
-                <a href="javascript:void(0)" @click="startCore('A0' + i, coreData[i]['isActive'])" :to="{ name: 'stage', params: {id: 'A0' + i}}">
-                  <div class="current-course-item">
-                    <div class="course-item-icon">
-                      <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
-                      <div :class="'core' + i"></div>
-                      <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate'] && !coreData[i]['isActive']" class="icon-course-lock"></i>
-                    </div>
-                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] &&  !coreData[i]['isActive']}">核心{{i}}</p>
-                    <p class="course-item-star" v-if="coreData[i]['isCompleted']">
-                      <span class="course-yellow-star"><i v-for="index in coreData[i]['starNum']" :key="index"></i></span>
-                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - coreData[i]['starNum'])" :key="index"></i></span>
-                    </p>
-                    <p class="course-item-progress" v-else>
-                      <span v-text="coreData[i]['completedRate']"></span>
-                    </p>
-                    <div v-show="coreData[i]['completedRate'] && coreData[i]['completedRate'] !== '1'" class="continue-learn-core">
-                      <span>继续学习</span>
-                    </div>
-                  </div>
-                </a>
-                <div class="course-circle-box" v-if="i<5">
-                  <div class="course-core-circle" :class="{'course-core-circle-locked': !coreData[i]['isCompleted'] }" v-for="index in 3" :key="index"></div>
-                </div>
-              </div>
-            </li>
-
-            <li class="course-review">
-              <div class="course-review-name">
-                <span>测试</span>
-              </div>
-              <div class="course-item-box">
-                <a href="javascript:void(0);" @click="startTest(coreData['isCoreCompleted'])">
-                  <div class="current-course-item">
-                    <div class="course-item-icon">
-                      <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
-                      <div class="review-test"></div>
-                      <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
-                    </div>
-                    <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">测试</p>
-                     <p class="course-item-star" v-show="coreData['isCoreCompleted'] && testData['isTestCompleted']">
-                      <span class="course-yellow-star"><i v-for="index in testData['starTestNum']" :key="index"></i></span>
-                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - testData['starTestNum'])" :key="index"></i></span>
-                    </p>
-                    <p class="course-item-progress" v-show="!testData['isTestCompleted']">
-                      <span v-show="coreData['isCoreCompleted'] && !testData['isTestCompleted']" v-text="testData['completedTestRate']"></span>
-                    </p>
-                    <div v-show="testData['completedTestRate'] && testData['completedTestRate'] !== '1'" class="continue-learn-test">
-                      <span>继续学习</span>
-                    </div>
-                  </div>
-                </a>
-                <div class="course-circle-box">
-                  <div class="course-review-circle" :class="{'course-review-circle-locked': !testData['isTestCompleted'] }" v-for="index in 3" :key="index"></div>
-                </div>
-              </div>
-            <div class="course-item-box" style="margin-left: -4px;">
-              <a href="javascript:void(0)" @click="startHomework(coreData['isCoreCompleted'])">
+            </div>
+          </li>
+          <li class="course-core">
+            <div class="course-core-name">
+              <span>核心课程</span>
+            </div>
+            <div class="course-item-box" v-for="i in 5" :key="i">
+              <a href="javascript:void(0)" @click="startCore('A0' + i, coreData[i]['isActive'])" :to="{ name: 'stage', params: {id: 'A0' + i}}">
                 <div class="current-course-item">
                   <div class="course-item-icon">
-                    <canvas width="300" height="300" :id="item.code + '-canvas-A8'"></canvas>
-                    <div class="review-homework"></div>
-                    <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
+                    <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
+                    <div :class="'core' + i"></div>
+                    <i v-show="!coreData[i]['isCompleted'] && !coreData[i]['completedRate'] && !coreData[i]['isActive']" class="icon-course-lock"></i>
                   </div>
-                  <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">作业</p>
-                  <p class="course-item-star"  v-show="coreData['isCoreCompleted']  && homeworkData['isHomeworkCompleted']">
-                    <span class="course-yellow-star"><i v-for="index in homeworkData['starHomeworkNum']" :key="index"></i></span>
-                    <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - homeworkData['starHomeworkNum'])" :key="index"></i></span>
+                  <p class="course-item-title" :class="{'course-item-title-locked': !coreData[i]['completedRate'] &&  !coreData[i]['isActive']}">核心{{i}}</p>
+                  <p class="course-item-star" v-if="coreData[i]['isCompleted']">
+                    <span class="course-yellow-star"><i v-for="index in coreData[i]['starNum']" :key="index"></i></span>
+                    <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - coreData[i]['starNum'])" :key="index"></i></span>
                   </p>
-                  <p class="course-item-progress" v-show="!homeworkData['isHomeworkCompleted']">
-                    <span v-show="coreData['isCoreCompleted'] && !homeworkData['isHomeworkCompleted']" v-text="homeworkData['completedHomeworkRate']"></span>
+                  <p class="course-item-progress" v-else>
+                    <span v-text="coreData[i]['completedRate']"></span>
                   </p>
-                  <div v-show="homeworkData['completedHomeworkRate'] && homeworkData['completedHomeworkRate'] !== '1'" class="continue-learn-test">
+                  <div v-show="coreData[i]['completedRate'] && coreData[i]['completedRate'] !== '1'" class="continue-learn-core">
                     <span>继续学习</span>
                   </div>
                 </div>
               </a>
+              <div class="course-circle-box" v-if="i<5">
+                <div class="course-core-circle" :class="{'course-core-circle-locked': !coreData[i]['isCompleted'] }" v-for="index in 3" :key="index"></div>
+              </div>
             </div>
           </li>
 
-          <li class="course-vip">
-              <div class="course-vip-name">
-                <p>强化</p>
-                <p>(会员专享)</p>
-              </div>
-              <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
-                <a href="javascript:void(0);" @click="jumpVipPage(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'], 'A' + (i + 1))">
-                  <div class="current-course-item">
-
-                    <div class="course-item-icon">
-                      <canvas width="300" height="300" :id="item.code + '-canvas-A' + (i + 1)"></canvas>
-                      <div :class="'vip'+ (i + 1)"></div>
-                      <i v-show="!(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'])" class="icon-vip-lock"></i>
-                    </div>
-                    <div v-show="vipData['A' + (i + 1)]['completedRate'] &&  vipData['A' + (i + 1)]['completedRate'] !== '1'" class="continue-learn-vip">
-                      <span>继续学习</span>
-                    </div>
-                    <p class="course-item-title" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
-                    <p class="course-item-star" v-if="vipData['A' + (i + 1)]['isCompleted']">
-                      <span class="course-yellow-star"><i v-for="index in vipData['A' + (i + 1)]['starNum']" :key="index"></i></span>
-                      <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - vipData['A' + (i + 1)]['starNum'])" :key="index"></i></span>
-                    </p>
-                    <p class="course-item-progress" v-else>
-                      <span v-text="vipData['A' + (i + 1)]['completedRate']"></span>
-                    </p>
+          <li class="course-review">
+            <div class="course-review-name">
+              <span>测试</span>
+            </div>
+            <div class="course-item-box">
+              <a href="javascript:void(0);" @click="startTest(coreData['isCoreCompleted'])">
+                <div class="current-course-item">
+                  <div class="course-item-icon">
+                    <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
+                    <div class="review-test"></div>
+                    <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
                   </div>
-                </a>
-
-                 <div class="course-circle-box" v-if="i<(vipItemList.length-1)">
-                    <div class="course-vip-circle" :class="{'course-vip-circle-locked': !vipData['A' + (i + 1)]['completedRate'] }" v-for="index in 3" :key="index"></div>
+                  <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">测试</p>
+                    <p class="course-item-star" v-show="coreData['isCoreCompleted'] && testData['isTestCompleted']">
+                    <span class="course-yellow-star"><i v-for="index in testData['starTestNum']" :key="index"></i></span>
+                    <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - testData['starTestNum'])" :key="index"></i></span>
+                  </p>
+                  <p class="course-item-progress" v-show="!testData['isTestCompleted']">
+                    <span v-show="coreData['isCoreCompleted'] && !testData['isTestCompleted']" v-text="testData['completedTestRate']"></span>
+                  </p>
+                  <div v-show="testData['completedTestRate'] && testData['completedTestRate'] !== '1'" class="continue-learn-test">
+                    <span>继续学习</span>
                   </div>
+                </div>
+              </a>
+              <div class="course-circle-box">
+                <div class="course-review-circle" :class="{'course-review-circle-locked': !testData['isTestCompleted'] }" v-for="index in 3" :key="index"></div>
               </div>
-            </li>
-          </ul>
-        </div>
-      <!-- </transition> -->
+            </div>
+          <div class="course-item-box" style="margin-left: -4px;">
+            <a href="javascript:void(0)" @click="startHomework(coreData['isCoreCompleted'])">
+              <div class="current-course-item">
+                <div class="course-item-icon">
+                  <canvas width="300" height="300" :id="item.code + '-canvas-A8'"></canvas>
+                  <div class="review-homework"></div>
+                  <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
+                </div>
+                <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">作业</p>
+                <p class="course-item-star"  v-show="coreData['isCoreCompleted']  && homeworkData['isHomeworkCompleted']">
+                  <span class="course-yellow-star"><i v-for="index in homeworkData['starHomeworkNum']" :key="index"></i></span>
+                  <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - homeworkData['starHomeworkNum'])" :key="index"></i></span>
+                </p>
+                <p class="course-item-progress" v-show="!homeworkData['isHomeworkCompleted']">
+                  <span v-show="coreData['isCoreCompleted'] && !homeworkData['isHomeworkCompleted']" v-text="homeworkData['completedHomeworkRate']"></span>
+                </p>
+                <div v-show="homeworkData['completedHomeworkRate'] && homeworkData['completedHomeworkRate'] !== '1'" class="continue-learn-test">
+                  <span>继续学习</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </li>
+
+        <li class="course-vip">
+            <div class="course-vip-name">
+              <p>强化</p>
+              <p>(会员专享)</p>
+            </div>
+            <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
+              <a href="javascript:void(0);" @click="jumpVipPage(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'], 'A' + (i + 1))">
+                <div class="current-course-item">
+
+                  <div class="course-item-icon">
+                    <canvas width="300" height="300" :id="item.code + '-canvas-A' + (i + 1)"></canvas>
+                    <div :class="'vip'+ (i + 1)"></div>
+                    <i v-show="!(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'])" class="icon-vip-lock"></i>
+                  </div>
+                  <div v-show="vipData['A' + (i + 1)]['completedRate'] &&  vipData['A' + (i + 1)]['completedRate'] !== '1'" class="continue-learn-vip">
+                    <span>继续学习</span>
+                  </div>
+                  <p class="course-item-title" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
+                  <p class="course-item-star" v-if="vipData['A' + (i + 1)]['isCompleted']">
+                    <span class="course-yellow-star"><i v-for="index in vipData['A' + (i + 1)]['starNum']" :key="index"></i></span>
+                    <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - vipData['A' + (i + 1)]['starNum'])" :key="index"></i></span>
+                  </p>
+                  <p class="course-item-progress" v-else>
+                    <span v-text="vipData['A' + (i + 1)]['completedRate']"></span>
+                  </p>
+                </div>
+              </a>
+
+                <div class="course-circle-box" v-if="i<(vipItemList.length-1)">
+                  <div class="course-vip-circle" :class="{'course-vip-circle-locked': !vipData['A' + (i + 1)]['completedRate'] }" v-for="index in 3" :key="index"></div>
+                </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import $ from 'jquery'
+// import $ from 'jquery'
 import bus from '../../../bus'
 import cookie from '../../../tool/cookie'
 export default {
   props: ['currentCourseCode', 'item'],
   data () {
     return {
+      flag: true,
       isCoreCompleted: 0,
       chapterProgress: 0,
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
@@ -477,8 +478,8 @@ export default {
           this.isShow = !this.isShow
         } else {
           this.isShow = !this.isShow
-          let top = $('#' + chapterCode).offset().top - 116
-          $('body,html').animate({ scrollTop: top }, 300, 'linear')
+          // let top = $('#' + chapterCode).offset().top - 116
+          // $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }
 
         return false
@@ -489,8 +490,8 @@ export default {
         }
         this.isShow = false
         setTimeout(() => {
-          let top = $('#' + chapterCode).offset().top - 126
-          $('body,html').animate({ scrollTop: top }, 300, 'linear')
+          // let top = $('#' + chapterCode).offset().top - 126
+          // $('body,html').animate({ scrollTop: top }, 300, 'linear')
         }, time)
 
         setTimeout(() => {
@@ -579,11 +580,8 @@ export default {
       }
     },
     draw (id, rate, color) {
-      if (rate === 1) {
-        return
-      }
       if (this.$el && this.$el.querySelector(id)) {
-        rate = (rate === 1) ? 100 : rate
+        rate = (rate === 1) ? 0 : rate
         let canvas = this.$el.querySelector(id)
         let ctx = canvas.getContext('2d')
         let mW = canvas.width
@@ -606,6 +604,47 @@ export default {
 </script>
 
 <style scoped>
+  .cur-course {
+    width: 100%;
+    height: 720px;
+    overflow: hidden;
+    animation:myfirst 1s linear;
+    -moz-animation:myfirst 1s linear; /* Firefox */
+    -webkit-animation:myfirst 1s linear; /* Safari and Chrome */
+    -o-animation:myfirst 1s linear; /* Opera */
+  }
+
+  @keyframes myfirst
+  {
+    from {
+      height: 0px;
+    }
+    to {
+      height: 720px;
+    }
+  }
+
+  .cur-course-shrink {
+    width: 100%;
+    height: 0px;
+    padding: 0px !important;
+    overflow: hidden;
+    animation:mySecond .3s linear;
+    -moz-animation:mySecond .3s linear; /* Firefox */
+    -webkit-animation:mySecond .3s linear; /* Safari and Chrome */
+    -o-animation:mySecond .3s linear; /* Opera */
+  }
+
+  @keyframes mySecond
+  {
+    from {
+      height: 720px;
+    }
+    to {
+      height: 0px;
+    }
+  }
+
   .course-list {
     margin-top: 60px;
     width: 890px;
@@ -614,11 +653,12 @@ export default {
   .course-item {
     background-color:#fff;
     margin-top: 14px;
-    padding: 14px;
+    padding: 14px 14px 0 14px;
     border-radius: 5px;
   }
 
   .current-learn-course-info{
+    margin-bottom: 14px;
     cursor: pointer;
     overflow:hidden;
     /* -webkit-transition: all .3s ease-in-out;
@@ -745,14 +785,14 @@ export default {
     font-weight: bold;
   }
 
-  /* .fade-enter-active, .fade-leave-active {
-    transition: all 1s linear;
+  .fade-enter-active, .fade-leave-active {
+    transition: all .1s linear;
   }
 
   .fade-enter, .fade-leave-to {
-    transform: translateY(-10px);
+    /* transform: translateY(-10px); */
     opacity: 0;
-  } */
+  }
 
   .course-item-detail ul > li:not(:first-child) {
     padding: 24px 24px 0;
@@ -841,7 +881,7 @@ export default {
   }
 
   .course-brief-shade{
-    position: relative;
+    position: absolute;
     height: 100%;
     width: 100%;
     background: rgba(0,0,0,0.40);
@@ -850,6 +890,7 @@ export default {
   }
 
   .course-brief-title{
+    position: relative;
     font-size: 30px;
     color: #ffffff;
     line-height: 48px;
@@ -859,6 +900,7 @@ export default {
   }
 
   .course-brief-describe{
+    position: relative;
     font-size: 18px;
     color: #ffffff;
     line-height: 24px;
@@ -867,6 +909,7 @@ export default {
   }
 
   .course-brief-progress-title{
+    position: relative;
     font-size: 20px;
     color: #ffffff;
     line-height: 24px;
@@ -875,6 +918,7 @@ export default {
   }
 
   .course-brief-progress-area {
+    position: relative;
     margin: 10px 0 0 36px;
     display: inline-flex;
     line-height: 10px;
@@ -903,6 +947,7 @@ export default {
   }
 
   .course-brief-shrink {
+    position: relative;
     background: red;
     margin-top: 30px;
   }

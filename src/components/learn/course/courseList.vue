@@ -134,8 +134,8 @@ export default {
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)
 
-      let top = $('#' + this.currentChapterCode).offset().top - 116
-      $('body,html').animate({ scrollTop: top }, 100, 'linear')
+      // let top = $('#' + this.currentChapterCode).offset().top - 116
+      // $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
       // this.hideLoading()
       this.$refs['chapterItem'].$emit('saveHistoryCourseData')
