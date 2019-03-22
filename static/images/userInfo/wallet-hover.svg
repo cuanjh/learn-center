@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="15px" viewBox="0 0 18 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>钱包（点亮）</title>
+    <desc>Created with Sketch.</desc>
+    <g id="世界语言地图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="课程-copy-11" transform="translate(-424.000000, -520.000000)">
+            <g id="侧边栏" transform="translate(370.000000, 100.000000)">
+                <g id="钱包" transform="translate(54.000000, 420.000000)">
+                    <rect id="Rectangle-10" stroke="#2A9FE4" stroke-width="1.2" x="6.89473684" y="5.0625" width="10.1052632" height="4.875" rx="2.4375"></rect>
+                    <path d="M14.4736842,10.2165985 L14.4736842,12.375 C14.4736842,13.2724627 13.7196375,14 12.7894737,14 L2.68421053,14 C1.75404674,14 1,13.2724627 1,12.375 L1,2.625 C1,1.72753728 1.75404674,1 2.68421053,1 L12.7894737,1 C13.7196375,1 14.4736842,1.72753728 14.4736842,2.625 L14.4736842,5.05892944" id="Rectangle-8" stroke="#2A9FE4" stroke-width="1.2"></path>
+                    <ellipse id="Oval-2" fill="#2A9FE4" cx="10.2631579" cy="7.5" rx="1" ry="1"></ellipse>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -87,7 +87,7 @@ export default {
           "common":{
             "bdSnsKey":{},
             "bdDesc": "全球说电台课程", //分享时的标题
-            "bdText":"我在听#全球说#配套课程"+course.description+"，随时随地学语言，走到哪里，学到哪里！",//分享时的文本摘要
+            "bdText":"我在听#全球说#配套课程"+course.title+"，随时随地学语言，走到哪里，学到哪里！",//分享时的文本摘要
             "bdMini":"1",
             "bdMiniList":false,
             "bdPic":course.cover_url, //此处为分享时自带的图片
