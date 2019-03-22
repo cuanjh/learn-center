@@ -1,14 +1,14 @@
 <template>
   <div class="my-course">
     <div class="title">我的课程</div>
-    <div class="current-chapter" v-if="userId && curCourseCode">
+    <div class="current-chapter" v-if="!isDefault && userId && curCourseCode">
       <img :src="curCourseObj['courseBg']" alt="">
       <div class="course-brief-shade">
         <div class="course-brief-title">
-          <span> {{ curCourseObj['courseLevel'] }} 课程{{ curCourseObj['courseNum'] }}：{{ curCourseObj['courseDesc'] }}</span>
+          <span> {{ courseDesc }} </span>
         </div>
         <div class="course-brief-core">
-          <span>核心{{ curCourseObj['courseCore'] }}</span>
+          <span>{{ curCourseObj['courseCore'] ? '核心' + curCourseObj['courseCore'] : '' }}</span>
         </div>
         <div class="course-brief-words">{{ curCourseObj['courseWords'] }}</div>
         <div class="change-course">
@@ -18,7 +18,7 @@
         <a class="start-learn" @click="startLearn()">开始学习</a>
       </div>
     </div>
-    <div class="current-chapter-none" v-else>
+    <div class="current-chapter-none" v-else-if="!isDefault">
       <img alt="">
       <div class="course-brief-shade">
         <div class="course-brief-title">
@@ -26,7 +26,11 @@
         </div>
       </div>
     </div>
-    <div class="current-course" v-if="userId && curChapterCode">
+    <div class="current-chapter" v-else>
+      <div class="course-brief-shade">
+      </div>
+    </div>
+    <div class="current-course" v-if="!isDefault && userId && curChapterCode" >
       <dl @mouseleave="isShowSubscribeCourses = false">
         <dt><img :src="courseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
         <dd>
@@ -55,9 +59,11 @@
       <div class="learn-hours"><span>已学习 </span><span>{{ curArchiveCourse['learn_time']>0?parseInt(curArchiveCourse['learn_time']/(60*60))+' 小时':'0 小时' }}</span></div>
       <a class="all-courses" @click="goCourseList()">全部课程</a>
     </div>
-    <div class="current-course-none" v-else>
+    <div class="current-course-none" v-else-if="!isDefault">
       <i></i>
       <router-link :to="{path: '/app/book-case'}" class="add-course">添加课程</router-link>
+    </div>
+    <div class="current-course" v-else>
     </div>
   </div>
 </template>
@@ -70,12 +76,13 @@ import cookie from '../../../tool/cookie'
 export default {
   data () {
     return {
+      isDefault: true, // 默认展示内容
       userId: '',
       curCourseCode: '',
       curCourseObj: {
         courseLevel: '',
         courseNum: 1,
-        courseCore: 1,
+        courseCore: 0,
         courseDesc: '',
         courseWords: '',
         courseBg: '',
@@ -128,6 +135,7 @@ export default {
       this.initData(courseCode)
     } else {
       bus.$emit('loadRecommendRadio', '')
+      this.isDefault = false
     }
   },
   components: {
@@ -146,6 +154,13 @@ export default {
       userInfo: state => state.userInfo,
       historyCourseRecord: state => state.course.historyCourseRecord
     }),
+    courseDesc () {
+      if (this.curCourseObj['courseLevel'] && this.curCourseObj['courseNum'] && this.curCourseObj['courseDesc']) {
+        return this.curCourseObj['courseLevel'] + ' 课程' + this.curCourseObj['courseNum'] + '：' + this.curCourseObj['courseDesc']
+      } else {
+        return ' '
+      }
+    },
     isVip () {
       if (!this.userInfo.member_info) {
         return
@@ -225,6 +240,7 @@ export default {
       } else {
         bus.$emit('loadRecommendRadio', this.curCourseCode)
       }
+      this.isDefault = false
       cookie.delCookieTalkmate('purchaseCourseCode')
     },
     pre () {
@@ -421,6 +437,7 @@ export default {
   .course-brief-title{
     font-size: 28px;
     color: #ffffff;
+    height: 45px;
     line-height: 45px;
     font-weight: bold;
     margin-top: 44px;
@@ -430,6 +447,7 @@ export default {
   .course-brief-core {
     font-size: 16px;
     color: #ffffff;
+    height: 22px;
     line-height: 22px;
     font-weight: 500;
     margin: 30px 0 0 40px;
@@ -438,6 +456,7 @@ export default {
   .course-brief-words {
     font-size: 16px;
     color: #ffffff;
+    height: 22px;
     line-height: 22px;
     font-weight: 500;
     margin: 2px 0 0 40px;
