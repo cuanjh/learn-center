@@ -265,18 +265,6 @@ export default {
       getRadioCommentCard: 'course/getRadioCommentCard', // 评论课程卡片
       getOtherRecommends: 'getOtherRecommends' // 其他人也在听
     }),
-    // 卡片数据
-    async initCardDetail () {
-      let params = {
-        code: this.radioCardParams.radioCode,
-        card_id: this.radioCardParams.id
-      }
-      await this.getRadioCardDetail(params).then(res => {
-        console.log('卡片返回', res)
-        this.cardDetail = res
-        Bus.$emit('shareCardContent', this.cardDetail)
-      })
-    },
     // 发请求获取radio的详情页面
     async loadData () {
       let _this = this
@@ -291,6 +279,18 @@ export default {
           _this.subscibenoInfo = res.result.relation
           _this.initAuthorInfo(res.result.course_info.author_info.user_id)
         }
+      })
+
+      // 卡片数据
+      let params = {
+        code: _this.radioCardParams.radioCode,
+        card_id: _this.radioCardParams.id
+      }
+      await _this.getRadioCardDetail(params).then(res => {
+        console.log('卡片返回', res)
+        _this.cardDetail = res
+        _this.cardDetail['purchased_state'] = _this.subscibenoInfo.purchased_state
+        Bus.$emit('shareCardContent', _this.cardDetail)
       })
     },
     // 获取卡片评论列表
