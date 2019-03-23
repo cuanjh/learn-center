@@ -51,14 +51,8 @@
                     <div class="buy-button" v-show="false">
                       <span>购买</span>
                     </div>
-                    <a v-if="subscribeCourses && subscribeCourses.indexOf(courseCode) > -1 && courseInfo.has_course" @click="startLearn()" href="javascript:void(0)" class="button">
-                      <span>开始学习</span>
-                    </a>
-                    <a v-else-if="(subscribeCourses && subscribeCourses.indexOf(courseCode) === -1 && courseInfo.has_course) || (courseCode.indexOf('-Basic') > -1)" @click="subscribeCourse()" href="javascript:void(0)" class="button">
-                      <span>订阅课程</span>
-                    </a>
-                    <a v-else href="javascript:void(0)" class="button locked">
-                      <span>课程建设中</span>
+                    <a href="javascript:void(0)" @click="btnHandler()" :class="['button', {'locked': (btnState == '0')}]">
+                      <span>{{btnDesc}}</span>
                     </a>
                   </li>
                 </ul>
@@ -181,6 +175,8 @@ import ShareBox from '../../common/shareBox'
 export default {
   data () {
     return {
+      btnDesc: '',
+      btnState: '', // 0: 课程建设中 1: 订阅课程 2: 开始学习
       type: '3',
       userId: '',
       showRadioPlay: false,
@@ -223,6 +219,7 @@ export default {
           info: ''
         }
       },
+      subscribeLangCourses: [], // 订阅的官方课程
       courseInfo: {}, // 语言的详情
       resourceInfoRadios: [], // 资源电台
       allCountryLists: [], // 接收后端的所有数据
@@ -261,17 +258,10 @@ export default {
   },
   computed: {
     ...mapState({
-      subscribeCoursesStr: state => state.course.subscribeCoursesStr
+      userInfo: state => state.userInfo
     }),
     courseCode () {
       return this.$route.params.courseCode
-    },
-    subscribeCourses () {
-      let sc = this.subscribeCoursesStr
-      if (!sc) {
-        sc = localStorage.getItem('subscribeCoursesStr')
-      }
-      return sc
     }
   },
   methods: {
@@ -279,7 +269,7 @@ export default {
       langInfoDetails: 'course/langInfoDetails', // 语言详情
       getShelfResList: 'course/getShelfResList',
       postPurchaseCourse: 'course/postPurchaseCourse',
-      getLearnCourses: 'course/getLearnCourses',
+      getMoreLearnCourses: 'getMoreLearnCourses',
       getEndangeredDetail: 'getEndangeredDetail',
       getCountryLanguages: 'getCountryLanguages'
     }),
@@ -323,6 +313,13 @@ export default {
       }
       this.showMoreCountry = !this.showMoreCountry
     },
+    btnHandler () {
+      if (this.btnState === '1') {
+        this.subscribeCourse()
+      } else if (this.btnState === '2') {
+        this.startLearn()
+      }
+    },
     // 点开始学习
     startLearn () {
       let arr = this.courseCode.split('-')
@@ -337,11 +334,23 @@ export default {
         Bus.$emit('showGoLoginBox')
         return false
       }
-      let arr = this.courseCode.split('-')
-      let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
-      this.postPurchaseCourse({ code: courseCode }).then((res) => {
-        this.getLearnCourses()
-      })
+      let isVip = this.userInfo.member_info.member_type
+      if (parseInt(isVip) !== 1 && this.subscribeLangCourses.length >= 3) {
+        let obj = {
+          className: 'vipIcon',
+          description: '升级会员免费订阅所有官方课程',
+          btnDesc: '升级会员',
+          isLink: true,
+          hyperLink: '/app/user/vip'
+        }
+        Bus.$emit('showCommonModal', obj)
+      } else {
+        let arr = this.courseCode.split('-')
+        let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
+        this.postPurchaseCourse({ code: courseCode }).then((res) => {
+          this.refreshSubscribeCourses()
+        })
+      }
     },
     async initDataDetails () {
       let _this = this
@@ -385,11 +394,36 @@ export default {
           _this.countryLangs = res.data
         })
       })
+      this.refreshSubscribeCourses()
     },
     // 播放视频
     playRadio () {
       $('#my-video')[0].play()
       this.showRadioPlay = true
+    },
+    refreshSubscribeCourses () {
+      let _this = this
+      _this.getMoreLearnCourses().then(res => {
+        if (res.success) {
+          let learnCourses = res.learn_courses
+          learnCourses.forEach(item => {
+            if (!parseInt(item.course_type)) {
+              _this.subscribeLangCourses.push(item.code)
+            }
+          })
+          if (_this.subscribeLangCourses.length > 0 && _this.subscribeLangCourses.join(',').indexOf(_this.courseCode) > -1 && _this.courseInfo.has_course) {
+            _this.btnState = '2'
+            _this.btnDesc = '开始学习'
+          } else if ((_this.subscribeLangCourses.length > 0 && _this.subscribeLangCourses.join(',').indexOf(_this.courseCode) === -1 && _this.courseInfo.has_course) || (_this.courseCode.indexOf('-Basic') > -1)) {
+            _this.btnState = '1'
+            this.btnDesc = '订阅课程'
+          } else {
+            _this.btnState = '0'
+            this.btnDesc = '课程建设中'
+          }
+          console.log(_this.btnState)
+        }
+      })
     }
   }
 }
@@ -532,6 +566,7 @@ export default {
             }
           }
           .button {
+            min-width: 140px;
             background: #2A9FE4FF;
             font-size: 14px;
             color: #ffffff;

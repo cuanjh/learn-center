@@ -399,6 +399,7 @@ export default {
         _this.comments = res.result.course_info.comments
         _this.otherRadios = res.result.realated_courses
         _this.subscibenoInfo = res.result.relation
+        _this.courseInfo['purchased_state'] = res.result.relation.purchased_state
         Bus.$emit('shareCardContent', _this.courseInfo)
       })
     },

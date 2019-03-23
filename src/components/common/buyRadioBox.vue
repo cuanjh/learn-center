@@ -27,7 +27,7 @@
         <!-- 支付信息 -->
         <div class="pay">
           <div class="weixin">
-            <img id="qrCode" :src="weixinUrl" alt="微信支付二维码">
+            <img id="qrCode" :src="weixinUrl" alt="">
             <!-- <i></i> -->
             <span>微信付款</span>
           </div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="76px" height="76px" viewBox="0 0 76 76" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>画板</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFC6AC" offset="0%"></stop>
+            <stop stop-color="#FFB58B" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="35.8887353%" y1="60.7941439%" x2="100%" y2="-1.88806141%" id="linearGradient-2">
+            <stop stop-color="#FD856A" offset="0%"></stop>
+            <stop stop-color="#FFAF97" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="画板" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="椭圆形" stroke="url(#linearGradient-1)" stroke-width="4" fill="#FFDFD8" fill-rule="nonzero" cx="38" cy="38" r="36"></circle>
+        <path d="M24.7471515,32.6714773 L52.4703427,25.9953744 C54.0811491,25.6074713 55.7014232,26.5988304 56.0893262,28.2096368 C56.2005012,28.6713022 56.2004955,29.1527645 56.0893095,29.6144273 L49.4128577,57.3361697 C49.0249164,58.9469668 47.4046187,59.9382874 45.7938215,59.550346 C45.2566712,59.4209798 44.7656795,59.1457881 44.3749865,58.7551155 L23.3282472,37.709476 C22.1566437,36.5379338 22.156594,34.6384388 23.3281363,33.4668353 C23.7188637,33.0760876 24.2099228,32.8008489 24.7471515,32.6714773 Z" id="矩形" fill="url(#linearGradient-2)" fill-rule="nonzero" transform="translate(38.041631, 44.041631) rotate(-45.000000) translate(-38.041631, -44.041631) "></path>
+        <path d="M37.2843661,26 L38.7156339,26 C39.8202034,26 40.7156339,26.8954305 40.7156339,28 C40.7156339,28.0884 40.709773,28.1767028 40.6980897,28.2643274 L39.1321637,40.0087721 C39.0565046,40.5762155 38.5724651,41 38,41 L38,41 C37.4275349,41 36.9434954,40.5762155 36.8678363,40.0087721 L35.3019103,28.2643274 C35.1559263,27.1694473 35.9251586,26.1635282 37.0200387,26.0175442 C37.1076633,26.0058609 37.1959661,26 37.2843661,26 Z" id="矩形" fill="#FFFFFF" fill-rule="nonzero" opacity="0.800000012"></path>
+        <rect id="矩形-copy" fill="#FFFFFF" fill-rule="nonzero" opacity="0.800000012" x="36" y="43" width="4" height="4" rx="2"></rect>
+    </g>
+</svg>
