@@ -400,12 +400,6 @@ export default {
         _this.otherRadios = res.result.realated_courses
         _this.subscibenoInfo = res.result.relation
 
-        let isShare = 1
-        let purchasedState = res.result.relation.purchased_state
-        if (purchasedState === 0 || purchasedState === 2 || purchasedState === 5) {
-          isShare = 0
-        }
-        _this.courseInfo['isShare'] = isShare
         Bus.$emit('shareCardContent', _this.courseInfo)
       })
     },
@@ -581,12 +575,6 @@ export default {
         if (res.success) {
           // purchased_state状态值显示隐藏 0未购买 1已购买 隐藏 2购买已删除
           this.subscibenoInfo.purchased_state = 1
-          let isShare = 1
-          let purchasedState = this.subscibenoInfo.purchased_state
-          if (purchasedState === 0 || purchasedState === 2 || purchasedState === 5) {
-            isShare = 0
-          }
-          this.courseInfo['isShare'] = isShare
           Bus.$emit('shareCardContent', this.courseInfo)
         }
       })

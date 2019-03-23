@@ -30,12 +30,10 @@ export default {
   created () {
     Bus.$on('shareCardContent', (shareCard) => {
       console.log('当前要分享的卡片', shareCard)
-      if (shareCard.isShare) {
-        const s = document.createElement('script')
-        s.type = 'text/javascript'
-        s.src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)
-        document.body.appendChild(s)
-      }
+      const s = document.createElement('script')
+      s.type = 'text/javascript'
+      s.src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)
+      document.body.appendChild(s)
       this.shareCourse = shareCard
     })
   },
@@ -51,17 +49,6 @@ export default {
       let userId = cookie.getCookie('user_id')
       if (!userId) {
         Bus.$emit('showGoLoginBox')
-        return false
-      }
-
-      if (course['isShare'] === 0) {
-        let obj = {
-          className: 'warnIcon',
-          description: '只有订阅后才能分享！',
-          btnDesc: '取消',
-          isLink: false
-        }
-        Bus.$emit('showCommonModal', obj)
         return false
       }
       // 分享相关代码
