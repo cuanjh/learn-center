@@ -248,7 +248,6 @@ export default {
       {id: 4, path: '', text: '课程详情'}
     ]
     Bus.$emit('loadNavData', navList)
-    this.initCardDetail()
     this.loadData()
     this.initCommentList(this.pageSize)
     this.getOtherRecommends({current_radio_code: this.radioCardParams.radioCode}).then(res => {
@@ -289,7 +288,12 @@ export default {
       await _this.getRadioCardDetail(params).then(res => {
         console.log('卡片返回', res)
         _this.cardDetail = res
-        _this.cardDetail['purchased_state'] = _this.subscibenoInfo.purchased_state
+        let isShare = 1
+        let purchasedState = _this.subscibenoInfo.purchased_state
+        if (purchasedState === 0 || purchasedState === 2 || purchasedState === 5) {
+          isShare = 0
+        }
+        _this.cardDetail['isShare'] = isShare
         Bus.$emit('shareCardContent', _this.cardDetail)
       })
     },

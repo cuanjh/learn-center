@@ -27,20 +27,20 @@ export default {
       shareCourse: {}
     }
   },
-  beforeCreate () {
-  },
   created () {
     Bus.$on('shareCardContent', (shareCard) => {
       console.log('当前要分享的卡片', shareCard)
+      if (shareCard.isShare) {
+        const s = document.createElement('script')
+        s.type = 'text/javascript'
+        s.src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)
+        document.body.appendChild(s)
+      }
       this.shareCourse = shareCard
     })
   },
   mounted () {
     console.log('type', this.type)
-    const s = document.createElement('script')
-    s.type = 'text/javascript'
-    s.src = '/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)
-    document.body.appendChild(s)
   },
   methods: {
     leaveWX () {
@@ -48,18 +48,13 @@ export default {
     },
     shareCourseCard (course) {
       console.log('course', course)
-      setTimeout(() => {
-        this.setShare(course)
-      }, 0)
-    },
-    setShare (course) {
       let userId = cookie.getCookie('user_id')
       if (!userId) {
         Bus.$emit('showGoLoginBox')
         return false
       }
 
-      if (course['purchased_state'] === 0) {
+      if (course['isShare'] === 0) {
         let obj = {
           className: 'warnIcon',
           description: '只有订阅后才能分享！',
@@ -71,64 +66,40 @@ export default {
       }
       // 分享相关代码
       /* eslint-disable */
+      let bdDesc = '', bdText = '', bdPic = '', bdUrl = ''
       if (this.type === '1') {
-        window._bd_share_config = {
-          "common":{
-            "bdSnsKey":{},
-            "bdDesc": "全球说电台课程", //分享时的标题
-            "bdText":"我在听#全球说#配套课程"+course.module_name+"，随时随地学语言，走到哪里，学到哪里！",//分享时的文本摘要
-            "bdMini":"1",
-            "bdMiniList":false,
-            "bdPic":course.cover, //此处为分享时自带的图片
-            "bdUrl":'http://share.talkmate.com/course/' + course.code, //此处为后台要进行分享的内容的定义
-            "bdStyle":"1",
-            "bdSize":"24",
-          },
-          "share":{}
-          // "selectShare":{
-          //   "bdContainerClass":null,
-          //   "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
-          // }
-        }
+        bdDesc = '全球说电台课程' //分享时的标题
+        bdText = '我在听#全球说#配套课程' + course.module_name + '，随时随地学语言，走到哪里，学到哪里！' //分享时的文本摘要
+        bdPic = course.cover //此处为分享时自带的图片
+        bdUrl = 'http://share.talkmate.com/course/' + course.code //此处为后台要进行分享的内容的定义
       } else if (this.type === '2') {
-        window._bd_share_config = {
-          "common":{
-            "bdSnsKey":{},
-            "bdDesc": "全球说电台课程", //分享时的标题
-            "bdText":"我在听#全球说#配套课程"+course.description+"，随时随地学语言，走到哪里，学到哪里！",//分享时的文本摘要
-            "bdMini":"1",
-            "bdMiniList":false,
-            "bdPic":course.cover_url, //此处为分享时自带的图片
-            "bdUrl":'http://share.talkmate.com/card/' + course.course_code + '/' + course.card_id, //此处为后台要进行分享的内容的定义
-            "bdStyle":"1",
-            "bdSize":"24",
-          },
-          "share":{}
-          // "selectShare":{
-          //   "bdContainerClass":null,
-          //   "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
-          // }
-        }
+        bdDesc = '全球说电台课程' //分享时的标题
+        bdText = '我在听#全球说#配套课程' + course.description + '，随时随地学语言，走到哪里，学到哪里！' //分享时的文本摘要
+        bdPic = course.cover_url, //此处为分享时自带的图片
+        bdUrl = 'http://share.talkmate.com/card/' + course.course_code + '/' + course.card_id //此处为后台要进行分享的内容的定义
       } else {
-        window._bd_share_config = {
-          // 我从#全球说-世界语言地图#中推荐了乌尔都语，传承语言文化，扩充语言知识！我在全球说，跟随世界语言地图学习多样语言，传承多样文化
-          "common":{
-            "bdSnsKey":{},
-            "bdDesc": "全球说-WAL世界语言地图", //分享时的标题
-            "bdText":"我从#全球说-世界语言地图#中推荐了"+course.name+"，传承语言文化，扩充语言知识！我在全球说，跟随世界语言地图学习多样语言，传承多样文化",//分享时的文本摘要
-            "bdMini":"1",
-            "bdMiniList":false,
-            "bdPic":course.flag, //此处为分享时自带的图片
-            "bdUrl":'http://share.talkmate.com/course_new/' + course.course_code, //此处为后台要进行分享的内容的定义
-            "bdStyle":"1",
-            "bdSize":"24",
+        bdDesc = '全球说-WAL世界语言地图' //分享时的标题
+        bdText = '我从#全球说-世界语言地图#中推荐了' + course.name + '，传承语言文化，扩充语言知识！我在全球说，跟随世界语言地图学习多样语言，传承多样文化' //分享时的文本摘要
+        bdPic = course.flag //此处为分享时自带的图片
+        bdUrl = 'http://share.talkmate.com/course_new/' + course.course_code //此处为后台要进行分享的内容的定义
+      }
+
+      window._bd_share_config = {
+        "common":{
+          "onBeforeClick": function (cmd, config) {
+            return false
           },
-          "share":{}
-          // "selectShare":{
-          //   "bdContainerClass":null,
-          //   "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
-          // }
-        }
+          "bdSnsKey":{},
+          "bdDesc": bdDesc, //分享时的标题
+          "bdText":bdText,//分享时的文本摘要
+          "bdMini":"1",
+          "bdMiniList":false,
+          "bdPic":bdPic, //此处为分享时自带的图片
+          "bdUrl":bdUrl, //此处为后台要进行分享的内容的定义
+          "bdStyle":"1",
+          "bdSize":"24",
+        },
+        "share":{}
       }
 
       if (window._bd_share_main) {
