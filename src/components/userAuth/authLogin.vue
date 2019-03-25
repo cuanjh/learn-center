@@ -157,11 +157,7 @@ export default {
     AuthPwdLogin
   },
   mounted () {
-    // $('#phoneCode').val('')
-    this.postAnonyLogin({preferLangs: 'ENG', skillLangs: 'ENG'}).then(res => {
-      console.log(res)
-    })
-    this.getCodeUrl()
+    // this.getCodeUrl()
     let userId = Cookie.getCookie('user_id')
     console.log('userId', userId)
     if (!userId) {
@@ -193,7 +189,6 @@ export default {
       userLogin: 'userLogin',
       sendCode: 'getSendCode',
       userSnsLogin: 'userSnsLogin',
-      postAnonyLogin: 'postAnonyLogin',
       getUserInfo: 'getUserInfo'
     }),
     onFocus () {

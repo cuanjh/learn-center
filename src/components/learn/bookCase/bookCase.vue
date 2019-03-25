@@ -127,7 +127,6 @@ export default {
       getLearnInfo: 'course/getLearnInfo',
       getLearnCourses: 'course/getLearnCourses',
       getLangsList: 'getLangsList',
-      postAnonyLogin: 'postAnonyLogin',
       getUserInfo: 'getUserInfo'
     }),
     qnUrl (url) {
