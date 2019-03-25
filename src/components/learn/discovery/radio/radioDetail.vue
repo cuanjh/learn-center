@@ -479,6 +479,16 @@ export default {
     // 播放列表
     loadRadioList (e, radio, index, card) {
       console.log(' radio, order',  radio, index, card)
+      let userId = cookie.getCookie('user_id')
+      if (!userId && card.list_order > 3) {
+        Bus.$emit('showGoLoginBox')
+        $('#' + card.card_id + ' .gradient-layer-play i').removeClass('pause')
+        $('#' + card.card_id + ' .gradient-layer-play i').addClass('play')
+        $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+        $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+        Bus.$emit('radioPause')
+        return false
+      }
       if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
         if (parseInt(radio.money) !== 0) { // 收费
           if (this.isVip !== 1) { // 不是会员

@@ -364,8 +364,11 @@ export default {
       let radio = this.radioDetail.course_info
       if (!this.userInfo && this.curIndex > 1) {
         Bus.$emit('showGoLoginBox')
+        $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+        $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
         $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
         $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+        this.pause()
         return false
       }
       this.curIndex++
