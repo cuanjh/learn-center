@@ -35,10 +35,11 @@
             <i></i>
             <span>加入VIP，畅听更多"会员免费"课程！</span>
           </div>
-          <router-link :to="{path: '/app/user/vip'}" class="right">
+          <!-- :to="{path: '/app/user/vip'}"  -->
+          <a @click="knowVip()" class="right">
             了解会员
             <i></i>
-          </router-link>
+          </a>
         </div>
       </div>
     </div>
@@ -70,9 +71,9 @@ export default {
     Bus.$on('showBuyCoinsRadio', (radio) => {
       console.log('当前要购买的金币radio', radio)
       this.itemRadio = radio
-      console.log('user.coins', this.userInfo.coins)
-      if (this.userInfo.coins < radio.money) {
-        Bus.$emit('showUserCoins', this.userInfo.coins, radio.money)
+      let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      if (userInfo.coins < radio.money) {
+        Bus.$emit('showUserCoins', userInfo.coins, radio.money)
       } else {
         this.showBuyCoinsBox = true
       }
@@ -101,6 +102,10 @@ export default {
     // 关闭按钮
     closeButton () {
       this.showBuyCoinsBox = false
+    },
+    knowVip () {
+      this.showBuyCoinsBox = false
+      this.$router.push({path: '/app/user/vip'})
     },
     // 初始化订阅的状态
     async initSubscibe (radioDetail) {

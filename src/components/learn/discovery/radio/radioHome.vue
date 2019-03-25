@@ -28,7 +28,7 @@
       <div class="right">
         <div class="name">
           <span>分类 / </span>
-          <span @click="lookMoreRadioList(menus[0])" class="more">更多</span>
+          <span @click="goRadioList(menus[0])" class="more">更多</span>
         </div>
         <ul>
           <li v-for="item in menus" :key="item.menu_id">
@@ -247,12 +247,16 @@ export default {
     // 查看更多
     goRadioList (item) {
       console.log('跳转之前item', item)
-      this.$router.push({name: 'radioList', params: { itemId: item.list_order }})
+      let menuStr = JSON.stringify(item)
+      sessionStorage.setItem('menu', menuStr)
+      // this.$router.push({name: 'radioList', params: { itemId: item.list_order }})
+      this.$router.push({path: '/app/discovery/radio-list'})
     },
     // 点击更多
-    lookMoreRadioList () {
-      this.$router.push({name: 'radioList', params: { itemId: 410 }})
-    },
+    // lookMoreRadioList (item) {
+    //   console.log('查看更多', item)
+    //   // this.$router.push({name: 'radioList', params: { itemId: 410 }})
+    // },
     swiperInit () {
       this.$nextTick(() => {
         /* eslint-disable no-new */
@@ -406,11 +410,18 @@ export default {
           padding: 7px 21px;
           margin-top: 12px;
           margin-right: 11px;
+          max-width: 98px;
+          overflow: hidden;
           a {
             cursor: pointer;
             font-size: 14px;
             color: #4a4a4a;
             font-weight: 400;
+            display: inline-block;
+            max-width: 98px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             &:hover {
               color: #2A9FE4;
             }

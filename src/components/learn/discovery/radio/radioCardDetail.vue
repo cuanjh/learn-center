@@ -343,8 +343,8 @@ export default {
       })
     },
     // 作者详情
-    async initAuthorInfo (authorId) {
-      await this.getAuthorDetail({partner_user_id: authorId}).then(res => {
+    initAuthorInfo (authorId) {
+      this.getAuthorDetail({partner_user_id: authorId}).then(res => {
         console.log('作者返回', res)
         this.authorDetail = res.detail
       })
@@ -372,6 +372,16 @@ export default {
     // 收听列表
     loadRadioList (e, radio) {
       console.log('卡片详情==》', radio)
+      let userId = cookie.getCookie('user_id')
+      if (!userId && this.radioCardParams.order > 3) {
+        Bus.$emit('showGoLoginBox')
+        $('#' + this.cardDetail.card_id + ' .gradient-layer-play i').removeClass('pause')
+        $('#' + this.cardDetail.card_id + ' .gradient-layer-play i').addClass('play')
+        $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+        $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+        Bus.$emit('radioPause')
+        return false
+      }
       if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
         if (parseInt(radio.money) !== 0) { // 收费
           if (this.isVip !== 1) { // 不是会员
