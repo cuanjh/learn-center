@@ -344,34 +344,74 @@ export default {
     },
     pre () {
       this.curIndex--
-      if (this.curIndex < 0) {
-        return
-      }
-      this.playRadio()
-    },
-    // 下一条自动播放
-    next () {
-      this.curIndex++
       let radio = this.radioDetail.course_info
-      console.log('radio', radio)
-      console.log('this.curRadio', this.curRadio)
-      console.log('===>', this.curIndex)
+      console.log('上一曲radio', radio)
+      $('#' + radio.code + ' .gradient-layer-play i').removeClass('play')
+      $('#' + radio.code + ' .gradient-layer-play i').addClass('pause')
       if (!this.userInfo && this.curIndex > 2) {
         Bus.$emit('showGoLoginBox')
         return false
       }
+      if (this.curIndex < 0) {
+        return
+      }
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+      $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
+      this.playRadio()
+    },
+    // 下一条自动播放
+    next () {
+      let radio = this.radioDetail.course_info
+      if (!this.userInfo && this.curIndex > 1) {
+        Bus.$emit('showGoLoginBox')
+        $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+        $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+        return false
+      }
+      this.curIndex++
+      console.log('radio', radio)
+      console.log('this.curRadio', this.curRadio)
+      console.log('===>', this.curIndex)
       if (this.subscibenoInfo.purchased_state !== 1 &&
           this.subscibenoInfo.purchased_state !== 4 &&
           this.subscibenoInfo.purchased_state !== 2) { // 没订阅
         if (parseInt(radio.money) !== 0) { // 收费
           if (this.isVip !== 1) { // 不是会员
             if (this.curIndex > 2) {
-              this.curIndex = 0
+              if (radio.money_type === 'CNY') {
+                // 人民币提示
+                Bus.$emit('showBuyRadio', this.radioDetail)
+              } else if (radio.money_type === 'coins') {
+                // 金币提示
+                Bus.$emit('showBuyCoinsRadio', radio)
+                Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+              }
+              this.curIndex = 2
+              this.pause()
+              $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+              $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
+              $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+              $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+              return false
             }
           } else { // 是会员
             if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
               if (this.curIndex > 2) {
-                this.curIndex = 0
+                if (radio.money_type === 'CNY') {
+                  // 人民币提示
+                  Bus.$emit('showBuyRadio', this.radioDetail)
+                } else if (radio.money_type === 'coins') {
+                  // 金币提示
+                  Bus.$emit('showBuyCoinsRadio', radio)
+                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                }
+                this.curIndex = 2
+                this.pause()
+                $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+                $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
+                $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+                $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+                return false
               }
             }
           }
@@ -491,8 +531,10 @@ export default {
       console.log('播放器中的radio', radio)
       $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
       $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
-      if (!this.userInfo && index > 3) {
+      if (!this.userInfo && index > 2) {
         Bus.$emit('showGoLoginBox')
+        $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+        $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
         this.pause()
         return false
       }
@@ -510,7 +552,9 @@ export default {
                 Bus.$emit('showBuyCoinsRadio', radio)
                 Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
               }
-              index = 0
+              $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+              $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+              this.pause()
               return false
             }
           } else { // 是会员
@@ -524,7 +568,9 @@ export default {
                   Bus.$emit('showBuyCoinsRadio', radio)
                   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
                 }
-                index = 0
+                $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+                $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+                this.pause()
                 return false
               }
             }

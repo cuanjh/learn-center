@@ -535,7 +535,8 @@ export default {
       let radio = this.courseInfo
       console.log('组件中的radio', this.radioDetail)
       console.log('subscibenoInfo', this.subscibenoInfo)
-      if (!this.userInfo) {
+      let userId = cookie.getCookie('user_id')
+      if (!userId) {
         Bus.$emit('showGoLoginBox')
         return
       }
