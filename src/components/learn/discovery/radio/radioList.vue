@@ -119,6 +119,7 @@ export default {
     NavComp
   },
   mounted () {
+    console.log('=======>', this.radioMenu)
     let navList = [
       {id: 1, path: '/app/index', text: '我的学习账户'},
       {id: 2, path: '/app/discovery/radio-home', text: '电台'},
@@ -126,7 +127,8 @@ export default {
     ]
     Bus.$emit('loadNavData', navList)
     this.userId = cookie.getCookie('user_id')
-    this.isActive = this.courseOrder ? this.courseOrder : 410
+    // this.isActive = this.courseOrder ? this.courseOrder : 410
+    this.isActive = this.radioMenu.list_order
     this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
       this.menuRadioNavs = res.data.menuRadios
@@ -154,8 +156,12 @@ export default {
       }
       return this.userInfo.member_info.member_type
     },
-    courseOrder () {
-      return this.$route.params.itemId
+    // courseOrder () {
+    //   return this.$route.params.itemId
+    // },
+    radioMenu () {
+      let menu = JSON.parse(sessionStorage.getItem('menu'))
+      return menu
     }
   },
   methods: {
@@ -167,6 +173,8 @@ export default {
     // 导航切换
     tabChange (item) {
       console.log('item', item)
+      let menuStr = JSON.stringify(item)
+      sessionStorage.setItem('menu', menuStr)
       console.log('langCodesSel====', this.langCodesSel)
       let _this = this
       _this.selState = _this.langCodesSel[0]

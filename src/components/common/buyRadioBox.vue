@@ -44,10 +44,10 @@
             <i></i>
             <span>加入VIP，畅听更多"会员免费"课程！</span>
           </div>
-          <router-link tag="div" :to="{path: '/app/user/vip'}" class="right">
+          <div @click="knowVip()" class="right">
             <span>了解会员</span>
             <i></i>
-          </router-link>
+          </div>
         </div>
       </div>
       <!-- 遇到问题 -->
@@ -157,6 +157,10 @@ export default {
     },
     closeButton () {
       this.showBuyBox = false
+    },
+    knowVip () {
+      this.showBuyBox = false
+      this.$router.push({path: '/app/user/vip'})
     },
     // 知道了
     know () {

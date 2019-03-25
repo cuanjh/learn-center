@@ -360,7 +360,9 @@ export default {
         Bus.$emit('showGoLoginBox')
         return false
       }
-      if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+      if (this.subscibenoInfo.purchased_state !== 1 &&
+          this.subscibenoInfo.purchased_state !== 4 &&
+          this.subscibenoInfo.purchased_state !== 2) { // 没订阅
         if (parseInt(radio.money) !== 0) { // 收费
           if (this.isVip !== 1) { // 不是会员
             if (this.curIndex > 2) {
@@ -494,7 +496,9 @@ export default {
         this.pause()
         return false
       }
-      if (this.subscibenoInfo.purchased_state !== 1 && this.subscibenoInfo.purchased_state !== 4) { // 没订阅
+      if (this.subscibenoInfo.purchased_state !== 1 &&
+          this.subscibenoInfo.purchased_state !== 4 &&
+          this.subscibenoInfo.purchased_state !== 2) { // 没订阅
         if (parseInt(radio.money) !== 0) { // 收费
           if (this.isVip !== 1) { // 不是会员
             if (index > 2) {

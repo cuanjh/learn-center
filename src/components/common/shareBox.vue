@@ -4,7 +4,6 @@
       <div class="bdsharebuttonbox">
         <ul class="gb_resItms">
           <li>
-            <!--  @mouseenter=""  -->
             <a title="分享到微信" href="javascript:;" class="bds_weixin" data-cmd="weixin" @click="shareCourseCard(shareCourse)" @mouseleave="leaveWX()">
             </a>
           </li>
@@ -30,11 +29,14 @@ export default {
   created () {
     Bus.$on('shareCardContent', (shareCard) => {
       console.log('当前要分享的卡片', shareCard)
-      const s = document.createElement('script')
-      s.type = 'text/javascript'
-      s.src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)
-      document.body.appendChild(s)
-      this.shareCourse = shareCard
+      let userId = cookie.getCookie('user_id')
+      if (userId) {
+        const s = document.createElement('script')
+        s.type = 'text/javascript'
+        s.src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)
+        document.body.appendChild(s)
+        this.shareCourse = shareCard
+      }
     })
   },
   mounted () {
@@ -61,7 +63,7 @@ export default {
         bdUrl = 'http://share.talkmate.com/course/' + course.code //此处为后台要进行分享的内容的定义
       } else if (this.type === '2') {
         bdDesc = '全球说电台课程' //分享时的标题
-        bdText = '我在听#全球说#配套课程' + course.description + '，随时随地学语言，走到哪里，学到哪里！' //分享时的文本摘要
+        bdText = '我在听#全球说#配套课程' + course.title + '，随时随地学语言，走到哪里，学到哪里！' //分享时的文本摘要
         bdPic = course.cover_url, //此处为分享时自带的图片
         bdUrl = 'http://share.talkmate.com/card/' + course.course_code + '/' + course.card_id //此处为后台要进行分享的内容的定义
       } else {
