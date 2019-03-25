@@ -31,19 +31,16 @@ export default {
   },
   created () {
     Bus.$on('shareCardContent', (shareCard) => {
-      let userId = cookie.getCookie('user_id')
       console.log('当前要分享的卡片', shareCard)
       this.shareCourse = shareCard
-      console.log('=====>', this.shareCourse)
-      if (userId) {
-        setTimeout(() => {
-          this.setShare(shareCard)
-        }, 0)
-      }
     })
   },
   mounted () {
     console.log('type', this.type)
+    const s = document.createElement('script')
+    s.type = 'text/javascript'
+    s.src = '/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)
+    document.body.appendChild(s)
   },
   methods: {
     leaveWX () {
@@ -59,6 +56,17 @@ export default {
       let userId = cookie.getCookie('user_id')
       if (!userId) {
         Bus.$emit('showGoLoginBox')
+        return false
+      }
+
+      if (course['purchased_state'] === 0) {
+        let obj = {
+          className: 'warnIcon',
+          description: '只有订阅后才能分享！',
+          btnDesc: '取消',
+          isLink: false
+        }
+        Bus.$emit('showCommonModal', obj)
         return false
       }
       // 分享相关代码
@@ -122,10 +130,7 @@ export default {
           // }
         }
       }
-      const s = document.createElement('script')
-      s.type = 'text/javascript'
-      s.src = '/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)
-      document.body.appendChild(s)
+
       if (window._bd_share_main) {
         window._bd_share_main.init()
       }

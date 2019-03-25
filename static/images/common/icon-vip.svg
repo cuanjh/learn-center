@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="78px" height="73px" viewBox="0 0 78 73" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>分组 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="110.466542%" y1="0%" x2="0%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#FFDB3E" offset="0%"></stop>
+            <stop stop-color="#FFBF00" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="108.571996%" y1="16.6666667%" x2="0%" y2="0%" id="linearGradient-2">
+            <stop stop-color="#FFDE00" offset="0%"></stop>
+            <stop stop-color="#FFC000" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="103.60771%" y1="15.9046092%" x2="0%" y2="0%" id="linearGradient-3">
+            <stop stop-color="#FFDE00" offset="0%"></stop>
+            <stop stop-color="#FFBE00" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#FFE000" offset="0%"></stop>
+            <stop stop-color="#FFBE00" offset="97.4191655%"></stop>
+        </linearGradient>
+        <linearGradient x1="45.047751%" y1="56.1957267%" x2="67.8513973%" y2="80.3054613%" id="linearGradient-5">
+            <stop stop-color="#FFDB3F" offset="0%"></stop>
+            <stop stop-color="#FFC42C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="个人学习中心" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="提示弹窗" transform="translate(-1362.000000, -487.000000)">
+            <g id="分组-2" transform="translate(1362.000000, 486.000000)">
+                <g id="Group" transform="translate(54.000000, 0.000000)">
+                    <path d="M7.80986394,10.9527211 L16.3812925,10.9527211 C17.8014533,10.9527211 18.9527211,12.1039889 18.9527211,13.5241497 L18.9527211,13.5241497 C18.9527211,14.9443104 17.8014533,16.0955782 16.3812925,16.0955782 L7.80986394,16.0955782 C6.38970315,16.0955782 5.23843537,14.9443104 5.23843537,13.5241497 L5.23843537,13.5241497 C5.23843537,12.1039889 6.38970315,10.9527211 7.80986394,10.9527211 Z" id="Rectangle-Copy" fill="url(#linearGradient-1)" transform="translate(12.095578, 13.524150) rotate(-45.000000) translate(-12.095578, -13.524150) "></path>
+                    <path d="M1.73583414,4.63067368 L8.592977,4.63067368 C10.0131378,4.63067368 11.1644056,5.78194147 11.1644056,7.20210225 L11.1644056,7.20210225 C11.1644056,8.62226304 10.0131378,9.77353083 8.592977,9.77353083 L1.73583414,9.77353083 C0.315673359,9.77353083 -0.835594427,8.62226304 -0.835594427,7.20210225 L-0.835594427,7.20210225 C-0.835594427,5.78194147 0.315673359,4.63067368 1.73583414,4.63067368 Z" id="Rectangle-Copy" fill="url(#linearGradient-2)" transform="translate(5.164406, 7.202102) rotate(-62.000000) translate(-5.164406, -7.202102) "></path>
+                    <path d="M14.592977,18.3449594 L21.4501199,18.3449594 C22.8702806,18.3449594 24.0215484,19.4962272 24.0215484,20.916388 L24.0215484,20.916388 C24.0215484,22.3365488 22.8702806,23.4878165 21.4501199,23.4878165 L14.592977,23.4878165 C13.1728162,23.4878165 12.0215484,22.3365488 12.0215484,20.916388 L12.0215484,20.916388 C12.0215484,19.4962272 13.1728162,18.3449594 14.592977,18.3449594 Z" id="Rectangle-Copy" fill="url(#linearGradient-3)" transform="translate(18.021548, 20.916388) rotate(-29.000000) translate(-18.021548, -20.916388) "></path>
+                </g>
+                <g id="分组" transform="translate(0.000000, 20.000000)">
+                    <polygon id="Fill-1" fill="url(#linearGradient-4)" points="44.4198097 26.1902069 32.2118017 6 19.7423785 26.1902069 3 14.2228042 10.8510013 43 32.2118017 43 53.572602 43 61 14.2228042"></polygon>
+                    <polygon id="Fill-1" fill="url(#linearGradient-5)" points="44 26.1902069 31.9988512 6 11 43 31.9988512 43"></polygon>
+                    <path d="M18,54 L46,54 C49.8659932,54 53,50.8659932 53,47 L11,47 L11,47 C11,50.8659932 14.1340068,54 18,54 Z" id="Fill-3" fill="#FFBE00"></path>
+                    <circle id="椭圆形" fill="#FFDE00" fill-rule="nonzero" cx="32.5" cy="5.5" r="5.5"></circle>
+                    <circle id="椭圆形-copy-3" fill="#FFDE00" fill-rule="nonzero" cx="3.5" cy="14.5" r="3.5"></circle>
+                    <circle id="椭圆形-copy-4" fill="#FFDE00" fill-rule="nonzero" cx="60.5" cy="14.5" r="3.5"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

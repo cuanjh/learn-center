@@ -17,6 +17,7 @@
     <buy-chapter v-if="isShowBuyChapter"/>
     <!-- 匿名用户听电台提示弹框 -->
     <user-login-regist-box></user-login-regist-box>
+    <common-modal />
   </div>
 </template>
 <script>
@@ -30,6 +31,7 @@ import VoicePlayer from '../common/voicePlayer.vue'
 import ContinueLearn from '../common/continueLearn.vue'
 import BuyChapter from '../common/buyChapterConfirm.vue'
 import GotoBind from '../common/gotoBind.vue'
+import CommonModal from '../common/commonModal.vue'
 import Bus from '../../bus'
 import cookie from '../../tool/cookie'
 import UserLoginRegistBox from '../common/userLoginRegistBox.vue'
@@ -64,7 +66,8 @@ export default {
     ContinueLearn,
     BuyChapter,
     GotoBind,
-    UserLoginRegistBox
+    UserLoginRegistBox,
+    CommonModal
   },
   mounted () {
     let userId = cookie.getCookie('user_id')
