@@ -75,9 +75,9 @@
                   <i class="subscibe"></i>
                   <span>已订阅</span>
                 </p>
-                <p class="have-no-course" v-else>
+                <p class="have-no-course" v-else @click="subscibe()">
                   <i class="subscibeno"></i>
-                  <span @click="subscibe()">订阅</span>
+                  <span>订阅</span>
                 </p>
               </div>
             </div>

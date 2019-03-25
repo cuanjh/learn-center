@@ -128,7 +128,7 @@ export default {
     Bus.$emit('loadNavData', navList)
     this.userId = cookie.getCookie('user_id')
     // this.isActive = this.courseOrder ? this.courseOrder : 410
-    this.isActive = this.radioMenu.list_order
+    this.isActive = this.radioMenu
     this.postDisvRadio().then((res) => {
       console.log('电台首页', res)
       this.menuRadioNavs = res.data.menuRadios
@@ -161,7 +161,10 @@ export default {
     // },
     radioMenu () {
       let menu = JSON.parse(sessionStorage.getItem('menu'))
-      return menu
+      if (!menu) {
+        return 410
+      }
+      return menu.list_order
     }
   },
   methods: {
