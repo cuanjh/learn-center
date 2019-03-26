@@ -86,11 +86,11 @@
     <div class="link-lists">
       <dl>
         <dt>项目平台</dt>
-        <dd><a href="http://www.utlcc.org" target="_blank">多语言冠军挑战赛</a></dd>
-        <dd><a href="http://www.unesco-talkmate.org" target="_blank">联合国项目办公室</a></dd>
+        <dd><a href="http://www.utlcc.org" rel="nofollow noopener noreferrer" target="_blank">多语言冠军挑战赛</a></dd>
+        <dd><a href="http://www.unesco-talkmate.org" rel="nofollow noopener noreferrer" target="_blank">联合国项目办公室</a></dd>
         <dd style="display:none"><a href="javascript:;" target="_blank">全球幼教联盟</a></dd>
-        <dd><a href="https://www.talkmate.com/langmuseum.html" target="_blank">语言博物馆</a></dd>
-        <dd><a href="https://www.talkmate.com/langtactic.html" target="_blank">一带一路语言战略</a></dd>
+        <dd><a href="https://www.talkmate.com/langmuseum.html" rel="nofollow noopener noreferrer" target="_blank">语言博物馆</a></dd>
+        <dd><a href="https://www.talkmate.com/langtactic.html" rel="nofollow noopener noreferrer" target="_blank">一带一路语言战略</a></dd>
       </dl>
       <dl>
         <dt>企业文化</dt>
