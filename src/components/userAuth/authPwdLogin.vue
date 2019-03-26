@@ -385,7 +385,7 @@ export default {
   .auto-forget .forget {
     display: inline-block;
     font-size: 14px;
-    font-family: PingFang-SC-Medium;
+    // font-family: PingFang-SC-Medium;
     font-weight: 500;
     line-height: 20px;
     margin-right: 10px;
@@ -424,7 +424,7 @@ export default {
     display: inline-block;
     width: 100%;
     font-size: 14px;
-    font-family: PingFang-SC-Medium;
+    // font-family: PingFang-SC-Medium;
     font-weight: 500;
     color:rgba(153,153,153,1);
     line-height: 20px;
@@ -445,7 +445,7 @@ export default {
     cursor: pointer;
     height: 14px;
     font-size: 14px;
-    font-family: PingFang-SC-Medium;
+    // font-family: PingFang-SC-Medium;
     font-weight: 500;
     color:rgba(42,159,228,1);
     line-height: 14px;
