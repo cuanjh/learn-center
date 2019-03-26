@@ -50,7 +50,7 @@
               <!-- 前两个宽50% 后面的是100% -->
               <div class="right-header">
                 <div class="right-img">
-                  <img :src="naInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="国家图片">
+                  <img :src="naInfo.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="">
                 </div>
                 <div class="introduce">
                   <p>{{naInfo.name}}</p>
@@ -66,7 +66,7 @@
                   <ul class="country-info">
                     <li v-for="(item, index) in nationInfoObj" :key="index">
                       <p class="title">{{item.title}}</p>
-                      <p class="desc">{{item.info?item.info : naInfo.name}}</p>
+                      <p class="desc">{{item.info}}</p>
                     </li>
                   </ul>
                 </div>
@@ -75,7 +75,7 @@
                     <li class="country-img" v-for="item in countryLanguages" :key="item.lang_code">
                       <router-link :to="{path: '/app/book-details/' + item.courseCode}" class="have-img">
                         <div class="country-img">
-                          <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="语言图片">
+                          <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="">
                         </div>
                         <div class="country-title">
                           <p>{{item.name}}</p>
@@ -178,7 +178,7 @@ export default {
       subscribeCoursesStr: state => state.course.subscribeCoursesStr
     }),
     naInfo () {
-      let nationInfos = JSON.parse(localStorage.getItem('routerParams'))
+      let nationInfos = JSON.parse(localStorage.getItem('nationInfos'))
       return nationInfos
     },
     countryCode () {
