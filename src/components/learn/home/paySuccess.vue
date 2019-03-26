@@ -5,6 +5,7 @@
       <p>支付成功啦，请确认支付完成！</p>
       <p><router-link :to="{path: '/app/index'}">知道了</router-link></p>
       <p>点击“知道了”将跳转至学习主页</p>
+      <p>可以到个人中心查看购买的课程</p>
     </div>
   </div>
 </template>
@@ -68,6 +69,12 @@ export default {
         font-size: 14px;
         font-weight: 500;
         color: #90A2AE;
+      }
+      &:nth-child(5) {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        color: red;
       }
     }
   }
