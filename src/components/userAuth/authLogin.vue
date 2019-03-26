@@ -528,7 +528,7 @@ html,body{-webkit-text-size-adjust:none;}
   .login-pwd p{
     cursor: pointer;
     font-size:14px;
-    font-family:PingFang-SC-Medium;
+    // font-family:PingFang-SC-Medium;
     font-weight:500;
     color:#3C5B6F;
     line-height:14px;
