@@ -332,12 +332,12 @@ export default {
   display: inline-block;
   float: left;
   height: 60px;
-  font-size:18px;
+  font-size:16px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
   color:#3C5B6FFF;
   text-align: center;
-  margin-right: 50px;
+  margin-right: 42px;
   // border-right: 1px solid #EEF2F3;
   line-height: 60px;
 }
@@ -383,6 +383,7 @@ export default {
   height: 70px;
   border-radius: 8px;
   background-color: #E8E8E8;
+  object-fit: cover;
 }
 
 .user-course-item-box ol {

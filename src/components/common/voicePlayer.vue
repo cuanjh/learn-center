@@ -174,7 +174,7 @@
       </div>
     </div>
     <!-- 人民币付费课程弹框 -->
-    <buy-radio-box></buy-radio-box>
+    <buy-money-box></buy-money-box>
     <!-- 金币付费课程弹框 -->
     <buy-coins-radio-box/>
     <!-- 金币不足 -->
@@ -187,7 +187,7 @@ import { mapState, mapActions } from 'vuex'
 import $ from 'jquery'
 import Bus from '../../bus'
 import SoundCtrl from '../../plugins/soundCtrl'
-import BuyRadioBox from './buyRadioBox.vue'
+import BuyMoneyBox from './buyMoneyBox.vue'
 import BuyCoinsRadioBox from './buyCoinsRadioBox.vue'
 import UserCoinsBox from './userCoinsBox.vue'
 
@@ -219,7 +219,7 @@ export default {
       subscibenoInfo: {}
     }
   },
-  components: {BuyRadioBox, BuyCoinsRadioBox, UserCoinsBox},
+  components: {BuyMoneyBox, BuyCoinsRadioBox, UserCoinsBox},
   computed: {
     ...mapState({
       userInfo: state => state.userInfo // 用户信息
@@ -500,7 +500,7 @@ export default {
             if (index > 2) {
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', this.radioDetail)
+                Bus.$emit('showBuyMoneyBox', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -514,7 +514,7 @@ export default {
               if (index > 2) {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', this.radioDetail)
+                  Bus.$emit('showBuyMoneyBox', this.radioDetail)
                 } else if (radio.money_type === 'coins') {
                   // 金币提示
                   Bus.$emit('showBuyCoinsRadio', radio)

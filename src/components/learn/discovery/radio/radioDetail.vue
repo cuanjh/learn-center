@@ -485,7 +485,7 @@ export default {
             if (card.list_order > 3) {
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', this.radioDetail)
+                Bus.$emit('showBuyMoneyBox', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -498,7 +498,7 @@ export default {
               if (card.list_order > 3) {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', this.radioDetail)
+                  Bus.$emit('showBuyMoneyBox', this.radioDetail)
                 } else if (radio.money_type === 'coins') {
                   // 金币提示
                   Bus.$emit('showBuyCoinsRadio', radio)
@@ -543,7 +543,7 @@ export default {
         if (this.isVip !== 1) { // 不是会员
           if (radio.money_type === 'CNY') {
             // 人民币提示
-            Bus.$emit('showBuyRadio', this.radioDetail)
+            Bus.$emit('showBuyMoneyBox', this.radioDetail)
             return false
           } else if (radio.money_type === 'coins') {
             // 金币提示
@@ -555,7 +555,7 @@ export default {
           if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
             if (radio.money_type === 'CNY') {
               // 人民币提示
-              Bus.$emit('showBuyRadio', this.radioDetail)
+              Bus.$emit('showBuyMoneyBox', this.radioDetail)
               return false
             } else if (radio.money_type === 'coins') {
               // 金币提示

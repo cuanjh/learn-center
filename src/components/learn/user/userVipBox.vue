@@ -51,7 +51,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 40px 0 29px;
+  padding: 0 40px 0 25px;
   height:90px;
   background-color: #ffffff;
   // box-shadow:0px 3px 10px 0px rgba(5,43,52,0.05);

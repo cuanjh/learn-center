@@ -98,9 +98,10 @@
                       <a class="face-pic" @click="showEmoji = !showEmoji">
                         <i :class="{'active':showEmoji}"></i>添加表情
                       </a>
-                      <a class="release" :class="{disabled:desc !== ''}" @click="commentCard()">
+                      <!-- :class="{disabled:desc == ''}" -->
+                      <button class="release" v-bind:disabled="isGoRelease == ''" @click="commentCard()">
                         <span>发表评论</span>
-                      </a>
+                      </button>
                     </div>
                     <transition name="fade" mode="">
                       <div class="emoji-box" v-if="showEmoji" >
@@ -248,7 +249,7 @@ export default {
       {id: 4, path: '', text: '课程详情'}
     ]
     Bus.$emit('loadNavData', navList)
-    this.initCardDetail()
+    // this.initCardDetail()
     this.loadData()
     this.initCommentList(this.pageSize)
     this.getOtherRecommends({current_radio_code: this.radioCardParams.radioCode}).then(res => {
@@ -380,7 +381,7 @@ export default {
             if (this.radioCardParams.order > 3) {
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', this.radioDetail)
+                Bus.$emit('showBuyMoneyBox', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -393,7 +394,7 @@ export default {
               if (this.radioCardParams.order > 3) {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', this.radioDetail)
+                  Bus.$emit('showBuyMoneyBox', this.radioDetail)
                 } else if (radio.money_type === 'coins') {
                   // 金币提示
                   Bus.$emit('showBuyCoinsRadio', radio)
@@ -734,11 +735,11 @@ export default {
                 word-wrap: break-word;
                 overflow-x: hidden;
                 border-radius:6px;
-                border:1px solid rgba(42,159,228,1);
+                border:1px solid rgba(200,212,219,1);
                 font-size:14px;
                 font-family:PingFangSC-Regular;
                 font-weight:400;
-                color:rgba(144,162,174,1);
+                color:#333;
                 line-height:20px;
               }
               .pay-service-textarea-text {
@@ -795,14 +796,14 @@ export default {
                 padding: 7px 22px;
                 background:rgba(200,212,219,1);
                 border-radius:30px;
-                cursor: not-allowed;
-              }
-              .disabled {
-                background:rgba(200,212,219,1);
+                background: #0581D1;
                 &:hover {
-                  cursor: pointer;
                   background: #2A9FE4FF;
                 }
+              }
+              .release:disabled {
+                cursor: not-allowed;
+                background:rgba(200,212,219,1);
               }
               // 表情
               .emoji-box {
@@ -869,6 +870,7 @@ export default {
                   height: 40px;
                   border-radius: 50%;
                   margin-right: 10px;
+                  object-fit: cover;
                 }
                 .left {
                   width: 100%;

@@ -4,7 +4,8 @@
       <div class="common-madal">
         <p :class="className"><i></i></p>
         <p class="description" v-html="description"></p>
-        <a href="javacript:;" @click="commonHandler()" class="button"><span v-text="btnDesc"></span></a>
+        <a href="javacript:;" class="button" @click="commonHandler()"><span v-text="btnDesc"></span></a>
+        <a href="javacript:;" class="button" v-if="btnCancel" @click="commonCancel()"><span>{{btnCancel}}</span></a>
       </div>
     </div>
   </transition>
@@ -13,10 +14,23 @@
 <script>
 import Bus from '../../bus'
 export default {
+  data () {
+    return {
+      isShow: false,
+      className: '',
+      description: '',
+      btnCancel: '',
+      btnDesc: '',
+      isLink: false,
+      hyperLink: ''
+    }
+  },
   created () {
     Bus.$on('showCommonModal', (data) => {
+      console.log('全局弹框data', data)
       this.className = data.className
       this.description = data.description
+      this.btnCancel = data.btnCancel
       this.btnDesc = data.btnDesc
       this.isLink = data.isLink
       if (this.isLink) {
@@ -28,22 +42,15 @@ export default {
       this.isShow = false
     })
   },
-  data () {
-    return {
-      isShow: false,
-      className: '',
-      description: '',
-      btnDesc: '',
-      isLink: false,
-      hyperLink: ''
-    }
-  },
   methods: {
     commonHandler () {
       if (this.hyperLink) {
         this.isShow = false
         this.$router.push({path: this.hyperLink})
       }
+      this.isShow = false
+    },
+    commonCancel () {
       this.isShow = false
     }
   }
@@ -91,8 +98,11 @@ export default {
     width:140px;
     height:36px;
     line-height: 36px;
-    background:#2A9FE4;
+    background:#0581D1;
     border-radius:18px;
+    &:hover {
+      background-color: #2A9FE4;
+    }
     span {
       color: #fff;
       font-weight: 500;

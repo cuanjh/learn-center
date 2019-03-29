@@ -72,7 +72,17 @@ export default {
       this.itemRadio = radio
       console.log('user.coins', this.userInfo.coins)
       if (this.userInfo.coins < radio.money) {
-        Bus.$emit('showUserCoins', this.userInfo.coins, radio.money)
+        let obj = {
+          className: 'warnIcon',
+          buttonClass: 'buttonClass',
+          description: `哦!你的金币余额不足啦！<br/>获取此课程需要${radio.money}金币!<br/> 金币余额: ${this.userInfo.coins}`,
+          btnCancel: '取消',
+          btnDesc: '去充值',
+          isLink: true,
+          hyperLink: '/app/user/wallet'
+        }
+        Bus.$emit('showCommonModal', obj)
+        // Bus.$emit('showUserCoins', this.userInfo.coins, radio.money)
       } else {
         this.showBuyCoinsBox = true
       }

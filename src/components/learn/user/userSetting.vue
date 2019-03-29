@@ -1,135 +1,138 @@
 <template>
   <div>
     <section class='user-setting-wrap'>
-    <div class="userVip-bottom-nav">
-      <p @click='swapVipTab(true)' :class="{ 'active': activeTab === true }">基本资料</p>
-      <p @click='swapVipTab(false)' :class="{ 'active': activeTab === false }">修改密码</p>
-    </div>
-    <div class='user-setting-form' v-show="activeTab === true">
-      <form action="#">
-        <div>
-          <div>
-            <span style='position:relative;line-height: 40px;display: inline-block;width:74px'>昵称</span>
-            <input type="text" placeholder='昵称限制50个字符' maxlength="50" :class="['reg-input', {'error':!nicknameError}]" v-model="nickname">
-            <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
+      <div class="user-setting-nav">
+        <a @click='swapVipTab(true)' :class="{ 'active': activeTab === true }">基本资料</a>
+        <a @click='swapVipTab(false)' :class="{ 'active': activeTab === false }">修改密码</a>
+      </div>
+      <div class='user-setting-form' v-show="activeTab === true">
+        <form action="#">
+          <div class="user-setting-item">
+            <div class="user-setting-item-left">
+              <span>昵称</span>
+              <input type="text" placeholder='' maxlength="50"
+                     :class="['reg-input', {'error':!nicknameError}]"
+                     v-model="nickname">
+            </div>
+            <div class='learn-setting-error-tips-settingpage' v-show='!nicknameError'>
+              <i></i><em>昵称限制50个字符</em>
+            </div>
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show='!nicknameError'><i></i><em>昵称限制50个字符</em></div>
-        </div>
-
-        <div>
-          <div>
-            <span style='position:relative;line-height: 40px;display: inline-block;width:74px'>手机</span>
-            <input type="text" placeholder='请填写手机号' :class="['reg-input', {'error':!phoneNumberValidator}]" v-model="phone">
-            <template v-if="!phonenumberConfirmed">
-              <em class='bind-logical-textState adjust'>未绑定</em>
-              <span class='bind-logical-btnState adjust' style="line-height: 30px;" @click="bindPhoneNumber(phone)" v-show="phoneNumberValidator&&phone">绑定手机</span>
-            </template>
-            <template v-if="phonenumberConfirmed">
-              <em class='bind-logical-textState adjust'>已绑定</em>
-              <span class='bind-logical-btnState adjustOff' style="line-height: 30px;"  @click="unbindIdentity('phonenumber')">解除绑定</span>
-            </template>
+          <div class="user-setting-item">
+            <div class="user-setting-item-left">
+              <span>手机</span>
+              <input type="text" placeholder=''
+                     :class="['reg-input', {'error':!phoneNumberValidator}]"
+                     v-model="phone">
+            </div>
+            <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'>
+              <i></i><em>请输入正确的手机号</em>
+            </div>
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'><i></i><em>请输入正确的手机号</em></div>
-        </div>
-        <div>
-          <div>
-            <span style='position:relative;line-height: 40px;display: inline-block;width:74px'>邮箱</span>
-            <input type="text" placeholder='请填写邮箱账号' :class="['reg-input', {'error':!mailValidator}]" v-model="email">
-            <template v-if="emailConfirmedStatus == 0">
-              <em class='bind-logical-textState adjust'>未绑定</em>
-              <span class='bind-logical-btnState adjust bindEmail' @click="bindEmail(email)" v-show="mailValidator&&email">绑定邮箱</span>
-            </template>
-            <template v-if="emailConfirmedStatus == 1">
-              <em class='bind-logical-textState adjust'>未验证</em>
-              <span class='bind-logical-btnState' style="margin-left:-56px" @click="confirmEmail(email)">验证邮箱</span>
-              <span class='bind-logical-btnState adjustOff' style='' @click="unbindIdentity('email')">解除绑定</span>
-            </template>
-            <template v-if="emailConfirmedStatus == 2">
-              <em class='bind-logical-textState adjust'>已绑定</em>
-              <span class='bind-logical-btnState adjustOff' style="" @click="unbindIdentity('email')">解除绑定</span>
-            </template>
+          <div class="user-setting-item">
+            <div class="user-setting-item-left">
+              <span>邮箱</span>
+              <input type="text" placeholder=''
+                     :class="['reg-input', {'error':!mailValidator}]"
+                     v-model="email">
+              <!-- <template v-if="emailConfirmedStatus == 0">
+                <em class='bind-logical-textState adjust'>未绑定</em>
+                <span class='bind-logical-btnState adjust bindEmail' @click="bindEmail(email)" v-show="mailValidator&&email">绑定邮箱</span>
+              </template>
+              <template v-if="emailConfirmedStatus == 1">
+                <em class='bind-logical-textState adjust'>未验证</em>
+                <span class='bind-logical-btnState' style="margin-left:-56px" @click="confirmEmail(email)">验证邮箱</span>
+                <span class='bind-logical-btnState adjustOff' style='' @click="unbindIdentity('email')">解除绑定</span>
+              </template>
+              <template v-if="emailConfirmedStatus == 2">
+                <em class='bind-logical-textState adjust'>已绑定</em>
+                <span class='bind-logical-btnState adjustOff' style="" @click="unbindIdentity('email')">解除绑定</span>
+              </template> -->
+            </div>
+            <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'>
+              <i></i><em>请输入正确的邮箱账号</em>
+            </div>
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'><i></i><em>请输入正确的邮箱账号</em></div>
-        </div>
-        <div :class="{'error':!gender}">
-          <span style='margin-right: 20px; position: relative; line-height: 40px;display: inline-block;width:74px'>性别</span>
-          <div class='selsex'>
-            <gender-selector ref="gender" :value="'male'" @update="updateGender"></gender-selector>
+          <div class="user-setting-item" :class="{'error':!gender}">
+            <span>性别</span>
+            <div class='selsex'>
+              <gender-selector id="selsex-content" ref="gender" :value="'male'" @update="updateGender"></gender-selector>
+            </div>
           </div>
-          <i class='user-setting-require-item'>*</i>
-        </div>
-
-        <div :class="{'error':!birthday}">
-          <span style='margin-right: 20px; position: relative; line-height: 40px; display: inline-block;width:74px'>生日</span>
-          <div class='seldate'>
-            <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" v-focus/> -->
-            <date-picker ref="datePicker" @update="updateBirthday"></date-picker>
+          <div class="user-setting-item" :class="{'error':!birthday}">
+            <span>生日</span>
+            <div class='seldate'>
+              <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" v-focus/> -->
+              <date-picker id="seldate-content" ref="datePicker" @update="updateBirthday"></date-picker>
+            </div>
           </div>
-          <i class='user-setting-require-item'>*</i>
-        </div>
-
-        <div :class="{'error':!country}">
-          <span style='margin-right:13px; position: relative; line-height: 40px;'>国籍/地区</span>
-          <div class='selsex selcity'>
-            <country-selector ref="country" :value="country" @update="updateCountry"></country-selector>
+          <div class="user-setting-item" :class="{'error':!country}">
+            <span>国籍/地区</span>
+            <div class='selsex selcity'>
+              <country-selector id="selcity-content" ref="country" :value="country" @update="updateCountry"></country-selector>
+            </div>
           </div>
-          <i class='user-setting-require-item'>*</i>
-        </div>
-
-        <div class='expertLang-box' :class="{'error':!languageSkill}">
-          <span style='position:relative;vertical-align: top;line-height: 40px;'>我的母语</span>
-          <div class="selsex sellang">
-            <language-skill-selector ref="langSkill" :value="languageSkill" @update="updateLanguageSkill"></language-skill-selector>
+          <div class='user-setting-item expertLang-box' :class="{'error':!languageSkill}">
+            <span>精通语言</span>
+            <div class="selsex sellang">
+              <language-skill-selector id="sellang-content" ref="langSkill" :value="languageSkill" @update="updateLanguageSkill"></language-skill-selector>
+            </div>
           </div>
-          <i class='user-setting-require-item'>*</i>
-        </div>
-
-        <div class='intro-box'><span style='position:relative;vertical-align: top'>个人介绍</span>
-          <textarea class='user-introduction-area' :maxlength='descMaxLeng' v-model='desc'></textarea>
-          <p class='words-remain'>您还可以输入<span>{{ descMaxLeng - desc.length }}</span>字</p>
-        </div>
-        <div class='submit' @click="saveUserInfo">保存修改</div>
-      </form>
-      <p class='bindPhone-error-tips' style='bottom:9px;top:initial;left:28px;' v-show='noticeSetting'><i class='user error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p>
-    </div>
-    <div class="user-fixpassword" v-show="activeTab === false">
-      <form action="" style='padding-bottom: 20px;'>
-        <p v-if="!isAnonymous">
-          <span>原密码</span>
-          <input type="password" placeholder='请输入原始密码' v-model="oldPsw" />
-          <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
-        </p>
-        <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码输入错误，请重新输入</div>
-        <p :class="{'error':false}">
-          <span>新密码</span>
-          <input type="password" placeholder='请输入新密码' v-on:input="comparePwd()" v-model="newPsw1">
-          <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
-        </p>
-        <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码不符合规范，请重新输入</div>
-        <p>
-          <span>确认密码</span>
-          <input type="password" placeholder='请确认新密码' v-on:input="comparePwd()" v-model="newPsw2">
-          <i class='user-setting-require-item user-setting-require-item-adjust-spe'>*</i>
-        </p>
-        <div class='learn-setting-error-tips-settingpage' v-show="!isSame"><i></i>您两次输入的密码不同，请重新输入</div>
-        <div class='submit' @click="modifyPsw">保存修改</div>
-        <p class='bindPhone-error-tips' style='bottom:-1px;top:initial;left:28px;' v-show='noticePsw'><i class='user error psw-user-error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p>
-      </form>
-    </div>
-  </section>
-  <set-alert
-    ref="setAlert"
-    :alert-type="alertType"
-    :bind-phone-num="phone"
-    :alert-message="alertMessage"
-    :bind-confirm-type="bindConfirmType"
-    :alert-button="alertButton"
-    @updateAlertMessage="updateAlertMessage"
-    @updateAlertButton="updateAlertButton"
-    @memberupdate="loadData"
-    @close="closeWin()"
-  >
-  </set-alert>
+          <div  class="user-setting-item intro-box">
+            <span>个人介绍</span>
+            <textarea class='user-introduction-area' :maxlength='descMaxLeng' v-model='desc'></textarea>
+            <p class='words-remain'>您还可以输入<span>{{ descMaxLeng - desc.length }}</span>字</p>
+          </div>
+          <button class='submit' @click="saveUserInfo">保存修改</button>
+        </form>
+        <!-- <p class='bindPhone-error-tips' style='bottom:9px;top:initial;left:28px;' v-show='noticeSetting'><i class='user error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p> -->
+      </div>
+      <div class="user-fixpassword" v-show="activeTab === false">
+        <form action="">
+          <p class="user-password-text" v-if="!isAnonymous">
+            <span>原密码</span>
+            <input type="password" placeholder='' v-model="oldPsw" />
+          </p>
+          <div class='learn-setting-error-tips-settingpage' v-show="false">
+            <i></i>您的密码输入错误，请重新输入
+          </div>
+          <p class="user-password-text" :class="{'error':false}">
+            <span>新密码</span>
+            <input type="password" placeholder=''
+                   v-on:input="comparePwd()"
+                   v-model="newPsw1">
+          </p>
+          <div class='learn-setting-error-tips-settingpage' v-show="false">
+            <i></i>您的密码不符合规范，请重新输入
+          </div>
+          <p class="user-password-text">
+            <span>确认密码</span>
+            <input type="password" placeholder=''
+                   v-on:input="comparePwd()"
+                   v-model="newPsw2">
+          </p>
+          <!--  v-show="!isSame" -->
+          <div class='learn-setting-error-tips-settingpage' v-show="!isSame">
+            <i></i>两次输入的密码不同，请重新输入
+          </div>
+          <button class='submit' @click="modifyPsw()">保存修改</button>
+          <!-- <p class='bindPhone-error-tips' style='bottom:-1px;top:initial;left:28px;' v-show='noticePsw'><i class='user error psw-user-error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p> -->
+        </form>
+      </div>
+    </section>
+    <set-alert
+      ref="setAlert"
+      :alert-type="alertType"
+      :bind-phone-num="phone"
+      :alert-message="alertMessage"
+      :bind-confirm-type="bindConfirmType"
+      :alert-button="alertButton"
+      @updateAlertMessage="updateAlertMessage"
+      @updateAlertButton="updateAlertButton"
+      @memberupdate="loadData"
+      @close="closeWin()"
+    >
+    </set-alert>
   </div>
 </template>
 
@@ -144,6 +147,7 @@ import DatePicker from '../../common/user/datepicker.vue'
 import GenderSelector from '../../common/user/generSelector.vue'
 import CountrySelector from '../../common/user/countrySelector.vue'
 import LanguageSkillSelector from '../../common/user/languageSkillSelector.vue'
+
 export default {
   components: {
     DatePicker,
@@ -199,6 +203,7 @@ export default {
       this.$refs['setAlert'].$emit('isShowSetAlert', true)
       this.updateAlertType('bindAccount')
     }
+    this.hoverSelect()
   },
   computed: {
     ...mapState({
@@ -586,12 +591,19 @@ export default {
       } else {
         this.isSame = false
       }
+    },
+    hoverSelect () {
+      $('.multiselect__content li').hover(() => {
+        $('.multiselect__content li').css('background-color', '#EEF2F3FF')
+      }, () => {
+        $('.multiselect__content li').css('background-color', '#ffffff')
+      })
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 input {
   display: inline-block;
   -webkit-appearance: none;
@@ -611,89 +623,30 @@ input {
   background: #fff;
 }
 
-.user-setting-wrap .userVip-bottom-nav {
-  width: 100%;
-  height: 39px;
-  line-height: 39px;
-  text-align: center;
-  font-size: 16px;
-  color: #6d6d6d;
-  border-bottom: 1px solid #ededed;
-  position: relative;
-}
-
-.user-setting-wrap .userVip-bottom-nav p.active {
-  color: #0e8abe;
-  border-bottom: 4px solid #0e8abe;
-  height: 39px;
-}
-.user-setting-wrap .userVip-bottom-nav p {
-  background-image: url(../../../../static/images/learn/learn-user-ziliao-black.svg);
-  background-repeat: no-repeat;
-  background-position: 120px center;
-  padding-left: 20px;
-  width: 50%;
-  float: left;
-  cursor: pointer;
-  font-size: 16px;
-}
-.user-setting-wrap .userVip-bottom-nav p.active {
-  background-image: url(../../../../static/images/learn/learn-user-ziliao-blue.svg);
-}
-.user-setting-wrap .userVip-bottom-nav p:nth-of-type(2) {
-  background-image: url(../../../../static/images/learn/learn-user-xiugai-black.svg);
-}
-.user-setting-wrap .userVip-bottom-nav p:nth-of-type(2).active {
-  background-image: url(../../../../static/images/learn/learn-user-xiugai-blue.svg);
-}
-.user-setting-wrap .userVip-bottom-nav p:nth-of-type(2):hover {
-  background-image: url(../../../../static/images/learn/learn-user-xiugai-blue.svg) !important;
-}
-.user-setting-wrap .userVip-bottom-nav p:nth-of-type(1):hover {
-  background-image: url(../../../../static/images/learn/learn-user-ziliao-blue.svg) !important;
-}
-
-.userVip-bottom-nav:after {
-  content: "";
-  width: 1px;
-  height: 102%;
-  position: absolute;
-  background-color: #ededed;
-  top: 0;
-  left: 50%;
-  margin-left: -.5px;
-}
-
-.user-setting-form {
-  width: 100%;
-  padding: 31px;
-  padding-right: 0px;
-}
-.user-setting-form form > div {
-  height: 40px;
-  /* line-height: 40px; */
-  margin: 22px 0;
-}
-
-.user-setting-form form > div > span {
-  font-size: 20px;
-  color: #4a4a4a;
-  margin-right: 20px;
-}
-.user-setting-form form > div .reg-input {
-  width: 320px;
-  border: 1px solid #dcdbdb;
-  border-radius: 5px;
-  padding-left: 19px;
-  height: 40px;
-}
+// .user-setting-form form > div {
+//   height: 40px;
+//   /* line-height: 40px; */
+//   margin: 22px 0;
+// }
+// .user-setting-form form > div > span {
+//   font-size: 20px;
+//   color: #4a4a4a;
+//   margin-right: 20px;
+// }
+// .user-setting-form form > div .reg-input {
+//   width: 320px;
+//   border: 1px solid #dcdbdb;
+//   border-radius: 5px;
+//   padding-left: 19px;
+//   height: 40px;
+// }
 
 .user-setting-form form>div .error {
   border-color: #e46773;
 }
 
 .user-setting-form form > div .selsex {
-  width: 210px;
+  width: 140px;
   /*height: 40px;*/
   display: inline-block;
 }
@@ -739,11 +692,11 @@ input {
   padding: 0 5px !important;
 }
 .user-setting-form form > div .selcity {
-  width: 250px;
+  width: 220px;
 }
 .user-setting-form .multiselect__input,
 .user-setting-form .multiselect__single {
-  /*color:#dcdbdb !important;*/
+  color:#dcdbdb !important;
 }
 .user-setting-form .user-introduction-area {
   width: 474px;
@@ -754,25 +707,26 @@ input {
   resize: none;
   padding: 0 20px;
   line-height: 34px;
+  margin-left: 23px;
 }
 .user-setting-form .submit,
 .user-fixpassword .submit {
-  width: 162px;
-  height: 47px;
-  border-radius: 4px;
-  background-color: #0e8abe;
-  text-align: center;
-  line-height: 47px;
-  color: #fff;
-  cursor: pointer;
-  margin-top: -6px;
+  // width: 162px;
+  // height: 47px;
+  // border-radius: 4px;
+  // background-color: #0e8abe;
+  // text-align: center;
+  // line-height: 47px;
+  // color: #fff;
+  // cursor: pointer;
+  // margin-top: -6px;
 }
 .user-fixpassword .submit:hover {
   background-color: #05618d;
 }
-.user-setting-form .submit:hover {
-  background-color: #05618d;
-}
+// .user-setting-form .submit:hover {
+//   background-color: #05618d;
+// }
 .user-setting-form form > div.intro-box {
   height: 177px;
 }
@@ -782,46 +736,48 @@ input {
   .multiselect__tag
   ~ .multiselect__input {
 }
-.user-fixpassword {
-  width: 100%;
-  height: 355px;
-  background: #fff;
-  border-radius: 5px;
-}
-.user-fixpassword {
-  width: 100%;
-  height: 100%;
-  padding: 31px;
-}
-.user-fixpassword p {
-  height: 40px;
-  line-height: 40px;
-  margin: 15px 0;
-}
-.user-fixpassword p > span {
-  font-size: 18px;
-  color: #4a4a4a;
-  margin-right: 20px;
-  width: 80px;
-  display: inline-block;
-  text-align: left;
-}
-.user-fixpassword p > input {
-  height: 40px;
-  padding-left: 20px;
-  line-height: 40px;
-  border-radius: 5px;
-  border: 1px solid #dcdbdb;
-  width: 320px;
-}
-.user-fixpassword .submit {
-  margin-top: 35px;
-}
+// .user-fixpassword {
+//   width: 100%;
+//   height: 355px;
+//   background: #fff;
+//   border-radius: 5px;
+// }
+// .user-fixpassword {
+//   width: 100%;
+//   height: 100%;
+//   padding: 31px;
+// }
+// .user-fixpassword p {
+//   height: 40px;
+//   line-height: 40px;
+//   margin: 15px 0;
+// }
+// .user-fixpassword p > span {
+//   font-size: 18px;
+//   color: #4a4a4a;
+//   margin-right: 20px;
+//   width: 80px;
+//   display: inline-block;
+//   text-align: left;
+// }
+// .user-fixpassword p > input {
+//   height: 40px;
+//   padding-left: 20px;
+//   line-height: 40px;
+//   border-radius: 5px;
+//   border: 1px solid #dcdbdb;
+//   width: 320px;
+// }
+// .user-fixpassword .submit {
+//   margin-top: 35px;
+// }
 .user-setting-form ::-webkit-input-placeholder {
   /*color:green;*/
 }
 .intro-box {
   position: relative;
+  display: flex;
+  align-items: flex-start;
 }
 .user-setting-form .words-remain {
   color: #b0b0b0;
@@ -885,7 +841,7 @@ input {
   background: #05618d;
 }
 .user-wrap .user-setting-form form > div .sellang {
-  width: 474px;
+  width: 190px;
 }
 .user-wrap .user-setting-require-item {
   color: #ff785a;
@@ -954,31 +910,7 @@ input {
   cursor: default;
   display: inline-block;
 }
-.user-setting-form .learn-setting-error-tips-settingpage {
-  color: #e46773;
-  font-size: 12px;
-  height: 20px;
-  margin: 0;
-  line-height: 20px;
-  padding-left: 77px;
-}
-.learn-setting-error-tips-settingpage i {
-  display: inline-block;
-  width: 13px;
-  height: 13px;
-  background: url(../../../../static/images/learn/learn-login-tanhao.svg) no-repeat;
-  position: relative;
-  top: 3px;
-  margin-right: 5px;
-}
-.user-fixpassword .learn-setting-error-tips-settingpage {
-  font-size: 12px;
-  color: #e46773;
-  padding-left: 100px;
-}
-.user-fixpassword .learn-setting-error-tips-settingpage i {
-  top: 5px;
-}
+
 .user-setting-form form .seldate .Wdate {
   background-position: 150px center;
   height: 40px !important;
@@ -1002,5 +934,199 @@ input {
 }
 .psw-user-error {
   margin-top: 8px !important;
+}
+.user-setting-wrap {
+  width: 100%;
+  background: #fff;
+  margin-top: 90px;
+  .user-setting-nav {
+    width: 100%;
+    height: 60px;
+    background-color: #ffffff;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #6d6d6d;
+    border-bottom: 1px solid #ededed;
+    border-radius: 4px;
+    position: relative;
+    padding-left: 25px;
+    a {
+      display: inline-block;
+      float: left;
+      height: 60px;
+      font-size:16px;
+      font-family:PingFangSC-Semibold;
+      font-weight:500;
+      color:#3C5B6FFF;
+      text-align: center;
+      margin-right: 50px;
+      // border-right: 1px solid #EEF2F3;
+      line-height: 60px;
+      &:hover {
+        color: #2A9FE4;
+      }
+      &.active {
+        color: #0581D1;
+        font-weight: bold;
+        border-bottom: 3px solid #2A9FE4FF;
+      }
+    }
+    a:last-child {
+      border-right: 0;
+    }
+  }
+  // 基本资料设置样式
+  .user-setting-form {
+    padding: 60px 54px 114px;
+    form {
+      .user-setting-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding-bottom: 16px;
+        span {
+          display: inline-block;
+          text-align: right;
+          width: 64px;
+          font-size:14px;
+          font-family:PingFang-SC-Medium;
+          font-weight:500;
+          color:rgba(68,68,68,1);
+          line-height: 40px;
+        }
+        .user-setting-item-left {
+          input {
+            width: 280px;
+            height: 40px;
+            border-radius: 4px;
+            border: 1px solid #C8D4DBFF;
+            padding: 0 10px;
+            margin: 0 14px 0 20px;
+          }
+        }
+        .learn-setting-error-tips-settingpage {
+          display: flex;
+          align-items: center;
+          em {
+            font-size:12px;
+            font-family:PingFang-SC-Regular;
+            font-weight:400;
+            color:rgba(221,43,43,1);
+          }
+          i {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: url('../../../../static/images/userInfo/error-icon.svg') no-repeat center;
+            background-size: cover;
+            margin-right: 8px;
+          }
+        }
+        .seldate {
+          width: 220px;
+          margin-left: 23px;
+          .cov-vue-date {
+            width: 220px;
+            input {
+              width: 220px;
+            }
+          }
+        }
+        .sellang {
+          width: 220px;
+        }
+        .selsex {
+          // width: 140px;
+          margin-left: 23px;
+          #selsex-content {
+            width: 100%;
+            .multiselect__tags {
+              .multiselect__input {
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+      .intro-box {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        .words-remain {
+          left: 90px;
+          bottom: 26px;
+          span {
+            display: inline;
+            line-height: 20px;
+            color: #0581D1;
+            padding: 0 6px;
+          }
+        }
+      }
+    }
+  }
+  // 修改密码
+  .user-fixpassword {
+    width: 100%;
+    form {
+      padding: 62px 60px 240px;
+      .user-password-text {
+        span {
+          display: inline-block;
+          text-align: right;
+          width: 64px;
+          font-size: 14px;
+          font-family: PingFang-SC-Medium;
+          font-weight: 500;
+          color: #444444;
+          line-height: 40px;
+        }
+        input {
+          width: 280px;
+          height: 40px;
+          border-radius: 4px;
+          border: 1px solid #C8D4DBFF;
+          padding: 0 10px;
+          margin: 0 14px 16px 20px;
+        }
+      }
+      .learn-setting-error-tips-settingpage {
+        font-size:12px;
+        font-family:PingFang-SC-Regular;
+        font-weight:400;
+        color:rgba(221,43,43,1);
+        padding: 0px 0 46px 88px;
+        line-height: 12px;
+        i {
+          display: inline-block;
+          width: 12px;
+          height: 12px;
+          background: url('../../../../static/images/userInfo/error-icon.svg') no-repeat center;
+          background-size: cover;
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+  // 保存修改
+  .submit {
+    width: 160px;
+    height: 36px;
+    font-size:16px;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    padding: 6px 48px;
+    background: #0581D1;
+    color: #fff;
+    border-radius: 22px;
+    margin-left: 88px;
+    &:hover {
+      background: #2A9FE4;
+    }
+    &:active {
+      background: #0581D1;
+    }
+  }
 }
 </style>

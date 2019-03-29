@@ -89,6 +89,12 @@
                 <i class="setting"></i><span>设置</span>
               </router-link>
             </li>
+            <li  v-if="isAnonymous">
+              <router-link :class="{'active': activeItem === 'bind' }"
+                           :to="{ path:'/app/user/bind' }">
+                <i class="spe-bind"></i><span>绑定</span>
+              </router-link>
+            </li>
           </ul>
         </div>
       </div>
@@ -486,6 +492,7 @@ export default {
   padding-bottom: 66px;
   ul {
     li {
+      padding-bottom: 10px;
       a {
         display: flex;
         align-items: center;
@@ -512,16 +519,25 @@ export default {
           width: 18px;
           height: 15px;
           background-image: url('../../../../static/images/userInfo/wallet.svg');
+          margin-right: 12px;
         }
         .doc {
           width: 18px;
           height: 16px;
           background-image: url('../../../../static/images/userInfo/doc.svg');
+          margin-right: 12px;
         }
         .setting {
           width: 17px;
           height: 16px;
           background-image: url('../../../../static/images/userInfo/setting.png');
+          margin-right: 13px;
+        }
+        .spe-bind {
+          width: 15px;
+          height: 15px;
+          background-image: url('../../../../static/images/userInfo/spe-bind.svg');
+          margin-right: 13px;
         }
         &:hover {
           color: #2A9FE4FF;
@@ -541,6 +557,12 @@ export default {
           }
           .setting {
             background-image: url('../../../../static/images/userInfo/setting-hover.png');
+          }
+          .spe-bind {
+            width: 15px;
+            height: 15px;
+            background-image: url('../../../../static/images/userInfo/spe-bind-hover.svg');
+            margin-right: 13px;
           }
         }
         &.active {
@@ -562,8 +584,17 @@ export default {
           .setting {
             background-image: url('../../../../static/images/userInfo/setting-hover.png');
           }
+          .spe-bind {
+            width: 15px;
+            height: 15px;
+            background-image: url('../../../../static/images/userInfo/spe-bind-hover.svg');
+            margin-right: 13px;
+          }
         }
       }
+    }
+    li:last-child {
+      padding-bottom: 0;
     }
   }
 }
