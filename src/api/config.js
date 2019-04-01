@@ -34,6 +34,8 @@ export default {
   resetAnonymous: '/user/reset_password_anonymous', // 匿名账号重置
   unbindIdentity: '/user/unbind_identity', // 解除邮箱或者手机号绑定
   uploadUserPhoto: '/user/upload_user_photo', // 上传用户头像(需要登录)
+  upUserFollowerApi: '/relation/get_follower', // 用户中心粉丝列表接口
+  upUserFollowingApi: '/relation/get_following', // 用户中心关注人列表接口
   // 登录新的接口
 
   // 课程

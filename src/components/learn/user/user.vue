@@ -19,12 +19,26 @@
               <span>你还不是会员</span>
               <a @click="goVip()">成为会员</a>
             </li>
-            <li>
+            <li v-if="userInfo">
               <!-- <span>{{ userInfo ? userInfo.following_count : '' }}<em> 关注</em></span>
               <span>{{ userInfo ? userInfo.followed_count : '' }}<em> 粉丝</em></span> -->
-              <p><span>23</span><span>关注</span></p>
-              <p><span>23</span><span>关注</span></p>
-              <p><span>23</span><span>关注</span></p>
+              <!-- @click="goUserFollow('follow')" :to="{path: '/app/user/user-follow'}" -->
+              <a @click="goUserFollowing('follow')"
+                  :class="{'active': activeItem === 'follow' }">
+                <span>{{userInfo.following_count ? userInfo.following_count : '0'}}</span>
+                <span >关注</span>
+              </a>
+              <!-- :to="{path: '/app/user/user-follow'}" -->
+              <a @click="goUserFollow('followed')"
+                  :class="{'active': activeItem === 'followed' }">
+                <span>{{userInfo.followed_count ? userInfo.followed_count : '0'}}</span>
+                <span >粉丝</span>
+              </a>
+              <router-link :to="{path: '/app/user/user-follow'}"
+                           :class="{'active': activeItem === 'dynamic' }">
+                <span>{{userInfo.dynamic_num ? userInfo.dynamic_num : '0'}}</span>
+                <span >动态</span>
+              </router-link>
             </li>
           </ol>
           <div v-show="false">
@@ -125,6 +139,7 @@ export default {
   },
   created () {
     this.$on('activeNavUserItem', (e) => {
+      console.log('activeNavUserItem', e)
       this.activeItem = e
     })
     this.$on('activate', e => {
@@ -182,6 +197,20 @@ export default {
       getCoinsProduct: 'user/getCoinsProduct',
       getMemberProductsList: 'user/getMemberProductsList'
     }),
+    // 关注
+    goUserFollowing (navNum) {
+      console.log(navNum)
+      this.activeItem = navNum
+      this.$router.push({path: '/app/user/user-follow'})
+      Bus.$emit('activeUserItem', navNum)
+    },
+    // 粉丝
+    goUserFollow (navNum) {
+      console.log(navNum)
+      this.activeItem = navNum
+      this.$router.push({path: '/app/user/user-follow'})
+      Bus.$emit('activeUserItem', navNum)
+    },
     uploadPicBtn () {
       $('#avatar-modal').fadeIn()
       console.log(window.location.href)
@@ -238,7 +267,7 @@ export default {
   position: relative;
 }
 .user-left-userDetail ol {
-  padding: 35px 54px 32px;
+  padding: 35px 52px 32px;
   text-align: center;
 }
 .user-left-userDetail ol li:nth-of-type(1) img {
@@ -338,14 +367,24 @@ export default {
   display: flex;
   justify-content: space-between;
   padding-top: 24px;
-  padding-bottom: 20px;
+  padding-bottom: 16px;
   border-bottom: 1px solid #F2F2F2FF;
-  p {
+  a {
     display: inline-block;
+    &:hover {
+      span,span:nth-child(2) {
+        color: #2A9FE4;
+      }
+    }
+    &.active {
+      span,span:nth-child(2) {
+        color: #2A9FE4;
+      }
+    }
     span {
       display: block;
     }
-    span:last-child {
+    span:nth-child(2) {
       font-size:12px;
       font-family:PingFangSC-Regular;
       font-weight:400;

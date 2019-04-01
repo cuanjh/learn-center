@@ -24,25 +24,27 @@
                    placeholder='字母/数字/下划线 6-15位'
                    v-model="newPsw">
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show="true">
-            <i></i>您的密码不符合规范，请重新输入</div>
+          <div class='learn-setting-error-tips-settingpage' v-show="false">
+            <i></i><em class="password">您的密码不符合规范，请重新输入</em>
+          </div>
             <div class='submit learn-bind-submit' @click="bindPhoneAccount()">我要绑定</div>
-            <!-- v-show='notice' -->
-            <p class='bindPhone-error-tips'>
+            <p class='bindPhone-error-tips' v-show='notice'>
               <i class='user error'></i><em>请填写完成后再绑定</em>
             </p>
         </form>
       </div>
       <div class="user-setting-form" v-show="activeTab === false">
-        <form action="" style='padding-bottom: 20px;'>
-          <div :class="{'error':!email}">
+        <form action="">
+          <div class="user-bind-content" :class="{'error':!email}">
             <span>邮箱</span>
-            <input type="text" placeholder='请填写邮箱账号' class='reg-input' v-model="email" autocomplete="off">
+            <input type="text" placeholder='请填写邮箱账号' class='reg-input'
+                   v-model="email"
+                   autocomplete="off">
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!email'>
             <i></i><em>请输入正确的邮箱账号</em>
           </div>
-          <div :class="{'error':false}" class='learn-bind-psd'>
+          <div class="user-bind-content learn-bind-psd" :class="{'error':false}">
             <span >密码</span>
             <input class='learn-bind-psd-input' type="password"
                    placeholder='字母/数字/下划线 6-15位'
@@ -77,6 +79,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import Bus from '../../../bus.js'
 import SetAlert from './userSettingAlert.vue'
 import Vertify from '../../../tool/vertifyAccount'
 export default {
@@ -125,6 +128,17 @@ export default {
       sendCode: 'user/sendCode',
       resetAnonymous: 'user/resetAnonymous'
     }),
+    // 提示用户的信息不完整
+    alertMessageNotBox (msg) {
+      // this.noticeSetting = true
+      let obj = {
+        className: 'warnIcon',
+        description: `${msg}`,
+        btnDesc: '确定',
+        isLink: false
+      }
+      Bus.$emit('showCommonModal', obj)
+    },
     swapVipTab (value) {
       this.activeTab = value
       if (value) {
@@ -155,6 +169,10 @@ export default {
         return
       }
       var emailVertify = Vertify.vertifyEmail(this.email, this.newPsw2)
+      if (!emailVertify) {
+        this.alertMessageNotBox('输入邮箱格式不正确！')
+        return false
+      }
       if (emailVertify) {
         this.noticeEmail = false
         this.bindEmail()
@@ -166,7 +184,8 @@ export default {
       params.type = 'bind_phonenumber'
       params.phonenumber = this.phone
       this.sendCode(params).then((res) => {
-        this.$refs['setAlert'].$emit('isShowSetAlert', true)
+        // this.$refs['setAlert'].$emit('isShowSetAlert', true)
+        this.alertMessageNotBox('手机号已经存在！')
         if (res.success) {
           _this.updateAlertType('bindPhoneNumber')
         } else {
@@ -180,7 +199,8 @@ export default {
       params.email = this.email
       params.password = this.newPsw2
       this.resetAnonymous(params).then((res) => {
-        this.$refs['setAlert'].$emit('isShowSetAlert', true)
+        // this.$refs['setAlert'].$emit('isShowSetAlert', true)
+        this.alertMessageNotBox('邮箱已经存在！')
         if (res.success) {
           setTimeout(() => {
             _this.updateAlertType('bindEmail')
@@ -337,29 +357,35 @@ export default {
 //   margin-right: 5px;
 // }
 
-// .bindPhone-error-tips {
-//   font-size: 12px;
-//   color: #e46773;
-//   position: relative;
-// }
+.bindPhone-error-tips {
+  display: flex;
+  align-items: center;
+  font-size:12px;
+  font-family:PingFang-SC-Regular;
+  font-weight:400;
+  color:rgba(221,43,43,1);
+  position: relative;
+  padding-top: 14px;
+  padding-left: 88px;
+}
 
-// .bindPhone-error-tips i {
-//   display: inline-block;
-//   width: 13px;
-//   height: 13px;
-//   background: url(../../../../static/images/learn/learn-login-tanhao.svg) no-repeat;
-//   position: relative;
-//   top: 5px;
-//   margin-right: 5px;
-// }
+.bindPhone-error-tips i {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  background: url('../../../../static/images/userInfo/error-icon.svg') no-repeat center;
+  background-position: center;
+  position: relative;
+  // top: 3px;
+  margin-right: 8px;
+}
 
 .user-setting-form {
   width: 100%;
   form {
     padding: 62px 60px 240px;
     .user-bind-content {
-      // display: flex;
-      // align-items: center;
+      display: inline-block;
       span {
         display: inline-block;
         text-align: right;
@@ -380,18 +406,26 @@ export default {
       }
     }
     .learn-setting-error-tips-settingpage {
+      display: inline-block;
+      position: relative;
       font-size:12px;
       font-family:PingFang-SC-Regular;
       font-weight:400;
       color:rgba(221,43,43,1);
       line-height: 12px;
+      line-height: 40px;
       i {
         display: inline-block;
+        position: absolute;
+        top: 50%;
+        margin-top: -6px;
         width: 12px;
         height: 12px;
         background: url('../../../../static/images/userInfo/error-icon.svg') no-repeat center;
         background-size: cover;
-        margin-right: 8px;
+      }
+      em {
+        margin-left: 18px;
       }
     }
   }
@@ -407,6 +441,7 @@ export default {
     color: #fff;
     border-radius: 22px;
     margin-left: 88px;
+    margin-top: 32px;
     &:hover {
       background: #2A9FE4;
     }

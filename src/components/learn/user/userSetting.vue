@@ -83,9 +83,12 @@
             <textarea class='user-introduction-area' :maxlength='descMaxLeng' v-model='desc'></textarea>
             <p class='words-remain'>您还可以输入<span>{{ descMaxLeng - desc.length }}</span>字</p>
           </div>
-          <button class='submit' @click="saveUserInfo">保存修改</button>
+          <button class='submit' @click="saveUserInfo()">保存修改</button>
         </form>
-        <!-- <p class='bindPhone-error-tips' style='bottom:9px;top:initial;left:28px;' v-show='noticeSetting'><i class='user error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p> -->
+        <p class='bindPhone-error-tips'
+           v-show='noticeSetting'>
+           <i class='user error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em>
+        </p>
       </div>
       <div class="user-fixpassword" v-show="activeTab === false">
         <form action="">
@@ -112,11 +115,16 @@
                    v-model="newPsw2">
           </p>
           <!--  v-show="!isSame" -->
-          <div class='learn-setting-error-tips-settingpage' v-show="!isSame">
+          <div class='learn-setting-error-tips-settingpage' v-show="false">
             <i></i>两次输入的密码不同，请重新输入
           </div>
           <button class='submit' @click="modifyPsw()">保存修改</button>
-          <!-- <p class='bindPhone-error-tips' style='bottom:-1px;top:initial;left:28px;' v-show='noticePsw'><i class='user error psw-user-error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em></p> -->
+          <p class='bindPhone-error-tips'
+             style='bottom:-1px;top:initial;left:28px;'
+             v-show='noticePsw'>
+            <i class='user error psw-user-error'></i>
+            <em>带星号*的为必填内容，请填写完成后再保存修改</em>
+          </p>
         </form>
       </div>
     </section>
@@ -140,7 +148,7 @@
 import $ from 'jquery'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import cookie from '../../../tool/cookie'
-
+import Bus from '../../../bus.js'
 import Constant from '../../../api/constant'
 import SetAlert from './userSettingAlert.vue'
 import DatePicker from '../../common/user/datepicker.vue'
@@ -182,9 +190,9 @@ export default {
       newPsw1: '', // 新密码1
       newPsw2: '', // 新密码2
       isSame: true, // 判断新密码两次输入是否一致
-      noticePsw: false, // 密码没填全提示信息
+      noticePsw: false, // 以前密码没填全提示信息
       end: 'not use', // 没用
-      noticeSetting: false
+      noticeSetting: false // 以前修改用户信息提示
     }
   },
   created () {
@@ -197,6 +205,7 @@ export default {
     this.$parent.$emit('navItem', 'user')
     // let ui = JSON.parse(sessionStorage.getItem('userInfo'))
     this.loadData()
+    // isAnonymous 为true就是匿名用户跳到绑定，false就是老用户
     let isAnonymous = cookie.getCookie('is_anonymous') === 'true'
     if (isAnonymous) {
       // this.updateUserAnonymous(true)
@@ -461,8 +470,15 @@ export default {
       }
     },
     // 提示用户的信息不完整
-    alertMessageNotFull () {
-      this.noticeSetting = true
+    alertMessageNotFull (msg) {
+      // this.noticeSetting = true
+      let obj = {
+        className: 'warnIcon',
+        description: `${msg}`,
+        btnDesc: '确定',
+        isLink: false
+      }
+      Bus.$emit('showCommonModal', obj)
     },
     transForm (birthday) {
       if (birthday) {
@@ -487,28 +503,33 @@ export default {
       if (this.nickname !== '') {
         _params.nickname = this.nickname
       } else {
-        return this.alertMessageNotFull()
+        this.alertMessageNotFull('用户名不能为空！')
+        return false
       }
       if (this.gender) {
         _params.gender = this.gender.language
       } else {
-        return this.alertMessageNotFull()
+        this.alertMessageNotFull('性别不能为空！')
+        return false
       }
       if (this.birthday) {
         _params.birthday = this.birthday
       } else {
-        return this.alertMessageNotFull()
+        this.alertMessageNotFull('生日不能为空！')
+        return false
       }
       if (this.country.language) {
         _params.country_code = this.country.language
       } else {
-        return this.alertMessageNotFull()
+        this.alertMessageNotFull('国籍/地区不能为空！')
+        return false
       }
       // 精通语言
       if (this.languageSkill) {
         _params.skillLangs = this.languageSkill['language']
       } else {
-        return this.alertMessageNotFull()
+        this.alertMessageNotFull('母语不能为空！')
+        return false
       }
       if (this.desc !== '') {
         _params.description = this.desc
@@ -531,13 +552,15 @@ export default {
       })
       await _this.getUserInfo()
     },
+    // 修改密码
     modifyPsw () {
       var _this = this
       var _params = {}
-      if (this.isAnonymous) {
+      if (this.isAnonymous) { // true 新用户
         if (this.newPsw1.length === 0 || this.newPsw2.length === 0) {
-          this.noticePsw = true
-          return
+          // this.noticePsw = true
+          this.alertMessageNotFull('两次输入的密码不一致!')
+          return false
         }
         _params.password = this.newPsw2
         console.log('=====', _params)
@@ -546,17 +569,29 @@ export default {
             _this.updateAlertType('showMessage')
             _this.alertMessage = '密码修改成功!'
             _this.alertButton = '确定'
-            this.noticePsw = false
+            // this.noticePsw = false
           } else {
             _this.showAlertView(res)
           }
         })
-      } else {
-        if (this.oldPsw.length === 0 || this.newPsw1.length === 0 || this.newPsw2.length === 0) {
-          this.noticePsw = true
+      } else { // false 老用户
+        // if (this.oldPsw.length === 0 || this.newPsw1.length === 0 || this.newPsw2.length === 0) {
+        //   this.noticePsw = true
+        //   return
+        // }
+        if (this.oldPsw.length === 0) {
+          this.alertMessageNotFull('旧密码不能为空！')
           return
         }
-        this.noticePsw = false
+        if (this.newPsw1.length === 0) {
+          this.alertMessageNotFull('新密码不能为空！')
+          return
+        }
+        if (this.newPsw2.length === 0) {
+          this.alertMessageNotFull('请确定密码，谢谢！')
+          return
+        }
+        // this.noticePsw = false
         _params.old_pwd = this.oldPsw
         _params.new_pwd = this.newPsw2
         _this.changePwd(_params).then((res) => {
@@ -564,7 +599,7 @@ export default {
             _this.updateAlertType('showMessage')
             _this.alertMessage = '密码修改成功!'
             _this.alertButton = '确定'
-            this.noticePsw = false
+            // this.noticePsw = false
           } else {
             _this.showAlertView(res)
           }
