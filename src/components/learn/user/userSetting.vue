@@ -6,126 +6,122 @@
         <a @click='swapVipTab(false)' :class="{ 'active': activeTab === false }">修改密码</a>
       </div>
       <div class='user-setting-form' v-show="activeTab === true">
-        <form action="#">
-          <div class="user-setting-item">
-            <div class="user-setting-item-left">
-              <span>昵称</span>
-              <input type="text" placeholder='' maxlength="50"
-                     :class="['reg-input', {'error':!nicknameError}]"
-                     v-model="nickname">
-            </div>
-            <div class='learn-setting-error-tips-settingpage' v-show='!nicknameError'>
-              <i></i><em>昵称限制50个字符</em>
-            </div>
+        <div class="user-setting-item">
+          <div class="user-setting-item-left">
+            <span>昵称</span>
+            <input type="text" placeholder='' maxlength="50"
+                    :class="['reg-input', {'error':!nicknameError}]"
+                    v-model="nickname">
           </div>
-          <div class="user-setting-item">
-            <div class="user-setting-item-left">
-              <span>手机</span>
-              <input type="text" placeholder=''
-                     :class="['reg-input', {'error':!phoneNumberValidator}]"
-                     v-model="phone">
-            </div>
-            <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'>
-              <i></i><em>请输入正确的手机号</em>
-            </div>
+          <div class='learn-setting-error-tips-settingpage' v-show='!nicknameError'>
+            <i></i><em>昵称限制50个字符</em>
           </div>
-          <div class="user-setting-item">
-            <div class="user-setting-item-left">
-              <span>邮箱</span>
-              <input type="text" placeholder=''
-                     :class="['reg-input', {'error':!mailValidator}]"
-                     v-model="email">
-              <!-- <template v-if="emailConfirmedStatus == 0">
-                <em class='bind-logical-textState adjust'>未绑定</em>
-                <span class='bind-logical-btnState adjust bindEmail' @click="bindEmail(email)" v-show="mailValidator&&email">绑定邮箱</span>
-              </template>
-              <template v-if="emailConfirmedStatus == 1">
-                <em class='bind-logical-textState adjust'>未验证</em>
-                <span class='bind-logical-btnState' style="margin-left:-56px" @click="confirmEmail(email)">验证邮箱</span>
-                <span class='bind-logical-btnState adjustOff' style='' @click="unbindIdentity('email')">解除绑定</span>
-              </template>
-              <template v-if="emailConfirmedStatus == 2">
-                <em class='bind-logical-textState adjust'>已绑定</em>
-                <span class='bind-logical-btnState adjustOff' style="" @click="unbindIdentity('email')">解除绑定</span>
-              </template> -->
-            </div>
-            <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'>
-              <i></i><em>请输入正确的邮箱账号</em>
-            </div>
+        </div>
+        <div class="user-setting-item">
+          <div class="user-setting-item-left">
+            <span>手机</span>
+            <input type="text" placeholder=''
+                    :class="['reg-input', {'error':!phoneNumberValidator}]"
+                    v-model="phone">
           </div>
-          <div class="user-setting-item" :class="{'error':!gender}">
-            <span>性别</span>
-            <div class='selsex'>
-              <gender-selector id="selsex-content" ref="gender" :value="'male'" @update="updateGender"></gender-selector>
-            </div>
+          <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'>
+            <i></i><em>请输入正确的手机号</em>
           </div>
-          <div class="user-setting-item" :class="{'error':!birthday}">
-            <span>生日</span>
-            <div class='seldate'>
-              <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" v-focus/> -->
-              <date-picker id="seldate-content" ref="datePicker" @update="updateBirthday"></date-picker>
-            </div>
+        </div>
+        <div class="user-setting-item">
+          <div class="user-setting-item-left">
+            <span>邮箱</span>
+            <input type="text" placeholder=''
+                    :class="['reg-input', {'error':!mailValidator}]"
+                    v-model="email">
+            <!-- <template v-if="emailConfirmedStatus == 0">
+              <em class='bind-logical-textState adjust'>未绑定</em>
+              <span class='bind-logical-btnState adjust bindEmail' @click="bindEmail(email)" v-show="mailValidator&&email">绑定邮箱</span>
+            </template>
+            <template v-if="emailConfirmedStatus == 1">
+              <em class='bind-logical-textState adjust'>未验证</em>
+              <span class='bind-logical-btnState' style="margin-left:-56px" @click="confirmEmail(email)">验证邮箱</span>
+              <span class='bind-logical-btnState adjustOff' style='' @click="unbindIdentity('email')">解除绑定</span>
+            </template>
+            <template v-if="emailConfirmedStatus == 2">
+              <em class='bind-logical-textState adjust'>已绑定</em>
+              <span class='bind-logical-btnState adjustOff' style="" @click="unbindIdentity('email')">解除绑定</span>
+            </template> -->
           </div>
-          <div class="user-setting-item" :class="{'error':!country}">
-            <span>国籍/地区</span>
-            <div class='selsex selcity'>
-              <country-selector id="selcity-content" ref="country" :value="country" @update="updateCountry"></country-selector>
-            </div>
+          <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'>
+            <i></i><em>请输入正确的邮箱账号</em>
           </div>
-          <div class='user-setting-item expertLang-box' :class="{'error':!languageSkill}">
-            <span>精通语言</span>
-            <div class="selsex sellang">
-              <language-skill-selector id="sellang-content" ref="langSkill" :value="languageSkill" @update="updateLanguageSkill"></language-skill-selector>
-            </div>
+        </div>
+        <div class="user-setting-item" :class="{'error':!gender}">
+          <span>性别</span>
+          <div class='selsex'>
+            <gender-selector id="selsex-content" ref="gender" :value="'male'" @update="updateGender"></gender-selector>
           </div>
-          <div  class="user-setting-item intro-box">
-            <span>个人介绍</span>
-            <textarea class='user-introduction-area' :maxlength='descMaxLeng' v-model='desc'></textarea>
-            <p class='words-remain'>您还可以输入<span>{{ descMaxLeng - desc.length }}</span>字</p>
+        </div>
+        <div class="user-setting-item" :class="{'error':!birthday}">
+          <span>生日</span>
+          <div class='seldate'>
+            <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" v-focus/> -->
+            <date-picker id="seldate-content" ref="datePicker" @update="updateBirthday"></date-picker>
           </div>
-          <button class='submit' @click="saveUserInfo()">保存修改</button>
-        </form>
+        </div>
+        <div class="user-setting-item" :class="{'error':!country}">
+          <span>国籍/地区</span>
+          <div class='selsex selcity'>
+            <country-selector id="selcity-content" ref="country" :value="country" @update="updateCountry"></country-selector>
+          </div>
+        </div>
+        <div class='user-setting-item expertLang-box' :class="{'error':!languageSkill}">
+          <span>精通语言</span>
+          <div class="selsex sellang">
+            <language-skill-selector id="sellang-content" ref="langSkill" :value="languageSkill" @update="updateLanguageSkill"></language-skill-selector>
+          </div>
+        </div>
+        <div  class="user-setting-item intro-box">
+          <span>个人介绍</span>
+          <textarea class='user-introduction-area' :maxlength='descMaxLeng' v-model='desc'></textarea>
+          <p class='words-remain'>您还可以输入<span>{{ descMaxLeng - desc.length }}</span>字</p>
+        </div>
+        <button class='submit' @click="saveUserInfo()">保存修改</button>
         <p class='bindPhone-error-tips'
            v-show='noticeSetting'>
            <i class='user error'></i><em>带星号*的为必填内容，请填写完成后再保存修改</em>
         </p>
       </div>
       <div class="user-fixpassword" v-show="activeTab === false">
-        <form action="">
-          <p class="user-password-text" v-if="!isAnonymous">
-            <span>原密码</span>
-            <input type="password" placeholder='' v-model="oldPsw" />
-          </p>
-          <div class='learn-setting-error-tips-settingpage' v-show="false">
-            <i></i>您的密码输入错误，请重新输入
-          </div>
-          <p class="user-password-text" :class="{'error':false}">
-            <span>新密码</span>
-            <input type="password" placeholder=''
-                   v-on:input="comparePwd()"
-                   v-model="newPsw1">
-          </p>
-          <div class='learn-setting-error-tips-settingpage' v-show="false">
-            <i></i>您的密码不符合规范，请重新输入
-          </div>
-          <p class="user-password-text">
-            <span>确认密码</span>
-            <input type="password" placeholder=''
-                   v-on:input="comparePwd()"
-                   v-model="newPsw2">
-          </p>
-          <!--  v-show="!isSame" -->
-          <div class='learn-setting-error-tips-settingpage' v-show="false">
-            <i></i>两次输入的密码不同，请重新输入
-          </div>
-          <button class='submit' @click="modifyPsw()">保存修改</button>
-          <p class='bindPhone-error-tips'
-             style='bottom:-1px;top:initial;left:28px;'
-             v-show='noticePsw'>
-            <i class='user error psw-user-error'></i>
-            <em>带星号*的为必填内容，请填写完成后再保存修改</em>
-          </p>
-        </form>
+        <p class="user-password-text" v-if="!isAnonymous">
+          <span>原密码</span>
+          <input type="password" placeholder='' v-model="oldPsw" />
+        </p>
+        <div class='learn-setting-error-tips-settingpage' v-show="false">
+          <i></i>您的密码输入错误，请重新输入
+        </div>
+        <p class="user-password-text" :class="{'error':false}">
+          <span>新密码</span>
+          <input type="password" placeholder=''
+                  v-on:input="comparePwd()"
+                  v-model="newPsw1">
+        </p>
+        <div class='learn-setting-error-tips-settingpage' v-show="false">
+          <i></i>您的密码不符合规范，请重新输入
+        </div>
+        <p class="user-password-text">
+          <span>确认密码</span>
+          <input type="password" placeholder=''
+                  v-on:input="comparePwd()"
+                  v-model="newPsw2">
+        </p>
+        <!--  v-show="!isSame" -->
+        <div class='learn-setting-error-tips-settingpage' v-show="false">
+          <i></i>两次输入的密码不同，请重新输入
+        </div>
+        <button class='submit' @click="modifyPsw()">保存修改</button>
+        <p class='bindPhone-error-tips'
+            style='bottom:-1px;top:initial;left:28px;'
+            v-show='noticePsw'>
+          <i class='user error psw-user-error'></i>
+          <em>带星号*的为必填内容，请填写完成后再保存修改</em>
+        </p>
       </div>
     </section>
     <set-alert
@@ -323,15 +319,15 @@ export default {
 
       _this.$refs['country'].$emit('init', _this.country)
 
-      _this.languageSkill = []
-      if (result.skill_langs === undefined) {
-        _this.languageSkill = []
+      _this.languageSkill = ''
+      if (result.skill_langs.length === 0) {
+        _this.languageSkill = ''
       } else {
         result.skill_langs.forEach((value, index, array) => {
           var _tmp = {}
           _tmp.lan_code = value.lan_code
           _tmp.name = value.name
-          _this.languageSkill.push(_tmp)
+          _this.languageSkill = _tmp
         })
       }
 
@@ -440,35 +436,6 @@ export default {
       this.alertMessage = '一封验证邮件已发送至您的邮箱'
       this.alertButton = '确定'
     },
-    motherTogue () {
-      if (
-        (this.languageSkill.length ===
-          this.ui['skillLangs'].length) &
-        (this.ui['skillLangs'].length === 0)
-      ) {
-        return 1
-      }
-      if (
-        this.languageSkill.length === this.ui['skillLangs'].length
-      ) {
-        var num = 0
-        for (var i = 0; i < this.languageSkill.length; i++) {
-          for (var j = 0; j < this.ui['skillLangs'].length; j++) {
-            if (
-              this.languageSkill[i].language ===
-              this.ui['skillLangs'][j]['lan_code']
-            ) {
-              num = num + 1
-            }
-          }
-        }
-        if (num === this.languageSkill.length) {
-          return 1
-        }
-      } else {
-        return 0
-      }
-    },
     // 提示用户的信息不完整
     alertMessageNotFull (msg) {
       // this.noticeSetting = true
@@ -526,7 +493,7 @@ export default {
       }
       // 精通语言
       if (this.languageSkill) {
-        _params.skillLangs = this.languageSkill['language']
+        _params.skillLangs = this.languageSkill['lan_code']
       } else {
         this.alertMessageNotFull('母语不能为空！')
         return false
@@ -1014,125 +981,40 @@ input {
   // 基本资料设置样式
   .user-setting-form {
     padding: 60px 54px 114px;
-    form {
-      .user-setting-item {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        padding-bottom: 16px;
-        span {
-          display: inline-block;
-          text-align: right;
-          width: 64px;
-          font-size:14px;
-          font-family:PingFang-SC-Medium;
-          font-weight:500;
-          color:rgba(68,68,68,1);
-          line-height: 40px;
-        }
-        .user-setting-item-left {
-          input {
-            width: 280px;
-            height: 40px;
-            border-radius: 4px;
-            border: 1px solid #C8D4DBFF;
-            padding: 0 10px;
-            margin: 0 14px 0 20px;
-          }
-        }
-        .learn-setting-error-tips-settingpage {
-          display: flex;
-          align-items: center;
-          em {
-            font-size:12px;
-            font-family:PingFang-SC-Regular;
-            font-weight:400;
-            color:rgba(221,43,43,1);
-          }
-          i {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            background: url('../../../../static/images/userInfo/error-icon.svg') no-repeat center;
-            background-size: cover;
-            margin-right: 8px;
-          }
-        }
-        .seldate {
-          width: 220px;
-          margin-left: 23px;
-          .cov-vue-date {
-            width: 220px;
-            input {
-              width: 220px;
-            }
-          }
-        }
-        .sellang {
-          width: 220px;
-        }
-        .selsex {
-          // width: 140px;
-          margin-left: 23px;
-          #selsex-content {
-            width: 100%;
-            .multiselect__tags {
-              .multiselect__input {
-                width: 100%;
-              }
-            }
-          }
-        }
+    .user-setting-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding-bottom: 16px;
+      span {
+        display: inline-block;
+        text-align: right;
+        width: 64px;
+        font-size:14px;
+        font-family:PingFang-SC-Medium;
+        font-weight:500;
+        color:rgba(68,68,68,1);
+        line-height: 40px;
       }
-      .intro-box {
-        position: relative;
-        display: flex;
-        align-items: flex-start;
-        .words-remain {
-          left: 90px;
-          bottom: 26px;
-          span {
-            display: inline;
-            line-height: 20px;
-            color: #0581D1;
-            padding: 0 6px;
-          }
-        }
-      }
-    }
-  }
-  // 修改密码
-  .user-fixpassword {
-    width: 100%;
-    form {
-      padding: 62px 60px 240px;
-      .user-password-text {
-        span {
-          display: inline-block;
-          text-align: right;
-          width: 64px;
-          font-size: 14px;
-          font-family: PingFang-SC-Medium;
-          font-weight: 500;
-          color: #444444;
-          line-height: 40px;
-        }
+      .user-setting-item-left {
         input {
           width: 280px;
           height: 40px;
           border-radius: 4px;
           border: 1px solid #C8D4DBFF;
           padding: 0 10px;
-          margin: 0 14px 16px 20px;
+          margin: 0 14px 0 20px;
         }
       }
       .learn-setting-error-tips-settingpage {
-        font-size:12px;
-        font-family:PingFang-SC-Regular;
-        font-weight:400;
-        color:rgba(221,43,43,1);
-        padding: 0px 0 46px 88px;
-        line-height: 12px;
+        display: flex;
+        align-items: center;
+        em {
+          font-size:12px;
+          font-family:PingFang-SC-Regular;
+          font-weight:400;
+          color:rgba(221,43,43,1);
+        }
         i {
           display: inline-block;
           width: 12px;
@@ -1141,6 +1023,87 @@ input {
           background-size: cover;
           margin-right: 8px;
         }
+      }
+      .seldate {
+        width: 220px;
+        margin-left: 23px;
+        .cov-vue-date {
+          width: 220px;
+          input {
+            width: 220px;
+          }
+        }
+      }
+      .sellang {
+        width: 220px;
+      }
+      .selsex {
+        // width: 140px;
+        margin-left: 23px;
+        #selsex-content {
+          width: 100%;
+          .multiselect__tags {
+            .multiselect__input {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+    .intro-box {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      .words-remain {
+        left: 90px;
+        bottom: 26px;
+        span {
+          display: inline;
+          line-height: 20px;
+          color: #0581D1;
+          padding: 0 6px;
+        }
+      }
+    }
+  }
+  // 修改密码
+  .user-fixpassword {
+    width: 100%;
+    padding: 62px 60px 240px;
+    .user-password-text {
+      span {
+        display: inline-block;
+        text-align: right;
+        width: 64px;
+        font-size: 14px;
+        font-family: PingFang-SC-Medium;
+        font-weight: 500;
+        color: #444444;
+        line-height: 40px;
+      }
+      input {
+        width: 280px;
+        height: 40px;
+        border-radius: 4px;
+        border: 1px solid #C8D4DBFF;
+        padding: 0 10px;
+        margin: 0 14px 16px 20px;
+      }
+    }
+    .learn-setting-error-tips-settingpage {
+      font-size:12px;
+      font-family:PingFang-SC-Regular;
+      font-weight:400;
+      color:rgba(221,43,43,1);
+      padding: 0px 0 46px 88px;
+      line-height: 12px;
+      i {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background: url('../../../../static/images/userInfo/error-icon.svg') no-repeat center;
+        background-size: cover;
+        margin-right: 8px;
       }
     }
   }

@@ -92,7 +92,7 @@ export default {
         _this.options = []
         res.mother_tongue.forEach((value, index, array) => {
           var _tmp = {}
-          _tmp.language = value.lan_code
+          _tmp.lan_code = value.lan_code
           _tmp.name = value.name[_this.languageHandler]
           _this.options.push(_tmp)
         })
