@@ -211,6 +211,7 @@ export default {
     this.$on('coverShow', () => {
       this.updateAlertType('')
     })
+    Bus.$on()
   },
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'setting')
@@ -371,6 +372,7 @@ export default {
     unbindIdentity (type) {
       this.updateAlertType('bindConfirm')
       this.bindConfirmType = type
+      this.$refs['setAlert'].$emit('isShowSetAlert', true)
     },
     // 绑定手机号
     async bindPhoneNumber (phonenumber) {

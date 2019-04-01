@@ -22,7 +22,8 @@ export default {
       btnCancel: '',
       btnDesc: '',
       isLink: false,
-      hyperLink: ''
+      hyperLink: '',
+      emitMethod: ''
     }
   },
   created () {
@@ -35,6 +36,8 @@ export default {
       this.isLink = data.isLink
       if (this.isLink) {
         this.hyperLink = data.hyperLink
+      } else {
+        this.emitMethod = ''
       }
       this.isShow = true
     })
@@ -47,6 +50,8 @@ export default {
       if (this.hyperLink) {
         this.isShow = false
         this.$router.push({path: this.hyperLink})
+      } else {
+        Bus.$emit(this.emitMethod)
       }
       this.isShow = false
     },
