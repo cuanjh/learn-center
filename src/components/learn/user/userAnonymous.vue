@@ -238,7 +238,7 @@ export default {
 .user-bind-wrap {
   width: 100%;
   background: #fff;
-  margin-top: 90px;
+  // margin-top: 90px;
   .user-bind-nav {
     width: 100%;
     height: 60px;

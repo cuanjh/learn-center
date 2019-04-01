@@ -203,7 +203,7 @@ export default {
 <style lang="less" scoped>
 .user-wallet-wrap {
   width: 100%;
-  margin-top: 90px;
+  // margin-top: 90px;
 }
 .user-wallet-top {
   width: 100%;
@@ -277,6 +277,8 @@ export default {
   margin-right: 50px;
   // border-right: 1px solid #EEF2F3;
   line-height: 60px;
+  border-bottom: 3px solid transparent;
+  transition: none;
 }
 .userVip-bottom-nav a:last-child {
   border-right: 0;

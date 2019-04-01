@@ -56,26 +56,34 @@
           <div class="user-setting-item" :class="{'error':!gender}">
             <span>性别</span>
             <div class='selsex'>
-              <gender-selector id="selsex-content" ref="gender" :value="'male'" @update="updateGender"></gender-selector>
+              <gender-selector id="selsex-content" ref="gender"
+                               :value="'male'"
+                               @update="updateGender"></gender-selector>
             </div>
           </div>
           <div class="user-setting-item" :class="{'error':!birthday}">
             <span>生日</span>
             <div class='seldate'>
               <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" v-focus/> -->
-              <date-picker id="seldate-content" ref="datePicker" @update="updateBirthday"></date-picker>
+              <date-picker id="seldate-content" ref="datePicker"
+                            :value="birthday"
+                           @update="updateBirthday"></date-picker>
             </div>
           </div>
           <div class="user-setting-item" :class="{'error':!country}">
             <span>国籍/地区</span>
             <div class='selsex selcity'>
-              <country-selector id="selcity-content" ref="country" :value="country" @update="updateCountry"></country-selector>
+              <country-selector id="selcity-content" ref="country"
+                                :value="country"
+                                @update="updateCountry"></country-selector>
             </div>
           </div>
           <div class='user-setting-item expertLang-box' :class="{'error':!languageSkill}">
-            <span>精通语言</span>
+            <span>我的母语</span>
             <div class="selsex sellang">
-              <language-skill-selector id="sellang-content" ref="langSkill" :value="languageSkill" @update="updateLanguageSkill"></language-skill-selector>
+              <language-skill-selector id="sellang-content" ref="langSkill"
+                                       :value="languageSkill"
+                                       @update="updateLanguageSkill"></language-skill-selector>
             </div>
           </div>
           <div  class="user-setting-item intro-box">
@@ -541,6 +549,7 @@ export default {
       var _this = this
       await _this.updateInfo(_params).then((res) => {
         console.log('修改用户信息', res)
+        debugger
         if (res.success) {
           _this.updateAlertType('showMessage')
           _this.alertMessage = '信息修改成功'
@@ -596,9 +605,10 @@ export default {
         _params.new_pwd = this.newPsw2
         _this.changePwd(_params).then((res) => {
           if (res.success) {
-            _this.updateAlertType('showMessage')
-            _this.alertMessage = '密码修改成功!'
-            _this.alertButton = '确定'
+            // _this.updateAlertType('showMessage')
+            // _this.alertMessage = '密码修改成功!'
+            // _this.alertButton = '确定'
+            this.alertMessageNotFull('密码修改成功!')
             // this.noticePsw = false
           } else {
             _this.showAlertView(res)
@@ -973,7 +983,7 @@ input {
 .user-setting-wrap {
   width: 100%;
   background: #fff;
-  margin-top: 90px;
+  // margin-top: 90px;
   .user-setting-nav {
     width: 100%;
     height: 60px;
@@ -998,6 +1008,8 @@ input {
       margin-right: 50px;
       // border-right: 1px solid #EEF2F3;
       line-height: 60px;
+      border-bottom: 3px solid transparent;
+      transition: none;
       &:hover {
         color: #2A9FE4;
       }

@@ -252,7 +252,7 @@ export default {
 
 <style lang="less" scoped>
 .user-course-wrap {
-  margin-top: 90px;
+  // margin-top: 90px;
 }
 .user-course-nav {
   width: 100%;
@@ -340,6 +340,8 @@ export default {
   margin-right: 42px;
   // border-right: 1px solid #EEF2F3;
   line-height: 60px;
+  border-bottom: 3px solid transparent;
+  transition: none;
 }
 
 .user-course-wrap-title:last-child {

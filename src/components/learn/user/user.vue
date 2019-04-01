@@ -34,11 +34,13 @@
                 <span>{{userInfo.followed_count ? userInfo.followed_count : '0'}}</span>
                 <span >粉丝</span>
               </a>
-              <router-link :to="{path: '/app/user/user-follow'}"
-                           :class="{'active': activeItem === 'dynamic' }">
-                <span>{{userInfo.dynamic_num ? userInfo.dynamic_num : '0'}}</span>
+              <!-- :to="{path: '/app/user/user-follow'}" -->
+              <a  @click="goUserDynamic('dynamic')"
+                  :class="{'active': activeItem === 'dynamic' }">
+                  <!-- {{userInfo.dynamic_num ? userInfo.dynamic_num : '0'}} -->
+                <span>{{'0'}}</span>
                 <span >动态</span>
-              </router-link>
+              </a>
             </li>
           </ol>
           <div v-show="false">
@@ -80,7 +82,7 @@
                 <i class="course"></i><span>课程</span>
               </router-link>
             </li>
-            <li>
+            <li v-show="false">
               <a href="javascript:;">
                 <i class="certification"></i><span>认证</span>
               </a>
@@ -207,6 +209,12 @@ export default {
     // 粉丝
     goUserFollow (navNum) {
       console.log(navNum)
+      this.activeItem = navNum
+      this.$router.push({path: '/app/user/user-follow'})
+      Bus.$emit('activeUserItem', navNum)
+    },
+    // 动态
+    goUserDynamic (navNum) {
       this.activeItem = navNum
       this.$router.push({path: '/app/user/user-follow'})
       Bus.$emit('activeUserItem', navNum)

@@ -132,7 +132,7 @@ export default {
   width: 100%;
   border-radius: 4px;
   background-color: #ffffff;
-  margin-top: 90px;
+  // margin-top: 90px;
   .user-doc-content {
     width: 100%;
     padding: 20px 0 25px;

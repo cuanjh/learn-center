@@ -4,7 +4,7 @@
       <div class="user-follow-nav">
         <a @click="tabChange('follow')" :class="{'active': 'follow' == navFlag}">关注</a>
         <a @click="tabChange('followed')" :class="{'active': 'followed' == navFlag}">粉丝</a>
-        <a v-show="false" @click="tabChange('dynamic')" :class="{'active': 'dynamic' == navFlag}">动态</a>
+        <a @click="tabChange('dynamic')" :class="{'active': 'dynamic' == navFlag}">动态</a>
       </div>
       <div class="user-nav-container">
         <div class="user-nav-content">
@@ -86,6 +86,16 @@
                 <dt></dt>
                 <dd>
                   <p>你还没有粉丝哦!</p>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="tab-dynamic" v-show="'dynamic' == navFlag">
+            <div class="no-user-following">
+              <dl>
+                <dt></dt>
+                <dd>
+                  <p>你还没有动态哦!</p>
                 </dd>
               </dl>
             </div>
@@ -269,7 +279,7 @@ export default {
 .user-follow {
   width: 100%;
   background: #fff;
-  margin-top: 90px;
+  // margin-top: 90px;
   .user-follow-content {
     width: 100%;
     .user-follow-nav {
@@ -312,7 +322,7 @@ export default {
     .user-nav-container {
       width: 100%;
       .user-nav-content {
-        .tab-follow,.tab-following {
+        .tab-follow,.tab-following,.tab-dynamic {
           width: 100%;
           ul {
             padding: 50px 44px 30px;

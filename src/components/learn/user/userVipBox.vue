@@ -45,7 +45,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .vip-content {
-  position: fixed;
+  // position: fixed;
   width: 890px;
   z-index: 99;
   display: flex;

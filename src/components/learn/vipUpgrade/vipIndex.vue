@@ -18,7 +18,7 @@
           <!-- vip选项 -->
           <div class="vip-lists">
             <div class="lists-content">
-              <div class="lists">
+              <div class="lists" v-show="false">
                 <div class="list-header">
                   <p class="name">比较免费选项和 VIP 选项</p>
                   <div class="free">
@@ -49,7 +49,7 @@
           <div class="title">通过激活码升级</div>
           <div class="code">
             <input type="text" placeholder="输入激活码" v-model="activateNum">
-            <button class="button" @click='showConfirm()'>立即激活</button>
+            <button class="button" v-bind:disabled="activateNum == ''" @click='showConfirm()'>立即激活</button>
           </div>
         </div>
         <!-- 选择合适的计划 -->
@@ -188,14 +188,15 @@
   </div>
 </template>
 <script>
-import Vue from 'vue'
+// import Vue from 'vue'
 import { mapState, mapActions, mapMutations } from 'vuex'
-import I18nLocales from '../../../vueI18/locale'
+import Bus from '../../../bus.js'
+// import I18nLocales from '../../../vueI18/locale'
 
 export default {
   data () {
     return {
-      items: I18nLocales[Vue.config.lang].vip.left.tips,
+      // items: I18nLocales[Vue.config.lang].vip.left.tips,
       recommand: 2,
       value: 3,
       activateNum: ''
@@ -205,8 +206,7 @@ export default {
   },
   mounted () {
     this.getMemberProductsList()
-    console.log('------>', this.productList)
-    console.log('会员功能', this.items)
+    console.log('会员列表卡片充值', this.productList)
   },
   computed: {
     ...mapState({
@@ -220,6 +220,16 @@ export default {
     ...mapActions({
       getMemberProductsList: 'user/getMemberProductsList'
     }),
+    // 提示用户的信息不完整
+    alertMessage (msg) {
+      let obj = {
+        className: 'warnIcon',
+        description: `${msg}`,
+        btnDesc: '确定激活',
+        isLink: false
+      }
+      Bus.$emit('showCommonModal', obj)
+    },
     goBuy (item) {
       let OBJ = item
       let jsonStr = JSON.stringify(OBJ)
@@ -234,7 +244,8 @@ export default {
       if (!this.activateNum) {
         return
       }
-      this.$refs.alert.$emit('ifConfirmShow', true)
+      this.alertMessage('你确定使用激活码激活会员？')
+      // this.$refs.alert.$emit('ifConfirmShow', true)
     }
   }
 }
@@ -496,7 +507,7 @@ export default {
             padding: 6px 20px;
           }
           .button {
-            cursor: pointer;
+            // cursor: pointer;
             width: 121px;
             height: 36px;
             font-size:15px;
@@ -506,6 +517,10 @@ export default {
             background:rgba(216,222,225,1);
             border-radius:0px 18px 18px 0px;
             border:1px solid rgba(176,188,192,1);
+          }
+          .button:disabled {
+            cursor: not-allowed;
+            background:rgba(200,212,219,1);
           }
         }
       }
