@@ -23,6 +23,17 @@
             <input type="text" placeholder=''
                     :class="['reg-input', {'error':!phoneNumberValidator}]"
                     v-model="phone">
+            <template v-if="!phonenumberConfirmed">
+              <em class='bind-logical-textState adjust'>未绑定</em>
+              <a class='bind-logical-btnState adjust' style="line-height: 30px;"
+                 @click="bindPhoneNumber(phone)"
+                 v-show="phoneNumberValidator&&phone">绑定手机</a>
+            </template>
+            <template v-if="phonenumberConfirmed">
+              <em class='bind-logical-textState adjust'>已绑定</em>
+              <a class='bind-logical-btnState adjustOff' style="line-height: 30px;"
+                 @click="unbindIdentity('phonenumber')">解除绑定</a>
+            </template>
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'>
             <i></i><em>请输入正确的手机号</em>
@@ -34,19 +45,24 @@
             <input type="text" placeholder=''
                     :class="['reg-input', {'error':!mailValidator}]"
                     v-model="email">
-            <!-- <template v-if="emailConfirmedStatus == 0">
+            <template v-if="emailConfirmedStatus == 0">
               <em class='bind-logical-textState adjust'>未绑定</em>
-              <span class='bind-logical-btnState adjust bindEmail' @click="bindEmail(email)" v-show="mailValidator&&email">绑定邮箱</span>
+              <a class='bind-logical-btnState adjust bindEmail'
+                 @click="bindEmail(email)"
+                 v-show="mailValidator&&email">绑定邮箱</a>
             </template>
             <template v-if="emailConfirmedStatus == 1">
               <em class='bind-logical-textState adjust'>未验证</em>
-              <span class='bind-logical-btnState' style="margin-left:-56px" @click="confirmEmail(email)">验证邮箱</span>
-              <span class='bind-logical-btnState adjustOff' style='' @click="unbindIdentity('email')">解除绑定</span>
+              <a class='bind-logical-btnState' style="margin-left:-72px"
+                 @click="confirmEmail(email)">验证邮箱</a>
+              <a class='bind-logical-btnState adjustOff' style=''
+                 @click="unbindIdentity('email')">解除绑定</a>
             </template>
             <template v-if="emailConfirmedStatus == 2">
               <em class='bind-logical-textState adjust'>已绑定</em>
-              <span class='bind-logical-btnState adjustOff' style="" @click="unbindIdentity('email')">解除绑定</span>
-            </template> -->
+              <a class='bind-logical-btnState adjustOff' style=""
+                 @click="unbindIdentity('email')">解除绑定</a>
+            </template>
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'>
             <i></i><em>请输入正确的邮箱账号</em>
@@ -508,7 +524,6 @@ export default {
       var _this = this
       await _this.updateInfo(_params).then((res) => {
         console.log('修改用户信息', res)
-        debugger
         if (res.success) {
           _this.updateAlertType('showMessage')
           _this.alertMessage = '信息修改成功'
@@ -645,11 +660,11 @@ input {
 //   height: 40px;
 // }
 
-.user-setting-form form>div .error {
+.user-setting-form>div .error {
   border-color: #e46773;
 }
 
-.user-setting-form form > div .selsex {
+.user-setting-form > div .selsex {
   width: 140px;
   /*height: 40px;*/
   display: inline-block;
@@ -673,7 +688,7 @@ input {
   right: 1px;
   top: 7px;
 }
-.user-setting-form form > div > span {
+.user-setting-form > div > span {
   font-size: 18px;
 }
 .user-setting-form .seldate {
@@ -695,7 +710,7 @@ input {
 .user-setting-form .btn-next {
   padding: 0 5px !important;
 }
-.user-setting-form form > div .selcity {
+.user-setting-form > div .selcity {
   width: 220px;
 }
 .user-setting-form .multiselect__input,
@@ -731,15 +746,10 @@ input {
 // .user-setting-form .submit:hover {
 //   background-color: #05618d;
 // }
-.user-setting-form form > div.intro-box {
+.user-setting-form > div.intro-box {
   height: 177px;
 }
-.user-setting-form
-  form
-  > div.expertLang-box
-  .multiselect__tag
-  ~ .multiselect__input {
-}
+
 // .user-fixpassword {
 //   width: 100%;
 //   height: 355px;
@@ -844,7 +854,7 @@ input {
 .user-setting-form .multiselect__tag-icon:hover {
   background: #05618d;
 }
-.user-wrap .user-setting-form form > div .sellang {
+.user-wrap .user-setting-form > div .sellang {
   width: 190px;
 }
 .user-wrap .user-setting-require-item {
@@ -856,18 +866,18 @@ input {
 .user-wrap .user-setting-require-item-adjust-spe {
   left: 5px;
 }
-.user-setting-form form > div.error .reg-input {
+.user-setting-form > div.error .reg-input {
   border-color: #e46773;
 }
-.user-setting-form form > div.error .multiselect__tags {
+.user-setting-form > div.error .multiselect__tags {
   border-color: #e46773;
 }
-.user-setting-form form .bind-logical-textState {
+.user-setting-form .bind-logical-textState {
   font-size: 14px;
   color: #0e8abe;
   margin-right: 22px;
 }
-.user-setting-form form .bind-logical-btnState {
+.user-setting-form .bind-logical-btnState {
   display: inline-block;
   width: 80px;
   height: 30px;
@@ -880,20 +890,20 @@ input {
   cursor: pointer;
   margin-top: 6px;
 }
-.user-setting-form form .adjustOff {
+.user-setting-form .adjustOff {
   position: relative;
   /* right: 56px; */
   line-height: 30px;
 }
-.user-setting-form form .bind-logical-btnState:hover {
+.user-setting-form .bind-logical-btnState:hover {
   background: #05618d;
 }
-.user-setting-form form .adjust {
+.user-setting-form .adjust {
   position: relative;
-  right: 56px;
+  right: 70px;
   line-height: 40px;
 }
-.user-setting-form form .bindEmail {
+.user-setting-form .bindEmail {
   line-height: 30px;
 }
 .user-right-wrap {
@@ -903,7 +913,7 @@ input {
   margin-bottom: 30px;
   height: 90px;
 }
-.user-setting-form form .upload-section-user .adjust {
+.user-setting-form .upload-section-user .adjust {
   right: -20px;
   top: 53px;
 }
@@ -915,13 +925,13 @@ input {
   display: inline-block;
 }
 
-.user-setting-form form .seldate .Wdate {
+.user-setting-form .seldate .Wdate {
   background-position: 150px center;
   height: 40px !important;
   line-height: 40px;
   padding-left: 15px;
 }
-.user-setting-form form .error .seldate .Wdate {
+.user-setting-form .error .seldate .Wdate {
   border-color: #e46773 !important;
 }
 .user-fixpassword p.error > input {
@@ -932,7 +942,7 @@ input {
 .user-setting-wrap .user-setting-form .multiselect__single {
   font-size: 16px;
 }
-.user-setting-form form .seldate .Wdate {
+.user-setting-form .seldate .Wdate {
   background-image: url(../../../../static/images/learn/learn-login-rili.svg);
   background-size: 15px 20px;
 }
@@ -987,8 +997,6 @@ input {
     padding: 60px 54px 114px;
     .user-setting-item {
       width: 100%;
-      display: flex;
-      align-items: center;
       padding-bottom: 16px;
       span {
         display: inline-block;
@@ -1013,6 +1021,8 @@ input {
       .learn-setting-error-tips-settingpage {
         display: flex;
         align-items: center;
+        padding-left: 88px;
+        padding-top: 4px;
         em {
           font-size:12px;
           font-family:PingFang-SC-Regular;
