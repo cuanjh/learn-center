@@ -4,8 +4,9 @@
     :selected="value"
     v-model="selected"
     :options="options"
-    :searchable='true'
+    :searchable='false'
     @input="updateSelected"
+    :show-labels="false"
     placeholder='性别'
     select-label='选择'
     deselect-label='取消'
@@ -16,6 +17,8 @@
 <script>
 import Multiselect from 'vue-multiselect'
 import Constant from '../../../api/constant'
+import $ from 'jquery'
+
 export default {
   // male or femail
   props: ['value'],
@@ -29,6 +32,10 @@ export default {
   },
   mounted () {
     console.log('------' + this.value)
+    // this.$nextTick(() => {
+    //   this.removeCss()
+    //   this.generResetCss()
+    // })
   },
   data () {
     return {
@@ -39,9 +46,45 @@ export default {
       ]
     }
   },
+  updated () {
+    this.generResetCss()
+  },
   methods: {
     updateSelected (newValue) {
       this.$emit('update', newValue)
+    },
+    removeCss () {
+      $('#selsex-content .multiselect__content-wrapper').find('.multiselect__option--highlight,.multiselect__option--selected').removeAttr('style')
+    },
+    generResetCss () {
+      $('.multiselect__tags .multiselect__single').css({
+        'font-size': '14px'
+      })
+      $('#selsex-content .multiselect--active .multiselect__select').css({
+        'z-index': '99'
+      })
+      $('#selsex-content .multiselect__tags input').css({
+        'width': '100px'
+      })
+      $('#selsex-content .multiselect__content .multiselect__element .multiselect__option').css({
+        'font-size': '14px',
+        'font-weight': '500',
+        'text-align': 'center',
+        'color': '#103044FF',
+        'background': '#fff'
+      }) // 'background', '#EEF2F3FF' .multiselect__option--selected
+      $('#selsex-content .multiselect__content .multiselect__element').find('.multiselect__option--selected').css({
+        'font-size': '14px',
+        'font-weight': '500',
+        'color': '#103044FF',
+        'background': '#EEF2F3FF'
+      })
+      $('#selsex-content .multiselect__content .multiselect__element').find('.multiselect__option--highlight').css({
+        'font-size': '14px',
+        'font-weight': '500',
+        'color': '#103044FF',
+        'background': '#EEF2F3FF'
+      })
     }
   }
 }

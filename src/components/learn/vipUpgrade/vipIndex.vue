@@ -18,7 +18,7 @@
           <!-- vip选项 -->
           <div class="vip-lists">
             <div class="lists-content">
-              <div class="lists">
+              <!-- <div class="lists" v-show="false">
                 <div class="list-header">
                   <p class="name">比较免费选项和 VIP 选项</p>
                   <div class="free">
@@ -40,7 +40,7 @@
                     </li>
                   </ul>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -48,8 +48,8 @@
         <div class="activation-code">
           <div class="title">通过激活码升级</div>
           <div class="code">
-            <input type="text" placeholder="输入激活码" v-model="activateNum">
-            <button class="button" @click='showConfirm()'>立即激活</button>
+            <input type="text" placeholder="输入激活码" v-model="codeNum">
+            <button class="button" v-bind:disabled="codeNum == ''" @click='showConfirm()'>立即激活</button>
           </div>
         </div>
         <!-- 选择合适的计划 -->
@@ -62,7 +62,10 @@
               <ul>
                 <li v-for='(item, index) in productList' :key="index">
                   <div class="cards">
-                    <p class="title">BASIC</p>
+                    <p class="title" v-if="index == 0">BASIC</p>
+                    <p class="title" v-if="index == 1">STANDARD</p>
+                    <p class="title" v-if="index == 2">ADVANCED</p>
+                    <p class="title" v-if="index == 3">COMPREHENSIVE</p>
                     <div class="price">
                       <span>¥</span>
                       <span>{{ item.money }}</span>
@@ -188,38 +191,75 @@
   </div>
 </template>
 <script>
-import Vue from 'vue'
+// import Vue from 'vue'
 import { mapState, mapActions, mapMutations } from 'vuex'
-import I18nLocales from '../../../vueI18/locale'
+import Bus from '../../../bus.js'
+import LogCollect from '../../../tool/logCollect'
+// import I18nLocales from '../../../vueI18/locale'
 
 export default {
   data () {
     return {
-      items: I18nLocales[Vue.config.lang].vip.left.tips,
+      // items: I18nLocales[Vue.config.lang].vip.left.tips,
       recommand: 2,
       value: 3,
-      activateNum: ''
+      codeNum: ''
     }
   },
   components: {
   },
+  created () {
+    Bus.$on('settingUpdate', (type) => {
+      this.confirmCard(type)
+    })
+  },
   mounted () {
     this.getMemberProductsList()
-    console.log('------>', this.productList)
-    console.log('会员功能', this.items)
+    console.log('会员列表卡片充值', this.productList)
   },
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
       productList: state => state.user.productList
-    })
+    }),
+    ui () {
+      let ui = this.userInfo
+      if (Object.keys(ui).length === 0) {
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
+      }
+      return ui
+    }
   },
   methods: {
     ...mapMutations({
     }),
     ...mapActions({
+      getMemberCard: 'user/getMemberCard', // 激活码激活接口
       getMemberProductsList: 'user/getMemberProductsList'
     }),
+    // 提示用户的信息不完整
+    alertMessage (msg) {
+      let obj = {
+        className: 'warnIcon',
+        description: `${msg}`,
+        btnDesc: '确定',
+        isLink: false
+      }
+      Bus.$emit('showCommonModal', obj)
+    },
+    // 提示激活
+    alertConfirm (confirm) {
+      let obj = {
+        className: 'warnIcon',
+        buttonClass: 'buttonClass',
+        description: `你确定要激活吗？`,
+        btnCancel: '取消',
+        btnDesc: '确定',
+        isLink: false,
+        emitMethod: confirm
+      }
+      Bus.$emit('showCommonModal', obj)
+    },
     goBuy (item) {
       let OBJ = item
       let jsonStr = JSON.stringify(OBJ)
@@ -230,11 +270,38 @@ export default {
     },
     // 激活码激活
     showConfirm () {
-      this.$refs.alert.$emit('UserVipCode', this.activateNum)
-      if (!this.activateNum) {
-        return
-      }
-      this.$refs.alert.$emit('ifConfirmShow', true)
+      console.log('确定激活码？', this.codeNum)
+      var _memberType = this.ui.member_info.member_type
+      // this.$refs.alert.$emit('UserVipCode', this.activateNum)
+      this.getMemberCard(this.codeNum).then((res) => {
+        console.log('激活码返回', res)
+        if (res.success) {
+          this.alertConfirm(res.member_info.money)
+          // LogCollect.payMemberCard(
+          //   _memberType,
+          //   this.codeNum,
+          //   1,
+          //   res.member_info.money
+          // )
+        } else {
+          this.alertMessage(res.errorMsg)
+          LogCollect.payMemberCard(_memberType, this.codeNum, 0, 0)
+        }
+      })
+      // if (!this.codeNum) {
+      //   return
+      // }
+      // this.alertMessage('你确定使用激活码激活会员？')
+      // this.$refs.alert.$emit('ifConfirmShow', true)
+    },
+    confirmCard (money) {
+      var _memberType = this.ui.member_info.member_type
+      LogCollect.payMemberCard(
+        _memberType,
+        this.codeNum,
+        1,
+        money
+      )
     }
   }
 }
@@ -496,7 +563,7 @@ export default {
             padding: 6px 20px;
           }
           .button {
-            cursor: pointer;
+            // cursor: pointer;
             width: 121px;
             height: 36px;
             font-size:15px;
@@ -506,6 +573,10 @@ export default {
             background:rgba(216,222,225,1);
             border-radius:0px 18px 18px 0px;
             border:1px solid rgba(176,188,192,1);
+          }
+          .button:disabled {
+            cursor: not-allowed;
+            background:rgba(200,212,219,1);
           }
         }
       }

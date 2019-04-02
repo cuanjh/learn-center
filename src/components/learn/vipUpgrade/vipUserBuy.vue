@@ -5,9 +5,9 @@
       <div class="content">
         <div class="user-message">
           <span>开通账户：</span>
-          <div class="nickname">
-            <img :src="user.photo" alt="头像">
-            <span>{{user.nickname}}</span>
+          <div class="nickname" v-if="userInfo">
+            <img :src="userInfo.photo?userInfo.photo:''" alt="头像">
+            <span>{{userInfo.nickname}}</span>
           </div>
         </div>
         <div class="router-card">
@@ -36,11 +36,14 @@
         </div>
         <div class="pay-methods">
           <ul>
-            <li>
-              <a class="weixin">
+            <li @mouseleave="showWX = false">
+              <a class="weixin" @mouseenter="showWX = true">
                 <i></i>
                 <span>WeChat payment</span>
               </a>
+              <div class="weixin-qr" v-show="showWX">
+                <img :src="weixinUrl" alt="">
+              </div>
             </li>
             <li>
               <a class="zhifubao" @click="purchase()">
@@ -60,19 +63,28 @@
   </div>
 </template>
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import Bus from '../../../bus.js'
 // import LogCollect from '../../../tool/logCollect'
 
 export default {
   data () {
     return {
+      showWX: false,
       ckeckVal: true,
       message: '支付即同意《xxxx-用户协议》支付后即可申请发票'
     }
   },
   mounted () {
+    this.getUserInfo()
     let productId = this.userBuy.product_id
-    this.createAliWebOrder(productId)
+    console.log('productId', productId)
+    let params = {
+      product_id: productId,
+      course_code: ''
+    }
+    this.createAliRadioOrder(params)
+    this.createWeixinRadioOrder(params)
     console.log('------>11', this.userBuy)
     console.log('======>22', this.user)
     console.log('======>33', this.aliPayUrl)
@@ -80,29 +92,29 @@ export default {
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
-      pay: state => state.user.pay
+      // pay: state => state.user.pay
+      pay: state => state.user.pay, // 支付宝订单数据
+      payWeixin: state => state.user.payWeixin // 微信支付订单数据
     }),
-    user () {
-      let user = this.userInfo
-      if (Object.keys(user).length === 0) {
-        user = JSON.parse(sessionStorage.getItem('userInfo'))
-      }
-      return user
-    },
     userBuy () {
       let userBuyVip = JSON.parse(localStorage.getItem('userBuy'))
       return userBuyVip
     },
+    // 支付宝链接
     aliPayUrl () {
       return this.pay.aliWebPayUrl
+    },
+    // 微信链接
+    weixinUrl () {
+      return this.payWeixin.aliWebPayUrl
     }
   },
   methods: {
-    ...mapMutations({
-      updatePurchaseIconPay: 'user/updatePurchaseIconPay'
-    }),
     ...mapActions({
-      createAliWebOrder: 'user/createAliWebOrder'
+      getUserInfo: 'getUserInfo',
+      // createAliWebOrder: 'user/createAliWebOrder'
+      createAliRadioOrder: 'user/createAliRadioOrder', // 创建支付宝订单
+      createWeixinRadioOrder: 'user/createWeixinRadioOrder' // 创建微信支付订单
     }),
     clickMe () {
       let that = this
@@ -110,6 +122,13 @@ export default {
     },
     purchase () {
       window.open(this.aliPayUrl)
+      let obj = {
+        className: 'vipIcon',
+        description: '未完成支付请先完成支付！<br/>支付成功后请刷新页面。',
+        btnDesc: '知道了',
+        isLink: false
+      }
+      Bus.$emit('showCommonModal', obj)
     }
   }
 }
@@ -245,6 +264,7 @@ export default {
         ul {
           display: flex;
           li {
+            position: relative;
             width:300px;
             height:70px;
             margin-right: 50px;
@@ -269,6 +289,16 @@ export default {
                 height: 30px;
                 background: url('../../../../static/images/weixin.svg') no-repeat center;
                 background-size: cover;
+              }
+            }
+            .weixin-qr {
+              position: absolute;
+              bottom: 70px;
+              left: 80px;
+              img {
+                width: 160px;
+                height: 160px;
+                border-radius: 6px;
               }
             }
             .zhifubao {

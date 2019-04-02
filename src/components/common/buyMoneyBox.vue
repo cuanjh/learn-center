@@ -1,22 +1,23 @@
 <template>
   <div class="buy-container" v-show="showBuyBox">
-    <div class="buy-radio" v-show="contentShow">
+    <div class="buy-radio">
       <div class="close-button" @click="closeButton()"></div>
       <div class="buy-title">
         <p>付费内容提示</p>
-        <p>收听完整内容需要你购买订阅哦～</p>
+        <p v-show="isType">收听完整内容需要你购买订阅哦～</p>
       </div>
       <!-- 课程详情 -->
       <div class="course-introduce">
         <div class="introduce-content">
           <div class="triangle"></div>
           <div class="course">
-            <p>{{itemRadio.title ||itemRadio.module_name}}</p>
+            <p v-html="title"></p>
             <div class="price">
-              <p>课程共计 {{itemRadio.cards_count}} 课</p>
+              <p v-html="description"></p>
               <p class="yuan">
-                <span>{{itemRadio.money}}</span>
-                <span>元/年</span>
+                <span v-html="money"></span>
+                <span>元</span>
+                <span v-show="isType">/年</span>
               </p>
             </div>
           </div>
@@ -75,17 +76,17 @@
       </div>
     </div>
     <!-- 支付成功 -->
-    <div class="pay-success" v-show="successBox">
+    <!-- <div class="pay-success" v-show="false">
       <div class="pay-content">
         <p class="bg-img"><i></i></p>
-        <!-- <p>你已支付成功并完成电台订阅</p> -->
+        <p>你已支付成功并完成电台订阅</p>
         <p>
           <span>未完成支付请先完成支付！</span>
           <span>支付成功后请刷新页面。</span>
         </p>
         <p><span @click="know()">知道了</span></p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -95,30 +96,43 @@ import bus from '../../bus'
 export default {
   data () {
     return {
-      itemRadio: {},
+      // itemRadio: {},
       showBuyBox: false,
-      contentShow: true,
       activeButton: false,
-      successBox: false
+      successBox: false,
+      productId: '',
+      courseCode: '',
+      title: '',
+      description: '',
+      money: '',
+      isType: true // 支付电台 false支付金币
     }
   },
   created () {
-    bus.$on('showBuyRadio', (radio) => {
-      console.log('当前要购买的人民币radio', radio)
-      this.itemRadio = radio.course_info
+    bus.$on('showBuyMoneyBox', (data, type) => { // .module_name
+      console.log('当前要购买的人民币radio', data, type)
+      this.isType = type === undefined ? true : type
+      // this.itemRadio = data.course_info
       this.showBuyBox = true
+      if (type === undefined) {
+        this.title = data.course_info.title ? data.course_info.title : data.course_info.module_name
+        this.description = `课程共计 ${data.course_info.cards_count} 课`
+        this.money = `${data.course_info.money}`
+        this.productId = data.course_info.product_id
+        this.courseCode = data.course_info.code
+      } else {
+        this.title = `${data.product}枚金币`
+        this.description = `赠送 ${data.gave_coins} 金币`
+        this.money = `${data.total_money}`
+        this.productId = data.product_id
+      }
       let params = {
-        product_id: radio.course_info.product_id,
-        course_code: radio.course_info.code
+        product_id: this.productId,
+        course_code: this.courseCode
       }
       console.log('创建订单', params)
       this.createAliRadioOrder(params)
       this.createWeixinRadioOrder(params)
-    })
-    // 支付完成
-    this.$on('successBox', (e) => {
-      console.log('支付完成', e)
-      this.successBox = e
     })
   },
   mounted () {
@@ -158,17 +172,7 @@ export default {
     closeButton () {
       this.showBuyBox = false
     },
-    knowVip () {
-      this.showBuyBox = false
-      this.$router.push({path: '/app/user/vip'})
-    },
-    // 知道了
-    know () {
-      this.$emit('successBox', false)
-      this.showBuyBox = false
-      this.contentShow = true
-    },
-    // 微信移入
+    // 移入
     mouseEnter () {
       $('#qrCode').animate({
         top: '0px'
@@ -183,8 +187,14 @@ export default {
     // 支付宝支付接口
     goPayRadio () {
       window.open(this.aliPayUrl)
-      this.$emit('successBox', true)
-      this.contentShow = false
+      this.showBuyBox = false
+      let obj = {
+        className: 'warnIcon',
+        description: '未完成支付请先完成支付！<br/>支付成功后请刷新页面。',
+        btnDesc: '知道了',
+        isLink: false
+      }
+      bus.$emit('showCommonModal', obj)
     }
   }
 }

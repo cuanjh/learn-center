@@ -4,8 +4,9 @@
     :selected="value"
     v-model="selected"
     :options="options"
-    :searchable='true'
+    :searchable='false'
     @input="updateSelected"
+    :show-labels="false"
     placeholder='搜索国籍/地区'
     select-label='按回车可选择'
     deselect-label='按回车取消选择'
@@ -17,6 +18,8 @@
 <script>
 import { mapActions } from 'vuex'
 import Multiselect from 'vue-multiselect'
+import $ from 'jquery'
+
 export default {
   props: ['value'],
   components: {
@@ -51,12 +54,50 @@ export default {
       }
     })
   },
+  updated () {
+    this.countryResetCss()
+  },
   methods: {
     ...mapActions({
       getCountries: 'user/getCountries'
     }),
     updateSelected (newValue) {
       this.$emit('update', newValue)
+    },
+    countryResetCss () {
+      $('#selcity-content .multiselect__content').css({
+        'width': '203px',
+        'overflow-y': 'auto'
+      })
+      $('#selcity-content .multiselect__content li').css({
+        'width': '204px',
+        'font-size': '14px'
+      })
+      $('#selcity-content .multiselect__content li .multiselect__option').css({
+        'width': '204px',
+        'font-family': 'PingFang-SC-Medium',
+        'color': '#103044FF',
+        'font-size': '14px',
+        'font-weight': '500',
+        'background': '#fff'
+      })
+      $('#selcity-content.multiselect__content .multiselect__element').find('.multiselect__option--selected').css({
+        'font-size': '14px',
+        'font-weight': '500',
+        'color': '#103044FF',
+        'background': '#EEF2F3FF'
+      })
+      $('#selcity-content .multiselect__content .multiselect__element').find('.multiselect__option--highlight').css({
+        'font-size': '14px',
+        'font-weight': '500',
+        'color': '#103044FF',
+        'background': '#EEF2F3FF'
+      })
+      $('#selcity-content .multiselect__content li').hover(() => {
+        $('#selcity-content .multiselect__content li').css('background-color', '#EEF2F3FF')
+      }, () => {
+        $('#selcity-content .multiselect__content li').css('background-color', '#ffffff')
+      })
     }
   },
   computed: {

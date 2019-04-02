@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>地址定位</title>
+    <desc>Created with Sketch.</desc>
+    <g id="个人学习中心" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="电台主播个人信息" transform="translate(-624.000000, -152.000000)" fill="#91D249">
+            <g id="国籍" transform="translate(624.000000, 152.000000)">
+                <path d="M7,0.5 C4.23858994,0.5 2,2.8075805 2,5.5 C2,9.56240715 6.1666767,13.5 7,13.5 C7.8334609,13.5 12,9.56240715 12,5.5 C12,2.8075805 9.76147886,0.5 7,0.5 Z M7.000129,7.8133369 C5.6194207,7.8133369 4.5,6.69405403 4.5,5.3133369 C4.5,3.93261977 5.6194207,2.8133369 7.000129,2.8133369 C8.3809233,2.8133369 9.5,3.93261977 9.5,5.3133369 C9.5,6.69405403 8.3809233,7.8133369 7.000129,7.8133369 Z" id="地址定位"></path>
+            </g>
+        </g>
+    </g>
+</svg>

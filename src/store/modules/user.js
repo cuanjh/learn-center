@@ -192,6 +192,14 @@ const actions = {
   getUploadPhotoUrl ({ commit }, params) {
     var url = httpLoginUrl(config.uploadUserPhoto)
     commit('updateUploadPhotoUrl', url)
+  },
+  // 用户中心粉丝列表接口
+  getUserFollower ({ commit }, params) {
+    return httpLogin(config.upUserFollowerApi)
+  },
+  // 用户中心关注人列表接口
+  getUserFollowing ({ commit }, params) {
+    return httpLogin(config.upUserFollowingApi)
   }
 }
 

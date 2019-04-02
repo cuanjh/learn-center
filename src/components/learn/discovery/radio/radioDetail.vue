@@ -495,7 +495,7 @@ export default {
             if (card.list_order > 3) {
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', this.radioDetail)
+                Bus.$emit('showBuyMoneyBox', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -508,7 +508,7 @@ export default {
               if (card.list_order > 3) {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', this.radioDetail)
+                  Bus.$emit('showBuyMoneyBox', this.radioDetail)
                 } else if (radio.money_type === 'coins') {
                   // 金币提示
                   Bus.$emit('showBuyCoinsRadio', radio)
@@ -550,14 +550,23 @@ export default {
         Bus.$emit('showGoLoginBox')
         return
       }
-      if (this.subscibenoInfo.purchased_state !== 1 &&
-          this.subscibenoInfo.purchased_state !== 4 &&
-          this.subscibenoInfo.purchased_state !== 2) { // 没订阅
-        if (parseInt(radio.money) !== 0) { // 收费
-          if (this.isVip !== 1) { // 不是会员
+      if (parseInt(radio.money) !== 0) { // 收费
+        if (this.isVip !== 1) { // 不是会员
+          if (radio.money_type === 'CNY') {
+            // 人民币提示
+            Bus.$emit('showBuyMoneyBox', this.radioDetail)
+            return false
+          } else if (radio.money_type === 'coins') {
+            // 金币提示
+            Bus.$emit('showBuyCoinsRadio', radio)
+            Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+            return false
+          }
+        } else { // 是会员
+          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
             if (radio.money_type === 'CNY') {
               // 人民币提示
-              Bus.$emit('showBuyRadio', this.radioDetail)
+              Bus.$emit('showBuyMoneyBox', this.radioDetail)
               return false
             } else if (radio.money_type === 'coins') {
               // 金币提示

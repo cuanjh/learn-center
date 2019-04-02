@@ -43,8 +43,18 @@ export default {
           ],
           name: {
             textStyle: {
-              color: '#6d6d6d',
-              fontSize: 12
+              color: '#999999FF',
+              lineHeight: 20,
+              fontSize: 14,
+              borderRadius: 2,
+              padding: [2, 0]
+            },
+            formatter: (text) => {
+              text = text.replace(/\S{2}/g, function (match) {
+                console.log(match)
+                return match + '\n'
+              })
+              return text
             }
           },
           nameGap: 7,
@@ -65,27 +75,28 @@ export default {
         series: [
           {
             type: 'radar',
+            symbol: 'circle',
             data: [
               {
                 value: _array,
                 name: '数据分析',
                 lineStyle: {
                   normal: {
-                    color: '#7bc16b',
+                    color: '#61C9FC73',
                     width: 0
                   }
                 },
                 areaStyle: {
                   normal: {
-                    color: '#7bc16b'
+                    color: '#61C9FC73'
                   }
                 }
               }
             ],
-            symbolSize: 2,
+            symbolSize: 6,
             itemStyle: {
               normal: {
-                color: '#7bc16b'
+                color: '#4F97FEFF'
               }
             }
           }
@@ -97,4 +108,7 @@ export default {
 </script>
 
 <style scoped>
+body {
+  /* color: #7bc16b; */
+}
 </style>
