@@ -5,23 +5,23 @@
       <a :class="['user-course-wrap-title', {'active': !selTab}]" @click="selTab = !selTab">电台课程</a>
     </div>
     <div class='user-course-item-wrap' v-show="selTab" :class="{ 'userifloading': judgeLoading  }">
-      <div class='user-course-item' v-for='(item, index) in courseRander' :key="item.code + index">
+      <div class='user-course-item' v-for='(item, index) in langCourses' :key="item.course_code">
         <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
           <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
           <ol>
-            <router-link tag="li" :to="{path: '/app/book-details/' + item.code}">
-              <span>{{item.name[languagueHander]}}</span>
+            <router-link tag="li" :to="{path: '/app/book-details/' + item.course_code}">
+              <span>{{item.name}}</span>
             </router-link>
             <li>
-              <span v-text="levelDes[item.currentLevel]"></span>-<span v-text="'课程' + (parseInt(item.currentUnit.replace('Unit', '')) * parseInt(item.currentChapter.replace('Chapter', '')))"></span>
+              <!-- <span v-text="levelDes[item.currentLevel]"></span>-<span v-text="'课程' + (parseInt(item.currentUnit.replace('Unit', '')) * parseInt(item.currentChapter.replace('Chapter', '')))"></span> -->
             </li>
             <li>
-              <span :style="{ width: item['complateRate'] }"></span>
+              <span :style="{ width: (item['complete_rate'] * 100) + '%' }"></span>
               <div class="progress-bg">
                 <!-- <div class="progress" :style="{width: (curArchiveCourse['complete_rate'] ? curArchiveCourse['complete_rate']*100 : 0) +'%'}"></div> -->
               </div>
             </li>
-            <span class='user-course-del-btn-tag' v-show='showIdx === index ? delBtn : false' @click='deleteCourse(item.code)'><i></i>删除课程</span>
+            <span class='user-course-del-btn-tag' v-show='showIdx === index ? delBtn : false' @click='deleteCourse(item.course_code)'><i></i>删除课程</span>
           </ol>
           <div class="user-control">
             <div class="user-control-btn" @mouseenter="mouseoverControl($event)">
@@ -32,7 +32,7 @@
             <div class="user-control-sel" style="display:none">
               <ul>
                 <!-- <li>置顶</li> -->
-                <li @click="deleteCourse(item.code)">
+                <li @click="deleteCourse(item.course_code)">
                   <a>取消订阅</a>
                 </li>
               </ul>
@@ -65,16 +65,16 @@
     </div>
     <div class='user-radio-course-item-wrap' v-show="!selTab">
       <ul>
-        <li class='user-radio-course-item' v-for='(item, index) in radioRander' :key="item.code + index">
+        <li class='user-radio-course-item' v-for='item in radioCourseList' :key="item.course_code">
           <div class="user-radio-course-item-box" @mouseleave="mouseleaveControl($event)">
             <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
             <div class="play">
               <i></i>
             </div>
             <ol>
-              <router-link tag="li" :to="{path: '/app/discovery/radio-detail/' + item.code}"><span>{{item.module_name}}</span></router-link>
+              <router-link tag="li" :to="{path: '/app/discovery/radio-detail/' + item.course_code}"><span>{{item.name}}</span></router-link>
               <li>
-                <span>作者：{{item.author_info.nickname}}</span>
+                <span>作者：{{item.author.nickname}}</span>
                 <span>
                   <i></i>
                   {{item.buy_num}}
@@ -91,10 +91,10 @@
               <div class="user-control-sel" style="display:none">
                 <ul>
                   <li>
-                    <router-link :to="{path: '/app/discovery/radio-detail/' + item.code}">电台分享</router-link>
+                    <router-link :to="{path: '/app/discovery/radio-detail/' + item.course_code}">电台分享</router-link>
                   </li>
                   <!-- <li>置顶</li> -->
-                  <li @click="deleteCourse(item.code)"><a>取消订阅</a></li>
+                  <li @click="deleteCourse(item.course_code)"><a>取消订阅</a></li>
                 </ul>
                 <div class="triangle_border_down">
                   <span></span>
@@ -156,22 +156,23 @@ export default {
     this.$parent.$emit('activeNavUserItem', 'course')
     this.$parent.$emit('navItem', 'user')
     this.getLearnCourses()
+    this.initData()
     this.getMoreLearnCourses().then(res => {
       console.log('getMoreLearnCourses', res)
-      res.learn_courses.forEach(item => {
-        if (item.course_type === 0) {
-          this.langCourses.push(item)
-        } else if (item.course_type === 1) {
-          this.radioCourseList.push(item)
-        }
-      })
-      console.log('=========>', this.radioCourseList)
-      if (this.langCourses.length === 0) {
-        this.isShowCourse = true
-      }
-      if (this.radioCourseList.length === 0) {
-        this.isShowRadioCourse = true
-      }
+      // res.learn_courses.forEach(item => {
+      //   if (item.course_type === 0) {
+      //     this.langCourses.push(item)
+      //   } else if (item.course_type === 1) {
+      //     this.radioCourseList.push(item)
+      //   }
+      // })
+      // console.log('=========>', this.radioCourseList)
+      // if (this.langCourses.length === 0) {
+      //   this.isShowCourse = true
+      // }
+      // if (this.radioCourseList.length === 0) {
+      //   this.isShowRadioCourse = true
+      // }
     })
   },
   computed: {
@@ -222,7 +223,8 @@ export default {
     ...mapActions({
       getDeletePurchase: 'course/getDeletePurchase',
       getLearnCourses: 'course/getLearnCourses',
-      getMoreLearnCourses: 'getMoreLearnCourses'
+      getMoreLearnCourses: 'getMoreLearnCourses',
+      getUserCourseList: 'getUserCourseList'
     }),
     deleteCourse (code) {
       this.getDeletePurchase(code)
@@ -237,6 +239,19 @@ export default {
       /* eslint-disable */
       $('.user-control-sel').hide()
       /* eslint-enable */
+    },
+    initData () {
+      this.getUserCourseList().then(res => {
+        console.log('订阅课程', res)
+        this.langCourses = res.officialCourses
+        this.radioCourseList = res.radioCourses
+        if (this.langCourses.length === 0) {
+          this.isShowCourse = true
+        }
+        if (this.radioCourseList.length === 0) {
+          this.isShowRadioCourse = true
+        }
+      })
     },
     // 课程加载更多
     loadMoreCourse () {
