@@ -5,9 +5,9 @@
       <a :class="['user-course-wrap-title', {'active': !selTab}]" @click="selTab = !selTab">电台课程</a>
     </div>
     <div class='user-course-item-wrap' v-show="selTab" :class="{ 'userifloading': judgeLoading  }">
-      <div class='user-course-item' v-for='(item, index) in langCourses' :key="item.course_code">
+      <div class='user-course-item' v-for='(item, index) in showLangCourses' :key="item.course_code">
         <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
-          <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
+          <img @click="goToDetails(item.course_code)" :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
           <ol>
             <router-link tag="li" :to="{path: '/app/book-details/' + item.course_code}">
               <span>{{item.name}}</span>
@@ -65,16 +65,18 @@
     </div>
     <div class='user-radio-course-item-wrap' v-show="!selTab">
       <ul>
-        <li class='user-radio-course-item' v-for='item in radioCourseList' :key="item.course_code">
+        <li class='user-radio-course-item' v-for='item in showRadioCourses' :key="item.course_code">
           <div class="user-radio-course-item-box" @mouseleave="mouseleaveControl($event)">
-            <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
+            <img @click="goToRadioDetail(item.course_code)" :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
             <div class="play">
               <i></i>
             </div>
             <ol>
-              <router-link tag="li" :to="{path: '/app/discovery/radio-detail/' + item.course_code}"><span>{{item.name}}</span></router-link>
+              <router-link tag="li" :to="{path: '/app/discovery/radio-detail/' + item.course_code}">
+                <a>{{item.name}}</a>
+              </router-link>
               <li>
-                <span>作者：{{item.author.nickname}}</span>
+                <span v-if="item.author">作者：{{item.author.nickname}}</span>
                 <span>
                   <i></i>
                   {{item.buy_num}}
@@ -143,7 +145,8 @@ export default {
       isShowRadioCourse: false,
       langCourses: [],
       showLangCourses: [],
-      radioCourseList: []
+      radioCourseList: [],
+      showRadioCourses: []
     }
   },
   created () {
@@ -241,10 +244,13 @@ export default {
       /* eslint-enable */
     },
     initData () {
+      let _this = this
       this.getUserCourseList().then(res => {
         console.log('订阅课程', res)
-        this.langCourses = res.officialCourses
-        this.radioCourseList = res.radioCourses
+        _this.langCourses = res.officialCourses
+        _this.showLangCourses = _this.langCourses.slice(0, 5)
+        _this.radioCourseList = res.radioCourses
+        _this.showRadioCourses = _this.radioCourseList.slice(0, 5)
         if (this.langCourses.length === 0) {
           this.isShowCourse = true
         }
@@ -255,11 +261,29 @@ export default {
     },
     // 课程加载更多
     loadMoreCourse () {
+      if (this.showMoreCourse) {
+        this.showLangCourses = this.langCourses.slice(0, 5)
+      } else {
+        this.showLangCourses = this.langCourses
+      }
       this.showMoreCourse = !this.showMoreCourse
     },
     // 电台加载更多
     loadMoreRadios () {
+      if (this.showMoreRados) {
+        this.showRadioCourses = this.radioCourseList.slice(0, 5)
+      } else {
+        this.showRadioCourses = this.radioCourseList
+      }
       this.showMoreRados = !this.showMoreRados
+    },
+    // 去课程详情
+    goToDetails (courseCode) {
+      this.$router.push({path: '/app/book-details/' + courseCode})
+    },
+    // 去电台详情
+    goToRadioDetail (radioCode) {
+      this.$router.push({path: '/app/discovery/radio-detail/' + radioCode})
     }
   }
 }
@@ -271,7 +295,7 @@ export default {
 }
 .user-course-nav {
   width: 100%;
-  height: 60px;
+  height: 52px;
   background-color: #ffffff;
   text-align: center;
   font-size: 16px;
@@ -346,7 +370,7 @@ export default {
 .user-course-wrap-title {
   display: inline-block;
   float: left;
-  height: 60px;
+  height: 52px;
   font-size:16px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
@@ -370,7 +394,7 @@ export default {
   border-bottom: 3px solid #2A9FE4FF;
 }
 .user-course-item-wrap {
-  padding: 0 25px;
+  padding: 8px 25px 0;
   background: #fff;
 }
 .user-course-item-wrap .user-course-item {
@@ -396,6 +420,7 @@ export default {
   border-bottom: 0px solid #ffffff!important;
 }
 .user-course-item-box img {
+  cursor: pointer;
   width: 70px;
   height: 70px;
   border-radius: 8px;
@@ -448,15 +473,17 @@ export default {
 .user-radio-course-item-wrap {
   background-color: #ffffff;
   border-radius: 5px;
-  padding: 15px 21px 0px;
+  padding: 28px 25px 0px;
 }
 
 .user-radio-course-item-wrap .user-radio-course-item {
   height: 100px;
-  margin: 20px 0;
+  margin: 21px 0;
   border-bottom: 1px solid #EEF2F3;
 }
-
+.user-radio-course-item-wrap .user-radio-course-item:first-child {
+  margin-top: 0;
+}
 .user-radio-course-item-wrap .user-radio-course-item:last-child{
   border-bottom: 0px solid #EEF2F3 !important;
 }
@@ -471,6 +498,7 @@ export default {
 }
 
 .user-radio-course-item-box img {
+  cursor: pointer;
   width: 157px;
   height: 80px;
   border-radius: 4px;
@@ -507,6 +535,9 @@ export default {
   overflow: hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
+  a:hover {
+    color: #2A9FE4;
+  }
 }
 
 .user-radio-course-item-box ol li:nth-of-type(2) {

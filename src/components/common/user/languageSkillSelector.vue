@@ -48,6 +48,9 @@ export default {
       this.$emit('update', newValue)
     },
     sellangResetCss () {
+      $('.multiselect__tags .multiselect__single').css({
+        'font-size': '14px'
+      })
       $('#sellang-content .multiselect__content').css({
         'width': '203px',
         'overflow-y': 'auto'

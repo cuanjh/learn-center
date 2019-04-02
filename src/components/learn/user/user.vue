@@ -203,6 +203,7 @@ export default {
     goUserFollowing (navNum) {
       console.log(navNum)
       this.activeItem = navNum
+      this.$emit('activeNavUserItem', navNum)
       this.$router.push({path: '/app/user/user-follow'})
       Bus.$emit('activeUserItem', navNum)
     },
@@ -210,12 +211,14 @@ export default {
     goUserFollow (navNum) {
       console.log(navNum)
       this.activeItem = navNum
+      this.$emit('activeNavUserItem', navNum)
       this.$router.push({path: '/app/user/user-follow'})
       Bus.$emit('activeUserItem', navNum)
     },
     // 动态
     goUserDynamic (navNum) {
       this.activeItem = navNum
+      this.$emit('activeNavUserItem', navNum)
       this.$router.push({path: '/app/user/user-follow'})
       Bus.$emit('activeUserItem', navNum)
     },
@@ -306,6 +309,10 @@ export default {
   font-weight:bold;
   color:rgba(51,51,51,1);
   padding-top: 10px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 .user-left-userDetail ol li:nth-of-type(3) {
   font-size:12px;
@@ -375,7 +382,7 @@ export default {
   display: flex;
   justify-content: space-between;
   padding-top: 24px;
-  padding-bottom: 16px;
+  padding-bottom: 26px;
   border-bottom: 1px solid #F2F2F2FF;
   a {
     display: inline-block;

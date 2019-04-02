@@ -23,17 +23,17 @@
             <input type="text" placeholder=''
                     :class="['reg-input', {'error':!phoneNumberValidator}]"
                     v-model="phone">
-            <template v-if="!phonenumberConfirmed">
-              <em class='bind-logical-textState adjust'>未绑定</em>
-              <a class='bind-logical-btnState adjust' style="line-height: 30px;"
+            <div class="bind-phone-box" v-if="!phonenumberConfirmed">
+              <em class=''>未绑定</em>
+              <a class=''
                  @click="bindPhoneNumber(phone)"
                  v-show="phoneNumberValidator&&phone">绑定手机</a>
-            </template>
-            <template v-if="phonenumberConfirmed">
-              <em class='bind-logical-textState adjust'>已绑定</em>
-              <a class='bind-logical-btnState adjustOff' style="line-height: 30px;"
+            </div>
+            <div class="bind-phone-box" v-if="phonenumberConfirmed">
+              <em class=''>已绑定</em>
+              <a class=''
                  @click="unbindIdentityFun('phonenumber')">解除绑定</a>
-            </template>
+            </div>
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'>
             <i></i><em>请输入正确的手机号</em>
@@ -45,24 +45,24 @@
             <input type="text" placeholder=''
                     :class="['reg-input', {'error':!mailValidator}]"
                     v-model="email">
-            <template v-if="emailConfirmedStatus == 0">
-              <em class='bind-logical-textState adjust'>未绑定</em>
-              <a class='bind-logical-btnState adjust bindEmail'
+            <div class="bind-phone-box" v-if="emailConfirmedStatus == 0">
+              <em class=''>未绑定</em>
+              <a class=''
                  @click="bindEmailFun(email)"
                  v-show="mailValidator&&email">绑定邮箱</a>
-            </template>
-            <template v-if="emailConfirmedStatus == 1">
-              <em class='bind-logical-textState adjust'>未验证</em>
-              <a class='bind-logical-btnState' style="margin-left:-72px"
-                 @click="confirmEmail(email)">验证邮箱</a>
-              <a class='bind-logical-btnState adjustOff' style=''
+            </div>
+            <div class="bind-phone-box" v-if="emailConfirmedStatus == 1">
+              <em class='' v-show="false">未验证</em>
+              <a class='' style=""
+                 @click="confirmEmail(email)" v-show="false">验证邮箱</a>
+              <a class='' style=''
+                 @click="unbindIdentityFun('email')">删除邮箱</a>
+            </div>
+            <div class="bind-phone-box" v-if="emailConfirmedStatus == 2">
+              <em class=''>已绑定</em>
+              <a class='' style=""
                  @click="unbindIdentityFun('email')">解除绑定</a>
-            </template>
-            <template v-if="emailConfirmedStatus == 2">
-              <em class='bind-logical-textState adjust'>已绑定</em>
-              <a class='bind-logical-btnState adjustOff' style=""
-                 @click="unbindIdentityFun('email')">解除绑定</a>
-            </template>
+            </div>
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'>
             <i></i><em>请输入正确的邮箱账号</em>
@@ -271,6 +271,7 @@ export default {
       sendCode: 'getSendCode', // 发送验证码
       userExistsPhone: 'userExistsPhone', // 验证手机号是否存在
       bindEmail: 'user/bindEmail',
+      userExistsEmail: 'userExistsEmail', // 验证邮箱是否存在
       unbindIdentity: 'user/unbindIdentity', // 解除绑定
       // updateInfo: 'user/updateInfo',
       updateInfo: 'updateUserInfo',
@@ -383,6 +384,10 @@ export default {
     // 解除绑定的方法
     unbindIdentityFun (type) {
       console.log('type', type)
+      if (!(this.phone && this.email)) {
+        this.alertMessageNotFull('不能解除唯一的身份证明')
+        return false
+      }
       this.type = type
       let obj = {
         className: 'warnIcon',
@@ -494,13 +499,39 @@ export default {
     },
     // 绑定邮箱
     async bindEmailFun (email) {
+      console.log('eamil', email)
+      var _this = this
+      let params = {}
+      params.email = email
+      await _this.userExistsEmail(params).then(res => {
+        console.log('绑定邮箱返回', res)
+        if (res.exists) { // 存在
+          _this.alertMessageNotFull('邮箱已经存在！')
+          _this.email = ''
+        } else { // 不存在
+          this.bindEmailMethod(email)
+        }
+      })
+      // var _this = this
+      // await this.bindEmail(email).then((res) => {
+      //   console.log('绑定邮箱返回', res)
+      //   if (res.success) {
+      //     // _this.updateAlertType('bindSuccess')
+      //     // _this.alertMessage = '恭喜您绑定邮箱成功！'
+      //     // _this.alertButton = '确定'
+      //     this.alertMessageNotFull('恭喜您绑定邮箱成功！')
+      //   } else {
+      //     _this.showAlertView(res)
+      //   }
+      // })
+      // await _this.getUserInfo()
+      // _this.loadData()
+    },
+    async bindEmailMethod (email) {
       var _this = this
       await this.bindEmail(email).then((res) => {
         console.log('绑定邮箱返回', res)
         if (res.success) {
-          // _this.updateAlertType('bindSuccess')
-          // _this.alertMessage = '恭喜您绑定邮箱成功！'
-          // _this.alertButton = '确定'
           this.alertMessageNotFull('恭喜您绑定邮箱成功！')
         } else {
           _this.showAlertView(res)
@@ -1080,6 +1111,33 @@ input {
           padding: 0 10px;
           margin: 0 14px 0 20px;
         }
+        .bind-phone-box {
+          position: relative;
+          display: inline-block;
+          height: 40px;
+          line-height: 40px;
+          em {
+            position: absolute;
+            left: -76px;
+            font-size: 14px;
+            color: #0e8abe;
+          }
+          a {
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+            line-height: 30px;
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+            border-radius: 4px;
+            background-color: #0581D1;
+            margin-top: 6px;
+            &:hover {
+              background: #2A9FE4;
+            }
+          }
+        }
       }
       .learn-setting-error-tips-settingpage {
         display: flex;
@@ -1196,6 +1254,7 @@ input {
     color: #fff;
     border-radius: 22px;
     margin-left: 88px;
+    margin-top: 32px;
     &:hover {
       background: #2A9FE4;
     }

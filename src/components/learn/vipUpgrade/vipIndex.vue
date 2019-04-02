@@ -62,7 +62,10 @@
               <ul>
                 <li v-for='(item, index) in productList' :key="index">
                   <div class="cards">
-                    <p class="title">BASIC</p>
+                    <p class="title" v-if="index == 0">BASIC</p>
+                    <p class="title" v-if="index == 1">STANDARD</p>
+                    <p class="title" v-if="index == 2">ADVANCED</p>
+                    <p class="title" v-if="index == 3">COMPREHENSIVE</p>
                     <div class="price">
                       <span>¥</span>
                       <span>{{ item.money }}</span>

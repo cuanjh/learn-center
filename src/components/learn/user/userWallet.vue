@@ -3,7 +3,7 @@
     <div class='userVip-top-wrap user-wallet-top'>
       <div class='userVip-top-tips'>
         <span>我的金币</span>
-        <span><i class="coins-icon"></i>{{ userInfo ? userInfo.coins : '' }}</span>
+        <p><i class="coins-icon"></i><span>{{ userInfo ? userInfo.coins : '' }}</span></p>
       </div>
       <div class='userVip-top-btns'>
       </div>
@@ -216,6 +216,7 @@ export default {
   padding: 0px 55px 0px 25px;
   line-height: 100px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   span {
     font-size:20px;
@@ -223,19 +224,28 @@ export default {
     font-weight:600;
     color:rgba(68,68,68,1);
   }
-  span:last-child {
-    font-size:40px;
-    font-family:DINCondensed-Bold;
-    font-weight:bold;
-    color:rgba(51,51,51,1);
+  p {
+    position: relative;
+    width: 114px;
+    height: 100px;
+    span {
+      position:absolute;
+      right: 0;
+      top: 10px;
+      font-size:40px;
+      font-family:DINCondensed-Bold;
+      font-weight:bold;
+      color:rgba(51,51,51,1);
+    }
     i {
+      position: absolute;
+      left: 0;
+      top: 26px;
       display: inline-block;
       width: 38px;
       height: 44px;
       background: url('../../../../static/images/userInfo/purse.svg') no-repeat center;
       background-size: cover;
-      margin-top: 17px;
-      margin-right: 16px;
     }
   }
 }
@@ -254,7 +264,7 @@ export default {
 
 .userVip-bottom-nav {
   width: 100%;
-  height: 60px;
+  height: 52px;
   background-color: #ffffff;
   text-align: center;
   font-size: 16px;
@@ -268,7 +278,7 @@ export default {
 .userVip-bottom-nav a {
   display: inline-block;
   float: left;
-  height: 60px;
+  height: 52px;
   font-size:16px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
@@ -552,7 +562,7 @@ export default {
         transition: all 0.3s ease-in-out;
       }
       .product {
-        padding: 36px 54px;
+        padding: 36px 15px;
         text-align: center;
         p {
           font-size:14px;
@@ -561,6 +571,8 @@ export default {
           color:rgba(126,146,159,1);
         }
         .purchase {
+          padding-bottom: 43px;
+          border-bottom: 1px solid #F5F5F5FF;
           p:nth-child(1) {
             font-size:36px;
             font-family:PTSans-CaptionBold;
@@ -575,7 +587,7 @@ export default {
           }
         }
         .gave {
-          padding-top: 60px;
+          padding-top: 25px;
           p:nth-child(2) {
             font-size: 22px;
           }

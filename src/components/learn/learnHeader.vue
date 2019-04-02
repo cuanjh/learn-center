@@ -163,7 +163,7 @@ export default {
         }
         this.learnCourse = _object
       } else {
-        console.log('learnCourse', this.learnCourse)
+        // console.log('learnCourse', this.learnCourse)
         this.learnCourse = newData
       }
     },

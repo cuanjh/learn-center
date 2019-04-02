@@ -183,7 +183,7 @@ export default {
             color:rgba(144,162,174,1);
             span:nth-child(2) {
               display: block;
-              font-size:30px;
+              font-size:22px;
               font-family:PTSans-Caption;
               font-weight:normal;
               color:rgba(10,43,64,1);

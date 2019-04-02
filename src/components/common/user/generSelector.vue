@@ -57,6 +57,9 @@ export default {
       $('#selsex-content .multiselect__content-wrapper').find('.multiselect__option--highlight,.multiselect__option--selected').removeAttr('style')
     },
     generResetCss () {
+      $('.multiselect__tags .multiselect__single').css({
+        'font-size': '14px'
+      })
       $('#selsex-content .multiselect--active .multiselect__select').css({
         'z-index': '99'
       })

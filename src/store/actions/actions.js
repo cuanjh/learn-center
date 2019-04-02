@@ -44,9 +44,17 @@ export default {
   userBindPhone ({commit}, params) {
     return httpLogin(config.umUserBindPhoneApi, params)
   },
+  // 匿名用户绑定邮箱
+  anonymousUserBindEmail ({commit}, params) {
+    return httpLogin(config.anonymousUserBindEmailApi, params)
+  },
   // 验证手机号是否存在接口
   userExistsPhone ({commit}, params) {
     return httpLogin(config.umUserExistsPhoneApi, params)
+  },
+  // 验证邮箱是否存在
+  userExistsEmail ({commit}, params) {
+    return httpLogin(config.umUserExistsEmailApi, params)
   },
   // 语言设置状态接口
   getLangsState ({commit, dispatch}, params) {

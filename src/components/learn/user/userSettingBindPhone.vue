@@ -141,9 +141,9 @@ export default {
       color:rgba(10,43,64,1);
     }
     .close {
-      width: 17px;
-      height: 17px;
-      background-image: url(../../../../static/images/learn/learn-user-setting-bindphone-close.svg);
+      width: 12px;
+      height: 12px;
+      background-image: url('../../../../static/images/userInfo/close.svg');
       background-repeat: no-repeat;
       background-size: contain;
       position: absolute;
