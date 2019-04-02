@@ -34,10 +34,9 @@ export default {
       this.btnCancel = data.btnCancel
       this.btnDesc = data.btnDesc
       this.isLink = data.isLink
+      this.emitMethod = data.emitMethod
       if (this.isLink) {
         this.hyperLink = data.hyperLink
-      } else {
-        this.emitMethod = ''
       }
       this.isShow = true
     })
@@ -50,8 +49,10 @@ export default {
       if (this.hyperLink) {
         this.isShow = false
         this.$router.push({path: this.hyperLink})
-      } else {
-        Bus.$emit(this.emitMethod)
+      }
+      if (this.emitMethod) {
+        this.isShow = false
+        Bus.$emit('settingUpdate', this.emitMethod)
       }
       this.isShow = false
     },

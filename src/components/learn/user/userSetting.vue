@@ -32,7 +32,7 @@
             <template v-if="phonenumberConfirmed">
               <em class='bind-logical-textState adjust'>已绑定</em>
               <a class='bind-logical-btnState adjustOff' style="line-height: 30px;"
-                 @click="unbindIdentity('phonenumber')">解除绑定</a>
+                 @click="unbindIdentityFun('phonenumber')">解除绑定</a>
             </template>
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'>
@@ -48,7 +48,7 @@
             <template v-if="emailConfirmedStatus == 0">
               <em class='bind-logical-textState adjust'>未绑定</em>
               <a class='bind-logical-btnState adjust bindEmail'
-                 @click="bindEmail(email)"
+                 @click="bindEmailFun(email)"
                  v-show="mailValidator&&email">绑定邮箱</a>
             </template>
             <template v-if="emailConfirmedStatus == 1">
@@ -56,12 +56,12 @@
               <a class='bind-logical-btnState' style="margin-left:-72px"
                  @click="confirmEmail(email)">验证邮箱</a>
               <a class='bind-logical-btnState adjustOff' style=''
-                 @click="unbindIdentity('email')">解除绑定</a>
+                 @click="unbindIdentityFun('email')">解除绑定</a>
             </template>
             <template v-if="emailConfirmedStatus == 2">
               <em class='bind-logical-textState adjust'>已绑定</em>
               <a class='bind-logical-btnState adjustOff' style=""
-                 @click="unbindIdentity('email')">解除绑定</a>
+                 @click="unbindIdentityFun('email')">解除绑定</a>
             </template>
           </div>
           <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'>
@@ -140,6 +140,7 @@
         </p>
       </div>
     </section>
+    <setting-bind-phone></setting-bind-phone>
     <set-alert
       ref="setAlert"
       :alert-type="alertType"
@@ -163,6 +164,7 @@ import cookie from '../../../tool/cookie'
 import Bus from '../../../bus.js'
 import Constant from '../../../api/constant'
 import SetAlert from './userSettingAlert.vue'
+import SettingBindPhone from './userSettingBindPhone.vue'
 import DatePicker from '../../common/user/datepicker.vue'
 import GenderSelector from '../../common/user/generSelector.vue'
 import CountrySelector from '../../common/user/countrySelector.vue'
@@ -172,6 +174,7 @@ export default {
   components: {
     DatePicker,
     SetAlert,
+    SettingBindPhone,
     GenderSelector,
     CountrySelector,
     LanguageSkillSelector
@@ -211,7 +214,9 @@ export default {
     this.$on('coverShow', () => {
       this.updateAlertType('')
     })
-    Bus.$on()
+    Bus.$on('settingUpdate', (type) => {
+      this.unbindEmitMethod(type)
+    })
   },
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'setting')
@@ -266,6 +271,7 @@ export default {
       sendCode: 'getSendCode', // 发送验证码
       userExistsPhone: 'userExistsPhone', // 验证手机号是否存在
       bindEmail: 'user/bindEmail',
+      unbindIdentity: 'user/unbindIdentity', // 解除绑定
       // updateInfo: 'user/updateInfo',
       updateInfo: 'updateUserInfo',
       resetPwd: 'user/resetPwd',
@@ -369,54 +375,107 @@ export default {
       // this.setUpSuccess = false
     },
     // 解除绑定
-    unbindIdentity (type) {
-      this.updateAlertType('bindConfirm')
-      this.bindConfirmType = type
-      this.$refs['setAlert'].$emit('isShowSetAlert', true)
+    // unbindIdentityEmail (type) {
+    //   this.updateAlertType('bindConfirm')
+    //   this.bindConfirmType = type
+    //   // this.$refs['setAlert'].$emit('isShowSetAlert', true)
+    // },
+    // 解除绑定的方法
+    unbindIdentityFun (type) {
+      console.log('type', type)
+      this.type = type
+      let obj = {
+        className: 'warnIcon',
+        buttonClass: 'buttonClass',
+        description: `你确定要解除绑定吗？`,
+        btnCancel: '取消',
+        btnDesc: '确定',
+        isLink: false,
+        emitMethod: type
+      }
+      Bus.$emit('showCommonModal', obj)
     },
-    // 绑定手机号
-    async bindPhoneNumber (phonenumber) {
-      var _this = this
+    async unbindEmitMethod (type) {
       var params = {}
-      params.phonenumber = phonenumber
-      params.type = 'bind_phonenumber'
-      params.codeLen = '6'
-      await _this.sendCode(params).then((res) => {
-        if (res.success) {
-          _this.updateAlertType('bindPhone')
+      params.identity_type = type
+      var _this = this
+      await _this.unbindIdentity(params).then((res) => {
+        console.log('解绑信息', res)
+        if (res.success) { // this.$router.push({path: '/app/user/setting'})
+          this.updateAlertType('')
+          this.email = ''
         } else {
           _this.showAlertView(res)
         }
       })
       await _this.getUserInfo()
-      // {phonenumber: this.phone, codeLen: '4'}
-      // await _this.userExistsPhone(params).then((data) => {
-      //   console.log('data', data)
-      //   if (data.success) {
-      //     if (!data.exists) {
-      //       // 手机号存在
-      //       _this.showAlertView(data)
-      //       _this.alertMessage = '该手机号已经存在'
-      //       _this.alertButton = '确定'
-      //     } else {
-      //       // 手机号不存在
-      //       _this.sendCode(params).then((res) => {
-      //         if (res.success) {
-      //           _this.updateAlertType('bindPhone')
-      //         } else {
-      //           _this.showAlertView(res)
-      //         }
-      //       })
-      //     }
-      //   } else {
-      //     _this.showAlertView(data)
-      //   }
-      // })
+      _this.loadData()
     },
+    // 绑定手机号
+    async bindPhoneNumber (phonenumber) {
+      let _this = this
+      let params = {}
+      params.phonenumber = phonenumber
+      await _this.userExistsPhone(params).then(res => {
+        console.log('res', res)
+        if (res.exists) { // 存在
+          this.phone = ''
+          this.alertMessageNotFull('手机号已经存在！')
+        } else { // 不存在
+          Bus.$emit('showBindPhone', phonenumber)
+          // 发送验证码
+          // _this.sendCode({phonenumber: phonenumber, codeLen: '4'}).then(res => {
+          //   console.log('发送验证码', res)
+          // })
+        }
+      })
+      // await _this.getUserInfo()
+      // _this.loadData()
+    },
+    // async bindPhoneNumber (phonenumber) {
+    //   var _this = this
+    //   var params = {}
+    //   params.phonenumber = phonenumber
+    //   params.type = 'bind_phonenumber'
+    //   params.codeLen = '6'
+    //   await _this.sendCode(params).then((res) => {
+    //     if (res.success) {
+    //       _this.updateAlertType('bindPhone')
+    //       this.$refs['setAlert'].$emit('isShowSetAlert', true)
+    //     } else {
+    //       _this.showAlertView(res)
+    //     }
+    //   })
+    //   await _this.getUserInfo()
+    //   // {phonenumber: this.phone, codeLen: '4'}
+    //   // await _this.userExistsPhone(params).then((data) => {
+    //   //   console.log('data', data)
+    //   //   if (data.success) {
+    //   //     if (!data.exists) {
+    //   //       // 手机号存在
+    //   //       _this.showAlertView(data)
+    //   //       _this.alertMessage = '该手机号已经存在'
+    //   //       _this.alertButton = '确定'
+    //   //     } else {
+    //   //       // 手机号不存在
+    //   //       _this.sendCode(params).then((res) => {
+    //   //         if (res.success) {
+    //   //           _this.updateAlertType('bindPhone')
+    //   //         } else {
+    //   //           _this.showAlertView(res)
+    //   //         }
+    //   //       })
+    //   //     }
+    //   //   } else {
+    //   //     _this.showAlertView(data)
+    //   //   }
+    //   // })
+    // },
     showAlertView (errorinfo) {
-      this.updateAlertType('showMessage')
-      this.alertMessage = errorinfo.errorMsg
-      this.alertButton = '确定'
+      // this.updateAlertType('showMessage')
+      // this.alertMessage = errorinfo.errorMsg
+      // this.alertButton = '确定'
+      this.alertMessageNotFull(errorinfo.errorMsg)
     },
     // 监听性别组件的变更信息
     updateGender (newSelected) {
@@ -434,13 +493,15 @@ export default {
       this.birthday = val
     },
     // 绑定邮箱
-    async bindEmail (email) {
+    async bindEmailFun (email) {
       var _this = this
       await this.bindEmail(email).then((res) => {
+        console.log('绑定邮箱返回', res)
         if (res.success) {
-          _this.updateAlertType('bindSuccess')
-          _this.alertMessage = '恭喜您绑定邮箱成功！'
-          _this.alertButton = '确定'
+          // _this.updateAlertType('bindSuccess')
+          // _this.alertMessage = '恭喜您绑定邮箱成功！'
+          // _this.alertButton = '确定'
+          this.alertMessageNotFull('恭喜您绑定邮箱成功！')
         } else {
           _this.showAlertView(res)
         }
