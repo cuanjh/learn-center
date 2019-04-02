@@ -36,6 +36,7 @@ export default {
   uploadUserPhoto: '/user/upload_user_photo', // 上传用户头像(需要登录)
   upUserFollowerApi: '/relation/get_follower', // 用户中心粉丝列表接口
   upUserFollowingApi: '/relation/get_following', // 用户中心关注人列表接口
+  userCourseListApi: '/studyv1/user/course/list', // 用户订阅课程列表接口
   // 登录新的接口
 
   // 课程

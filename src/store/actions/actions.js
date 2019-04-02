@@ -143,5 +143,9 @@ export default {
   // 获取国家所拥有的语言
   getCountryLanguages ({commit}, params) {
     return httpLogin(config.countryLanguagesApi, params)
+  },
+  // 获取用户订阅课程
+  getUserCourseList ({commit}, params) {
+    return httpLogin(config.userCourseListApi, params)
   }
 }
