@@ -543,7 +543,8 @@ export default {
     },
     jumpVipPage (isActive, id) {
       if (parseInt(this.isVip) !== 1) {
-        this.$router.push({ path: '/app/user/vip' })
+        // this.$router.push({ path: '/app/user/vip' })
+        this.$router.push({ path: '/app/vip-home' })
       } else {
         if (isActive) {
           this.$router.push({ name: 'stage', params: {id: id} })

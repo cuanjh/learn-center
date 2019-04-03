@@ -108,6 +108,7 @@ export default {
     display: inline-block;
     width: 578px;
     background: #ffffff;
+    border-radius: 0 0 0 5px;
     .userdoc-item-left-content {
       padding: 28px 25px 70px;
       .userdoc-item-top {
@@ -195,7 +196,8 @@ export default {
     display: inline-block;
     width: 300px;
     background: #ffffff;
-    margin-left: 6px;
+    border-radius: 0 0 5px 0;
+    margin-left: 7px;
     .userdoc-item-right-content {
       width: 100%;
       height: 430px;

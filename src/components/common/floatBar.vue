@@ -80,7 +80,7 @@ export default {
 .float-bar-container {
   position: fixed;
   bottom: 100px;
-  right: 40px;
+  right: 10px;
   // background: red;
   z-index: 4;
   white-space: nowrap;

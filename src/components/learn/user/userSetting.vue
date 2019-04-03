@@ -128,7 +128,7 @@
                   v-model="newPsw2">
         </p>
         <!--  v-show="!isSame" -->
-        <div class='learn-setting-error-tips-settingpage' v-show="false">
+        <div class='learn-setting-error-tips-settingpage' v-show="!isSame">
           <i></i>两次输入的密码不同，请重新输入
         </div>
         <button class='submit' @click="modifyPsw()">保存修改</button>
@@ -547,7 +547,7 @@ export default {
       this.alertButton = '确定'
     },
     // 提示用户的信息不完整
-    alertMessageNotFull (msg) {
+    alertMessageNotFull (msg, icon) {
       // this.noticeSetting = true
       let obj = {
         className: 'warnIcon',
@@ -555,6 +555,11 @@ export default {
         btnDesc: '确定',
         isLink: false
       }
+
+      if (icon) {
+        obj.className = icon
+      }
+
       Bus.$emit('showCommonModal', obj)
     },
     transForm (birthday) {
@@ -619,9 +624,7 @@ export default {
       await _this.updateInfo(_params).then((res) => {
         console.log('修改用户信息', res)
         if (res.success) {
-          _this.updateAlertType('showMessage')
-          _this.alertMessage = '信息修改成功'
-          _this.alertButton = '确定'
+          this.alertMessageNotFull('修改成功', 'okIcon')
           this.noticeSetting = false
         } else {
           _this.showAlertView(res)
@@ -635,7 +638,6 @@ export default {
       var _params = {}
       if (this.isAnonymous) { // true 新用户
         if (this.newPsw1.length === 0 || this.newPsw2.length === 0) {
-          // this.noticePsw = true
           this.alertMessageNotFull('两次输入的密码不一致!')
           return false
         }
@@ -643,10 +645,7 @@ export default {
         console.log('=====', _params)
         _this.resetPwd(_params).then((res) => {
           if (res.success) {
-            _this.updateAlertType('showMessage')
-            _this.alertMessage = '密码修改成功!'
-            _this.alertButton = '确定'
-            // this.noticePsw = false
+            this.alertMessageNotFull('密码修改成功!', 'okIcon')
           } else {
             _this.showAlertView(res)
           }
@@ -668,16 +667,15 @@ export default {
           this.alertMessageNotFull('请确定密码，谢谢！')
           return
         }
-        // this.noticePsw = false
+        if (!this.isSame) {
+          this.alertMessageNotFull('两次输入的新密码不一致！')
+          return
+        }
         _params.old_pwd = this.oldPsw
         _params.new_pwd = this.newPsw2
         _this.changePwd(_params).then((res) => {
           if (res.success) {
-            // _this.updateAlertType('showMessage')
-            // _this.alertMessage = '密码修改成功!'
-            // _this.alertButton = '确定'
-            this.alertMessageNotFull('密码修改成功!')
-            // this.noticePsw = false
+            this.alertMessageNotFull('密码修改成功!', 'okIcon')
           } else {
             _this.showAlertView(res)
           }
@@ -1078,6 +1076,7 @@ input {
       }
       &.active {
         color: #0581D1;
+        font-size: 18px;
         font-weight: bold;
         border-bottom: 3px solid #2A9FE4FF;
       }

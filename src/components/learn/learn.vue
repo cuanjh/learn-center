@@ -123,7 +123,7 @@ export default {
       $('.test-level-wrap').css('min-height', clientHeight + 'px')
       $('.confirm-wrap').css('min-height', clientHeight + 'px')
       $('.homework-wrap').css('min-height', clientHeight + 'px')
-      $('.user-wrap').css('min-height', clientHeight + 'px')
+      // $('.user-wrap').css('min-height', clientHeight + 'px')
     },
     async changeCourseCode (courseCode) {
       var that = this

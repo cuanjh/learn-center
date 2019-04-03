@@ -254,6 +254,7 @@ export default {
         return false
       }
       this.page++
+      console.log(this.$route.params.userId, this.page)
       this.getRadioAuthorList({ partner_user_id: this.$route.params.userId, page: this.page }).then((res) => {
         console.log('电台列表', res)
         if (res.data.radios) {

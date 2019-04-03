@@ -1,6 +1,6 @@
 <template>
 <section class='user-wallet-wrap'>
-    <div class='userVip-top-wrap user-wallet-top'>
+    <div class='user-wallet-top'>
       <div class='userVip-top-tips'>
         <span>我的金币</span>
         <p><i class="coins-icon"></i><span>{{ userInfo ? userInfo.coins : '' }}</span></p>
@@ -55,7 +55,7 @@
             </div>
           </li>
         </ul>
-        <div class="up-all">
+        <div class="up-all" v-if="record.length>0">
           <div class="up-all-content" v-if="record.length>5">
             <a @click="loadMoreRecord()" v-text="isShowRecord?'全部展开':'收起'"></a>
             <i v-show="isShowRecord"></i>
@@ -64,6 +64,14 @@
           <div v-else>
             <span>已经是全部内容了</span>
           </div>
+        </div>
+        <div class="no-user-following" v-else>
+          <dl>
+            <dt></dt>
+            <dd>
+              <p>你还没有消费记录哦!</p>
+            </dd>
+          </dl>
         </div>
       </div>
       <div class="user-wallet-purchase-icon" v-show='!activeTab'>
@@ -85,12 +93,13 @@
                 <p>{{ item.gave_coins }}</p>
               </div>
             </div>
-            <a class="go-pay" @click='purchaseIconPay(item)'>立即购买</a>
+            <div class="go-pay">
+              <a @click='purchaseIconPay(item)'>立即购买</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div></div>
     <!-- <pay-alert ref="payAlert"></pay-alert> -->
   </section>
 </template>
@@ -209,7 +218,7 @@ export default {
   width: 100%;
   // height: 100px;
   background: #fff;
-  border-radius: 5px;
+  border-radius: 5px 5px 0 0;
 }
 
 .user-wallet-wrap .userVip-top-tips {
@@ -226,26 +235,22 @@ export default {
   }
   p {
     position: relative;
-    width: 114px;
     height: 100px;
+    line-height: 100px;
     span {
-      position:absolute;
-      right: 0;
-      top: 10px;
       font-size:40px;
       font-family:DINCondensed-Bold;
       font-weight:bold;
       color:rgba(51,51,51,1);
     }
     i {
-      position: absolute;
-      left: 0;
-      top: 26px;
       display: inline-block;
       width: 38px;
       height: 44px;
       background: url('../../../../static/images/userInfo/purse.svg') no-repeat center;
       background-size: cover;
+      vertical-align: middle;
+      margin-right: 16px;
     }
   }
 }
@@ -257,21 +262,19 @@ export default {
 
 .user-wallet-bottom {
   width: 100%;
-  border-radius: 5px;
+  border-radius: 0 0 5px 5px;
   background: #fff;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .userVip-bottom-nav {
   width: 100%;
   height: 52px;
-  background-color: #ffffff;
   text-align: center;
   font-size: 16px;
   font-weight: 500;
   color: #6d6d6d;
   border-bottom: 1px solid #ededed;
-  border-radius: 4px;
   position: relative;
   padding-left: 25px;
 }
@@ -282,7 +285,7 @@ export default {
   font-size:16px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
-  color:#3C5B6FFF;
+  color:#3C5B6F;
   text-align: center;
   margin-right: 50px;
   // border-right: 1px solid #EEF2F3;
@@ -298,7 +301,8 @@ export default {
 }
 .userVip-bottom-nav a.active {
   color: #0581D1;
-  border-bottom: 3px solid #2A9FE4FF;
+  font-size: 18px;
+  border-bottom: 3px solid #2A9FE4;
 }
 
 .user-wallet-bottom ol {
@@ -438,6 +442,7 @@ export default {
 .payment-detail {
   width: 100%;
   background: #fff;
+  margin-bottom: 50px;
   ul {
     padding: 25px 55px 46px;
     li {
@@ -445,7 +450,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #E6EBEEFF;
+      border-bottom: 1px solid #E6EBEE;
       .detail-left {
         font-size:14px;
         font-family:PingFang-SC-Regular;
@@ -540,17 +545,19 @@ export default {
 
 .user-wallet-purchase-icon {
   width: 100%;
-  // height: 312px;
-  // border-radius: 4px;
-  background-color: #ffffff;
   .user-title-purchase-item-wrap {
     width: 100%;
     padding: 54px 38px 70px;
     display: flex;
     justify-content: space-between;
     .user-title-purchase-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
       position: relative;
       width: 190px;
+      height: 308px;
       border-radius:5px;
       border:1px solid rgba(236,240,243,1);
       &:hover {
@@ -583,6 +590,7 @@ export default {
               font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(127,201,97,1);
+              padding-right: 4px;
             }
           }
         }
@@ -594,16 +602,18 @@ export default {
         }
       }
       .go-pay {
-        display: inline-block;
         text-align: center;
-        width: 100%;
+        width: 190px;
         font-size:16px;
         font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(255,255,255,1);
-        padding: 14px 0;
         background: #7FC961FF;
         border-radius: 0 0 5px 5px;
+        a {
+          display: inline-block;
+          padding: 14px 0;
+        }
       }
     }
   }
@@ -783,5 +793,43 @@ export default {
   -ms-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   -webkit-animation: loadRotate 1s linear infinite;
+}
+.no-user-following {
+  margin-top: 16px;
+  width: 100%;
+  /* height: 176px; */
+  min-height: 400px;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+.no-user-following dl {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.no-user-following dl dt {
+  width: 144px;
+  height: 81px;
+  background-image: url('../../../../static/images/userInfo/follower.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.no-user-following dl dd {
+  /* width: 70%;
+  height: 100%; */
+  text-align: center;
+  padding: 20px 0 0;
+  font-size: 18px;
+}
+.no-user-following dl dd p {
+  font-size:16px;
+  font-family:PingFang-SC-Medium;
+  font-weight:500;
+  color:rgba(200,212,219,1);
+  line-height:22px;
 }
 </style>

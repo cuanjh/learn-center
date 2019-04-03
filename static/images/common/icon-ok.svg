@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="92px" height="60px" viewBox="0 0 92 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>付费完成</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="25.8187586%" y1="0%" x2="72.8103402%" y2="92.0353047%" id="linearGradient-1">
+            <stop stop-color="#EAFF7F" offset="0%"></stop>
+            <stop stop-color="#A3E050" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="支付结束回跳页面" transform="translate(-914.000000, -187.000000)">
+            <g id="补签完成" transform="translate(914.000000, 187.000000)">
+                <path d="M46.1521806,50.8571429 C59.4910616,50.8571429 70.6465517,39.9200989 70.6465517,26.4285714 C70.6465517,12.937044 59.4910616,2 46.1521806,2 C32.8132996,2 22,12.937044 22,26.4285714 C22,39.9200989 32.8132996,50.8571429 46.1521806,50.8571429 Z" id="Oval" stroke="#91D249" stroke-width="3.09090918" fill="url(#linearGradient-1)"></path>
+                <path d="M47.3534483,46.8051948 L54.0631239,41.4025974 C56.5635776,44.7012987 59.1781987,47.5627706 61.9069873,49.987013 C66.9776316,43.8818568 74.7466312,36.1719001 85.2139859,26.8571429 L91.8113657,29.987013 C78.2422868,39.2294372 68.7289587,49.2294372 63.2713816,59.987013 C60.1576229,56.9186154 54.8516452,52.5246761 47.3534483,46.8051948 Z" id="Rectangle-59-Copy-5" stroke="#FFFFFF" stroke-width="2" fill="#A3E050"></path>
+                <g id="Group-4" transform="translate(32.137931, 17.428571)">
+                    <ellipse id="Oval-8" fill="#A1DE3E" cx="3.30711207" cy="3.41940973" rx="3.30711207" ry="3.33333333"></ellipse>
+                    <ellipse id="Oval-8-Copy" fill="#A1DE3E" cx="22.9547464" cy="3.33333333" rx="3.30711207" ry="3.33333333"></ellipse>
+                    <path d="M2.64568966,13.4400774 C3.54036818,17.9755972 7.93717843,21.4194097 13.2264227,21.4194097 C18.5236981,21.4194097 22.9258273,17.9651311 23.8112069,13.4194097" id="Oval-8-Copy-2" stroke="#98D937" stroke-width="3.2" stroke-linecap="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

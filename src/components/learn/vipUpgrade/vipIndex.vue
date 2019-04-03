@@ -11,36 +11,38 @@
       <div class="vip-content">
         <!-- 介绍vip会员福利 -->
         <div class="introduce">
-          <div class="introduce-title">
-            <p>解锁以下所有功能以及更多其他实用功能</p>
-            <p>获得各种专享功能的访问权限，从离线模式到由母语使用者提供反馈的对话功能。用不了多久您就能说出一口流利的外语！</p>
-          </div>
-          <!-- vip选项 -->
-          <div class="vip-lists">
-            <div class="lists-content">
-              <!-- <div class="lists" v-show="false">
-                <div class="list-header">
-                  <p class="name">比较免费选项和 VIP 选项</p>
-                  <div class="free">
-                    <span>免费</span>
-                    <span>VIP</span>
+          <div class="introduce-content">
+            <div class="introduce-title">
+              <p>解锁以下所有功能以及更多其他实用功能</p>
+              <p>获得各种专享功能的访问权限，从离线模式到由母语使用者提供反馈的对话功能。用不了多久您就能说出一口流利的外语！</p>
+            </div>
+            <!-- vip选项 -->
+            <div class="vip-lists">
+              <div class="lists-content">
+                <!-- <div class="lists" v-show="false">
+                  <div class="list-header">
+                    <p class="name">比较免费选项和 VIP 选项</p>
+                    <div class="free">
+                      <span>免费</span>
+                      <span>VIP</span>
+                    </div>
                   </div>
-                </div>
-                <div class="list-items">
-                  <ul>
-                    <li v-for='(item, index) in items' :key="index">
-                      <div class="session">
-                        <div class="icon-content"><i class="icon"></i></div>
-                        <div class="title"><span>{{ item.red }}</span></div>
-                      </div>
-                      <div class="pitch">
-                        <div class="icon-blue"></div>
-                        <div class="icon-green"></div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div> -->
+                  <div class="list-items">
+                    <ul>
+                      <li v-for='(item, index) in items' :key="index">
+                        <div class="session">
+                          <div class="icon-content"><i class="icon"></i></div>
+                          <div class="title"><span>{{ item.red }}</span></div>
+                        </div>
+                        <div class="pitch">
+                          <div class="icon-blue"></div>
+                          <div class="icon-green"></div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div> -->
+              </div>
             </div>
           </div>
         </div>
@@ -285,6 +287,7 @@ export default {
           // )
         } else {
           this.alertMessage(res.errorMsg)
+          this.codeNum = ''
           LogCollect.payMemberCard(_memberType, this.codeNum, 0, 0)
         }
       })
@@ -350,8 +353,14 @@ export default {
         width: 100%;
         height: 610px;
         background: #ffffff;
-        padding: 73px 120px 0;
+        // padding: 73px 120px 0;
+        .introduce-content {
+          width: 960px;
+          margin: 0 auto;
+          padding: 73px 0px 0;
+        }
         .introduce-title {
+          width: 100%;
           p:nth-child(1) {
             font-size:24px;
             font-family:PingFang-SC-Bold;
@@ -368,9 +377,7 @@ export default {
         }
         .vip-lists {
           margin-top: 12px;
-          width: 100%;
           height: 530px;
-          height:530px;
           background:rgba(255,255,255,1);
           box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
           border:1px solid rgba(233,237,239,1);
@@ -542,10 +549,11 @@ export default {
       }
       // 激活码激活会员
       .activation-code {
-        width: 100%;
+        width: 960px;
         margin-top: 121px;
-        padding: 0 120px;
+        padding: 160px 0 0px;
         text-align: center;
+        margin: 0 auto;
         .title {
           font-size:24px;
           font-family:PingFang-SC-Bold;
@@ -601,7 +609,8 @@ export default {
           position: relative;
           width: 100%;
           .cards-list {
-            width: 100%;
+            width: 960px;
+            margin: 0 auto;
             margin-top: -140px;
             ul {
               width: 100%;
@@ -610,7 +619,7 @@ export default {
               li {
                 overflow: hidden;
                 position: relative;
-                width: 23%;
+                width: 224px;
                 background:rgba(255,255,255,1);
                 box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
                 border-radius:5px;
@@ -731,7 +740,8 @@ export default {
             }
           }
           .bottom-content {
-            width: 100%;
+            width: 960px;
+            margin: 0 auto;
             margin-top: 112px;
             .title {
               i {
@@ -811,7 +821,8 @@ export default {
           }
           .other-say {
             padding: 183px 0;
-            width: 100%;
+            width: 960px;
+            margin: 0 auto;
             .other-content {
               width: 100%;
               .text {

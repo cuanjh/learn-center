@@ -38,7 +38,7 @@ export default {
         desc = '升级会员'
       }
       window._czc.push(['_trackEvent', '学习系统', 'VIP banner', desc, '', '.vip-btn'])
-      this.$router.push({ path: '/app/vip-index' })
+      this.$router.push({ path: '/app/vip-home' })
     }
   }
 }
@@ -56,7 +56,7 @@ export default {
   background-color: #ffffff;
   // box-shadow:0px 3px 10px 0px rgba(5,43,52,0.05);
   border-radius:5px;
-  border-bottom: 10px solid #f6f8f9;
+  margin-bottom: 10px;
   .prompt {
     display: flex;
     align-items: center;

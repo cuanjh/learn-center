@@ -157,13 +157,17 @@ export default {
       $('#phoneNumber,#phonePwd,#emailNumber,#emailPwd').removeAttr('readOnly')
     },
     // 提示用户的信息不完整
-    alertMessageNotBox (msg) {
+    alertMessageNotBox (msg, icon) {
       // this.noticeSetting = true
       let obj = {
         className: 'warnIcon',
         description: `${msg}`,
         btnDesc: '确定',
         isLink: false
+      }
+
+      if (icon) {
+        obj.className = icon
       }
       Bus.$emit('showCommonModal', obj)
     },
@@ -281,7 +285,7 @@ export default {
           //     email: params.email
           //   })
           // }, 1000)
-          _this.alertMessageNotBox('恭喜你绑定成功')
+          _this.alertMessageNotBox('恭喜你绑定成功', 'okIcon')
           _this.getUserInfo()
         } else {
           _this.alertMessageNotBox(res.errorMsg)

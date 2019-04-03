@@ -45,10 +45,10 @@
             <i></i>
             <span>加入VIP，畅听更多"会员免费"课程！</span>
           </div>
-          <div @click="knowVip()" class="right">
+          <router-link tag="div" :to="{path: '/app/vip-home'}" class="right">
             <span>了解会员</span>
             <i></i>
-          </div>
+          </router-link>
         </div>
       </div>
       <!-- 遇到问题 -->

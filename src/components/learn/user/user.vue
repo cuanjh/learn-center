@@ -45,7 +45,7 @@
           </ol>
           <div v-show="false">
             <p><i></i>认证用户</p>
-            <router-link tag="p" :class="{'active': judgeVip}" :to="{ path:'/app/user/vip' }"><i></i>会员用户</router-link>
+            <router-link tag="p" :class="{'active': judgeVip}" :to="{ path:'/app/vip-home' }"><i></i>会员用户</router-link>
           </div>
         </div>
         <div class="user-left-nav">
@@ -237,7 +237,7 @@ export default {
         desc = '升级会员'
       }
       window._czc.push(['_trackEvent', '学习系统', 'VIP banner', desc, '', '.vip-btn'])
-      this.$router.push({ path: '/app/vip-index' })
+      this.$router.push({ path: '/app/vip-home' })
     }
   }
 }
@@ -248,7 +248,7 @@ export default {
   /* background: #ecf4f7; */
   width: 100%;
   /*height: 1000px;*/
-  min-height: 1000px;
+  // min-height: 1000px;
 }
 .margin-top {
   position: fixed;
