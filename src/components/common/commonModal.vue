@@ -141,6 +141,18 @@ export default {
   }
 }
 
+.okIcon {
+  text-align: center;
+  i {
+    display: inline-block;
+    width: 92px;
+    height: 60px;
+    background-image: url('../../../static/images/common/icon-ok.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }

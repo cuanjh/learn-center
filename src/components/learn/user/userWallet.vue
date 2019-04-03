@@ -1,6 +1,6 @@
 <template>
 <section class='user-wallet-wrap'>
-    <div class='userVip-top-wrap user-wallet-top'>
+    <div class='user-wallet-top'>
       <div class='userVip-top-tips'>
         <span>我的金币</span>
         <p><i class="coins-icon"></i><span>{{ userInfo ? userInfo.coins : '' }}</span></p>
@@ -100,7 +100,6 @@
         </div>
       </div>
     </div>
-    <div></div>
     <!-- <pay-alert ref="payAlert"></pay-alert> -->
   </section>
 </template>
@@ -219,7 +218,7 @@ export default {
   width: 100%;
   // height: 100px;
   background: #fff;
-  border-radius: 5px;
+  border-radius: 5px 5px 0 0;
 }
 
 .user-wallet-wrap .userVip-top-tips {
@@ -236,26 +235,22 @@ export default {
   }
   p {
     position: relative;
-    width: 114px;
     height: 100px;
+    line-height: 100px;
     span {
-      position:absolute;
-      right: 0;
-      top: 10px;
       font-size:40px;
       font-family:DINCondensed-Bold;
       font-weight:bold;
       color:rgba(51,51,51,1);
     }
     i {
-      position: absolute;
-      left: 0;
-      top: 26px;
       display: inline-block;
       width: 38px;
       height: 44px;
       background: url('../../../../static/images/userInfo/purse.svg') no-repeat center;
       background-size: cover;
+      vertical-align: middle;
+      margin-right: 16px;
     }
   }
 }
@@ -267,7 +262,7 @@ export default {
 
 .user-wallet-bottom {
   width: 100%;
-  border-radius: 5px;
+  border-radius: 0 0 5px 5px;
   background: #fff;
   margin-top: 10px;
 }
@@ -275,13 +270,11 @@ export default {
 .userVip-bottom-nav {
   width: 100%;
   height: 52px;
-  background-color: #ffffff;
   text-align: center;
   font-size: 16px;
   font-weight: 500;
   color: #6d6d6d;
   border-bottom: 1px solid #ededed;
-  border-radius: 4px;
   position: relative;
   padding-left: 25px;
 }
@@ -292,7 +285,7 @@ export default {
   font-size:16px;
   font-family:PingFangSC-Semibold;
   font-weight:600;
-  color:#3C5B6FFF;
+  color:#3C5B6F;
   text-align: center;
   margin-right: 50px;
   // border-right: 1px solid #EEF2F3;
@@ -308,7 +301,8 @@ export default {
 }
 .userVip-bottom-nav a.active {
   color: #0581D1;
-  border-bottom: 3px solid #2A9FE4FF;
+  font-size: 18px;
+  border-bottom: 3px solid #2A9FE4;
 }
 
 .user-wallet-bottom ol {
@@ -448,6 +442,7 @@ export default {
 .payment-detail {
   width: 100%;
   background: #fff;
+  margin-bottom: 50px;
   ul {
     padding: 25px 55px 46px;
     li {
@@ -455,7 +450,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #E6EBEEFF;
+      border-bottom: 1px solid #E6EBEE;
       .detail-left {
         font-size:14px;
         font-family:PingFang-SC-Regular;
@@ -550,9 +545,6 @@ export default {
 
 .user-wallet-purchase-icon {
   width: 100%;
-  // height: 312px;
-  // border-radius: 4px;
-  background-color: #ffffff;
   .user-title-purchase-item-wrap {
     width: 100%;
     padding: 54px 38px 70px;

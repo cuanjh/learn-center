@@ -5,39 +5,41 @@
       <a :class="['user-course-wrap-title', {'active': !selTab}]" @click="selTab = !selTab">电台课程</a>
     </div>
     <div class='user-course-item-wrap' v-show="selTab" :class="{ 'userifloading': judgeLoading  }">
-      <div class='user-course-item' v-for='(item, index) in showLangCourses' :key="item.course_code + index">
-        <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
-          <img @click="goToDetails(item.course_code)" :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
-          <ol>
-            <router-link tag="li" :to="{path: '/app/book-details/' + item.course_code}">
-              <span>{{item.name}}</span>
-            </router-link>
-            <li>
-              <!-- <span v-text="levelDes[item.currentLevel]"></span>-<span v-text="'课程' + (parseInt(item.currentUnit.replace('Unit', '')) * parseInt(item.currentChapter.replace('Chapter', '')))"></span> -->
-            </li>
-            <li>
-              <span :style="{ width: (item['complete_rate'] * 100) + '%' }"></span>
-              <div class="progress-bg">
-                <!-- <div class="progress" :style="{width: (curArchiveCourse['complete_rate'] ? curArchiveCourse['complete_rate']*100 : 0) +'%'}"></div> -->
-              </div>
-            </li>
-            <span class='user-course-del-btn-tag' v-show='showIdx === index ? delBtn : false' @click='deleteCourse(item.course_code)'><i></i>删除课程</span>
-          </ol>
-          <div class="user-control">
-            <div class="user-control-btn" @mouseenter="mouseoverControl($event)">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <div class="user-control-sel" style="display:none">
-              <ul>
-                <!-- <li>置顶</li> -->
-                <li @click="deleteCourse(item.course_code)">
-                  <a>取消订阅</a>
-                </li>
-              </ul>
-              <div class="triangle_border_down">
+      <div class="user-course-list">
+        <div class='user-course-item' v-for='(item, index) in showLangCourses' :key="item.course_code + index">
+          <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
+            <img @click="goToDetails(item.course_code)" :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
+            <ol>
+              <router-link tag="li" :to="{path: '/app/book-details/' + item.course_code}">
+                <span>{{item.name}}</span>
+              </router-link>
+              <li>
+                <span v-text="levelDes[item['current_chapter_code'].split('-')[2]]"></span> - <span v-text="'课程' + (parseInt(item['current_chapter_code'].split('-')[3].replace('Unit', '')) * parseInt(item['current_chapter_code'].split('-')[4].replace('Chapter', '')))"></span>
+              </li>
+              <li>
+                <span :style="{ width: (item['complete_rate'] * 100) + '%' }"></span>
+                <div class="progress-bg">
+                  <!-- <div class="progress" :style="{width: (curArchiveCourse['complete_rate'] ? curArchiveCourse['complete_rate']*100 : 0) +'%'}"></div> -->
+                </div>
+              </li>
+              <span class='user-course-del-btn-tag' v-show='showIdx === index ? delBtn : false' @click='deleteCourse(item.course_code)'><i></i>删除课程</span>
+            </ol>
+            <div class="user-control">
+              <div class="user-control-btn" @mouseenter="mouseoverControl($event)">
                 <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="user-control-sel" style="display:none">
+                <ul>
+                  <!-- <li>置顶</li> -->
+                  <li @click="deleteCourse(item.course_code)">
+                    <a>取消订阅</a>
+                  </li>
+                </ul>
+                <div class="triangle_border_down">
+                  <span></span>
+                </div>
               </div>
             </div>
           </div>
@@ -160,23 +162,6 @@ export default {
     this.$parent.$emit('navItem', 'user')
     this.getLearnCourses()
     this.initData()
-    this.getMoreLearnCourses().then(res => {
-      console.log('getMoreLearnCourses', res)
-      // res.learn_courses.forEach(item => {
-      //   if (item.course_type === 0) {
-      //     this.langCourses.push(item)
-      //   } else if (item.course_type === 1) {
-      //     this.radioCourseList.push(item)
-      //   }
-      // })
-      // console.log('=========>', this.radioCourseList)
-      // if (this.langCourses.length === 0) {
-      //   this.isShowCourse = true
-      // }
-      // if (this.radioCourseList.length === 0) {
-      //   this.isShowRadioCourse = true
-      // }
-    })
   },
   computed: {
     ...mapState({
@@ -226,7 +211,6 @@ export default {
     ...mapActions({
       getDeletePurchase: 'course/getDeletePurchase',
       getLearnCourses: 'course/getLearnCourses',
-      getMoreLearnCourses: 'getMoreLearnCourses',
       getUserCourseList: 'getUserCourseList'
     }),
     deleteCourse (code) {
@@ -303,7 +287,7 @@ export default {
   font-weight: 500;
   color: #6d6d6d;
   border-bottom: 1px solid #ededed;
-  border-radius: 4px;
+  border-radius: 5px 5px 0 0;
   position: relative;
   padding-left: 25px;
 }
@@ -369,13 +353,11 @@ export default {
   }
 }
 .user-course-wrap-title {
-  display: inline-block;
   float: left;
   height: 52px;
   font-size:16px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:#3C5B6FFF;
+  font-weight:500;
+  color:#3C5B6F;
   text-align: center;
   margin-right: 42px;
   // border-right: 1px solid #EEF2F3;
@@ -391,20 +373,27 @@ export default {
   color: #2A9FE4;
 }
 .user-course-nav .active {
-  color: #0581D1;
-  border-bottom: 3px solid #2A9FE4FF;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2A9FE4;
+  border-bottom: 3px solid #2A9FE4;
 }
 .user-course-item-wrap {
   padding: 8px 0 0;
   background: #fff;
+  border-radius: 0 0 5px 5px;
 }
-.user-course-item-wrap .user-course-item {
+.user-course-list .user-course-item {
   margin-right: 0;
   margin-left: 0;
   padding: 0 25px;
   // height: 100px;
   // border-radius: 5px;
   // background-color: #ffffff;
+}
+
+.user-course-list .user-course-item:last-child .user-course-item-box {
+  border-bottom: 0px solid #EEF2F3;
 }
 
 .user-course-item-box {
@@ -416,9 +405,9 @@ export default {
   align-items: flex-start;
   padding-bottom: 24px;
   padding-top: 21px;
-  border-bottom: 1px solid #EEF2F3FF;
+  border-bottom: 1px solid #EEF2F3;
 }
-.user-course-item-wrap .user-course-item:last-child .user-course-item-box {
+.user-course-list .user-course-item:last-child .user-course-item-box {
   border-bottom: 0px solid #ffffff!important;
 }
 .user-course-item-box img {
@@ -437,6 +426,7 @@ export default {
   flex: 1;
 }
 .user-course-item-box ol li:nth-of-type(1) {
+  margin-top: 6px;
   display: inline-block;
   font-size:14px;
   font-family:PingFang-SC-Bold;
@@ -460,7 +450,7 @@ export default {
   border-radius: 5px;
   background-color: #EEF2F3;
   position: relative;
-  margin: 15px 0;
+  margin: 18px 0 0;
 }
 .user-course-item-box ol li:nth-of-type(3) span {
   position: absolute;
@@ -474,7 +464,7 @@ export default {
 
 .user-radio-course-item-wrap {
   background-color: #ffffff;
-  border-radius: 5px;
+  border-radius: 0 0 5px 5px;
   padding: 28px 0px 0px;
   ul {
     padding: 0 25px;
@@ -597,7 +587,7 @@ export default {
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background-color: #3C5B6FFF;
+    background-color: #3C5B6F;
   }
 }
 .user-control-sel {

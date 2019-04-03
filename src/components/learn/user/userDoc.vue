@@ -130,7 +130,7 @@ export default {
 <style lang="less" scoped>
 .userDoc-top {
   width: 100%;
-  border-radius: 4px;
+  border-radius: 5px 5px 0 0;
   background-color: #ffffff;
   // margin-top: 90px;
   .user-doc-content {
