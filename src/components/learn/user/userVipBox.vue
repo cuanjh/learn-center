@@ -38,7 +38,7 @@ export default {
         desc = '升级会员'
       }
       window._czc.push(['_trackEvent', '学习系统', 'VIP banner', desc, '', '.vip-btn'])
-      this.$router.push({ path: '/app/vip-index' })
+      this.$router.push({ path: '/app/vip-home' })
     }
   }
 }

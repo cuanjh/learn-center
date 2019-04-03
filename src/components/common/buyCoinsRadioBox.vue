@@ -35,7 +35,7 @@
             <i></i>
             <span>加入VIP，畅听更多"会员免费"课程！</span>
           </div>
-          <router-link :to="{path: '/app/user/vip'}" class="right">
+          <router-link :to="{path: '/app/vip-home'}" class="right">
             了解会员
             <i></i>
           </router-link>

@@ -55,7 +55,7 @@
             </div>
           </li>
         </ul>
-        <div class="up-all">
+        <div class="up-all" v-if="record.length>0">
           <div class="up-all-content" v-if="record.length>5">
             <a @click="loadMoreRecord()" v-text="isShowRecord?'全部展开':'收起'"></a>
             <i v-show="isShowRecord"></i>
@@ -64,6 +64,14 @@
           <div v-else>
             <span>已经是全部内容了</span>
           </div>
+        </div>
+        <div class="no-user-following" v-else>
+          <dl>
+            <dt></dt>
+            <dd>
+              <p>你还没有消费记录哦!</p>
+            </dd>
+          </dl>
         </div>
       </div>
       <div class="user-wallet-purchase-icon" v-show='!activeTab'>
@@ -85,7 +93,9 @@
                 <p>{{ item.gave_coins }}</p>
               </div>
             </div>
-            <a class="go-pay" @click='purchaseIconPay(item)'>立即购买</a>
+            <div class="go-pay">
+              <a @click='purchaseIconPay(item)'>立即购买</a>
+            </div>
           </div>
         </div>
       </div>
@@ -259,7 +269,7 @@ export default {
   width: 100%;
   border-radius: 5px;
   background: #fff;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .userVip-bottom-nav {
@@ -549,8 +559,13 @@ export default {
     display: flex;
     justify-content: space-between;
     .user-title-purchase-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
       position: relative;
       width: 190px;
+      height: 308px;
       border-radius:5px;
       border:1px solid rgba(236,240,243,1);
       &:hover {
@@ -583,6 +598,7 @@ export default {
               font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(127,201,97,1);
+              padding-right: 4px;
             }
           }
         }
@@ -594,16 +610,18 @@ export default {
         }
       }
       .go-pay {
-        display: inline-block;
         text-align: center;
-        width: 100%;
+        width: 190px;
         font-size:16px;
         font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(255,255,255,1);
-        padding: 14px 0;
         background: #7FC961FF;
         border-radius: 0 0 5px 5px;
+        a {
+          display: inline-block;
+          padding: 14px 0;
+        }
       }
     }
   }
@@ -783,5 +801,43 @@ export default {
   -ms-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   -webkit-animation: loadRotate 1s linear infinite;
+}
+.no-user-following {
+  margin-top: 16px;
+  width: 100%;
+  /* height: 176px; */
+  min-height: 400px;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+.no-user-following dl {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.no-user-following dl dt {
+  width: 144px;
+  height: 81px;
+  background-image: url('../../../../static/images/userInfo/follower.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.no-user-following dl dd {
+  /* width: 70%;
+  height: 100%; */
+  text-align: center;
+  padding: 20px 0 0;
+  font-size: 18px;
+}
+.no-user-following dl dd p {
+  font-size:16px;
+  font-family:PingFang-SC-Medium;
+  font-weight:500;
+  color:rgba(200,212,219,1);
+  line-height:22px;
 }
 </style>

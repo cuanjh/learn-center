@@ -261,7 +261,7 @@ export default {
     },
     // 课程加载更多
     loadMoreCourse () {
-      if (this.showMoreCourse) {
+      if (!this.showMoreCourse) {
         this.showLangCourses = this.langCourses.slice(0, 5)
       } else {
         this.showLangCourses = this.langCourses
@@ -270,7 +270,7 @@ export default {
     },
     // 电台加载更多
     loadMoreRadios () {
-      if (this.showMoreRados) {
+      if (!this.showMoreRados) {
         this.showRadioCourses = this.radioCourseList.slice(0, 5)
       } else {
         this.showRadioCourses = this.radioCourseList
@@ -292,6 +292,7 @@ export default {
 <style lang="less" scoped>
 .user-course-wrap {
   // margin-top: 90px;
+  position: relative;
 }
 .user-course-nav {
   width: 100%;
@@ -394,12 +395,13 @@ export default {
   border-bottom: 3px solid #2A9FE4FF;
 }
 .user-course-item-wrap {
-  padding: 8px 25px 0;
+  padding: 8px 0 0;
   background: #fff;
 }
 .user-course-item-wrap .user-course-item {
   margin-right: 0;
   margin-left: 0;
+  padding: 0 25px;
   // height: 100px;
   // border-radius: 5px;
   // background-color: #ffffff;
@@ -473,7 +475,10 @@ export default {
 .user-radio-course-item-wrap {
   background-color: #ffffff;
   border-radius: 5px;
-  padding: 28px 25px 0px;
+  padding: 28px 0px 0px;
+  ul {
+    padding: 0 25px;
+  }
 }
 
 .user-radio-course-item-wrap .user-radio-course-item {

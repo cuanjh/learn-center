@@ -411,9 +411,8 @@ export default {
     },
     // 跳转vip
     toVip () {
-      this.$router.push({
-        path: '/app/user/vip'
-      })
+      // this.$router.push({ path: '/app/user/vip' })
+      this.$router.push({ path: '/app/vip-home' })
     },
     // 处理radio的时间
     toParseTime (data) {

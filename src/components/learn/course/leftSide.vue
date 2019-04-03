@@ -11,8 +11,8 @@
             </p>
           </div>
           <p class="course-old">{{$t('course.finished')}}&nbsp;<span v-text="finishedChapter + '/' + chapterNum"></span>&nbsp;{{$t('course.classHour')}}</p>
-          <p class="vip" v-if="isVip === 1"><span><i></i>{{ vipEndDate }}到期</span><router-link tag="span" :to="{path: '/app/user/vip'}">会员续费</router-link></p>
-          <p class="no-vip" v-else><span><i></i>你还不是会员</span><router-link tag="span" :to="{path: '/app/user/vip'}">成为会员</router-link></p>
+          <p class="vip" v-if="isVip === 1"><span><i></i>{{ vipEndDate }}到期</span><router-link tag="span" :to="{path: '/app/vip-home'}">会员续费</router-link></p>
+          <p class="no-vip" v-else><span><i></i>你还不是会员</span><router-link tag="span" :to="{path: '/app/vip-home'}">成为会员</router-link></p>
         </dd>
       </dl>
       <!-- <div class="finished-course">

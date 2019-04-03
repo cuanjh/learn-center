@@ -211,7 +211,7 @@ export default[
       },
       // vip升级跳转路由
       {
-        path: 'vip-index',
+        path: 'vip-home',
         name: 'vipIndex',
         component: vipIndex
       },
