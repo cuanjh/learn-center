@@ -5,7 +5,7 @@
       <a :class="['user-course-wrap-title', {'active': !selTab}]" @click="selTab = !selTab">电台课程</a>
     </div>
     <div class='user-course-item-wrap' v-show="selTab" :class="{ 'userifloading': judgeLoading  }">
-      <div class='user-course-item' v-for='(item, index) in showLangCourses' :key="item.course_code">
+      <div class='user-course-item' v-for='(item, index) in showLangCourses' :key="item.course_code + index">
         <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
           <img @click="goToDetails(item.course_code)" :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
           <ol>
@@ -612,19 +612,18 @@ export default {
 }
 
 .user-control-sel ul {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding: 8px 0;
 }
 
 .user-control-sel ul li {
-  /* text-align: center; */
+  text-align: center;
   color: #7E929F;
   font-size: 14px;
   font-weight: 500;
 }
 .user-control-sel ul li a {
   display: block;
-  padding: 6px 20px;
+  padding: 6px 0px;
 }
 .user-control-sel ul li a:hover {
   background-color: #F5F7F8;

@@ -14,7 +14,7 @@ export default {
       cirX: '',
       cirY: '',
       rad: '',
-      n: 1,
+      n: 0,
       speed: 150,
       r: 36
     }
