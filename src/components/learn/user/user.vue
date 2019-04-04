@@ -1,6 +1,5 @@
 <template>
   <div class='user-wrap'>
-    <div class="margin-top"></div>
     <div class="user-container row">
       <div class='user-left-bar'>
         <div class='user-left-userDetail'>
@@ -9,7 +8,6 @@
               <img :src="userInfo ? userInfo.photo : ''" class="avatar-view" id='defaultUserImg' @click='uploadPicBtn' >
             </li>
             <li v-text="userInfo ? userInfo.nickname : ''"></li>
-            <!-- <li>全球说ID:<span v-text="userInfo ? userInfo.talkmate_id : ''"></span></li> -->
             <li class="is-vip" v-if="isVip == 1">
               <i class="vip-icon"></i>
               <span>会员到期时间：{{endTime}}</span>
@@ -20,24 +18,18 @@
               <a @click="goVip()">成为会员</a>
             </li>
             <li v-if="userInfo">
-              <!-- <span>{{ userInfo ? userInfo.following_count : '' }}<em> 关注</em></span>
-              <span>{{ userInfo ? userInfo.followed_count : '' }}<em> 粉丝</em></span> -->
-              <!-- @click="goUserFollow('follow')" :to="{path: '/app/user/user-follow'}" -->
               <a @click="goUserFollowing('follow')"
                   :class="{'active': activeItem === 'follow' }">
                 <span>{{userInfo.following_count ? userInfo.following_count : '0'}}</span>
                 <span >关注</span>
               </a>
-              <!-- :to="{path: '/app/user/user-follow'}" -->
               <a @click="goUserFollow('followed')"
                   :class="{'active': activeItem === 'followed' }">
                 <span>{{userInfo.followed_count ? userInfo.followed_count : '0'}}</span>
                 <span >粉丝</span>
               </a>
-              <!-- :to="{path: '/app/user/user-follow'}" -->
               <a  @click="goUserDynamic('dynamic')"
                   :class="{'active': activeItem === 'dynamic' }">
-                  <!-- {{userInfo.dynamic_num ? userInfo.dynamic_num : '0'}} -->
                 <span>{{'0'}}</span>
                 <span >动态</span>
               </a>
@@ -49,32 +41,6 @@
           </div>
         </div>
         <div class="user-left-nav">
-          <!-- <ul>
-            <li :class="{'active': activeItem === 'course' }">
-              <router-link tag="p" :to="{ path:'/app/user/course' }"><i></i>课程</router-link>
-            </li>
-            <li :class="{'active': activeItem === 'doc' }">
-              <router-link tag="p" :to="{ path:'/app/user/doc' }"><i></i>档案</router-link>
-            </li>
-          </ul>
-          <ul class='spe-ul'>
-            <li :class="{'active': activeItem === 'wallet' }">
-              <router-link tag="p" :to="{ path:'/app/user/wallet' }" ><i></i>钱包</router-link>
-            </li>
-            <li :class="{'active': activeItem === 'vip' }">
-              <router-link tag="p" :to="{ path:'/app/user/vip' }" ><i></i>会员</router-link>
-            </li>
-          </ul>
-          <ul class='spe-set'>
-            <li :class="{'active': activeItem === 'setting' }">
-              <router-link tag="p" :to="{ path:'/app/user/setting' }" ><i></i>设置</router-link>
-            </li>
-          </ul>
-          <ul class='spe-bind' v-if="isAnonymous">
-            <li :class="{'active': activeItem === 'bind' }">
-              <router-link tag="p" :to="{ path:'/app/user/bind' }" ><i></i>绑定</router-link>
-            </li>
-          </ul> -->
           <ul>
             <li>
               <router-link :class="{'active': activeItem === 'course' }"
@@ -245,35 +211,23 @@ export default {
 
 <style lang="less" scoped>
 .user-wrap {
-  /* background: #ecf4f7; */
   width: 100%;
-  /*height: 1000px;*/
-  // min-height: 1000px;
 }
-.margin-top {
-  position: fixed;
-  z-index: 99;
-  width: 100%;
-  height: 40px;
-  background: #f6f8f9;
-}
+
 .user-container {
   width: 1200px;
   margin: 0px auto 40px;
 }
 .user-left-bar {
-  position: fixed;
   width: 280px;
   height: 100%;
   margin-top: 40px;
-  // float: left;
+  margin-right: 20px;
 }
 .user-left-userDetail {
   width: 100%;
-  // height: 330px;
   border-radius: 5px;
   background: #fff;
-  // margin-bottom: 20px;
   overflow: hidden;
   position: relative;
 }
@@ -283,8 +237,6 @@ export default {
 }
 .user-left-userDetail ol li:nth-of-type(1) img {
   display: inline-block;
-  /* width: 120px;
-  height: 120px; */
   width: 70px;
   height: 70px;
   border-radius: 50%;
@@ -364,16 +316,7 @@ export default {
     background-image: url('../../../../static/images/userInfo/is-vip.svg');
   }
 }
-// .user-left-userDetail ol li:nth-of-type(4) {
-//   position: relative;
-//   margin-top: 20px;
-// }
-// .user-left-userDetail ol li:nth-of-type(4) span {
-//   color: #4a4a4a;
-//   font-size: 18px;
-//   text-align: center;
-//   margin: 0 20px;
-// }
+
 .user-left-userDetail ol li:nth-of-type(4) {
   font-size:20px;
   font-family:PingFang-SC-Bold;
@@ -451,94 +394,7 @@ export default {
   left: 50%;
   margin-left: -1px;
 }
-// .user-left-nav ul {
-//   border-radius: 5px;
-//   background: #fff;
-//   width: 100%;
-//   /*padding: 0 26.5px;*/
-// }
-// .user-left-nav ul li {
-//   height: 40px;
-//   padding: 0 28px;
-//   line-height: 53px;
-//   background: url(../../../../static/images/learn/learn-user-arrow.svg)
-//     no-repeat;
-//   background-position: 280px center;
-//   cursor: pointer;
-//   position: relative;
-//   font-size:16px;
-//   font-family:PingFang-SC-Medium;
-//   font-weight:500;
-//   color:rgba(144,162,174,1)
-// }
-// .user-left-nav ul li:hover::before {
-//   content: "";
-//   width: 3px;
-//   height: 40px;
-//   background-color: #3c9bbe;
-//   position: absolute;
-//   top: 4px;
-//   left: 0;
-// }
-// .user-left-nav ul li p {
-//   padding-left: 25px;
-//   // border-bottom: 1px solid #ededed;
-//   // position: relative;
-//   width: 100%;
-//   height: 100%;
-//   /* line-height: 40px; */
-//   display: flex;
-//   align-items: center;
-// }
-// .user-left-nav ul li:nth-last-of-type(1) p {
-//   border: none;
-// }
-// .user-left-nav ul:nth-of-type(1) {
-//   border-radius: 5px;
-//   // margin-bottom: 20px;
-// }
 
-// .user-left-nav li i {
-//   display: inline-block;
-//   width: 16px;
-//   height: 16px;
-//   background-image: url(../../../../static/images/learn/learn-user-course.svg);
-//   background-repeat: no-repeat;
-//   background-position: center center;
-//   // left: 0;
-//   // top: 50%;
-//   // margin-top: -8.5px;
-// }
-// .user-left-nav li:nth-of-type(2) i {
-//   background-image: url(../../../../static/images/learn/learn-user-zuoye2.svg);
-// }
-// .user-left-nav li:nth-of-type(3) i {
-//   background-image: url(../../../../static/images/learn/learn-user-dangan.svg);
-// }
-// .user-left-nav .spe-ul li:nth-of-type(1) i {
-//   background-image: url(../../../../static/images/learn/learn-user-qianbao.svg);
-// }
-// .user-left-nav .spe-ul li:nth-of-type(2) i {
-//   background-image: url(../../../../static/images/learn/learn-user-huangguan.svg);
-// }
-// .user-left-nav li.active {
-//   background-color: #d9ecf3;
-//   line-height: 40px;
-//   border-top: 3px solid #fff;
-//   border-bottom: 3px solid #fff;
-// }
-// .user-left-nav li.active::after {
-//   content: "";
-//   width: 3px;
-//   height: 100%;
-//   background-color: #3c9bbe;
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-// }
-// .user-left-nav li.active p {
-//   border-bottom: none;
-// }
 // 左边导航
 .user-left-nav {
   width: 100%;
@@ -655,9 +511,7 @@ export default {
 .user-right-wrap {
   width: 890px;
   height: 100%;
-  margin-left: 300px;
   margin-top: 40px;
-  // float: left;
 }
 .spe-set {
   margin-top: 20px;

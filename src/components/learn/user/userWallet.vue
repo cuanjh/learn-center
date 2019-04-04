@@ -13,33 +13,6 @@
         <a @click='swapVipTab2' :class="{ 'active': activeTab === false }">金币充值</a>
         <a @click='swapVipTab' :class="{ 'active': activeTab === true }">收支明细</a>
       </div>
-      <!-- <ol v-show='activeTab'>
-        <li v-for='(item, index) in record' :key="index" :class="item['trade_type']">
-          <i></i>
-          <span></span>
-          <ul>
-            <li>{{ item.desc['title'] }}</li>
-            <li>{{ item.desc['describle'] }}</li>
-            <li>{{ item['trade_date'] }}</li>
-          </ul>
-          <span :class="{'fu': item.money <= 0}">
-            <em v-show="item.money > 0">+</em>{{ item.money }}
-          </span>
-        </li>
-        <p class='learn-user-wallet-load-more' @click='loadMore' v-show='!loadingMore' v-if="!findGuide">
-          <i class='rotateMore' :class="{ 'rotateMore-loading' : showLoading}"></i>加载更多
-        </p>
-        <p class='learn-user-wallet-load-no-more' v-show='loadingMore' v-if="!findGuide"><i></i>没有更多了</p>
-        <div class='user-course-nocourse' v-show='findGuide'>
-          <dl>
-            <dt></dt>
-            <dd>
-              <p>放心！你的金币很安全</p>
-              <p>快到<router-link tag="span" :to="{path: '/app/find'}">“发现”</router-link>里订阅喜欢的课程收入第一笔奖金吧</p>
-            </dd>
-          </dl>
-        </div>
-      </ol> -->
       <div class="payment-detail" v-show='activeTab'>
         <ul>
           <li v-for='(item, index) in RecordList' :key="index">
@@ -76,12 +49,6 @@
       </div>
       <div class="user-wallet-purchase-icon" v-show='!activeTab'>
         <div class='user-title-purchase-item-wrap'>
-          <!-- <div class='user-title-purchase-item' v-for='(item, index) in coinsProduct' :key="index">
-            <p>{{ item.product }}<span>金币</span></p>
-            <p>赠送</p>
-            <p>{{ item.gave_coins }} 金币</p>
-            <p @click='purchaseIconPay(item.product_id)'>支付:<span>￥{{ item.total_money }}</span></p>
-          </div> -->
           <div class='user-title-purchase-item' v-for='(item, index) in coinsProduct' :key="index">
             <div class="product">
               <div class="purchase">
@@ -100,7 +67,6 @@
         </div>
       </div>
     </div>
-    <!-- <pay-alert ref="payAlert"></pay-alert> -->
   </section>
 </template>
 
@@ -110,12 +76,8 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import $ from 'jquery'
 import cookie from '../../../tool/cookie'
 import Bus from '../../../bus.js'
-import PayAlert from './userPayAlert.vue'
 
 export default {
-  components: {
-    PayAlert
-  },
   data () {
     return {
       isShowRecord: true,
@@ -178,9 +140,6 @@ export default {
       }
       console.log('购买的金币明细', productItem)
       Bus.$emit('showBuyMoneyBox', productItem, this.type)
-      // this.createAliWebOrder(productId)
-      // this.updatePurchaseIconPay(true)
-      // this.$refs['payAlert'].$emit('isShowPayAlert', true)
     },
     // 收支明细样式
     swapVipTab () {
@@ -241,6 +200,7 @@ export default {
       font-size:40px;
       font-family:DINCondensed-Bold;
       font-weight:bold;
+      vertical-align: -webkit-baseline-middle;
       color:rgba(51,51,51,1);
     }
     i {
@@ -646,78 +606,7 @@ export default {
   background: #fff;
   padding: 26px;
 }
-// .user-title-purchase-item {
-//   width: 133px;
-//   height: 230px;
-//   background-color: #ffffff;
-//   border: solid 1px #7bc16b;
-//   margin-right: 21px;
-//   -webkit-transition: all 0.3s ease-in-out;
-//   -moz-transition: all 0.3s ease-in-out;
-//   -ms-transition: all 0.3s ease-in-out;
-//   -o-transition: all 0.3s ease-in-out;
-//   transition: all 0.3s ease-in-out;
-// }
-// .user-title-purchase-item:hover {
-//   box-shadow: 0 0 26px 0 rgba(187, 187, 187, 0.5);
-//   -webkit-transition: all 0.3s ease-in-out;
-//   -moz-transition: all 0.3s ease-in-out;
-//   -ms-transition: all 0.3s ease-in-out;
-//   -o-transition: all 0.3s ease-in-out;
-//   transition: all 0.3s ease-in-out;
-// }
-// .user-title-purchase-item:nth-last-of-type(1) {
-//   margin-right: 0;
-// }
-// .user-title-purchase-item-wrap {
-//   padding: 38px 26px;
-//   display: flex;
-// }
-// .user-title-purchase-item p {
-//   margin-top: 20px;
-//   text-align: center;
-// }
-// .user-title-purchase-item p:nth-of-type(1) {
-//   width: 100%;
-//   height: 84px;
-//   background-color: #7bc16b;
-//   color: #fff;
-//   font-size: 34px;
-//   font-weight: bolder;
-//   padding-top: 20px;
-// }
-// .user-title-purchase-item p:nth-of-type(1) span {
-//   font-size: 16px;
-//   position: relative;
-//   top: 4px;
-//   left: 2px;
-// }
-// .user-title-purchase-item p:nth-of-type(2) {
-//   font-size: 12px;
-//   color: #9b9b9b;
-// }
-// .user-title-purchase-item p:nth-of-type(3) {
-//   font-size: 14px;
-//   color: #fec62e;
-//   margin-top: 0;
-//   font-weight: bold;
-// }
-// .user-title-purchase-item p:nth-of-type(4) {
-//   width: 110px;
-//   height: 30px;
-//   margin: 0 auto;
-//   line-height: 30px;
-//   border-radius: 24.5px;
-//   background-color: #7bc16b;
-//   text-align: center;
-//   color: #fff;
-//   font-size: 14px;
-//   margin-top: 20px;
-//   cursor: pointer;
-// }
-// .user-title-purchase-item p:nth-of-type(4):hover {
-//   background-color: #6ab359;
-// }
+
 .user-wallet-bottom .userVip-bottom-nav p.active {
   color: #0e8abe;
   border-bottom: 4px solid #0e8abe;

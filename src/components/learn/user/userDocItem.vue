@@ -193,11 +193,10 @@ export default {
     }
   }
   .userdoc-item-right {
-    display: inline-block;
+    float:right;
     width: 300px;
     background: #ffffff;
     border-radius: 0 0 5px 0;
-    margin-left: 7px;
     .userdoc-item-right-content {
       width: 100%;
       height: 430px;

@@ -159,10 +159,7 @@ const actions = {
   },
   // 删除已订阅的课程的接口实现
   getDeletePurchase ({ commit, dispatch }, code) {
-    // commit('showLoading')
-    httpLogin(config.getStudyDelCourse, { code: code }).then((res) => {
-      dispatch('getLearnCourses')
-    })
+    return httpLogin(config.getStudyDelCourse, { code: code })
   },
   postUnlockChapter ({ commit }, params) {
     return httpLogin(config.postUnlockChapter, params)

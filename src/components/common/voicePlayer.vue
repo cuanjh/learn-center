@@ -297,7 +297,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
       postRadioDetail: 'course/postRadioDetail', // 电台详情
       getRadioCardList: 'course/getRadioCardList' // 电台列表
     }),
