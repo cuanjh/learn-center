@@ -47,9 +47,9 @@
       </div>
       <div class="up-all" v-if="!isShowCourse">
         <div class="up-all-content" v-if="langCourses.length>5">
-          <a @click="loadMoreCourse()" v-text="showMoreCourse?'全部展开':'收起'"></a>
-          <i v-show="showMoreCourse"></i>
-          <i class="active" v-show="showMoreCourse === false"></i>
+          <a @click="loadMoreCourse()" v-text="showMoreCourse ? '收起' : '全部展开'"></a>
+          <i v-show="!showMoreCourse"></i>
+          <i class="active" v-show="showMoreCourse"></i>
         </div>
         <div v-else>
           <span>已经是全部内容了</span>
@@ -60,7 +60,6 @@
           <dt></dt>
           <dd>
             <p>您还没有订阅的课程哦！</p>
-            <!-- <p>请到<span v-link="{path: '/v2/find'}">“发现”</span>里订阅您喜欢的课程！</p> -->
           </dd>
         </dl>
       </div>
@@ -110,9 +109,9 @@
       </ul>
       <div class="up-all" v-if="!isShowRadioCourse">
         <div class="up-all-content" v-if="radioCourses.length>5">
-          <a @click="loadMoreRadios()" v-text="showMoreRados?'全部展开':'收起'"></a>
-          <i v-show="showMoreRados"></i>
-          <i class="active" v-show="showMoreRados === false"></i>
+          <a @click="loadMoreRadios()" v-text="showMoreRados?'收起':'全部展开'"></a>
+          <i v-show="!showMoreRados"></i>
+          <i class="active" v-show="showMoreRados"></i>
         </div>
         <div v-else>
           <span>已经是全部内容了</span>
@@ -136,8 +135,8 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      showMoreCourse: true,
-      showMoreRados: true,
+      showMoreCourse: false,
+      showMoreRados: false,
       selTab: true,
       delBtn: false,
       arrowDown: false,
@@ -173,23 +172,6 @@ export default {
       radioCourses: state => state.course.radioCourses,
       levelDes: state => state.course.levelDes
     }),
-    // 订阅的时间越靠后显示靠前
-    courseRander () {
-      // var _object = []
-      var obj = this.learnCourses
-      console.log('订阅课程我的页面===', obj)
-      if (Object.keys(obj).length > 0) {
-        // for (var i in obj) {
-        //   _object.unshift(obj[i])
-        // }
-        if (this.showMoreCourse) {
-          return this.learnCourses.slice(0, 5)
-        } else {
-          return this.learnCourses
-        }
-      }
-      return []
-    },
     // 订阅的电台
     radioRander () {
       var obj = this.radioCourses
@@ -214,7 +196,9 @@ export default {
       getUserCourseList: 'getUserCourseList'
     }),
     deleteCourse (code) {
-      this.getDeletePurchase(code)
+      this.getDeletePurchase(code).then(() => {
+        this.initData()
+      })
     },
     mouseoverControl (e) {
       let target = e.target
@@ -232,9 +216,9 @@ export default {
       this.getUserCourseList().then(res => {
         console.log('订阅课程', res)
         _this.langCourses = res.officialCourses
-        _this.showLangCourses = _this.langCourses.slice(0, 5)
+        _this.showLangCourses = _this.showMoreCourse ? _this.langCourses : _this.langCourses.slice(0, 5)
         _this.radioCourseList = res.radioCourses
-        _this.showRadioCourses = _this.radioCourseList.slice(0, 5)
+        _this.showRadioCourses = _this.showMoreRados ? _this.radioCourseList : _this.radioCourseList.slice(0, 5)
         if (this.langCourses.length === 0) {
           this.isShowCourse = true
         }
@@ -245,21 +229,21 @@ export default {
     },
     // 课程加载更多
     loadMoreCourse () {
-      if (!this.showMoreCourse) {
-        this.showLangCourses = this.langCourses.slice(0, 5)
-      } else {
-        this.showLangCourses = this.langCourses
-      }
       this.showMoreCourse = !this.showMoreCourse
+      if (this.showMoreCourse) {
+        this.showLangCourses = this.langCourses
+      } else {
+        this.showLangCourses = this.langCourses.slice(0, 5)
+      }
     },
     // 电台加载更多
     loadMoreRadios () {
-      if (!this.showMoreRados) {
-        this.showRadioCourses = this.radioCourseList.slice(0, 5)
-      } else {
-        this.showRadioCourses = this.radioCourseList
-      }
       this.showMoreRados = !this.showMoreRados
+      if (this.showMoreRados) {
+        this.showRadioCourses = this.radioCourseList
+      } else {
+        this.showRadioCourses = this.radioCourseList.slice(0, 5)
+      }
     },
     // 去课程详情
     goToDetails (courseCode) {
@@ -275,7 +259,6 @@ export default {
 
 <style lang="less" scoped>
 .user-course-wrap {
-  // margin-top: 90px;
   position: relative;
 }
 .user-course-nav {
@@ -387,9 +370,6 @@ export default {
   margin-right: 0;
   margin-left: 0;
   padding: 0 25px;
-  // height: 100px;
-  // border-radius: 5px;
-  // background-color: #ffffff;
 }
 
 .user-course-list .user-course-item:last-child .user-course-item-box {
@@ -699,8 +679,6 @@ export default {
   background-size: cover;
 }
 .user-course-nocourse dl dd {
-  /* width: 70%;
-  height: 100%; */
   text-align: center;
   padding: 20px 0 0;
   font-size: 18px;

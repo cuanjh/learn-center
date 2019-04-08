@@ -62,6 +62,7 @@ export default {
   padding: 23px 20px;
 }
 .radio-content .other-radio-item img {
+  display: inline-block;
   width: 100%;
   height: 128px;
   object-fit: cover;

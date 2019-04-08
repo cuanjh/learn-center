@@ -75,18 +75,6 @@
         </div>
       </div>
     </div>
-    <!-- 支付成功 -->
-    <!-- <div class="pay-success" v-show="false">
-      <div class="pay-content">
-        <p class="bg-img"><i></i></p>
-        <p>你已支付成功并完成电台订阅</p>
-        <p>
-          <span>未完成支付请先完成支付！</span>
-          <span>支付成功后请刷新页面。</span>
-        </p>
-        <p><span @click="know()">知道了</span></p>
-      </div>
-    </div> -->
   </div>
 </template>
 <script>
@@ -352,6 +340,7 @@ export default {
           img {
             width: 90px;
             height: 90px;
+            background-color: #eaeaea;
             background-repeat: no-repeat;
             background-size: cover;
           }

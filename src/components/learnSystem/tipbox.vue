@@ -53,7 +53,7 @@ export default {
       'userInfo': state => state.userInfo
     }),
     isTeacher () {
-      return this.userInfo.is_teacher
+      return false
     }
   },
   created () {

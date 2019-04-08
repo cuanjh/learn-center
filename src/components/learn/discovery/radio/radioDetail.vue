@@ -75,7 +75,7 @@
                   <i class="subscibe"></i>
                   <span>已订阅</span>
                 </p>
-                <p class="have-no-course" v-else @click="subscibe()">
+                <p class="have-no-course" @click="subscibe()" v-else>
                   <i class="subscibeno"></i>
                   <span>订阅</span>
                 </p>
@@ -568,10 +568,10 @@ export default {
               Bus.$emit('showBuyMoneyBox', this.radioDetail)
               return false
             } else if (radio.money_type === 'coins') {
-              // 金币提示
-              Bus.$emit('showBuyCoinsRadio', radio)
-              Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-              return false
+              // // 金币提示
+              // Bus.$emit('showBuyCoinsRadio', radio)
+              // Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+              // return false
             }
           } else { // 是会员
             if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
@@ -592,13 +592,20 @@ export default {
       this.initSubscibe(radio)
     },
     // 初始化订阅的状态
-    async initSubscibe (radio) {
-      await this.postPurchaseCourse({code: radio.code}).then(res => {
+    initSubscibe (radio) {
+      this.postPurchaseCourse({code: radio.code}).then(res => {
         console.log('订阅课程返回', res)
         if (res.success) {
           // purchased_state状态值显示隐藏 0未购买 1已购买 隐藏 2购买已删除
           this.subscibenoInfo.purchased_state = 1
-          Bus.$emit('shareCardContent', this.courseInfo)
+          let obj = {
+            className: 'okIcon',
+            description: '订阅成功',
+            btnDesc: '确定',
+            isLink: false
+          }
+
+          Bus.$emit('showCommonModal', obj)
         }
       })
     },

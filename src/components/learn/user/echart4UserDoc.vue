@@ -6,25 +6,27 @@
 import echarts from 'echarts'
 export default {
   props: ['echartdata'],
-  mounted () {
-    var _array = [0, 0, 0, 0, 0]
-    if (this.echartdata['model_mother_tongue'] > 0) {
-      _array[0] = this.echartdata['model_mother_tongue']
+  watch: {
+    echartdata () {
+      var _array = [0, 0, 0, 0, 0]
+      if (this.echartdata && this.echartdata['model_mother_tongue'] > 0) {
+        _array[0] = this.echartdata['model_mother_tongue']
+      }
+      if (this.echartdata && this.echartdata['model_language_expression'] > 0) {
+        _array[1] = this.echartdata['model_language_expression']
+      }
+      if (this.echartdata && this.echartdata['model_statement_comprehensive'] > 0) {
+        _array[2] = this.echartdata['model_statement_comprehensive']
+      }
+      if (this.echartdata && this.echartdata['model_comprehensive_app'] > 0) {
+        _array[3] = this.echartdata['model_comprehensive_app']
+      }
+      if (this.echartdata && this.echartdata['model_language_logic'] > 0) {
+        _array[4] = this.echartdata['model_language_logic']
+      }
+      var myChart = echarts.init(this.$el)
+      this.drawChart(myChart, _array)
     }
-    if (this.echartdata['model_language_expression'] > 0) {
-      _array[1] = this.echartdata['model_language_expression']
-    }
-    if (this.echartdata['model_statement_comprehensive'] > 0) {
-      _array[2] = this.echartdata['model_statement_comprehensive']
-    }
-    if (this.echartdata['model_comprehensive_app'] > 0) {
-      _array[3] = this.echartdata['model_comprehensive_app']
-    }
-    if (this.echartdata['model_language_logic'] > 0) {
-      _array[4] = this.echartdata['model_language_logic']
-    }
-    var myChart = echarts.init(this.$el)
-    this.drawChart(myChart, _array)
   },
   methods: {
     drawChart (obj, _array) {

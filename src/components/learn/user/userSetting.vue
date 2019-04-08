@@ -77,7 +77,6 @@
         <div class="user-setting-item" :class="{'error':!birthday}">
           <span>生日</span>
           <div class='seldate'>
-            <!-- <input class="Wdate login-userdate-input" type="text" v-model="birthday" v-focus/> -->
             <date-picker id="seldate-content" ref="datePicker" @update="updateBirthday"></date-picker>
           </div>
         </div>
@@ -372,15 +371,7 @@ export default {
     },
     uploadPicBtn () {
       $('#avatar-modal').fadeIn()
-      // this.learnDoc = false
-      // this.setUpSuccess = false
     },
-    // 解除绑定
-    // unbindIdentityEmail (type) {
-    //   this.updateAlertType('bindConfirm')
-    //   this.bindConfirmType = type
-    //   // this.$refs['setAlert'].$emit('isShowSetAlert', true)
-    // },
     // 解除绑定的方法
     unbindIdentityFun (type) {
       console.log('type', type)
@@ -406,7 +397,7 @@ export default {
       var _this = this
       await _this.unbindIdentity(params).then((res) => {
         console.log('解绑信息', res)
-        if (res.success) { // this.$router.push({path: '/app/user/setting'})
+        if (res.success) {
           this.updateAlertType('')
           this.email = ''
         } else {
@@ -428,58 +419,10 @@ export default {
           this.alertMessageNotFull('手机号已经存在！')
         } else { // 不存在
           Bus.$emit('showBindPhone', phonenumber)
-          // 发送验证码
-          // _this.sendCode({phonenumber: phonenumber, codeLen: '4'}).then(res => {
-          //   console.log('发送验证码', res)
-          // })
         }
       })
-      // await _this.getUserInfo()
-      // _this.loadData()
     },
-    // async bindPhoneNumber (phonenumber) {
-    //   var _this = this
-    //   var params = {}
-    //   params.phonenumber = phonenumber
-    //   params.type = 'bind_phonenumber'
-    //   params.codeLen = '6'
-    //   await _this.sendCode(params).then((res) => {
-    //     if (res.success) {
-    //       _this.updateAlertType('bindPhone')
-    //       this.$refs['setAlert'].$emit('isShowSetAlert', true)
-    //     } else {
-    //       _this.showAlertView(res)
-    //     }
-    //   })
-    //   await _this.getUserInfo()
-    //   // {phonenumber: this.phone, codeLen: '4'}
-    //   // await _this.userExistsPhone(params).then((data) => {
-    //   //   console.log('data', data)
-    //   //   if (data.success) {
-    //   //     if (!data.exists) {
-    //   //       // 手机号存在
-    //   //       _this.showAlertView(data)
-    //   //       _this.alertMessage = '该手机号已经存在'
-    //   //       _this.alertButton = '确定'
-    //   //     } else {
-    //   //       // 手机号不存在
-    //   //       _this.sendCode(params).then((res) => {
-    //   //         if (res.success) {
-    //   //           _this.updateAlertType('bindPhone')
-    //   //         } else {
-    //   //           _this.showAlertView(res)
-    //   //         }
-    //   //       })
-    //   //     }
-    //   //   } else {
-    //   //     _this.showAlertView(data)
-    //   //   }
-    //   // })
-    // },
     showAlertView (errorinfo) {
-      // this.updateAlertType('showMessage')
-      // this.alertMessage = errorinfo.errorMsg
-      // this.alertButton = '确定'
       this.alertMessageNotFull(errorinfo.errorMsg)
     },
     // 监听性别组件的变更信息
@@ -512,20 +455,6 @@ export default {
           this.bindEmailMethod(email)
         }
       })
-      // var _this = this
-      // await this.bindEmail(email).then((res) => {
-      //   console.log('绑定邮箱返回', res)
-      //   if (res.success) {
-      //     // _this.updateAlertType('bindSuccess')
-      //     // _this.alertMessage = '恭喜您绑定邮箱成功！'
-      //     // _this.alertButton = '确定'
-      //     this.alertMessageNotFull('恭喜您绑定邮箱成功！')
-      //   } else {
-      //     _this.showAlertView(res)
-      //   }
-      // })
-      // await _this.getUserInfo()
-      // _this.loadData()
     },
     async bindEmailMethod (email) {
       var _this = this
@@ -548,7 +477,6 @@ export default {
     },
     // 提示用户的信息不完整
     alertMessageNotFull (msg, icon) {
-      // this.noticeSetting = true
       let obj = {
         className: 'warnIcon',
         description: `${msg}`,
@@ -651,10 +579,6 @@ export default {
           }
         })
       } else { // false 老用户
-        // if (this.oldPsw.length === 0 || this.newPsw1.length === 0 || this.newPsw2.length === 0) {
-        //   this.noticePsw = true
-        //   return
-        // }
         if (this.oldPsw.length === 0) {
           this.alertMessageNotFull('旧密码不能为空！')
           return
@@ -734,24 +658,6 @@ input {
   background: #fff;
 }
 
-// .user-setting-form form > div {
-//   height: 40px;
-//   /* line-height: 40px; */
-//   margin: 22px 0;
-// }
-// .user-setting-form form > div > span {
-//   font-size: 20px;
-//   color: #4a4a4a;
-//   margin-right: 20px;
-// }
-// .user-setting-form form > div .reg-input {
-//   width: 320px;
-//   border: 1px solid #dcdbdb;
-//   border-radius: 5px;
-//   padding-left: 19px;
-//   height: 40px;
-// }
-
 .user-setting-form>div .error {
   border-color: #e46773;
 }
@@ -820,66 +726,15 @@ input {
   line-height: 34px;
   margin-left: 23px;
 }
-.user-setting-form .submit,
-.user-fixpassword .submit {
-  // width: 162px;
-  // height: 47px;
-  // border-radius: 4px;
-  // background-color: #0e8abe;
-  // text-align: center;
-  // line-height: 47px;
-  // color: #fff;
-  // cursor: pointer;
-  // margin-top: -6px;
-}
+
 .user-fixpassword .submit:hover {
   background-color: #05618d;
 }
-// .user-setting-form .submit:hover {
-//   background-color: #05618d;
-// }
+
 .user-setting-form > div.intro-box {
   height: 177px;
 }
 
-// .user-fixpassword {
-//   width: 100%;
-//   height: 355px;
-//   background: #fff;
-//   border-radius: 5px;
-// }
-// .user-fixpassword {
-//   width: 100%;
-//   height: 100%;
-//   padding: 31px;
-// }
-// .user-fixpassword p {
-//   height: 40px;
-//   line-height: 40px;
-//   margin: 15px 0;
-// }
-// .user-fixpassword p > span {
-//   font-size: 18px;
-//   color: #4a4a4a;
-//   margin-right: 20px;
-//   width: 80px;
-//   display: inline-block;
-//   text-align: left;
-// }
-// .user-fixpassword p > input {
-//   height: 40px;
-//   padding-left: 20px;
-//   line-height: 40px;
-//   border-radius: 5px;
-//   border: 1px solid #dcdbdb;
-//   width: 320px;
-// }
-// .user-fixpassword .submit {
-//   margin-top: 35px;
-// }
-.user-setting-form ::-webkit-input-placeholder {
-  /*color:green;*/
-}
 .intro-box {
   position: relative;
   display: flex;
@@ -1044,17 +899,15 @@ input {
 .user-setting-wrap {
   width: 100%;
   background: #fff;
-  // margin-top: 90px;
+  border-radius: 5px;
   .user-setting-nav {
     width: 100%;
     height: 60px;
-    background-color: #ffffff;
     text-align: center;
     font-size: 16px;
     font-weight: 500;
     color: #6d6d6d;
     border-bottom: 1px solid #ededed;
-    border-radius: 4px;
     position: relative;
     padding-left: 25px;
     a {
@@ -1067,7 +920,6 @@ input {
       color:#3C5B6FFF;
       text-align: center;
       margin-right: 50px;
-      // border-right: 1px solid #EEF2F3;
       line-height: 60px;
       border-bottom: 3px solid transparent;
       transition: none;

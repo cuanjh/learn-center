@@ -1,56 +1,34 @@
 <template>
-  <!-- <div class="userdoc-item">
-    <div class='userdoc-item-top'>
-      <div class='user-doc-item-img'>
-        <img :src="'https://course-assets1.talkmate.com/course/covers/'+archive.course_code+'-2x.webp?imageView2/0/w/400/h/400/format/jpg'">
-        <div class='user-doc-item-tips'>
-          <p>
-            <span>全球说《 {{archive.course_name[languagueHander]}} 》</span>
-            <span><em>{{ levelDes[archive.current_chapter_code.split('-')[2]] }}</em></span>
-          </p>
-          <p v-text="archive['complete_rate']>=0?archive['complete_rate']*100+'%':'暂无数据' "></p>
-        </div>
-      </div>
-      <echart4-user-doc :echartdata="archive" class='userdoc-item-echart'></echart4-user-doc>
-    </div>
-    <div class="userdoc-item-bottom">
-      <p><span>正确率</span><span v-text="archive['correct_rate']>0?archive['correct_rate']*100+'%':'暂无数据'"></span></p>
-      <p><span>累计学习时长</span><span>{{ archive['learn_time']>0?parseInt(archive['learn_time']/60)+'分钟':'暂无数据' }}</span></p>
-    </div>
-  </div> -->
   <div class='userdoc-item-wrap'>
     <div class="userdoc-item">
       <div class='userdoc-item-left'>
         <div class="userdoc-item-left-content">
           <div class="userdoc-item-top">
             <div class="img">
-              <img :src="archive.course_flag" alt="">
+              <img :src="archive.courseInfo ? archive.courseInfo.flag : ''" alt="">
             </div>
             <div class="course-text">
-              <p v-if="archive.course_name">
-                <span>{{archive.course_name[languagueHander]}}</span>
+              <p>
+                <span>{{archive.courseInfo ? archive.courseInfo.name : ''}}</span>
               </p>
-               <p v-if="archive.current_chapter_code">
-                <span>{{ levelDes[archive.current_chapter_code.split('-')[2]] }}</span>
+               <p>
+                <span>{{ archive.courseInfo ? levelArr[0] + ' ~ ' + levelArr[archive.courseInfo.level_num - 1] : '' }}</span>
               </p>
             </div>
           </div>
           <div class="userdoc-item-bottom" v-if="archive">
             <div class="userdoc-item-bottom-left">
-              <!-- <div class="progress-bg">
-                <div class="progress"></div>
-              </div> -->
-              <canvas-circle :percent="archive['complete_rate'] >= 0 ? archive['complete_rate'] * 100 : '0'" ></canvas-circle>
+              <canvas-circle :percent="completeRate ? completeRate : 0" ></canvas-circle>
               <p class="text"><span>课程完成度</span></p>
             </div>
             <div class="userdoc-item-bottom-right">
               <div class="right-content">
                 <p>
-                  <span>{{archive.word_num}}<em>个</em></span>
+                  <span>{{archive.learnInfo ? archive.learnInfo.words_num : 0}}<em>个</em></span>
                   <span>累计词汇量</span>
                 </p>
                 <p>
-                  <span>{{archive.correct_rate * 100}}<em>%</em></span>
+                  <span>{{archive.learnInfo ? archive.learnInfo.correct_rate * 100 : 0}}<em>%</em></span>
                   <span>正确率</span>
                 </p>
               </div>
@@ -62,7 +40,7 @@
       <div class="userdoc-item-right" v-if="archive">
         <div class="userdoc-item-right-content">
           <p>语言能力模型</p>
-          <echart4-user-doc :echartdata="archive" class='userdoc-item-echart'></echart4-user-doc>
+          <echart4-user-doc :echartdata="archive.learnModel" class='userdoc-item-echart'></echart4-user-doc>
         </div>
       </div>
     </div>
@@ -78,6 +56,7 @@ export default {
   props: ['archive'],
   data () {
     return {
+      levelArr: ['初级 A1', '初级 A2', '中级 B1', '中级 B2', '高级 C1', '高级 C2']
       // cicleList: {ratio: this.archive['complete_rate'] >= 0 ? this.archive['complete_rate'] * 100 : '0'}
     }
   },
@@ -93,7 +72,15 @@ export default {
     ...mapState({
       levelDes: state => state.course.levelDes,
       languagueHander: state => state.course.languagueHander
-    })
+    }),
+    completeRate () {
+      if (!this.archive.learnInfo) {
+        return 0
+      }
+      let rate = Math.round((this.archive.learnInfo.lesson_finished_num / this.archive.learnInfo.lesson_num) * 100)
+      console.log('rate', rate)
+      return rate
+    }
   },
   methods: {
   }
@@ -193,11 +180,10 @@ export default {
     }
   }
   .userdoc-item-right {
-    display: inline-block;
+    float:right;
     width: 300px;
     background: #ffffff;
     border-radius: 0 0 5px 0;
-    margin-left: 7px;
     .userdoc-item-right-content {
       width: 100%;
       height: 430px;
