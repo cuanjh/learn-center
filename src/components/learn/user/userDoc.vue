@@ -1,21 +1,15 @@
 <template>
   <section>
     <div class="userDoc-top">
-      <!-- <ol>
-        <li><i></i>学习档案</li>
-        <li><span>金币</span><span v-text="userInfo ? userInfo.coins : ''"></span></li>
-        <li><span>排行榜</span><span>暂无数据</span></li>
-        <li><span>累计学习时长</span><span>{{ learnDays>0?learnDays+'天':'暂无数据' }}</span></li>
-      </ol> -->
       <div class="user-doc-content">
         <p class="user-doc">学习档案</p>
         <div class="user-doc-list">
           <ul>
             <li>
               <i class="grading"></i>
-              <p v-if="archives.current_chapter_code">
+              <p>
                 <span>测试定级</span>
-                <span>{{ levelDes[archives.current_chapter_code.split('-')[2]] }}</span>
+                <span>{{ (userArchive.learnInfo && userArchive.learnInfo.grade_info.has_set_grade_status) ?  levelArr[userArchive.learnInfo.grade_info.grade_level - 1] : '无'}}</span>
               </p>
             </li>
             <li>
@@ -29,7 +23,7 @@
               <i class="total-learn"></i>
               <p>
                 <span>累计学习天数</span>
-                <span>{{ learnDays>0?learnDays+'天':'暂无数据' }}</span>
+                <span>{{ (userArchive.learnInfo && userArchive.learnInfo.learn_days > 0) ? userArchive.learnInfo.learn_days + '天' : '暂无数据' }}</span>
               </p>
             </li>
           </ul>
@@ -38,91 +32,48 @@
     </div>
     <div class="userDoc-bottom" >
       <div class='userdoc-item-wrap'>
-        <!-- <doc-item :archive="archive" v-for="(archive, index) in archives" :key="index"/> -->
-        <doc-item :archive="archives"></doc-item>
+        <doc-item :archive="userArchive"></doc-item>
       </div>
     </div>
-    <!-- <div class='user-course-nocourse' v-show="findGuide">
-      <dl>
-        <dt></dt>
-        <dd>
-          <p>您还没有学习档案哦！</p>
-          <p>请到<router-link tag="span" :to="{path: '/app/find'}">“发现”</router-link>页面里订阅您喜欢的课程吧!</p>
-        </dd>
-      </dl>
-    </div> -->
   </section>
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
-import $ from 'jquery'
+import { mapState, mapActions } from 'vuex'
 import DocItem from './userDocItem.vue'
 
 export default {
   data () {
     return {
+      userArchive: {},
+      levelArr: ['初级 A1', '初级 A2', '中级 B1', '中级 B2', '高级 C1', '高级 C2']
     }
   },
   components: {
     DocItem
   },
-  created () {
-  },
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'doc')
     this.$parent.$emit('navItem', 'user')
-    this.initArchives()
+
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    let courseCode = userInfo.current_course_code
+    this.getUserArchive({course_code: courseCode}).then(res => {
+      console.log('用户课程档案', res)
+      this.userArchive = res
+    })
   },
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
-      levelDes: state => state.course.levelDes,
-      // languagueHander: state => state.course.languagueHander,
       courseArchives: state => state.user.courseArchives
-    }),
-    learnDays () {
-      return this.courseArchives.learn_days
-    },
-    archives () {
-      console.log('archives======', this.courseArchives.archives)
-      // let obj = this.courseArchives.archives
-      // if (obj.length > 0) {
-      //   return obj[0]
-      //   // obj = JSON.parse(sessionStorage.getItem('courseArchives'))[0]
-      // }
-      // // return this.courseArchives.archives.filter((item) => {
-      // //   return item.has_new_learn === 0
-      // // })
-      // return []
-      if (!this.courseArchives.archives) {
-        return false
-      }
-      return this.courseArchives.archives[0]
-    },
-    findGuide () {
-      if (this.courseArchives.length > 0) {
-        return false
-      }
-      return true
-    }
+    })
   },
   methods: {
-    ...mapMutations({
-      updateCourseArchives: 'user/updateCourseArchives'
-    }),
     ...mapActions({
-      getCourseArchives: 'user/getCourseArchives'
-    }),
-    initArchives () {
-      this.getCourseArchives().then((res) => {
-        this.updateCourseArchives(res)
-        setTimeout(() => {
-          let height = $('.user-container').height() + 100
-          $('.user-wrap').css('height', height + 'px')
-        }, 100)
-      })
-    }
+      getCourseArchives: 'user/getCourseArchives',
+      getUserArchive: 'getUserArchive'
+    })
   }
 }
 </script>

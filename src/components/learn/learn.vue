@@ -99,7 +99,8 @@ export default {
       getRecord: 'course/getRecord',
       getCourseTestRanking: 'course/getCourseTestRanking',
       homeworkContent: 'course/homeworkContent',
-      setCurrentChapter: 'course/setCurrentChapter'
+      setCurrentChapter: 'course/setCurrentChapter',
+      getUserInfo: 'getUserInfo'
     }),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
@@ -147,6 +148,7 @@ export default {
       await that.getProgress(that.currentChapterCode)
       await that.getCourseTestRanking(that.currentChapterCode)
       await that.homeworkContent(that.currentChapterCode + '-A8')
+      await this.getUserInfo()
       that.hideLoading()
     },
     coverHide () {

@@ -155,5 +155,9 @@ export default {
   // 获取用户订阅课程
   getUserCourseList ({commit}, params) {
     return httpLogin(config.userCourseListApi, params)
+  },
+  // 获取课程档案
+  getUserArchive ({commit}, params) {
+    return httpLogin(config.userArchiveApi, params)
   }
 }

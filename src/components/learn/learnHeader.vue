@@ -17,37 +17,6 @@
           我的
         </router-link>
         <router-link tag="span"  :to="{ path: '/app/user/bind' }" class='learn-login-right-tips-probation learn-login-right-tips-probation-modify' v-show="isAnonymous">您是试用账号<span>去绑定</span></router-link>
-        <!-- 课程列表 -->
-        <transition name="fade">
-          <section class='mycourse-wrap mycourse-loginout animated' v-show="navCourse">
-            <img class='mycourse-wrap-arrow' src="../../../static/images/course/learn-big-arrow.png">
-            <div class="mycourse-container">
-              <p>我订阅的课程</p>
-              <section>
-                <ul>
-                  <li  v-for='(course, index) in learnCourse' :key="index"
-                    class='mycourse-container-gray disable'
-                    :class="{'mycourse-container-light': true }">
-                    <dl>
-                      <dt>
-                        <a class='changeColor' @click="changeCourseCode(course['code'])">
-                          <img :src="course.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')">
-                          <div class='fix-ie-filter-bug'></div>
-                        </a>
-                      </dt>
-                      <dd><span><a>全球说</a></span><span class='mycourse-lang'><a href="">{{ !course.name ? '' : course.name['zh-CN'] }}</a></span></dd>
-                    </dl>
-                  </li>
-                  <li class='learn-courseList-add-more'>
-                    <router-link :to="{path: '/app/book-case'}">
-                      <img src="../../../static/images/course/learn-jiahao.png">
-                    </router-link>
-                  </li>
-                </ul>
-              </section>
-            </div>
-          </section>
-        </transition>
       </div>
       <div class="right" @mouseleave="hideExit">
         <div class="container" v-show="false">
@@ -107,9 +76,6 @@ export default {
     this.$on('activeNavItem', (item) => {
       this.activeItem = item
     })
-    // Bus.$on('changeCourseCode', (courseCode) => {
-    //   this.changeCourseCode(courseCode)
-    // })
   },
   mounted () {
     // this.getLearnCourses()
@@ -230,11 +196,6 @@ export default {
         this.updateIsLogin('0')
         window.location.href = 'http://www.talkmate.com'
       })
-    },
-    changeCourseCode (courseCode) {
-      localStorage.setItem('lastCourseCode', courseCode)
-      this.updateCurCourseCode(courseCode)
-      Bus.$emit('changeCourseCode', courseCode)
     },
     jumpCourse () {
       this.$router.push({ path: '/app/course-list' })

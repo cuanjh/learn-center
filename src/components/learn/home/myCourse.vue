@@ -240,6 +240,7 @@ export default {
       } else {
         bus.$emit('loadRecommendRadio', this.curCourseCode)
       }
+      await this.getUserInfo()
       this.isDefault = false
       cookie.delCookieTalkmate('purchaseCourseCode')
     },
