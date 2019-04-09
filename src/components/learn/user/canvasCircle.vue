@@ -19,15 +19,25 @@ export default {
       r: 36
     }
   },
+  mounted () {
+    this.canvas = document.getElementById('myCanvas')
+    this.context = this.canvas.getContext('2d')
+    this.context.scale(2, 2)
+    this.cirX = 40 // this.canvas.width/ 2
+    this.cirY = 40 // this.canvas.height/ 2
+    this.rad = Math.PI * 1.75 / 100 // 总弧度
+    console.log('rad', this.rad)
+    this.DreamLoading()
+  },
   watch: {
     percent () {
-      this.canvas = document.getElementById('myCanvas')
-      this.context = this.canvas.getContext('2d')
-      this.context.scale(2, 2)
-      this.cirX = 40 // this.canvas.width/ 2
-      this.cirY = 40 // this.canvas.height/ 2
-      this.rad = Math.PI * 1.75 / 100 // 总弧度
-      console.log('rad', this.rad)
+      // this.canvas = document.getElementById('myCanvas')
+      // this.context = this.canvas.getContext('2d')
+      // this.context.scale(2, 2)
+      // this.cirX = 40 // this.canvas.width/ 2
+      // this.cirY = 40 // this.canvas.height/ 2
+      // this.rad = Math.PI * 1.75 / 100 // 总弧度
+      // console.log('rad', this.rad)
       this.DreamLoading()
     }
   },

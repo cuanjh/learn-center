@@ -183,7 +183,7 @@ export default[
           },
           {
             path: 'user-follow',
-            // name: userFollow,
+            name: 'userFollow',
             component: userFollow
           },
           {

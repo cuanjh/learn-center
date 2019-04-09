@@ -136,22 +136,17 @@ export default {
     })
   },
   mounted () {
+    this.navFlag = this.$route.params.navFlag ? this.$route.params.navFlag : 'follow'
     this.$parent.$emit('activeNavUserItem', this.navFlag)
     this.$parent.$emit('navItem', 'user')
     this.initUserFollowing()
     this.initUserFollower()
-    console.log(this.jsGetAge('1993-6-25'))
-    var timestamp = '-62135596800000' // 随便举个例子而已
-    console.log(this.timestamp2Time(timestamp, '-'))
   },
   computed: {
     ...mapState({
       levelDes: state => state.course.levelDes,
       languagueHander: state => state.course.languagueHander
     })
-    // routerFlag () {
-    //   return this.$route.params.isActive
-    // }
   },
   methods: {
     ...mapActions({

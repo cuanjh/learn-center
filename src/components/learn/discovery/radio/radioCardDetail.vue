@@ -404,12 +404,14 @@ export default {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
                   Bus.$emit('showBuyMoneyBox', this.radioDetail)
-                } else if (radio.money_type === 'coins') {
-                  // 金币提示
-                  Bus.$emit('showBuyCoinsRadio', radio)
-                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                  return false
                 }
-                return false
+                // else if (radio.money_type === 'coins') {
+                //   // 金币提示
+                //   Bus.$emit('showBuyCoinsRadio', radio)
+                //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                // }
+                // return false
               }
             }
           }

@@ -382,7 +382,7 @@ export default {
             if (this.curIndex > 2) {
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', this.radioDetail)
+                Bus.$emit('showBuyMoneyBox', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -401,19 +401,20 @@ export default {
               if (this.curIndex > 2) {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', this.radioDetail)
-                } else if (radio.money_type === 'coins') {
-                  // 金币提示
-                  Bus.$emit('showBuyCoinsRadio', radio)
-                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                  Bus.$emit('showBuyMoneyBox', this.radioDetail)
+                  this.curIndex = 2
+                  this.pause()
+                  $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+                  $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
+                  $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+                  $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+                  return false
                 }
-                this.curIndex = 2
-                this.pause()
-                $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
-                $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
-                $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
-                $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
-                return false
+                // else if (radio.money_type === 'coins') {
+                //   // 金币提示
+                //   Bus.$emit('showBuyCoinsRadio', radio)
+                //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                // }
               }
             }
           }
@@ -565,15 +566,16 @@ export default {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
                   Bus.$emit('showBuyMoneyBox', this.radioDetail)
-                } else if (radio.money_type === 'coins') {
-                  // 金币提示
-                  Bus.$emit('showBuyCoinsRadio', radio)
-                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                  $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+                  $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+                  this.pause()
+                  return false
                 }
-                $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
-                $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
-                this.pause()
-                return false
+                // else if (radio.money_type === 'coins') {
+                //   // 金币提示
+                //   Bus.$emit('showBuyCoinsRadio', radio)
+                //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                // }
               }
             }
           }

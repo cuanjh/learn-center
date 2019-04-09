@@ -28,7 +28,7 @@
                   <span>累计词汇量</span>
                 </p>
                 <p>
-                  <span>{{archive.learnInfo ? archive.learnInfo.correct_rate * 100 : 0}}<em>%</em></span>
+                  <span>{{archive.learnInfo ? Math.round(archive.learnInfo.correct_rate * 100) : 0}}<em>%</em></span>
                   <span>正确率</span>
                 </p>
               </div>
@@ -67,6 +67,7 @@ export default {
     CanvasCircle
   },
   mounted () {
+    console.log('completeRate', this.completeRate)
   },
   computed: {
     ...mapState({
@@ -74,6 +75,7 @@ export default {
       languagueHander: state => state.course.languagueHander
     }),
     completeRate () {
+      console.log('===>', this.archive.learnInfo)
       if (!this.archive.learnInfo) {
         return 0
       }

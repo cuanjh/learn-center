@@ -170,7 +170,8 @@ export default {
       console.log(navNum)
       this.activeItem = navNum
       this.$emit('activeNavUserItem', navNum)
-      this.$router.push({path: '/app/user/user-follow'})
+      // this.$router.push({path: '/app/user/user-follow'})
+      this.$router.push({name: 'userFollow', params: {navFlag: navNum}})
       Bus.$emit('activeUserItem', navNum)
     },
     // 粉丝
@@ -178,14 +179,16 @@ export default {
       console.log(navNum)
       this.activeItem = navNum
       this.$emit('activeNavUserItem', navNum)
-      this.$router.push({path: '/app/user/user-follow'})
+      // this.$router.push({path: '/app/user/user-follow'})
+      this.$router.push({name: 'userFollow', params: {navFlag: navNum}})
       Bus.$emit('activeUserItem', navNum)
     },
     // 动态
     goUserDynamic (navNum) {
       this.activeItem = navNum
       this.$emit('activeNavUserItem', navNum)
-      this.$router.push({path: '/app/user/user-follow'})
+      // this.$router.push({path: '/app/user/user-follow'})
+      this.$router.push({name: 'userFollow', params: {navFlag: navNum}})
       Bus.$emit('activeUserItem', navNum)
     },
     uploadPicBtn () {

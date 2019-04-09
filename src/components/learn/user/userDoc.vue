@@ -9,7 +9,7 @@
               <i class="grading"></i>
               <p>
                 <span>测试定级</span>
-                <span>{{ (userArchive.learnInfo && userArchive.learnInfo.grade_info.has_set_grade_status) ?  levelArr[userArchive.learnInfo.grade_info.grade_level - 1] : '无'}}</span>
+                <span>{{ (userArchive.learnInfo && userArchive.learnInfo.grade_info.has_set_grade_status) ?  levelArr[userArchive.learnInfo.grade_info.grade_level] : '无'}}</span>
               </p>
             </li>
             <li>

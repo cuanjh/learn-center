@@ -15,7 +15,35 @@
             </div>
           </div>
           <!-- 价钱 -->
-           <div class="member">
+          <div class="member">
+            <!-- 免费课程 -->
+            <div class="money-nopay" v-if="courseInfo.money == 0">
+              <span v-text="$t('free')"></span>
+            </div>
+            <!-- 花钱 -->
+            <div class="money-pay" v-else>
+              <!-- 人民币 -->
+              <div class="cny-free" v-if="courseInfo.money_type == 'CNY'">
+                <p class="cny" v-if="courseInfo.free_for_member == 1 || courseInfo.free_for_member == true">
+                  <span v-text="'￥' + courseInfo.money"></span>
+                  <span>元/年</span>
+                  <span>会员免费</span>
+                </p>
+                <p class="cny" v-else>
+                  <span v-text="'￥' + courseInfo.money"></span>
+                  <span>元/年</span>
+                </p>
+              </div>
+              <div class="coins-free" v-else>
+                <!-- 金币对于会员都是免费的 -->
+                <p class="coins">
+                  <span v-text="courseInfo.money"></span> {{$t('coins')}}
+                  <span>会员免费</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="member" v-show="false">
              <!-- 免费课程 -->
             <div class="money-nopay" v-if="courseInfo.money == 0">
               <span v-text="$t('free')"></span>
@@ -508,12 +536,14 @@ export default {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
                   Bus.$emit('showBuyMoneyBox', this.radioDetail)
-                } else if (radio.money_type === 'coins') {
-                  // 金币提示
-                  Bus.$emit('showBuyCoinsRadio', radio)
-                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                  return false
                 }
-                return false
+                // else if (radio.money_type === 'coins') {
+                //   // 金币提示
+                //   Bus.$emit('showBuyCoinsRadio', radio)
+                //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                // }
+                // return false
               }
             }
           }
@@ -745,91 +775,155 @@ export default {
 }
 /* 收费 */
 /* 会员免费 */
-.member .money-pay .vip-free {
+.member .money-pay {
   margin-top: 30px;
+  .cny-free {
+    p {
+      display: flex;
+      align-items: center;
+      font-size:14px;
+      font-family:PingFangSC-Regular;
+      font-weight:400;
+      color:rgba(153,153,153,1);
+      span:nth-child(1) {
+        font-size: 24px;
+        font-family: PingFangSC-Semibold;
+        font-weight: 600;
+        color: #ff8331;
+        margin-right: 5px;
+      }
+      span:nth-child(3) {
+        // cursor: pointer;
+        font-size:12px;
+        font-family:PingFangSC-Semibold;
+        font-weight:600;
+        color:rgba(245,166,35,1);
+        padding: 0 10px;
+        border-radius:12px;
+        border:1px solid;
+        border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+        text-align: center;
+        margin: 0 10px;
+      }
+    }
+  }
+  .coins-free {
+    p {
+      display: flex;
+      align-items: center;
+      font-size:14px;
+      font-family:PingFangSC-Regular;
+      font-weight:400;
+      color:rgba(153,153,153,1);
+      span:nth-child(1) {
+        font-size: 24px;
+        font-family: PingFangSC-Semibold;
+        font-weight: 600;
+        color: #ff8331;
+        margin-right: 5px;
+      }
+      span:nth-child(2) {
+        // cursor: pointer;
+        font-size:12px;
+        font-family:PingFangSC-Semibold;
+        font-weight:600;
+        color:rgba(245,166,35,1);
+        padding: 0 10px;
+        border-radius:12px;
+        border:1px solid;
+        border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+        text-align: center;
+        margin: 0 10px;
+      }
+    }
+  }
 }
-.member .money-pay .vip-free .cny {
-  display: flex;
-    align-items: center;
-}
-.member .money-pay .vip-free .cny span {
-  font-size:14px;
-  font-family:PingFangSC-Regular;
-  font-weight:400;
-  color:rgba(153,153,153,1);
-}
-.member .money-pay .vip-free .cny span:nth-child(1) {
-  font-size:24px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(255,131,49,1);
-  margin-right: 5px;
-}
-.member .money-pay .vip-free  .cny span:nth-child(3) {
-  cursor: pointer;
-  font-size:12px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(245,166,35,1);
-  padding: 0 10px;
-  border-radius:12px;
-  border:1px solid;
-  border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
-  text-align: center;
-  margin: 0 10px;
-}
-.member .money-pay .vip-free .coins {
-  font-size:14px;
-  font-family:PingFangSC-Regular;
-  font-weight:400;
-  color:rgba(153,153,153,1);
-  padding: 0 5px;
-  display: flex;
-  align-items: center;
-}
-.member .money-pay .vip-free  .coins span:nth-child(2) {
-  cursor: pointer;
-  font-size:12px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(245,166,35,1);
-  padding: 0 10px;
-  border-radius:12px;
-  border:1px solid;
-  border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
-  text-align: center;
-  margin: 0 10px;
-}
-/* 会员不免费 */
-.member .money-pay .money {
-  margin-top: 30px;
-  font-size:14px;
-  font-family:PingFangSC-Regular;
-  font-weight:400;
-  color:rgba(153,153,153,1);
-}
-.member .money-pay .money .cny {
-  display: flex;
-  align-items: center;
-}
-.member .money-pay .money .cny span:nth-child(1) {
-  font-size:24px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(255,131,49,1);
-  margin-right: 5px;
-}
-.member .money-pay .money .coins {
-  display: flex;
-  align-items: center;
-}
-.member .money-pay .money .coins span {
-  font-size:24px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(255,131,49,1);
-  margin-right: 5px;
-}
+/* 会员免费 */
+// .member .money-pay .vip-free {
+//   margin-top: 30px;
+// }
+// .member .money-pay .vip-free .cny {
+//   display: flex;
+//     align-items: center;
+// }
+// .member .money-pay .vip-free .cny span {
+//   font-size:14px;
+//   font-family:PingFangSC-Regular;
+//   font-weight:400;
+//   color:rgba(153,153,153,1);
+// }
+// .member .money-pay .vip-free .cny span:nth-child(1) {
+//   font-size:24px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(255,131,49,1);
+//   margin-right: 5px;
+// }
+// .member .money-pay .vip-free  .cny span:nth-child(3) {
+//   cursor: pointer;
+//   font-size:12px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(245,166,35,1);
+//   padding: 0 10px;
+//   border-radius:12px;
+//   border:1px solid;
+//   border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+//   text-align: center;
+//   margin: 0 10px;
+// }
+// .member .money-pay .vip-free .coins {
+//   font-size:14px;
+//   font-family:PingFangSC-Regular;
+//   font-weight:400;
+//   color:rgba(153,153,153,1);
+//   padding: 0 5px;
+//   display: flex;
+//   align-items: center;
+// }
+// .member .money-pay .vip-free  .coins span:nth-child(2) {
+//   cursor: pointer;
+//   font-size:12px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(245,166,35,1);
+//   padding: 0 10px;
+//   border-radius:12px;
+//   border:1px solid;
+//   border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+//   text-align: center;
+//   margin: 0 10px;
+// }
+// /* 会员不免费 */
+// .member .money-pay .money {
+//   margin-top: 30px;
+//   font-size:14px;
+//   font-family:PingFangSC-Regular;
+//   font-weight:400;
+//   color:rgba(153,153,153,1);
+// }
+// .member .money-pay .money .cny {
+//   display: flex;
+//   align-items: center;
+// }
+// .member .money-pay .money .cny span:nth-child(1) {
+//   font-size:24px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(255,131,49,1);
+//   margin-right: 5px;
+// }
+// .member .money-pay .money .coins {
+//   display: flex;
+//   align-items: center;
+// }
+// .member .money-pay .money .coins span {
+//   font-size:24px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(255,131,49,1);
+//   margin-right: 5px;
+// }
 
 .course .subscription {
   margin-top: 27px;
