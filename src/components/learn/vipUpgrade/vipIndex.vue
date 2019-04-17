@@ -18,7 +18,7 @@
             </div>
             <!-- vip选项 -->
             <div class="vip-lists">
-              <div class="lists-content">
+              <div class="vip-function">
                 <!-- <div class="lists" v-show="false">
                   <div class="list-header">
                     <p class="name">比较免费选项和 VIP 选项</p>
@@ -43,6 +43,40 @@
                   </div>
                 </div> -->
               </div>
+              <!-- 会员卡片 -->
+              <div class="lists-content">
+                <div class="project-header">
+                  <div class="title">选择合适的计划来帮助您学习</div>
+                </div>
+                <div class="cards-list">
+                  <ul>
+                    <li v-for='(item, index) in productList' :key="index">
+                      <div class="cards">
+                        <p class="title" v-if="index == 0">BASIC</p>
+                        <p class="title" v-if="index == 1">STANDARD</p>
+                        <p class="title" v-if="index == 2">ADVANCED</p>
+                        <p class="title" v-if="index == 3">COMPREHENSIVE</p>
+                        <div class="price">
+                          <span>¥</span>
+                          <span>{{ item.money }}</span>
+                          <span>/mo</span>
+                        </div>
+                        <div class="expect">
+                          <span>{{ item.product }}个月有效期</span>
+                        </div>
+                        <div class="button">
+                          <p @click="goBuy(item)">
+                            <span>立即购买</span>
+                            <i></i>
+                          </p>
+                        </div>
+                        <span class="hint" v-show="recommand === index">76%的人会选</span>
+                        <span class="green" v-show="value === index">最优惠</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -50,45 +84,21 @@
         <div class="activation-code">
           <div class="title">通过激活码升级</div>
           <div class="code">
-            <input type="text" placeholder="输入激活码" v-model="codeNum">
-            <button class="button" v-bind:disabled="codeNum == ''" @click='showConfirm()'>立即激活</button>
+            <input type="text" v-model="codeNum1">
+            <span class="code-line"></span>
+            <input type="text" v-model="codeNum2">
+            <span class="code-line"></span>
+            <input type="text" v-model="codeNum3">
+            <span class="code-line"></span>
+            <input type="text" v-model="codeNum4">
           </div>
+          <p class="prompt">注：每个账号在1个自然年之内，只能累计使用3个激活码！</p>
+          <button class="button" v-bind:disabled="!isDisabled" @click='showConfirm()'>立即激活</button>
         </div>
-        <!-- 选择合适的计划 -->
+        <!-- 会员常见问题 -->
         <div class="project">
-          <div class="project-header">
-            <div class="title">选择合适的计划来帮助您学习</div>
-          </div>
           <div class="project-content">
-            <div class="cards-list">
-              <ul>
-                <li v-for='(item, index) in productList' :key="index">
-                  <div class="cards">
-                    <p class="title" v-if="index == 0">BASIC</p>
-                    <p class="title" v-if="index == 1">STANDARD</p>
-                    <p class="title" v-if="index == 2">ADVANCED</p>
-                    <p class="title" v-if="index == 3">COMPREHENSIVE</p>
-                    <div class="price">
-                      <span>¥</span>
-                      <span>{{ item.money }}</span>
-                      <span>/mo</span>
-                    </div>
-                    <div class="expect">
-                      <span>{{ item.product }}个月有效期</span>
-                    </div>
-                    <div class="button">
-                      <p @click="goBuy(item)">
-                        <span>立即购买</span>
-                        <i></i>
-                      </p>
-                    </div>
-                    <span class="hint" v-show="recommand === index">76%的人会选</span>
-                    <span class="green" v-show="value === index">最优惠</span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <!-- 下面内容区 -->
+            <!-- 会员常见的问题 -->
             <div class="bottom-content">
               <div class="title">
                 <i></i>
@@ -97,34 +107,58 @@
               <div class="course-list">
                 <ul>
                   <li>
-                    <div class="referral">
+                    <div class="referral" @click="unfoldAnswer('1')">
                       <p>
-                        <span>VIP会员能否免费学习所学语种相关的电台课程？</span>
-                        <i></i>
+                        <span><i class="mark"></i>VIP会员能否免费学习所学语种相关的电台课程？</span>
+                        <i :class="{'icon': answerShow == '1'}"></i>
+                      </p>
+                    </div>
+                    <div class="answer" v-show="answerShow == '1'">
+                      <p>
+                        <span>答：</span>
+                        <span>全球说有很多丰富有趣的音频电台课程，用户成为VIP会员后，所有的电台课程均可<br/>免费订阅，无需再次付费！</span>
                       </p>
                     </div>
                   </li>
                   <li>
-                    <div class="referral">
+                    <div class="referral" @click="unfoldAnswer('2')">
                       <p>
-                        <span>VIP会员能否支持学币、优惠券优惠购买？</span>
-                        <i></i>
+                        <span><i class="mark"></i>VIP会员能否支持学币、优惠券优惠购买？</span>
+                        <i :class="{'icon': answerShow == '2'}"></i>
+                      </p>
+                    </div>
+                    <div class="answer" v-show="answerShow == '2'">
+                      <p>
+                        <span>答：</span>
+                        <span>VIP会员本身提供购课折扣让利、免费课、免费阅读等丰富特权，因此在VIP会员不支<br/>持学币、优惠券等优惠抵扣。</span>
                       </p>
                     </div>
                   </li>
                   <li>
-                    <div class="referral">
+                    <div class="referral" @click="unfoldAnswer('3')">
                       <p>
-                        <span>VIP会员能否叠加优惠券、学币、邀请码使用呢？</span>
-                        <i></i>
+                        <span><i class="mark"></i>VIP会员能否叠加优惠券、学币、邀请码使用呢？</span>
+                        <i :class="{'icon': answerShow == '3'}"></i>
+                      </p>
+                    </div>
+                    <div class="answer" v-show="answerShow == '3'">
+                      <p>
+                        <span>答：</span>
+                        <span>你的很多语伴同样也抱有和你一样的问题!<br/>如果你已经是全球说的VIP会员，在学习的过程中获得了优惠券，将在你下次同等级续费中产生优惠，或者在当前等<br/>级进行会员进行会员升级的操作中产生优惠！</span>
                       </p>
                     </div>
                   </li>
                   <li>
-                    <div class="referral">
+                    <div class="referral" @click="unfoldAnswer('4')">
                       <p>
-                        <span>VIP会员本身提供购课折扣让利、免费课、免费阅读等丰富特权，故在购买VIP会员时不支持学币、优惠券等优惠抵扣。</span>
-                        <i></i>
+                        <span><i class="mark"></i>VIP会员本身提供购课折扣让利、免费课、免费阅读等丰富特权，故在购买VIP会员时不支持学币、优惠券等优惠抵扣。</span>
+                        <i :class="{'icon': answerShow == '4'}"></i>
+                      </p>
+                    </div>
+                    <div class="answer" v-show="answerShow == '4'">
+                      <p>
+                        <span>答：</span>
+                        <span>你的很多语伴同样也抱有和你一样的问题!<br/>如果你已经是全球说的VIP会员，在学习的过程中获得了优惠券，将在你下次同等级<br/>续费中产生优惠，或者在当前等级进行会<br/>员进行会员升级的操作中产生优惠！</span>
                       </p>
                     </div>
                   </li>
@@ -147,39 +181,63 @@
                 <div class="other-lists">
                   <ul>
                     <li>
-                      <div class="people-img">
-                        <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="动态头像">
-                        <div class="country">
-                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="国家">
+                      <div class="say-content">
+                        <div class="people-img">
+                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="动态头像">
+                          <div class="country">
+                            <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="国家">
+                          </div>
+                        </div>
+                        <div class="nickname">
+                          <p>宫本はるか</p>
+                          <p class="languages">
+                            <span class="mother-course">英语<i></i></span>
+                            <span class="learn-course">西班牙语<i></i></span>
+                          </p>
                         </div>
                       </div>
-                      <div class="nickname">
-                        <p>宫本はるか</p>
-                        <p>英语</p>
+                      <div class="say-desc">
+                        <p>很好的一款学习工具，陆陆续续在三个月的时间里学习了西班牙语，会员的功能真的很强大！</p>
                       </div>
                     </li>
                     <li>
-                      <div class="people-img">
-                        <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="动态头像">
-                        <div class="country">
-                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="国家">
+                      <div class="say-content">
+                        <div class="people-img">
+                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="动态头像">
+                          <div class="country">
+                            <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="国家">
+                          </div>
+                        </div>
+                        <div class="nickname">
+                          <p>宫本はるか</p>
+                          <p class="languages">
+                            <span class="mother-course">英语<i></i></span>
+                            <span class="learn-course">日语<i></i></span>
+                          </p>
                         </div>
                       </div>
-                      <div class="nickname">
-                        <p>宫本はるか</p>
-                        <p>英语</p>
+                      <div class="say-desc">
+                        <p>很高兴能和日语课程的编辑者通话，也很感谢能收到talkmate的参观邀请，意外的收货真的很多，惊喜也很多！</p>
                       </div>
                     </li>
                     <li>
-                      <div class="people-img">
-                        <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="动态头像">
-                        <div class="country">
-                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="国家">
+                      <div class="say-content">
+                        <div class="people-img">
+                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="动态头像">
+                          <div class="country">
+                            <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="国家">
+                          </div>
+                        </div>
+                        <div class="nickname">
+                          <p>宫本はるか</p>
+                          <p class="languages">
+                            <span class="mother-course">英语<i></i></span>
+                            <span class="learn-course">汉语<i></i></span>
+                          </p>
                         </div>
                       </div>
-                      <div class="nickname">
-                        <p>宫本はるか</p>
-                        <p>英语</p>
+                      <div class="say-desc">
+                        <p>我选择了学习汉语，其实在这里也没那么难学，很多的助学功能都很强大！</p>
                       </div>
                     </li>
                   </ul>
@@ -203,9 +261,13 @@ export default {
   data () {
     return {
       // items: I18nLocales[Vue.config.lang].vip.left.tips,
+      answerShow: '',
       recommand: 2,
       value: 3,
-      codeNum: ''
+      codeNum1: '',
+      codeNum2: '',
+      codeNum3: '',
+      codeNum4: ''
     }
   },
   components: {
@@ -224,6 +286,14 @@ export default {
       userInfo: state => state.userInfo,
       productList: state => state.user.productList
     }),
+    isActivation () {
+      let codes = this.codeNum1 + '-' + this.codeNum2 + '-' + this.codeNum3 + '-' + this.codeNum4
+      return codes
+    },
+    isDisabled () {
+      let codeNum = this.codeNum1 !== '' && this.codeNum2 !== '' && this.codeNum3 !== '' && this.codeNum4 !== ''
+      return codeNum
+    },
     ui () {
       let ui = this.userInfo
       if (Object.keys(ui).length === 0) {
@@ -272,10 +342,10 @@ export default {
     },
     // 激活码激活
     showConfirm () {
-      console.log('确定激活码？', this.codeNum)
+      console.log('确定激活码？', this.isActivation)
       var _memberType = this.ui.member_info.member_type
       // this.$refs.alert.$emit('UserVipCode', this.activateNum)
-      this.getMemberCard(this.codeNum).then((res) => {
+      this.getMemberCard(this.isActivation).then((res) => {
         console.log('激活码返回', res)
         if (res.success) {
           this.alertConfirm(res.member_info.money)
@@ -305,6 +375,10 @@ export default {
         1,
         money
       )
+    },
+    //  展开常见问题
+    unfoldAnswer (num) {
+      this.answerShow = num
     }
   }
 }
@@ -317,7 +391,7 @@ export default {
     .header-img {
       width: 100%;
       height: 360px;
-      background: url('../../../../static/images/vipUpgrade/header.jpeg') no-repeat center;
+      background: url('../../../../static/images/vipUpgrade/vip-banner.jpeg') no-repeat center;
       background-size: cover;
     }
     .title {
@@ -332,6 +406,7 @@ export default {
         font-weight:bold;
         color:rgba(255,255,255,1);
         text-align: center;
+        line-height: 40px
       }
       p:nth-child(2) {
         font-size:14px;
@@ -349,15 +424,14 @@ export default {
       width: 100%;
       // 介绍会员福利
       .introduce {
-        margin-top: 80px;
         width: 100%;
-        height: 610px;
+        height: 1100px;
         background: #ffffff;
         // padding: 73px 120px 0;
         .introduce-content {
           width: 960px;
           margin: 0 auto;
-          padding: 73px 0px 0;
+          padding: 66px 0px 0;
         }
         .introduce-title {
           width: 100%;
@@ -376,174 +450,12 @@ export default {
           }
         }
         .vip-lists {
-          margin-top: 12px;
-          height: 530px;
-          background:rgba(255,255,255,1);
-          box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
-          border:1px solid rgba(233,237,239,1);
-          .lists-content {
-            width: 100%;
-            padding: 37px 128px 37px 60px;
-            .lists {
-              width: 100%;
-              .list-header {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                padding-bottom: 15px;
-                border-bottom: 1px solid rgb(228, 229, 230);
-                .name {
-                  font-size:14px;
-                  font-family:PingFangSC-Semibold;
-                  font-weight:600;
-                  color:rgba(51,51,51,1);
-                }
-                .free {
-                  font-size:14px;
-                  font-family:PingFangSC-Semibold;
-                  font-weight:600;
-                  color:rgba(51,51,51,1);
-                  padding-right: 9px;
-                  span:nth-child(1) {
-                    margin-right: 84px;
-                  }
-                }
-              }
-              .list-items {
-                width: 100%;
-                margin-top: 42px;
-                height: 375px;
-                overflow-y: scroll;
-                ul {
-                  li {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 14px;
-                    align-items: center;
-                    .session {
-                      display: flex;
-                      width: 60%;
-                      align-items: center;
-                      .icon-content {
-                        position: relative;
-                        width: 34px;
-                        height: 34px;
-                        margin-right: 20px;
-                        i {
-                          display: inline-block;
-                          position: absolute;
-                          top: 50%;
-                          left: 50%;
-                          transform: translate(-50%, -50%);
-                          width: 20px;
-                          height: 20px;
-                          background-image: url('../../../../static/images/learn/learn-diqiu.svg');
-                          background-position: center;
-                          background-repeat: no-repeat;
-                          background-size: cover;
-                        }
-                      }
-                      .title {
-                        font-size:14px;
-                        font-family:PingFang-SC-Medium;
-                        font-weight:500;
-                        color:rgba(51,51,51,1);
-                      }
-                    }
-                    .pitch {
-                      display: flex;
-                      justify-content: space-between;
-                      width: 140px;
-                      .icon-blue {
-                        width: 20px;
-                        height: 20px;
-                        background: url('../../../../static/images/vipUpgrade/blue.svg') no-repeat center;
-                        background-size: cover;
-                      }
-                      .icon-green {
-                        width: 20px;
-                        height: 20px;
-                        background: url('../../../../static/images/vipUpgrade/green.svg') no-repeat center;
-                        background-size: cover;
-                      }
-                    }
-                  }
-                  li:nth-child(1) .session .icon{
-                    background-image: url('../../../../static/images/learn/learn-diqiu.svg');
-                  }
-                  li:nth-child(2) .session .icon{
-                    background-image: url('../../../../static/images/learn/learn-youxian.svg');
-                  }
-                  li:nth-child(3) .session .icon{
-                    width: 17px;
-                    height: 14px;
-                    background-image: url('../../../../static/images/learn/learn-tingli.svg');
-                  }
-                  li:nth-child(4) .session .icon{
-                    background-image: url('../../../../static/images/learn/learn-kouyu.svg');
-                  }
-                  li:nth-child(5) .session .icon{
-                    width: 18px;
-                    height: 16px;
-                    background-image: url('../../../../static/images/learn/learn-yuedu.svg');
-                  }
-                  li:nth-child(6) .session .icon{
-                    background-image: url('../../../../static/images/learn/learn-gangbi.svg');
-                  }
-                  li:nth-child(7) .session .icon{
-                    width: 17px;
-                    background-image: url('../../../../static/images/learn/learn-dengpao.svg');
-                  }
-                  li:nth-child(8) .session .icon{
-                    width: 19px;
-                    background-image: url('../../../../static/images/learn/learn-tingshuo.svg');
-                  }
-                  li:nth-child(9) .session .icon{
-                    height: 17px;
-                    background-image: url(../../../../static/images/learn/learn-huangguan-red.svg);
-                  }
-                  li:nth-child(10) .session .icon{
-                    background-image: url(../../../../static/images/learn/learn-jiangpai.svg);
-                  }
-                  li:nth-child(11) .session .icon{
-                    background-image: url(../../../../static/images/learn/learn-pengyouquan.svg);
-                  }
-                  li:nth-child(12) .session .icon{
-                    background-image: url(../../../../static/images/learn/learn-fanyi.svg);
-                  }
-                  li:nth-child(13) .session .icon{
-                    width: 21px;
-                    height: 16px;
-                    background-image: url(../../../../static/images/learn/learn-xiazai.svg);
-                  }
-                  li:nth-child(14) .session .icon{
-                    width: 22px;
-                    height: 16px;
-                    background-image: url(../../../../static/images/learn/learn-pingfen.svg);
-                  }
-                  li:nth-child(15) .session .icon{
-                    width: 24px;
-                    height: 13px;
-                    background-image: url(../../../../static/images/learn/learn-diy.svg);
-                  }
-                }
-              }
-              /*滚动条样式*/
-              .list-items::-webkit-scrollbar {/*滚动条整体样式*/
-                width: 8px;     /*高宽分别对应横竖滚动条的尺寸*/
-                height: 4px;
-              }
-              .list-items::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-                border-radius: 5px;
-                -webkit-box-shadow: inset 0 0 5px #fff;
-                background: #fff;
-              }
-              .list-items::-webkit-scrollbar-track {/*滚动条里面轨道*/
-                -webkit-box-shadow: inset 0 0 5px rgba(255,255,255,1);
-                border-radius: 0;
-                background: rgba(255,255,255,1);
-              }
-            }
+          .vip-function {
+            margin-top: 12px;
+            height: 530px;
+            background:rgba(255,255,255,1);
+            box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
+            border:1px solid rgba(233,237,239,1);
           }
         }
       }
@@ -551,7 +463,7 @@ export default {
       .activation-code {
         width: 960px;
         margin-top: 121px;
-        padding: 160px 0 0px;
+        padding: 220px 0 0px;
         text-align: center;
         margin: 0 auto;
         .title {
@@ -561,31 +473,50 @@ export default {
           color:rgba(51,51,51,1);
         }
         .code {
-          margin: 16px auto 0;
+          margin: 32px auto 22px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           input {
-            width:351px;
-            height:36px;
+            width:100px;
+            height:42px;
             background:rgba(255,255,255,1);
-            border-radius:18px 0px 0px 18px;
-            border:1px solid rgba(176,188,192,1);
-            padding: 6px 20px;
+            border-radius:10px;
+            border:2px solid rgba(200,212,219,1);
+            text-align: center;
           }
-          .button {
-            // cursor: pointer;
-            width: 121px;
-            height: 36px;
-            font-size:15px;
-            font-family:PingFang-SC-Bold;
-            font-weight:bold;
-            color:rgba(0,42,91,1);
-            background:rgba(216,222,225,1);
-            border-radius:0px 18px 18px 0px;
-            border:1px solid rgba(176,188,192,1);
+          input:focus {
+            border-color: #2A9FE4FF;
           }
-          .button:disabled {
-            cursor: not-allowed;
+          .code-line {
+            display: inline-block;
+            width:6px;
+            height:1px;
             background:rgba(200,212,219,1);
+            margin: 0 6px;
           }
+        }
+        .prompt {
+          font-size:12px;
+          font-weight:400;
+          color:rgba(126,146,159,1);
+          line-height:17px;
+          padding-bottom: 50px;
+        }
+        .button {
+          // cursor: pointer;
+          width:240px;
+          height:41px;
+          background:rgba(145,210,73,1);
+          border-radius:21px;
+          font-size:15px;
+          font-weight:bold;
+          color:rgba(255,255,255,1);
+          line-height:41px;
+        }
+        .button:disabled {
+          cursor: not-allowed;
+          background:rgba(200,212,219,1);
         }
       }
       // 卡片
@@ -593,157 +524,16 @@ export default {
         width: 100%;
         background: #ffffff;
         border-bottom: 1px solid #6A878E47;
-        .project-header {
-          background: rgba(246,248,249);
-          padding: 54px 0 190px;
-          text-align: center;
-          .title {
-            font-size:24px;
-            font-family:PingFang-SC-Bold;
-            font-weight:bold;
-            color:rgba(51,51,51,1);
-          }
-        }
         .project-content {
           padding: 0 120px;
           position: relative;
           width: 100%;
-          .cards-list {
-            width: 960px;
-            margin: 0 auto;
-            margin-top: -140px;
-            ul {
-              width: 100%;
-              display: flex;
-              justify-content: space-between;
-              li {
-                overflow: hidden;
-                position: relative;
-                width: 224px;
-                background:rgba(255,255,255,1);
-                box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
-                border-radius:5px;
-                border:1px solid rgba(208,221,228,1);
-                .cards {
-                  padding: 52px 32px 33px;
-                  .title {
-                    text-align: center;
-                  }
-                  .price {
-                    padding-top: 41px;
-                    position: relative;
-                    text-align: center;
-                    span:nth-child(1) {
-                      font-size:26px;
-                      font-family:PingFang-SC-Medium;
-                      font-weight:500;
-                      color:rgba(144,162,174,1);
-                    }
-                    span:nth-child(2) {
-                      font-size:70px;
-                      font-family:DINCondensed-Bold;
-                      font-weight:bold;
-                      color:rgba(0,42,91,1);
-                    }
-                    span:nth-child(3) {
-                      position: absolute;
-                      bottom: 25px;
-                      font-size:16px;
-                      font-family:PingFang-SC-Bold;
-                      font-weight:bold;
-                      color:rgba(144,162,174,1);
-                      text-align: bottom;
-                    }
-                  }
-                  .expect {
-                    width: 100%;
-                    text-align: center;
-                    padding: 45px 0 80px;
-                    span {
-                      font-size:14px;
-                      font-family:PingFangSC-Regular;
-                      font-weight:400;
-                      color:rgba(0,42,91,1);
-                    }
-                  }
-                  .button {
-                    cursor: pointer;
-                    width:160px;
-                    height:36px;
-                    background:rgba(42,159,228,1);
-                    border-radius:20px;
-                    margin: 0 auto;
-                    text-align: center;
-                    line-height: 36px;
-                    p {
-                      display: inline-block;
-                      span {
-                        font-size:14px;
-                        font-family:PingFangSC-Semibold;
-                        font-weight:600;
-                        color:rgba(255,255,255,1);
-                        margin-right: 10px;
-                      }
-                      i {
-                        display: none;
-                        width: 20px;
-                        height: 20px;
-                        background: url('../../../../static/images/authLogin/going.svg') no-repeat center;
-                        background-size: cover;
-                        float: right;
-                        margin-top: 8px;
-                      }
-                    }
-                    &:hover p i {
-                      display: block;
-                      transition: padding-right 218ms ease;
-                    }
-                  }
-                  .hint {
-                    display: inline-block;
-                    width: 150px;
-                    height: 86px;
-                    color: #fff;
-                    line-height: 144px;
-                    text-align: center;
-                    background-color: #FFBE29FF;
-                    position: absolute;
-                    top: -23px;
-                    right: -54px;
-                    font-size: 12px;
-                    transform: rotate(45deg);
-                    padding: 0 24px;
-                  }
-                  .green {
-                    display: inline-block;
-                    width: 150px;
-                    height: 86px;
-                    color: #fff;
-                    line-height: 144px;
-                    text-align: center;
-                    background-color: #91D249FF;
-                    position: absolute;
-                    top: -23px;
-                    right: -54px;
-                    font-size: 12px;
-                    transform: rotate(45deg);
-                    padding: 0 24px;
-                  }
-                }
-              }
-              li:nth-child(3) {
-                border:1px solid rgba(255,190,41,1);
-              }
-              li:nth-child(4) {
-                border:1px solid rgba(208,221,228,1);
-              }
-            }
-          }
           .bottom-content {
             width: 960px;
             margin: 0 auto;
             margin-top: 112px;
             .title {
+              padding-top: 80px;
               i {
                 display: inline-block;
                 width: 52px;
@@ -766,7 +556,7 @@ export default {
               border:4px solid rgba(238,243,246,1);
               margin-top: 15px;
               ul {
-                padding: 57px 100px;
+                padding: 47px 60px;
                 li {
                   padding: 14px 0;
                   border-bottom: 1px solid #DEE6EBFF;
@@ -781,8 +571,16 @@ export default {
                       font-weight:500;
                       color:rgba(51,51,51,1);
                       span {
-                        display: inline-block;
+                        display: flex;
+                        align-items: center;
                         width: 95%;
+                        .mark {
+                          display: inline-block;
+                          width: 20px;
+                          height: 18px;
+                          background: pink;
+                          margin-right: 14px;
+                        }
                       }
                       i {
                         display: inline-block;
@@ -791,6 +589,39 @@ export default {
                         background: url('../../../../static/images/go.svg') no-repeat center;
                         background-size: cover;
                       }
+                      .icon {
+                        display: inline-block;
+                        width: 6px;
+                        height: 12px;
+                        background: pink;
+                        // background: url('../../../../static/images/') no-repeat center;
+                        // background-size: cover;
+                      }
+                    }
+                  }
+                  .referral:hover {
+                    cursor: pointer;
+                  }
+                  .answer {
+                    width: 748px;
+                    padding-top: 6px;
+                    transition: all 3s ease;
+                    p {
+                      display: flex;
+                    }
+                    span:nth-child(1) {
+                      display: inline-block;
+                      font-size:14px;
+                      font-weight:600;
+                      color:rgba(51,51,51,1);
+                      line-height:20px;
+                    }
+                    span:nth-child(2) {
+                      display: inline-block;
+                      font-size:14px;
+                      font-weight:400;
+                      color:rgba(153,153,153,1);
+                      line-height:20px;
                     }
                   }
                 }
@@ -846,9 +677,13 @@ export default {
                   display: flex;
                   justify-content: space-between;
                   li {
-                    width: 33%;
-                    display: flex;
-                    align-items: center;
+                    display: inline-block;
+                    width: 260px;
+                    margin-right: 60px;
+                    .say-content {
+                      display: flex;
+                      align-items: center;
+                    }
                     .people-img {
                       position: relative;
                       width: 64px;
@@ -879,12 +714,46 @@ export default {
                         font-weight:bold;
                         color:rgba(51,51,51,1);
                       }
-                      p:nth-child(2) {
+                      .languages {
                         font-size:13px;
                         font-family:PingFang-SC-Medium;
                         font-weight:500;
                         color:rgba(184,184,184,1);
+                        display: flex;
+                        padding-top: 6px;
+                        span {
+                          display: flex;
+                          align-items: center;
+                          i {
+                            display: inline-block;
+                            background-repeat: no-repeat;
+                            background-size: cover;
+                            background-position: center;
+                            margin: 0 8px 0 4px;
+                          }
+                        }
+                        .mother-course {
+                          i {
+                            width: 5px;
+                            height: 6px;
+                            background: pink;
+                          }
+                        }
+                        .learn-course i {
+                          i {
+                            width: 16px;
+                            height: 11px;
+                            background: rgb(189, 17, 46);
+                          }
+                        }
                       }
+                    }
+                    .say-desc {
+                      padding-top: 12px;
+                      font-size:14px;
+                      font-weight:400;
+                      color:rgba(10,43,64,1);
+                      line-height:20px;
                     }
                   }
                 }
@@ -893,6 +762,145 @@ export default {
           }
         }
       }
+    }
+  }
+}
+.project-header {
+  // background: rgba(246,248,249);
+  padding: 54px 0 190px;
+  text-align: center;
+  .title {
+    font-size:24px;
+    font-family:PingFang-SC-Bold;
+    font-weight:bold;
+    color:rgba(51,51,51,1);
+  }
+}
+.cards-list {
+  width: 960px;
+  margin: 0 auto;
+  margin-top: -140px;
+  ul {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    li {
+      overflow: hidden;
+      position: relative;
+      width: 224px;
+      background:rgba(255,255,255,1);
+      box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
+      border-radius:5px;
+      border:6px solid rgba(230,235,238,1);
+      .cards {
+        padding: 52px 32px 33px;
+        .title {
+          text-align: center;
+        }
+        .price {
+          padding-top: 41px;
+          position: relative;
+          text-align: center;
+          span:nth-child(1) {
+            font-size:26px;
+            font-family:PingFang-SC-Medium;
+            font-weight:500;
+            color:rgba(144,162,174,1);
+          }
+          span:nth-child(2) {
+            font-size:70px;
+            font-family:DINCondensed-Bold;
+            font-weight:bold;
+            color:rgba(0,42,91,1);
+          }
+          span:nth-child(3) {
+            position: absolute;
+            bottom: 25px;
+            font-size:16px;
+            font-family:PingFang-SC-Bold;
+            font-weight:bold;
+            color:rgba(144,162,174,1);
+            text-align: bottom;
+          }
+        }
+        .expect {
+          width: 100%;
+          text-align: center;
+          padding: 45px 0 80px;
+          span {
+            font-size:14px;
+            font-family:PingFangSC-Regular;
+            font-weight:400;
+            color:rgba(0,42,91,1);
+          }
+        }
+        .button {
+          cursor: pointer;
+          width:160px;
+          height:36px;
+          background:rgba(42,159,228,1);
+          border-radius:20px;
+          margin: 0 auto;
+          text-align: center;
+          line-height: 36px;
+          p {
+            display: inline-block;
+            span {
+              font-size:14px;
+              font-family:PingFangSC-Semibold;
+              font-weight:600;
+              color:rgba(255,255,255,1);
+              margin-right: 10px;
+            }
+            i {
+              display: none;
+              width: 20px;
+              height: 20px;
+              background: url('../../../../static/images/authLogin/going.svg') no-repeat center;
+              background-size: cover;
+              float: right;
+              margin-top: 8px;
+            }
+          }
+          &:hover p i {
+            display: block;
+            transition: padding-right 218ms ease;
+          }
+        }
+        .hint {
+          display: inline-block;
+          width: 150px;
+          height: 86px;
+          color: #fff;
+          line-height: 144px;
+          text-align: center;
+          background-color: #FFBE29;
+          position: absolute;
+          top: -23px;
+          right: -54px;
+          font-size: 12px;
+          transform: rotate(45deg);
+          padding: 0 24px;
+        }
+        .green {
+          display: inline-block;
+          width: 150px;
+          height: 86px;
+          color: #fff;
+          line-height: 144px;
+          text-align: center;
+          background-color: #91D249FF;
+          position: absolute;
+          top: -32px;
+          right: -66px;
+          font-size: 12px;
+          transform: rotate(45deg);
+          padding: 0 24px;
+        }
+      }
+    }
+    li:nth-child(3) {
+      border:6px solid #FFBE29;
     }
   }
 }
