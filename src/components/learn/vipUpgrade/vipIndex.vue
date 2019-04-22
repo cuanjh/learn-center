@@ -110,7 +110,9 @@
                     <div class="referral" @click="unfoldAnswer('1')">
                       <p>
                         <span><i class="mark"></i>VIP会员能否免费学习所学语种相关的电台课程？</span>
-                        <i :class="{'icon': answerShow == '1'}"></i>
+                        <!-- <i :class="{'icon': answerShow == '1'}"></i> -->
+                        <i class="icon" v-if="answerShow == '1'"></i>
+                        <i v-else @click="upfoldAnswer()"></i>
                       </p>
                     </div>
                     <div class="answer" v-show="answerShow == '1'">
@@ -124,7 +126,9 @@
                     <div class="referral" @click="unfoldAnswer('2')">
                       <p>
                         <span><i class="mark"></i>VIP会员能否支持学币、优惠券优惠购买？</span>
-                        <i :class="{'icon': answerShow == '2'}"></i>
+                        <!-- <i :class="{'icon': answerShow == '2'}"></i> -->
+                        <i class="icon" v-if="answerShow == '2'"></i>
+                        <i v-else @click="upfoldAnswer()"></i>
                       </p>
                     </div>
                     <div class="answer" v-show="answerShow == '2'">
@@ -138,7 +142,9 @@
                     <div class="referral" @click="unfoldAnswer('3')">
                       <p>
                         <span><i class="mark"></i>VIP会员能否叠加优惠券、学币、邀请码使用呢？</span>
-                        <i :class="{'icon': answerShow == '3'}"></i>
+                        <!-- <i :class="{'icon': answerShow == '3'}"></i> -->
+                        <i class="icon" v-if="answerShow == '3'"></i>
+                        <i v-else @click="upfoldAnswer()"></i>
                       </p>
                     </div>
                     <div class="answer" v-show="answerShow == '3'">
@@ -152,7 +158,9 @@
                     <div class="referral" @click="unfoldAnswer('4')">
                       <p>
                         <span><i class="mark"></i>VIP会员本身提供购课折扣让利、免费课、免费阅读等丰富特权，故在购买VIP会员时不支持学币、优惠券等优惠抵扣。</span>
-                        <i :class="{'icon': answerShow == '4'}"></i>
+                        <!-- <i :class="{'icon': answerShow == '4'}"></i> -->
+                        <i class="icon" v-if="answerShow == '4'"></i>
+                        <i v-else @click="upfoldAnswer()"></i>
                       </p>
                     </div>
                     <div class="answer" v-show="answerShow == '4'">
@@ -378,7 +386,13 @@ export default {
     },
     //  展开常见问题
     unfoldAnswer (num) {
+      console.log('====>', this.answerShow)
+      console.log('====>', num)
       this.answerShow = num
+    },
+    // 收起常见问题
+    upfoldAnswer () {
+      this.answerShow = ''
     }
   }
 }
