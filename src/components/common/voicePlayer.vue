@@ -174,7 +174,7 @@
       </div>
     </div>
     <!-- 人民币付费课程弹框 -->
-    <buy-radio-box></buy-radio-box>
+    <buy-money-box></buy-money-box>
     <!-- 金币付费课程弹框 -->
     <buy-coins-radio-box/>
     <!-- 金币不足 -->
@@ -187,7 +187,7 @@ import { mapState, mapActions } from 'vuex'
 import $ from 'jquery'
 import Bus from '../../bus'
 import SoundCtrl from '../../plugins/soundCtrl'
-import BuyRadioBox from './buyRadioBox.vue'
+import BuyMoneyBox from './buyMoneyBox.vue'
 import BuyCoinsRadioBox from './buyCoinsRadioBox.vue'
 import UserCoinsBox from './userCoinsBox.vue'
 
@@ -219,7 +219,7 @@ export default {
       subscibenoInfo: {}
     }
   },
-  components: {BuyRadioBox, BuyCoinsRadioBox, UserCoinsBox},
+  components: {BuyMoneyBox, BuyCoinsRadioBox, UserCoinsBox},
   computed: {
     ...mapState({
       userInfo: state => state.userInfo // 用户信息
@@ -297,7 +297,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
       postRadioDetail: 'course/postRadioDetail', // 电台详情
       getRadioCardList: 'course/getRadioCardList' // 电台列表
     }),
@@ -383,7 +382,7 @@ export default {
             if (this.curIndex > 2) {
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', this.radioDetail)
+                Bus.$emit('showBuyMoneyBox', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -402,19 +401,20 @@ export default {
               if (this.curIndex > 2) {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', this.radioDetail)
-                } else if (radio.money_type === 'coins') {
-                  // 金币提示
-                  Bus.$emit('showBuyCoinsRadio', radio)
-                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                  Bus.$emit('showBuyMoneyBox', this.radioDetail)
+                  this.curIndex = 2
+                  this.pause()
+                  $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
+                  $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
+                  $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+                  $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+                  return false
                 }
-                this.curIndex = 2
-                this.pause()
-                $('#' + this.curRadio.card_id + ' .gradient-layer-play i').removeClass('pause')
-                $('#' + this.curRadio.card_id + ' .gradient-layer-play i').addClass('play')
-                $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
-                $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
-                return false
+                // else if (radio.money_type === 'coins') {
+                //   // 金币提示
+                //   Bus.$emit('showBuyCoinsRadio', radio)
+                //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                // }
               }
             }
           }
@@ -549,7 +549,7 @@ export default {
             if (index > 2) {
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', this.radioDetail)
+                Bus.$emit('showBuyMoneyBox', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -565,16 +565,17 @@ export default {
               if (index > 2) {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', this.radioDetail)
-                } else if (radio.money_type === 'coins') {
-                  // 金币提示
-                  Bus.$emit('showBuyCoinsRadio', radio)
-                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                  Bus.$emit('showBuyMoneyBox', this.radioDetail)
+                  $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
+                  $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
+                  this.pause()
+                  return false
                 }
-                $('#' + radio.code + ' .gradient-layer-play i').removeClass('pause')
-                $('#' + radio.code + ' .gradient-layer-play i').addClass('play')
-                this.pause()
-                return false
+                // else if (radio.money_type === 'coins') {
+                //   // 金币提示
+                //   Bus.$emit('showBuyCoinsRadio', radio)
+                //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                // }
               }
             }
           }

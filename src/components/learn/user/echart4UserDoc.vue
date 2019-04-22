@@ -6,25 +6,27 @@
 import echarts from 'echarts'
 export default {
   props: ['echartdata'],
-  mounted () {
-    var _array = [0, 0, 0, 0, 0]
-    if (this.echartdata['model_mother_tongue'] > 0) {
-      _array[0] = this.echartdata['model_mother_tongue']
+  watch: {
+    echartdata () {
+      var _array = [0, 0, 0, 0, 0]
+      if (this.echartdata && this.echartdata['model_mother_tongue'] > 0) {
+        _array[0] = this.echartdata['model_mother_tongue']
+      }
+      if (this.echartdata && this.echartdata['model_language_expression'] > 0) {
+        _array[1] = this.echartdata['model_language_expression']
+      }
+      if (this.echartdata && this.echartdata['model_statement_comprehensive'] > 0) {
+        _array[2] = this.echartdata['model_statement_comprehensive']
+      }
+      if (this.echartdata && this.echartdata['model_comprehensive_app'] > 0) {
+        _array[3] = this.echartdata['model_comprehensive_app']
+      }
+      if (this.echartdata && this.echartdata['model_language_logic'] > 0) {
+        _array[4] = this.echartdata['model_language_logic']
+      }
+      var myChart = echarts.init(this.$el)
+      this.drawChart(myChart, _array)
     }
-    if (this.echartdata['model_language_expression'] > 0) {
-      _array[1] = this.echartdata['model_language_expression']
-    }
-    if (this.echartdata['model_statement_comprehensive'] > 0) {
-      _array[2] = this.echartdata['model_statement_comprehensive']
-    }
-    if (this.echartdata['model_comprehensive_app'] > 0) {
-      _array[3] = this.echartdata['model_comprehensive_app']
-    }
-    if (this.echartdata['model_language_logic'] > 0) {
-      _array[4] = this.echartdata['model_language_logic']
-    }
-    var myChart = echarts.init(this.$el)
-    this.drawChart(myChart, _array)
   },
   methods: {
     drawChart (obj, _array) {
@@ -43,8 +45,18 @@ export default {
           ],
           name: {
             textStyle: {
-              color: '#6d6d6d',
-              fontSize: 12
+              color: '#999999FF',
+              lineHeight: 20,
+              fontSize: 14,
+              borderRadius: 2,
+              padding: [2, 0]
+            },
+            formatter: (text) => {
+              text = text.replace(/\S{2}/g, function (match) {
+                console.log(match)
+                return match + '\n'
+              })
+              return text
             }
           },
           nameGap: 7,
@@ -65,27 +77,28 @@ export default {
         series: [
           {
             type: 'radar',
+            symbol: 'circle',
             data: [
               {
                 value: _array,
                 name: '数据分析',
                 lineStyle: {
                   normal: {
-                    color: '#7bc16b',
+                    color: '#61C9FC73',
                     width: 0
                   }
                 },
                 areaStyle: {
                   normal: {
-                    color: '#7bc16b'
+                    color: '#61C9FC73'
                   }
                 }
               }
             ],
-            symbolSize: 2,
+            symbolSize: 6,
             itemStyle: {
               normal: {
-                color: '#7bc16b'
+                color: '#4F97FEFF'
               }
             }
           }
@@ -97,4 +110,7 @@ export default {
 </script>
 
 <style scoped>
+body {
+  /* color: #7bc16b; */
+}
 </style>

@@ -27,6 +27,7 @@ const introduceApp = r => require.ensure([], () => r(require('@/components/learn
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue')), 'user')
 const userCourse = r => require.ensure([], () => r(require('@/components/learn/user/userCourse.vue')), 'user-course')
 const userDoc = r => require.ensure([], () => r(require('@/components/learn/user/userDoc.vue')), 'userDoc')
+const userFollow = r => require.ensure([], () => r(require('@/components/learn/user/userFollow.vue')), 'user-follow')
 const userWallet = r => require.ensure([], () => r(require('@/components/learn/user/userWallet.vue')), 'user-wallet')
 const userVip = r => require.ensure([], () => r(require('@/components/learn/user/userVip.vue')), 'userVip')
 const userSetting = r => require.ensure([], () => r(require('@/components/learn/user/userSetting.vue')), 'user-setting')
@@ -181,6 +182,11 @@ export default[
             component: userDoc
           },
           {
+            path: 'user-follow',
+            name: 'userFollow',
+            component: userFollow
+          },
+          {
             path: 'wallet',
             component: userWallet
           },
@@ -205,7 +211,7 @@ export default[
       },
       // vip升级跳转路由
       {
-        path: 'vip-index',
+        path: 'vip-home',
         name: 'vipIndex',
         component: vipIndex
       },

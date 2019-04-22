@@ -1,59 +1,72 @@
 <template>
 <section class='user-wallet-wrap'>
-    <div class='userVip-top-wrap user-wallet-top'>
-      <div class='userVip-top-logo'></div>
+    <div class='user-wallet-top'>
       <div class='userVip-top-tips'>
-        <p>现有金币:</p>
-        <p>{{ userInfo ? userInfo.coins : '' }}</p>
+        <span>我的金币</span>
+        <p><i class="coins-icon"></i><span>{{ userInfo ? userInfo.coins : '' }}</span></p>
       </div>
       <div class='userVip-top-btns'>
       </div>
     </div>
     <div class="user-wallet-bottom">
       <div class="userVip-bottom-nav">
-        <p @click='swapVipTab2' :class="{ 'active': activeTab === false }">金币充值</p>
-        <p @click='swapVipTab' :class="{ 'active': activeTab === true }">收支明细</p>
+        <a @click='swapVipTab2' :class="{ 'active': activeTab === false }">金币充值</a>
+        <a @click='swapVipTab' :class="{ 'active': activeTab === true }">收支明细</a>
       </div>
-      <ol v-show='activeTab'>
-        <li v-for='(item, index) in record' :key="index" :class="item['trade_type']">
-          <i></i>
-          <span></span>
-          <ul>
-            <li>{{ item.desc['title'] }}</li>
-            <li>{{ item.desc['describle'] }}</li>
-            <li>{{ item['trade_date'] }}</li>
-          </ul>
-          <span :class="{'fu': item.money <= 0}">
-            <em v-show="item.money > 0">+</em>{{ item.money }}
-          </span>
-        </li>
-        <p class='learn-user-wallet-load-more' @click='loadMore' v-show='!loadingMore' v-if="!findGuide">
-          <i class='rotateMore' :class="{ 'rotateMore-loading' : showLoading}"></i>加载更多
-        </p>
-        <p class='learn-user-wallet-load-no-more' v-show='loadingMore' v-if="!findGuide"><i></i>没有更多了</p>
-        <div class='user-course-nocourse' v-show='findGuide'>
+      <div class="payment-detail" v-show='activeTab'>
+        <ul>
+          <li v-for='(item, index) in RecordList' :key="index">
+            <div class="detail-left">
+              <p>{{ item.desc['title'] }}</p>
+              <p>{{ item.desc['describle'] }}</p>
+              <p>{{ item['trade_date'] }}</p>
+            </div>
+            <div class="detail-right" :class="{'spending': item.money <= 0}">
+              <span>
+                <em v-show="item.money > 0">+</em>{{ item.money }}
+              </span>
+            </div>
+          </li>
+        </ul>
+        <div class="up-all" v-if="record.length>0">
+          <div class="up-all-content" v-if="record.length>5">
+            <a @click="loadMoreRecord()" v-text="isShowRecord?'全部展开':'收起'"></a>
+            <i v-show="isShowRecord"></i>
+            <i class="active" v-show="isShowRecord === false"></i>
+          </div>
+          <div v-else>
+            <span>已经是全部内容了</span>
+          </div>
+        </div>
+        <div class="no-user-following" v-else>
           <dl>
             <dt></dt>
             <dd>
-              <p>放心！你的金币很安全</p>
-              <p>快到<router-link tag="span" :to="{path: '/app/find'}">“发现”</router-link>里订阅喜欢的课程收入第一笔奖金吧</p>
+              <p>你还没有消费记录哦!</p>
             </dd>
           </dl>
         </div>
-      </ol>
+      </div>
       <div class="user-wallet-purchase-icon" v-show='!activeTab'>
         <div class='user-title-purchase-item-wrap'>
           <div class='user-title-purchase-item' v-for='(item, index) in coinsProduct' :key="index">
-            <p>{{ item.product }}<span>金币</span></p>
-            <p>赠送</p>
-            <p>{{ item.gave_coins }} 金币</p>
-            <p @click='purchaseIconPay(item.product_id)'>支付:<span>￥{{ item.total_money }}</span></p>
+            <div class="product">
+              <div class="purchase">
+                <p><span>¥</span>{{ item.total_money }}</p>
+                <p>/ {{ item.product }}金币</p>
+              </div>
+              <div class="gave">
+                <p>赠送</p>
+                <p>{{ item.gave_coins }}</p>
+              </div>
+            </div>
+            <div class="go-pay">
+              <a @click='purchaseIconPay(item)'>立即购买</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div></div>
-    <pay-alert ref="payAlert"></pay-alert>
   </section>
 </template>
 
@@ -61,16 +74,15 @@
 import LogCollect from '../../../tool/logCollect'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import $ from 'jquery'
-
-import PayAlert from './userPayAlert.vue'
+import cookie from '../../../tool/cookie'
+import Bus from '../../../bus.js'
 
 export default {
-  components: {
-    PayAlert
-  },
   data () {
     return {
-      activeTab: false
+      isShowRecord: true,
+      activeTab: false,
+      type: false
     }
   },
   mounted () {
@@ -81,39 +93,6 @@ export default {
     var _memberType = ui.member_info.member_type
     var _entryPage = this.$router.currentRoute.fullPath
     LogCollect.payCoinEnter(_memberType, _entryPage)
-  },
-  methods: {
-    ...mapMutations({
-      updatePurchaseIconPay: 'user/updatePurchaseIconPay'
-    }),
-    ...mapActions({
-      getTradeRecord: 'user/getTradeRecord',
-      createAliWebOrder: 'user/createAliWebOrder'
-    }),
-    close () {
-    },
-    purchaseIconPay (productId) {
-      this.createAliWebOrder(productId)
-      this.updatePurchaseIconPay(true)
-      this.$refs['payAlert'].$emit('isShowPayAlert', true)
-    },
-    swapVipTab () {
-      this.activeTab = true
-      setTimeout(() => {
-        let height = $('.user-wallet-wrap').height()
-        $('.user-wrap').css('height', height + 30 + 'px')
-      }, 100)
-    },
-    swapVipTab2 () {
-      this.activeTab = false
-      setTimeout(() => {
-        let height = $('.user-wallet-wrap').height()
-        $('.user-wrap').css('height', height + 'px')
-      }, 100)
-    },
-    loadMore () {
-      this.getTradeRecord()
-    }
   },
   computed: {
     ...mapState({
@@ -129,52 +108,113 @@ export default {
       } else {
         return true
       }
+    },
+    RecordList () {
+      var obj = this.record
+      if (Object.keys(obj).length > 0) {
+        if (this.isShowRecord) {
+          return this.record.slice(0, 5)
+        } else {
+          return this.record
+        }
+      }
+      return []
+    }
+  },
+  methods: {
+    ...mapMutations({
+      updatePurchaseIconPay: 'user/updatePurchaseIconPay'
+    }),
+    ...mapActions({
+      getTradeRecord: 'user/getTradeRecord',
+      createAliWebOrder: 'user/createAliWebOrder'
+    }),
+    close () {
+    },
+    // 立即购买
+    purchaseIconPay (productItem) {
+      let userId = cookie.getCookie('user_id')
+      if (!userId) {
+        Bus.$emit('showGoLoginBox')
+        return false
+      }
+      console.log('购买的金币明细', productItem)
+      Bus.$emit('showBuyMoneyBox', productItem, this.type)
+    },
+    // 收支明细样式
+    swapVipTab () {
+      this.activeTab = true
+      setTimeout(() => {
+        let height = $('.user-wallet-wrap').height()
+        $('.user-wrap').css('min-height', height + 50 + 'px')
+      }, 100)
+    },
+    // 金币充值样式
+    swapVipTab2 () {
+      this.activeTab = false
+      setTimeout(() => {
+        let height = $('.user-wallet-wrap').height()
+        $('.user-wrap').css('height', height + 'px')
+      }, 100)
+    },
+    // loadMore () {
+    //   this.getTradeRecord()
+    // },
+    // 张开收支明细
+    loadMoreRecord () {
+      this.isShowRecord = !this.isShowRecord
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .user-wallet-wrap {
   width: 100%;
+  // margin-top: 90px;
 }
 .user-wallet-top {
   width: 100%;
-  height: 147px;
+  // height: 100px;
   background: #fff;
-  border-radius: 5px;
-}
-
-.user-wallet-wrap .userVip-top-logo {
-  background-image: url(../../../../static/images/learn/learn-user-jinbi32.svg);
-  background-size: contain;
-  width: 128px;
-  margin: 0 35px 0 34px;
-  float: left;
-  height: 100%;
-  background-position: 50%;
-  background-repeat: no-repeat;
+  border-radius: 5px 5px 0 0;
 }
 
 .user-wallet-wrap .userVip-top-tips {
-  width: 214px;
-  padding: 45px 18px;
-  padding-left: 0;
-  float: left;
-  height: 100%;
+  padding: 0px 55px 0px 25px;
+  line-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  span {
+    font-size:20px;
+    font-family:PingFangSC-Semibold;
+    font-weight:600;
+    color:rgba(68,68,68,1);
+  }
+  p {
+    position: relative;
+    height: 100px;
+    line-height: 100px;
+    span {
+      font-size:40px;
+      font-family:DINCondensed-Bold;
+      font-weight:bold;
+      vertical-align: -webkit-baseline-middle;
+      color:rgba(51,51,51,1);
+    }
+    i {
+      display: inline-block;
+      width: 38px;
+      height: 44px;
+      background: url('../../../../static/images/userInfo/purse.svg') no-repeat center;
+      background-size: cover;
+      vertical-align: middle;
+      margin-right: 16px;
+    }
+  }
 }
 
-.user-wallet-wrap .userVip-top-tips p {
-  text-align: left;
-  color: #4a4a4a;
-}
-.user-wallet-wrap .userVip-top-tips p:nth-of-type(1) {
-  font-size: 20px;
-}
-.user-wallet-wrap .userVip-top-tips p:nth-of-type(2) {
-  color: #f49a3a;
-  font-size: 25px;
-}
 .user-wallet-wrap .userVip-top-btns p {
   margin-top: 24px;
   width: 230px;
@@ -182,39 +222,49 @@ export default {
 
 .user-wallet-bottom {
   width: 100%;
-  border-radius: 5px;
+  border-radius: 0 0 5px 5px;
   background: #fff;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .userVip-bottom-nav {
   width: 100%;
-  height: 39px;
-  line-height: 39px;
+  height: 52px;
   text-align: center;
   font-size: 16px;
+  font-weight: 500;
   color: #6d6d6d;
   border-bottom: 1px solid #ededed;
   position: relative;
+  padding-left: 25px;
 }
-
-.userVip-bottom-nav p {
-  width: 50%;
+.userVip-bottom-nav a {
+  display: inline-block;
   float: left;
-  cursor: pointer;
-  font-size: 16px;
+  height: 52px;
+  font-size:16px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:#3C5B6F;
+  text-align: center;
+  margin-right: 50px;
+  // border-right: 1px solid #EEF2F3;
+  line-height: 60px;
+  border-bottom: 3px solid transparent;
+  transition: none;
+}
+.userVip-bottom-nav a:last-child {
+  border-right: 0;
+}
+.userVip-bottom-nav a:hover {
+  color: #2A9FE4;
+}
+.userVip-bottom-nav a.active {
+  color: #0581D1;
+  font-size: 18px;
+  border-bottom: 3px solid #2A9FE4;
 }
 
-.user-wallet-bottom-title {
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  color: #fff;
-  font-size: 16px;
-  background-color: #66b8e0;
-  border-radius: 5px 5px 0 0;
-}
 .user-wallet-bottom ol {
   padding: 0 27px;
 }
@@ -348,11 +398,185 @@ export default {
 .user-wallet-bottom ol > li span.fu {
   color: #7ed321;
 }
+
+.payment-detail {
+  width: 100%;
+  background: #fff;
+  margin-bottom: 50px;
+  ul {
+    padding: 25px 55px 46px;
+    li {
+      padding: 15px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #E6EBEE;
+      .detail-left {
+        font-size:14px;
+        font-family:PingFang-SC-Regular;
+        font-weight:400;
+        color:rgba(153,153,153,1);
+        p:nth-child(1) {
+          font-size:14px;
+          font-family:PingFang-SC-Medium;
+          font-weight:500;
+          color:rgba(68,68,68,1);
+        }
+        p:nth-child(2) {
+          padding: 1px 0 5px;
+        }
+      }
+      .detail-right {
+        font-size:18px;
+        font-family:PingFang-SC-Bold;
+        font-weight:bold;
+        color:rgba(60,91,111,1);
+      }
+      .spending {
+        color:rgba(42,159,228,1);
+      }
+    }
+    li:last-child {
+      border-bottom: none;
+    }
+  }
+  .up-all {
+    width: 100%;
+    background: rgba(221, 221, 221, .1);
+    text-align: center;
+    line-height: 42px;
+    font-size:14px;
+    font-family:PingFangSC-Semibold;
+    font-weight:600;
+    color:rgba(42,159,228,1);
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    i {
+      display: inline-block;
+      width: 10px;
+      height: 6px;
+      background: url('../../../../static/images/upAll.svg') no-repeat center;
+      background-size: cover;
+      margin-left: 10px;
+    }
+    .active {
+      display: inline-block;
+      width: 10px;
+      height: 6px;
+      background: url('../../../../static/images/upAllActive.svg') no-repeat center;
+      background-size: cover;
+      margin-left: 10px;
+    }
+    .up-all-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .course-related {
+      width: 100%;
+      min-height: 445px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      i {
+        display: inline-block;
+        width: 145px;
+        height: 82px;
+        background-image: url('../../../../static/images/discovery/language-related.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+      }
+      span {
+        padding-top: 18px;
+        font-size:16px;
+        font-family:PingFang-SC-Medium;
+        font-weight:500;
+        color:rgba(200,212,219,1);
+        line-height:22px;
+      }
+    }
+  }
+}
+
 .user-wallet-purchase-icon {
   width: 100%;
-  height: 312px;
-  border-radius: 4px;
-  background-color: #ffffff;
+  .user-title-purchase-item-wrap {
+    width: 100%;
+    padding: 54px 38px 70px;
+    display: flex;
+    justify-content: space-between;
+    .user-title-purchase-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      width: 190px;
+      height: 308px;
+      border-radius:5px;
+      border:1px solid rgba(236,240,243,1);
+      &:hover {
+        box-shadow: 0 0 26px 0 rgba(187, 187, 187, 0.5);
+        -webkit-transition: all 0.3s ease-in-out;
+        -moz-transition: all 0.3s ease-in-out;
+        -ms-transition: all 0.3s ease-in-out;
+        -o-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+      }
+      .product {
+        padding: 36px 15px;
+        text-align: center;
+        p {
+          font-size:14px;
+          font-family:PingFang-SC-Medium;
+          font-weight:500;
+          color:rgba(126,146,159,1);
+        }
+        .purchase {
+          padding-bottom: 43px;
+          border-bottom: 1px solid #F5F5F5FF;
+          p:nth-child(1) {
+            font-size:36px;
+            font-family:PTSans-CaptionBold;
+            font-weight:normal;
+            color:rgba(93,155,4,1);
+            span {
+              font-size:22px;
+              font-family:PingFang-SC-Medium;
+              font-weight:500;
+              color:rgba(127,201,97,1);
+              padding-right: 4px;
+            }
+          }
+        }
+        .gave {
+          padding-top: 25px;
+          p:nth-child(2) {
+            font-size: 22px;
+          }
+        }
+      }
+      .go-pay {
+        text-align: center;
+        width: 190px;
+        font-size:16px;
+        font-family:PingFang-SC-Medium;
+        font-weight:500;
+        color:rgba(255,255,255,1);
+        background: #7FC961FF;
+        border-radius: 0 0 5px 5px;
+        a {
+          display: inline-block;
+          padding: 14px 0;
+        }
+      }
+    }
+  }
 }
 .user-wallet-purchase-icon .user-close {
   width: 19.2px;
@@ -382,78 +606,7 @@ export default {
   background: #fff;
   padding: 26px;
 }
-.user-title-purchase-item {
-  width: 133px;
-  height: 230px;
-  background-color: #ffffff;
-  border: solid 1px #7bc16b;
-  float: left;
-  margin-right: 21px;
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
-}
-.user-title-purchase-item:hover {
-  box-shadow: 0 0 26px 0 rgba(187, 187, 187, 0.5);
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
-}
-.user-title-purchase-item:nth-last-of-type(1) {
-  margin-right: 0;
-}
-.user-title-purchase-item-wrap {
-  padding: 38px 26px;
-}
-.user-title-purchase-item p {
-  margin-top: 20px;
-  text-align: center;
-}
-.user-title-purchase-item p:nth-of-type(1) {
-  width: 100%;
-  height: 84px;
-  background-color: #7bc16b;
-  color: #fff;
-  font-size: 34px;
-  font-weight: bolder;
-  padding-top: 20px;
-}
-.user-title-purchase-item p:nth-of-type(1) span {
-  font-size: 16px;
-  position: relative;
-  top: 4px;
-  left: 2px;
-}
-.user-title-purchase-item p:nth-of-type(2) {
-  font-size: 12px;
-  color: #9b9b9b;
-}
-.user-title-purchase-item p:nth-of-type(3) {
-  font-size: 14px;
-  color: #fec62e;
-  margin-top: 0;
-  font-weight: bold;
-}
-.user-title-purchase-item p:nth-of-type(4) {
-  width: 110px;
-  height: 30px;
-  margin: 0 auto;
-  line-height: 30px;
-  border-radius: 24.5px;
-  background-color: #7bc16b;
-  text-align: center;
-  color: #fff;
-  font-size: 14px;
-  margin-top: 20px;
-  cursor: pointer;
-}
-.user-title-purchase-item p:nth-of-type(4):hover {
-  background-color: #6ab359;
-}
+
 .user-wallet-bottom .userVip-bottom-nav p.active {
   color: #0e8abe;
   border-bottom: 4px solid #0e8abe;
@@ -529,5 +682,43 @@ export default {
   -ms-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   -webkit-animation: loadRotate 1s linear infinite;
+}
+.no-user-following {
+  margin-top: 16px;
+  width: 100%;
+  /* height: 176px; */
+  min-height: 400px;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+.no-user-following dl {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.no-user-following dl dt {
+  width: 144px;
+  height: 81px;
+  background-image: url('../../../../static/images/userInfo/follower.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.no-user-following dl dd {
+  /* width: 70%;
+  height: 100%; */
+  text-align: center;
+  padding: 20px 0 0;
+  font-size: 18px;
+}
+.no-user-following dl dd p {
+  font-size:16px;
+  font-family:PingFang-SC-Medium;
+  font-weight:500;
+  color:rgba(200,212,219,1);
+  line-height:22px;
 }
 </style>

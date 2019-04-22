@@ -35,11 +35,10 @@
             <i></i>
             <span>加入VIP，畅听更多"会员免费"课程！</span>
           </div>
-          <!-- :to="{path: '/app/user/vip'}"  -->
-          <a @click="knowVip()" class="right">
+          <router-link :to="{path: '/app/vip-home'}" class="right">
             了解会员
             <i></i>
-          </a>
+          </router-link>
         </div>
       </div>
     </div>
@@ -71,9 +70,19 @@ export default {
     Bus.$on('showBuyCoinsRadio', (radio) => {
       console.log('当前要购买的金币radio', radio)
       this.itemRadio = radio
-      let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-      if (userInfo.coins < radio.money) {
-        Bus.$emit('showUserCoins', userInfo.coins, radio.money)
+      console.log('user.coins', this.userInfo.coins)
+      if (this.userInfo.coins < radio.money) {
+        let obj = {
+          className: 'warnIcon',
+          buttonClass: 'buttonClass',
+          description: `哦!你的金币余额不足啦！<br/>获取此课程需要${radio.money}金币!<br/> 金币余额: ${this.userInfo.coins}`,
+          btnCancel: '取消',
+          btnDesc: '去充值',
+          isLink: true,
+          hyperLink: '/app/user/wallet'
+        }
+        Bus.$emit('showCommonModal', obj)
+        // Bus.$emit('showUserCoins', this.userInfo.coins, radio.money)
       } else {
         this.showBuyCoinsBox = true
       }
@@ -97,32 +106,24 @@ export default {
   },
   methods: {
     ...mapActions({
-      postPurchaseCourse: 'course/postPurchaseCourse' // 金币订阅课程
+      postPurchaseCourse: 'course/postPurchaseCourse', // 金币订阅课程
+      getUserInfo: 'getUserInfo'
     }),
     // 关闭按钮
     closeButton () {
       this.showBuyCoinsBox = false
     },
-    knowVip () {
-      this.showBuyCoinsBox = false
-      this.$router.push({path: '/app/user/vip'})
-    },
-    // 初始化订阅的状态
-    async initSubscibe (radioDetail) {
-      await this.postPurchaseCourse({code: radioDetail.course_info.code}).then(res => {
-        console.log('订阅课程返回', res)
-        // purchased_state状态值显示隐藏 0未购买 1已购买 隐藏 2购买已删除
-        this.subscibenoInfo.purchased_state = 1
-      })
-    },
     // 立即订阅
     clickPay () {
       this.contentShow = false
-      this.successShow = true
       setTimeout(() => {
-        this.successShow = false
         this.showBuyCoinsBox = false
-        this.initSubscibe(this.itemRadioDetail)
+        this.postPurchaseCourse({code: this.itemRadioDetail.course_info.code}).then(res => {
+          console.log('订阅课程返回', res)
+          // purchased_state状态值显示隐藏 0未购买 1已购买 隐藏 2购买已删除
+          this.subscibenoInfo.purchased_state = 1
+          this.getUserInfo()
+        })
         this.contentShow = true
       }, 1000)
     }

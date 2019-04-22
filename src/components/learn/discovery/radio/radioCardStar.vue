@@ -226,6 +226,7 @@ export default {
               height:36px;
               border-radius:6px;
               margin-right: 6px;
+              object-fit: cover;
             }
             span {
               display: inline-block;

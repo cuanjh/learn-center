@@ -15,7 +15,35 @@
             </div>
           </div>
           <!-- 价钱 -->
-           <div class="member">
+          <div class="member">
+            <!-- 免费课程 -->
+            <div class="money-nopay" v-if="courseInfo.money == 0">
+              <span v-text="$t('free')"></span>
+            </div>
+            <!-- 花钱 -->
+            <div class="money-pay" v-else>
+              <!-- 人民币 -->
+              <div class="cny-free" v-if="courseInfo.money_type == 'CNY'">
+                <p class="cny" v-if="courseInfo.free_for_member == 1 || courseInfo.free_for_member == true">
+                  <span v-text="'￥' + courseInfo.money"></span>
+                  <span>元/年</span>
+                  <span>会员免费</span>
+                </p>
+                <p class="cny" v-else>
+                  <span v-text="'￥' + courseInfo.money"></span>
+                  <span>元/年</span>
+                </p>
+              </div>
+              <div class="coins-free" v-else>
+                <!-- 金币对于会员都是免费的 -->
+                <p class="coins">
+                  <span v-text="courseInfo.money"></span> {{$t('coins')}}
+                  <span>会员免费</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="member" v-show="false">
              <!-- 免费课程 -->
             <div class="money-nopay" v-if="courseInfo.money == 0">
               <span v-text="$t('free')"></span>
@@ -75,7 +103,7 @@
                   <i class="subscibe"></i>
                   <span>已订阅</span>
                 </p>
-                <p class="have-no-course" v-else @click="subscibe()">
+                <p class="have-no-course" @click="subscibe()" v-else>
                   <i class="subscibeno"></i>
                   <span>订阅</span>
                 </p>
@@ -411,9 +439,8 @@ export default {
     },
     // 跳转vip
     toVip () {
-      this.$router.push({
-        path: '/app/user/vip'
-      })
+      // this.$router.push({ path: '/app/user/vip' })
+      this.$router.push({ path: '/app/vip-home' })
     },
     // 处理radio的时间
     toParseTime (data) {
@@ -495,7 +522,7 @@ export default {
             if (card.list_order > 3) {
               if (radio.money_type === 'CNY') {
                 // 人民币提示
-                Bus.$emit('showBuyRadio', this.radioDetail)
+                Bus.$emit('showBuyMoneyBox', this.radioDetail)
               } else if (radio.money_type === 'coins') {
                 // 金币提示
                 Bus.$emit('showBuyCoinsRadio', radio)
@@ -508,13 +535,15 @@ export default {
               if (card.list_order > 3) {
                 if (radio.money_type === 'CNY') {
                   // 人民币提示
-                  Bus.$emit('showBuyRadio', this.radioDetail)
-                } else if (radio.money_type === 'coins') {
-                  // 金币提示
-                  Bus.$emit('showBuyCoinsRadio', radio)
-                  Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                  Bus.$emit('showBuyMoneyBox', this.radioDetail)
+                  return false
                 }
-                return false
+                // else if (radio.money_type === 'coins') {
+                //   // 金币提示
+                //   Bus.$emit('showBuyCoinsRadio', radio)
+                //   Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+                // }
+                // return false
               }
             }
           }
@@ -550,20 +579,29 @@ export default {
         Bus.$emit('showGoLoginBox')
         return
       }
-      if (this.subscibenoInfo.purchased_state !== 1 &&
-          this.subscibenoInfo.purchased_state !== 4 &&
-          this.subscibenoInfo.purchased_state !== 2) { // 没订阅
-        if (parseInt(radio.money) !== 0) { // 收费
-          if (this.isVip !== 1) { // 不是会员
+      if (parseInt(radio.money) !== 0) { // 收费
+        if (this.isVip !== 1) { // 不是会员
+          if (radio.money_type === 'CNY') {
+            // 人民币提示
+            Bus.$emit('showBuyMoneyBox', this.radioDetail)
+            return false
+          } else if (radio.money_type === 'coins') {
+            // 金币提示
+            Bus.$emit('showBuyCoinsRadio', radio)
+            Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+            return false
+          }
+        } else { // 是会员
+          if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
             if (radio.money_type === 'CNY') {
               // 人民币提示
-              Bus.$emit('showBuyRadio', this.radioDetail)
+              Bus.$emit('showBuyMoneyBox', this.radioDetail)
               return false
             } else if (radio.money_type === 'coins') {
-              // 金币提示
-              Bus.$emit('showBuyCoinsRadio', radio)
-              Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
-              return false
+              // // 金币提示
+              // Bus.$emit('showBuyCoinsRadio', radio)
+              // Bus.$emit('hiddenBuyCoinsBox', this.radioDetail)
+              // return false
             }
           } else { // 是会员
             if (radio.free_for_member === 0 || radio.free_for_member === false) { // 会员不免费
@@ -584,13 +622,20 @@ export default {
       this.initSubscibe(radio)
     },
     // 初始化订阅的状态
-    async initSubscibe (radio) {
-      await this.postPurchaseCourse({code: radio.code}).then(res => {
+    initSubscibe (radio) {
+      this.postPurchaseCourse({code: radio.code}).then(res => {
         console.log('订阅课程返回', res)
         if (res.success) {
           // purchased_state状态值显示隐藏 0未购买 1已购买 隐藏 2购买已删除
           this.subscibenoInfo.purchased_state = 1
-          Bus.$emit('shareCardContent', this.courseInfo)
+          let obj = {
+            className: 'okIcon',
+            description: '订阅成功',
+            btnDesc: '确定',
+            isLink: false
+          }
+
+          Bus.$emit('showCommonModal', obj)
         }
       })
     },
@@ -730,91 +775,155 @@ export default {
 }
 /* 收费 */
 /* 会员免费 */
-.member .money-pay .vip-free {
+.member .money-pay {
   margin-top: 30px;
+  .cny-free {
+    p {
+      display: flex;
+      align-items: center;
+      font-size:14px;
+      font-family:PingFangSC-Regular;
+      font-weight:400;
+      color:rgba(153,153,153,1);
+      span:nth-child(1) {
+        font-size: 24px;
+        font-family: PingFangSC-Semibold;
+        font-weight: 600;
+        color: #ff8331;
+        margin-right: 5px;
+      }
+      span:nth-child(3) {
+        // cursor: pointer;
+        font-size:12px;
+        font-family:PingFangSC-Semibold;
+        font-weight:600;
+        color:rgba(245,166,35,1);
+        padding: 0 10px;
+        border-radius:12px;
+        border:1px solid;
+        border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+        text-align: center;
+        margin: 0 10px;
+      }
+    }
+  }
+  .coins-free {
+    p {
+      display: flex;
+      align-items: center;
+      font-size:14px;
+      font-family:PingFangSC-Regular;
+      font-weight:400;
+      color:rgba(153,153,153,1);
+      span:nth-child(1) {
+        font-size: 24px;
+        font-family: PingFangSC-Semibold;
+        font-weight: 600;
+        color: #ff8331;
+        margin-right: 5px;
+      }
+      span:nth-child(2) {
+        // cursor: pointer;
+        font-size:12px;
+        font-family:PingFangSC-Semibold;
+        font-weight:600;
+        color:rgba(245,166,35,1);
+        padding: 0 10px;
+        border-radius:12px;
+        border:1px solid;
+        border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+        text-align: center;
+        margin: 0 10px;
+      }
+    }
+  }
 }
-.member .money-pay .vip-free .cny {
-  display: flex;
-    align-items: center;
-}
-.member .money-pay .vip-free .cny span {
-  font-size:14px;
-  font-family:PingFangSC-Regular;
-  font-weight:400;
-  color:rgba(153,153,153,1);
-}
-.member .money-pay .vip-free .cny span:nth-child(1) {
-  font-size:24px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(255,131,49,1);
-  margin-right: 5px;
-}
-.member .money-pay .vip-free  .cny span:nth-child(3) {
-  cursor: pointer;
-  font-size:12px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(245,166,35,1);
-  padding: 0 10px;
-  border-radius:12px;
-  border:1px solid;
-  border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
-  text-align: center;
-  margin: 0 10px;
-}
-.member .money-pay .vip-free .coins {
-  font-size:14px;
-  font-family:PingFangSC-Regular;
-  font-weight:400;
-  color:rgba(153,153,153,1);
-  padding: 0 5px;
-  display: flex;
-  align-items: center;
-}
-.member .money-pay .vip-free  .coins span:nth-child(2) {
-  cursor: pointer;
-  font-size:12px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(245,166,35,1);
-  padding: 0 10px;
-  border-radius:12px;
-  border:1px solid;
-  border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
-  text-align: center;
-  margin: 0 10px;
-}
-/* 会员不免费 */
-.member .money-pay .money {
-  margin-top: 30px;
-  font-size:14px;
-  font-family:PingFangSC-Regular;
-  font-weight:400;
-  color:rgba(153,153,153,1);
-}
-.member .money-pay .money .cny {
-  display: flex;
-  align-items: center;
-}
-.member .money-pay .money .cny span:nth-child(1) {
-  font-size:24px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(255,131,49,1);
-  margin-right: 5px;
-}
-.member .money-pay .money .coins {
-  display: flex;
-  align-items: center;
-}
-.member .money-pay .money .coins span {
-  font-size:24px;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(255,131,49,1);
-  margin-right: 5px;
-}
+/* 会员免费 */
+// .member .money-pay .vip-free {
+//   margin-top: 30px;
+// }
+// .member .money-pay .vip-free .cny {
+//   display: flex;
+//     align-items: center;
+// }
+// .member .money-pay .vip-free .cny span {
+//   font-size:14px;
+//   font-family:PingFangSC-Regular;
+//   font-weight:400;
+//   color:rgba(153,153,153,1);
+// }
+// .member .money-pay .vip-free .cny span:nth-child(1) {
+//   font-size:24px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(255,131,49,1);
+//   margin-right: 5px;
+// }
+// .member .money-pay .vip-free  .cny span:nth-child(3) {
+//   cursor: pointer;
+//   font-size:12px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(245,166,35,1);
+//   padding: 0 10px;
+//   border-radius:12px;
+//   border:1px solid;
+//   border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+//   text-align: center;
+//   margin: 0 10px;
+// }
+// .member .money-pay .vip-free .coins {
+//   font-size:14px;
+//   font-family:PingFangSC-Regular;
+//   font-weight:400;
+//   color:rgba(153,153,153,1);
+//   padding: 0 5px;
+//   display: flex;
+//   align-items: center;
+// }
+// .member .money-pay .vip-free  .coins span:nth-child(2) {
+//   cursor: pointer;
+//   font-size:12px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(245,166,35,1);
+//   padding: 0 10px;
+//   border-radius:12px;
+//   border:1px solid;
+//   border-color:linear-gradient(270deg, rgba(250,217,97,1), rgba(247,107,28,1)) 1 1;
+//   text-align: center;
+//   margin: 0 10px;
+// }
+// /* 会员不免费 */
+// .member .money-pay .money {
+//   margin-top: 30px;
+//   font-size:14px;
+//   font-family:PingFangSC-Regular;
+//   font-weight:400;
+//   color:rgba(153,153,153,1);
+// }
+// .member .money-pay .money .cny {
+//   display: flex;
+//   align-items: center;
+// }
+// .member .money-pay .money .cny span:nth-child(1) {
+//   font-size:24px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(255,131,49,1);
+//   margin-right: 5px;
+// }
+// .member .money-pay .money .coins {
+//   display: flex;
+//   align-items: center;
+// }
+// .member .money-pay .money .coins span {
+//   font-size:24px;
+//   font-family:PingFangSC-Semibold;
+//   font-weight:600;
+//   color:rgba(255,131,49,1);
+//   margin-right: 5px;
+// }
 
 .course .subscription {
   margin-top: 27px;

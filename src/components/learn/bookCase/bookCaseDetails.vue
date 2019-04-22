@@ -341,7 +341,7 @@ export default {
           description: '升级会员免费订阅所有官方课程',
           btnDesc: '升级会员',
           isLink: true,
-          hyperLink: '/app/user/vip'
+          hyperLink: '/app/vip-home'
         }
         Bus.$emit('showCommonModal', obj)
       } else {

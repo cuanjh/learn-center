@@ -45,7 +45,8 @@ export default {
       this.showUserCoinsBox = false
     },
     gotoVip () {
-      this.$router.push({ path: '/app/user/vip' })
+      // this.$router.push({ path: '/app/user/vip' })
+      this.$router.push({ path: '/app/vip-home' })
       this.showUserCoinsBox = false
     },
     close () {

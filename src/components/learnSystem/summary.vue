@@ -374,6 +374,11 @@ export default {
             line-height: 20px;
             font-size: 16px;
             font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 240px;
+            display: inline-block;
           };
         };
         p:nth-of-type(2) {

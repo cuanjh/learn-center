@@ -1,21 +1,48 @@
 <template>
-  <div class="userdoc-item">
-    <div class='userdoc-item-top'>
-      <div class='user-doc-item-img'>
-        <img :src="'https://course-assets1.talkmate.com/course/covers/'+archive.course_code+'-2x.webp?imageView2/0/w/400/h/400/format/jpg'">
-        <div class='user-doc-item-tips'>
-          <p>
-            <span>全球说《 {{archive.course_name[languagueHander]}} 》</span>
-            <span><em>{{ levelDes[archive.current_chapter_code.split('-')[2]] }}</em></span>
-          </p>
-          <p v-text="archive['complete_rate']>=0?archive['complete_rate']*100+'%':'暂无数据' "></p>
+  <div class='userdoc-item-wrap'>
+    <div class="userdoc-item">
+      <div class='userdoc-item-left'>
+        <div class="userdoc-item-left-content">
+          <div class="userdoc-item-top">
+            <div class="img">
+              <img :src="archive.courseInfo ? archive.courseInfo.flag : ''" alt="">
+            </div>
+            <div class="course-text">
+              <p>
+                <span>{{archive.courseInfo ? archive.courseInfo.name : ''}}</span>
+              </p>
+               <p>
+                <span>{{ archive.courseInfo ? levelArr[0] + ' ~ ' + levelArr[archive.courseInfo.level_num - 1] : '' }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="userdoc-item-bottom" v-if="archive">
+            <div class="userdoc-item-bottom-left">
+              <canvas-circle :percent="completeRate ? completeRate : 0" ></canvas-circle>
+              <p class="text"><span>课程完成度</span></p>
+            </div>
+            <div class="userdoc-item-bottom-right">
+              <div class="right-content">
+                <p>
+                  <span>{{archive.learnInfo ? archive.learnInfo.words_num : 0}}<em>个</em></span>
+                  <span>累计词汇量</span>
+                </p>
+                <p>
+                  <span>{{archive.learnInfo ? Math.round(archive.learnInfo.correct_rate * 100) : 0}}<em>%</em></span>
+                  <span>正确率</span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <echart4-user-doc :echartdata="archive" class='userdoc-item-echart'></echart4-user-doc>
-    </div>
-    <div class="userdoc-item-bottom">
-      <p><span>正确率</span><span v-text="archive['correct_rate']>0?archive['correct_rate']*100+'%':'暂无数据'"></span></p>
-      <p><span>累计学习时长</span><span>{{ archive['learn_time']>0?parseInt(archive['learn_time']/60)+'分钟':'暂无数据' }}</span></p>
+      <!-- 右边的思维图 -->
+      <div class="userdoc-item-right" v-if="archive">
+        <div class="userdoc-item-right-content">
+          <p>语言能力模型</p>
+          <echart4-user-doc :echartdata="archive.learnModel" class='userdoc-item-echart'></echart4-user-doc>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -23,110 +50,154 @@
 <script>
 import { mapState } from 'vuex'
 import Echart4UserDoc from './echart4UserDoc.vue'
+import CanvasCircle from './canvasCircle.vue'
+
 export default {
   props: ['archive'],
+  data () {
+    return {
+      levelArr: ['初级 A1', '初级 A2', '中级 B1', '中级 B2', '高级 C1', '高级 C2']
+      // cicleList: {ratio: this.archive['complete_rate'] >= 0 ? this.archive['complete_rate'] * 100 : '0'}
+    }
+  },
+  created () {
+  },
   components: {
-    Echart4UserDoc
+    Echart4UserDoc,
+    CanvasCircle
   },
   mounted () {
-
+    console.log('completeRate', this.completeRate)
   },
   computed: {
     ...mapState({
       levelDes: state => state.course.levelDes,
       languagueHander: state => state.course.languagueHander
-    })
+    }),
+    completeRate () {
+      console.log('===>', this.archive.learnInfo)
+      if (!this.archive.learnInfo) {
+        return 0
+      }
+      let rate = Math.round((this.archive.learnInfo.lesson_finished_num / this.archive.learnInfo.lesson_num) * 100)
+      console.log('rate', rate)
+      return rate
+    }
+  },
+  methods: {
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
 .userdoc-item {
-  margin-top: 20px;
-  background: #fff;
-}
-.userdoc-item:nth-of-type(1) {
-  margin-top: 0;
-}
-.userdoc-item-top {
-  height: 199.7px;
-  border-bottom: 1px solid #ededed;
-}
-.userdoc-item-top .user-doc-item-img {
-  margin: 20px;
-  position: relative;
-  width: 334px;
-  float: left;
-}
-
-.userdoc-item-top .user-doc-item-img img {
-  max-width: 100%;
-  height: auto;
-}
-
-.userdoc-item-top .user-doc-item-tips {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  color: #fff;
   width: 100%;
-  font-size: 16px;
-  height: 50px;
-  background: rgba(0, 61, 90, 0.8);
-  padding: 0 14px;
-}
-.userdoc-item-top .user-doc-item-tips p {
-  width: 30%;
-  float: left;
-}
-.userdoc-item-top .user-doc-item-tips p:nth-of-type(1) {
-  width: 70%;
-  line-height: 20px;
-  position: relative;
-  top: 5px;
-}
-.userdoc-item-top .user-doc-item-tips p:nth-of-type(2) {
-  font-size: 22px;
-  color: #f3993a;
-  height: 100%;
-  text-align: right;
-  line-height: 50px;
-}
-.userdoc-item-top .user-doc-item-tips p span {
-  display: block;
-}
-.userdoc-item-top .userdoc-item-echart {
-  float: left;
-  /*background: red;*/
-  width: 264px;
-  height: 166px;
-  margin: 20px 0 0px 0;
-}
-.userdoc-item-bottom {
-  width: 100%;
-}
-.userdoc-item-bottom p {
-  height: 59px;
-  line-height: 59px;
-  border-bottom: 1px solid #ededed;
-  margin: 0 31px;
-}
-.userdoc-item-bottom p:nth-last-of-type(1) {
-  border: none;
-}
-.userdoc-item-bottom p span {
-  display: inline-block;
-  width: 50%;
-  text-align: left;
-  font-size: 16px;
-  color: #949794;
-}
-.userdoc-item-bottom p span:nth-of-type(2) {
-  text-align: right;
-  color: #f3993a;
-}
-.user-course-nocourse dl dd p span:hover {
-  color: #fa6f50;
+  margin-bottom: 50px;
+  .userdoc-item-left {
+    display: inline-block;
+    width: 578px;
+    background: #ffffff;
+    border-radius: 0 0 0 5px;
+    .userdoc-item-left-content {
+      padding: 28px 25px 70px;
+      .userdoc-item-top {
+        width: 100%;
+        display: flex;
+        padding-bottom: 74px;
+        .img {
+          width: 62px;
+          height: 62px;
+          border-radius: 6px;
+          background: #C7EAFFFF;
+          margin-right: 10px;
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+            object-fit: cover;
+          }
+        }
+        .course-text {
+          p {
+            font-size:15px;
+            font-family:PingFang-SC-Medium;
+            font-weight:500;
+            color:rgba(153,153,153,1);
+          }
+          p:nth-child(1) {
+            padding: 4px 0 6px;
+            padding: 4px 0 6px;
+            font-size:18px;
+            font-family:PingFangSC-Semibold;
+            font-weight:600;
+            color:rgba(51,51,51,1);
+          }
+        }
+      }
+      .userdoc-item-bottom {
+        width: 100%;
+        .userdoc-item-bottom-left {
+          display: inline-block;
+          width: 282px;
+          .text {
+            font-size:14px;
+            font-family:PingFang-SC-Medium;
+            font-weight:500;
+            color:rgba(126,146,159,1);
+            text-align: center;
+            padding-top: 30px;
+          }
+        }
+        .userdoc-item-bottom-right {
+          display: inline-block;
+          width: 240px;
+          border-left: 1px solid #EAEAEAFF;
+          .right-content {
+            padding: 4px 0;
+            p {
+              text-align: center;
+              font-size:30px;
+              font-family:Helvetica;
+              color:rgba(23,23,23,1);
+              padding-bottom: 64px;
+              em {
+                font-size: 16px;
+                line-height: 42px;
+                padding-left: 10px;
+              }
+              span:nth-child(2) {
+                display: block;
+                font-size:14px;
+                font-family:PingFang-SC-Medium;
+                font-weight:500;
+                color:rgba(126,146,159,1);
+              }
+            }
+            p:last-child {
+              padding-bottom: 0px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .userdoc-item-right {
+    float:right;
+    width: 300px;
+    background: #ffffff;
+    border-radius: 0 0 5px 0;
+    .userdoc-item-right-content {
+      width: 100%;
+      height: 430px;
+      padding: 28px 25px 70px;
+      .userdoc-item-echart {
+        // float: left;
+        // background: red;
+        width: 100%;
+        height: 320px;
+        margin-top: 60px;
+      }
+    }
+  }
 }
 </style>

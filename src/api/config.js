@@ -34,6 +34,10 @@ export default {
   resetAnonymous: '/user/reset_password_anonymous', // 匿名账号重置
   unbindIdentity: '/user/unbind_identity', // 解除邮箱或者手机号绑定
   uploadUserPhoto: '/user/upload_user_photo', // 上传用户头像(需要登录)
+  upUserFollowerApi: '/relation/get_follower', // 用户中心粉丝列表接口
+  upUserFollowingApi: '/relation/get_following', // 用户中心关注人列表接口
+  userCourseListApi: '/studyv1/user/course/list', // 用户订阅课程列表接口
+  userArchiveApi: '/studyv1/learn_info/v2/archive', // 课程档案接口
   // 登录新的接口
 
   // 课程
@@ -151,7 +155,9 @@ export default {
   umUserInfoApi: '/umv1/user/info', // 获取用户信息接口
   umUpdateUserInfoApi: '/umv1/user/edit/info', // 修改用户信息
   umUserBindPhoneApi: '/umv1/user/sns/bind/phone', // 绑定手机号码
+  anonymousUserBindEmailApi: '/umv1/user/regist_by_email', // 匿名用户绑定邮箱
   umUserExistsPhoneApi: '/umv1/user/exists/phone', // 验证手机号是否存在接口
+  umUserExistsEmailApi: '/umv1/user/exists/email', // 验证邮箱是否存在接口
   umLangsListApi: '/umv1/langs/lists', // 语言列表接口
   umLangsStateApi: '/umv1/langs/state', // 语言设置状态接口
   umUserAnonyApi: '/umv1/user/anony' // 匿名登录

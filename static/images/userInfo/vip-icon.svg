@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="66px" height="59px" viewBox="0 0 66 59" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>会员</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="58.2754891%" x2="95.269274%" y2="46.6014793%" id="linearGradient-1">
+            <stop stop-color="#FFF3D5" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFECAB" stop-opacity="0.856742527" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#FFE000" offset="0%"></stop>
+            <stop stop-color="#FFBE00" offset="97.4191655%"></stop>
+        </linearGradient>
+        <linearGradient x1="45.047751%" y1="56.1957267%" x2="67.8513973%" y2="80.3054613%" id="linearGradient-3">
+            <stop stop-color="#FFDB3F" offset="0%"></stop>
+            <stop stop-color="#FFC42C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="个人学习中心" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="个人中心-钱包" transform="translate(-699.000000, -117.000000)">
+            <g id="分组-10" transform="translate(670.000000, 100.000000)">
+                <g id="分组" transform="translate(29.000000, 13.000000)">
+                    <polygon id="矩形" fill="url(#linearGradient-1)" transform="translate(34.450232, 32.954565) rotate(-135.000000) translate(-34.450232, -32.954565) " points="11.6047855 13.690225 45.4155157 9.27153679 47.7061821 10.3551343 50.76422 12.3584923 57.2956779 42.5097978 38.1426414 43.6871957 38.298175 53.5057808 11.6047855 56.6375934"></polygon>
+                    <polygon id="Fill-1" fill="url(#linearGradient-2)" points="33.054144 25.0896353 24.209591 11.5978871 15.1756458 25.0896353 3.04599655 17.0926304 8.73395135 36.3224819 24.209591 36.3224819 39.6852306 36.3224819 45.0662899 17.0926304"></polygon>
+                    <polygon id="Fill-1" fill="url(#linearGradient-3)" points="32.9447197 25.063948 24.1001666 11.5721997 8.624527 36.2967945 24.1001666 36.2967945"></polygon>
+                    <path d="M13.0383665,43.1069252 L35.0994325,43.1069252 C37.5339388,43.1069252 39.507496,41.133368 39.507496,38.6988617 L8.63030303,38.6988617 L8.63030303,38.6988617 C8.63030303,41.133368 10.6038603,43.1069252 13.0383665,43.1069252 Z" id="Fill-3" fill="#FFBE00"></path>
+                    <circle id="椭圆形" fill="#FFDE00" fill-rule="nonzero" cx="24.2267206" cy="8.63562753" r="3.67071525"></circle>
+                    <ellipse id="椭圆形-copy-3" fill="#FFDE00" fill-rule="nonzero" cx="2.24561404" cy="16.0335306" rx="2.24561404" ry="2.25890169"></ellipse>
+                    <ellipse id="椭圆形-copy-4" fill="#FFDE00" fill-rule="nonzero" cx="45.4736842" cy="16.0335306" rx="2.24561404" ry="2.25890169"></ellipse>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

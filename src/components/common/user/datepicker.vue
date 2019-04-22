@@ -6,6 +6,7 @@
 
 <script>
 import DatePicker from 'vue-datepicker2'
+import $ from 'jquery'
 export default {
   components: {
     DatePicker
@@ -75,8 +76,18 @@ export default {
       this.startTime = val
     })
   },
+  updated () {
+    this.detepickerResetCss()
+  },
   mounted () {
     // console.log('--date--' + this.value)
+  },
+  methods: {
+    detepickerResetCss () {
+      $('.multiselect__tags .multiselect__single').css({
+        'font-size': '14px'
+      })
+    }
   },
   watch: {
     startTime (newValue, oldValue) {

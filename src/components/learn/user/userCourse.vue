@@ -1,60 +1,83 @@
 <template>
   <section class='user-course-wrap' >
     <div class="user-course-nav">
-      <p :class="['user-course-wrap-title', {'active': selTab}]" @click="selTab = !selTab">官方课程</p>
-      <p :class="['user-course-wrap-title', {'active': !selTab}]" @click="selTab = !selTab">电台课程</p>
+      <a :class="['user-course-wrap-title', {'active': selTab}]" @click="selTab = !selTab">官方课程</a>
+      <a :class="['user-course-wrap-title', {'active': !selTab}]" @click="selTab = !selTab">电台课程</a>
     </div>
     <div class='user-course-item-wrap' v-show="selTab" :class="{ 'userifloading': judgeLoading  }">
-      <div class='user-course-item' v-for='(item, index) in courseRander' :key="item.code + index">
-        <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
-          <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
-          <ol>
-            <router-link tag="li" :to="{path: '/app/book-details/' + item.code}"><span>{{item.name[languagueHander]}}</span></router-link>
-            <li><span v-text="levelDes[item.currentLevel]"></span>-<span v-text="'课程' + (parseInt(item.currentUnit.replace('Unit', '')) * parseInt(item.currentChapter.replace('Chapter', '')))"></span></li>
-            <li><span :style="{ width: item['complateRate'] }"></span></li>
-            <span class='user-course-del-btn-tag' v-show='showIdx === index ? delBtn : false' @click='deleteCourse(item.code)'><i></i>删除课程</span>
-          </ol>
-          <div class="user-control">
-            <div class="user-control-btn" @mouseenter="mouseoverControl($event)">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <div class="user-control-sel" style="display:none">
-              <ul>
-                <!-- <li>置顶</li> -->
-                <li @click="deleteCourse(item.code)">取消订阅</li>
-              </ul>
-              <div class="triangle_border_down">
+      <div class="user-course-list">
+        <div class='user-course-item' v-for='(item, index) in showLangCourses' :key="item.course_code + index">
+          <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
+            <img @click="goToDetails(item.course_code)" :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
+            <ol>
+              <router-link tag="li" :to="{path: '/app/book-details/' + item.course_code}">
+                <span>{{item.name}}</span>
+              </router-link>
+              <li>
+                <span v-text="levelDes[item['current_chapter_code'].split('-')[2]]"></span> - <span v-text="'课程' + (parseInt(item['current_chapter_code'].split('-')[3].replace('Unit', '')) * parseInt(item['current_chapter_code'].split('-')[4].replace('Chapter', '')))"></span>
+              </li>
+              <li>
+                <span :style="{ width: (item['complete_rate'] * 100) + '%' }"></span>
+                <div class="progress-bg">
+                  <!-- <div class="progress" :style="{width: (curArchiveCourse['complete_rate'] ? curArchiveCourse['complete_rate']*100 : 0) +'%'}"></div> -->
+                </div>
+              </li>
+              <span class='user-course-del-btn-tag' v-show='showIdx === index ? delBtn : false' @click='deleteCourse(item.course_code)'><i></i>删除课程</span>
+            </ol>
+            <div class="user-control">
+              <div class="user-control-btn" @mouseenter="mouseoverControl($event)">
                 <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="user-control-sel" style="display:none">
+                <ul>
+                  <!-- <li>置顶</li> -->
+                  <li @click="deleteCourse(item.course_code)">
+                    <a>取消订阅</a>
+                  </li>
+                </ul>
+                <div class="triangle_border_down">
+                  <span></span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
+      <div class="up-all" v-if="!isShowCourse">
+        <div class="up-all-content" v-if="langCourses.length>5">
+          <a @click="loadMoreCourse()" v-text="showMoreCourse ? '收起' : '全部展开'"></a>
+          <i v-show="!showMoreCourse"></i>
+          <i class="active" v-show="showMoreCourse"></i>
+        </div>
+        <div v-else>
+          <span>已经是全部内容了</span>
+        </div>
+      </div>
       <div class='user-course-nocourse' v-show="isShowCourse">
         <dl>
           <dt></dt>
           <dd>
             <p>您还没有订阅的课程哦！</p>
-            <!-- <p>请到<span v-link="{path: '/v2/find'}">“发现”</span>里订阅您喜欢的课程！</p> -->
           </dd>
         </dl>
       </div>
     </div>
     <div class='user-radio-course-item-wrap' v-show="!selTab">
       <ul>
-        <li class='user-radio-course-item' v-for='(item, index) in radioCourses' :key="item.code + index">
+        <li class='user-radio-course-item' v-for='item in showRadioCourses' :key="item.course_code">
           <div class="user-radio-course-item-box" @mouseleave="mouseleaveControl($event)">
-            <img :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
+            <img @click="goToRadioDetail(item.course_code)" :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
             <div class="play">
               <i></i>
             </div>
             <ol>
-              <router-link tag="li" :to="{path: '/app/discovery/radio-detail/' + item.code}"><span>{{item.module_name}}</span></router-link>
+              <router-link tag="li" :to="{path: '/app/discovery/radio-detail/' + item.course_code}">
+                <a>{{item.name}}</a>
+              </router-link>
               <li>
-                <span>作者：{{item.author_info.nickname}}</span>
+                <span v-if="item.author">作者：{{item.author.nickname}}</span>
                 <span>
                   <i></i>
                   {{item.buy_num}}
@@ -70,8 +93,11 @@
               </div>
               <div class="user-control-sel" style="display:none">
                 <ul>
+                  <li>
+                    <router-link :to="{path: '/app/discovery/radio-detail/' + item.course_code}">电台分享</router-link>
+                  </li>
                   <!-- <li>置顶</li> -->
-                  <li @click="deleteCourse(item.code)">取消订阅</li>
+                  <li @click="deleteCourse(item.course_code)"><a>取消订阅</a></li>
                 </ul>
                 <div class="triangle_border_down">
                   <span></span>
@@ -81,11 +107,21 @@
           </div>
         </li>
       </ul>
+      <div class="up-all" v-if="!isShowRadioCourse">
+        <div class="up-all-content" v-if="radioCourses.length>5">
+          <a @click="loadMoreRadios()" v-text="showMoreRados?'收起':'全部展开'"></a>
+          <i v-show="!showMoreRados"></i>
+          <i class="active" v-show="showMoreRados"></i>
+        </div>
+        <div v-else>
+          <span>已经是全部内容了</span>
+        </div>
+      </div>
       <div class='user-course-nocourse' v-show="isShowRadioCourse">
         <dl>
           <dt></dt>
           <dd>
-            <p>您暂没有创建电台课程</p>
+            <p>你暂没有订阅电台课程</p>
           </dd>
         </dl>
       </div>
@@ -99,6 +135,8 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   data () {
     return {
+      showMoreCourse: false,
+      showMoreRados: false,
       selTab: true,
       delBtn: false,
       arrowDown: false,
@@ -107,7 +145,9 @@ export default {
       isShowCourse: false,
       isShowRadioCourse: false,
       langCourses: [],
-      radioCourseList: []
+      showLangCourses: [],
+      radioCourseList: [],
+      showRadioCourses: []
     }
   },
   created () {
@@ -120,22 +160,7 @@ export default {
     this.$parent.$emit('activeNavUserItem', 'course')
     this.$parent.$emit('navItem', 'user')
     this.getLearnCourses()
-    this.getMoreLearnCourses().then(res => {
-      console.log('getMoreLearnCourses', res)
-      res.learn_courses.forEach(item => {
-        if (item.course_type === 0) {
-          this.langCourses.push(item)
-        } else if (item.course_type === 1) {
-          this.radioCourseList.push(item)
-        }
-      })
-      if (this.langCourses.length === 0) {
-        this.isShowCourse = true
-      }
-      if (this.radioCourseList.length === 0) {
-        this.isShowRadioCourse = true
-      }
-    })
+    this.initData()
   },
   computed: {
     ...mapState({
@@ -147,17 +172,18 @@ export default {
       radioCourses: state => state.course.radioCourses,
       levelDes: state => state.course.levelDes
     }),
-    // 订阅的时间越靠后显示靠前
-    courseRander () {
-      var _object = []
-      var obj = this.learnCourses
+    // 订阅的电台
+    radioRander () {
+      var obj = this.radioCourses
       console.log('订阅课程我的页面===', obj)
       if (Object.keys(obj).length > 0) {
-        for (var i in obj) {
-          _object.unshift(obj[i])
+        if (this.showMoreRados) {
+          return this.radioCourses.slice(0, 5)
+        } else {
+          return this.radioCourses
         }
       }
-      return _object
+      return []
     }
   },
   methods: {
@@ -167,10 +193,12 @@ export default {
     ...mapActions({
       getDeletePurchase: 'course/getDeletePurchase',
       getLearnCourses: 'course/getLearnCourses',
-      getMoreLearnCourses: 'getMoreLearnCourses'
+      getUserCourseList: 'getUserCourseList'
     }),
     deleteCourse (code) {
-      this.getDeletePurchase(code)
+      this.getDeletePurchase(code).then(() => {
+        this.initData()
+      })
     },
     mouseoverControl (e) {
       let target = e.target
@@ -182,51 +210,170 @@ export default {
       /* eslint-disable */
       $('.user-control-sel').hide()
       /* eslint-enable */
+    },
+    initData () {
+      let _this = this
+      this.getUserCourseList().then(res => {
+        console.log('订阅课程', res)
+        _this.langCourses = res.officialCourses
+        _this.showLangCourses = _this.showMoreCourse ? _this.langCourses : _this.langCourses.slice(0, 5)
+        _this.radioCourseList = res.radioCourses
+        _this.showRadioCourses = _this.showMoreRados ? _this.radioCourseList : _this.radioCourseList.slice(0, 5)
+        if (this.langCourses.length === 0) {
+          this.isShowCourse = true
+        }
+        if (this.radioCourseList.length === 0) {
+          this.isShowRadioCourse = true
+        }
+      })
+    },
+    // 课程加载更多
+    loadMoreCourse () {
+      this.showMoreCourse = !this.showMoreCourse
+      if (this.showMoreCourse) {
+        this.showLangCourses = this.langCourses
+      } else {
+        this.showLangCourses = this.langCourses.slice(0, 5)
+      }
+    },
+    // 电台加载更多
+    loadMoreRadios () {
+      this.showMoreRados = !this.showMoreRados
+      if (this.showMoreRados) {
+        this.showRadioCourses = this.radioCourseList
+      } else {
+        this.showRadioCourses = this.radioCourseList.slice(0, 5)
+      }
+    },
+    // 去课程详情
+    goToDetails (courseCode) {
+      this.$router.push({path: '/app/book-details/' + courseCode})
+    },
+    // 去电台详情
+    goToRadioDetail (radioCode) {
+      this.$router.push({path: '/app/discovery/radio-detail/' + radioCode})
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.user-course-wrap {
+  position: relative;
+}
 .user-course-nav {
   width: 100%;
-  height: 50px;
+  height: 52px;
+  background-color: #ffffff;
   text-align: center;
   font-size: 16px;
   font-weight: 500;
   color: #6d6d6d;
   border-bottom: 1px solid #ededed;
-  border-radius: 4px;
+  border-radius: 5px 5px 0 0;
   position: relative;
+  padding-left: 25px;
+}
+.up-all {
+  width: 100%;
+  background: rgba(221, 221, 221, .1);
+  text-align: center;
+  line-height: 42px;
+  font-size:14px;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(42,159,228,1);
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  i {
+    display: inline-block;
+    width: 10px;
+    height: 6px;
+    background: url('../../../../static/images/upAll.svg') no-repeat center;
+    background-size: cover;
+    margin-left: 10px;
+  }
+  .active {
+    display: inline-block;
+    width: 10px;
+    height: 6px;
+    background: url('../../../../static/images/upAllActive.svg') no-repeat center;
+    background-size: cover;
+    margin-left: 10px;
+  }
+  .up-all-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .course-related {
+    width: 100%;
+    min-height: 445px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    i {
+      display: inline-block;
+      width: 145px;
+      height: 82px;
+      background-image: url('../../../../static/images/discovery/language-related.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+    }
+    span {
+      padding-top: 18px;
+      font-size:16px;
+      font-family:PingFang-SC-Medium;
+      font-weight:500;
+      color:rgba(200,212,219,1);
+      line-height:22px;
+    }
+  }
 }
 .user-course-wrap-title {
-  width: 50%;
   float: left;
-  height: 50px;
-  margin-bottom: 20px;
-  line-height: 50px;
-  background-color: #ffffff;
+  height: 52px;
+  font-size:16px;
+  font-weight:500;
+  color:#3C5B6F;
   text-align: center;
-  border-right: 1px solid #EEF2F3;
-  cursor: pointer;
+  margin-right: 42px;
+  // border-right: 1px solid #EEF2F3;
+  line-height: 60px;
+  border-bottom: 3px solid transparent;
+  transition: none;
 }
 
 .user-course-wrap-title:last-child {
   border-right: 0;
 }
-.user-course-nav .active {
-  color: #0581D1;
-  border-bottom: 2px solid #0581D1;
+.user-course-wrap-title:hover {
+  color: #2A9FE4;
 }
-.user-course-item-wrap .user-course-item {
-  margin-top: 16px;
+.user-course-nav .active {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2A9FE4;
+  border-bottom: 3px solid #2A9FE4;
+}
+.user-course-item-wrap {
+  padding: 8px 0 0;
+  background: #fff;
+  border-radius: 0 0 5px 5px;
+}
+.user-course-list .user-course-item {
   margin-right: 0;
   margin-left: 0;
-  height: 100px;
-  border-radius: 5px;
-  background-color: #ffffff;
-  padding-top: 15px;
-  padding-left: 21px;
+  padding: 0 25px;
+}
+
+.user-course-list .user-course-item:last-child .user-course-item-box {
+  border-bottom: 0px solid #EEF2F3;
 }
 
 .user-course-item-box {
@@ -236,14 +383,20 @@ export default {
   -webkit-box-align: start;
   -ms-flex-align: start;
   align-items: flex-start;
-  background-color: #ffffff;
+  padding-bottom: 24px;
+  padding-top: 21px;
+  border-bottom: 1px solid #EEF2F3;
 }
-
+.user-course-list .user-course-item:last-child .user-course-item-box {
+  border-bottom: 0px solid #ffffff!important;
+}
 .user-course-item-box img {
+  cursor: pointer;
   width: 70px;
   height: 70px;
   border-radius: 8px;
   background-color: #E8E8E8;
+  object-fit: cover;
 }
 
 .user-course-item-box ol {
@@ -253,16 +406,23 @@ export default {
   flex: 1;
 }
 .user-course-item-box ol li:nth-of-type(1) {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
+  margin-top: 6px;
+  display: inline-block;
+  font-size:14px;
+  font-family:PingFang-SC-Bold;
+  font-weight:bold;
+  color:#333333;
+}
+.user-course-item-box ol li:nth-of-type(1):hover {
   cursor: pointer;
+  color: #2A9FE4;
 }
 
 .user-course-item-box ol li:nth-of-type(2) {
-  font-size: 13px;
-  color: #7E929F;
-  font-weight: 500;
+  font-size:13px;
+  font-family:PingFang-SC-Medium;
+  font-weight:500;
+  color:#7e929f;
 }
 .user-course-item-box ol li:nth-of-type(3) {
   width: 200px;
@@ -270,7 +430,7 @@ export default {
   border-radius: 5px;
   background-color: #EEF2F3;
   position: relative;
-  margin: 15px 0;
+  margin: 18px 0 0;
 }
 .user-course-item-box ol li:nth-of-type(3) span {
   position: absolute;
@@ -284,17 +444,21 @@ export default {
 
 .user-radio-course-item-wrap {
   background-color: #ffffff;
-  margin-top: 16px;
-  border-radius: 5px;
-  padding: 15px 21px 0px;
+  border-radius: 0 0 5px 5px;
+  padding: 28px 0px 0px;
+  ul {
+    padding: 0 25px;
+  }
 }
 
 .user-radio-course-item-wrap .user-radio-course-item {
   height: 100px;
-  margin: 20px 0;
+  margin: 21px 0;
   border-bottom: 1px solid #EEF2F3;
 }
-
+.user-radio-course-item-wrap .user-radio-course-item:first-child {
+  margin-top: 0;
+}
 .user-radio-course-item-wrap .user-radio-course-item:last-child{
   border-bottom: 0px solid #EEF2F3 !important;
 }
@@ -309,6 +473,7 @@ export default {
 }
 
 .user-radio-course-item-box img {
+  cursor: pointer;
   width: 157px;
   height: 80px;
   border-radius: 4px;
@@ -341,6 +506,13 @@ export default {
   color: #333;
   margin-top: 10px;
   cursor: pointer;
+  max-width: 500px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  a:hover {
+    color: #2A9FE4;
+  }
 }
 
 .user-radio-course-item-box ol li:nth-of-type(2) {
@@ -352,6 +524,13 @@ export default {
 
 .user-radio-course-item-box ol li:nth-of-type(2) span {
   margin-right: 15px;
+}
+.user-radio-course-item-box ol li:nth-of-type(2) span:nth-child(1) {
+  display: inline-block;
+  width: 96px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .user-radio-course-item-box ol li:nth-of-type(2) span:nth-child(2) i {
@@ -382,7 +561,15 @@ export default {
   border-radius: 50%;
   background-color: #b9cde2;
 }
-
+.user-control-btn:hover {
+  span{
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #3C5B6F;
+  }
+}
 .user-control-sel {
   bottom: 30px;
   margin-left: -90px;
@@ -395,19 +582,20 @@ export default {
 }
 
 .user-control-sel ul {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding: 8px 0;
 }
 
 .user-control-sel ul li {
-  /* text-align: center; */
-  padding: 6px 20px;
+  text-align: center;
   color: #7E929F;
   font-size: 14px;
   font-weight: 500;
 }
-
-.user-control-sel ul li:hover {
+.user-control-sel ul li a {
+  display: block;
+  padding: 6px 0px;
+}
+.user-control-sel ul li a:hover {
   background-color: #F5F7F8;
   color: #0A2B40;
 }
@@ -491,8 +679,6 @@ export default {
   background-size: cover;
 }
 .user-course-nocourse dl dd {
-  /* width: 70%;
-  height: 100%; */
   text-align: center;
   padding: 20px 0 0;
   font-size: 18px;

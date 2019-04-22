@@ -1,37 +1,80 @@
 <template>
   <div>
     <section class='user-bind-wrap'>
-      <div class="userVip-bottom-nav">
+      <!-- <div class="userVip-bottom-nav">
         <p @click='swapVipTab(true)' :class="{ 'active': activeTab === true }">手机号绑定</p>
         <p @click='swapVipTab(false)' :class="{ 'active': activeTab === false }">邮箱绑定</p>
+      </div> -->
+      <div class="user-bind-nav">
+        <a @click='swapVipTab(true)' :class="{ 'active': activeTab === true }">手机号绑定</a>
+        <a @click='swapVipTab(false)' :class="{ 'active': activeTab === false }">邮箱绑定</a>
       </div>
       <div class='user-setting-form' v-show="activeTab === true">
-        <form action="" style='padding-bottom: 20px;'>
-          <div :class="{'error': !phone}">
-            <span style='position:relative;top:2px'>手机</span>
-            <input type="text" placeholder='请填写手机号' class='reg-input' v-model="phone" autocomplete="off">
+        <form action="">
+          <div class="user-bind-content" :class="{'error': !phone}">
+            <span >手机</span>
+            <input  type="text" placeholder='请填写手机号' class='reg-input'
+                    id="phoneNumber"
+                    readonly="readonly"
+                    @focus="onFocus()"
+                    v-model="phone"
+                    autocomplete="off">
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show="!phone"><i></i><em>请输入正确的手机号</em></div>
-          <div :class="{'error':false}" class='learn-bind-psd'><span style='position:relative;top:3px'>密码</span><input class='learn-bind-psd-input' type="password" placeholder='字母 / 数字 / 下划线 6-15位' v-model="newPsw"></div>
-          <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码不符合规范，请重新输入</div>
-            <div class='submit learn-bind-submit' @click="bindPhoneAccount()">我要绑定</div>
-            <p v-show='notice' class='bindPhone-error-tips'><i class='user error'></i><em>请填写完成后再绑定</em></p>
+          <div class='learn-setting-error-tips-settingpage' v-show="!phone">
+            <i></i><em>请输入正确的手机号</em>
+          </div>
+          <div class="user-bind-content" :class="{'error':false}">
+            <span >密码</span>
+            <input  class='learn-bind-psd-input' type="password"
+                    id="phonePwd"
+                    readonly="readonly"
+                    @focus="onFocus()"
+                    placeholder='字母/数字/下划线 6-15位'
+                    v-model="newPsw">
+          </div>
+          <div class='learn-setting-error-tips-settingpage' v-show="false">
+            <i></i><em class="password">您的密码不符合规范，请重新输入</em>
+          </div>
+            <a class='submit learn-bind-submit' @click="bindPhoneAccount()">我要绑定</a>
+            <p class='bindPhone-error-tips' v-show='notice'>
+              <i class='user error'></i><em>请填写完成后再绑定</em>
+            </p>
         </form>
       </div>
       <div class="user-setting-form" v-show="activeTab === false">
-        <form action="" style='padding-bottom: 20px;'>
-          <div :class="{'error':!email}">
-            <span style='position:relative;top:2px'>邮箱</span>
-            <input type="text" placeholder='请填写邮箱账号' class='reg-input' v-model="email" autocomplete="off">
+        <form action="">
+          <div class="user-bind-content" :class="{'error':!email}">
+            <span>邮箱</span>
+            <input  type="text" placeholder='请填写邮箱账号' class='reg-input'
+                    id="emailNumber"
+                    readonly="readonly"
+                    @focus="onFocus()"
+                    v-model="email"
+                    autocomplete="off">
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show='!email'><i></i><em>请输入正确的邮箱账号</em></div>
-          <div :class="{'error':false}" class='learn-bind-psd'><span style='position:relative;top:3px'>密码</span><input class='learn-bind-psd-input' type="password" placeholder='字母 / 数字 / 下划线 6-15位' v-model="newPsw2"></div>
-          <div class='learn-setting-error-tips-settingpage' v-show="false"><i></i>您的密码不符合规范，请重新输入</div>
-          <div class='submit learn-bind-submit' @click="bindEmailAccount()">我要绑定</div>
-          <p v-show='noticeEmail' class='bindPhone-error-tips'><i class='user error'></i><em>请填写完成后再绑定</em></p>
+          <div class='learn-setting-error-tips-settingpage' v-show='!email'>
+            <i></i><em>请输入正确的邮箱账号</em>
+          </div>
+          <div class="user-bind-content learn-bind-psd" :class="{'error':false}">
+            <span >密码</span>
+            <input  class='learn-bind-psd-input' type="password"
+                    id="emailPwd"
+                    readonly="readonly"
+                    @focus="onFocus()"
+                    placeholder='字母/数字/下划线 6-15位'
+                    v-model="newPsw2">
+          </div>
+          <div class='learn-setting-error-tips-settingpage' v-show="false">
+            <i></i>您的密码不符合规范，请重新输入
+          </div>
+          <a class='submit learn-bind-submit' @click="bindEmailAccount()">我要绑定</a>
+          <p v-show='noticeEmail' class='bindPhone-error-tips'>
+            <i class='user error'></i><em>请填写完成后再绑定</em>
+          </p>
         </form>
       </div>
     </section>
+    <setting-bind-phone/>
     <set-alert
       ref="setAlert"
       :alert-type="alertType"
@@ -51,8 +94,12 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import Bus from '../../../bus.js'
+import $ from 'jquery'
 import SetAlert from './userSettingAlert.vue'
 import Vertify from '../../../tool/vertifyAccount'
+import SettingBindPhone from './userSettingBindPhone.vue'
+
 export default {
   data () {
     return {
@@ -70,6 +117,7 @@ export default {
     }
   },
   components: {
+    SettingBindPhone,
     SetAlert
   },
   created () {
@@ -80,13 +128,14 @@ export default {
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'bind')
     this.$parent.$emit('navItem', 'user')
-    this.newPsw = ''
-    this.newPsw2 = ''
-    this.email = ''
-    this.phone = ''
+    // this.newPsw = ''
+    // this.newPsw2 = ''
+    // this.email = ''
+    // this.phone = ''
   },
   computed: {
     ...mapState({
+      userInfo: state => state.userInfo,
       alertType: state => state.user.alertType
     })
   },
@@ -96,9 +145,32 @@ export default {
       modefiyEmailMemberInfo: 'user/modefiyEmailMemberInfo'
     }),
     ...mapActions({
-      sendCode: 'user/sendCode',
-      resetAnonymous: 'user/resetAnonymous'
+      getUserInfo: 'getUserInfo', // 获取用户信息
+      // sendCode: 'user/sendCode',
+      userExistsPhone: 'userExistsPhone', // 验证手机号是否存在
+      userExistsEmail: 'userExistsEmail', // 验证邮箱是否存在
+      // sendCode: 'getSendCode', // 发送验证码
+      // resetAnonymous: 'user/resetAnonymous',
+      anonymousUserBindEmail: 'anonymousUserBindEmail'
     }),
+    onFocus () {
+      $('#phoneNumber,#phonePwd,#emailNumber,#emailPwd').removeAttr('readOnly')
+    },
+    // 提示用户的信息不完整
+    alertMessageNotBox (msg, icon) {
+      // this.noticeSetting = true
+      let obj = {
+        className: 'warnIcon',
+        description: `${msg}`,
+        btnDesc: '确定',
+        isLink: false
+      }
+
+      if (icon) {
+        obj.className = icon
+      }
+      Bus.$emit('showCommonModal', obj)
+    },
     swapVipTab (value) {
       this.activeTab = value
       if (value) {
@@ -129,41 +201,94 @@ export default {
         return
       }
       var emailVertify = Vertify.vertifyEmail(this.email, this.newPsw2)
+      if (!emailVertify) {
+        this.alertMessageNotBox('输入邮箱格式不正确！')
+        return false
+      }
       if (emailVertify) {
         this.noticeEmail = false
-        this.bindEmail()
+        this.bindEmail(this.email)
       }
     },
     bindPhone (phone) {
-      var _this = this
-      var params = {}
-      params.type = 'bind_phonenumber'
-      params.phonenumber = this.phone
-      this.sendCode(params).then((res) => {
-        this.$refs['setAlert'].$emit('isShowSetAlert', true)
-        if (res.success) {
-          _this.updateAlertType('bindPhoneNumber')
-        } else {
-          this.showAlertView(res)
+      let _this = this
+      let params = {}
+      params.phonenumber = phone
+      _this.userExistsPhone(params).then(res => {
+        console.log('res', res)
+        if (res.exists) { // 存在
+          this.phone = ''
+          this.alertMessageNotBox('手机号已经存在！')
+        } else { // 不存在
+          Bus.$emit('showBindPhone', phone)
         }
       })
+      // var _this = this
+      // var params = {}
+      // params.type = 'bind_phonenumber'
+      // params.phonenumber = this.phone
+      // this.sendCode(params).then((res) => {
+      //   // this.$refs['setAlert'].$emit('isShowSetAlert', true)
+      //   this.alertMessageNotBox('手机号已经存在！')
+      //   if (res.success) {
+      //     _this.updateAlertType('bindPhoneNumber')
+      //   } else {
+      //     this.showAlertView(res)
+      //   }
+      // })
     },
-    bindEmail () {
+    bindEmail (email) {
+      console.log('eamil', email)
       var _this = this
-      var params = {}
-      params.email = this.email
+      let params = {}
+      params.email = email
+      _this.userExistsEmail(params).then(res => {
+        console.log('绑定邮箱返回', res)
+        if (res.exists) { // 存在
+          _this.alertMessageNotBox('邮箱已经存在！')
+          _this.email = ''
+        } else { // 不存在
+          this.bindEmailFN(email)
+        }
+      })
+      // var _this = this
+      // var params = {}
+      // params.email = email
+      // params.password = this.newPsw2
+      // this.resetAnonymous(params).then((res) => {
+      //   console.log('res', res)
+      //   // this.$refs['setAlert'].$emit('isShowSetAlert', true)
+      //   // this.alertMessageNotBox('邮箱已经存在！')
+      //   if (res.success) {
+      //     setTimeout(() => {
+      //       _this.updateAlertType('bindEmail')
+      //       _this.modefiyEmailMemberInfo({
+      //         email: params.email
+      //       })
+      //     }, 1000)
+      //   } else {
+      //     this.showAlertView(res)
+      //   }
+      // })
+    },
+    bindEmailFN (email) {
+      let _this = this
+      let params = {}
+      params.email = email
       params.password = this.newPsw2
-      this.resetAnonymous(params).then((res) => {
-        this.$refs['setAlert'].$emit('isShowSetAlert', true)
+      _this.anonymousUserBindEmail(params).then((res) => {
+        console.log('res', res)
         if (res.success) {
-          setTimeout(() => {
-            _this.updateAlertType('bindEmail')
-            _this.modefiyEmailMemberInfo({
-              email: params.email
-            })
-          }, 1000)
+          // setTimeout(() => {
+          //   _this.updateAlertType('bindEmail')
+          //   _this.modefiyEmailMemberInfo({
+          //     email: params.email
+          //   })
+          // }, 1000)
+          _this.alertMessageNotBox('恭喜你绑定成功', 'okIcon')
+          _this.getUserInfo()
         } else {
-          this.showAlertView(res)
+          _this.alertMessageNotBox(res.errorMsg)
         }
       })
     },
@@ -188,159 +313,224 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .user-bind-wrap {
   width: 100%;
   background: #fff;
+  // margin-top: 90px;
+  .user-bind-nav {
+    width: 100%;
+    height: 60px;
+    background-color: #ffffff;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #6d6d6d;
+    border-bottom: 1px solid #ededed;
+    border-radius: 4px;
+    position: relative;
+    padding-left: 25px;
+    a {
+      display: inline-block;
+      float: left;
+      height: 60px;
+      font-size:16px;
+      font-family:PingFangSC-Semibold;
+      font-weight:500;
+      color:#3C5B6FFF;
+      text-align: center;
+      margin-right: 50px;
+      // border-right: 1px solid #EEF2F3;
+      line-height: 60px;
+      &:hover {
+        color: #2A9FE4;
+      }
+      &.active {
+        color: #0581D1;
+        font-weight: bold;
+        border-bottom: 3px solid #2A9FE4FF;
+      }
+    }
+    a:last-child {
+      border-right: 0;
+    }
+  }
 }
 
-.userVip-bottom-nav {
-  width: 100%;
-  height: 39px;
-  line-height: 39px;
-  text-align: center;
-  font-size: 16px;
-  color: #6d6d6d;
-  border-bottom: 1px solid #ededed;
-  position: relative;
-}
+// .user-setting-form form > div {
+//   /*height: 40px;*/
+//   line-height: 40px;
+//   margin: 15px 0;
+// }
 
-.userVip-bottom-nav p {
-  width: 50%;
-  float: left;
-  cursor: pointer;
-  font-size: 16px;
-  height: 39px;
-}
+// .user-setting-form form > div.error .reg-input {
+//   border-color: #e46773;
+// }
 
-.user-bind-wrap .userVip-bottom-nav p.active {
-  color: #0e8abe;
-  border-bottom: 4px solid #0e8abe;
-}
-.user-bind-wrap .userVip-bottom-nav p {
-  background-image: url(../../../../static/images/learn/learn-bind-phone2.svg);
-  background-repeat: no-repeat;
-  padding-left: 20px;
-}
-.user-bind-wrap .userVip-bottom-nav p:first-child {
-  background-position: 110px 12px;
-  background-size: 13px;
-}
-.user-bind-wrap .userVip-bottom-nav p:last-child {
-  background-position: 111px 13px;
-  background-size: 16px;
-}
-.user-bind-wrap .userVip-bottom-nav p.active {
-  background-image: url(../../../../static/images/learn/learn-bind-phone.svg);
-}
-.user-bind-wrap .userVip-bottom-nav p:nth-of-type(2) {
-  background-image: url(../../../../static/images/learn/learn-bind-email2.svg);
-}
-.user-bind-wrap .userVip-bottom-nav p:nth-of-type(2).active {
-  background-image: url(../../../../static/images/learn/learn-bind-email.svg);
-}
-.user-bind-wrap .userVip-bottom-nav p:nth-of-type(2):hover {
-  background-image: url(../../../../static/images/learn/learn-bind-email.svg) !important;
-}
-.user-bind-wrap .userVip-bottom-nav p:nth-of-type(1):hover {
-  background-image: url(../../../../static/images/learn/learn-bind-phone.svg) !important;
-}
-.user-setting-form {
-  width: 100%;
-  padding: 31px;
-}
-.user-setting-form form > div {
-  /*height: 40px;*/
-  line-height: 40px;
-  margin: 15px 0;
-}
+// .user-setting-form form > div .reg-input {
+//   width: 320px;
+//   border: 1px solid #dcdbdb;
+//   border-radius: 5px;
+//   padding-left: 19px;
+// }
 
-.user-setting-form form > div.error .reg-input {
-  border-color: #e46773;
-}
+// .user-setting-form form > div > span {
+//   font-size: 20px;
+//   color: #4a4a4a;
+//   margin-right: 20px;
+// }
 
-.user-setting-form form > div .reg-input {
-  width: 320px;
-  border: 1px solid #dcdbdb;
-  border-radius: 5px;
-  padding-left: 19px;
-}
+// .learn-bind-psd {
+//   font-size: 18px;
+//   font-weight: normal;
+//   font-style: normal;
+//   font-stretch: normal;
+//   color: #4a4a4a;
+//   margin-top: 24px;
+// }
+// .learn-bind-psd-input {
+//   width: 320px;
+//   border: 1px solid #dcdbdb;
+//   border-radius: 5px;
+//   padding-left: 18px;
+//   height: 45px;
+//   margin-left: 5px;
+//   font-size: 16px;
+// }
+// .learn-bind-submit {
+//   margin-top: 26px !important;
+// }
+// .learn-bind-error {
+//   color: #e46773;
+//   font-size: 10px;
+// }
 
-.user-setting-form form > div > span {
-  font-size: 20px;
-  color: #4a4a4a;
-  margin-right: 20px;
-}
+// .user-setting-form .submit {
+//   width: 162px;
+//   height: 47px;
+//   border-radius: 4px;
+//   background-color: #0e8abe;
+//   text-align: center;
+//   line-height: 47px;
+//   color: #fff;
+//   cursor: pointer;
+//   margin-top: -6px;
+// }
 
-.learn-bind-psd {
-  font-size: 18px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  color: #4a4a4a;
-  margin-top: 24px;
-}
-.learn-bind-psd-input {
-  width: 320px;
-  border: 1px solid #dcdbdb;
-  border-radius: 5px;
-  padding-left: 18px;
-  height: 45px;
-  margin-left: 5px;
-  font-size: 16px;
-}
-.learn-bind-submit {
-  margin-top: 26px !important;
-}
-.learn-bind-error {
-  color: #e46773;
-  font-size: 10px;
-}
+// .user-setting-form .learn-setting-error-tips-settingpage {
+//   color: #e46773;
+//   font-size: 12px;
+//   height: 20px;
+//   margin: 0;
+//   line-height: 20px;
+//   padding-left: 64px;
+// }
 
-.user-setting-form .submit {
-  width: 162px;
-  height: 47px;
-  border-radius: 4px;
-  background-color: #0e8abe;
-  text-align: center;
-  line-height: 47px;
-  color: #fff;
-  cursor: pointer;
-  margin-top: -6px;
-}
-
-.user-setting-form .learn-setting-error-tips-settingpage {
-  color: #e46773;
-  font-size: 12px;
-  height: 20px;
-  margin: 0;
-  line-height: 20px;
-  padding-left: 64px;
-}
-
-.learn-setting-error-tips-settingpage i {
-  display: inline-block;
-  width: 13px;
-  height: 13px;
-  background: url(../../../../static/images/learn/learn-login-tanhao.svg) no-repeat;
-  position: relative;
-  top: 3px;
-  margin-right: 5px;
-}
+// .learn-setting-error-tips-settingpage i {
+//   display: inline-block;
+//   width: 13px;
+//   height: 13px;
+//   background: url(../../../../static/images/learn/learn-login-tanhao.svg) no-repeat;
+//   position: relative;
+//   top: 3px;
+//   margin-right: 5px;
+// }
 
 .bindPhone-error-tips {
-  font-size: 12px;
-  color: #e46773;
+  display: flex;
+  align-items: center;
+  font-size:12px;
+  font-family:PingFang-SC-Regular;
+  font-weight:400;
+  color:rgba(221,43,43,1);
   position: relative;
+  padding-top: 14px;
+  padding-left: 88px;
 }
 
 .bindPhone-error-tips i {
   display: inline-block;
   width: 13px;
   height: 13px;
-  background: url(../../../../static/images/learn/learn-login-tanhao.svg) no-repeat;
+  background: url('../../../../static/images/userInfo/error-icon.svg') no-repeat center;
+  background-position: center;
   position: relative;
-  top: 5px;
-  margin-right: 5px;
+  // top: 3px;
+  margin-right: 8px;
+}
+
+.user-setting-form {
+  width: 100%;
+  form {
+    padding: 62px 60px 240px;
+    .user-bind-content {
+      display: inline-block;
+      span {
+        display: inline-block;
+        text-align: right;
+        width: 64px;
+        font-size: 14px;
+        font-family: PingFang-SC-Medium;
+        font-weight: 500;
+        color: #444444;
+        line-height: 40px;
+      }
+      input {
+        width: 280px;
+        height: 40px;
+        border-radius: 4px;
+        border: 1px solid #C8D4DBFF;
+        padding: 0 10px;
+        margin: 0 14px 16px 20px;
+      }
+    }
+    .learn-setting-error-tips-settingpage {
+      display: inline-block;
+      position: relative;
+      font-size:12px;
+      font-family:PingFang-SC-Regular;
+      font-weight:400;
+      color:rgba(221,43,43,1);
+      line-height: 12px;
+      line-height: 40px;
+      i {
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        margin-top: -6px;
+        width: 12px;
+        height: 12px;
+        background: url('../../../../static/images/userInfo/error-icon.svg') no-repeat center;
+        background-size: cover;
+      }
+      em {
+        margin-left: 18px;
+      }
+    }
+  }
+  input {
+    font-size: 14px;
+  }
+  // 保存修改
+  .submit {
+    display: block;
+    width: 160px;
+    height: 36px;
+    font-size:16px;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    padding: 6px 48px;
+    background: #0581D1;
+    color: #fff;
+    border-radius: 22px;
+    margin-left: 88px;
+    margin-top: 32px;
+    &:hover {
+      background: #2A9FE4;
+    }
+    &:active {
+      background: #0581D1;
+    }
+  }
 }
 </style>

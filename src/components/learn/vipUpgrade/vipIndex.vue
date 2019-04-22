@@ -11,35 +11,37 @@
       <div class="vip-content">
         <!-- 介绍vip会员福利 -->
         <div class="introduce">
-          <div class="introduce-title">
-            <p>解锁以下所有功能以及更多其他实用功能</p>
-            <p>获得各种专享功能的访问权限，从离线模式到由母语使用者提供反馈的对话功能。用不了多久您就能说出一口流利的外语！</p>
-          </div>
-          <!-- vip选项 -->
-          <div class="vip-lists">
-            <div class="lists-content">
-              <div class="lists">
-                <div class="list-header">
-                  <p class="name">比较免费选项和 VIP 选项</p>
-                  <div class="free">
-                    <span>免费</span>
-                    <span>VIP</span>
+          <div class="introduce-content">
+            <div class="introduce-title">
+              <p>解锁以下所有功能以及更多其他实用功能</p>
+              <p>获得各种专享功能的访问权限，从离线模式到由母语使用者提供反馈的对话功能。用不了多久您就能说出一口流利的外语！</p>
+            </div>
+            <!-- vip选项 -->
+            <div class="vip-lists">
+              <div class="lists-content">
+                <!-- <div class="lists" v-show="false">
+                  <div class="list-header">
+                    <p class="name">比较免费选项和 VIP 选项</p>
+                    <div class="free">
+                      <span>免费</span>
+                      <span>VIP</span>
+                    </div>
                   </div>
-                </div>
-                <div class="list-items">
-                  <ul>
-                    <li v-for='(item, index) in items' :key="index">
-                      <div class="session">
-                        <div class="icon-content"><i class="icon"></i></div>
-                        <div class="title"><span>{{ item.red }}</span></div>
-                      </div>
-                      <div class="pitch">
-                        <div class="icon-blue"></div>
-                        <div class="icon-green"></div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
+                  <div class="list-items">
+                    <ul>
+                      <li v-for='(item, index) in items' :key="index">
+                        <div class="session">
+                          <div class="icon-content"><i class="icon"></i></div>
+                          <div class="title"><span>{{ item.red }}</span></div>
+                        </div>
+                        <div class="pitch">
+                          <div class="icon-blue"></div>
+                          <div class="icon-green"></div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -48,8 +50,8 @@
         <div class="activation-code">
           <div class="title">通过激活码升级</div>
           <div class="code">
-            <input type="text" placeholder="输入激活码" v-model="activateNum">
-            <button class="button" @click='showConfirm()'>立即激活</button>
+            <input type="text" placeholder="输入激活码" v-model="codeNum">
+            <button class="button" v-bind:disabled="codeNum == ''" @click='showConfirm()'>立即激活</button>
           </div>
         </div>
         <!-- 选择合适的计划 -->
@@ -62,7 +64,10 @@
               <ul>
                 <li v-for='(item, index) in productList' :key="index">
                   <div class="cards">
-                    <p class="title">BASIC</p>
+                    <p class="title" v-if="index == 0">BASIC</p>
+                    <p class="title" v-if="index == 1">STANDARD</p>
+                    <p class="title" v-if="index == 2">ADVANCED</p>
+                    <p class="title" v-if="index == 3">COMPREHENSIVE</p>
                     <div class="price">
                       <span>¥</span>
                       <span>{{ item.money }}</span>
@@ -188,38 +193,75 @@
   </div>
 </template>
 <script>
-import Vue from 'vue'
+// import Vue from 'vue'
 import { mapState, mapActions, mapMutations } from 'vuex'
-import I18nLocales from '../../../vueI18/locale'
+import Bus from '../../../bus.js'
+import LogCollect from '../../../tool/logCollect'
+// import I18nLocales from '../../../vueI18/locale'
 
 export default {
   data () {
     return {
-      items: I18nLocales[Vue.config.lang].vip.left.tips,
+      // items: I18nLocales[Vue.config.lang].vip.left.tips,
       recommand: 2,
       value: 3,
-      activateNum: ''
+      codeNum: ''
     }
   },
   components: {
   },
+  created () {
+    Bus.$on('settingUpdate', (type) => {
+      this.confirmCard(type)
+    })
+  },
   mounted () {
     this.getMemberProductsList()
-    console.log('------>', this.productList)
-    console.log('会员功能', this.items)
+    console.log('会员列表卡片充值', this.productList)
   },
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
       productList: state => state.user.productList
-    })
+    }),
+    ui () {
+      let ui = this.userInfo
+      if (Object.keys(ui).length === 0) {
+        ui = JSON.parse(sessionStorage.getItem('userInfo'))
+      }
+      return ui
+    }
   },
   methods: {
     ...mapMutations({
     }),
     ...mapActions({
+      getMemberCard: 'user/getMemberCard', // 激活码激活接口
       getMemberProductsList: 'user/getMemberProductsList'
     }),
+    // 提示用户的信息不完整
+    alertMessage (msg) {
+      let obj = {
+        className: 'warnIcon',
+        description: `${msg}`,
+        btnDesc: '确定',
+        isLink: false
+      }
+      Bus.$emit('showCommonModal', obj)
+    },
+    // 提示激活
+    alertConfirm (confirm) {
+      let obj = {
+        className: 'warnIcon',
+        buttonClass: 'buttonClass',
+        description: `你确定要激活吗？`,
+        btnCancel: '取消',
+        btnDesc: '确定',
+        isLink: false,
+        emitMethod: confirm
+      }
+      Bus.$emit('showCommonModal', obj)
+    },
     goBuy (item) {
       let OBJ = item
       let jsonStr = JSON.stringify(OBJ)
@@ -230,11 +272,39 @@ export default {
     },
     // 激活码激活
     showConfirm () {
-      this.$refs.alert.$emit('UserVipCode', this.activateNum)
-      if (!this.activateNum) {
-        return
-      }
-      this.$refs.alert.$emit('ifConfirmShow', true)
+      console.log('确定激活码？', this.codeNum)
+      var _memberType = this.ui.member_info.member_type
+      // this.$refs.alert.$emit('UserVipCode', this.activateNum)
+      this.getMemberCard(this.codeNum).then((res) => {
+        console.log('激活码返回', res)
+        if (res.success) {
+          this.alertConfirm(res.member_info.money)
+          // LogCollect.payMemberCard(
+          //   _memberType,
+          //   this.codeNum,
+          //   1,
+          //   res.member_info.money
+          // )
+        } else {
+          this.alertMessage(res.errorMsg)
+          this.codeNum = ''
+          LogCollect.payMemberCard(_memberType, this.codeNum, 0, 0)
+        }
+      })
+      // if (!this.codeNum) {
+      //   return
+      // }
+      // this.alertMessage('你确定使用激活码激活会员？')
+      // this.$refs.alert.$emit('ifConfirmShow', true)
+    },
+    confirmCard (money) {
+      var _memberType = this.ui.member_info.member_type
+      LogCollect.payMemberCard(
+        _memberType,
+        this.codeNum,
+        1,
+        money
+      )
     }
   }
 }
@@ -283,8 +353,14 @@ export default {
         width: 100%;
         height: 610px;
         background: #ffffff;
-        padding: 73px 120px 0;
+        // padding: 73px 120px 0;
+        .introduce-content {
+          width: 960px;
+          margin: 0 auto;
+          padding: 73px 0px 0;
+        }
         .introduce-title {
+          width: 100%;
           p:nth-child(1) {
             font-size:24px;
             font-family:PingFang-SC-Bold;
@@ -301,9 +377,7 @@ export default {
         }
         .vip-lists {
           margin-top: 12px;
-          width: 100%;
           height: 530px;
-          height:530px;
           background:rgba(255,255,255,1);
           box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
           border:1px solid rgba(233,237,239,1);
@@ -475,10 +549,11 @@ export default {
       }
       // 激活码激活会员
       .activation-code {
-        width: 100%;
+        width: 960px;
         margin-top: 121px;
-        padding: 0 120px;
+        padding: 160px 0 0px;
         text-align: center;
+        margin: 0 auto;
         .title {
           font-size:24px;
           font-family:PingFang-SC-Bold;
@@ -496,7 +571,7 @@ export default {
             padding: 6px 20px;
           }
           .button {
-            cursor: pointer;
+            // cursor: pointer;
             width: 121px;
             height: 36px;
             font-size:15px;
@@ -506,6 +581,10 @@ export default {
             background:rgba(216,222,225,1);
             border-radius:0px 18px 18px 0px;
             border:1px solid rgba(176,188,192,1);
+          }
+          .button:disabled {
+            cursor: not-allowed;
+            background:rgba(200,212,219,1);
           }
         }
       }
@@ -530,7 +609,8 @@ export default {
           position: relative;
           width: 100%;
           .cards-list {
-            width: 100%;
+            width: 960px;
+            margin: 0 auto;
             margin-top: -140px;
             ul {
               width: 100%;
@@ -539,7 +619,7 @@ export default {
               li {
                 overflow: hidden;
                 position: relative;
-                width: 23%;
+                width: 224px;
                 background:rgba(255,255,255,1);
                 box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
                 border-radius:5px;
@@ -660,7 +740,8 @@ export default {
             }
           }
           .bottom-content {
-            width: 100%;
+            width: 960px;
+            margin: 0 auto;
             margin-top: 112px;
             .title {
               i {
@@ -740,7 +821,8 @@ export default {
           }
           .other-say {
             padding: 183px 0;
-            width: 100%;
+            width: 960px;
+            margin: 0 auto;
             .other-content {
               width: 100%;
               .text {

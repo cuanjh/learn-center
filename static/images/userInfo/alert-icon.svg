@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>提示弹框</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFBAA2" offset="0%"></stop>
+            <stop stop-color="#FD8469" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-2" points="0 0 4 0 4 19.4594595 0 19.4594595"></polygon>
+    </defs>
+    <g id="个人学习中心" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="提示弹窗" transform="translate(-920.000000, -486.000000)">
+            <g id="分组-7" transform="translate(920.000000, 486.000000)">
+                <g id="分组-6-copy-2" transform="translate(2.000000, 2.000000)" fill="#FFDFD8" stroke="#FFBDAE" stroke-width="4">
+                    <circle id="椭圆形-copy-8" cx="38" cy="38" r="38"></circle>
+                </g>
+                <g id="分组-5" transform="translate(19.000000, 18.000000)">
+                    <path d="M22.7275578,2.96152766 L40.2454838,32.9922579 C40.8020444,33.9463618 40.4797719,35.1709972 39.5256681,35.7275578 C39.2197959,35.9059832 38.8720353,36 38.517926,36 L3.482074,36 C2.3775045,36 1.482074,35.1045695 1.482074,34 C1.482074,33.6458907 1.57609079,33.2981301 1.7545162,32.9922579 L19.2724422,2.96152766 C19.8290028,2.00742383 21.0536382,1.68515134 22.0077421,2.24171191 C22.3057493,2.41554948 22.5537202,2.66352039 22.7275578,2.96152766 Z" id="三角形" fill="url(#linearGradient-1)"></path>
+                    <g id="分组" transform="translate(21.000000, 22.378378) scale(-1, 1) translate(-21.000000, -22.378378) translate(19.000000, 12.648649)">
+                        <mask id="mask-3" fill="white">
+                            <use xlink:href="#path-2"></use>
+                        </mask>
+                        <g id="Clip-2"></g>
+                        <path d="M2.00004434,15.5675446 C1.10001774,15.5675446 0.5,16.1513491 0.5,17.0270558 C0.5,17.9026762 1.10001774,18.4864807 2.00004434,18.4864807 C2.89998226,18.4864807 3.5,17.9026762 3.5,17.0270558 C3.5,16.1513491 2.89998226,15.5675446 2.00004434,15.5675446 Z M0.800023648,12.6486947 C1.00008868,13.2324416 1.40010051,13.6216446 2.00005912,13.6216446 C2.60013598,13.6216446 3.00002956,13.2324416 3.19997635,12.6486947 L4,1.94601497 C4,0.778290943 3.00002956,0 2.00005912,0 C0.800023648,0 0,0.972949964 0,2.14055895 L0.800023648,12.6486947 Z" id="Fill-1" fill="#FFFFFF" mask="url(#mask-3)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

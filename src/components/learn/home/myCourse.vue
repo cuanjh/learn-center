@@ -225,7 +225,7 @@ export default {
           if (item.level_code === arr[2]) {
             item.rates.forEach(rate => {
               if (rate.unit === arr[3] && rate.chapter === arr[4]) {
-                _this.curChapterCorrectRate = rate.correct_rate * 100 + '%'
+                _this.curChapterCorrectRate = Math.round(rate.correct_rate * 100) + '%'
               }
             })
           }
@@ -240,6 +240,7 @@ export default {
       } else {
         bus.$emit('loadRecommendRadio', this.curCourseCode)
       }
+      await this.getUserInfo()
       this.isDefault = false
       cookie.delCookieTalkmate('purchaseCourseCode')
     },
