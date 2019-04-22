@@ -133,6 +133,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    margin-top: 4px;
   }
   .footer-right .relation p .phone {
     background-image: url('../../../static/images/footer/t.svg');
@@ -158,6 +159,7 @@
     display: inline-block;
     width: 8px;
     height: 8px;
+    margin-top: 4px;
     background:url('../../../static/images/footer/star.svg') no-repeat center;
     background-size: cover;
   }
