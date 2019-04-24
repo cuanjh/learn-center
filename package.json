@@ -14,7 +14,7 @@
     "lint-fix": "eslint --fix --ext .js,.vue src test/unit test/e2e/specs",
     "upload": "node build/upload_files.js",
     "build": "node build/build.js",
-    "publish": "node build/build.js && ./build/upload.js"
+    "publish": "node build/build.js && ./build/uploadOnline.js"
   },
   "dependencies": {
     "EventEmitter": "^1.0.0",
