@@ -19,29 +19,6 @@
             <!-- vip选项 -->
             <div class="vip-lists">
               <div class="vip-function">
-                <!-- <div class="lists" v-show="false">
-                  <div class="list-header">
-                    <p class="name">比较免费选项和 VIP 选项</p>
-                    <div class="free">
-                      <span>免费</span>
-                      <span>VIP</span>
-                    </div>
-                  </div>
-                  <div class="list-items">
-                    <ul>
-                      <li v-for='(item, index) in items' :key="index">
-                        <div class="session">
-                          <div class="icon-content"><i class="icon"></i></div>
-                          <div class="title"><span>{{ item.red }}</span></div>
-                        </div>
-                        <div class="pitch">
-                          <div class="icon-blue"></div>
-                          <div class="icon-green"></div>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div> -->
               </div>
               <!-- 会员卡片 -->
               <div class="lists-content">
@@ -106,67 +83,18 @@
               </div>
               <div class="course-list">
                 <ul>
-                  <li>
-                    <div class="referral" @click="unfoldAnswer('1')">
+                  <li v-for="(card, index) in cardslist" :key="index">
+                    <div class="referral" @click="unfoldAnswer(index)">
                       <p>
-                        <span><i class="mark"></i>VIP会员能否免费学习所学语种相关的电台课程？</span>
-                        <!-- <i :class="{'icon': answerShow == '1'}"></i> -->
-                        <i class="icon" v-if="answerShow == '1'"></i>
-                        <i v-else @click="upfoldAnswer()"></i>
+                        <span><i class="mark"></i>{{card.question}}</span>
+                        <i class="icon" v-if="answerShow == index"></i>
+                        <i v-else></i>
                       </p>
                     </div>
-                    <div class="answer" v-show="answerShow == '1'">
+                    <div class="answer" v-show="answerShow == index">
                       <p>
                         <span>答：</span>
-                        <span>全球说有很多丰富有趣的音频电台课程，用户成为VIP会员后，所有的电台课程均可<br/>免费订阅，无需再次付费！</span>
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="referral" @click="unfoldAnswer('2')">
-                      <p>
-                        <span><i class="mark"></i>VIP会员能否支持学币、优惠券优惠购买？</span>
-                        <!-- <i :class="{'icon': answerShow == '2'}"></i> -->
-                        <i class="icon" v-if="answerShow == '2'"></i>
-                        <i v-else @click="upfoldAnswer()"></i>
-                      </p>
-                    </div>
-                    <div class="answer" v-show="answerShow == '2'">
-                      <p>
-                        <span>答：</span>
-                        <span>VIP会员本身提供购课折扣让利、免费课、免费阅读等丰富特权，因此在VIP会员不支<br/>持学币、优惠券等优惠抵扣。</span>
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="referral" @click="unfoldAnswer('3')">
-                      <p>
-                        <span><i class="mark"></i>VIP会员能否叠加优惠券、学币、邀请码使用呢？</span>
-                        <!-- <i :class="{'icon': answerShow == '3'}"></i> -->
-                        <i class="icon" v-if="answerShow == '3'"></i>
-                        <i v-else @click="upfoldAnswer()"></i>
-                      </p>
-                    </div>
-                    <div class="answer" v-show="answerShow == '3'">
-                      <p>
-                        <span>答：</span>
-                        <span>你的很多语伴同样也抱有和你一样的问题!<br/>如果你已经是全球说的VIP会员，在学习的过程中获得了优惠券，将在你下次同等级续费中产生优惠，或者在当前等<br/>级进行会员进行会员升级的操作中产生优惠！</span>
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="referral" @click="unfoldAnswer('4')">
-                      <p>
-                        <span><i class="mark"></i>VIP会员本身提供购课折扣让利、免费课、免费阅读等丰富特权，故在购买VIP会员时不支持学币、优惠券等优惠抵扣。</span>
-                        <!-- <i :class="{'icon': answerShow == '4'}"></i> -->
-                        <i class="icon" v-if="answerShow == '4'"></i>
-                        <i v-else @click="upfoldAnswer()"></i>
-                      </p>
-                    </div>
-                    <div class="answer" v-show="answerShow == '4'">
-                      <p>
-                        <span>答：</span>
-                        <span>你的很多语伴同样也抱有和你一样的问题!<br/>如果你已经是全球说的VIP会员，在学习的过程中获得了优惠券，将在你下次同等级<br/>续费中产生优惠，或者在当前等级进行会<br/>员进行会员升级的操作中产生优惠！</span>
+                        <span>{{card.answer}}</span>
                       </p>
                     </div>
                   </li>
@@ -191,10 +119,7 @@
                     <li>
                       <div class="say-content">
                         <div class="people-img">
-                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="动态头像">
-                          <div class="country">
-                            <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="国家">
-                          </div>
+                          <img src="../../../../static/images/vipUpgrade/itme-one.png" alt="">
                         </div>
                         <div class="nickname">
                           <p>宫本はるか</p>
@@ -211,10 +136,7 @@
                     <li>
                       <div class="say-content">
                         <div class="people-img">
-                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="动态头像">
-                          <div class="country">
-                            <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="国家">
-                          </div>
+                          <img src="../../../../static/images/vipUpgrade/item-two.png" alt="">
                         </div>
                         <div class="nickname">
                           <p>宫本はるか</p>
@@ -231,10 +153,7 @@
                     <li>
                       <div class="say-content">
                         <div class="people-img">
-                          <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="动态头像">
-                          <div class="country">
-                            <img src="https://uploadfile1.talkmate.com/uploadfiles/avatar/5b74e4432152c797519a092a/5b74e4432152c797519a092a.jpg?hash=FlbsyYkEr9WFXYJD0n7SfjqP1nWI" alt="国家">
-                          </div>
+                          <img src="../../../../static/images/vipUpgrade/item-three.png" alt="">
                         </div>
                         <div class="nickname">
                           <p>宫本はるか</p>
@@ -269,7 +188,25 @@ export default {
   data () {
     return {
       // items: I18nLocales[Vue.config.lang].vip.left.tips,
-      answerShow: '',
+      answerShow: -1,
+      cardslist: [
+        {
+          question: 'VIP会员能否免费学习所学语种相关的电台课程？',
+          answer: '全球说有很多丰富有趣的音频电台课程，用户成为VIP会员后，所有的电台课程均可免费订阅，无需再次付费！'
+        },
+        {
+          question: 'VIP会员能否支持学币、优惠券优惠购买？',
+          answer: 'VIP会员本身提供购课折扣让利、免费课、免费阅读等丰富特权，因此在VIP会员不支持学币、优惠券等优惠抵扣。'
+        },
+        {
+          question: 'VIP会员能否叠加优惠券、学币、邀请码使用呢？',
+          answer: '你的很多语伴同样也抱有和你一样的问题！ 如果你已经是全球说的VIP会员，在学习的过程中获得了优惠券，将在你下次同等级续费中产生优惠，或者在当前等级进行会 员进行会员升级的操作中产生优惠！'
+        },
+        {
+          question: '成为VIP会员后能否退订或者装让给其他朋友呢？',
+          answer: '你的很多语伴同样也抱有和你一样的问题！ 如果你已经是全球说的VIP会员，在学习的过程中获得了优惠券，将在你下次同等级续费中产生优惠，或者在当前等级进行会 员进行会员升级的操作中产生优惠！'
+        }
+      ],
       recommand: 2,
       value: 3,
       codeNum1: '',
@@ -386,13 +323,17 @@ export default {
     },
     //  展开常见问题
     unfoldAnswer (num) {
+      if (this.answerShow !== -1 && this.answerShow === num) {
+        this.answerShow = -1
+        return
+      }
+      // if (this.answerShow !== '') {
+      //   this.answerShow = ''
+      //   return
+      // }
       console.log('====>', this.answerShow)
       console.log('====>', num)
       this.answerShow = num
-    },
-    // 收起常见问题
-    upfoldAnswer () {
-      this.answerShow = ''
     }
   }
 }
@@ -405,7 +346,7 @@ export default {
     .header-img {
       width: 100%;
       height: 360px;
-      background: url('../../../../static/images/vipUpgrade/vip-banner.jpeg') no-repeat center;
+      background: url('../../../../static/images/vipUpgrade/vip-banner.jpg') no-repeat center;
       background-size: cover;
     }
     .title {
@@ -415,19 +356,21 @@ export default {
       transform: translate(-50%, -50%);
       margin-bottom: 10px;
       p:nth-child(1) {
-        font-size:28px;
-        font-family:PingFang-SC-Bold;
-        font-weight:bold;
+        font-family:PingFang-SC-Heavy;
+        font-size:44px;
+        font-weight:800;
         color:rgba(255,255,255,1);
-        text-align: center;
-        line-height: 40px
+        line-height:62px;
+        padding-bottom: 10px;
       }
       p:nth-child(2) {
-        font-size:14px;
-        font-family:PingFang-SC-Medium;
-        font-weight:500;
+        font-size:21px;
+        font-family:PingFangSC-Semibold;
+        font-weight:600;
         color:rgba(255,255,255,1);
+        line-height:29px;
         text-align: center;
+
       }
     }
   }
@@ -467,9 +410,9 @@ export default {
           .vip-function {
             margin-top: 12px;
             height: 530px;
-            background:rgba(255,255,255,1);
-            box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
-            border:1px solid rgba(233,237,239,1);
+            background:url('../../../../static/images/vipUpgrade/vip-img.png') no-repeat center;
+            background-size: cover;
+            margin-left: -16px;
           }
         }
       }
@@ -550,22 +493,25 @@ export default {
               padding-top: 80px;
               i {
                 display: inline-block;
-                width: 52px;
-                height: 52px;
-                background: url('../../../../static/images/vipUpgrade/icon.svg') no-repeat center;
+                width: 30px;
+                height: 30px;
+                background: url('../../../../static/images/vipUpgrade/xin.svg') no-repeat center;
                 background-size: cover;
+                margin-right: 12px;
               }
               span {
                 font-size:28px;
                 font-family:PingFang-SC-Bold;
                 font-weight:bold;
                 color:rgba(51,51,51,1);
-                line-height: 52px;
+                line-height: 30px;
               }
             }
             .course-list {
               width: 100%;
               background:rgba(255,255,255,1);
+              border-radius:8px;
+              box-shadow:0px 9px 22px 0px rgba(8,60,88,0.2);
               border-radius:8px;
               border:4px solid rgba(238,243,246,1);
               margin-top: 15px;
@@ -592,24 +538,24 @@ export default {
                           display: inline-block;
                           width: 20px;
                           height: 18px;
-                          background: pink;
+                          background:url('../../../../static/images/vipUpgrade/problem.svg') no-repeat center;
+                          background-size: cover;
                           margin-right: 14px;
                         }
                       }
                       i {
                         display: inline-block;
-                        width: 6px;
+                        width: 7px;
                         height: 12px;
-                        background: url('../../../../static/images/go.svg') no-repeat center;
+                        background: url('../../../../static/images/vipUpgrade/right-icon.svg') no-repeat center;
                         background-size: cover;
                       }
                       .icon {
                         display: inline-block;
-                        width: 6px;
-                        height: 12px;
-                        background: pink;
-                        // background: url('../../../../static/images/') no-repeat center;
-                        // background-size: cover;
+                        width: 12px;
+                        height: 7px;
+                        background: url('../../../../static/images/vipUpgrade/down-icon.svg') no-repeat center;
+                        background-size: cover;
                       }
                     }
                   }
@@ -646,12 +592,16 @@ export default {
                 .phone-num {
                   width: 100%;
                   text-align: center;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
                   i {
                     display: inline-block;
-                    width: 60px;
-                    height: 60px;
-                    background: url('../../../../static/images/vipUpgrade/blue.svg') no-repeat center;
-                    background-size: 100%;
+                    width: 30px;
+                    height: 30px;
+                    background: url('../../../../static/images/vipUpgrade/iphone.svg') no-repeat center;
+                    background-size:cover;
+                    margin-right: 10px;
                   }
                   span {
                     font-size:16px;
@@ -700,26 +650,25 @@ export default {
                     }
                     .people-img {
                       position: relative;
-                      width: 64px;
-                      height: 64px;
+                      width: 75px;
+                      height: 75px;
                       margin-right: 15px;
                       img {
                         width: 100%;
                         height: 100%;
-                        border-radius: 50%;
                       }
-                      .country {
-                        position: absolute;
-                        right: 0;
-                        bottom: 0;
-                        width: 14px;
-                        height: 14px;
-                        border-radius: 50%;
-                        img {
-                          width: 100%;
-                          height: 100%;
-                        }
-                      }
+                      // .country {
+                      //   position: absolute;
+                      //   right: 0;
+                      //   bottom: 0;
+                      //   width: 14px;
+                      //   height: 14px;
+                      //   border-radius: 50%;
+                      //   img {
+                      //     width: 100%;
+                      //     height: 100%;
+                      //   }
+                      // }
                     }
                     .nickname {
                       p:nth-child(1) {
@@ -743,21 +692,24 @@ export default {
                             background-repeat: no-repeat;
                             background-size: cover;
                             background-position: center;
-                            margin: 0 8px 0 4px;
                           }
                         }
                         .mother-course {
                           i {
-                            width: 5px;
-                            height: 6px;
-                            background: pink;
+                            width: 7px;
+                            height: 8px;
+                            background: url('../../../../static/images/vipUpgrade/learn-right.svg') no-repeat center;
+                            background-size: cover;
+                            margin: 0 6px;
                           }
                         }
-                        .learn-course i {
+                        .learn-course {
                           i {
-                            width: 16px;
-                            height: 11px;
-                            background: rgb(189, 17, 46);
+                            width: 18px;
+                            height: 12px;
+                            background: url('../../../../static/images/vipUpgrade/learn-green.svg') no-repeat center;
+                            background-size: cover;
+                            margin-left: 4px;
                           }
                         }
                       }
@@ -803,7 +755,7 @@ export default {
       position: relative;
       width: 224px;
       background:rgba(255,255,255,1);
-      box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
+      box-shadow:0px 15px 18px 0px rgba(0,41,69,0.2);
       border-radius:5px;
       border:6px solid rgba(230,235,238,1);
       .cards {
@@ -915,6 +867,9 @@ export default {
     }
     li:nth-child(3) {
       border:6px solid #FFBE29;
+    }
+    li:nth-child(4) {
+      border:6px solid #91D249FF;
     }
   }
 }
