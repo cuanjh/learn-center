@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>分组 6@2x</title>
+    <desc>Created with Sketch.</desc>
+    <g id="个人学习中心" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="会员详情介绍页" transform="translate(-887.000000, -2479.000000)" fill-rule="nonzero">
+            <g id="分组-6" transform="translate(887.000000, 2479.000000)">
+                <ellipse id="椭圆形" stroke="#42ADE8" stroke-width="2" cx="15" cy="16.5" rx="9.17241379" ry="9.5"></ellipse>
+                <path d="M27.0689655,18 C27.8688262,18 28.5172414,17.3284271 28.5172414,16.5 C28.5172414,15.6715729 27.8688262,15 27.0689655,15" id="路径" stroke="#91D249" stroke-width="2"></path>
+                <path d="M1.5463155,18 C2.34617618,18 2.99459137,17.3284271 2.99459137,16.5 C2.99459137,15.6715729 2.34617618,15 1.5463155,15" id="路径-copy" stroke="#91D249" stroke-width="2" transform="translate(2.270453, 16.500000) scale(-1, 1) translate(-2.270453, -16.500000) "></path>
+                <path d="M26.8599597,19.0146934 C26.9971832,18.2508196 27.0689655,17.4627132 27.0689655,16.6570241 C27.0689655,9.66674273 21.6655056,4 15,4 C8.3344944,4 2.93103448,9.66674273 2.93103448,16.6570241 C2.93103448,17.4618498 3.00266304,18.2491305 3.13959939,19.0122376" id="路径" stroke="#91D249" stroke-width="1.5" stroke-linecap="round"></path>
+                <path d="M8.72413793,16.5 C8.72413793,20.0898509 11.5339371,23 15,23 C18.4660629,23 21.2758621,20.0898509 21.2758621,16.5" id="路径" stroke="#42ADE8" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>
