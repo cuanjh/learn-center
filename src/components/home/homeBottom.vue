@@ -170,8 +170,10 @@
     line-height:17px;
     padding-left: 6px;
   }
-  .row2 {
+  .row-bottom {
+    width: 100%;
     background-color: #103044;
+    margin-top: 50px;
   }
   .footer .copyright{
     width: 1180px;
@@ -311,7 +313,7 @@
         </div>
       </div>
     </div>
-    <div class="row row2">
+    <div class="row-bottom">
       <div class="copyright">
         <div class="main bottom-content">
           <p class="desc" style="display: none;">北京酷语时代教育科技有限公司 版权所有 @2016 京ICP备14044248号
