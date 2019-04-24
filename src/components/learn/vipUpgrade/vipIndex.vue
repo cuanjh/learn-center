@@ -839,11 +839,11 @@ export default {
           height: 86px;
           color: #fff;
           line-height: 144px;
-          text-align: center;
+          text-align: left;
           background-color: #FFBE29;
           position: absolute;
           top: -23px;
-          right: -54px;
+          right: -74px;
           font-size: 12px;
           transform: rotate(45deg);
           padding: 0 24px;
