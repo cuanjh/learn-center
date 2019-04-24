@@ -4,7 +4,7 @@
       <div class="top"></div>
       <div class="content">
         <div class="user-message">
-          <span>开通账户：</span>
+          <span>购买账户：</span>
           <div class="nickname" v-if="userInfo">
             <img :src="userInfo.photo?userInfo.photo:''" alt="头像">
             <span>{{userInfo.nickname}}</span>
@@ -31,7 +31,7 @@
         <div class="hand">
           <div class="point">
             <i></i>
-            <span>Please select the payment method</span>
+            <span>请选择付款方式</span>
           </div>
         </div>
         <div class="pay-methods">
@@ -64,7 +64,7 @@
             </div>
           </div>
         </div>
-        <div class="checkbox">
+        <div class="checkbox" v-show="false">
           <label for="label" @click.stop="clickMe">
             <input type="checkbox" id="label" v-model="ckeckVal">
             {{message}}
@@ -202,7 +202,7 @@ export default {
             .price {
               padding-top: 41px;
               position: relative;
-              text-align: center;
+              margin-left: 72px;
               span:nth-child(1) {
                 font-size: 26px;
                 font-family: PingFang-SC-Medium;
