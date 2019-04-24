@@ -61,13 +61,13 @@
         <div class="activation-code">
           <div class="title">通过激活码升级</div>
           <div class="code">
-            <input type="text" v-model="codeNum1">
+            <input id="input-1" type="text" @keyup="inputKeyup($event, codeNum1)" maxlength="4" v-model="codeNum1">
             <span class="code-line"></span>
-            <input type="text" v-model="codeNum2">
+            <input id="input-2" type="text" @keyup="inputKeyup($event, codeNum2)" maxlength="4" v-model="codeNum2">
             <span class="code-line"></span>
-            <input type="text" v-model="codeNum3">
+            <input id="input-3" type="text" @keyup="inputKeyup($event, codeNum3)" maxlength="4" v-model="codeNum3">
             <span class="code-line"></span>
-            <input type="text" v-model="codeNum4">
+            <input id="input-4" type="text" maxlength="4" v-model="codeNum4">
           </div>
           <p class="prompt">注：每个账号在1个自然年之内，只能累计使用3个激活码！</p>
           <button class="button" v-bind:disabled="!isDisabled" @click='showConfirm()'>立即激活</button>
@@ -179,6 +179,7 @@
 </template>
 <script>
 // import Vue from 'vue'
+import $ from 'jquery'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import Bus from '../../../bus.js'
 import LogCollect from '../../../tool/logCollect'
@@ -290,16 +291,11 @@ export default {
       console.log('确定激活码？', this.isActivation)
       var _memberType = this.ui.member_info.member_type
       // this.$refs.alert.$emit('UserVipCode', this.activateNum)
-      this.getMemberCard(this.isActivation).then((res) => {
+      let activeCode = this.isActivation.toUpperCase()
+      this.getMemberCard(activeCode).then((res) => {
         console.log('激活码返回', res)
         if (res.success) {
           this.alertConfirm(res.member_info.money)
-          // LogCollect.payMemberCard(
-          //   _memberType,
-          //   this.codeNum,
-          //   1,
-          //   res.member_info.money
-          // )
         } else {
           this.alertMessage(res.errorMsg)
           this.codeNum = ''
@@ -334,6 +330,18 @@ export default {
       console.log('====>', this.answerShow)
       console.log('====>', num)
       this.answerShow = num
+    },
+    inputKeyup (event, num) {
+      if (num.length === 4) {
+        let id = event.target.id
+        let idNum = parseInt(id.split('-')[1])
+        if (idNum !== 4) {
+          let nextId = 'input-' + (idNum + 1)
+          setTimeout(() => {
+            $('#' + nextId).focus()
+          }, 100)
+        }
+      }
     }
   }
 }
