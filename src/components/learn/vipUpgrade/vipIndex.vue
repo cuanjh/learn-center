@@ -402,16 +402,14 @@ export default {
           width: 100%;
           p:nth-child(1) {
             font-size:24px;
-            font-family:PingFang-SC-Bold;
             font-weight:bold;
-            color:rgba(51,51,51,1);
+            color:#333333;
             margin-bottom: 8px;
           }
-          p:nth-child(1) {
+          p:nth-child(2) {
             font-size:14px;
-            font-family:PingFang-SC-Medium;
             font-weight:500;
-            color:rgba(51,51,51,1);
+            color:#333333;
           }
         }
         .vip-lists {
@@ -590,6 +588,7 @@ export default {
                       font-weight:400;
                       color:rgba(153,153,153,1);
                       line-height:20px;
+                      margin-left: 6px;
                     }
                   }
                 }
@@ -766,6 +765,11 @@ export default {
       box-shadow:0px 15px 18px 0px rgba(0,41,69,0.2);
       border-radius:5px;
       border:6px solid rgba(230,235,238,1);
+      transition: transform .3s;
+      -webkit-transition: transform .3s;
+      &:hover {
+        transform: translateY(-6px)
+      }
       .cards {
         padding: 52px 32px 33px;
         .title {

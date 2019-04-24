@@ -732,6 +732,7 @@ const mutations = {
     let course = learnMoreCourse.filter((item) => {
       return item.lan_code === arr[0]
     })
+    state.chapterDes = []
     state.chapterDes.push(course[0].name['zh-CN'])
     state.chapterDes.push(state.levelDes[arr[2]])
     let unitNum = parseInt(arr[3].replace('Unit', ''))

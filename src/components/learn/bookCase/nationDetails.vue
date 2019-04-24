@@ -326,8 +326,10 @@ a {
     background: #F9F9F9FF;
     // 左边导航
     .nation-left-tab {
-      height: 100%;
-      width: 240px;
+      width: 230px;
+      background-color: #fff;
+      margin-right: 10px;
+      border-radius: 0 0 0 5px;
       .left {
         padding-top: 30px;
         p {
@@ -339,7 +341,7 @@ a {
           color:rgba(153,153,153,1);
           span {
             padding-left: 25px;
-            border-left: 4px solid #f6f8f9;
+            border-left: 4px solid #fff;
           }
           &.active {
             color:#0A2B40FF;
@@ -358,6 +360,7 @@ a {
       width: 100%;
       height: auto;
       background:#fff;
+      border-radius: 0 0 5px 0;
       .nation-right {
         width: 100%;
         padding: 31px 40px 60px;

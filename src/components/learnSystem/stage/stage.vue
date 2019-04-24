@@ -60,7 +60,7 @@ export default {
     return {
       cur: -1, // 当前的子组件
       isTeacher: 0,
-      // totalCoin: 0, // 所有的金币数
+      totalCoin: 0, // 所有的金币数
       coin: 0, // 获取的金币数
       continue_correct: 0, // 连对数
       max_continue_correct: 0, // 最高连击数
@@ -109,7 +109,8 @@ export default {
       } else {
         that.coin = _coinCache
         let coins = parseInt(this.totalCoin) + _coinCache
-        that.updateTotalCoin(coins)
+        this.totalCoin = coins
+        // that.updateTotalCoin(coins)
       }
 
       var resource = this.getResource(this.curSlide)
@@ -156,12 +157,14 @@ export default {
           // 连续正确
           that.coin += coin
           let coins = that.totalCoin + coin
-          that.updateTotalCoin(coins)
+          // that.updateTotalCoin(coins)
+          this.totalCoin = coins
         } else if (that.continue_wrong >= minNum) {
           // 连续错误
           that.coin -= baseCoin
           let coins = Math.max((that.totalCoin - baseCoin), 0)
-          that.updateTotalCoin(coins)
+          // that.updateTotalCoin(coins)
+          this.totalCoin = coins
         }
       })
     })
@@ -401,8 +404,7 @@ export default {
       tips: state => state.learn.tips,
       formScores: state => state.course.formScores,
       canRecord: state => state.learn.canRecord,
-      userInfo: state => state.user.userInfo,
-      totalCoin: state => state.user.totalCoin,
+      userInfo: state => state.userInfo,
       contentUrl: state => state.course.contentUrl
     }),
     comLength () {
@@ -458,7 +460,7 @@ export default {
       postUnlockChapter: 'course/postUnlockChapter',
       getUnlockChapter: 'course/getUnlockChapter',
       getProgress: 'course/getProgress',
-      getUserInfo: 'user/getUserInfo',
+      getUserInfo: 'getUserInfo',
       getChapterContent: 'course/getChapterContent',
       getLearnInfo: 'course/getLearnInfo',
       getCourseContent: 'course/getCourseContent',
@@ -630,7 +632,7 @@ export default {
     async initData () {
       await this.getUserInfo()
       console.log(3333)
-      // this.totalCoin = this.userInfo.coins
+      this.totalCoin = this.userInfo.coins
       localStorage.setItem('userCoin', this.userInfo.coins)
       // var that = this
       // let _coinCache = coinCache.get(that.completePath)

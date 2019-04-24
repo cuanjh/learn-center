@@ -75,7 +75,7 @@
               <p>
                 <span class="record-count">{{ item.record_count + '条录音' }}</span>
                 <span class="praise-count">{{ item.praise_count }}</span>
-                <span class="partner-chapter">{{ chapterDes }} </span>
+                <span class="partner-chapter">{{ chapterDes.join('·') }} </span>
               </p>
             </div>
           </div>
@@ -462,7 +462,6 @@ export default {
     width: 10px;
     height: 14px;
     display: inline-block;
-    margin-top: 5px;
     margin-right: 6px;
     background-image: url('../../../static/images/learnSystem/record-sound.png');
     background-repeat: no-repeat;
@@ -479,7 +478,7 @@ export default {
     width: 14px;
     height: 13px;
     display: inline-block;
-    margin-top: 5px;
+    margin-top: 4px;
     margin-right: 6px;
     background-image: url('../../../static/images/learnSystem/record-like.png');
     background-repeat: no-repeat;
@@ -489,7 +488,7 @@ export default {
   .partner-chapter {
     float: right;
     color: #444444;
-    margin-left: 200px;
+    margin-left: 160px;
   }
 
   .learn-myrecord-item {

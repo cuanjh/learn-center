@@ -92,6 +92,7 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     margin-bottom: 1px;
+    box-shadow: 0 5px 5px rgba(16, 48, 68,.1);
   }
   .weixin {
     background-image: url('../../../static/images/floatBar/icon-weixin.svg');
