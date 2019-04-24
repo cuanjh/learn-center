@@ -253,7 +253,8 @@ export default {
     }),
     ...mapActions({
       getMemberCard: 'user/getMemberCard', // 激活码激活接口
-      getMemberProductsList: 'user/getMemberProductsList'
+      getMemberProductsList: 'user/getMemberProductsList',
+      getUserInfo: 'getUserInfo'
     }),
     // 提示用户的信息不完整
     alertMessage (msg) {
@@ -295,7 +296,17 @@ export default {
       this.getMemberCard(activeCode).then((res) => {
         console.log('激活码返回', res)
         if (res.success) {
-          this.alertConfirm(res.member_info.money)
+          // this.alertConfirm(res.member_info.money)
+          let obj = {
+            className: 'okIcon',
+            description: '激活码激活成功',
+            btnDesc: '确定',
+            isLink: false
+          }
+
+          Bus.$emit('showCommonModal', obj)
+          this.confirmCard(res.member_info.money)
+          this.getUserInfo()
         } else {
           this.alertMessage(res.errorMsg)
           this.codeNum = ''
