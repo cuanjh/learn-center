@@ -189,7 +189,6 @@
   .footer .copyright .bottom-content .bottom .policy {
     padding-right: 34px;
     font-size:13px;
-    font-family:PingFang-SC-Regular;
     font-weight:400;
     color:rgba(178,192,201,1);
   }

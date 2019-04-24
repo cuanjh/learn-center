@@ -29,14 +29,14 @@
                   <ul>
                     <li v-for='(item, index) in productList' :key="index">
                       <div class="cards">
-                        <p class="title" v-if="index == 0">BASIC</p>
-                        <p class="title" v-if="index == 1">STANDARD</p>
-                        <p class="title" v-if="index == 2">ADVANCED</p>
-                        <p class="title" v-if="index == 3">COMPREHENSIVE</p>
+                        <p class="title" v-if="index == 0">月卡</p>
+                        <p class="title" v-if="index == 1">季卡</p>
+                        <p class="title" v-if="index == 2">半年卡</p>
+                        <p class="title" v-if="index == 3">年卡</p>
                         <div class="price">
                           <span>¥</span>
-                          <span>{{ item.money }}</span>
-                          <span>/mo</span>
+                          <span>{{ item.total_money }}</span>
+                          <span></span>
                         </div>
                         <div class="expect">
                           <span>{{ item.product }}个月有效期</span>
@@ -364,7 +364,6 @@ export default {
       transform: translate(-50%, -50%);
       margin-bottom: 10px;
       p:nth-child(1) {
-        font-family:PingFang-SC-Heavy;
         font-size:44px;
         font-weight:800;
         color:rgba(255,255,255,1);
@@ -431,7 +430,6 @@ export default {
         margin: 0 auto;
         .title {
           font-size:24px;
-          font-family:PingFang-SC-Bold;
           font-weight:bold;
           color:rgba(51,51,51,1);
         }
@@ -507,7 +505,6 @@ export default {
               }
               span {
                 font-size:28px;
-                font-family:PingFang-SC-Bold;
                 font-weight:bold;
                 color:rgba(51,51,51,1);
                 line-height: 30px;
@@ -533,7 +530,6 @@ export default {
                       justify-content: space-between;
                       align-items: center;
                       font-size:14px;
-                      font-family:PingFang-SC-Medium;
                       font-weight:500;
                       color:rgba(51,51,51,1);
                       span {
@@ -612,7 +608,6 @@ export default {
                   }
                   span {
                     font-size:16px;
-                    font-family:PingFang-SC-Bold;
                     font-weight:bold;
                     color:rgba(51,51,51,1);
                     line-height: 60px;
@@ -630,13 +625,11 @@ export default {
               .text {
                 p:nth-child(1) {
                   font-size:24px;
-                  font-family:PingFang-SC-Medium;
                   font-weight:500;
                   color:rgba(16,48,68,1);
                 }
                 p:nth-child(2) {
                   font-size:18px;
-                  font-family:PingFang-SC-Regular;
                   font-weight:400;
                   color:rgba(60,91,111,1);
                 }
@@ -680,13 +673,11 @@ export default {
                     .nickname {
                       p:nth-child(1) {
                         font-size:17px;
-                        font-family:PingFang-SC-Bold;
                         font-weight:bold;
                         color:rgba(51,51,51,1);
                       }
                       .languages {
                         font-size:13px;
-                        font-family:PingFang-SC-Medium;
                         font-weight:500;
                         color:rgba(184,184,184,1);
                         display: flex;
@@ -744,7 +735,6 @@ export default {
   text-align: center;
   .title {
     font-size:24px;
-    font-family:PingFang-SC-Bold;
     font-weight:bold;
     color:rgba(51,51,51,1);
   }
@@ -781,7 +771,6 @@ export default {
           text-align: center;
           span:nth-child(1) {
             font-size:26px;
-            font-family:PingFang-SC-Medium;
             font-weight:500;
             color:rgba(144,162,174,1);
           }
@@ -795,7 +784,6 @@ export default {
             position: absolute;
             bottom: 25px;
             font-size:16px;
-            font-family:PingFang-SC-Bold;
             font-weight:bold;
             color:rgba(144,162,174,1);
             text-align: bottom;

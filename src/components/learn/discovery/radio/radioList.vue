@@ -364,7 +364,6 @@ a {
     height: 46px;
     line-height: 58px;
     font-size:14px;
-    font-family:PingFang-SC-Medium;
     font-weight:500;
     color:rgba(60,91,111,1);
     z-index: 99;
@@ -395,7 +394,6 @@ a {
               align-items: center;
               justify-content: space-between;
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               color:#3C5B6F;
               line-height:19px;
               padding: 8px 26px;
@@ -448,14 +446,12 @@ a {
             width: 100%;
             .title {
               font-size:20px;
-              font-family:PingFang-SC-Bold;
               font-weight:bold;
               color:rgba(10,43,64,1);
               line-height:28px;
             }
             .tab {
               font-size:13px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(60,91,111,1);
               line-height:18px;
@@ -477,7 +473,6 @@ a {
               }
               a {
                 font-size:13px;
-                font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(60,91,111,1);
                 line-height:18px;
@@ -492,14 +487,12 @@ a {
             border-bottom: 3px solid #EEF2F3;
             .column {
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(144,162,174,1);
             }
             .new {
               a {
                 font-size:14px;
-                font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:#3C5B6FFF;
                 padding-right: 20px;
@@ -580,7 +573,6 @@ a {
                     text-overflow:ellipsis;
                     white-space:nowrap;
                     font-size:14px;
-                    font-family:PingFang-SC-Medium;
                     font-weight:500;
                     color:rgba(51,51,51,1);
                     line-height:20px;
@@ -588,7 +580,6 @@ a {
                   .num {
                     display: flex;
                     font-size:12px;
-                    font-family:PingFang-SC-Medium;
                     font-weight:500;
                     // color:rgba(245,166,35,1);
                     color: #999999FF;
@@ -610,7 +601,6 @@ a {
                   }
                   .author {
                     font-size:12px;
-                    font-family:PingFang-SC-Medium;
                     font-weight:500;
                     color:rgba(184,184,184,1);
                     line-height:17px;
@@ -621,7 +611,6 @@ a {
                       text-overflow:ellipsis;
                       white-space:nowrap;
                       font-size:12px;
-                      font-family:PingFang-SC-Medium;
                       font-weight:500;
                       color:rgba(153,153,153,1);
                       line-height:17px;
@@ -666,7 +655,6 @@ a {
             span {
               padding-top: 18px;
               font-size:15px;
-              font-family:PingFang-SC-Medium;
               font-weight:400;
               color:rgba(200,212,219,1);
               line-height:22px;

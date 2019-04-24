@@ -439,14 +439,12 @@ a {
                 margin-bottom: 30px;
                 .title {
                   font-size:16px;
-                  font-family:PingFangSC-Semibold;
                   font-weight:600;
                   color:rgba(0,42,91,1);
                 }
                 .desc {
                   width: 90%;
                   font-size:14px;
-                  font-family:PingFang-SC-Regular;
                   font-weight:400;
                   color:rgba(153,153,153,1);
                 }

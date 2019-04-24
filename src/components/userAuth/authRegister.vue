@@ -158,7 +158,6 @@ export default {
     width: 56px;
     height: 14px;
     font-size: 14px;
-    font-family: PingFang-SC-Medium;
     font-weight: 500;
     color:rgba(42,159,228,1);
     line-height: 14px;
@@ -171,7 +170,6 @@ export default {
   .login-pwd p{
     cursor: pointer;
     font-size:14px;
-    font-family:PingFang-SC-Medium;
     font-weight:500;
     color:rgba(153,153,153,1);
     line-height:14px;

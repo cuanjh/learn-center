@@ -711,13 +711,11 @@ export default {
 }
 .radio-left .course .introduce .introduce-content .title {
   font-size:14px;
-  font-family:PingFang-SC-Regular;
   font-weight:400;
   color:rgba(136,136,136,1);
 }
 .radio-left .course .introduce .introduce-text {
   font-size:14px;
-  font-family:PingFang-SC-Regular;
   font-weight:400;
   color:rgba(136,136,136,1);
   line-height: 22px;
@@ -1068,7 +1066,6 @@ export default {
 }
 .author-info .author-info-right .nickname {
   font-size:16px;
-  font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:rgba(51,51,51,1);
 }
@@ -1184,7 +1181,6 @@ export default {
 }
 .author-text .desc {
   font-size:14px;
-  font-family:PingFang-SC-Regular;
   font-weight:400;
   color:rgba(136,136,136,1);
   line-height:22px;
@@ -1318,7 +1314,6 @@ export default {
 .radio-left .course-list .course-item .course-title {
   display: inline-block;
   font-size:14px;
-  font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:rgba(51,51,51,1);
   overflow: hidden;
@@ -1339,7 +1334,6 @@ export default {
 }
 .radio-left .course-list .course-item .course-title .audition {
   font-size:11px;
-  font-family:PingFang-SC-Medium;
   font-weight:500;
   color:rgba(214,59,59,1);
   line-height:16px;

@@ -948,7 +948,6 @@ input {
         text-align: right;
         width: 64px;
         font-size:14px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(68,68,68,1);
         line-height: 40px;
@@ -997,7 +996,6 @@ input {
         padding-top: 4px;
         em {
           font-size:12px;
-          font-family:PingFang-SC-Regular;
           font-weight:400;
           color:rgba(221,43,43,1);
         }
@@ -1062,7 +1060,6 @@ input {
         text-align: right;
         width: 64px;
         font-size: 14px;
-        font-family: PingFang-SC-Medium;
         font-weight: 500;
         color: #444444;
         line-height: 40px;
@@ -1078,7 +1075,6 @@ input {
     }
     .learn-setting-error-tips-settingpage {
       font-size:12px;
-      font-family:PingFang-SC-Regular;
       font-weight:400;
       color:rgba(221,43,43,1);
       padding: 0px 0 46px 88px;

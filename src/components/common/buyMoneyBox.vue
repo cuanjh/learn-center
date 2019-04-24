@@ -228,7 +228,6 @@ export default {
       padding: 56px 0 27px;
       p {
         font-size:14px;
-        font-family:PingFang-SC-Bold;
         font-weight:bold;
         color:rgba(126,146,159,1);
         line-height:20px;
@@ -260,14 +259,12 @@ export default {
           position: absolute;
           top: 0;
           font-size:13px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(126,146,159,1);
           line-height:18px;
           padding: 15px 32px 10px;
           p {
             font-size:16px;
-            font-family:PingFang-SC-Bold;
             font-weight:bold;
             color:rgba(10,43,64,1);
             line-height:22px;
@@ -280,14 +277,12 @@ export default {
             padding: 0px 0px;
             p {
               font-size:13px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(126,146,159,1);
               line-height:18px;
             }
             .yuan {
               font-size:13px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(255,167,23,1);
               line-height:18px;
@@ -296,7 +291,6 @@ export default {
             }
             span:nth-child(1) {
               font-size:26px;
-              font-family:PingFang-SC-Bold;
               font-weight:bold;
               color:rgba(255,167,23,1);
               line-height:34px;
@@ -309,7 +303,6 @@ export default {
         width: 100%;
         p {
           font-size:12px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(178,192,201,1);
           line-height:17px;
@@ -324,7 +317,6 @@ export default {
         align-items: center;
         span {
           font-size:12px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:#7E929F;
           line-height:17px;
@@ -396,7 +388,6 @@ export default {
         }
         span {
           font-size:14px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(255,255,255,1);
           line-height:20px;
@@ -460,7 +451,6 @@ export default {
             flex-direction: column;
             align-items: center;
             font-size:13px;
-            font-family:PingFang-SC-Medium;
             font-weight:500;
             color:#B2C0C9FF;
             span {
@@ -503,7 +493,6 @@ export default {
               display: flex;
               align-items: center;
               font-size:13px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(10,43,64,1);
               line-height:18px;
@@ -558,7 +547,6 @@ export default {
       }
       p:nth-child(2) {
         font-size:18px;
-        font-family:PingFang-SC-Bold;
         font-weight:bold;
         color:rgba(10,43,64,1);
         padding: 28px 0 20px;
@@ -574,7 +562,6 @@ export default {
       }
       p:last-child {
         font-size:14px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(144,162,174,1);
         line-height:20px;

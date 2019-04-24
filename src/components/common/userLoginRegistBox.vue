@@ -108,7 +108,6 @@ export default {
       }
       .look {
         font-size:14px;
-        font-family:PingFang-SC-Medium;
         color:#90A2AE;
         line-height:20px;
         margin-top: 12px;

@@ -231,13 +231,11 @@ export default {
               display: flex;
               flex-direction: column;
               font-size:14px;
-              font-family:PingFang-SC-Bold;
               font-weight:bold;
               color:rgba(51,51,51,1);
               padding: 10px 0 10px 8px;
               span:nth-child(2) {
                 font-size:12px;
-                font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(153,153,153,1);
                 padding-top: 4px;

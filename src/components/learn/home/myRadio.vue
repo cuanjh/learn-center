@@ -422,7 +422,6 @@ export default {
       }
       .change-batch {
         font-size:14px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(126,146,159,1);
         line-height:20px;

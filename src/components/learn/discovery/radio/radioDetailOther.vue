@@ -101,7 +101,6 @@ export default {
 }
 .other-radio-item .title a{
   font-size:14px;
-  font-family:PingFang-SC-Medium;
   font-weight:500;
   color:rgba(68,68,68,1);
   margin-top: 15px;

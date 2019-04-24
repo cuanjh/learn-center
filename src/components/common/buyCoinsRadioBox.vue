@@ -171,7 +171,6 @@ export default {
       padding: 56px 0 27px;
       p {
         font-size:14px;
-        font-family:PingFang-SC-Bold;
         font-weight:bold;
         color:rgba(126,146,159,1);
         line-height:20px;
@@ -208,7 +207,6 @@ export default {
             width: 100%;
             height: 32px;
             font-size:15px;
-            font-family:PingFang-SC-Bold;
             font-weight:bold;
             color:rgba(255,167,23,1);
             line-height:16px;
@@ -224,7 +222,6 @@ export default {
         width: 100%;
         p {
           font-size:12px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(178,192,201,1);
           line-height:17px;
@@ -271,7 +268,6 @@ export default {
         }
         span, a {
           font-size:14px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(255,255,255,1);
           line-height:20px;
@@ -332,14 +328,12 @@ export default {
       }
       p:nth-child(2) {
         font-size:18px;
-        font-family:PingFang-SC-Bold;
         font-weight:bold;
         color:rgba(10,43,64,1);
         padding: 28px 0 20px;
       }
       p:last-child {
         font-size:14px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(144,162,174,1);
         line-height:20px;

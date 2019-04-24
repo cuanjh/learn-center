@@ -60,7 +60,6 @@ export default {
     display: flex;
     justify-content: space-between;
     font-size:16px;
-    font-family:PingFang-SC-Bold;
     font-weight:bold;
     color:rgba(51,51,51,1);
     line-height:36px;
@@ -75,7 +74,6 @@ export default {
     .all {
       cursor: pointer;
       font-size:14px;
-      font-family:PingFang-SC-Medium;
       font-weight:500;
       color:rgba(60,91,111,1);
       line-height:36px;
@@ -122,7 +120,6 @@ export default {
               }
               .language {
                 font-size:12px;
-                font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(144,162,174,1);
                 span:nth-child(1) {
@@ -147,7 +144,6 @@ export default {
             text-align: center;
             span {
               font-size:12px;
-              font-family:PingFang-SC-Bold;
               font-weight:bold;
               color:rgba(42,159,228,1);
               line-height:24px;
@@ -160,7 +156,6 @@ export default {
   }
   .refresh {
     font-size:14px;
-    font-family:PingFang-SC-Medium;
     font-weight:500;
     color:rgba(144,162,174,1);
     line-height:20px;

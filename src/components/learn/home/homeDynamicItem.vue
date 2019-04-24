@@ -360,13 +360,11 @@ export default {
     }
     .learn-one {
       font-size:12px;
-      font-family:PingFang-SC-Medium;
       font-weight:500;
       color:rgba(144,162,174,1);
     }
     .learn-more {
       font-size:12px;
-      font-family:PingFang-SC-Medium;
       font-weight:500;
       color:rgba(144,162,174,1);
       // i {
@@ -388,7 +386,6 @@ export default {
         margin-right: 15px;
         a {
           font-size:12px;
-          font-family:PingFang-SC-Bold;
           font-weight:bold;
           color:rgba(42,159,228,1);
           padding: 0 16px;
@@ -632,7 +629,6 @@ export default {
 .dynamic-details {
   width: 100%;
   font-size:14px;
-  font-family:PingFang-SC-Medium;
   font-weight:500;
   color:rgba(51,51,51,1);
   line-height:20px;
@@ -648,7 +644,6 @@ export default {
   p {
     cursor: pointer;
     font-size:13px;
-    font-family:PingFang-SC-Medium;
     font-weight:500;
     color:rgba(144,162,174,1);
     line-height:18px;
@@ -784,7 +779,6 @@ export default {
         }
         span {
           font-size:14px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(144,162,174,1);
           line-height:20px;
@@ -800,7 +794,6 @@ export default {
         line-height: 30px;
         span {
           font-size:14px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(255,255,255,1);
         }

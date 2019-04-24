@@ -126,7 +126,6 @@ export default {
           p {
             font-size: 14px;
             color: #b2c0c9ff;
-            font-family: PingFang-SC;
           }
           p:nth-child(1) {
             font-size: 26px;

@@ -519,7 +519,6 @@ export default {
         .radio-info {
           .radio-name {
             font-size:22px;
-            font-family:PingFang-SC-Bold;
             font-weight:bold;
             color:rgba(10,43,64,1);
             line-height:30px;
@@ -641,7 +640,6 @@ export default {
             }
             .desc {
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(60,91,111,1);
               line-height:20px;
@@ -655,7 +653,6 @@ export default {
             }
             .desc-up {
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(60,91,111,1);
               line-height:20px;
@@ -672,7 +669,6 @@ export default {
             text-align: center;
             a {
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(5,129,209,1);
               line-height:42px;
@@ -855,7 +851,6 @@ export default {
               padding: 18px 126px;
               span {
                 font-size:18px;
-                font-family:PingFang-SC-Bold;
                 font-weight:bold;
                 color:rgba(255,255,255,1);
                 line-height:25px;
@@ -939,7 +934,6 @@ export default {
             .more {
               display: inline-block;
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:#0581D1FF;
               line-height:20px;
@@ -964,7 +958,6 @@ export default {
             background:rgba(222,222,222,.1);
             text-align: center;
             font-size:14px;
-            font-family:PingFang-SC-Medium;
             font-weight:500;
             color:#90a2ae;
             line-height:20px;

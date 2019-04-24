@@ -61,7 +61,6 @@ export default {
     display: flex;
     align-items: center;
     font-size:16px;
-    font-family:PingFang-SC-Bold;
     font-weight:bold;
     color:rgba(253,157,28,1);
     .vip-img {
@@ -77,7 +76,6 @@ export default {
   .vip-btn {
     a {
       font-size:14px;
-      font-family:PingFang-SC-Bold;
       font-weight:bold;
       color:rgba(255,255,255,1);
       line-height:20px;

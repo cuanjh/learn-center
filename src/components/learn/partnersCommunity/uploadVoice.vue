@@ -376,7 +376,6 @@ export default {
               align-items: center;
               span {
                 font-size:13px;
-                font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(178,192,201,1);
               }
@@ -628,7 +627,6 @@ export default {
                   }
                   span {
                     font-size:13px;
-                    font-family:PingFang-SC-Medium;
                     font-weight:500;
                     color:rgba(178,192,201,1);
                   }

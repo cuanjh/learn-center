@@ -129,7 +129,6 @@ export default {
           p {
             text-align: center;
             font-size:14px;
-            font-family:PingFang-SC-Medium;
             font-weight:500;
             color:rgba(144,162,174,1);
             span:nth-child(2) {

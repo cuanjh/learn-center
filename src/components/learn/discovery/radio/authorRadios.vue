@@ -150,7 +150,6 @@ export default {
             text-overflow: ellipsis;
             white-space: nowrap;
             font-size: 14px;
-            font-family: PingFang-SC-Medium;
             font-weight: 500;
             color: rgba(51, 51, 51, 1);
             line-height: 20px;
@@ -159,7 +158,6 @@ export default {
             display: flex;
             align-items: center;
             font-size: 12px;
-            font-family: PingFang-SC-Medium;
             font-weight: 500;
             // color:rgba(245,166,35,1);
             color: #999999ff;
@@ -182,7 +180,6 @@ export default {
           }
           .author {
             font-size: 12px;
-            font-family: PingFang-SC-Medium;
             font-weight: 500;
             color: rgba(153, 153, 153, 1);
             line-height: 17px;

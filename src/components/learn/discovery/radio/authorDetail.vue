@@ -306,7 +306,6 @@ export default {
       }
       .author-text {
         font-size:13px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(144,162,174,1);
         .nickname {
@@ -351,7 +350,6 @@ export default {
             a {
               padding: 3px 15px;
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(255,255,255,1);
               border-radius: 13px;
@@ -369,7 +367,6 @@ export default {
             .followed {
               padding: 3px 15px;
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:#90A2AE;
               border-radius: 13px;
@@ -394,7 +391,6 @@ export default {
         .introduce {
           width: 510px;
           font-size:13px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(144,162,174,1);
           span {
@@ -416,7 +412,6 @@ export default {
       span {
         cursor: pointer;
         font-size:14px;
-        font-family:PingFang-SC-Bold;
         font-weight:bold;
         color:rgba(16,48,68,1);
         line-height: 20px;
@@ -457,7 +452,6 @@ export default {
               background:rgba(246,248,249,.7);
               p {
                 text-align: center;
-                font-family:PingFang-SC-Medium;
               }
               p:nth-child(1) {
                 font-size:14px;
@@ -505,7 +499,6 @@ export default {
                   width: 100%;
                   .text {
                     font-size:14px;
-                    font-family:PingFang-SC-Medium;
                     font-weight:500;
                     color:rgba(126,146,159,1);
                     line-height:20px;

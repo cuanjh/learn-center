@@ -413,12 +413,10 @@ export default {
       border-bottom: 1px solid #E6EBEE;
       .detail-left {
         font-size:14px;
-        font-family:PingFang-SC-Regular;
         font-weight:400;
         color:rgba(153,153,153,1);
         p:nth-child(1) {
           font-size:14px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(68,68,68,1);
         }
@@ -428,7 +426,6 @@ export default {
       }
       .detail-right {
         font-size:18px;
-        font-family:PingFang-SC-Bold;
         font-weight:bold;
         color:rgba(60,91,111,1);
       }
@@ -494,7 +491,6 @@ export default {
       span {
         padding-top: 18px;
         font-size:16px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(200,212,219,1);
         line-height:22px;
@@ -533,7 +529,6 @@ export default {
         text-align: center;
         p {
           font-size:14px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(126,146,159,1);
         }
@@ -547,7 +542,6 @@ export default {
             color:rgba(93,155,4,1);
             span {
               font-size:22px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(127,201,97,1);
               padding-right: 4px;
@@ -565,7 +559,6 @@ export default {
         text-align: center;
         width: 190px;
         font-size:16px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(255,255,255,1);
         background: #7FC961FF;
@@ -716,7 +709,6 @@ export default {
 }
 .no-user-following dl dd p {
   font-size:16px;
-  font-family:PingFang-SC-Medium;
   font-weight:500;
   color:rgba(200,212,219,1);
   line-height:22px;

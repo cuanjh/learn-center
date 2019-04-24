@@ -136,7 +136,6 @@ export default {
     .userView-bindPhone-title {
       width: 100%;
       font-size:22px;
-      font-family:PingFang-SC-Bold;
       font-weight:bold;
       color:rgba(10,43,64,1);
     }
@@ -155,7 +154,6 @@ export default {
       width: 100%;
       .bindPhone-sentNumber {
         font-size:16px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(126,146,159,1);
         line-height:22px;
@@ -178,7 +176,6 @@ export default {
           display: inline;
           padding: 0 20px;
           font-size:14px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(250,250,250,1);
           background:#0581D1;
@@ -211,7 +208,6 @@ export default {
       .bindPhone-time-limited-tips {
         padding-top: 20px;
         font-size:14px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(229,110,110,1);
       }

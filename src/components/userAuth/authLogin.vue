@@ -412,7 +412,6 @@ html,body{-webkit-text-size-adjust:none;}
         left: 21px;
         top: 6px;
         font-size: 14px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color: #103044;
         text-align: left;
@@ -528,7 +527,6 @@ html,body{-webkit-text-size-adjust:none;}
   .login-pwd p{
     cursor: pointer;
     font-size:14px;
-    // font-family:PingFang-SC-Medium;
     font-weight:500;
     color:#3C5B6F;
     line-height:14px;
@@ -611,7 +609,6 @@ html,body{-webkit-text-size-adjust:none;}
   //     width: 56px;
   //     height: 14px;
   //     font-size: 14px;
-  //     font-family: PingFang-SC-Medium;
   //     font-weight: 500;
   //     color:rgba(42,159,228,1);
   //     line-height: 14px;
@@ -693,7 +690,6 @@ html,body{-webkit-text-size-adjust:none;}
   .areacode-box .code-list li {
     width: 100%;
     font-size:13px;
-    font-family:PingFang-SC-Medium;
     font-weight:500;
     color: #103044;
     text-align: left;

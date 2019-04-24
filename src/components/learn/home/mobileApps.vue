@@ -86,7 +86,6 @@ export default {
       display: inline-block;
       border-radius:18px;
       border:1px solid #90A2AE;
-      font-family: PingFang-SC;
       font-weight: 600;
       font-size: 14px;
       color: #0A2B40;

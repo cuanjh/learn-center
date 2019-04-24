@@ -328,7 +328,6 @@ export default {
     span {
       padding-top: 18px;
       font-size:16px;
-      font-family:PingFang-SC-Medium;
       font-weight:500;
       color:rgba(200,212,219,1);
       line-height:22px;
@@ -409,7 +408,6 @@ export default {
   margin-top: 6px;
   display: inline-block;
   font-size:14px;
-  font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:#333333;
 }
@@ -420,7 +418,6 @@ export default {
 
 .user-course-item-box ol li:nth-of-type(2) {
   font-size:13px;
-  font-family:PingFang-SC-Medium;
   font-weight:500;
   color:#7e929f;
 }
@@ -685,7 +682,6 @@ export default {
 }
 .user-course-nocourse dl dd p {
   font-size:16px;
-  font-family:PingFang-SC-Medium;
   font-weight:500;
   color:rgba(200,212,219,1);
   line-height:22px;

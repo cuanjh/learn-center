@@ -58,7 +58,6 @@ export default {
     display: flex;
     justify-content: space-between;
     font-size:16px;
-    font-family:PingFang-SC-Bold;
     font-weight:bold;
     color:rgba(51,51,51,1);
     line-height:36px;
@@ -104,7 +103,6 @@ export default {
             .name {
               .title {
                 font-size:14px;
-                font-family:PingFang-SC-Heavy;
                 font-weight:800;
                 color:rgba(102,102,102,1);
               }
@@ -115,7 +113,6 @@ export default {
             cursor: pointer;
             span {
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(102,102,102,1);
             }
@@ -143,7 +140,6 @@ export default {
       }
       span {
         font-size:14px;
-        font-family:PingFang-SC-Bold;
         font-weight:bold;
         color:rgba(255,255,255,1);
         line-height:38px;

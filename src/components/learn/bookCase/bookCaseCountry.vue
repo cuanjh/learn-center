@@ -115,7 +115,6 @@ export default {
 }
 .book-nation li .nation-languages .languages p:nth-child(1){
   font-size:14px;
-  font-family:PingFang-SC-Regular;
   font-weight:400;
   color:rgba(51,51,51,1);
   margin-bottom: 6px;
@@ -127,7 +126,6 @@ export default {
     width: 200px;
     height: 62px;
     font-size: 14px;
-    font-family: PingFang-SC-Regular;
     font-weight: 400;
     color: #999999;
     overflow: hidden;

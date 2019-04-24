@@ -77,7 +77,6 @@ export default {
           align-items: center;
           .nickname {
             font-size:14px;
-            font-family:PingFang-SC-Medium;
             font-weight:500;
             color:rgba(74,74,74,1);
             a {
@@ -92,7 +91,6 @@ export default {
             }
             p {
               font-size:12px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(153,153,153,1);
             }

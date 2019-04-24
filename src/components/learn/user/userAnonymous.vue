@@ -440,7 +440,6 @@ export default {
   display: flex;
   align-items: center;
   font-size:12px;
-  font-family:PingFang-SC-Regular;
   font-weight:400;
   color:rgba(221,43,43,1);
   position: relative;
@@ -470,7 +469,6 @@ export default {
         text-align: right;
         width: 64px;
         font-size: 14px;
-        font-family: PingFang-SC-Medium;
         font-weight: 500;
         color: #444444;
         line-height: 40px;
@@ -488,7 +486,6 @@ export default {
       display: inline-block;
       position: relative;
       font-size:12px;
-      font-family:PingFang-SC-Regular;
       font-weight:400;
       color:rgba(221,43,43,1);
       line-height: 12px;

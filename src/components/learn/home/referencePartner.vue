@@ -65,7 +65,6 @@ export default {
         display: flex;
         align-items: center;
         font-size:16px;
-        font-family:PingFang-SC-Bold;
         font-weight:bold;
         color:rgba(16,48,68,1);
         i {
@@ -81,7 +80,6 @@ export default {
       .more-partner {
         cursor: pointer;
         font-size:14px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(60,91,111,1);
       }
@@ -137,7 +135,6 @@ export default {
               text-align: center;
               span {
                 font-size:12px;
-                font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(153,153,153,1);
               }
@@ -152,7 +149,6 @@ export default {
                 border:1px solid rgba(230,235,238,1);
                 padding: 5px 22px;
                 font-size:13px;
-                font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(16,48,68,1);
                 i {
@@ -177,7 +173,6 @@ export default {
       padding: 0 33px;
       span {
         font-size:14px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(144,162,174,1);
       }

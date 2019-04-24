@@ -652,7 +652,6 @@ export default {
             font-size: 24px;
             color: #333333FF;
             line-height: 34px;
-            font-family: PingFang-SC;
             font-weight: bold;
           }
           .lists {
@@ -701,7 +700,6 @@ export default {
                     display: flex;
                     flex-direction: column;
                     span {
-                      font-family: PingFang-SC;
                       font-size: 14px;
                       line-height: 20px;
                       color: #333333FF;
@@ -752,7 +750,6 @@ export default {
             p {
               width: 232px;
               font-size:16px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(51,51,51,1);
               line-height:22px;

@@ -184,7 +184,6 @@ export default {
       padding: 10px 0;
       span {
         font-size:16px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(60,91,111,1);
       }

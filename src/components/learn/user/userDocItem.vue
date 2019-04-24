@@ -120,7 +120,6 @@ export default {
         .course-text {
           p {
             font-size:15px;
-            font-family:PingFang-SC-Medium;
             font-weight:500;
             color:rgba(153,153,153,1);
           }
@@ -141,7 +140,6 @@ export default {
           width: 282px;
           .text {
             font-size:14px;
-            font-family:PingFang-SC-Medium;
             font-weight:500;
             color:rgba(126,146,159,1);
             text-align: center;
@@ -168,7 +166,6 @@ export default {
               span:nth-child(2) {
                 display: block;
                 font-size:14px;
-                font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(126,146,159,1);
               }

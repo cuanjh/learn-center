@@ -75,7 +75,6 @@ export default {
       })
       $('#selcity-content .multiselect__content li .multiselect__option').css({
         'width': '204px',
-        'font-family': 'PingFang-SC-Medium',
         'color': '#103044FF',
         'font-size': '14px',
         'font-weight': '500',

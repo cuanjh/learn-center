@@ -174,7 +174,6 @@ export default {
             }
             span {
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:400;
               color:rgba(10,43,64,1);
             }
@@ -236,7 +235,6 @@ export default {
               white-space:nowrap;
               line-height: 36px;
               font-size:14px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(51,51,51,1);
             }

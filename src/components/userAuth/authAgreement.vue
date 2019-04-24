@@ -155,7 +155,6 @@ body, html {
 }
 .container .container-block h4{
   font-size:18px;
-  font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:rgba(16,48,68,1);
   line-height:25px;

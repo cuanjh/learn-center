@@ -260,7 +260,6 @@ export default {
 }
 .user-left-userDetail ol li:nth-of-type(2) {
   font-size:18px;
-  font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:rgba(51,51,51,1);
   padding-top: 10px;
@@ -271,7 +270,6 @@ export default {
 }
 .user-left-userDetail ol li:nth-of-type(3) {
   font-size:12px;
-  font-family:PingFang-SC-Medium;
   font-weight:500;
   color:rgba(60,91,111,1);
   display: flex;
@@ -280,7 +278,6 @@ export default {
   padding-top: 8px;
   a{
     font-size:12px;
-    font-family:PingFangSC-Semibold;
     font-weight:600;
     color:rgba(255,190,41,1);
     padding: 2px 8px;
@@ -322,7 +319,6 @@ export default {
 
 .user-left-userDetail ol li:nth-of-type(4) {
   font-size:20px;
-  font-family:PingFang-SC-Bold;
   font-weight:bold;
   color:rgba(10,43,64,1);
   display: flex;

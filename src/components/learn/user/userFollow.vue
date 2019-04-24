@@ -347,7 +347,6 @@ export default {
                   .description {
                     p {
                       font-size:14px;
-                      font-family:PingFang-SC-Medium;
                       font-weight:500;
                       color:rgba(144,162,174,1);
                       padding-top: 8px;
@@ -378,7 +377,6 @@ export default {
                       display: inline-block;
                       max-width: 200px;
                       font-size:16px;
-                      font-family:PingFang-SC-Bold;
                       font-weight:bold;
                       color:rgba(10,43,64,1);
                       overflow: hidden;
@@ -393,7 +391,6 @@ export default {
                 .right {
                   a {
                     font-size:14px;
-                    font-family:PingFang-SC-Medium;
                     font-weight:500;
                     color:rgba(126,146,159,1);
                     padding: 3px 20px;
@@ -493,7 +490,6 @@ export default {
         span {
           padding-top: 18px;
           font-size:16px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(200,212,219,1);
           line-height:22px;
@@ -501,7 +497,6 @@ export default {
       }
       .no-show {
         font-size:16px;
-        font-family:PingFang-SC-Medium;
         font-weight:500;
         color:rgba(60,91,91,1);
       }
@@ -541,7 +536,6 @@ export default {
 }
 .no-user-following dl dd p {
   font-size:16px;
-  font-family:PingFang-SC-Medium;
   font-weight:500;
   color:rgba(200,212,219,1);
   line-height:22px;

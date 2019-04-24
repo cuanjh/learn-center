@@ -623,7 +623,6 @@ export default {
           display: flex;
           align-items: center;
           font-size:14px;
-          font-family:PingFang-SC-Medium;
           font-weight:500;
           color:rgba(126,146,159,1);
           i {
@@ -790,7 +789,6 @@ export default {
         padding: 0 21px 20px;
         span {
           font-size:16px;
-          font-family:PingFang-SC-Bold;
           font-weight:bold;
           color:rgba(10,43,64,1);
           line-height:18px;
@@ -814,7 +812,6 @@ export default {
             .moods-item {
               a {
                 font-size:16px;
-                font-family:PingFang-SC-Medium;
                 font-weight:500;
                 color:rgba(74,74,74,1);
                 line-height:22px;

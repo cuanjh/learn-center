@@ -474,7 +474,6 @@ export default {
             left: 104px;
             p:nth-child(1) {
               font-size:24px;
-              font-family:PingFang-SC-Heavy;
               font-weight:800;
               color:rgba(51,51,51,1);
             }
@@ -499,14 +498,12 @@ export default {
                   background: #F6F8F9FF;
                   border-radius: 80px;
                   font-size:14px;
-                  font-family:PingFang-SC-Regular;
                   font-weight:400;
                   color:rgba(51,51,51,1);
                   .fl {
                     float: right;
                     display: block;
                     // width: 110px;
-                    font-family:PingFang-SC-Heavy;
                     font-weight:800;
                   }
                   i {
@@ -704,7 +701,6 @@ export default {
           }
           span {
             font-size:14px;
-            font-family:PingFang-SC-Heavy;
             font-weight:800;
             margin-left: 7px;
             color:#B9CDE2;
@@ -777,7 +773,6 @@ export default {
             span {
               padding-top: 18px;
               font-size:16px;
-              font-family:PingFang-SC-Medium;
               font-weight:500;
               color:rgba(200,212,219,1);
               line-height:22px;

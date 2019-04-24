@@ -255,7 +255,6 @@ input[type="text"] {
         cursor: pointer;
         display: block;
         font-size:14px;
-        font-family:PingFang-SC-Bold;
         font-weight:bold;
         color:rgba(255,255,255,1);
         text-align: center;
