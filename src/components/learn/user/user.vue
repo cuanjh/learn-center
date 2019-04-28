@@ -518,9 +518,6 @@ export default {
 .spe-set li i {
   background-image: url(../../../../static/images/learn/learn-user-shezhi.svg);
 }
-.spe-bind {
-  margin-top: 20px;
-}
 .spe-bind li i {
   background-image: url(../../../../static/images/learn/learn-user-bind.svg);
 }
