@@ -186,11 +186,14 @@
     justify-content: space-between;
     align-items: center;
   }
-  .footer .copyright .bottom-content .bottom .policy {
-    padding-right: 34px;
-    font-size:13px;
-    font-weight:400;
+
+  .footer .copyright .bottom-content .bottom {
     color:rgba(178,192,201,1);
+    font-size:13px;
+  }
+
+  .footer .copyright .bottom-content .bottom .policy {
+    font-weight:400;
   }
   .footer .copyright .desc{
     /* padding-left: 50px;
@@ -315,13 +318,11 @@
     <div class="row-bottom">
       <div class="copyright">
         <div class="main bottom-content">
-          <p class="desc" style="display: none;">北京酷语时代教育科技有限公司 版权所有 @2016 京ICP备14044248号
-            <a href="javascript:;" target="_blank">使用条款 | 隐私政策</a>
-            <span class="policeICP">{dede:kuyulang key='公安部备案号 11010502036358'/}</span>
-          </p>
           <p class="desc">北京酷语时代教育科技有限公司 版权所有 @2016</p>
           <div class="bottom">
-            <a class="policy" href="javascript:;" target="_blank">使用条款 | 隐私政策 / 帮助</a>
+            <router-link class="policy" :to="{path: '/auth/auth-agreement'}" target="_blank">使用条款 | 隐私政策</router-link>
+            /
+            <a class="help" href="javascript:;">帮助</a>
           </div>
         </div>
       </div>
