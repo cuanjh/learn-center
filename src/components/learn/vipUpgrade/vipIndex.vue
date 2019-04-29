@@ -1,12 +1,12 @@
 <template>
   <div class="vip-home">
-      <div class="vip-header">
-        <div class="header-img"></div>
-        <div class="title">
-          <p>成为 VIP 会员，加快学习速度</p>
-          <p>借助 VIP 会员资格解锁完整的语言学习之旅</p>
-        </div>
+    <div class="vip-header">
+      <div class="header-img"></div>
+      <div class="title">
+        <p>成为 VIP 会员，加快学习速度</p>
+        <p>借助 VIP 会员资格解锁完整的语言学习之旅</p>
       </div>
+    </div>
     <div class="vip-container">
       <div class="vip-content">
         <!-- 介绍vip会员福利 -->
@@ -175,6 +175,7 @@
         </div>
       </div>
     </div>
+    <bottom />
   </div>
 </template>
 <script>
@@ -183,6 +184,7 @@ import $ from 'jquery'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import Bus from '../../../bus.js'
 import LogCollect from '../../../tool/logCollect'
+import Bottom from '../../common/bottom.vue'
 // import I18nLocales from '../../../vueI18/locale'
 
 export default {
@@ -217,6 +219,7 @@ export default {
     }
   },
   components: {
+    Bottom
   },
   created () {
     Bus.$on('settingUpdate', (type) => {
@@ -495,7 +498,6 @@ export default {
       .project {
         width: 100%;
         background: #ffffff;
-        border-bottom: 1px solid #6A878E47;
         .project-content {
           padding: 0 120px;
           position: relative;

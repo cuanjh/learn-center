@@ -45,8 +45,11 @@ export default {
       this.showUserCoinsBox = false
     },
     gotoVip () {
-      // this.$router.push({ path: '/app/user/vip' })
-      this.$router.push({ path: '/app/vip-home' })
+      // this.$router.push({ path: '/app/vip-home' })
+      let routeUrl = this.$router.resolve({
+        path: '/app/vip-home'
+      })
+      window.open(routeUrl.href, '_blank')
       this.showUserCoinsBox = false
     },
     close () {

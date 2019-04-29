@@ -126,8 +126,11 @@ export default {
     gotoVip () {
       this.goldShortage = false
       this.isShow = false
-      // this.$router.push({ path: '/app/user/vip' })
-      this.$router.push({path: '/app/vip-home'})
+      // this.$router.push({path: '/app/vip-home'})
+      let routeUrl = this.$router.resolve({
+        path: '/app/vip-home'
+      })
+      window.open(routeUrl.href, '_blank')
     }
   }
 }

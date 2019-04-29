@@ -209,8 +209,11 @@ export default {
     },
     gotoVIP () {
       window._czc.push(['_trackEvent', '学习系统', 'header', '跳转到会员', '', 'VIP'])
-      // this.$router.push({path: '/app/user/vip'})
-      this.$router.push({path: '/app/vip-home'})
+      // this.$router.push({path: '/app/vip-home'})
+      let routeUrl = this.$router.resolve({
+        path: '/app/vip-home'
+      })
+      window.open(routeUrl.href, '_blank')
     }
   }
 }

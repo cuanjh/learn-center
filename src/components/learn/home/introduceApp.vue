@@ -291,12 +291,14 @@
         </div>
       </div>
     </div>
+    <bottom />
   </div>
 </template>
 <script>
 import $ from 'jquery'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
+import Bottom from '../../common/bottom.vue'
 
 export default {
   data () {
@@ -304,6 +306,9 @@ export default {
       showRadioPlay: false,
       videoImg: true
     }
+  },
+  components: {
+    Bottom
   },
   mounted () {
     this.$nextTick(() => {

@@ -11,8 +11,8 @@
             </p>
           </div>
           <p class="course-old">{{$t('course.finished')}}&nbsp;<span v-text="finishedChapter + '/' + chapterNum"></span>&nbsp;{{$t('course.classHour')}}</p>
-          <p class="vip" v-if="isVip === 1"><span><i></i>{{ vipEndDate }}到期</span><router-link tag="span" :to="{path: '/app/vip-home'}">会员续费</router-link></p>
-          <p class="no-vip" v-else><span><i></i>你还不是会员</span><router-link tag="span" :to="{path: '/app/vip-home'}">成为会员</router-link></p>
+          <p class="vip" v-if="isVip === 1"><span><i></i>{{ vipEndDate }}到期</span><router-link :to="{path: '/app/vip-home'}" target="_blank">会员续费</router-link></p>
+          <p class="no-vip" v-else><span><i></i>你还不是会员</span><router-link :to="{path: '/app/vip-home'}" target="_blank">成为会员</router-link></p>
         </dd>
       </dl>
       <!-- <div class="finished-course">
@@ -304,7 +304,7 @@ export default {
   margin-right: 16px;
 }
 
-.lang-overview dd .vip span:last-child {
+.lang-overview dd .vip a {
   /* width:66px; */
   border-radius:20px;
   border:1px solid #ffbe29;
@@ -340,7 +340,7 @@ export default {
   line-height:22px;
   margin-right: 16px;
 }
-.lang-overview dd .no-vip span:last-child {
+.lang-overview dd .no-vip a {
   /* width:66px; */
   border-radius:20px;
   border:1px solid #ffbe29;
