@@ -4,7 +4,7 @@
       <li v-for="(item, key, index) in langInfoObj" :key="index">
         <p class="title">{{item.title}}</p>
         <p v-if="key === 'LanguageResources'" class="desc">
-          <a :href="item.info">{{item.info}}</a>
+          <a :href="item.info" target="_blank">{{item.info}}</a>
         </p>
         <p v-else class="desc">{{item.info}}</p>
       </li>

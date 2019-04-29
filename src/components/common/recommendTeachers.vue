@@ -74,7 +74,7 @@ export default {
       if (this.showMoreAuthor) {
         this.showMoreAuthor = false
       }
-      this.startAuthorsIndex--
+      this.startAuthorsIndex = this.startAuthorsIndex - 5
     },
     // 下一个
     radioAuthorNext () {
@@ -84,7 +84,7 @@ export default {
       if (this.showMoreAuthor) {
         return
       }
-      this.startAuthorsIndex++
+      this.startAuthorsIndex = this.startAuthorsIndex + 5
       if (this.startAuthorsIndex === 11) {
         this.startAuthorsIndex = this.authors.length - 4
         this.showMoreAuthor = true
