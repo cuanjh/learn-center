@@ -630,7 +630,7 @@ export default {
             }
           }
           .other-say {
-            padding: 183px 0;
+            padding: 92px 0 122px 0;
             width: 960px;
             margin: 0 auto;
             .other-content {
