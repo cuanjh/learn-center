@@ -9,7 +9,7 @@
   }
   .link-lists {
     width: 1180px;
-    overflow: hidden;
+    /* overflow: hidden; */
     margin: 0px auto;
     display: flex;
     justify-content: space-between;
@@ -79,6 +79,7 @@
     padding-bottom: 34px;
   }
   .footer-right .share a {
+    position: relative;
     display: inline-block;
     width: 26px;
     height: 26px;
@@ -90,6 +91,7 @@
     margin-right:12px;
   }
   .footer-right .share a i {
+    position: absolute;
     display: inline-block;
     width: 26px;
     height: 26px;
@@ -111,6 +113,15 @@
   }
   .footer-right .share a:hover .weixin {
     background-image: url('../../../static/images/footer/weixin-hover.svg');
+  }
+  .footer-right .share a:hover .weixin-talkmate {
+    position: absolute;
+    display: inline-block;
+    width: 154px;
+    height: 156px;
+    background-image: url('../../../static/images/footer/weixin-talkmate.svg');
+    left: -152px;
+    top: -38px;
   }
   .footer-right .share a:hover .flash {
     background-image: url('../../../static/images/footer/facebook-hover.svg');
@@ -284,9 +295,9 @@
       </div>
       <div class="footer-right">
         <div class="share">
-          <a href="javascript:;"><i class="weixin"></i></a>
+          <a href="javascript:;"><i class="weixin"></i><i class="weixin-talkmate"></i></a>
           <a href="javascript:;"><i class="flash"></i></a>
-          <a href="javascript:;"><i class="weibo"></i></a>
+          <a href="https://weibo.com/u/5487063021" target="_blank"><i class="weibo"></i></a>
           <a href="javascript:;"><i class="qq"></i></a>
         </div>
         <div class="relation">
