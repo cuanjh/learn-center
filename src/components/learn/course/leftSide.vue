@@ -180,16 +180,17 @@ export default {
   font-weight: bold;
 }
 .lang-overview dd .triangle {
+  width: 130px;
   display: inline-block;
 }
 .lang-overview dd .triangle span {
   display: inline-block;
+  max-width: 90px;
   font-size: 19px;
   line-height:26px;
   font-weight: bold;
   color: #ffffff;
   word-break: break-all;
-  width: 46px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

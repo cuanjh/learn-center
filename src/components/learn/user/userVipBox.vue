@@ -2,7 +2,7 @@
   <div class="vip-content">
     <div  class="prompt">
       <i class="vip-img"></i>
-        <span v-if="isVip == 1">您的会员服务(年卡)有效期为：{{startTime}} 至 {{endTime}}</span>
+        <span v-if="isVip == 1">您的会员服务{{ cardKind }}有效期为：{{startTime}} 至 {{endTime}}</span>
         <span v-else>现在注册成为会员，12月圣诞好礼，新用户80%折！！！</span>
     </div>
     <div @click="goVip()" class="vip-btn">
@@ -24,7 +24,22 @@ export default {
   computed: {
     ...mapState({
       userInfo: state => state.userInfo
-    })
+    }),
+    cardKind () {
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return
+      }
+      var month = this.userInfo.member_info['month_num']
+      if (month === 1) {
+        return '(月卡)'
+      } else if (month === 3) {
+        return '(季卡)'
+      } else if (month === 6) {
+        return '(半年卡)'
+      } else if (month === 12) {
+        return '(年卡)'
+      }
+    }
   },
   methods: {
     goVip () {

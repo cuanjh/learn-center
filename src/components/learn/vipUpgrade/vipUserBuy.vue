@@ -304,7 +304,7 @@ export default {
               background-repeat: no-repeat;
               background-position: center;
               background-size: cover;
-              background-image: url("../../../../static/images/pay-icon/icon-alipay1.svg");
+              background-image: url("../../../../static/images/pay-icon/icon-alipay.png");
             }
           }
         }

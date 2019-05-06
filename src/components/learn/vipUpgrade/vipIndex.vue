@@ -139,7 +139,7 @@
                           <img src="../../../../static/images/vipUpgrade/item-two.png" alt="">
                         </div>
                         <div class="nickname">
-                          <p>宫本はるか</p>
+                          <p>CALGARY</p>
                           <p class="languages">
                             <span class="mother-course">英语<i></i></span>
                             <span class="learn-course">日语<i></i></span>
@@ -156,7 +156,7 @@
                           <img src="../../../../static/images/vipUpgrade/item-three.png" alt="">
                         </div>
                         <div class="nickname">
-                          <p>宫本はるか</p>
+                          <p>皮特_Yang</p>
                           <p class="languages">
                             <span class="mother-course">英语<i></i></span>
                             <span class="learn-course">汉语<i></i></span>
@@ -195,7 +195,7 @@ export default {
       cardslist: [
         {
           question: 'VIP会员能否免费学习所学语种相关的电台课程？',
-          answer: '全球说有很多丰富有趣的音频电台课程，用户成为VIP会员后，所有的电台课程均可免费订阅，无需再次付费！'
+          answer: '全球说有很多丰富有趣的音频电台课程，用户成为VIP会员后，除去少部分主播老师的课程设计为付费外，其他均为免费！'
         },
         {
           question: 'VIP会员能否支持学币、优惠券优惠购买？',
@@ -203,11 +203,11 @@ export default {
         },
         {
           question: 'VIP会员能否叠加优惠券、学币、邀请码使用呢？',
-          answer: '你的很多语伴同样也抱有和你一样的问题！ 如果你已经是全球说的VIP会员，在学习的过程中获得了优惠券，将在你下次同等级续费中产生优惠，或者在当前等级进行会 员进行会员升级的操作中产生优惠！'
+          answer: '你的很多语伴同样也抱有和你一样的问题！ 如果你已经是全球说的VIP会员，在学习的过程中获得了优惠券，将在你下次同等级续费中产生优惠，或者在当前等级进行会员升级的操作中产生优惠！'
         },
         {
-          question: '成为VIP会员后能否退订或者装让给其他朋友呢？',
-          answer: '你的很多语伴同样也抱有和你一样的问题！ 如果你已经是全球说的VIP会员，在学习的过程中获得了优惠券，将在你下次同等级续费中产生优惠，或者在当前等级进行会 员进行会员升级的操作中产生优惠！'
+          question: '成为VIP会员后能否退订或者转让给其他朋友呢？',
+          answer: '成为VIP后所产生的所有优惠和费用均不支持退订和转让，全球说提供免费的体验课程和电台课程，你可以选择试学一部分课程再另行考虑成为VIP，会员权限将为你提供更多更实用的学习提升方法和学习趣味！'
         }
       ],
       recommand: 2,
@@ -774,7 +774,7 @@ export default {
         transform: translateY(-6px)
       }
       .cards {
-        padding: 52px 32px 33px;
+        padding: 52px 30px 33px;
         .title {
           text-align: center;
         }
