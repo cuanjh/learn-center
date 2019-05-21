@@ -147,18 +147,18 @@
               <p>(会员专享)</p>
             </div>
             <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
-              <a href="javascript:void(0);" @click="jumpVipPage(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'], 'A' + (i + 1))">
+              <a href="javascript:void(0);" @click="jumpVipPage(coreData['isCoreCompleted'], 'A' + (i + 1))">
                 <div class="current-course-item">
 
                   <div class="course-item-icon">
                     <canvas width="300" height="300" :id="item.code + '-canvas-A' + (i + 1)"></canvas>
                     <div :class="'vip'+ (i + 1)"></div>
-                    <i v-show="!(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive'])" class="icon-vip-lock"></i>
+                    <i v-show="!(userInfo.member_info.member_type == 1) || !(userInfo.member_info.member_type == 1 && coreData['isCoreCompleted'])" class="icon-vip-lock"></i>
                   </div>
                   <div v-show="vipData['A' + (i + 1)]['completedRate'] &&  vipData['A' + (i + 1)]['completedRate'] !== '1'" class="continue-learn-vip">
                     <span>继续学习</span>
                   </div>
-                  <p class="course-item-title" :class="{'course-item-title-locked': !(coreData['isCoreCompleted'] && vipData['A' + (i + 1)]['isActive']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
+                  <p class="course-item-title" :class="{'course-item-title-locked': !(userInfo.member_info.member_type == 1) || !(userInfo.member_info.member_type == 1 && coreData['isCoreCompleted']) }">{{ $t("courseItem.vip."+vipitem) }}</p>
                   <p class="course-item-star" v-if="vipData['A' + (i + 1)]['isCompleted']">
                     <span class="course-yellow-star"><i v-for="index in vipData['A' + (i + 1)]['starNum']" :key="index"></i></span>
                     <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - vipData['A' + (i + 1)]['starNum'])" :key="index"></i></span>
@@ -348,14 +348,14 @@ export default {
             }
           }
 
-          obj['isActive'] = 0
-          if (i === 1) {
-            obj['isActive'] = 1
-          } else {
-            if (retObj['A' + (i - 1)]['isCompleted'] === 1) {
-              obj['isActive'] = 1
-            }
-          }
+          obj['isActive'] = 1
+          // if (i === 1) {
+          //   obj['isActive'] = 1
+          // } else {
+          //   if (retObj['A' + (i - 1)]['isCompleted'] === 1) {
+          //     obj['isActive'] = 1
+          //   }
+          // }
           if (parseInt(this.isVip) !== 1) {
             obj['isCompleted'] = 0
             obj['isActive'] = 0
