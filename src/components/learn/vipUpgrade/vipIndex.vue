@@ -19,6 +19,22 @@
             <!-- vip选项 -->
             <div class="vip-lists">
               <div class="vip-function">
+                <ul>
+                  <li>
+                    <div class="one">比较免费选项和 VIP 选项</div>
+                    <div class="two">免费</div>
+                    <div class="three">VIP</div>
+                  </li>
+                  <li v-for="item in functionList" :key="item.id">
+                    <div class="one">
+                      <i :class="'icon' + item.id"></i>
+                      <span>{{item.title}}</span>
+                      <span class="des">{{item.des}}</span>
+                    </div>
+                    <div class="two"><i v-show="item.id == 1 || item.id == 5 || item.id == 7"></i></div>
+                    <div class="three"><i></i></div>
+                  </li>
+                </ul>
               </div>
               <!-- 会员卡片 -->
               <div class="lists-content">
@@ -190,6 +206,16 @@ import Bottom from '../../common/bottom.vue'
 export default {
   data () {
     return {
+      functionList: [
+        {id: 1, title: '作业批改优先推送给母语使用者'},
+        {id: 2, title: '听力、口语、阅读、写作、语法、听说专享提升'},
+        {id: 3, title: '课程中心会员专区'},
+        {id: 4, title: '支持移动端离线下载'},
+        {id: 5, title: '语音评分'},
+        {id: 6, title: '课程创建DIY模板', des: '（即将推出）'},
+        {id: 7, title: '官方课程证书', des: '（即将推出）'},
+        {id: 8, title: '语伴聊天窗口64种语言及时翻译', des: '（即将推出）'}
+      ],
       // items: I18nLocales[Vue.config.lang].vip.left.tips,
       answerShow: -1,
       cardslist: [
@@ -427,11 +453,98 @@ export default {
         }
         .vip-lists {
           .vip-function {
-            margin-top: 12px;
-            height: 530px;
-            background:url('../../../../static/images/vipUpgrade/vip-img.png') no-repeat center;
-            background-size: cover;
-            margin-left: -16px;
+            width: 960px;
+            margin-top: 20px;
+            box-shadow:0px 6px 16px 0px rgba(0,51,86,0.12);
+            ul {
+              width: 100%;
+              height: 100%;
+              padding-bottom: 34px;
+              li {
+                padding-left: 60px;
+                display: flex;
+                align-items: center;
+                i {
+                  display: inline-block;
+                  width: 42px;
+                  height: 42px;
+                  background-repeat: no-repeat;
+                  background-size: cover;
+                  background-position: center;
+                }
+                span {
+                  font-size:14px;
+                  font-weight:500;
+                  color:rgba(51,51,51,1);
+                  line-height:42px;
+                  padding-left: 16px;
+                }
+                .des {
+                  color: #90A2AE;
+                  padding-left: 0;
+                }
+                .one {
+                  width: 652px;
+                  font-size:14px;
+                  font-weight:600;
+                  color:rgba(51,51,51,1);
+                  .icon1 {
+                    background-image: url('../../../../static/images/vipUpgrade/icon-map.svg');
+                  }
+                  .icon2 {
+                    background-image: url('../../../../static/images/vipUpgrade/icon-time.svg');
+                  }
+                  .icon3 {
+                    background-image: url('../../../../static/images/vipUpgrade/icon-voice.svg');
+                  }
+                  .icon4 {
+                    background-image: url('../../../../static/images/vipUpgrade/icon-yun.svg');
+                  }
+                  .icon5 {
+                    background-image: url('../../../../static/images/vipUpgrade/icon-erji.svg');
+                  }
+                  .icon6 {
+                    background-image: url('../../../../static/images/vipUpgrade/icon-bulb.svg');
+                  }
+                  .icon7 {
+                    background-image: url('../../../../static/images/vipUpgrade/icon-book.svg');
+                  }
+                  .icon8 {
+                    background-image: url('../../../../static/images/vipUpgrade/icon-vip.svg');
+                  }
+                }
+                .two {
+                  width: 98px;
+                  font-size:14px;
+                  font-weight:600;
+                  color:rgba(51,51,51,1);
+                  line-height:20px;
+                  i {
+                    width: 20px;
+                    height: 20px;
+                   background-image: url('../../../../static/images/vipUpgrade/icon-blue.svg');
+                  }
+                }
+                .three {
+                  font-size:14px;
+                  font-weight:600;
+                  color:rgba(51,51,51,1);
+                  line-height:20px;
+                  i {
+                    width: 20px;
+                    height: 20px;
+                    background-image: url('../../../../static/images/vipUpgrade/icon-green.svg');
+                  }
+                }
+              }
+              li:first-child {
+                padding-top: 30px;
+                padding-bottom: 16px;
+                margin-bottom: 33px;
+                border-bottom: 1px solid #F5F9FB;
+
+              }
+            }
           }
         }
       }
@@ -743,8 +856,7 @@ export default {
   }
 }
 .project-header {
-  // background: rgba(246,248,249);
-  padding: 54px 0 190px;
+  padding: 74px 0 190px;
   text-align: center;
   .title {
     font-size:24px;

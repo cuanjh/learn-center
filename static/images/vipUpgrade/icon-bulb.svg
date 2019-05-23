@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="42px" height="42px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>8@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="34" height="34" rx="17"></rect>
+        <filter x="-20.6%" y="-14.7%" width="141.2%" height="141.2%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.580392157   0 0 0 0 0.31372549   0 0 0 0 0  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M0.417616721,0.53366928 C1.705076,4.09738708 1.56202497,6.22876446 4.25461455,6.22876446 C6.9864278,6.22876446 6.80415309,4.10652482 8.09161238,0.549660321 C7.03719482,0.53366928 3.36195475,0.53366928 0.417616721,0.53366928 Z" id="path-4"></path>
+    </defs>
+    <g id="个人学习中心" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="会员详情介绍页" transform="translate(-536.000000, -873.000000)">
+            <g id="8" transform="translate(540.000000, 875.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Mask">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g id="灯泡" mask="url(#mask-2)">
+                    <g transform="translate(10.200000, 6.800000)">
+                        <path d="M10.72824,14.4325831 C10.9915189,13.7438049 11.2899126,13.1796006 12.1399134,11.6648313 C12.6332221,10.7857158 12.9010808,10.2828912 13.1532484,9.73758191 C13.6353392,8.69506645 13.8810261,7.82383141 13.8810261,7.02463606 C13.8810261,3.31340005 10.8421144,0.303893244 7.09025516,0.303893244 C3.33908114,0.303893244 0.299484256,3.31272253 0.299484256,7.02463606 C0.299484256,7.73015025 0.489411006,8.4912563 0.859424272,9.36490199 C1.13269295,10.0101221 1.44107548,10.5989181 2.03496862,11.6529544 C2.88895553,13.1686027 3.18618672,13.7287828 3.44828495,14.4174132 L10.72824,14.4325831 Z" id="Shape" stroke="#636363" stroke-width="0.566666667" fill="#FFFFFF" fill-rule="nonzero"></path>
+                        <path d="M2.8633279,7.02463606 C2.8633279,7.20053751 3.00637894,7.34217245 3.18403909,7.34217245 C3.36169924,7.34217245 3.50475027,7.20053751 3.50475027,7.02463606 C3.50475027,5.27019037 4.94679696,3.84013438 6.72109121,3.84013438 C6.89875136,3.84013438 7.04180239,3.69849944 7.04180239,3.52259798 C7.04180239,3.34669653 6.89875136,3.20506159 6.72109121,3.20506159 C4.59378393,3.20506159 2.8633279,4.91838746 2.8633279,7.02463606 Z" id="Shape" stroke="none" fill="#636363" fill-rule="nonzero"></path>
+                        <g id="Path-8-+-Path-9-Mask" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(2.833333, 14.166667)">
+                            <mask id="mask-5" fill="white">
+                                <use xlink:href="#path-4"></use>
+                            </mask>
+                            <use id="Mask" fill="#FEC62E" fill-rule="nonzero" xlink:href="#path-4"></use>
+                            <path d="M0.606233724,2.68433431 L8.28618571,1.84021403" id="Path-8" stroke="#636363" stroke-width="0.566666667" mask="url(#mask-5)"></path>
+                            <path d="M1.45740967,4.64131266 L7.41363525,3.84512939" id="Path-9" stroke="#636363" stroke-width="0.566666667" mask="url(#mask-5)"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

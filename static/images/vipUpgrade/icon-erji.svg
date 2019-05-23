@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="42px" height="42px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>7@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="34" height="34" rx="17"></rect>
+        <filter x="-20.6%" y="-14.7%" width="141.2%" height="141.2%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.580392157   0 0 0 0 0.31372549   0 0 0 0 0  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="个人学习中心" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="会员详情介绍页" transform="translate(-536.000000, -824.000000)">
+            <g id="7" transform="translate(540.000000, 826.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Mask">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g id="Group-7" mask="url(#mask-2)">
+                    <g transform="translate(7.366667, 7.366667)">
+                        <path d="M9.5,10 L9.5,10 C10.8807119,10 12,11.1192881 12,12.5 L12,14.5 C12,15.8807119 10.8807119,17 9.5,17 L9.5,17 C8.11928813,17 7,15.8807119 7,14.5 L7,12.5 C7,11.1192881 8.11928813,10 9.5,10 Z" id="矩形" stroke="#636363" stroke-width="0.7" fill="#FFFFFF" fill-rule="nonzero"></path>
+                        <path d="M17.3873906,7.20019999 C17.3873906,3.5167683 13.9260819,0.530765788 9.65633281,0.530765788 L9.65633281,0.530765788 C5.38660582,0.530765788 1.92529704,3.5167683 1.92529704,7.20019999 L1.92529704,7.70606287 L2.7091382,7.70606287 L2.7091382,7.20019999 C2.7091382,3.89026603 5.81950657,1.20701132 9.65633281,1.20701132 L9.65633281,1.20701132 C13.493159,1.20701132 16.6035054,3.89026603 16.6035054,7.20019999 L16.6035054,7.70606287 L17.3873907,7.70606287 L17.3873906,7.20019999 Z" id="Shape" stroke="none" fill="#636363" fill-rule="evenodd"></path>
+                        <path d="M17,13.0333333 L17,13.0333333 C17,16.1629469 14.4629469,18.7 11.3333333,18.7" id="Rectangle-5" stroke="#636363" stroke-width="0.68" fill="none"></path>
+                        <path d="M9.85980632,17.5175537 L11.3440552,17.5175537 C11.9640564,17.5175537 12.4666667,18.020164 12.4666667,18.6401652 L12.4666667,18.6401652 C12.4666667,19.2601664 11.9640564,19.7627767 11.3440552,19.7627767 L9.85980632,19.7627767 C9.54684496,19.7627767 9.29313965,19.5090714 9.29313965,19.19611 L9.29313965,18.0842204 C9.29313965,17.771259 9.54684496,17.5175537 9.85980632,17.5175537 Z" id="Rectangle-7" stroke="none" fill="#FEC62E" fill-rule="evenodd"></path>
+                        <path d="M16.4333333,6.8 L17.2833333,6.8 C18.3786981,6.8 19.2666667,7.68796858 19.2666667,8.78333333 L19.2666667,11.6166667 C19.2666667,12.7120314 18.3786981,13.6 17.2833333,13.6 L16.4333333,13.6 C15.8074106,13.6 15.3,13.0925894 15.3,12.4666667 L15.3,7.93333333 C15.3,7.30741062 15.8074106,6.8 16.4333333,6.8 Z" id="Rectangle-14" stroke="none" fill="#FEC62E" fill-rule="evenodd"></path>
+                        <path d="M1.13333333,6.8 L1.98333333,6.8 C3.07869809,6.8 3.96666667,7.68796858 3.96666667,8.78333333 L3.96666667,11.6166667 C3.96666667,12.7120314 3.07869809,13.6 1.98333333,13.6 L1.13333333,13.6 C0.507410617,13.6 7.66534251e-17,13.0925894 0,12.4666667 L0,7.93333333 C-7.66534251e-17,7.30741062 0.507410617,6.8 1.13333333,6.8 Z" id="Rectangle-14" stroke="none" fill="#FEC62E" fill-rule="evenodd" transform="translate(1.983333, 10.200000) scale(-1, 1) translate(-1.983333, -10.200000) "></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
