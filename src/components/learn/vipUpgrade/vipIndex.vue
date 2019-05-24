@@ -459,11 +459,12 @@ export default {
             ul {
               width: 100%;
               height: 100%;
-              padding-bottom: 34px;
+              padding-bottom: 27px;
               li {
                 padding-left: 60px;
                 display: flex;
                 align-items: center;
+                margin-bottom: 7px;
                 i {
                   display: inline-block;
                   width: 42px;
@@ -514,11 +515,13 @@ export default {
                   }
                 }
                 .two {
-                  width: 98px;
+                  width: 28px;
                   font-size:14px;
                   font-weight:600;
                   color:rgba(51,51,51,1);
                   line-height:20px;
+                  margin-right: 69px;
+                  text-align: center;
                   i {
                     width: 20px;
                     height: 20px;
@@ -541,8 +544,7 @@ export default {
                 padding-top: 30px;
                 padding-bottom: 16px;
                 margin-bottom: 33px;
-                border-bottom: 1px solid #F5F9FB;
-
+                border-bottom: 3px solid #F5F9FB;
               }
             }
           }
