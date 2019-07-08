@@ -2,18 +2,20 @@
   <div class="nav-bar">
     <div class="flex-container">
       <div class="item">
-        <a href="javascript:;" class="back">
+        <a href="javascript:;" @click="goBack()" class="back">
           <i></i>
         </a>
-        <span class="name">课程24 核心1</span>
+        <span class="name">{{ title }}</span>
       </div>
       <div class="item">
-        <progress-comp />
       </div>
       <div class="item" style="height: 40px">
-        <gold-box></gold-box>
+        <gold-box :totalCoins="part.totalCoins"></gold-box>
         <setting />
       </div>
+    </div>
+    <div class="flex-progress">
+      <progress-comp @changeSlide="changeSlide" :part="part"/>
     </div>
   </div>
 </template>
@@ -23,16 +25,44 @@ import GoldBox from './goldBox'
 import Setting from './setting'
 import ProgressComp from './progress'
 export default {
+  props: ['part'],
+  data () {
+    return {
+    }
+  },
   components: {
     GoldBox,
     Setting,
     ProgressComp
+  },
+  mounted () {
+  },
+  computed: {
+    title () {
+      let arr = this.part.chapterCode.split('-')
+      let unitNum = arr[3].toLowerCase().replace('unit', '')
+      let chapterNum = (parseInt(unitNum) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
+      let des = ''
+      if (this.part.id.indexOf('A0') > -1) {
+        des = '核心' + this.part.id.replace('A0', '')
+      }
+      return '课程' + chapterNum + ' ' + des
+    }
+  },
+  methods: {
+    goBack () {
+      this.$router.go()
+    },
+    changeSlide (index) {
+      this.$parent.$emit('changeSlide', index)
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
 .nav-bar {
+  position: relative;
   height: 62px;
   background-color: #fff;
   border-bottom: 1px solid #E6EBEE;
@@ -52,6 +82,16 @@ export default {
     display: flex;
     align-items: center;
   }
+}
+
+.flex-progress {
+  width: 100%;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  height: 62px;
+  top: 0;
+  justify-content: center;
 }
 
 .back {

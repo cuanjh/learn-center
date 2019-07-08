@@ -62,7 +62,7 @@
               <span>核心课程</span>
             </div>
             <div class="course-item-box" v-for="i in 5" :key="i">
-              <a href="javascript:void(0)" @click="startCore('A0' + i, coreData[i]['isActive'])" :to="{ name: 'stage', params: {id: 'A0' + i}}">
+              <a href="javascript:void(0)" @click="startCore('A0' + i, coreData[i]['isActive'])">
                 <div class="current-course-item">
                   <div class="course-item-icon">
                     <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
@@ -519,7 +519,8 @@ export default {
     },
     startCore (id, isActive) {
       if (isActive) {
-        this.$router.push({ name: 'stage', params: {id: id} })
+        // this.$router.push({ name: 'stage', params: {id: id} })
+        this.$router.push({ path: '/study', query: {chapterCode: this.currentChapterCode, id: id} })
       } else {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         bus.$emit('setContinueLearn', this.tips)
@@ -550,7 +551,8 @@ export default {
         window.open(routeUrl.href, '_blank')
       } else {
         if (isActive) {
-          this.$router.push({ name: 'stage', params: {id: id} })
+          // this.$router.push({ name: 'stage', params: {id: id} })
+          this.$router.push({ path: '/study', query: {chapterCode: this.currentChapterCode, id: id} })
         } else {
           this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
           bus.$emit('setContinueLearn', this.tips)

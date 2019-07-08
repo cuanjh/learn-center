@@ -1,28 +1,33 @@
 <template>
   <ul class="progress">
-    <li class=" perfect">
-      <span>1</span>
-    </li>
-    <li class="perfect">
-      <span>2</span>
-    </li>
-    <li class="great">
-      <span>3</span>
-    </li>
-    <li class="current">
-      <span>4</span>
-    </li>
-    <li>
-      <span>5</span>
+    <li :class="[{'current': part.curSlideIndex == index, 'perfect': val == 1, 'great': val == 0}]"
+      v-for="(val, index) in part.slidesVal"
+      :key="index"
+      @click="changeSlide(index)">
+      <span>{{ index + 1 }}</span>
     </li>
   </ul>
 </template>
+
+<script>
+export default {
+  props: ['part'],
+  mounted () {
+  },
+  computed: {
+  },
+  methods: {
+    changeSlide (index) {
+      this.$emit('changeSlide', index)
+    }
+  }
+}
+</script>
 
 <style lang="less" scoped>
 .progress {
   display: flex;
   align-items: center;
-  margin: 0 20px;
   li {
     display: flex;
     align-items: center;

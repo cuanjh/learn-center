@@ -68,7 +68,7 @@ const download = r => require.ensure([], () => r(require('@/components/common/do
 const paySuccess = r => require.ensure([], () => r(require('@/components/learn/home/paySuccess.vue')), 'paySuccess')
 
 // 新版学习系统
-const study = r => require.ensure([], () => r(require('@/components/study/index.vue')), 'study')
+const study = r => require.ensure([], () => r(require('@/components/study/study.vue')), 'study')
 export default[
   {
     path: '/',
@@ -337,7 +337,10 @@ export default[
   },
   {
     path: '/study',
-    component: study
+    component: study,
+    props: (route) => ({
+      chapterCode: route.query.chapterCode, id: route.query.id
+    })
   },
   {
     path: '/download',

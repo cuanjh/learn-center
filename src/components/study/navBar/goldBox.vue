@@ -1,9 +1,15 @@
 <template>
   <div class="gold-box">
     <i></i>
-    <span>1000</span>
+    <span>{{ totalCoins }}</span>
   </div>
 </template>
+
+<script>
+export default {
+  props: ['totalCoins']
+}
+</script>
 
 <style lang="less" scoped>
 .gold-box{
@@ -12,7 +18,7 @@
   i {
     width: 25px;
     height: 30px;
-    background-image: url('../../../../static/images/study/icon-gold.svg');
+    background-image: url('../../../../static/images/study/icon-gold-bag.svg');
     background-repeat: no-repeat;
     background-size: cover;
   }
