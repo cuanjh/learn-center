@@ -53,7 +53,7 @@ export default {
         password: this.pwd1
       }).then(res => {
         if (res.success) {
-          alert('0000')
+          this.$router.push({path: '/auth/login'})
         } else {
           this.loading = false
           this.errText = errCode[res.code]
