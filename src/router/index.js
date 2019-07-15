@@ -22,6 +22,8 @@ const gradeLevelShow = r => require.ensure([], () => r(require('@/components/lea
 const gradeLevelConfirm = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelConfirm.vue')), 'grade-level-confirm')
 const homework = r => require.ensure([], () => r(require('@/components/learn/homework/homework.vue')), 'homework')
 const introduceApp = r => require.ensure([], () => r(require('@/components/learn/home/introduceApp.vue')), 'introduce-app')
+// mini
+const bookMiniDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookMiniDetails.vue')), 'book-mini-details')
 
 // 学习 --- 我的
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue')), 'user')
@@ -138,6 +140,11 @@ export default[
         path: 'book-details/:courseCode',
         name: 'bookCaseDetails',
         component: bookCaseDetails
+      },
+      {
+        path: 'book-mini-details/:miniCode',
+        name: 'bookMiniDetails',
+        component: bookMiniDetails
       },
       {
         path: 'hot-courses',

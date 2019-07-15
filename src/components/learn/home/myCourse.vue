@@ -115,11 +115,24 @@ export default {
   mounted () {
     // this.getUserInfo()
     this.userId = cookie.getCookie('user_id')
-    this.getMoreLearnCourses().then(res => {
+    // this.getMoreLearnCourses().then(res => {
+    //   if (res.success) {
+    //     let learnCourses = res.learn_courses
+    //     learnCourses.forEach(item => {
+    //       if (!parseInt(item.course_type)) {
+    //         this.subscribeLangCourses.push(item)
+    //       }
+    //     })
+    //     this.subscribeLangCourses = this.subscribeLangCourses.reverse()
+    //     console.log('订阅的官方课程', this.subscribeLangCourses)
+    //   }
+    // })
+    this.getLearnMoreCoursesNew().then(res => {
+      console.log('新的课程列表返回', res)
       if (res.success) {
-        let learnCourses = res.learn_courses
+        let learnCourses = res.courses
         learnCourses.forEach(item => {
-          if (!parseInt(item.course_type)) {
+          if (item.course_type === 0 || item.course_type === 3) {
             this.subscribeLangCourses.push(item)
           }
         })
@@ -184,7 +197,8 @@ export default {
       getCourseTestRanking: 'course/getCourseTestRanking',
       homeworkContent: 'course/homeworkContent',
       getCourseArchives: 'user/getCourseArchives',
-      getUserInfo: 'getUserInfo'
+      getUserInfo: 'getUserInfo',
+      getLearnMoreCoursesNew: 'getLearnMoreCoursesNew' // 新的课程列表接口
     }),
     async initData (courseCode) {
       var _this = this

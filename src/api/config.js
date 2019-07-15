@@ -158,7 +158,13 @@ export default {
   anonymousUserBindEmailApi: '/umv1/user/regist_by_email', // 匿名用户绑定邮箱
   umUserExistsPhoneApi: '/umv1/user/exists/phone', // 验证手机号是否存在接口
   umUserExistsEmailApi: '/umv1/user/exists/email', // 验证邮箱是否存在接口
-  umLangsListApi: '/umv1/langs/lists', // 语言列表接口
+  // umLangsListApi: '/umv1/langs/lists', // 语言列表接口
+  umLangsListApi: '/studyv1/course/list', // 语言列表接口
   umLangsStateApi: '/umv1/langs/state', // 语言设置状态接口
-  umUserAnonyApi: '/umv1/user/anony' // 匿名登录
+  umUserAnonyApi: '/umv1/user/anony', // 匿名登录
+
+  // kid课程接口
+  umKidCourseDetailApi: '/kidv1/course/detail', // mini课程详情接口
+  umKidLearnMoreCoursesApi: '/studyv1/user/course/subscribes', // 获取更多订阅课程接口
+  umkidCourseSubApi: '/studyv1/course/sub' // 课程订阅课程接口
 }

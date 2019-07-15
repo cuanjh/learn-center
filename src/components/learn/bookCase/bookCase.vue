@@ -107,8 +107,8 @@ export default {
 
     this.getLangsList().then(res => {
       console.log('官方课程', res)
-      _this.hotCourse = res.hotLangsInfo
-      _this.courseLangs = res.langsInfo
+      _this.hotCourse = res.courseInfo.hotCourses.concat(res.courseInfo.kidCourses)
+      _this.courseLangs = [...res.courseInfo.kidCourses, ...res.courseInfo.listCourses]
       this.defaultCourseLangs = _this.courseLangs
     })
   },
@@ -142,9 +142,9 @@ export default {
     hideDetails () {
       this.showDetailsHot = this.showDetailsChina = null
     },
-    goDetails (courseCode) {
-      this.$router.push({path: '/app/book-details/' + courseCode + '-Basic'})
-    },
+    // goDetails (courseCode) {
+    //   this.$router.push({path: '/app/book-details/' + courseCode + '-Basic'})
+    // },
     // 数字每三位添加逗号
     toThousands (num) {
       return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
@@ -188,8 +188,13 @@ export default {
     },
     async routerGo (item) {
       console.log('item', item)
-      let langCode = item['lan_code']
-      this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
+      let langCode = item['code']
+      // this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
+      if (item.name.indexOf('Mini') > -1) {
+        this.$router.push({path: '/app/book-mini-details/' + langCode})
+      } else {
+        this.$router.push({path: '/app/book-details/' + langCode})
+      }
     },
     search () {
       this.courseLangs = this.defaultCourseLangs.filter((item) => {

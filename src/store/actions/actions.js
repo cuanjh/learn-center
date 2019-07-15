@@ -82,9 +82,20 @@ export default {
     return httpLogin(config.courseListApi)
   },
   // 获取语言列表
+  // getLangsList ({commit}) {
+  //   return httpNoLogin(config.umLangsListApi).then(res => {
+  //     commit('updateCourseLangsList', res.hotLangsInfo.concat(res.langsInfo))
+  //     return res
+  //   })
+  // },
   getLangsList ({commit}) {
     return httpNoLogin(config.umLangsListApi).then(res => {
-      commit('updateCourseLangsList', res.hotLangsInfo.concat(res.langsInfo))
+      console.log('res====>', res)
+      // this.courseNew = [...this.courseNew, ...this.allCourse]
+      // let hotList = res.courseInfo.hotCourses.concat(res.courseInfo.kidCourses)
+      // let allCourseList = res.courseInfo.kidCourses.concat(res.courseInfo.listCourses)
+      // console.log('hotList, allCourseList', hotList, allCourseList)
+      commit('updateCourseLangsList', res.courseInfo)
       return res
     })
   },
@@ -159,5 +170,17 @@ export default {
   // 获取课程档案
   getUserArchive ({commit}, params) {
     return httpLogin(config.userArchiveApi, params)
+  },
+  // 获取mini的课程详情
+  getKidCourseDetail ({commit}, params) {
+    return httpLogin(config.umKidCourseDetailApi, params)
+  },
+  // 获取用户课程列表接口
+  getLearnMoreCoursesNew ({commit}, params) {
+    return httpLogin(config.umKidLearnMoreCoursesApi, params)
+  },
+  // mini课程订阅接口
+  getKidCourseSub ({commit}, params) {
+    return httpLogin(config.umkidCourseSubApi, params)
   }
 }

@@ -74,11 +74,24 @@ export default {
     LearnCourseList
   },
   mounted () {
-    this.getMoreLearnCourses().then(res => {
+    // this.getMoreLearnCourses().then(res => {
+    //   if (res.success) {
+    //     let learnCourses = res.learn_courses
+    //     learnCourses.forEach(item => {
+    //       if (!parseInt(item.course_type)) {
+    //         this.subscribeLangCourses.push(item)
+    //       }
+    //     })
+    //     this.subscribeLangCourses = this.subscribeLangCourses.reverse()
+    //     console.log('订阅的官方课程', this.subscribeLangCourses)
+    //   }
+    // })
+    this.getLearnMoreCoursesNew().then(res => {
+      console.log('新的课程列表返回', res)
       if (res.success) {
-        let learnCourses = res.learn_courses
+        let learnCourses = res.courses
         learnCourses.forEach(item => {
-          if (!parseInt(item.course_type)) {
+          if (item.course_type === 0 || item.course_type === 3) {
             this.subscribeLangCourses.push(item)
           }
         })
@@ -117,7 +130,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getMoreLearnCourses'
+      'getMoreLearnCourses',
+      'getLearnMoreCoursesNew' // 新的课程列表接口
     ]),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode'
