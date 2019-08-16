@@ -1,6 +1,12 @@
 <template>
   <div class="radio-wrap">
     <nav-comp />
+    <div class="radio-search">
+      <input class="search-input" type="text" placeholder="输入电台名称" v-model="searchKey"  @keyup.enter="goSearch">
+      <div class="icon-search" @click="goSearch()">
+        <i ></i>
+      </div>
+    </div>
     <div class="radio-swiper">
       <div class="left">
         <div class="swiper-container">
@@ -175,7 +181,8 @@ export default {
       recomendRadios: {}, // 推荐电台
       recomendRadiosList: [],
       randomRadio: {}, // 随机推荐电台
-      hotRadiosList: [] // 热门电台
+      hotRadiosList: [], // 热门电台
+      searchKey: '' // 搜索关键字
     }
   },
   components: {
@@ -323,6 +330,22 @@ export default {
       }
       return try3
        /* eslint-disable */
+    },
+    // 点击搜索
+    goSearch () {
+      console.log(this.searchKey)
+      if (this.searchKey === '') {
+        let obj = {
+          className: 'warnIcon',
+          description: '输入内容不能为空',
+          btnDesc: '确定',
+          isLink: false
+        }
+        Bus.$emit('showCommonModal', obj)
+        return false
+      }
+      sessionStorage.setItem('keyword', this.searchKey)
+      this.$router.push({path: '/app/discovery/radio-search'})
     }
   }
 }
@@ -333,6 +356,36 @@ export default {
   width: 1200px;
   margin: 0 auto;
   min-height: 1000px;
+  .radio-search {
+    position: relative;
+    .icon-search {
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .icon-search i {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background: url('../../../../../static/images/headline/icon-search-radio.png') no-repeat center;
+      background-size: cover;
+    }
+  }
+  .search-input {
+    width: 880px;
+    height: 40px;
+    border: 1px solid #2A9FE4;
+    border-radius: 30px;
+    margin: 20px 0;
+    padding: 0 60px;
+  }
   .radio-swiper {
     margin: 8px auto 16px;
     height: 300px;
@@ -477,7 +530,7 @@ export default {
           }
           &:hover {
             cursor: pointer;
-            color: #2A9FE4FF;
+            color: #2A9FE4;
             i {
               background-image: url('../../../../../static/images/hotradiohover.svg');
             }
@@ -489,7 +542,7 @@ export default {
           }
           &:hover {
             cursor: pointer;
-            color: #2A9FE4FF;
+            color: #2A9FE4;
             i {
               background-image: url('../../../../../static/images/learntuijianhover.svg');
             }
@@ -501,7 +554,7 @@ export default {
           }
           &:hover {
             cursor: pointer;
-            color: #2A9FE4FF;
+            color: #2A9FE4;
             i {
               background-image: url('../../../../../static/images/latesthover.svg');
             }
@@ -513,7 +566,7 @@ export default {
           }
           &:hover {
             cursor: pointer;
-            color: #2A9FE4FF;
+            color: #2A9FE4;
             i {
               background-image: url('../../../../../static/images/starhover.svg');
             }

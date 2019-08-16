@@ -320,6 +320,9 @@ const actions = {
   radioAuthorCommentReward ({ commit, dispatch }, params) {
     return httpLogin(config.radioAuthorCommentReward, params)
   },
+  getRadioSearchList ({ commit, dispatch }, params) {
+    return httpLogin(config.radioSearchList, params)
+  },
   // 加载更多评论列表接口
   getAuthorCommentList ({ commit }, params) {
     return httpLogin(config.radioAuthorCommentList, params)
