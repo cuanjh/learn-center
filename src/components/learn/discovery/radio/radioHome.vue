@@ -187,8 +187,7 @@ export default {
       recomendRadiosList: [],
       randomRadio: {}, // 随机推荐电台
       hotRadiosList: [], // 热门电台
-      searchKey: '', // 搜索关键字
-      HistoryList: []
+      searchKey: '' // 搜索关键字
     }
   },
   components: {
@@ -355,25 +354,25 @@ export default {
     },
     SearchVal (val) {
       val = val.trim() // 清除空格
-      let HistoryList = JSON.parse(localStorage.getItem('HistoryList'))
-      if (!HistoryList) {
-        HistoryList = []
+      let historyLists = JSON.parse(localStorage.getItem('historyList'))
+      if (!historyLists) {
+        historyLists = []
       }
-      console.log(HistoryList)
-      if (HistoryList.length > 0) { // 有数据的话 判断
-        if (HistoryList.indexOf(val) !== -1) { // 有相同的，先删除 再添加
-          HistoryList.splice(HistoryList.indexOf(val), 1)
-          HistoryList.unshift(val)
+      console.log(historyLists)
+      if (historyLists.length > 0) { // 有数据的话 判断
+        if (historyLists.indexOf(val) !== -1) { // 有相同的，先删除 再添加
+          historyLists.splice(historyLists.indexOf(val), 1)
+          historyLists.unshift(val)
         } else { // 没有相同的 添加
-          HistoryList.unshift(val)
+          historyLists.unshift(val)
         }
       } else { // 没有数据 添加
-        HistoryList.unshift(val)
+        historyLists.unshift(val)
       }
-      if (HistoryList.length > 6) { // 保留六个值
-        HistoryList.pop()
+      if (historyLists.length > 6) { // 保留六个值
+        historyLists.pop()
       }
-      localStorage.setItem('HistoryList', JSON.stringify(HistoryList))
+      localStorage.setItem('historyList', JSON.stringify(historyLists))
     }
   }
 }

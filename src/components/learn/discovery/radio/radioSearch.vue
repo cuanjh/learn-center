@@ -44,28 +44,28 @@
                 </div>
               </div>
             </div>
+            <!-- 分页 -->
+            <div class="page" v-show="show">
+              <div class="pagelist">
+                <a class="jump" :class="{disabled:pstart}" @click="jumpOnPage()">上一页</a>
+                <a v-show="currentPage>5" class="jump" @click="jumpPage(1)">1</a>
+                <span class="ellipsis" v-show="efont">...</span>
+                <a class="jump"
+                      :class="{bgprimary:currentPage==num}"
+                      v-for="(num, index) in indexs"
+                      :key="index"
+                      @click="jumpPage(num)"
+                      >{{num}}</a>
+                <span class="ellipsis" v-show="ebehind">...</span>
+                <a class="jump" :class="{disabled:pend}" @click="jumpDowPage()">下一页</a>
+              </div>
+            </div>
           </div>
           <div class="no-content" v-else>
             <div class="no-list">
               <i></i>
               <span>没有相关的电台</span>
             </div>
-          </div>
-        </div>
-        <!-- 分页 -->
-        <div class="page" v-show="show">
-          <div class="pagelist">
-            <a class="jump" :class="{disabled:pstart}" @click="jumpOnPage()">上一页</a>
-            <a v-show="currentPage>5" class="jump" @click="jumpPage(1)">1</a>
-            <span class="ellipsis" v-show="efont">...</span>
-            <a class="jump"
-                  :class="{bgprimary:currentPage==num}"
-                  v-for="(num, index) in indexs"
-                  :key="index"
-                  @click="jumpPage(num)"
-                  >{{num}}</a>
-            <span class="ellipsis" v-show="ebehind">...</span>
-            <a class="jump" :class="{disabled:pend}" @click="jumpDowPage()">下一页</a>
           </div>
         </div>
       </div>
@@ -86,6 +86,7 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
+import $ from 'jquery'
 import NavComp from '../../../common/nav.vue'
 import Bus from '../../../../bus'
 import StarHostList from '../../../common/starHostList.vue'
@@ -125,7 +126,7 @@ export default {
       this.searchKey = this.keywords
       this.currentKey = this.keywords
     }
-    this.historyList = JSON.parse(localStorage.getItem('HistoryList'))
+    this.historyList = JSON.parse(localStorage.getItem('historyList'))
     this.initRadioSearchList(this.keywords)
     console.log(this.show)
     this.postDisvRadio().then((res) => {
@@ -134,10 +135,10 @@ export default {
   },
   computed: {
     keywords () {
-      let HistoryList = JSON.parse(localStorage.getItem('HistoryList'))
-      console.log('HistoryList', HistoryList)
-      if (HistoryList && HistoryList.length > 0) {
-        return HistoryList[0]
+      let historyLists = JSON.parse(localStorage.getItem('historyList'))
+      console.log('historyLists', historyLists)
+      if (historyLists && historyLists.length > 0) {
+        return historyLists[0]
       }
       return ''
     },
@@ -193,7 +194,7 @@ export default {
       }
       return ar
     }
-    /* eslint-disable */
+    /* eslint-enable */
   },
   methods: {
     ...mapActions({
@@ -201,15 +202,15 @@ export default {
       postDisvRadio: 'course/postDisvRadio' // 电台首页
     }),
     // 初始化数据
-    async initRadioSearchList (a) {
+    initRadioSearchList (a) {
       let params = {
         page: this.page,
         page_size: this.AllpageSize,
         key_word: a
       }
       console.log('params', params)
-      this.currentKey= a
-      await this.getRadioSearchList(params).then(res => {
+      this.currentKey = a
+      this.getRadioSearchList(params).then(res => {
         console.log('电台列表===》', res)
         if (res.success) {
           if (res.data.radios.length > 0) {
@@ -229,18 +230,18 @@ export default {
       console.log('this.currentPage', this.currentPage)
       this.currentPage = num
       console.log('currentPage', this.currentPage)
-      this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage*this.pagesize)
+      this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize)
       console.log('this.pageCards', this.pageCards)
     },
     // 点击上一页
     jumpOnPage () {
       this.currentPage--
-      this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage*this.pagesize)
+      this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize)
     },
     // 点击下一页
     jumpDowPage () {
       this.currentPage++
-      this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage*this.pagesize)
+      this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize)
     },
     // 点击搜索
     goSearch () {
@@ -255,35 +256,36 @@ export default {
         return false
       }
       this.SearchVal(this.searchKey)
-      this.historyList = JSON.parse(localStorage.getItem('HistoryList'))
+      this.historyList = JSON.parse(localStorage.getItem('historyList'))
     },
     SearchVal (val) {
       val = val.trim() // 清除空格
-      let HistoryList = JSON.parse(localStorage.getItem('HistoryList'))
-      if (!HistoryList) {
-        HistoryList = []
+      let historyLists = JSON.parse(localStorage.getItem('historyList'))
+      if (!historyLists) {
+        historyLists = []
       }
-      if (HistoryList.length > 0) { // 有数据的话 判断
-        if (HistoryList.indexOf(val) !== -1) { // 有相同的，先删除 再添加
-          HistoryList.splice(HistoryList.indexOf(val), 1)
-          HistoryList.unshift(val)
+      console.log(historyLists)
+      if (historyLists.length > 0) { // 有数据的话 判断
+        if (historyLists.indexOf(val) !== -1) { // 有相同的，先删除 再添加
+          historyLists.splice(historyLists.indexOf(val), 1)
+          historyLists.unshift(val)
         } else { // 没有相同的 添加
-          HistoryList.unshift(val)
+          historyLists.unshift(val)
         }
       } else { // 没有数据 添加
-        HistoryList.unshift(val)
+        historyLists.unshift(val)
       }
-      if (HistoryList.length > 6) { // 保留六个值
-        HistoryList.pop()
+      if (historyLists.length > 6) { // 保留六个值
+        historyLists.pop()
       }
-      localStorage.setItem('HistoryList', JSON.stringify(HistoryList))
+      localStorage.setItem('historyList', JSON.stringify(historyLists))
       this.initRadioSearchList(this.searchKey)
     },
     // 搜索历史标签
     goSearchHistory (key) {
-      this.searchKey= key
+      this.searchKey = key
       this.initRadioSearchList(key)
-      this.historyList = JSON.parse(localStorage.getItem('HistoryList'))
+      this.historyList = JSON.parse(localStorage.getItem('historyList'))
     },
     // 详情页面
     goDetail (code) {
@@ -314,7 +316,7 @@ export default {
     // 清除历史记录
     // localStorage.removeItem('userInfo')
     clearnHistory () {
-      localStorage.removeItem('HistoryList')
+      localStorage.removeItem('historyList')
       this.historyList = []
     }
   }
