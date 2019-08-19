@@ -3,11 +3,16 @@
     <nav-comp />
     <div class="radio-search-input">
       <input class="search-input" type="text" placeholder="输入电台名称" v-model="searchKey"  @keyup.enter="goSearch">
+      <button class="search-button" @click="goSearch()">搜索</button>
       <div class="icon-search" @click="goSearch()">
         <i ></i>
       </div>
     </div>
-    <div class="history-list">
+    <div class="history-list" v-if="historyList && historyList.length>0">
+      <div class="history-title">
+        <span>历史记录</span>
+        <a class="clearn-button" @click="clearnHistory()"><i></i>清除</a>
+      </div>
       <ul>
         <li v-for="(item, index) in historyList" :key="index" @click="goSearchHistory(item)" :class="{'active': item == searchKey}">
           <a href="javascript:;">{{item}}</a>
@@ -15,7 +20,7 @@
       </ul>
     </div>
     <div class="radio-search-content">
-      <div class="left-content">
+      <div class="left-content" v-if="historyList">
         <div class="top">
           <p class="text">搜索“<span>{{currentKey}}</span>”相关结果</p>
         </div>
@@ -61,6 +66,14 @@
                   >{{num}}</a>
             <span class="ellipsis" v-show="ebehind">...</span>
             <a class="jump" :class="{disabled:pend}" @click="jumpDowPage()">下一页</a>
+          </div>
+        </div>
+      </div>
+      <div class="left-content" v-else>
+        <div class="no-content">
+          <div class="no-list">
+            <i></i>
+            <span>请在输入框输入你要查找的内容</span>
           </div>
         </div>
       </div>
@@ -123,7 +136,7 @@ export default {
     keywords () {
       let HistoryList = JSON.parse(localStorage.getItem('HistoryList'))
       console.log('HistoryList', HistoryList)
-      if (HistoryList.length > 0) {
+      if (HistoryList && HistoryList.length > 0) {
         return HistoryList[0]
       }
       return ''
@@ -198,14 +211,16 @@ export default {
       this.currentKey= a
       await this.getRadioSearchList(params).then(res => {
         console.log('电台列表===》', res)
-        if (res.data.radios.length > 0) {
-          this.total = res.data.radios.length
-          this.cards = res.data.radios
-          this.pageCards = this.cards.slice(0, this.pagesize)
-          console.log('cards=====>', this.cards)
-          console.log('pageCards=====>', this.pageCards)
-        } else {
-          this.pageCards = []
+        if (res.success) {
+          if (res.data.radios.length > 0) {
+            this.total = res.data.radios.length
+            this.cards = res.data.radios
+            this.pageCards = this.cards.slice(0, this.pagesize)
+            console.log('cards=====>', this.cards)
+            console.log('pageCards=====>', this.pageCards)
+          } else {
+            this.pageCards = []
+          }
         }
       })
     },
@@ -245,6 +260,9 @@ export default {
     SearchVal (val) {
       val = val.trim() // 清除空格
       let HistoryList = JSON.parse(localStorage.getItem('HistoryList'))
+      if (!HistoryList) {
+        HistoryList = []
+      }
       if (HistoryList.length > 0) { // 有数据的话 判断
         if (HistoryList.indexOf(val) !== -1) { // 有相同的，先删除 再添加
           HistoryList.splice(HistoryList.indexOf(val), 1)
@@ -272,6 +290,32 @@ export default {
       this.$router.push({
         path: `/app/discovery/radio-detail/${code}`
       })
+    },
+    // 听电台
+    loadRadioList (e, radio) {
+      if (this.isPlay && radio.code === this.lastCode) {
+        $('.gradient-layer-play i').removeClass('pause')
+        $(e.target, $('#' + radio.code)).addClass('play')
+        Bus.$emit('radioPause')
+      } else {
+        $('.gradient-layer-play i').removeClass('pause')
+        $('.gradient-layer-play i').addClass('play')
+        $(e.target, $('#' + radio.code)).removeClass('play')
+        $(e.target, $('#' + radio.code)).addClass('pause')
+        if (radio.code !== this.lastCode) {
+          Bus.$emit('getRadioCardList', radio)
+          this.lastCode = radio.code
+        } else {
+          Bus.$emit('radioPlay')
+        }
+      }
+      this.isPlay = !this.isPlay
+    },
+    // 清除历史记录
+    // localStorage.removeItem('userInfo')
+    clearnHistory () {
+      localStorage.removeItem('HistoryList')
+      this.historyList = []
     }
   }
 }
@@ -283,6 +327,22 @@ export default {
   min-height: 1000px;
   .radio-search-input {
     position: relative;
+    width: 880px;
+    .search-button {
+      width: 80px;
+      height: 40px;
+      color: #fff;
+      text-align: center;
+      line-height: 40px;
+      position: absolute;
+      top: 20px;
+      right: 0;
+      border-radius: 0 30px 30px 0;
+      background: #0581D1;
+      &:hover {
+        background: #2a9fe4;
+      }
+    }
     .search-input {
       width: 880px;
       height: 40px;
@@ -314,6 +374,47 @@ export default {
   .history-list {
     width: 880px;
     margin-bottom: 20px;
+    .history-title {
+      padding-bottom: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span {
+        font-size: 16px;
+        color: #333;
+        font-weight: bold;
+      }
+      .clearn-button {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: #ccc;
+        i {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background: url('../../../../../static/images/discovery/icon-clearn.png') no-repeat center;
+          background-size: cover;
+          margin-right: 6px;
+        }
+        &:hover {
+          color: #2A9FE4;
+          i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: url('../../../../../static/images/discovery/icon-clearn-active.png') no-repeat center;
+            background-size: cover;
+            margin-right: 6px;
+            animation: zy 2s .15s linear infinite;
+            -moz-animation: zy 2s .15s linear infinite;
+            -webkit-animation: zy 2s .15s linear infinite;
+            -o-animation: zy 2s .15s linear infinite;
+          }
+        }
+      }
+    }
     ul {
       display: flex;
       flex-wrap: wrap;
@@ -479,31 +580,31 @@ export default {
             border-bottom: 0px solid #ffffff;
           }
         }
-        .no-content {
-          width: 100%;
-          height: 400px;
-          margin-top: 10%;
-          .no-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            i {
-              display: inline-block;
-              width: 144px;
-              height: 80px;
-              background-image: url('../../../../../static/images/discovery/userradiono.svg');
-              background-repeat: no-repeat;
-              background-position: center;
-              background-size: cover;
-            }
-            span {
-              padding-top: 20px;
-              font-size: 16px;
-              font-weight: 500;
-              color: #c8d4db;
-              line-height: 22px;
-            }
+      }
+      .no-content {
+        width: 100%;
+        height: 400px;
+        margin-top: 10%;
+        .no-list {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          i {
+            display: inline-block;
+            width: 144px;
+            height: 80px;
+            background-image: url('../../../../../static/images/discovery/userradiono.svg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+          }
+          span {
+            padding-top: 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #c8d4db;
+            line-height: 22px;
           }
         }
       }
@@ -543,6 +644,74 @@ export default {
     .jump.disabled {
       pointer-events: none;
     }
+  }
+}
+@keyframes zy {
+  10% {
+    transform: rotate(15deg);
+  }
+  20% {
+    transform: rotate(-10deg);
+  }
+  30% {
+    transform: rotate(5deg);
+  }
+  40% {
+    transform: rotate(-5deg);
+  }
+  50%,100% {
+    transform: rotate(0deg);
+  }
+}
+@-o-keyframes zy {
+  10% {
+    transform: rotate(15deg);
+  }
+  20% {
+    transform: rotate(-10deg);
+  }
+  30% {
+    transform: rotate(5deg);
+  }
+  40% {
+    transform: rotate(-5deg);
+  }
+  50%,100% {
+    transform: rotate(0deg);
+  }
+}
+@-moz-keyframes zy {
+  10% {
+    transform: rotate(15deg);
+  }
+  20% {
+    transform: rotate(-10deg);
+  }
+  30% {
+    transform: rotate(5deg);
+  }
+  40% {
+    transform: rotate(-5deg);
+  }
+  50%,100% {
+    transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes zy {
+  10% {
+    transform: rotate(15deg);
+  }
+  20% {
+    transform: rotate(-10deg);
+  }
+  30% {
+    transform: rotate(5deg);
+  }
+  40% {
+    transform: rotate(-5deg);
+  }
+  50%,100% {
+    transform: rotate(0deg);
   }
 }
 </style>

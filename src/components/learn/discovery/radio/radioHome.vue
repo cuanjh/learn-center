@@ -2,7 +2,12 @@
   <div class="radio-wrap">
     <nav-comp />
     <div class="radio-search">
-      <input class="search-input" type="text" placeholder="输入电台名称" v-model="searchKey"  @keyup.enter="goSearch">
+      <input class="search-input"
+             type="text"
+             placeholder="输入电台名称"
+             v-model="searchKey"
+             @keyup.enter="goSearch">
+      <button class="search-button" v-bind:disabled="searchKey == ''" @click="goSearch()">搜索</button>
       <div class="icon-search" @click="goSearch()">
         <i ></i>
       </div>
@@ -381,6 +386,27 @@ export default {
   min-height: 1000px;
   .radio-search {
     position: relative;
+    width: 880px;
+    .search-button {
+      width: 80px;
+      height: 40px;
+      color: #fff;
+      text-align: center;
+      line-height: 40px;
+      position: absolute;
+      top: 20px;
+      right: 0;
+      border-radius: 0 30px 30px 0;
+      background: #0581D1;
+      &:hover {
+        background: #2a9fe4;
+      }
+    }
+    .search-button:disabled {
+      cursor: not-allowed;
+      color: #333;
+      background: #ccc;
+    }
     .icon-search {
       width: 40px;
       height: 40px;
