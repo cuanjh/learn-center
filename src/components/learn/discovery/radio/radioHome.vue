@@ -182,7 +182,8 @@ export default {
       recomendRadiosList: [],
       randomRadio: {}, // 随机推荐电台
       hotRadiosList: [], // 热门电台
-      searchKey: '' // 搜索关键字
+      searchKey: '', // 搜索关键字
+      HistoryList: []
     }
   },
   components: {
@@ -344,8 +345,30 @@ export default {
         Bus.$emit('showCommonModal', obj)
         return false
       }
-      sessionStorage.setItem('keyword', this.searchKey)
+      this.SearchVal(this.searchKey)
       this.$router.push({path: '/app/discovery/radio-search'})
+    },
+    SearchVal (val) {
+      val = val.trim() // 清除空格
+      let HistoryList = JSON.parse(localStorage.getItem('HistoryList'))
+      if (!HistoryList) {
+        HistoryList = []
+      }
+      console.log(HistoryList)
+      if (HistoryList.length > 0) { // 有数据的话 判断
+        if (HistoryList.indexOf(val) !== -1) { // 有相同的，先删除 再添加
+          HistoryList.splice(HistoryList.indexOf(val), 1)
+          HistoryList.unshift(val)
+        } else { // 没有相同的 添加
+          HistoryList.unshift(val)
+        }
+      } else { // 没有数据 添加
+        HistoryList.unshift(val)
+      }
+      if (HistoryList.length > 6) { // 保留六个值
+        HistoryList.pop()
+      }
+      localStorage.setItem('HistoryList', JSON.stringify(HistoryList))
     }
   }
 }

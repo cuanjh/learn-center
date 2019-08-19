@@ -1,13 +1,26 @@
 <template>
   <div class="radio-search">
     <nav-comp />
+    <div class="radio-search-input">
+      <input class="search-input" type="text" placeholder="输入电台名称" v-model="searchKey"  @keyup.enter="goSearch">
+      <div class="icon-search" @click="goSearch()">
+        <i ></i>
+      </div>
+    </div>
+    <div class="history-list">
+      <ul>
+        <li v-for="(item, index) in historyList" :key="index" @click="goSearchHistory(item)" :class="{'active': item == searchKey}">
+          <a href="javascript:;">{{item}}</a>
+        </li>
+      </ul>
+    </div>
     <div class="radio-search-content">
       <div class="left-content">
         <div class="top">
-          <p class="text">搜索“<span>{{keywords}}</span>”相关结果</p>
+          <p class="text">搜索“<span>{{currentKey}}</span>”相关结果</p>
         </div>
         <div class="radio-search-list">
-          <div class="list-content">
+          <div class="list-content" v-if="pageCards.length>0">
             <div class="item" v-for="(radio, index) in pageCards" :key="index">
               <div class="item-left">
                 <div class="play-radio">
@@ -25,6 +38,12 @@
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="no-content" v-else>
+            <div class="no-list">
+              <i></i>
+              <span>没有相关的电台</span>
             </div>
           </div>
         </div>
@@ -46,7 +65,7 @@
         </div>
       </div>
       <div class="right-content">
-        <star-host-list ></star-host-list>
+        <star-host-list :teacherLists="teacherLists"></star-host-list>
         <introduce-app-box></introduce-app-box>
       </div>
     </div>
@@ -69,7 +88,11 @@ export default {
       page: 1, // 页码， 默认值是1
       AllpageSize: 50000, // 每一页的数量，默认值是16
       cards: [],
-      pageCards: []
+      pageCards: [],
+      teacherLists: [],
+      searchKey: '', // 搜索关键字
+      currentKey: '',
+      historyList: []
     }
   },
   components: {
@@ -84,14 +107,26 @@ export default {
       {id: 3, path: '', text: '搜索'}
     ]
     Bus.$emit('loadNavData', navList)
-    console.log(this.keywords)
-    this.initRadioSearchList()
+    console.log(this.searchKey)
+    if (this.keywords) {
+      this.searchKey = this.keywords
+      this.currentKey = this.keywords
+    }
+    this.historyList = JSON.parse(localStorage.getItem('HistoryList'))
+    this.initRadioSearchList(this.keywords)
     console.log(this.show)
+    this.postDisvRadio().then((res) => {
+      this.teacherLists = res.data.authors
+    })
   },
   computed: {
     keywords () {
-      let keyWord = sessionStorage.getItem('keyword')
-      return keyWord
+      let HistoryList = JSON.parse(localStorage.getItem('HistoryList'))
+      console.log('HistoryList', HistoryList)
+      if (HistoryList.length > 0) {
+        return HistoryList[0]
+      }
+      return ''
     },
     pages () { // 总页数
       return Math.ceil(this.total * 1 / this.pagesize)
@@ -149,16 +184,18 @@ export default {
   },
   methods: {
     ...mapActions({
-      getRadioSearchList: 'course/getRadioSearchList'
+      getRadioSearchList: 'course/getRadioSearchList',
+      postDisvRadio: 'course/postDisvRadio' // 电台首页
     }),
     // 初始化数据
-    async initRadioSearchList () {
+    async initRadioSearchList (a) {
       let params = {
         page: this.page,
         page_size: this.AllpageSize,
-        key_word: this.keywords
+        key_word: a
       }
       console.log('params', params)
+      this.currentKey= a
       await this.getRadioSearchList(params).then(res => {
         console.log('电台列表===》', res)
         if (res.data.radios.length > 0) {
@@ -167,6 +204,8 @@ export default {
           this.pageCards = this.cards.slice(0, this.pagesize)
           console.log('cards=====>', this.cards)
           console.log('pageCards=====>', this.pageCards)
+        } else {
+          this.pageCards = []
         }
       })
     },
@@ -187,6 +226,52 @@ export default {
     jumpDowPage () {
       this.currentPage++
       this.pageCards = this.cards.slice((this.currentPage - 1) * this.pagesize, this.currentPage*this.pagesize)
+    },
+    // 点击搜索
+    goSearch () {
+      if (this.searchKey === '') {
+        let obj = {
+          className: 'warnIcon',
+          description: '输入内容不能为空',
+          btnDesc: '确定',
+          isLink: false
+        }
+        Bus.$emit('showCommonModal', obj)
+        return false
+      }
+      this.SearchVal(this.searchKey)
+      this.historyList = JSON.parse(localStorage.getItem('HistoryList'))
+    },
+    SearchVal (val) {
+      val = val.trim() // 清除空格
+      let HistoryList = JSON.parse(localStorage.getItem('HistoryList'))
+      if (HistoryList.length > 0) { // 有数据的话 判断
+        if (HistoryList.indexOf(val) !== -1) { // 有相同的，先删除 再添加
+          HistoryList.splice(HistoryList.indexOf(val), 1)
+          HistoryList.unshift(val)
+        } else { // 没有相同的 添加
+          HistoryList.unshift(val)
+        }
+      } else { // 没有数据 添加
+        HistoryList.unshift(val)
+      }
+      if (HistoryList.length > 6) { // 保留六个值
+        HistoryList.pop()
+      }
+      localStorage.setItem('HistoryList', JSON.stringify(HistoryList))
+      this.initRadioSearchList(this.searchKey)
+    },
+    // 搜索历史标签
+    goSearchHistory (key) {
+      this.searchKey= key
+      this.initRadioSearchList(key)
+      this.historyList = JSON.parse(localStorage.getItem('HistoryList'))
+    },
+    // 详情页面
+    goDetail (code) {
+      this.$router.push({
+        path: `/app/discovery/radio-detail/${code}`
+      })
     }
   }
 }
@@ -196,6 +281,71 @@ export default {
   width: 1200px;
   margin: 0 auto;
   min-height: 1000px;
+  .radio-search-input {
+    position: relative;
+    .search-input {
+      width: 880px;
+      height: 40px;
+      border: 1px solid #2A9FE4;
+      border-radius: 30px;
+      margin: 20px 0;
+      padding: 0 60px;
+    }
+    .icon-search {
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .icon-search i {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background: url('../../../../../static/images/headline/icon-search-radio.png') no-repeat center;
+      background-size: cover;
+    }
+  }
+  .history-list {
+    width: 880px;
+    margin-bottom: 20px;
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      li {
+        width: auto;
+        a {
+          display: inline-block;
+          padding: 6px 18px;
+          line-height: 12px;
+          margin-right: 8px;
+          word-break: break-all;
+          text-decoration: none;
+          border: 1px solid #ccc;
+          border-radius: 12px;
+          font-family: PingFangSC-Regular;
+          font-size: 12px;
+          color: #4d4d4d;
+          &:hover {
+            color: #2A9FE4;
+            border: 1px solid #2A9FE4;
+          }
+        }
+        &.active {
+          a {
+            color: #2A9FE4;
+            border: 1px solid #2A9FE4;
+          }
+        }
+      }
+    }
+  }
   .radio-search-content {
     width: 100%;
     display: flex;
@@ -327,6 +477,33 @@ export default {
           }
           .item:last-child {
             border-bottom: 0px solid #ffffff;
+          }
+        }
+        .no-content {
+          width: 100%;
+          height: 400px;
+          margin-top: 10%;
+          .no-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            i {
+              display: inline-block;
+              width: 144px;
+              height: 80px;
+              background-image: url('../../../../../static/images/discovery/userradiono.svg');
+              background-repeat: no-repeat;
+              background-position: center;
+              background-size: cover;
+            }
+            span {
+              padding-top: 20px;
+              font-size: 16px;
+              font-weight: 500;
+              color: #c8d4db;
+              line-height: 22px;
+            }
           }
         }
       }
