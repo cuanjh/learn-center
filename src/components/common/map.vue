@@ -210,17 +210,19 @@ export default {
       console.log(key)
       console.log(mp)
       let _this = this
-      // // 课程检索
-      // let lanlist = this.courseLangsList.filter((item) => {
-      //   return item.letter.toUpperCase() === key.toUpperCase() || item.pinyin.indexOf(key) > -1 || item.name.indexOf(key) > -1 || item.lan_code.toUpperCase() === key.toUpperCase()
-      // })
-      // if (lanlist.length > 0) {
-      //   _this.courseLangsMap(lanlist)
-      // }
+      // 课程检索
+      let lanlist = this.courseLangsList.filter((item) => {
+        return item.letter.toUpperCase() === key.toUpperCase() || item.pinyin.indexOf(key) > -1 || item.name.indexOf(key) > -1 || item.lan_code.toUpperCase() === key.toUpperCase()
+      })
+      if (lanlist.length > 0) {
+        _this.courseLangsMap(lanlist)
+      }
 
       // 濒危语言检索
       _this.getEndangeredMap({keyword: key}).then(res => {
-        _this.loadEndanger(res.data)
+        if (res.success) {
+          _this.loadEndanger(res.data)
+        }
       })
     },
     // 官方语言地图
