@@ -98,6 +98,14 @@ export const httpNoLogin = (_url, _params) => { // 未登录
   if (!_params) { // 无参数请求情况
     _params = {}
   }
+
+  Cookie.delCookie('user_id')
+  Cookie.delCookie('device_id')
+  Cookie.delCookie('verify')
+  Cookie.delCookieTalkmate('user_id')
+  Cookie.delCookieTalkmate('device_id')
+  Cookie.delCookieTalkmate('verify')
+
   _params.appKey = process.env.APP_KEY
   let secret = process.env.APP_SECRET
   _params.HTTP_API_VERSION = '4.1'
