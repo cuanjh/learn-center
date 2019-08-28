@@ -1,24 +1,28 @@
-import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken } from '../../api/api'
+import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken, clearCookie } from '../../api/api'
 import config from '../../api/config'
 import cookie from '../../tool/cookie'
 
 export default {
   // 新登录接口手机快速登录
   userLogin ({commit}, params) {
+    clearCookie()
     return httpNoLogin(config.umUserLoginApi, params).then((res) => {
       commit('updateLoginInfo', res)
     })
   },
   // 匿名登录
   postAnonyLogin ({commit}, params) {
+    clearCookie()
     return httpNoLogin(config.umUserAnonyApi, params)
   },
   // 第三方登录
   userSnsLogin ({commit}, params) {
+    clearCookie()
     return httpSnsUrl(config.umUserSnsLoginApi, params)
   },
   // 新密码登录接口
   userPwdLogin ({commit}, params) {
+    clearCookie()
     return httpNoLogin(config.umUserPwdLoginApi, params)
   },
   // 用户信息里面修改密码

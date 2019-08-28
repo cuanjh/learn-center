@@ -99,13 +99,6 @@ export const httpNoLogin = (_url, _params) => { // 未登录
     _params = {}
   }
 
-  Cookie.delCookie('user_id')
-  Cookie.delCookie('device_id')
-  Cookie.delCookie('verify')
-  Cookie.delCookieTalkmate('user_id')
-  Cookie.delCookieTalkmate('device_id')
-  Cookie.delCookieTalkmate('verify')
-
   _params.appKey = process.env.APP_KEY
   let secret = process.env.APP_SECRET
   _params.HTTP_API_VERSION = '4.1'
@@ -208,4 +201,13 @@ export const httpSnsUrl = (_url, _params) => {
   })
   url = url.toString().substring(0, url.length - 1)
   return url
+}
+
+export const clearCookie = () => {
+  Cookie.delCookie('user_id')
+  Cookie.delCookie('device_id')
+  Cookie.delCookie('verify')
+  Cookie.delCookieTalkmate('user_id')
+  Cookie.delCookieTalkmate('device_id')
+  Cookie.delCookieTalkmate('verify')
 }
