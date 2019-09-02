@@ -190,7 +190,7 @@ export default {
       console.log('item', item)
       let langCode = item['code']
       // this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
-      if (item.name.indexOf('Mini') > -1) {
+      if (langCode.indexOf('KFR') > -1 || langCode.indexOf('KEN') > -1 || langCode.indexOf('KSP') > -1) {
         this.$router.push({path: '/app/book-mini-details/' + langCode})
       } else {
         this.$router.push({path: '/app/book-details/' + langCode})
