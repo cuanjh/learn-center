@@ -182,5 +182,9 @@ export default {
   // mini课程订阅接口
   getKidCourseSub ({commit}, params) {
     return httpLogin(config.umkidCourseSubApi, params)
+  },
+  // kid教师内容接口(包含绘本，单词，儿歌)
+  getKidCourseContent ({commit}, params) {
+    return httpLogin(config.umKidCourseContent, params)
   }
 }

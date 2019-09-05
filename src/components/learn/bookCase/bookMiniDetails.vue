@@ -122,6 +122,7 @@ import $ from 'jquery'
 import NavComp from '../../common/nav.vue'
 import ShareBox from '../../common/shareBox'
 import VipPrompt from '../../../components/common/vipPrompt.vue'
+
 /**
   * 订阅状态判断
   * "has_purchased": false, //是否购买
