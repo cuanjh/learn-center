@@ -3,6 +3,19 @@
     <nav-comp />
     <vip-prompt class="vip"/>
     <div class="hot-course-box">
+      <p class="title">儿童课程
+      </p>
+      <ul class="course-item">
+        <li v-for="(item, index) in kidCourse"
+          :key="'kid' + index" @click="routerGoKid(item)">
+          <div class="imgBox">
+            <img :src="qnUrl(item.flag)" alt="">
+          </div>
+          <p class="name"><span>{{ item.name }}</span></p>
+        </li>
+      </ul>
+    </div>
+    <div class="hot-course-box">
       <p class="title">热门课程
       </p>
       <ul class="course-item">
@@ -84,7 +97,8 @@ export default {
       curLetter: '全部',
       defaultCourseLangs: [],
       courseLangs: [],
-      searchVal: ''
+      searchVal: '',
+      kidCourse: [] // 儿童课程
     }
   },
   components: {
@@ -107,8 +121,9 @@ export default {
 
     this.getLangsList().then(res => {
       console.log('官方课程', res)
-      _this.hotCourse = res.courseInfo.hotCourses.concat(res.courseInfo.kidCourses)
-      _this.courseLangs = [...res.courseInfo.kidCourses, ...res.courseInfo.listCourses]
+      _this.hotCourse = res.courseInfo.hotCourses
+      _this.kidCourse = res.courseInfo.kidCourses
+      _this.courseLangs = res.courseInfo.listCourses
       this.defaultCourseLangs = _this.courseLangs
     })
   },
@@ -186,15 +201,15 @@ export default {
       }
       return arr
     },
-    async routerGo (item) {
+    routerGo (item) {
       console.log('item', item)
       let langCode = item['code']
       // this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
-      if (langCode.indexOf('KFR') > -1 || langCode.indexOf('KEN') > -1 || langCode.indexOf('KSP') > -1) {
-        this.$router.push({path: '/app/book-mini-details/' + langCode})
-      } else {
-        this.$router.push({path: '/app/book-details/' + langCode})
-      }
+      this.$router.push({path: '/app/book-details/' + langCode})
+    },
+    routerGoKid (item) {
+      let langCode = item['code']
+      this.$router.push({path: '/app/book-mini-details/' + langCode})
     },
     search () {
       this.courseLangs = this.defaultCourseLangs.filter((item) => {
@@ -220,9 +235,10 @@ export default {
       .title {
         font-size: 20px;
         color: #333333;
-        margin: 0 20px 10px 0;
         font-weight: bold;
-        text-align: center;
+        width: 944px;
+        margin: 0 auto;
+        padding: 0 28px;
       }
       // .hot-courses {
       //   overflow: hidden;

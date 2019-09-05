@@ -195,7 +195,7 @@ export default {
     },
     swiperInit () {
       this.$nextTick(() => {
-        /* eslint-disable no-new */
+        /* eslint-disable */
         new Swiper('.swiper-container', {
           loop: true,
           initialSlide: 0,
@@ -220,6 +220,7 @@ export default {
             clickable: true
           }
         })
+        /* eslint-enable */
       })
     },
     tabNav (catid) {

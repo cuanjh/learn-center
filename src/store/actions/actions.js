@@ -194,5 +194,9 @@ export default {
   // 获取Kid目录结构
   getKidCatalog ({ commit }, params) {
     return httpLogin(config.kidCatalogApi, params)
+  },
+  // kid教师内容接口(包含绘本，单词，儿歌)
+  getKidCourseContent ({commit}, params) {
+    return httpLogin(config.umKidCourseContent, params)
   }
 }

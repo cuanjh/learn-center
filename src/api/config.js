@@ -168,5 +168,7 @@ export default {
   userSubCoursesApi: '/studyv1/user/course/subscribes', // 获取更多订阅课程接口
   umkidCourseSubApi: '/studyv1/course/sub', // 课程订阅课程接口
   kidLearnInfoApi: '/studyv1/learn_info/v3/index', // kid学习首页接口
-  kidCatalogApi: '/kidv1/course/catalog'
+  kidCatalogApi: '/kidv1/course/catalog',
+  umKidLearnMoreCoursesApi: '/studyv1/user/course/subscribes', // 获取更多订阅课程接口
+  umKidCourseContent: '/kidv1/course/teacher/content' // kid教师内容接口(包含绘本，单词，儿歌)
 }
