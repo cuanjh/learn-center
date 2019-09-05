@@ -176,11 +176,23 @@ export default {
     return httpLogin(config.umKidCourseDetailApi, params)
   },
   // 获取用户课程列表接口
-  getLearnMoreCoursesNew ({commit}, params) {
-    return httpLogin(config.umKidLearnMoreCoursesApi, params)
+  getSubCourses ({commit}, params) {
+    return httpLogin(config.userSubCoursesApi, params)
   },
   // mini课程订阅接口
   getKidCourseSub ({commit}, params) {
     return httpLogin(config.umkidCourseSubApi, params)
+  },
+  // 获取kid学习信息
+  getKidLearnInfo ({commit}, params) {
+    return httpLogin(config.kidLearnInfoApi, params)
+  },
+  // 设置当前学习课程
+  setKidCurrentChapter ({ commit }, params) {
+    return httpLogin(config.setCurChapter, params)
+  },
+  // 获取Kid目录结构
+  getKidCatalog ({ commit }, params) {
+    return httpLogin(config.kidCatalogApi, params)
   }
 }

@@ -86,7 +86,7 @@ export default {
     //     console.log('订阅的官方课程', this.subscribeLangCourses)
     //   }
     // })
-    this.getLearnMoreCoursesNew().then(res => {
+    this.getSubCourses().then(res => {
       console.log('新的课程列表返回', res)
       if (res.success) {
         let learnCourses = res.courses
@@ -131,7 +131,7 @@ export default {
   methods: {
     ...mapActions([
       'getMoreLearnCourses',
-      'getLearnMoreCoursesNew' // 新的课程列表接口
+      'getSubCourses' // 新的课程列表接口
     ]),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode'

@@ -24,6 +24,8 @@ const homework = r => require.ensure([], () => r(require('@/components/learn/hom
 const introduceApp = r => require.ensure([], () => r(require('@/components/learn/home/introduceApp.vue')), 'introduce-app')
 // mini
 const bookMiniDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookMiniDetails.vue')), 'book-mini-details')
+const kidCourseList = r => require.ensure([], () => r(require('@/components/learn/course/kidCourseList.vue')), 'kid-course-list')
+const kidStage = r => require.ensure([], () => r(require('@/components/learn/course/kidStage.vue')), 'kid-stage')
 
 // 学习 --- 我的
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue')), 'user')
@@ -126,6 +128,11 @@ export default[
           keepAlive: true
         },
         component: courseList
+      },
+      {
+        path: 'kid-course-list',
+        name: 'kidCourseList',
+        component: kidCourseList
       },
       {
         path: 'index',
@@ -305,6 +312,14 @@ export default[
         component: paySuccess
       }
     ]
+  },
+  {
+    path: '/kid-stage',
+    component: kidStage,
+    props: (route) => ({
+      code: route.query.code,
+      type: route.query.type
+    })
   },
   {
     path: '/learn',

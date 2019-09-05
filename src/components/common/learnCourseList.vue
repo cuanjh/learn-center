@@ -18,7 +18,7 @@
                 </dt>
                 <dd>
                   <span class='mycourse-lang'>
-                    <a href="">{{ !course.name ? '' : course.name['zh-CN'] }}</a>
+                    <a href="">{{ !course.name ? '' : course.name['zh-cn'] }}</a>
                   </span>
                 </dd>
               </dl>
