@@ -24,8 +24,8 @@ const homework = r => require.ensure([], () => r(require('@/components/learn/hom
 const introduceApp = r => require.ensure([], () => r(require('@/components/learn/home/introduceApp.vue')), 'introduce-app')
 // mini
 const bookMiniDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookMiniDetails.vue')), 'book-mini-details')
-const kidCourseList = r => require.ensure([], () => r(require('@/components/learn/course/kidCourseList.vue')), 'kid-course-list')
-const kidStage = r => require.ensure([], () => r(require('@/components/learn/course/kidStage.vue')), 'kid-stage')
+const kidCourseList = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidCourseList.vue')), 'kid-course-list')
+const kidStage = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidStage.vue')), 'kid-stage')
 
 // 学习 --- 我的
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue')), 'user')

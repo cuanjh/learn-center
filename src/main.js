@@ -133,7 +133,7 @@ router.afterEach((to, from, next) => {
   }, 0)
 })
 
-Vue.config.lang = 'cn'
+Vue.config.lang = 'zh-cn'
 
 const i18n = new VueI18n({
   locale: Vue.config.lang,

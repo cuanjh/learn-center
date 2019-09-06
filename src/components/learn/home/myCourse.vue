@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="my-course">
+    <div v-show="!isKid" class="my-course">
       <div class="title">我的课程</div>
       <div class="current-chapter" v-if="!isDefault && userId && curCourseCode">
         <img :src="curCourseObj['courseBg']" alt="">
@@ -67,7 +67,12 @@
       <div class="current-course" v-else>
       </div>
     </div>
-    <my-kid-course v-show="isKid"></my-kid-course>
+    <my-kid-course v-show="isKid"
+      :kidCourseBaseInfo="kidCourseBaseInfo"
+      :kidChapterInfo="kidChapterInfo"
+      :subscribeLangCourses="subscribeLangCourses"
+      :kidLevelName="kidLevelName">
+    </my-kid-course>
   </div>
 </template>
 
@@ -108,7 +113,10 @@ export default {
       isShowSubscribeCourses: false,
       isShowNext: true,
       isShowPre: true,
-      subscribeLangCourses: []
+      subscribeLangCourses: [],
+      kidCourseBaseInfo: {},
+      kidChapterInfo: {},
+      kidLevelName: ''
     }
   },
   created () {
@@ -180,6 +188,8 @@ export default {
     }),
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
+      getLearnInfoV5: 'getLearnInfoV5',
+      getKidCatalog: 'getKidCatalog',
       setCurrentChapter: 'course/setCurrentChapter',
       getLearnCourses: 'course/getLearnCourses',
       getMoreLearnCourses: 'getMoreLearnCourses',
@@ -262,7 +272,26 @@ export default {
             console.log('curArchiveCourse', _this.curArchiveCourse)
           })
         } else {
-
+          bus.$emit('loadRecommendRadio', this.curCourseCode)
+          let resKid = await this.getLearnInfoV5({course_code: this.curCourseCode})
+          console.log(resKid)
+          this.kidCourseBaseInfo = resKid.info.courseBaseInfo
+          let curChapterCode = resKid.info.learnConfig.current_chapter_code
+          let resKidCatalog = await this.getKidCatalog({course_code: this.curCourseCode})
+          console.log(resKidCatalog)
+          let curLevelCode = curChapterCode.split('-').slice(0, 3).join('-')
+          this.catalogs = resKidCatalog.catalogInfo.catalogs
+          let curLevel = this.catalogs.find(item => {
+            return item.code === curLevelCode
+          })
+          this.kidLevelName = curLevel.levelNameDes[this.$i18n.locale]
+          this.kidChapterInfo = curLevel.chapters.find(item => {
+            return item.code === curChapterCode
+          })
+          let arr = curChapterCode.split('-')
+          this.kidChapterInfo['chapterNum'] = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
+          this.kidChapterInfo['chapterDesc'] = this.kidChapterInfo.des[this.$i18n.locale]
+          console.log(this.kidChapterInfo)
         }
       } else {
         bus.$emit('loadRecommendRadio', this.curCourseCode)

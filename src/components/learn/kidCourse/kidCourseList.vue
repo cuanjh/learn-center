@@ -31,7 +31,7 @@
         <li v-for='level in catalogs' :key="level.code" :style="{'width': levelWidth}">
           <p class='learn-course-nav-blue'
               v-bind:class="{'learn-course-nav-active': curLevelCode === level.code}"
-              v-on:click='selLevel(level)'>{{ level.levelName }}</p>
+              v-on:click='selLevel(level)'>{{ level.levelNameDes[lang] }}</p>
         </li>
       </ul>
     </div>
@@ -43,7 +43,7 @@
           :id="item.code">
           <div class="current-learn-course-info" v-show="curCharpterCode !== item.code">
             <div class="current-learn-course-flag">
-              <img :src="item.image_bg">
+              <img :src="item.flag">
               <div class="fix-ie-bg"></div>
             </div>
             <div class="current-learn-course-word-info">
@@ -57,7 +57,7 @@
           <transition name="expand" mode="out-in">
             <div class="course-item-detail" v-show="curCharpterCode == item.code">
               <div class="course-brief">
-                <img :src="item.image_bg" alt="">
+                <img :src="item.image_bg2" alt="">
                 <div class="course-brief-shade">
                   <div class="course-brief-title">
                     <span>课程</span>
@@ -281,12 +281,15 @@ export default {
     levelWidth () {
       let width = Math.floor(100 / parseInt(this.levelNum)) + '%'
       return width
+    },
+    lang () {
+      return this.$i18n.locale
     }
   },
   methods: {
     ...mapActions([
       'getUserInfo',
-      'getKidLearnInfo',
+      'getLearnInfoV5',
       'getKidCatalog',
       'getMoreLearnCourses',
       'getSubCourses' // 新的课程列表接口
@@ -300,11 +303,11 @@ export default {
       console.log(res1)
       let curCourseCode = res1.info.current_course_code
       // 2.1 获取该课程的学习信息
-      let res21 = await this.getKidLearnInfo({course_code: curCourseCode})
+      let res21 = await this.getLearnInfoV5({course_code: curCourseCode})
       console.log(res21)
       this.flag = res21.info.courseBaseInfo.flag
       this.name = res21.info.courseBaseInfo.name + ' KID'
-      this.curCharpterCode = res21.info.learnInfo.current_chapter_code
+      this.curCharpterCode = res21.info.learnConfig.current_chapter_code
       this.curLevelCode = this.curCharpterCode.split('-').slice(0, 3).join('-')
 
       // 2.2 获取kid目录结构

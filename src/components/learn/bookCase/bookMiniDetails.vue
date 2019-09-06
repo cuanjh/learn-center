@@ -200,7 +200,7 @@ export default {
       getKidCourseDetail: 'getKidCourseDetail',
       getSubCourses: 'getSubCourses',
       getKidCourseSub: 'getKidCourseSub',
-      getKidLearnInfo: 'getKidLearnInfo',
+      getLearnInfoV5: 'getLearnInfoV5',
       setKidCurrentChapter: 'setKidCurrentChapter'
     }),
     // 播放视频
@@ -240,7 +240,7 @@ export default {
     },
     // 开始学习
     async startLearn () {
-      let res1 = await this.getKidLearnInfo({course_code: this.miniCode})
+      let res1 = await this.getLearnInfoV5({course_code: this.miniCode})
       console.log(res1)
       let curChapterCode = res1.info.learnInfo.current_chapter_code
       let res2 = await this.setKidCurrentChapter({chapter_code: curChapterCode})

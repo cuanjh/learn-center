@@ -184,8 +184,8 @@ export default {
     return httpLogin(config.umkidCourseSubApi, params)
   },
   // 获取kid学习信息
-  getKidLearnInfo ({commit}, params) {
-    return httpLogin(config.kidLearnInfoApi, params)
+  getLearnInfoV5 ({commit}, params) {
+    return httpLogin(config.learnInfoV5Api, params)
   },
   // 设置当前学习课程
   setKidCurrentChapter ({ commit }, params) {

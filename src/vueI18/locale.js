@@ -1,6 +1,6 @@
 import chinese from './zh'
 import english from './en'
 export default {
-  cn: chinese,
+  'zh-cn': chinese,
   en: english
 }

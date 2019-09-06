@@ -116,13 +116,12 @@ export default {
 //   font-weight: bold;
 // }
 .mycourse-container > section ul {
-  // display: flex;
+  display: flex;
   flex-flow: row wrap;
   align-content: flex-start;
 }
 .mycourse-container > section ul > li {
   display: inline-block;
-  flex: 0 0 20%;
   cursor: pointer;
   margin-bottom: 30px;
   margin-right: 30px;
