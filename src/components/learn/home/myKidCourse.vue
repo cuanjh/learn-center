@@ -106,6 +106,7 @@ export default {
       }
     }
     .course {
+      position: relative;
       margin-left: 72px;
       margin-top: 24px;
       display: flex;
@@ -187,7 +188,7 @@ export default {
 
     .all-courses {
       position:absolute;
-      bottom: 34px;
+      bottom: 0px;
       margin-top: 73px;
       width: 140px;
       height: 38px;

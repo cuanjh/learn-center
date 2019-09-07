@@ -242,7 +242,7 @@ export default {
     async startLearn () {
       let res1 = await this.getLearnInfoV5({course_code: this.miniCode})
       console.log(res1)
-      let curChapterCode = res1.info.learnInfo.current_chapter_code
+      let curChapterCode = res1.info.learnConfig.current_chapter_code
       let res2 = await this.setKidCurrentChapter({chapter_code: curChapterCode})
       if (res2.success) {
         this.$router.push({path: '/app/kid-course-list'})
