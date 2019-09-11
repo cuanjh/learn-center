@@ -189,7 +189,7 @@ export default {
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
       getLearnInfoV5: 'getLearnInfoV5',
-      getKidCatalog: 'getKidCatalog',
+      getCatalog: 'getCatalog',
       setCurrentChapter: 'course/setCurrentChapter',
       getLearnCourses: 'course/getLearnCourses',
       getMoreLearnCourses: 'getMoreLearnCourses',
@@ -201,6 +201,7 @@ export default {
       homeworkContent: 'course/homeworkContent',
       getCourseArchives: 'user/getCourseArchives',
       getUserInfo: 'getUserInfo',
+      getOneCourseSub: 'getOneCourseSub',
       getSubCourses: 'getSubCourses' // 新的课程列表接口
     }),
     async initData (courseCode) {
@@ -211,7 +212,14 @@ export default {
       if (courseCode) {
         this.curCourseCode = courseCode
       }
-
+      this.getOneCourseSub({course_code: this.curCourseCode}).then(res => {
+        console.log('courseSubInfo', res)
+        if (res.subInfo.course_type === 3) {
+          localStorage.setItem('isKid', '1')
+        } else if (res.subInfo.course_type === 0) {
+          localStorage.setItem('isKid', '0')
+        }
+      })
       let subCourses = await this.getSubCourses()
       console.log('新的课程列表返回', subCourses)
       if (subCourses.success) {
@@ -277,7 +285,7 @@ export default {
           console.log(resKid)
           this.kidCourseBaseInfo = resKid.info.courseBaseInfo
           let curChapterCode = resKid.info.learnConfig.current_chapter_code
-          let resKidCatalog = await this.getKidCatalog({course_code: this.curCourseCode})
+          let resKidCatalog = await this.getCatalog({course_code: this.curCourseCode})
           console.log(resKidCatalog)
           let curLevelCode = curChapterCode.split('-').slice(0, 3).join('-')
           this.catalogs = resKidCatalog.catalogInfo.catalogs
@@ -435,12 +443,12 @@ export default {
         await this.getCourseTestRanking(chapterCode)
         await this.homeworkContent(chapterCode + '-A8')
       }
-      this.$router.push({path: '/learn/stage/A0' + this.curCourseObj['courseCore']})
+      this.$router.push({path: '/learn/stage/' + chapterCode + '-A0' + this.curCourseObj['courseCore']})
     },
     goCourseList () {
       bus.$emit('radioPause')
       window._czc.push(['_trackEvent', '学习系统', '首页', '全部课程', '', '.all-courses'])
-      this.$router.push({ path: '/app/course-list' })
+      this.$router.push({ path: '/app/course-list/' + this.curCourseCode })
     }
   }
 }

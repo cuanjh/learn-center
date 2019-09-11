@@ -41,10 +41,13 @@
           v-for="(item, index) in curLevelChapters"
           :key="'item' + index"
           :id="item.code">
-          <div class="current-learn-course-info" v-show="curCharpterCode !== item.code">
+          <div class="current-learn-course-info"
+            :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
+            @click="jumpToCourse(item.code)"
+            v-if="isShow ? curChapterCode !== item.code : !isShow">
             <div class="current-learn-course-flag">
               <img :src="item.flag">
-              <div class="fix-ie-bg"></div>
+              <div class="fix-ie-bg" v-show="unlockCourses.indexOf(item.code) === -1"></div>
             </div>
             <div class="current-learn-course-word-info">
               <div class="current-learn-course-title">
@@ -55,7 +58,7 @@
             </div>
           </div>
           <transition name="expand" mode="out-in">
-            <div class="course-item-detail" v-show="curCharpterCode == item.code">
+            <div class="course-item-detail" v-show="isShow && curChapterCode == item.code">
               <div class="course-brief">
                 <img :src="item.image_bg2" alt="">
                 <div class="course-brief-shade">
@@ -107,18 +110,18 @@
                       <div class="course-core-name">
                         <span>核心课程</span>
                       </div>
-                      <div class="course-item-box" v-for="i in 5" :key="i">
-                        <a href="javascript:void(0)" @click="startCore('A0' + i, '')" :to="{ name: 'stage', params: {id: 'A0' + i}}">
+                      <div class="course-item-box" v-for="core in curChapterData.core" :key="core.part_num">
+                        <a href="javascript:void(0)" @click="startCore(item.code + '-A0' + core.part_num, core.isUnlock)" :to="{ name: 'stage', params: {id: 'A0' + core.part_num}}">
                           <div class="current-course-item">
                             <div class="course-item-icon">
-                              <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
-                              <div :class="'core' + i"></div>
-                              <i class="icon-course-lock"></i>
+                              <canvas width="300" height="300" :id="item.code + '-canvas-A0' + core.part_num"></canvas>
+                              <div :class="'core' + core.part_num"></div>
+                              <i class="icon-course-lock" v-show="!core.isUnlock"></i>
                             </div>
-                            <p class="course-item-title">核心{{i}}</p>
-                            <p class="course-item-star">
-                              <span class="course-yellow-star"><i v-for="index in 5" :key="index"></i></span>
-                              <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - 5)" :key="index"></i></span>
+                            <p class="course-item-title" :class="{'course-item-title-locked': !core.isUnlock }">核心{{core.part_num}}</p>
+                            <p class="course-item-star" v-show="core.isCompleted">
+                              <span class="course-yellow-star"><i v-for="index in core.star" :key="index"></i></span>
+                              <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - core.star)" :key="index"></i></span>
                             </p>
                             <p class="course-item-progress">
                               <span></span>
@@ -128,7 +131,7 @@
                             </div>
                           </div>
                         </a>
-                        <div class="course-circle-box" v-if="i<5">
+                        <div class="course-circle-box" v-if="core.part_num<5">
                           <div class="course-core-circle" v-for="index in 3" :key="index"></div>
                         </div>
                       </div>
@@ -138,22 +141,22 @@
                         <span>测试</span>
                       </div>
                       <div class="course-item-box">
-                        <a href="javascript:void(0);" @click="startTest()">
+                        <a href="javascript:void(0);" @click="startTest(curChapterData.coreComplete)">
                           <div class="current-course-item">
                             <div class="course-item-icon">
                               <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
                               <div class="review-test"></div>
-                              <i class="icon-review-lock"></i>
+                              <i class="icon-review-lock" v-show="!curChapterData.coreComplete"></i>
                             </div>
-                            <p class="course-item-title">测试</p>
-                              <p class="course-item-star">
-                              <span class="course-yellow-star"><i v-for="index in 5" :key="index"></i></span>
-                              <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - 5)" :key="index"></i></span>
+                            <p class="course-item-title" :class="{'course-item-title-locked': !curChapterData.coreComplete }">测试</p>
+                            <p class="course-item-star" v-show="testData.isTestCompleted">
+                              <span class="course-yellow-star"><i v-for="index in testData.star" :key="index"></i></span>
+                              <span class="course-yellow-star courseIsLock"><i v-for="index in testData.grayStar" :key="index"></i></span>
                             </p>
-                            <p class="course-item-progress">
-                              <span></span>
+                            <p class="course-item-progress" v-show="testData['isTestCompleted']">
+                              <span v-show="curChapterData.coreComplete && !testData['isTestCompleted']" v-text="testData['completedTestRate']"></span>
                             </p>
-                            <div class="continue-learn-test">
+                            <div v-show="testData['completedTestRate'] && testData['completedTestRate'] !== 1" class="continue-learn-test">
                               <span>继续学习</span>
                             </div>
                           </div>
@@ -163,22 +166,22 @@
                         </div>
                       </div>
                       <div class="course-item-box" style="margin-left: -4px;">
-                        <a href="javascript:void(0)" @click="startHomework()">
+                        <a href="javascript:void(0)" @click="startHomework(curChapterData.coreComplete)">
                           <div class="current-course-item">
                             <div class="course-item-icon">
                               <canvas width="300" height="300" :id="item.code + '-canvas-A8'"></canvas>
                               <div class="review-homework"></div>
-                              <i class="icon-review-lock"></i>
+                              <i class="icon-review-lock" v-show="!curChapterData.coreComplete"></i>
                             </div>
-                            <p class="course-item-title">作业</p>
-                            <p class="course-item-star">
-                              <span class="course-yellow-star"><i v-for="index in 4" :key="index"></i></span>
-                              <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - 4)" :key="index"></i></span>
+                            <p class="course-item-title" :class="{'course-item-title-locked': !curChapterData.coreComplete }">作业</p>
+                            <p class="course-item-star" v-show="homeworkData['isCompleted']">
+                              <span class="course-yellow-star"><i v-for="index in homeworkData['star']" :key="index"></i></span>
+                              <span class="course-yellow-star courseIsLock"><i v-for="index in homeworkData['grayStar']" :key="index"></i></span>
                             </p>
-                            <p class="course-item-progress">
-                              <span></span>
+                            <p class="course-item-progress" v-show="homeworkData['isComplete']">
+                              <span v-show="curChapterData.homework && !homeworkData['isComplete']" v-text="homeworkData['completedHomeworkRate']"></span>
                             </p>
-                            <div class="continue-learn-test">
+                            <div class="continue-learn-test" v-show="homeworkData['completedHomeworkRate'] && homeworkData['completedHomeworkRate'] !== '1'">
                               <span>继续学习</span>
                             </div>
                           </div>
@@ -190,24 +193,24 @@
                         <p>强化</p>
                         <p>(会员专享)</p>
                       </div>
-                      <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
-                        <a href="javascript:void(0);" @click="jumpVipPage(coreData['isCoreCompleted'], 'A' + (i + 1))">
+                      <div class="course-item-box" v-for="(vip, i) in vipData" :key="i">
+                        <a href="javascript:void(0);" @click="jumpVipPage(curChapterData['coreComplete'], item.code + '-A' + (i + 1))">
                           <div class="current-course-item">
                             <div class="course-item-icon">
                               <canvas width="300" height="300" :id="item.code + '-canvas-A' + (i + 1)"></canvas>
                               <div :class="'vip'+ (i + 1)"></div>
-                              <i class="icon-vip-lock"></i>
+                              <i class="icon-vip-lock" v-show="!(isVip == 1) || !(isVip == 1 && curChapterData['coreComplete'])"></i>
                             </div>
                             <div class="continue-learn-vip">
                               <span>继续学习</span>
                             </div>
-                            <p class="course-item-title">{{ $t("courseItem.vip."+vipitem) }}</p>
-                            <p class="course-item-star" v-if="true">
-                              <span class="course-yellow-star"><i v-for="index in 5" :key="index"></i></span>
-                              <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - 5)" :key="index"></i></span>
+                            <p class="course-item-title" :class="{'course-item-title-locked': !(isVip == 1) || !(isVip == 1 && curChapterData['coreComplete']) }">{{ $t("courseItem.vip."+vipItemList[i]) }}</p>
+                            <p class="course-item-star" v-if="vip['isCompleted']">
+                              <span class="course-yellow-star"><i v-for="index in vip['starNum']" :key="index"></i></span>
+                              <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - vip['starNum'])" :key="index"></i></span>
                             </p>
                             <p class="course-item-progress" v-else>
-                              <span></span>
+                              <span v-text="vip['completedRate']"></span>
                             </p>
                           </div>
                         </a>
@@ -232,31 +235,58 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import moment from 'moment'
 import Bus from '../../../bus'
 import LearnCourseList from '../../common/learnCourseList.vue'
+import cookie from '../../../tool/cookie'
 
 export default {
   name: 'leftSide',
   data () {
     return {
+      isVip: 0, // 是否是VIP
+      curChapterData: {
+        core: []
+      },
+      coreData: [],
+      testData: {},
+      homeworkData: {},
+      vipData: [],
+      unlockCourses: '',
       trigangleShow: false,
       navCourse: false,
       flag: '',
       name: '',
       curLevelCode: '',
       curLevelChapters: [],
-      curCharpterCode: '',
+      curChapterCode: '',
       catalogs: [],
       assetsServer: '',
       learnCourse: [],
       subscribeLangCourses: [],
       tabNav: ['学习', '拓展'],
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
-      active: 0
+      active: 0,
+      isShow: true,
+      buyChapters: ''
     }
   },
   components: {
     LearnCourseList
   },
+  created () {
+    // this.$on('draw', this.drawProgress)
+    this.$on('changeIsShow', (flag) => {
+      this.isShow = flag
+    })
+  },
   mounted () {
+    let courseCode = this.$route.params.courseCode
+    this.getOneCourseSub({course_code: courseCode}).then(res => {
+      console.log('courseSubInfo', res)
+      if (res.subInfo.course_type === 3) {
+        localStorage.setItem('isKid', '1')
+      } else if (res.subInfo.course_type === 0) {
+        localStorage.setItem('isKid', '0')
+      }
+    })
     this.initData()
   },
   computed: {
@@ -271,13 +301,6 @@ export default {
       let endTime = this.userInfo.member_info.end_time * 1000
       return moment(endTime).format('YYYY.MM.DD')
     },
-    // 是否是vip
-    isVip () {
-      if (!this.userInfo || !this.userInfo.member_info) {
-        return 0
-      }
-      return this.userInfo.member_info.member_type
-    },
     levelWidth () {
       let width = Math.floor(100 / parseInt(this.levelNum)) + '%'
       return width
@@ -287,31 +310,44 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'getUserInfo',
-      'getLearnInfoV5',
-      'getKidCatalog',
-      'getMoreLearnCourses',
-      'getSubCourses' // 新的课程列表接口
-    ]),
+    ...mapActions({
+      getUserInfo: 'getUserInfo',
+      getLearnInfoV5: 'course/getLearnInfoV5',
+      setKidCurrentChapter: 'setKidCurrentChapter',
+      getCatalog: 'getCatalog',
+      getMoreLearnCourses: 'getMoreLearnCourses',
+      getSubCourses: 'getSubCourses', // 新的课程列表接口
+      getUnlockChapter: 'course/getUnlockChapter',
+      getCourseContent: 'course/getCourseContent',
+      getRecord: 'course/getRecord',
+      getProgress: 'getProgress',
+      getOneCourseSub: 'getOneCourseSub',
+      getCourseTestRanking: 'getCourseTestRanking',
+      getHomeworkContent: 'getHomeworkContent',
+      getChapterContent: 'getChapterContent'
+    }),
     ...mapMutations({
-      updateCurCourseCode: 'course/updateCurCourseCode'
+      updateCurCourseCode: 'course/updateCurCourseCode',
+      updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     async initData () {
-      // 1. 当前学习的语言课程
-      let res1 = await this.getUserInfo()
+      let userInfo = await this.getUserInfo()
+      this.isVip = userInfo.info.member_info.member_type
+
+      let courseCode = this.$route.params.courseCode
+      // 1 获取该课程的学习信息
+      let res1 = await this.getLearnInfoV5({course_code: courseCode})
       console.log(res1)
-      let curCourseCode = res1.info.current_course_code
-      // 2.1 获取该课程的学习信息
-      let res21 = await this.getLearnInfoV5({course_code: curCourseCode})
-      console.log(res21)
-      this.flag = res21.info.courseBaseInfo.flag
-      this.name = res21.info.courseBaseInfo.name + ' KID'
-      this.curCharpterCode = res21.info.learnConfig.current_chapter_code
-      this.curLevelCode = this.curCharpterCode.split('-').slice(0, 3).join('-')
+      this.flag = res1.info.courseBaseInfo.flag
+      this.name = res1.info.courseBaseInfo.name + ' KID'
+      this.curChapterCode = res1.info.learnConfig.current_chapter_code
+      this.curLevelCode = this.curChapterCode.split('-').slice(0, 3).join('-')
+
+      // 2.设置当前学习的课程
+      this.setKidCurrentChapter({chapter_code: this.curChapterCode})
 
       // 2.2 获取kid目录结构
-      let res22 = await this.getKidCatalog({course_code: curCourseCode})
+      let res22 = await this.getCatalog({course_code: courseCode})
       console.log(res22)
       this.assetsServer = res22.assets_server
       this.catalogs = res22.catalogInfo.catalogs
@@ -319,6 +355,7 @@ export default {
         return item.code === this.curLevelCode
       })
       this.curLevelChapters = curLevel.chapters
+      localStorage.setItem('curLevelChapters', JSON.stringify(this.curLevelChapters))
       console.log('curLevelChapters', this.curLevelChapters)
       // 3. 获取订阅课程
       let res3 = await this.getSubCourses()
@@ -333,6 +370,8 @@ export default {
         this.subscribeLangCourses = this.subscribeLangCourses.reverse()
         console.log('订阅的官方课程', this.subscribeLangCourses)
       }
+
+      this.initProData()
     },
     jumpToPage (path) {
       this.$router.push({ path: path })
@@ -345,10 +384,354 @@ export default {
     },
     changeTab (index) {
       this.active = index
+      if (index === 1) {
+        this.drawProgress('core', this.curChapterData['core'])
+        this.drawProgress('test', this.testData)
+        this.drawProgress('homework', this.homeworkData)
+        this.drawProgress('vip', this.vipData)
+      }
     },
     goKidStage (item, type) {
       let code = item.code
       this.$router.push({path: '/kid-stage', query: {code: code, type: type}})
+    },
+    async initProData () {
+      this.isShow = true
+      let courseCode = this.$route.params.courseCode
+      // 4. pro课程数据处理
+      let unlockChapters = await this.getUnlockChapter(courseCode)
+      this.unlockCourses = Object.keys(unlockChapters.unlock).join(',')
+      this.buyChapters = ''
+      Object.keys(unlockChapters.unlock).forEach(key => {
+        let item = unlockChapters.unlock[key]
+        if (item.Has_purchased) {
+          this.buyChapters += key + ','
+        }
+      })
+      console.log('unlockChapters ==> ', unlockChapters)
+      let curUnlockChapter = unlockChapters.unlock[unlockChapters.current_chapter_code]
+      console.log('curUnlockChapter ==> ', curUnlockChapter)
+      this.updateUnlockCourseList(unlockChapters)
+      this.curChapterData['coreComplete'] = curUnlockChapter['Core_complete']
+      this.curChapterData['homework'] = curUnlockChapter['Homework']
+      this.curChapterData['homeworkComplete'] = curUnlockChapter['Homework_complete']
+      this.curChapterData['improvement'] = curUnlockChapter['Improvement']
+
+      let curChapter = this.curLevelChapters.find(item => {
+        return item.code === this.curChapterCode
+      })
+      console.log(curChapter)
+
+      // 核心课程
+      let corePartInfos = JSON.parse(localStorage.getItem('corePartInfos'))
+      console.log(corePartInfos)
+      let curChapterCoreParts = corePartInfos.find(item => {
+        return item.chapter_code === this.curChapterCode.split('-').slice(2, 5).join('-')
+      }).parts
+      console.log(curChapterCoreParts)
+
+      await this.getRecord(this.curChapterCode + '-A0')
+
+      let progressObj = await this.getProgress({chapter_code: this.curChapterCode})
+      console.log('progressObj', progressObj)
+      let forms = {}
+      if (progressObj.state) {
+        forms = progressObj.record.forms
+      }
+      console.log(Object.keys(forms))
+      let formsKey = Object.keys(forms)
+      this.curChapterData['core'] = []
+      for (let i = 0; i < curChapterCoreParts.length; i++) {
+        let item = curChapterCoreParts[i]
+        let isUnlock = false
+        if (curUnlockChapter) {
+          if (item.part_num === 1 && curUnlockChapter.Core) {
+            isUnlock = true
+          }
+          if (item.part_num > 1 && curUnlockChapter['A0' + (item.part_num - 1)]) {
+            isUnlock = true
+          }
+        }
+        let formLength = item.end_form - item.start_form + 1
+        let formNum = 0
+        let correctFormNum = 0
+        item.slides.forEach(slide => {
+          let arr = formsKey.filter(form => {
+            return form.indexOf('A0-' + slide + '-') > -1
+          })
+          arr.forEach(form => {
+            if (forms[form] === 1) {
+              correctFormNum++
+            }
+          })
+          formNum += arr.length
+        })
+        let completedRate = !formNum ? '' : ((formNum / formLength) * 100).toFixed(0)
+        let correctRate = (correctFormNum / formLength).toFixed(2)
+        let coreObj = {part_num: item.part_num, star: this.starNum(correctRate), completedRate: completedRate, isUnlock: isUnlock, isCompleted: curUnlockChapter['A0' + item.part_num]}
+        this.curChapterData['core'].push(coreObj)
+      }
+
+      // 测试数据
+      let testRanking = await this.getCourseTestRanking(this.curChapterCode)
+      console.log('testRanking', testRanking)
+      if (testRanking.result.current_user && Object.keys(testRanking.result.current_user).length > 0) {
+        this.testData['isTestCompleted'] = 1
+        this.testData['completedTestRate'] = 100
+        let correctRate = testRanking.result.current_user.correct_rate
+        if (!correctRate) {
+          correctRate = 0
+        }
+        correctRate = Math.floor((correctRate).toFixed(3))
+        this.testData['star'] = this.starNum(correctRate)
+        this.testData['grayStar'] = 5 - this.testData['star']
+      } else {
+        this.testData['isTestCompleted'] = 0
+        this.testData['completedTestRate'] = ''
+        this.testData['star'] = 0
+        this.testData['grayStar'] = 5
+      }
+
+      // 作业
+      let retObj = {}
+      let homeworkContent = await this.getHomeworkContent(this.curChapterCode + '-A8')
+      console.log(homeworkContent)
+      if (homeworkContent && Object.keys(homeworkContent).length > 0) {
+        let homeworkNum = homeworkContent.contents.length
+        let doneNum = 0
+        homeworkContent.contents.forEach((item) => {
+          if (item.has_done) {
+            doneNum++
+          }
+        })
+        if (homeworkNum === doneNum) {
+          retObj['star'] = 5
+          retObj['grayStar'] = 0
+          retObj['completedHomeworkRate'] = 100
+          retObj['isComplete'] = '1'
+          retObj['imgHomeworkStyle'] = ''
+        } else {
+          retObj['star'] = 0
+          retObj['grayStar'] = 5
+          retObj['isComplete'] = '0'
+          retObj['completedHomeworkRate'] = (doneNum === 0) ? '' : (doneNum / homeworkNum * 100).toFixed(0) + '%'
+          retObj['imgHomeworkStyle'] = ''
+        }
+      } else {
+        retObj['star'] = 0
+        retObj['grayStar'] = 5
+        retObj['isComplete'] = '0'
+        retObj['completedHomeworkRate'] = ''
+        retObj['imgHomeworkStyle'] = ''
+      }
+      this.homeworkData = retObj
+      console.log(this.homeworkData)
+      // await this.getCourseContent(curChapter.chapter_url)
+      // vip 课程数据
+      let chapterContent = await this.getChapterContent(curChapter.chapter_url)
+      console.log('chapterContent', chapterContent)
+      this.vipData = []
+      let srcVipArray = []
+      let vipFormArray = []
+      for (let i = 1; i <= 6; i++) {
+        let obj = {}
+        obj['isCompleted'] = 0
+        obj['starNum'] = 0
+        obj['completedRate'] = ''
+        obj['imgStyle'] = ''
+
+        if (Object.keys(chapterContent).length > 0) {
+          let vipForms = []
+          Object.keys(forms).filter((item) => {
+            return item.indexOf('A' + i) > -1
+          }).map((el) => {
+            return forms[el]
+          }).forEach((i) => {
+            if (i > -1) {
+              vipForms.push(i)
+            }
+          })
+          srcVipArray[i] = vipForms
+          let vipParts = chapterContent.improvement.parts
+          vipParts.forEach((item) => {
+            if (item.slide_type_code.indexOf('A' + i) > -1) {
+              let formsLength = 0
+              item.slides.forEach((slide) => {
+                formsLength += slide.forms.length
+              })
+              vipFormArray[i] = formsLength
+            }
+          })
+
+          if (srcVipArray[i] && (srcVipArray[i].length < vipFormArray[i])) {
+            obj['isCompleted'] = 0
+            obj['starNum'] = 0
+            obj['completedRate'] = !srcVipArray[i].length ? '' : ((srcVipArray[i].length / vipFormArray[i]) * 100).toFixed(0) + '%'
+            obj['imgStyle'] = ''
+          } else {
+            obj['isCompleted'] = 1
+            obj['completedRate'] = '100'
+            let correctNum = srcVipArray[i].filter((item) => item === 1).length
+            let correctRate = (correctNum / vipFormArray[i]).toFixed(2)
+            obj['starNum'] = this.starNum(correctRate)
+            obj['imgStyle'] = ''
+          }
+        }
+
+        obj['isActive'] = 1
+        if (parseInt(this.isVip) !== 1) {
+          obj['isCompleted'] = 0
+          obj['isActive'] = 0
+          obj['completedRate'] = ''
+          obj['starNum'] = 0
+          obj['imgStyle'] = ''
+        }
+        this.vipData.push(obj)
+      }
+      console.log(srcVipArray)
+      console.log(vipFormArray)
+      console.log('vipdata', this.vipData)
+      console.log('curChapterData', this.curChapterData)
+    },
+    drawProgress (type, retObj) {
+      console.log(retObj)
+      let chapterCode = this.curChapterCode
+      let rate = 0
+      let id = ''
+      let color = ''
+      if (type === 'core') {
+        for (let i = 0; i < 5; i++) {
+          rate = parseFloat(retObj[i]['completedRate'] ? retObj[i]['completedRate'] : 0)
+          id = '#' + chapterCode + '-canvas-A0' + (i + 1)
+          color = '#2A9FE4'
+          this.draw(id, rate, color)
+        }
+      } else if (type === 'test') {
+        rate = parseFloat(retObj['completedTestRate'] ? retObj['completedTestRate'] : 0)
+        id = '#' + chapterCode + '-canvas-A7'
+        color = '#7FB926'
+        this.draw(id, rate, color)
+      } else if (type === 'homework') {
+        rate = parseFloat(retObj['completedHomeworkRate'] ? retObj['completedHomeworkRate'] : 0)
+        id = '#' + chapterCode + '-canvas-A8'
+        color = '#7FB926'
+        this.draw(id, rate, color)
+      } else if (type === 'vip') {
+        for (let i = 0; i < 6; i++) {
+          rate = parseFloat(retObj[i]['completedRate'] ? retObj[i]['completedRate'] : 0)
+          id = '#' + chapterCode + '-canvas-A' + (i + 1)
+          color = '#F5A623'
+          this.draw(id, rate, color)
+        }
+      }
+    },
+    draw (id, rate, color) {
+      if (this.$el && this.$el.querySelector(id)) {
+        rate = (rate === 100) ? 0 : rate
+        let canvas = this.$el.querySelector(id)
+        let ctx = canvas.getContext('2d')
+        let mW = canvas.width
+        let mH = canvas.height
+        let startAngle = -(1 / 2 * Math.PI) // 开始角度
+        let endAngle = startAngle + 2 * Math.PI * rate * 0.01 // 结束角度
+        ctx.clearRect(0, 0, mW, mH)
+        ctx.beginPath()
+        ctx.arc(140, 157, 98, startAngle, endAngle)
+        ctx.lineWidth = 9
+        ctx.strokeStyle = color
+        ctx.stroke()
+      }
+    },
+    starNum (correctRate) {
+      let stars = 0
+      if (correctRate <= 0.40) {
+        stars = 1
+      } else if (correctRate <= 0.65) {
+        stars = 2
+      } else if (correctRate <= 0.80) {
+        stars = 3
+      } else if (correctRate <= 0.95) {
+        stars = 4
+      } else {
+        stars = 5
+      }
+      return stars
+    },
+    startCore (id, isUnlock) {
+      if (isUnlock) {
+        this.$router.push({ name: 'stage', params: {id: id} })
+      } else {
+        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+        Bus.$emit('setContinueLearn', this.tips)
+      }
+    },
+    startTest (isCoreCompleted) {
+      if (!isCoreCompleted) {
+        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+        Bus.$emit('setContinueLearn', this.tips)
+      } else {
+        this.$router.push({ path: '/learn/pk/' + this.curChapterCode })
+      }
+    },
+    startHomework (isCoreCompleted) {
+      if (!isCoreCompleted) {
+        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+        Bus.$emit('setContinueLearn', this.tips)
+      } else {
+        this.$router.push({ path: '/app/homework' })
+      }
+    },
+    jumpVipPage (isActive, id) {
+      if (parseInt(this.isVip) !== 1) {
+        let routeUrl = this.$router.resolve({
+          path: '/app/vip-home'
+        })
+        window.open(routeUrl.href, '_blank')
+      } else {
+        if (isActive) {
+          this.$router.push({ name: 'stage', params: {id: id} })
+        } else {
+          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+          Bus.$emit('setContinueLearn', this.tips)
+        }
+      }
+    },
+    jumpToCourse (chapterCode) {
+      let isAnonymous = cookie.getCookie('is_anonymous') === 'true'
+      if (isAnonymous) {
+        Bus.$emit('showBindWin')
+        return false
+      }
+      if (this.unlockCourses.indexOf(chapterCode) === -1) {
+        this.tips = '完成上一课“核心课程”, <br>才能开启本课程！'
+        Bus.$emit('setContinueLearn', this.tips)
+        return false
+      }
+      if (this.buyChapters.indexOf(chapterCode) === -1 && parseInt(this.isVip) !== 1) {
+        Bus.$emit('showBuyChapterPanel', chapterCode)
+        return false
+      }
+
+      if (chapterCode === this.curChapterCode) {
+        if (this.isShow) {
+          this.isShow = !this.isShow
+        } else {
+          this.isShow = !this.isShow
+        }
+        return false
+      } else {
+        this.isShow = false
+        setTimeout(() => {
+          this.setKidCurrentChapter({chapter_code: chapterCode}).then(res => {
+            this.active = 0
+            this.curChapterCode = chapterCode
+            this.initProData()
+          })
+        }, 300)
+      }
+    },
+    switchShow () {
+      this.isShow = false
     }
   }
 }
@@ -685,6 +1068,9 @@ export default {
     margin-bottom: 14px;
     cursor: pointer;
     overflow:hidden;
+  }
+  .current-learn-course-disabled{
+    cursor: not-allowed;
   }
   .current-learn-course-flag{
     float:left;
@@ -1075,6 +1461,16 @@ export default {
       margin:0 2px;
       background:url(../../../../static/images/course/course-yellow-star.png) no-repeat;
       background-size:100% 100%;
+    }
+
+    .courseIsLock i{
+      -webkit-filter: grayscale(100%);
+      -moz-filter: grayscale(100%);
+      -ms-filter: grayscale(100%);
+      -o-filter: grayscale(100%);
+      filter: grayscale(100%);
+      -webkit-filter: gray;
+      filter: gray;
     }
 
     .course-review{

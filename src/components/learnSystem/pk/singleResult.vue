@@ -72,6 +72,7 @@ export default {
       }
       _this.percent = Math.floor((correctRate).toFixed(3) * 100000) / 1000
       _this.$set(_this, 'users', this.chapterTestResult.ranking)
+
       //            Model.setPKScore(this.path, result.score)
       // var _this = this
       // var code = _.values(Config.LANG)

@@ -271,7 +271,9 @@ export default {
       postPurchaseCourse: 'course/postPurchaseCourse',
       getMoreLearnCourses: 'getMoreLearnCourses',
       getEndangeredDetail: 'getEndangeredDetail',
-      getCountryLanguages: 'getCountryLanguages'
+      getCountryLanguages: 'getCountryLanguages',
+      getLearnInfoV5: 'getLearnInfoV5',
+      setKidCurrentChapter: 'setKidCurrentChapter'
     }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
@@ -321,13 +323,23 @@ export default {
       }
     },
     // 点开始学习
-    startLearn () {
+    async startLearn () {
       let arr = this.courseCode.split('-')
       let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase()
-      Bus.$emit('loadIndexCourse', courseCode)
-      setTimeout(() => {
-        this.$router.push({path: '/app/index'})
-      }, 1000)
+      // Bus.$emit('loadIndexCourse', courseCode)
+      // setTimeout(() => {
+      //   this.$router.push({path: '/app/index'})
+      // }, 1000)
+      let res1 = await this.getLearnInfoV5({course_code: courseCode})
+      console.log(res1)
+      let curChapterCode = res1.info.learnConfig.current_chapter_code
+      let res2 = await this.setKidCurrentChapter({chapter_code: curChapterCode})
+      if (res2.success) {
+        Bus.$emit('loadIndexCourse', courseCode)
+        setTimeout(() => {
+          this.$router.push({path: '/app/index'})
+        }, 1000)
+      }
     },
     subscribeCourse () {
       if (!this.userId) {

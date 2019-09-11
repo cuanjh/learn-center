@@ -122,15 +122,15 @@ export default[
     component: learn,
     children: [
       {
-        path: 'course-list',
+        path: 'course-list/:courseCode',
         name: 'courseList',
-        meta: {
-          keepAlive: true
-        },
+        // meta: {
+        //   keepAlive: true
+        // },
         component: courseList
       },
       {
-        path: 'kid-course-list',
+        path: 'kid-course-list/:courseCode',
         name: 'kidCourseList',
         component: kidCourseList
       },
@@ -335,7 +335,7 @@ export default[
         component: stage
       },
       {
-        path: 'pk',
+        path: 'pk/:chapterCode',
         name: 'pk',
         component: pk
       },

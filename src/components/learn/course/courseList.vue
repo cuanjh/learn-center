@@ -33,7 +33,8 @@ export default {
   data () {
     return {
       levels: [],
-      isShow: true
+      isShow: true,
+      changeCourseCode: ''
     }
   },
   components: {
@@ -46,7 +47,15 @@ export default {
     this.$parent.$emit('initLayout')
     this.$parent.$emit('navItem', 'course')
     // this.showLoading()
-
+    let courseCode = this.$route.params.courseCode
+    this.getOneCourseSub({course_code: courseCode}).then(res => {
+      console.log('courseSubInfo', res)
+      if (res.subInfo.course_type === 3) {
+        localStorage.setItem('isKid', '1')
+      } else if (res.subInfo.course_type === 0) {
+        localStorage.setItem('isKid', '0')
+      }
+    })
     this.initData()
   },
   computed: {
@@ -66,6 +75,16 @@ export default {
       historyCourseRecord: state => state.course.historyCourseRecord
     })
   },
+  watch: {
+    $route (to, from) {
+      if (to.name === from.name) {
+        this.changeCourseCode = to.params.courseCode
+      }
+    },
+    changeCourseCode () {
+      this.initData()
+    }
+  },
   methods: {
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
@@ -77,7 +96,8 @@ export default {
       setCurrentChapter: 'course/setCurrentChapter',
       getCourseTestRanking: 'course/getCourseTestRanking',
       homeworkContent: 'course/homeworkContent',
-      getUserInfo: 'getUserInfo'
+      getUserInfo: 'getUserInfo',
+      getOneCourseSub: 'getOneCourseSub'
     }),
     ...mapMutations({
       updateUnlockCourseList: 'course/updateUnlockCourseList',
@@ -116,8 +136,9 @@ export default {
       }
     },
     async initData () {
-      let res = await this.getUserInfo()
-      let curCourseCode = res.info.current_course_code
+      // let res = await this.getUserInfo()
+      // let curCourseCode = res.info.current_course_code
+      let curCourseCode = this.$route.params.courseCode
       console.log('courselist initData', curCourseCode)
       this.$refs['chapterItem'].$emit('changeIsHistory', false)
       await this.getLearnInfo(curCourseCode)
@@ -127,7 +148,7 @@ export default {
       })
       await this.getCourseContent(this.contentUrl)
       await this.getChapterContent()
-
+      await this.setCurrentChapter(this.currentChapterCode)
       await this.getRecord(this.currentChapterCode + '-A0')
       await this.getProgress(this.currentChapterCode)
       await this.homeworkContent(this.currentChapterCode + '-A8')

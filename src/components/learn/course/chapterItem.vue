@@ -62,7 +62,7 @@
               <span>核心课程</span>
             </div>
             <div class="course-item-box" v-for="i in 5" :key="i">
-              <a href="javascript:void(0)" @click="startCore('A0' + i, coreData[i]['isActive'])" :to="{ name: 'stage', params: {id: 'A0' + i}}">
+              <a href="javascript:void(0)" @click="startCore(item.code + '-A0' + i, coreData[i]['isActive'])" :to="{ name: 'stage', params: {id: 'A0' + i}}">
                 <div class="current-course-item">
                   <div class="course-item-icon">
                     <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
@@ -239,7 +239,8 @@ export default {
       // 核心课程
       if (!that.isHistory) {
         let curChapterCode = that.currentChapterCode
-        let corePartInfos = that.$store.state.course.courseBaseInfo.corePartInfos
+        let corePartInfos = JSON.parse(localStorage.getItem('corePartInfos'))
+        console.log(corePartInfos)
         let coreParts = corePartInfos.filter((item) => curChapterCode.indexOf(item.chapter_code) > 0)
 
         let partObj = coreParts[0].parts
@@ -248,7 +249,7 @@ export default {
           let startForm = element.start_form - 1
           let endForm = element.end_form
           let coreForms = []
-          element.Slides.forEach((slide) => {
+          element.slides.forEach((slide) => {
             Object.keys(that.curChapterProgress).filter((item) => {
               return item.indexOf('A0-' + slide + '-') > -1
             }).map((el) => {
@@ -530,7 +531,7 @@ export default {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         bus.$emit('setContinueLearn', this.tips)
       } else {
-        this.$router.push({ path: '/learn/pk' })
+        this.$router.push({ path: '/learn/pk/' + this.currentChapterCode })
       }
     },
     startHomework (isCoreCompleted) {
@@ -587,7 +588,7 @@ export default {
       }
     },
     draw (id, rate, color) {
-      if (this.$el && this.$el.querySelector(id)) {
+      if (this.$el && this.$el.querySelector && this.$el.querySelector(id)) {
         rate = (rate === 1) ? 0 : rate
         let canvas = this.$el.querySelector(id)
         let ctx = canvas.getContext('2d')

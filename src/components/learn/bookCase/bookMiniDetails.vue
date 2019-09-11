@@ -199,9 +199,7 @@ export default {
     ...mapActions({
       getKidCourseDetail: 'getKidCourseDetail',
       getSubCourses: 'getSubCourses',
-      getKidCourseSub: 'getKidCourseSub',
-      getLearnInfoV5: 'getLearnInfoV5',
-      setKidCurrentChapter: 'setKidCurrentChapter'
+      getOneCourseSub: 'getOneCourseSub'
     }),
     // 播放视频
     playRadio () {
@@ -240,16 +238,10 @@ export default {
     },
     // 开始学习
     async startLearn () {
-      let res1 = await this.getLearnInfoV5({course_code: this.miniCode})
-      console.log(res1)
-      let curChapterCode = res1.info.learnConfig.current_chapter_code
-      let res2 = await this.setKidCurrentChapter({chapter_code: curChapterCode})
-      if (res2.success) {
-        this.$router.push({path: '/app/kid-course-list'})
-      }
+      this.$router.push({path: '/app/kid-course-list/' + this.miniCode})
     },
     subscribeCourse () {
-      this.getKidCourseSub({course_code: this.miniCode}).then(res => {
+      this.getOneCourseSub({course_code: this.miniCode}).then(res => {
         console.log('状态返回===》', res)
         if (res.success) {
           this.btnState = '1'

@@ -1,13 +1,13 @@
 <template>
   <div class="homework-wrap">
     <div class="homework-container">
-      <router-link class="homework-balk" :to="{path: '/app/course-list'}">
+      <a href="javascript:;" class="homework-balk" @click="back()">
         <p></p>
         <span>返回</span>
-      </router-link>
+      </a>
       <div class="homework-content">
         <div class="homework-title">
-          <p>{{chapterDes.join('·')}}</p>
+          <p>{{courseName + '·' + chapterDes.join('·')}}</p>
         </div>
         <div class="my-work">
           <p class="line"></p>
@@ -15,7 +15,7 @@
         </div>
         <!-- 作业列表，分为语音和写作 -->
         <div class="homework-list">
-          <speakwork class="homework-item" v-for="(homework, index) in homeworkList" :key="index" :homework="homework"/>
+          <speakwork class="homework-item" @initData="initData" v-for="(homework, index) in homeworkList" :key="index" :homework="homework"/>
         </div>
       </div>
     </div>
@@ -28,7 +28,12 @@ import Recorder from '../../../plugins/recorder'
 
 export default {
   data () {
-    return {}
+    return {
+      curChapterCode: '',
+      courseCode: '',
+      courseName: '',
+      homeworkList: []
+    }
   },
   created () {
     Recorder.init()
@@ -38,32 +43,56 @@ export default {
   },
   mounted () {
     this.$parent.$emit('initLayout')
-    let curChapterCode
     // 判断如果currentChapterCode不存在去localStorgae中取
     if (!this.currentChapterCode) {
-      curChapterCode = localStorage.getItem('currentChapterCode')
+      this.curChapterCode = localStorage.getItem('currentChapterCode')
     } else {
-      curChapterCode = this.currentChapterCode
+      this.curChapterCode = this.currentChapterCode
     }
-    let activityCode = curChapterCode + '-A8'
-    this.homeworkContent(activityCode)
-    this.updateChapterDes(curChapterCode)
+    this.courseCode = this.curChapterCode.split('-').slice(0, 2).join('-')
+    this.getOneCourseSub({course_code: this.courseCode}).then(res => {
+      console.log('courseSubInfo', res)
+      this.courseName = res.subInfo.name[this.$i18n.locale]
+    })
+    this.updateChapterDes(this.curChapterCode)
+    this.initData()
   },
   computed: {
     ...mapState({
       currentChapterCode: state => state.course.currentChapterCode,
       tips: state => state.learn.tips,
-      chapterDes: state => state.course.chapterDes,
-      homeworkList: state => state.course.homeworkContent
+      chapterDes: state => state.course.chapterDes
     })
   },
   methods: {
+    ...mapActions({
+      getOneCourseSub: 'getOneCourseSub',
+      setHomeworkComplete: 'setHomeworkComplete',
+      getHomeworkContent: 'getHomeworkContent'
+    }),
     ...mapMutations({
       updateChapterDes: 'course/updateChapterDes'
     }),
-    ...mapActions({
-      homeworkContent: 'course/homeworkContent'
-    })
+    initData () {
+      let activityCode = this.curChapterCode + '-A8'
+      this.getHomeworkContent(activityCode).then(res => {
+        this.homeworkList = res.contents
+        let complete = this.homeworkList.filter(item => {
+          return item.has_done === true
+        })
+        if (complete.length === this.homeworkList.length) {
+          this.setHomeworkComplete({chapter_code: this.curChapterCode, homework_complete: true})
+        }
+      })
+    },
+    back () {
+      let isKid = localStorage.getItem('isKid')
+      if (isKid === '1') {
+        this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
+      } else {
+        this.$router.push({path: '/app/course-list'})
+      }
+    }
   }
 }
 </script>

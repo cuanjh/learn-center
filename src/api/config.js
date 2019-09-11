@@ -42,12 +42,13 @@ export default {
 
   // 课程
   moreLearnCoursesApi: '/study/more_learn_courses', // 获取更多的订阅课程
-  currentCourse: '/study/current_course', // 获取一个课程的详情
+  currentCourseApi: '/study/current_course', // 获取一个课程的详情
   learnInfo: '/studyv1/learn_info/index', // 1.一门课程基本配置 2.用户针对此课程学习基本配置 3.学习信息
+  corePartInfoApi: '/study/core_part_info', // 核心课程切课信息
   unlockChapter: '/chapters_state/get_unlock_chapter', // 最新的接口加入A0-A8是否完成的数据结构；返回正在学习的chapter编码；
   setCurChapter: '/chapters_state/set_current_chapter', // 设置正在学习的课程的最新chapter编码
   getRecord: '/chapters_state/get_record', // 查询学习结果
-  getProgress: '/chapters_state/get_progress', // 获取学习结果
+  getProgressApi: '/chapters_state/get_progress', // 获取学习结果
   hasGrade: '/level_grade/has_grade', // 返回用户对当前课程是否进行过定级操作
   levelGradeGrade: '/level_grade/grade', // 定级确认
   homeworkContent: '/feedv1/homework/content', // 获取作业内容接口
@@ -141,6 +142,7 @@ export default {
   postGradeResult: '/level_grade/grade_result', // 用来接收用户在定级的过程中学习的结果
   getRecordCourseList: '/study_info/record_course_list', // 获取用户录音课程
   getRecordCourse: '/study_info/record_course', // 获取用户录音课程
+  setHomeworkCompleteApi: '/chapters_state/set_complete', // 设置作业完成接口
 
   /**
    * 新登录接口
@@ -165,10 +167,11 @@ export default {
 
   // kid课程接口
   umKidCourseDetailApi: '/kidv1/course/detail', // mini课程详情接口
-  userSubCoursesApi: '/studyv1/user/course/subscribes', // 获取更多订阅课程接口
-  umkidCourseSubApi: '/studyv1/course/sub', // 课程订阅课程接口
+  userSubCoursesApi: '/studyv1/user/course/subscribes/v2', // 获取更多订阅课程接口
+  userSubRadioCoursesApi: '/studyv1/user/course/subscribes/v3', // 用户订阅的电台课程
+  courseSubApi: '/studyv1/course/sub', // 单个课程订阅课程接口
   learnInfoV5Api: '/studyv1/learn_info/v5/index', // kid学习首页接口
-  kidCatalogApi: '/studyv1/catalog',
+  studyCatalogApi: '/studyv1/catalog',
   umKidLearnMoreCoursesApi: '/studyv1/user/course/subscribes', // 获取更多订阅课程接口
   umKidCourseContent: '/kidv1/course/teacher/content' // kid教师内容接口(包含绘本，单词，儿歌)
 }

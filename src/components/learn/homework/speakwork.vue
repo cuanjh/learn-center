@@ -54,7 +54,7 @@
                   <span :class="{'animat':animat}"></span>
                 </i>
               </div>
-              <div class="send" @click.prevent="exit()">
+              <div class="send" @click="exit()">
                 <i></i>
                 <span>发送</span>
               </div>
@@ -229,6 +229,7 @@ export default {
     },
     // 发送作业 先调七牛云上传音频，调后台写作业接口
     exit () {
+      let that = this
       let code = this.homework.form_id
       let sentence = this.homework.sentence
       Recorder.getTime((duration) => {
@@ -249,6 +250,7 @@ export default {
             this.mShow = false
             this.lastShow = false
             this.animat = false
+            that.$emit('initData')
           })
         })
       })

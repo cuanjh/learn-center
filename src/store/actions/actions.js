@@ -1,4 +1,4 @@
-import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken } from '../../api/api'
+import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken, httpAssets } from '../../api/api'
 import config from '../../api/config'
 import cookie from '../../tool/cookie'
 
@@ -180,8 +180,8 @@ export default {
     return httpLogin(config.userSubCoursesApi, params)
   },
   // mini课程订阅接口
-  getKidCourseSub ({commit}, params) {
-    return httpLogin(config.umkidCourseSubApi, params)
+  getOneCourseSub ({commit}, params) {
+    return httpLogin(config.courseSubApi, params)
   },
   // 获取kid学习信息
   getLearnInfoV5 ({commit}, params) {
@@ -191,12 +191,32 @@ export default {
   setKidCurrentChapter ({ commit }, params) {
     return httpLogin(config.setCurChapter, params)
   },
-  // 获取Kid目录结构
-  getKidCatalog ({ commit }, params) {
-    return httpLogin(config.kidCatalogApi, params)
+  // 获取目录结构
+  getCatalog ({ commit }, params) {
+    return httpLogin(config.studyCatalogApi, params)
   },
   // kid教师内容接口(包含绘本，单词，儿歌)
   getKidCourseContent ({commit}, params) {
     return httpLogin(config.umKidCourseContent, params)
+  },
+  // 获取学习进度
+  getProgress ({commit}, params) {
+    return httpLogin(config.getProgressApi, params)
+  },
+  // 获取章节资源内容
+  getChapterContent ({ commit, state }, chapterUrl) {
+    return httpAssets(chapterUrl)
+  },
+  // 获取测试排行榜数据
+  getCourseTestRanking ({ commit, state }, chapterCode) {
+    return httpLogin(config.courseTestRanking, { chapter_code: chapterCode })
+  },
+  // 获取作业内容数据
+  getHomeworkContent ({ commit, state }, activityCode) {
+    return httpLogin(config.homeworkContent, { activity_code: activityCode })
+  },
+  // 设置作业完成接口
+  setHomeworkComplete ({commit, state}, params) {
+    return httpLogin(config.setHomeworkCompleteApi, params)
   }
 }

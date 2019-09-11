@@ -11,7 +11,7 @@
               :class="{'mycourse-container-light': true }">
               <dl>
                 <dt>
-                  <a class='changeColor' @click="changeCourseCodes(course['code'])">
+                  <a class='changeColor' @click="changeCourseCodes(course)">
                     <img :src="course.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')">
                     <div class='fix-ie-filter-bug'></div>
                   </a>
@@ -36,7 +36,7 @@
 </template>
 <script>
 import { mapActions, mapMutations } from 'vuex'
-import Bus from '../../bus'
+// import Bus from '../../bus'
 export default {
   props: ['type', 'subscribeLangCourses'],
   data () {
@@ -55,13 +55,16 @@ export default {
       updateCurCourseCode: 'course/updateCurCourseCode'
     }),
     // 点击订阅的课程跳转到点击的课程开始学习
-    changeCourseCodes (courseCode) {
-      localStorage.setItem('lastCourseCode', courseCode)
-      this.updateCurCourseCode(courseCode)
-      if (this.type === 'index') {
-        Bus.$emit('loadIndexCourse', courseCode)
+    changeCourseCodes (course) {
+      console.log(course)
+      let courseCode = course.code
+      let courseType = course.course_type
+      if (courseType === 3) {
+        localStorage.setItem('isKid', '1')
+        this.$router.push({path: '/app/kid-course-list/' + courseCode})
       } else {
-        Bus.$emit('changeCourseCode', courseCode)
+        localStorage.setItem('isKid', '0')
+        this.$router.push({path: '/app/course-list/' + courseCode})
       }
     }
   }

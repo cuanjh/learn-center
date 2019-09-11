@@ -70,6 +70,8 @@ export default {
     CommonModal
   },
   mounted () {
+    console.log('learn mounted')
+    this.getCorePartInfo()
     let userId = cookie.getCookie('user_id')
     if (userId) {
       this.isShowBuyChapter = true
@@ -92,6 +94,7 @@ export default {
   methods: {
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
+      getCorePartInfo: 'course/getCorePartInfo',
       getUnlockChapter: 'course/getUnlockChapter',
       getCourseContent: 'course/getCourseContent',
       getProgress: 'course/getProgress',

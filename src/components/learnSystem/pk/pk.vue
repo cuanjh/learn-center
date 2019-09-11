@@ -2,9 +2,10 @@
   <div>
     <div class="sentence-box" v-if="pk"></div>
     <transition name="fade" mode="out-in">
-      <component :is="state" :data="data" :path="path" :ref="state"></component>
+      <component :is="state" :data="dataPK" :path="path" :ref="state"></component>
     </transition>
-    <component :is="'pk-progress'" :data="progressNum" :updateData="updateProgressNum" :idx="cur" v-if="showProgress" ref="pro"></component>
+    <component :is="'pkProgress'" :data="progressNum" :updateData="updateProgressNum" :idx="cur" v-if="showProgress" ref="pro"></component>
+    <single-result v-show="isShowResult" ref="singleResult"></single-result>
   </div>
 </template>
 
@@ -26,7 +27,7 @@ import Loader from '../../../plugins/loader'
 export default {
   data () {
     return {
-      state: 'pk-menu', // 组件名称
+      state: 'pkMenu', // 组件名称
       pk: false, // 双人PK
       single: false, // 单人测试
       progressNum: [], // 进度
@@ -38,105 +39,17 @@ export default {
       save_progress: [], // 自己的进度记录
       cur: -1,
       pk_playerFinish: false,
-      data: [], // pk数据
+      dataPK: [], // pk数据
       path: [], // 章节数
+      isShowResult: false,
       isBack: false // 是否为用户手动点击返回
     }
   },
   components: {
-    'pk-menu': pkMenu,
-    'cutdown': cutdown,
-    'single-result': singleResult,
-    'pk-progress': pkProgress
-  },
-  mounted () {
-    var chapterCode = this.currentChapterCode
-    if (!chapterCode) {
-      chapterCode = localStorage.getItem('currentChapterCode')
-    }
-
-    let slideTypeCode = chapterCode + '-A7'
-    let chapterContent = this.curChapterContent
-    if (Object.keys(chapterContent).length === 0) {
-      chapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
-    }
-    var forms = this.getPkForms(chapterContent, slideTypeCode)
-    var resource = this.getResource(forms)
-    Loader(resource).then((cb, data) => {
-      console.log(data)
-      let _slide = forms
-      _.map(data, (val) => {
-        _slide[val.idx][val.type] = val.url
-      })
-      this.$set(this, 'data', _slide)
-    }).catch((cb, err) => {
-      console.log(err.stack)
-    })
-
-    this.$on('pk_player_getProgress', data => {
-      this.$broadcast('addCouple', data.index, data.score)
-    })
-
-    this.$on('pk_finish', data => {
-      data = data || {
-        time: this.$.pro.getTime()
-      }
-      this.pk_finish = true
-      this.pk_time = data.time
-      this.$emit('time-over')
-    })
-
-    this.$on('pk_player_leave', () => {
-      // toaster.success(Config.tips.pk_playerLeave)
-    })
-
-    this.$on('pk_player_finish', () => {
-      this.pk_playerFinish = true
-    })
-  },
-  computed: {
-    ...mapState({
-      currentChapterCode: state => state.course.currentChapterCode,
-      curChapterContent: state => state.course.curChapterContent
-    }),
-    questionNum () {
-      return Math.floor(this.data.length / 2)
-    },
-    precision () {
-      var num = 0
-      for (var i = 0; i < this.progressNum.length; i++) {
-        if (this.progressNum[i] > 0) {
-          num++
-        }
-      }
-      return Math.round(num / this.progressNum.length * 100)
-    },
-    combo () {
-      let num = 0
-      let max = 0
-      for (var i = 0; i < this.progressNum.length; i++) {
-        if (this.progressNum[i] > 0) {
-          num++
-        } else {
-          max = max > num ? max : num
-          num = 0
-        }
-      }
-      return max > num ? max : num
-    },
-    currentNum () {
-      for (var i = 0; i < this.progressNum.length; i++) {
-        if (this.progressNum[i] === -1) {
-          return i
-        }
-      }
-    },
-    partNum () {
-      return this.data[0].sound
-        .split('sounds/')[1]
-        .split('-')[0]
-        .split('/')
-    }
+    pkMenu,
+    cutdown,
+    pkProgress,
+    singleResult
   },
   created () {
     console.log('created')
@@ -168,36 +81,31 @@ export default {
         this.time = this.$refs.pro.getTime()
       }
       // 如果不是break的则
-      if (this.state !== 'pk-menu') {
+      if (this.state !== 'pkMenu') {
         if (this.single) {
-          this.state = 'single-result'
+          this.$set(this, 'state', '')
         } else {
-          this.state = 'couple-result'
+          this.$set(this, 'state', 'couple-result')
         }
-        let that = this
-        setTimeout(() => {
-          this.postCourseTestRecord({
-            chapterCode: this.currentChapterCode,
-            progress: JSON.stringify(that.save_progress)
-          })
-          // var result = that.$refs.pro.getResult(this.pk_time)
-          if (that.$refs.pro) {
-            that.$refs.pro.$emit('reset-progress')
-          }
-          that.pk = false
-          this.$nextTick(() => {
-            that.$refs['single-result'].$emit(
-              'init-result',
-              {
-                score: that.score,
-                time: that.time,
-                question_num: that.questionNum,
-                progress: that.save_progress
-              }
-            )
-            that.showProgress = false
-          })
-        }, 500)
+
+        this.postCourseTestRecord({
+          chapterCode: this.$route.params.chapterCode,
+          progress: JSON.stringify(this.save_progress)
+        })
+        // var result = that.$refs.pro.getResult(this.pk_time)
+        if (this.$refs.pro) {
+          this.$refs.pro.$emit('reset-progress')
+        }
+        this.pk = false
+        this.isShowResult = true
+        console.log(this.$refs)
+        this.$refs['singleResult'].$emit('init-result', {
+          score: this.score,
+          time: this.time,
+          question_num: this.questionNum,
+          progress: this.save_progress
+        })
+        this.showProgress = false
       }
       console.log('isback: ', this.isBack)
       // 结束时的日志汇报
@@ -238,10 +146,18 @@ export default {
 
     this.$on('back', (content) => {
       this.cur = -1
-      if (this.state === 'pk-menu' || content) {
+      this.isShowResult = false
+      if (this.state === 'pkMenu' || content) {
         // this.$dispatch('change-router', _.take(this.path, 3).join('/'))
         // this.$broadcast('break-rebot')
-        this.$router.push({ path: '/app/course-list' })
+        let chapterCode = this.$route.params.chapterCode
+        let courseCode = chapterCode.split('-').slice(0, 2).join('-')
+        let isKid = localStorage.getItem('isKid')
+        if (isKid === '1') {
+          this.$router.push({ path: '/app/kid-course-list/' + courseCode })
+        } else {
+          this.$router.push({ path: '/app/course-list/' + courseCode })
+        }
       } else {
         // pk中断强制上传时间
         if (this.$refs.pro) {
@@ -249,7 +165,7 @@ export default {
           this.pk_finish = true
         }
 
-        this.state = 'pk-menu'
+        this.state = 'pkMenu'
         this.showProgress = true
         if (this.$refs.pro) {
           this.$refs.pro.$emit('reset-progress')
@@ -275,10 +191,109 @@ export default {
       // logCollect.learnStart(isFirst)
     })
   },
+  mounted () {
+    this.initData()
+    this.$on('pk_player_getProgress', data => {
+      this.$broadcast('addCouple', data.index, data.score)
+    })
+
+    this.$on('pk_finish', data => {
+      data = data || {
+        time: this.$.pro.getTime()
+      }
+      this.pk_finish = true
+      this.pk_time = data.time
+      this.$emit('time-over')
+    })
+
+    this.$on('pk_player_leave', () => {
+      // toaster.success(Config.tips.pk_playerLeave)
+    })
+
+    this.$on('pk_player_finish', () => {
+      this.pk_playerFinish = true
+    })
+  },
+  computed: {
+    ...mapState({
+    }),
+    questionNum () {
+      return Math.floor(this.dataPK.length / 2)
+    },
+    precision () {
+      var num = 0
+      for (var i = 0; i < this.progressNum.length; i++) {
+        if (this.progressNum[i] > 0) {
+          num++
+        }
+      }
+      return Math.round(num / this.progressNum.length * 100)
+    },
+    combo () {
+      let num = 0
+      let max = 0
+      for (var i = 0; i < this.progressNum.length; i++) {
+        if (this.progressNum[i] > 0) {
+          num++
+        } else {
+          max = max > num ? max : num
+          num = 0
+        }
+      }
+      return max > num ? max : num
+    },
+    currentNum () {
+      for (var i = 0; i < this.progressNum.length; i++) {
+        if (this.progressNum[i] === -1) {
+          return i
+        }
+      }
+    },
+    partNum () {
+      return this.data[0].sound
+        .split('sounds/')[1]
+        .split('-')[0]
+        .split('/')
+    }
+  },
   methods: {
     ...mapActions({
-      postCourseTestRecord: 'learn/postCourseTestRecord'
+      postCourseTestRecord: 'learn/postCourseTestRecord',
+      getCatalog: 'getCatalog',
+      getChapterContent: 'getChapterContent'
     }),
+    async initData () {
+      let chapterCode = this.$route.params.chapterCode
+      let slideTypeCode = chapterCode + '-A7'
+      let courseCode = chapterCode.split('-').slice(0, 2).join('-')
+      let curLevelCode = chapterCode.split('-').slice(0, 3).join('-')
+
+      // 2.2 获取kid目录结构
+      let res = await this.getCatalog({course_code: courseCode})
+      console.log(res)
+      this.catalogs = res.catalogInfo.catalogs
+      let curLevel = this.catalogs.find(item => {
+        return item.code === curLevelCode
+      })
+
+      let curChapter = curLevel.chapters.find(item => {
+        return item.code === chapterCode
+      })
+
+      let chapterContent = await this.getChapterContent(curChapter.chapter_url)
+      var forms = this.getPkForms(chapterContent, slideTypeCode)
+      var resource = this.getResource(forms)
+      Loader(resource).then((cb, data) => {
+        console.log(data)
+        let _slide = forms
+        _.map(data, (val) => {
+          _slide[val.idx][val.type] = val.url
+        })
+        this.$set(this, 'dataPK', _slide)
+      }).catch((cb, err) => {
+        console.log(err.stack)
+      })
+    },
     initCutDown (num, data) {
       console.log('initCutDown')
       this.pk_time = 0

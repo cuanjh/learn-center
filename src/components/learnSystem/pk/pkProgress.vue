@@ -1,5 +1,6 @@
 <template>
-  <div class="progress p-pk"> <img :src="userphoto + urlFix" v-if="start">
+  <div class="progress p-pk">
+    <img :src="userInfo.photo + urlFix" v-if="start">
     <b v-for="(value, index) in data" :key="index" :class="{great:value==0,perfect:value==1,current:index==idx+1}" v-show="start">{{index + 1}}</b>
     <div class="timer" :class="{warning:warning,error:error}" v-if="start">
       <span>00:</span>
@@ -34,7 +35,7 @@ export default {
       error: false,
       couple: false,
       coupleProgress: [],
-      // userphoto: this.userInfo.photo,
+      userphoto: '',
       urlFix: '&imageView2/0/w/50',
       otherplayer: {}
     }
@@ -45,28 +46,14 @@ export default {
     }
   },
   mounted () {
-    console.log(this.data)
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
   },
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo,
       pkTime: state => state.learn.pkTime
     }),
     coupleLength () {
       return this.coupleProgress.length
-    },
-    // time () {
-    //   return this.pkTime
-    // },
-    userphoto () {
-      return this.ui.photo
-    },
-    ui () {
-      let ui = this.userInfo
-      if (Object.keys(ui).length === 0) {
-        ui = JSON.parse(sessionStorage.getItem('userInfo'))
-      }
-      return ui
     }
   },
   created () {

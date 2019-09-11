@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     goCourseList () {
-      this.$router.push({path: '/app/kid-course-list'})
+      this.$router.push({path: '/app/kid-course-list/' + this.kidCourseBaseInfo.code})
     }
   }
 }
