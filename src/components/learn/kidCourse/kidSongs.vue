@@ -1,5 +1,5 @@
 <template>
-   <div class="video-container">
+   <div class="video-container" v-show="isShow">
     <div class="video-content">
       <div class="kid-video-box">
         <video id="myVideo" controls="controls" autoplay="autoplay" ref='video'>
@@ -29,41 +29,38 @@
           </ul>
         </div>
       </div>
+      <div class="icon-close" @click="closeModal()"></div>
     </div>
   </div>
 </template>
 <script>
 import $ from 'jquery'
-import { mapActions } from 'vuex'
+// import { mapActions } from 'vuex'
+import Bus from '../../../bus'
 
 export default {
   data () {
     return {
+      isShow: false,
       isActive: 'hello',
       songs: [],
       songsAll: [],
       currentVideo: {}
     }
   },
+  created () {
+    Bus.$on('showSongsModal', (data) => {
+      console.log('儿歌详情data===>', data)
+      this.songsAll = data
+      this.songs = data.hello
+      this.currentVideo = data.hello[0]
+      this.$refs.video.src = data.hello[0].sound
+      this.isShow = true
+    })
+  },
   mounted () {
-    this.initKidContent()
   },
   methods: {
-    ...mapActions({
-      getKidCourseContent: 'getKidCourseContent'
-    }),
-    initKidContent () {
-      this.getKidCourseContent({chapter_code: 'KEN-Basic-Level1-Unit1-Chapter1 '}).then(res => {
-        console.log('kid内容返回====>', res)
-        if (res.success) {
-          console.log(this.currentVideo)
-          this.songsAll = res.teacherContent.songs
-          this.songs = res.teacherContent.songs.hello
-          this.currentVideo = res.teacherContent.songs.hello[0]
-          this.$refs.video.src = res.teacherContent.songs.hello[0].sound
-        }
-      })
-    },
     tabChange (tabActive) {
       this.isActive = tabActive
       if (this.isActive === 'hello') {
@@ -80,6 +77,11 @@ export default {
     },
     convertTimeMMSS (seconds) {
       return new Date(seconds * 1000).toISOString().substr(14, 5)
+    },
+    // 关闭蒙层
+    closeModal () {
+      this.isShow = false
+      $('#myVideo')[0].pause()
     }
   }
 }
@@ -101,12 +103,11 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    width:1200px;
-    height:656px;
-    background:rgba(0,0,0,1);
+    background:rgba(255,255,255,1);
+    border-radius:5px;
     border:1px solid rgba(151,151,151,1);
     transform: translate(-50%, -50%);
-    padding: 25px;
+    padding: 36px;
     display: flex;
     justify-content: space-between;
     .kid-video-box {
@@ -139,33 +140,41 @@ export default {
         display: flex;
         justify-content: space-between;
         margin-bottom: 20px;
+        background:#fff;
+        box-shadow:0px 0px 6px 2px rgba(0,0,0,0.19);
+          border-radius:5px;
         .item {
-          width: 46%;
+          width: 50%;
           text-align: center;
+          padding: 10px 0;
+          border-radius: 5px 0 0 5px;
           &:hover {
-            background:rgba(51,51,51,1);
-            border-radius:6px 0px 0px 6px;
+            background:rgba(255,255,255,.5);
             a {
               color: #4a90e2;
             }
           }
           &.active {
-            background:rgba(51,51,51,1);
-            border-radius:6px 0px 0px 6px;
+            background:#4A90E2;
             a {
-              color:#4a90e2;
+              color:#fff;
             }
           }
           a {
             display: inline-block;
             font-size:20px;
             font-weight:400;
-            color:rgba(155,155,155,1);
+            color:#9B9B9B;
           }
+        }
+        .item:last-child {
+          border-radius: 0px 5px 5px 0px;
         }
       }
       .song-content {
-        background: #333333;
+        background:rgba(255,255,255,1);
+        box-shadow:0px 0px 6px 2px rgba(0,0,0,0.15);
+        border-radius:5px;
         display: flex;
         flex: 1;
         ul {
@@ -177,14 +186,20 @@ export default {
           li {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
-            margin-bottom: 36px;
+            margin-bottom: 30px;
+            border-radius: 5px;
             &:hover {
               cursor: pointer;
-              background: rgb(68, 66, 66);
+              background: rgba(74, 144, 226, .5);
+              .text {
+                color: #fff;
+              }
             }
             &.active {
-              background: rgb(68, 66, 66);
+              background: rgba(74, 144, 226, .7);
+              .text {
+                color: #fff;
+              }
             }
             .img-box {
               width: 160px;
@@ -193,6 +208,7 @@ export default {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                border-radius: 5px
               }
             }
             .text {
@@ -214,6 +230,16 @@ export default {
         }
       }
     }
+  }
+  .icon-close {
+    position: absolute;
+    top: -48px;
+    right: -26px;
+    width: 40px;
+    height: 40px;
+    background: url('../../../../static/images/icon-cloce.png') no-repeat center;
+    background-size: cover;
+    cursor: pointer;
   }
 }
 </style>

@@ -198,5 +198,17 @@ export default {
   // kid教师内容接口(包含绘本，单词，儿歌)
   getKidCourseContent ({commit}, params) {
     return httpLogin(config.umKidCourseContent, params)
+  },
+  // 单个课程的录音状态接口
+  getKidRecordState ({commit}, params) {
+    return httpLogin(config.umKidRecordState, params)
+  },
+  // 录音列表接口
+  getKidRecordLists ({commit}, params) {
+    return httpLogin(config.umKidRecordLists, params)
+  },
+  // 分享的标题
+  getkidRecordShare ({commit}, params) {
+    return httpLogin(config.umkidRecordShare, params)
   }
 }

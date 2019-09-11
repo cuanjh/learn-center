@@ -84,19 +84,19 @@
                 <div class="tab-content">
                   <div class="tab-content-kid" v-show="!active">
                     <ul>
-                      <li>
+                      <li  @click="goKidStage(item, 'draw', index+1)">
                         <div class="icon">
                           <i></i>
                         </div>
                         <div class="title">
-                          <span @click="goKidStage(item, 'read')">绘本阅读</span>
+                          <span>绘本阅读</span>
                         </div>
                       </li>
-                      <li>
+                      <li @click="goKidStage(item, 'word', index+1)">
                         <div class="icon"><i></i></div>
-                        <div class="title"><span @click="goKidStage(item, 'word')">核心单词</span></div>
+                        <div class="title"><span >核心单词</span></div>
                       </li>
-                      <li>
+                      <li @click="goKidSongs(item)">
                         <div class="icon"><i></i></div>
                         <div class="title"><span>儿歌</span></div>
                       </li>
@@ -224,6 +224,7 @@
         </div>
       </div>
     </div>
+    <kid-songs />
   </div>
 </template>
 
@@ -232,6 +233,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import moment from 'moment'
 import Bus from '../../../bus'
 import LearnCourseList from '../../common/learnCourseList.vue'
+import kidSongs from './kidSongs.vue'
 
 export default {
   name: 'leftSide',
@@ -254,7 +256,8 @@ export default {
     }
   },
   components: {
-    LearnCourseList
+    LearnCourseList,
+    kidSongs
   },
   mounted () {
     this.initData()
@@ -292,7 +295,8 @@ export default {
       'getLearnInfoV5',
       'getKidCatalog',
       'getMoreLearnCourses',
-      'getSubCourses' // 新的课程列表接口
+      'getSubCourses', // 新的课程列表接口
+      'getKidCourseContent' // 儿歌
     ]),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode'
@@ -346,9 +350,20 @@ export default {
     changeTab (index) {
       this.active = index
     },
-    goKidStage (item, type) {
+    goKidStage (item, type, courseIndex) {
+      console.log(item, type, courseIndex)
       let code = item.code
-      this.$router.push({path: '/kid-stage', query: {code: code, type: type}})
+      this.$router.push({path: '/kid-stage', query: {code: code, type: type, courseIndex: courseIndex}})
+    },
+    // 儿歌
+    goKidSongs (item) {
+      console.log('儿歌详情每一个===>', item)
+      this.getKidCourseContent({chapter_code: item.code}).then(res => {
+        console.log(res)
+        if (res.success) {
+          Bus.$emit('showSongsModal', res.teacherContent.songs)
+        }
+      })
     }
   }
 }
@@ -832,6 +847,7 @@ export default {
       display: flex;
       flex-direction: row;
       padding: 6px 0;
+      cursor: pointer;
     }
     ul li .icon {
       margin-right: 14px;

@@ -170,5 +170,8 @@ export default {
   learnInfoV5Api: '/studyv1/learn_info/v5/index', // kid学习首页接口
   kidCatalogApi: '/studyv1/catalog',
   umKidLearnMoreCoursesApi: '/studyv1/user/course/subscribes', // 获取更多订阅课程接口
-  umKidCourseContent: '/kidv1/course/teacher/content' // kid教师内容接口(包含绘本，单词，儿歌)
+  umKidCourseContent: '/kidv1/course/teacher/content', // kid教师内容接口(包含绘本，单词，儿歌)
+  umKidRecordState: '/kidv1/record/state', // 单个课程的录音状态接口
+  umKidRecordLists: '/kidv1/record/lists', // 教师模块的录音列表接口
+  umkidRecordShare: '/kidv1/course/record/share' // 模块学习信息分享接口
 }
