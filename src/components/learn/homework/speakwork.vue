@@ -155,7 +155,7 @@ export default {
       // 录音状态下不可点
       this.recording = true
       // 开始检测录音音量
-      bus.$on('record_setVolume', this.setVolume)
+      bus.$on('record_setVolume', this.setVolume) // 开始动画
       Recorder.startRecording()
       var _this = this
       console.log('record start!!!!!')

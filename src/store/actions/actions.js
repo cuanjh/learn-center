@@ -218,5 +218,17 @@ export default {
   // 设置作业完成接口
   setHomeworkComplete ({commit, state}, params) {
     return httpLogin(config.setHomeworkCompleteApi, params)
+  },
+  // 单个课程的录音状态接口
+  getKidRecordState ({commit}, params) {
+    return httpLogin(config.umKidRecordState, params)
+  },
+  // 录音列表接口
+  getKidRecordLists ({commit}, params) {
+    return httpLogin(config.umKidRecordLists, params)
+  },
+  // 分享的标题
+  getkidRecordShare ({commit}, params) {
+    return httpLogin(config.umkidRecordShare, params)
   }
 }
