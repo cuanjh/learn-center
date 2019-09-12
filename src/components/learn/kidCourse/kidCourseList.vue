@@ -232,7 +232,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import moment from 'moment'
 import Bus from '../../../bus'
 import LearnCourseList from '../../common/learnCourseList.vue'
@@ -256,6 +256,7 @@ export default {
       navCourse: false,
       flag: '',
       name: '',
+      changeCourseCode: '',
       curLevelCode: '',
       curLevelChapters: [],
       curChapterCode: '',
@@ -290,12 +291,13 @@ export default {
         localStorage.setItem('isKid', '0')
       }
     })
+    this.getUserInfo().then(res => {
+      this.userInfo = res.info
+      this.isVip = res.info.member_info.member_type
+    })
     this.initData()
   },
   computed: {
-    ...mapState({
-      userInfo: state => state.userInfo
-    }),
     // 统计vip的时间
     vipEndDate () {
       if (!this.userInfo || !this.userInfo.member_info) {
@@ -312,9 +314,18 @@ export default {
       return this.$i18n.locale
     }
   },
+  watch: {
+    $route (to, from) {
+      if (to.name === from.name) {
+        this.changeCourseCode = to.params.courseCode
+      }
+    },
+    changeCourseCode () {
+      this.initData()
+    }
+  },
   methods: {
     ...mapActions({
-      getUserInfo: 'getUserInfo',
       getLearnInfoV5: 'course/getLearnInfoV5',
       setKidCurrentChapter: 'setKidCurrentChapter',
       getCatalog: 'getCatalog',
@@ -342,9 +353,6 @@ export default {
       updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     async initData () {
-      let userInfo = await this.getUserInfo()
-      this.isVip = userInfo.info.member_info.member_type
-
       let courseCode = this.$route.params.courseCode
       // 1 获取该课程的学习信息
       let res1 = await this.getLearnInfoV5({course_code: courseCode})
