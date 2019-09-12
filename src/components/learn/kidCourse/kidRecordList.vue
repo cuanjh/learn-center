@@ -1,7 +1,7 @@
 <template>
   <div class="record-lists-container">
     <div class="header">
-      <header>
+      <div class="header-container">
         <div class="header-content">
           <div class="left">
             <a href="javascript:;"  class="balk-icon" @click="goKidStage()"></a>
@@ -10,13 +10,13 @@
               <span>{{type=='draw'?'绘本阅读':'绘本单词'}}</span>
             </p>
           </div>
-          <share-box :type="typeNum"/>
         </div>
-      </header>
+      </div>
     </div>
     <div class="record-lists">
       <div class="top-contant">
         <h1 >我的{{type=='draw'?'绘本':'单词'}}录音</h1>
+        <share-box class="this-share-box" :type="recordType" />
         <!-- <button class="share" @click="shareRecord()">分享</button> -->
       </div>
       <div class="record-swiper">
@@ -24,16 +24,16 @@
           <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item, index) in recordLists" :key="index">
               <div class="slide-content">
-                <div class="record-img">
+                <div class="record-img" @click="playMother('mother-sound'+index)">
                   <img :src="item.image" alt="">
                   <audio preload="load" class="mother-sound" :id="'mother-sound'+index" :src="item.sound_url"></audio>
                 </div>
                 <div class="record-desc">
                   <p class="text">{{item.content || item.word}}</p>
                   <div class="record-playVoice-button">
-                    <div class="play-box" @click="playMyRecord($event, index)">
-                      <audio preload="load" class="record-sound" :id="'record-sound'+index" :src="item.record_sound_url"></audio>
-                      <i :id="'loading'+index">
+                    <div class="play-box">
+                      <audio preload="load" @ended.native="audioEnd()" class="record-sound" :id="'record-sound'+index" :src="item.record_sound_url"></audio>
+                      <i :id="'loading'+index" @click="playClik('loading'+(item.list_order-1))">
                         <span></span>
                         <span></span>
                         <span></span>
@@ -56,17 +56,17 @@
 <script>
 import { mapActions } from 'vuex'
 import $ from 'jquery'
+import Bus from '../../../bus'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
 import ShareBox from '../../common/shareBox'
-import Bus from '../../../bus'
 
 export default {
-  props: ['code', 'type', 'courseIndex'],
+  name: 'kidRecordList',
+  props: ['code', 'type'],
   data () {
     return {
-      typeNum: '4',
-      showShareBox: false,
+      recordType: '4',
       courseInfo: {
         code: '',
         title: '',
@@ -82,9 +82,19 @@ export default {
   components: {
     ShareBox
   },
+  computed: {
+    courseIndex () {
+      let arr = this.code.split('-')
+      let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
+      return num
+    }
+  },
   mounted () {
     console.log(this.code, this.type)
     this.initDataList()
+  },
+  updated () {
+    this.resetStyle()
   },
   methods: {
     ...mapActions([
@@ -118,6 +128,7 @@ export default {
       this.courseInfo.teacherModule = this.type
       console.log(this.courseInfo)
       Bus.$emit('shareCardContent', this.courseInfo)
+      this.resetStyle()
     },
     swiperInit () {
       this.$nextTick(() => {
@@ -158,9 +169,11 @@ export default {
               $('#loading'+this.previousIndex).removeClass('loading')
               $('#record-sound'+this.activeIndex)[0].play()
               $('#record-sound'+(this.previousIndex))[0].pause()
+              $('#mother-sound'+(this.previousIndex))[0].pause()
               $('#record-sound'+(this.previousIndex))[0].currentTime = 0
+              $('#mother-sound'+(this.previousIndex))[0].currentTime = 0
               let audio = document.getElementById('record-sound' + this.activeIndex)
-               audio.addEventListener('ended', () => {
+              audio.addEventListener('ended', () => {
                 $('#loading' + this.activeIndex).removeClass('loading')
               }, false)
             }
@@ -170,35 +183,56 @@ export default {
       })
     },
     goKidStage () {
-      this.$router.push({path: '/kid-stage', query: {code: this.code, type: this.type, courseIndex: this.courseIndex}})
+      this.$router.push({path: '/kid-stage', query: {code: this.code, type: this.type}})
     },
     // 播放录音
-    playMyRecord (e, index) {
-      console.log(e, index)
-      this.watchaudio(index)
-    },
-    watchaudio (index) {
-      console.log(index)
-      $('.play-box i').removeClass('loading')
-      $('#loading' + index).addClass('loading')
-      let audio = document.getElementById('record-sound' + index)
-      audio.play()
-      audio.onloadedmetadata = () => {
-        audio.play()
+    playClik (e) {
+      console.log(e)
+      if ($('#' + e).prev()[0].paused) {
+        $('#' + e).prev()[0].play()
+        $('#' + e).addClass('loading')
+      } else {
+        $('#' + e).prev()[0].pause()
+        $('#' + e).prev()[0].currentTime = 0
+        $('#' + e).removeClass('loading')
       }
-      audio.addEventListener('ended', () => {
-        $('#loading' + index).removeClass('loading')
-      }, false)
+    },
+    audioEnd () {
+      $('.play-box i').removeClass('loading')
+    },
+    // 播放母语
+    // 点击图片播放母语音频
+    playMother (e) {
+      console.log(e)
+      $('#' + e)[0].play()
+    },
+    resetStyle () {
+      $('#swiper-pagination').find('.swiper-pagination-bullet').css({
+        'width': '20px',
+        'height': '6px',
+        'border-radius': '6px',
+        'margin-right': '8px'
+      })
+      $('#swiper-pagination').find('.swiper-pagination-bullet-active').css({
+        'width': '20px',
+        'height': '6px',
+        'background': '#0581D1',
+        'border-radius': '6px',
+        'margin-right': '8px'
+      })
     }
   }
 }
 </script>
 <style lang="less" scoped>
+.record-lists-container {
+  width: 100%;
+}
 .header {
   width: 100%;
   height: 62px;
   background: #fff;
-  header {
+  .header-container {
     width: 100%;
     height: 62px;
     .header-content {
@@ -216,9 +250,14 @@ export default {
         display: inline-block;
         width: 30px;
         height: 30px;
-        background: #EEF2F3;
+        background: url('../../../../static/images/kidcontent/icon-back.png') no-repeat center;
+        background-size: cover;
         border-radius: 50%;
         margin-right: 26px;
+        &:hover {
+          background: url('../../../../static/images/kidcontent/icon-back-active.png') no-repeat center;
+          background-size: cover;
+        }
       }
       .course-desc {
         font-size:17px;
@@ -231,30 +270,19 @@ export default {
 .record-lists {
   .top-contant {
     text-align: center;
-    position: relative;
     padding: 64px 126px;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     h1 {
       font-size:36px;
       font-weight:600;
       color:rgba(60,91,111,1);
     }
-    .share {
-      width:184px;
-      height:74px;
-      background:rgba(74,144,226,1);
-      box-shadow:0px 34px 20px -29px rgba(74,144,226,0.81);
-      border-radius:37px;
-      font-size:36px;
-      font-weight:600;
-      color:rgba(255,255,255,1);
+    .this-share-box {
       position: absolute;
       right: 126px;
-      &:hover{
-        background: rgba(74,144,226,.8);
-      }
     }
   }
 }

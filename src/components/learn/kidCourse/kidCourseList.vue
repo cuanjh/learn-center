@@ -87,7 +87,7 @@
                 <div class="tab-content">
                   <div class="tab-content-kid" v-show="!active">
                     <ul>
-                      <li  @click="goKidStage(item, 'draw', index+1)">
+                      <li  @click="goKidStage(item, 'draw')">
                         <div class="icon">
                           <i></i>
                         </div>
@@ -95,7 +95,7 @@
                           <span>绘本阅读</span>
                         </div>
                       </li>
-                      <li @click="goKidStage(item, 'word', index+1)">
+                      <li @click="goKidStage(item, 'word')">
                         <div class="icon"><i></i></div>
                         <div class="title"><span >核心单词</span></div>
                       </li>
@@ -227,7 +227,7 @@
         </div>
       </div>
     </div>
-    <kid-songs />
+    <kid-songs/>
   </div>
 </template>
 
@@ -274,6 +274,21 @@ export default {
   components: {
     LearnCourseList,
     kidSongs
+  },
+  // beforeRouteUpdate (to, from, next) {
+  //   if (to.name === 'kidCourseList') {
+  //     next()
+  //     this.initData()
+  //   } else {
+  //     next()
+  //   }
+  // },
+  beforeRouteUpdate (to, from, next) {
+    console.log('监听路由变化：', this.$route.path)
+    if (to.name === 'kidCourseList') {
+      next()
+      this.initKid()
+    }
   },
   created () {
     // this.$on('draw', this.drawProgress)
@@ -352,6 +367,31 @@ export default {
       updateCurCourseCode: 'course/updateCurCourseCode',
       updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
+    async initKid () {
+      let courseCode = this.$route.params.courseCode
+      // 1 获取该课程的学习信息
+      let res1 = await this.getLearnInfoV5({course_code: courseCode})
+      console.log(res1)
+      this.flag = res1.info.courseBaseInfo.flag
+      this.name = res1.info.courseBaseInfo.name + ' KID'
+      this.curChapterCode = res1.info.learnConfig.current_chapter_code
+      this.curLevelCode = this.curChapterCode.split('-').slice(0, 3).join('-')
+
+      // 2.设置当前学习的课程
+      this.setKidCurrentChapter({chapter_code: this.curChapterCode})
+
+      // 2.2 获取kid目录结构
+      let res22 = await this.getCatalog({course_code: courseCode})
+      console.log(res22)
+      this.assetsServer = res22.assets_server
+      this.catalogs = res22.catalogInfo.catalogs
+      let curLevel = this.catalogs.find(item => {
+        return item.code === this.curLevelCode
+      })
+      this.curLevelChapters = curLevel.chapters
+      localStorage.setItem('curLevelChapters', JSON.stringify(this.curLevelChapters))
+      console.log('curLevelChapters', this.curLevelChapters)
+    },
     async initData () {
       let courseCode = this.$route.params.courseCode
       // 1 获取该课程的学习信息
@@ -410,10 +450,10 @@ export default {
         this.drawProgress('vip', this.vipData)
       }
     },
-    goKidStage (item, type, courseIndex) {
-      console.log(item, type, courseIndex)
+    goKidStage (item, type) {
+      console.log(item, type)
       let code = item.code
-      this.$router.push({path: '/kid-stage', query: {code: code, type: type, courseIndex: courseIndex}})
+      this.$router.push({path: '/kid-stage', query: {code: code, type: type}})
     },
     async initProData () {
       this.isShow = true
@@ -759,7 +799,8 @@ export default {
       this.getKidCourseContent({chapter_code: item.code}).then(res => {
         console.log(res)
         if (res.success) {
-          Bus.$emit('showSongsModal', res.teacherContent.songs)
+          let songs = res.teacherContent.songs
+          Bus.$emit('showSongsModal', songs)
         }
       })
     }
