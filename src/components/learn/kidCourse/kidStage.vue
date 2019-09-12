@@ -11,7 +11,7 @@
         </div>
       </header>
     </div>
-    <div class="record-lists" v-if="recordState>0" @click="goKidRecordList(code, type, courseIndex)">
+    <div class="record-lists" v-if="recordState>0" @click="goKidRecordList(code, type)">
       <div class="record-lists-content">
         <div class="num-content">
           <i class="icon-img"></i>
@@ -44,7 +44,7 @@ import KidStageItem from './kidStageItem.vue'
 import Recorder from '../../../plugins/recorder'
 
 export default {
-  props: ['code', 'type', 'courseIndex'],
+  props: ['code', 'type'],
   data () {
     return {
       courseCode: '',
@@ -55,6 +55,13 @@ export default {
   components: {
     KidStageItem
   },
+  computed: {
+    courseIndex () {
+      let arr = this.code.split('-')
+      let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
+      return num
+    }
+  },
   created () {
     this.initData()
     this.initRecordState()
@@ -63,6 +70,9 @@ export default {
   mounted () {
     let arr = this.code.split('-')
     this.courseCode = arr.slice(0, 2).join('-')
+  },
+  updated () {
+    this.resetStyle()
   },
   methods: {
     ...mapActions([
@@ -84,6 +94,7 @@ export default {
       }
       console.log('kid stage list', this.list)
       await this.swiperInit()
+      this.resetStyle()
     },
     async initRecordState () {
       let res = await this.getKidRecordState({chapter_code: this.code})
@@ -134,8 +145,23 @@ export default {
         /* eslint-enable */
       })
     },
-    goKidRecordList (code, type, courseIndex) {
-      this.$router.push({path: '/kid-record-list', query: {code: code, type: type, courseIndex: courseIndex}})
+    resetStyle () {
+      $('#swiper-pagination').find('.swiper-pagination-bullet').css({
+        'width': '20px',
+        'height': '6px',
+        'border-radius': '6px',
+        'margin-right': '8px'
+      })
+      $('#swiper-pagination').find('.swiper-pagination-bullet-active').css({
+        'width': '20px',
+        'height': '6px',
+        'background': '#0581D1',
+        'border-radius': '6px',
+        'margin-right': '8px'
+      })
+    },
+    goKidRecordList (code, type) {
+      this.$router.push({path: '/kid-record-list', query: {code: code, type: type}})
     }
   }
 }
@@ -159,9 +185,14 @@ export default {
         display: inline-block;
         width: 30px;
         height: 30px;
-        background: #EEF2F3;
+        background: url('../../../../static/images/kidcontent/icon-back.png') no-repeat center;
+        background-size: cover;
         border-radius: 50%;
         margin-right: 26px;
+        &:hover {
+          background: url('../../../../static/images/kidcontent/icon-back-active.png') no-repeat center;
+          background-size: cover;
+        }
       }
       .course-desc {
         font-size:17px;
@@ -235,7 +266,7 @@ export default {
   width: 100%;
   height: 100%;
   padding: 40px 120px;
-  background: #0581D1;
+  // background: #0581D1;
   box-sizing: border-box;
   position: relative;
   margin-top: 10%;

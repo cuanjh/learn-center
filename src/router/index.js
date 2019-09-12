@@ -319,17 +319,16 @@ export default[
     component: kidStage,
     props: (route) => ({
       code: route.query.code,
-      type: route.query.type,
-      courseIndex: route.query.courseIndex
+      type: route.query.type
     })
   },
   {
     path: '/kid-record-list',
+    name: 'kidRecordList',
     component: kidRecordList,
     props: (route) => ({
       code: route.query.code,
-      type: route.query.type,
-      courseIndex: route.query.courseIndex
+      type: route.query.type
     })
   },
   {

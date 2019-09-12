@@ -1,5 +1,5 @@
 <template>
-  <div class="share">
+  <div class="share" id="share-box">
     <div class="gb_resLay">
       <div class="bdsharebuttonbox">
         <ul class="gb_resItms">
@@ -89,7 +89,7 @@ export default {
         bdDesc = course.title //分享时的标题
         bdText = course.text
         bdPic = course.flag //此处为分享时自带的图片
-        bdUrl = 'http://share.talkmate.com/record/' + course.chapterCode + '/' + course.teacherModule + '/' + userId + '/' + course.courseName  //此处为后台要进行分享的内容的定义
+        bdUrl = 'http://share.talkmate.com/record/' + course.chapterCode + '/' + course.teacherModule + '/' + userId  //此处为后台要进行分享的内容的定义
       }
 
       window._bd_share_config = {
@@ -118,7 +118,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.share {
+#share-box {
   .bdsharebuttonbox {
     .gb_resItms {
       display: flex;

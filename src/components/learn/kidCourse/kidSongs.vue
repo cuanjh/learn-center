@@ -1,10 +1,35 @@
 <template>
    <div class="video-container" v-show="isShow">
-    <div class="video-content">
+    <div class="video-content" id="video-content">
       <div class="kid-video-box">
-        <video id="myVideo" controls="controls" autoplay="autoplay" ref='video'>
-          <!-- <source id="video-source" src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4"> -->
-        </video>
+        <video id="myVideo" @ended.native="end()" autoplay="autoplay" :src="currentVideo.sound"></video>
+        <div class="controls">
+          <div id="voice-player-progress" class="progress" >
+            <i class="progress-load" style="width: 0%;"></i>
+            <i class="progress-cur"  :style="{'width': curProgress + 'px'}">
+              <span id="progressCurBtn"
+                    class="progress-btn"
+                    @mousedown="onMouseDownProgress($event)"
+                    :style="{'left': curProgress + 'px'}">
+              </span>
+            </i>
+          </div>
+          <div class="left-btns">
+            <a href="javascript:;" class="play-btn" @click="play()">
+              <i class="icon-play" v-if="!isPlay"></i>
+              <i class="icon-pause" v-if="isPlay"></i>
+            </a>
+            <a href="javascript:;" class="play-next"  @click="next()"></a>
+            <div class="playtime" v-if="currentVideo">
+              <span>{{toParseTime(curTime)}} </span>
+              <span>&nbsp;/&nbsp;</span>
+              <span>{{toParseTime(currentVideo.sound_time)}}</span>
+            </div>
+          </div>
+          <div class="full-screen" @click="fullScreen()">
+            <a href="javascript:;"></a>
+          </div>
+        </div>
       </div>
       <div class="right-list">
         <div class="top-tabs">
@@ -17,13 +42,16 @@
         </div>
         <div class="song-content">
           <ul>
-            <li v-for="(item, index) in songs" :key="index" @click="playSong(item)" :class="{'active':item.code == currentVideo.code}">
+            <li v-for="(item, index) in songs"
+                :key="index"
+                @click="playSong(item)"
+                :class="{'active':item.code == currentVideo.code}">
               <div class="img-box">
                 <img :src="item.image" alt="">
               </div>
               <p class="text">
                 <span>{{item.title}}</span>
-                <span>{{convertTimeMMSS(item.sound_time)}}</span>
+                <span>{{toParseTime(item.sound_time)}}</span>
               </p>
             </li>
           </ul>
@@ -45,7 +73,15 @@ export default {
       isActive: 'hello',
       songs: [],
       songsAll: [],
-      currentVideo: {}
+      currentVideo: {},
+      isPlay: true, // 播放暂停按钮控制
+      curTime: 0, // 当前的时间
+      duration: 0, // 总时间
+      isEnd: false,
+      curProgress: 0, // 计算播放的长度的比值
+      progressFlag: '',
+      video: document.getElementById('myVideo'),
+      curIndex: 0
     }
   },
   created () {
@@ -54,9 +90,13 @@ export default {
       this.songsAll = data
       this.songs = data.hello
       this.currentVideo = data.hello[0]
-      this.$refs.video.src = data.hello[0].sound
+      this.video = $('#myVideo')[0]
+      this.play()
       this.isShow = true
+      console.log('当前的video===》', this.currentVideo)
     })
+  },
+  computed: {
   },
   mounted () {
   },
@@ -72,16 +112,113 @@ export default {
     playSong (itemvideo) {
       console.log(itemvideo)
       this.currentVideo = itemvideo
-      this.$refs.video.src = itemvideo.sound
-      $('#myVideo')[0].play()
-    },
-    convertTimeMMSS (seconds) {
-      return new Date(seconds * 1000).toISOString().substr(14, 5)
+      // $('#myVideo')[0].play()
+      // let video = $('#myVideo')[0]
+      this.video.pause()
+      this.video.currentTime = 0
+      this.play()
     },
     // 关闭蒙层
     closeModal () {
       this.isShow = false
-      $('#myVideo')[0].pause()
+      this.video.pause()
+      this.video.currentTime = 0
+      this.curIndex = 0
+    },
+    // 点击播放
+    play () {
+      if (this.video.paused || this.video.ended) {
+        if (this.video.ended) {
+          this.video.currentTime = 0
+        }
+        this.video.play()
+        this.isPlay = true
+        this.progressFlag = setInterval(this.getProgress, 60)
+      } else {
+        this.video.pause()
+        this.isPlay = false
+        clearInterval(this.progressFlag)
+      }
+    },
+    end () {
+      console.log('video播完了')
+      this.isPlay = false
+      this.video.pause()
+      this.video.currentTime = 0
+      this.curProgress = $('#voice-player-progress').width()
+      this.isEnd = true
+    },
+    // 点击next
+    next () {
+      this.curIndex++
+      console.log(this.curIndex)
+      console.log(this.songs)
+      let lastLength = this.songs.length - 1
+      if (this.curIndex > lastLength) {
+        this.curIndex = 0
+      }
+      this.currentVideo = this.songs[this.curIndex]
+      // this.video.pause()
+      // this.video.currentTime = 0
+      this.play()
+      console.log(this.currentVideo)
+    },
+    // 点击全屏
+    fullScreen () {
+      this.video.webkitRequestFullScreen()
+    },
+    getProgress () {
+      let percent = this.video.currentTime / this.video.duration
+      this.curProgress = percent.toFixed(4) * ($('#voice-player-progress').width() - 10)
+      this.curTime = this.video.currentTime
+      if (this.curTime === this.video.duration) {
+        this.isPlay = false
+        this.next()
+      }
+    },
+    onMouseDownProgress (ev) {
+      let _this = this
+      let progressWidth = $('#voice-player-progress').width()
+      let progressCur = document.getElementById('progressCurBtn')
+      let oevent = ev || event
+      let distanceX = oevent.clientX - progressCur.offsetLeft
+      document.onmousemove = (ev) => {
+        let oevent = ev || event
+        let left = oevent.clientX - distanceX
+        if (left < 0) {
+          left = 0
+        }
+        if (progressWidth >= left) {
+          _this.curProgress = left
+        } else {
+          _this.curProgress = progressWidth
+        }
+        let time = left / progressWidth * _this.video.duration
+        if (time > _this.video.duration) {
+          time = _this.video.duration
+        }
+        _this.curTime = time
+        _this.setCurrentTime(_this.curTime)
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
+      return false
+    },
+    setCurrentTime (time) {
+      this.video.currentTime = time
+    },
+    toParseTime (data) {
+      let m = parseInt(data / 60)
+      if (m < 10) {
+        m = '0' + m
+      }
+      let s = Math.round(data % 60)
+      if (s < 10) {
+        s = '0' + s
+      }
+      return m + ':' + s
     }
   }
 }
@@ -112,8 +249,6 @@ export default {
     justify-content: space-between;
     .kid-video-box {
       width: 728px;
-      display: flex;
-      flex: 1;
       .video-player{
         width: 728px!important;
         height: 100%;
@@ -125,10 +260,111 @@ export default {
       .vjs_video_4926-dimensions.vjs-fluid {
         padding-top: 0!important;
       }
+      .controls {
+        width: 100%;
+        height: 54px;
+        background: #4A90E2;
+        padding: 0 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        .left-btns {
+          display: flex;
+          align-items: center;
+          a, i {
+            &:hover {
+              opacity: .8;
+            }
+          }
+          .play-btn {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            .icon-play {
+              display: inline-block;
+              width: 20px;
+              height: 20px;
+              background: url('../../../../static/images/kidcontent/icon-play.png') no-repeat center;
+              background-size: cover;
+            }
+            .icon-pause {
+              display: inline-block;
+              width: 20px;
+              height: 20px;
+              background: url('../../../../static/images/kidcontent/icon-pause.png') no-repeat center;
+              background-size: cover;
+            }
+          }
+          .play-next {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: url('../../../../static/images/kidcontent/icon-next.png') no-repeat center;
+            background-size: cover;
+            margin: 0 20px;
+          }
+          .playtime {
+            font-size:20px;
+            font-weight:500;
+            color:rgba(255,255,255,1);
+          }
+        }
+        .full-screen {
+          width: 24px;
+          height: 24px;
+          a {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: url('../../../../static/images/kidcontent/icon-full-screen.png') no-repeat center;
+            background-size: cover;
+            &:hover {
+              opacity: .8;
+            }
+          }
+        }
+        .progress {
+          display: inline-block;
+          position: absolute;
+          top: -4px;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          background-color: rgba(255, 255, 255, .2);
+          .progress-load {
+            height: 100%;
+            width: 0%;
+            background-color: #a3a3ac;
+            display: block;
+          }
+          .progress-cur {
+            position: relative;
+            left: 0;
+            top: -2px;
+            display: block;
+            height: 100%;
+            width: 0%;
+            background-color: #FFB131;
+            z-index: 1;
+            .progress-btn{
+              position: absolute;
+              right: -5px;
+              top: -4px;
+              font-size: 0;
+              background-color: #FFB131;
+              height: 10px;
+              width: 10px;
+              border-radius: 50%;
+              cursor: pointer;
+            }
+          }
+        }
+      }
     }
     .kid-video-box #myVideo {
       width: 100%;
-      height: 100%;
+      height: 546px;
       outline: none;
     }
     .right-list {
@@ -190,15 +426,13 @@ export default {
             border-radius: 5px;
             &:hover {
               cursor: pointer;
-              background: rgba(74, 144, 226, .5);
               .text {
-                color: #fff;
+                color: #4A90E2;
               }
             }
             &.active {
-              background: rgba(74, 144, 226, .7);
               .text {
-                color: #fff;
+                color: #4A90E2;
               }
             }
             .img-box {

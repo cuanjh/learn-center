@@ -2,7 +2,7 @@
   <div class="swiper-slide">
     <div class="slide-content">
       <div class="draw-img">
-        <img :src="item.image" alt="">
+        <img :src="item.image" alt="" @click="playMother('mother-sound'+index)">
         <audio preload="load" class="mother-sound" :id="'mother-sound'+index" :src="item.sound"></audio>
       </div>
       <div class="draw-desc">
@@ -44,8 +44,8 @@
   </div>
 </template>
 <script>
-// import { mapMutations, mapState, mapActions } from 'vuex'
 import { mapMutations, mapState, mapActions } from 'vuex'
+import $ from 'jquery'
 import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 
@@ -132,6 +132,11 @@ export default {
       } else {
         Recorder.stopRecordSoud()
       }
+    },
+    // 点击图片播放母语音频
+    playMother (e) {
+      console.log(e)
+      $('#' + e)[0].play()
     }
   }
 }

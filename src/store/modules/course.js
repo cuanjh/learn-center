@@ -558,11 +558,12 @@ const mutations = {
       curLevelChapters = state.curLevelChapters
     }
 
-    let chapter = curLevelChapters.filter(
-      (item) => {
-        return item.code === currentChapterCode
-      })[0]
-    state.curChapterUrl = chapter.chapter_url
+    let chapter = curLevelChapters.filter((item) => {
+      return item.code === currentChapterCode
+    })[0]
+    if (chapter) {
+      state.curChapterUrl = chapter.chapter_url
+    }
   },
   chapterProgress (state, params) {
     let id = params.id
