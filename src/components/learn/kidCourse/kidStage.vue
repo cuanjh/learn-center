@@ -26,7 +26,7 @@
     <div class="kid-draws" id="swiper-kid">
       <div class="swiper-container index-swiper">
         <div class="swiper-wrapper">
-          <kid-stage-item  v-for="(item, index) in list" :key="index" :item="item" :index="index"/>
+          <kid-stage-item  v-for="(item, index) in list" :key="index" :item="item" :courseCode="code" :index="index"/>
         </div>
       </div>
       <!-- 如果需要分页器 -->

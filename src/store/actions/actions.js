@@ -227,6 +227,10 @@ export default {
   getKidRecordLists ({commit}, params) {
     return httpLogin(config.umKidRecordLists, params)
   },
+  // 保存录音接口
+  getKidRecordSave ({commit}, params) {
+    return httpLogin(config.umKidRecordSave, params)
+  },
   // 分享的标题
   getkidRecordShare ({commit}, params) {
     return httpLogin(config.umkidRecordShare, params)

@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="record-end-button" v-if="playing">
-              <div class="record-clear-button" @click.stop.prevent="clear()">
+              <div class="record-clear-button" @click.stop.prevent="againRecord()">
                 <i></i>
               </div>
               <div class="record-playVoice-button" @click.stop.prevent="startMySound()">
@@ -33,7 +33,7 @@
                   <span></span>
                 </i>
               </div>
-              <div class="record-saveVoice-button" @click.stop.prevent="saveVoice()">
+              <div class="record-saveVoice-button" @click.stop.prevent="saveVoice(item)">
                 <i></i>
               </div>
             </div>
@@ -50,7 +50,7 @@ import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 
 export default {
-  props: ['item', 'index'],
+  props: ['item', 'index', 'courseCode'],
   data () {
     return {
       animat: false,
@@ -78,7 +78,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      getQiniuToken: 'learn/getQiniuToken'
+      getQiniuToken: 'learn/getQiniuToken',
+      getKidRecordSave: 'getKidRecordSave'
     }),
     ...mapMutations({
       updateQiniuToken: 'learn/updateQiniuToken',
@@ -113,6 +114,7 @@ export default {
       this.recording = false
       this.playing = true
       this.animat = true
+      this.recordActivity = false
     },
     // 是否可以录音
     checkRecording () {
@@ -132,6 +134,43 @@ export default {
       } else {
         Recorder.stopRecordSoud()
       }
+    },
+    // 点击重新开始录音
+    againRecord () {
+      this.playing = false
+      this.startRecord()
+    },
+    // 点击保存录音上次七牛云
+    saveVoice (card) {
+      console.log(card, this.courseCode)
+      let _this = this
+      let code = card.code
+      let content = card.content
+      Recorder.getTime((duration) => {
+        let time = Math.round(duration)
+        // 上传七牛云
+        this.getQiniuToken().then((res) => {
+          this.updateQiniuToken(res)
+          console.log('res======>', res)
+          Recorder.uploadQiniu(this.qiniuToken, code, content)
+          let recorderUrl = Recorder.recorderUrl
+          // 请求后端接口
+          let params = {
+            sound_url: recorderUrl,
+            sound_time: time,
+            course_code: _this.courseCod,
+            code: code,
+            teacher_module: _this.$route.params.type
+          }
+          console.log(params)
+          _this.getKidRecordSave(params).then(res => {
+            console.log('res', res)
+            // 返回成功之后再处理 返回失败具体提示
+          })
+        })
+      })
+      this.recording = false
+      this.updateSpeakWork(false)
     },
     // 点击图片播放母语音频
     playMother (e) {
