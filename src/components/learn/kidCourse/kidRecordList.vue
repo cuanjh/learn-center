@@ -298,21 +298,22 @@ export default {
   }
 }
 .swiper-slide {
-  width: 568px!important;
-  min-height: 358px!important;
+ // width: 568px!important;
+  width: 36%!important;
+  // min-height: 358px!important;
+  height: 21%!important;
   border-radius:4px;
   background: #fff;
-  -webkit-transform-style: preserve-3d;
-  -moz-transform-style: preserve-3d;
-  -ms-transform-style: preserve-3d;
-  transform-style: preserve-3d;
+  padding-bottom: 20px;
 }
 .swiper-slide .slide-content {
   width: 100%;
   height: 100%;
   .record-img {
-    width: 568px;
-    height: 217px;
+    // width: 568px;
+    // height: 217px;
+    width: 100%;
+    height: 176px !important;
     border-radius: 4px 4px 0 0;
     img {
       width: 100%;
@@ -477,7 +478,8 @@ export default {
   box-shadow:0px 48px 37px -30px rgba(0,0,0,0.11);
 }
 .record-swiper #swiper-pagination {
-  bottom: 70px;
+  // bottom: 70px;
+  bottom: 0;
   left: 50%;
   .swiper-pagination-bullet {
     outline:none;

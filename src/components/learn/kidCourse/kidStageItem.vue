@@ -12,6 +12,7 @@
             <i class="start-img" @click.stop.prevent="startRecord('mother-sound'+index)" v-if="!isRecord"></i>
           </div>
           <div class="recording-body-buttons" v-show="isRecord">
+            <i class="close-record" @click="closeRecord()"></i>
             <div class="recording-body-button" v-if="recording">
               <div class="tip"><i class="tip-img"></i></div>
               <div class="recording-button" @click.stop.prevent="recordStop()">
@@ -49,6 +50,7 @@ import { mapMutations, mapState, mapActions } from 'vuex'
 import $ from 'jquery'
 import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
+import Cookie from '../../../tool/cookie.js'
 
 export default {
   props: ['item', 'index', 'type', 'courseCode'],
@@ -58,7 +60,8 @@ export default {
       recording: false,
       playing: false,
       isRecord: false,
-      recordActivity: false // 录音是否激活
+      recordActivity: false, // 录音是否激活
+      qiniuUrl: ''
     }
   },
   created () {
@@ -82,16 +85,16 @@ export default {
     ...mapState({
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
-      qiniuToken: state => state.learn.qiniuToken
+      FileQiniuToken: state => state.FileQiniuToken // 七牛的token
     })
   },
   methods: {
     ...mapActions({
-      getQiniuToken: 'learn/getQiniuToken',
+      getUploadFileToken: 'getUploadFileToken', // 上传七牛
       getKidRecordSave: 'getKidRecordSave'
     }),
     ...mapMutations({
-      updateQiniuToken: 'learn/updateQiniuToken',
+      updateFileQiniuToken: 'updateFileQiniuToken', // 更新上传七牛token
       updateSpeakWork: 'learn/updateSpeakWork'
     }),
     // 点击开始录音
@@ -151,43 +154,101 @@ export default {
       this.startRecord(e)
     },
     // 点击保存录音上次七牛云
-    saveVoice (card) {
+    async saveVoice (card) {
       console.log(card, this.courseCode)
       let code = card.code
       let content = card.content
-      Recorder.getTime((duration) => {
-        let time = Math.round(duration)
-        // 上传七牛云
-        this.getQiniuToken().then((res) => {
-          this.updateQiniuToken(res)
-          console.log('res======>', res)
-          Recorder.uploadQiniu(this.qiniuToken, code, content)
-          let recorderUrl = Recorder.recorderUrl
-          // 请求后端接口
-          let params = {
-            sound_url: recorderUrl,
-            sound_time: time,
-            course_code: this.courseCode,
-            code: code,
-            teacher_module: this.type
-          }
-          console.log(params)
-          this.getKidRecordSave(params).then(res => {
-            console.log('res', res)
-            // 返回成功之后再处理 返回失败具体提示
-            if (res.success) {
-              this.isRecord = false
-              this.playing = false
-              this.animat = false
-              Recorder.stopRecording()
-              bus.$off('record_setVolume')
-              this.$emit('initRecordState')
+      console.log('code,content', code, content)
+      let _this = this
+      // 上传七牛
+      await _this.getUploadFileToken().then(res => {
+        _this.updateFileQiniuToken(res)
+        console.log('Token', res)
+        let date = new Date()
+        let d = date.format('yyyy/MM/dd')
+        let userId = Cookie.getCookie('user_id')
+        let time = date.getTime()
+        let fileAudioKey = 'feed/sound/' + d + '/' + userId + '/' + time + '.wav'
+        Recorder.uploadQiniuVoice(_this.FileQiniuToken, fileAudioKey).then(data => {
+          console.log('data', data)
+          _this.qiniuUrl = data.key
+          console.log('qiniuUrl', _this.qiniuUrl)
+          if (_this.qiniuUrl) {
+            // 请求后端接口
+            let params = {
+              sound_url: this.qiniuUrl,
+              sound_time: time,
+              course_code: this.courseCode,
+              code: code,
+              teacher_module: this.type
             }
-          })
+            console.log(params)
+            this.getKidRecordSave(params).then(res => {
+              console.log('res', res)
+              // 返回成功之后再处理 返回失败具体提示
+              if (res.success) {
+                this.isRecord = false
+                this.playing = false
+                this.animat = false
+                Recorder.stopRecording()
+                bus.$off('record_setVolume')
+                this.$emit('initRecordState')
+              }
+            })
+          }
         })
+        console.log('qiniuUrl', this.qiniuUrl)
       })
+      // Recorder.getTime((duration) => {
+      //   let Audiotime = Math.round(duration)
+      //   console.log('Audiotime', Audiotime)
+      //   // 上传七牛云
+      //   this.getUploadFileToken().then((res) => {
+      //     this.updateFileQiniuToken(res)
+      //     console.log('resupdateFileQiniuToken', res)
+      //     let date = new Date()
+      //     let d = date.format('yyyy/MM/dd')
+      //     let userId = Cookie.getCookie('user_id')
+      //     let time = date.getTime()
+      //     let fileAudioKey = 'feed/sound/' + d + '/' + userId + '/' + time + '.wav'
+      //     Recorder.uploadQiniuVoice(this.FileQiniuToken, fileAudioKey).then(data => {
+      //       console.log('data', data)
+      //       this.qiniuUrl = data.key
+      //     })
+      //     console.log('qiniuUrl', this.qiniuUrl)
+      //     // 请求后端接口
+      //     let params = {
+      //       sound_url: this.qiniuUrl,
+      //       sound_time: time,
+      //       course_code: this.courseCode,
+      //       code: code,
+      //       teacher_module: this.type
+      //     }
+      //     console.log(params)
+      //     this.getKidRecordSave(params).then(res => {
+      //       console.log('res', res)
+      //       // 返回成功之后再处理 返回失败具体提示
+      //       if (res.success) {
+      //         this.isRecord = false
+      //         this.playing = false
+      //         this.animat = false
+      //         Recorder.stopRecording()
+      //         bus.$off('record_setVolume')
+      //         this.$emit('initRecordState')
+      //       }
+      //     })
+      //   })
+      // })
+      // this.recording = false
+      // this.updateSpeakWork(false)
+    },
+    closeRecord () {
+      this.isRecord = false
+      this.playing = false
+      this.animat = false
       this.recording = false
-      this.updateSpeakWork(false)
+      Recorder.stopRecording()
+      bus.$off('record_setVolume')
     },
     // 点击图片播放母语音频
     playMother (e) {
@@ -215,7 +276,7 @@ export default {
     // width: 40%;
     // height: 217px;
     width: 100%;
-    height: 13% !important;
+    height: 176px !important;
     border-radius: 4px 4px 0 0;
     .img-box {
       width: 100%;
@@ -250,6 +311,19 @@ export default {
       }
       .recording-body-buttons {
         padding-bottom: 30px;
+        position: relative;
+        .close-record {
+          display: inline-block;
+          cursor: pointer;
+          width: 20px;
+          height: 20px;
+          background: url('../../../../static/images/icon-cloce.png') no-repeat center;
+          background-size: cover;
+          position: absolute;
+          right: 0px;
+          top: 0;
+          z-index: 999;
+        }
         .recording-body-button {
           text-align: center;
           position: relative;
@@ -476,9 +550,9 @@ export default {
   transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -webkit-transition: all 0.5s;
-  -webkit-transform: scale(0.7,0.7);
-  -moz-transform: scale(0.7,0.7);
-  transform: scale(0.7,0.7);
+  -webkit-transform: scale(0.6,0.6);
+  -moz-transform: scale(0.6,0.6);
+  transform: scale(0.6,0.6);
   -webkit-overflow-scrolling:touch;
   position: relative;
 }
@@ -498,9 +572,9 @@ export default {
   transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -webkit-transition: all 0.5s;
-  -webkit-transform: scale(0.7,0.7);
-  -moz-transform: scale(0.7,0.7);
-  transform: scale(0.7,0.7);
+  -webkit-transform: scale(0.6,0.6);
+  -moz-transform: scale(0.6,0.6);
+  transform: scale(0.6,0.6);
   -webkit-overflow-scrolling:touch;
   position: relative;
   z-index: 1;
@@ -521,9 +595,9 @@ export default {
   transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -webkit-transition: all 0.5s ease;
-  -webkit-transform: scale(1,1);
-  -moz-transform: scale(1,1);
-  transform: scale(1,1);
+  -webkit-transform: scale(.9,.9);
+  -moz-transform: scale(.9,.9);
+  transform: scale(.9,.9);
   -webkit-overflow-scrolling:touch;
   box-shadow:0px 28px 20px -16px rgba(0,0,0,0.11);
 }

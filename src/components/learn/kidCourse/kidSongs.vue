@@ -88,11 +88,12 @@ export default {
     Bus.$on('showSongsModal', (data) => {
       console.log('儿歌详情data===>', data)
       this.isShow = true
-      this.isPlay = true
+      // this.isPlay = true
       this.songsAll = data
       this.songs = data.hello
       this.currentVideo = data.hello[0]
       this.video = $('#myVideo')[0]
+      this.isPlay = true
       this.play()
       console.log('当前的video===》', this.currentVideo)
     })
@@ -440,8 +441,8 @@ export default {
               }
             }
             .img-box {
-              width: 66%;
-              height: 90%;
+              width: 50%;
+              height: 80%;
               img {
                 width: 100%;
                 height: 100%;

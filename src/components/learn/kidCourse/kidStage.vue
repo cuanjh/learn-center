@@ -138,11 +138,19 @@ export default {
               //Swiper初始化了
               console.log('当前的slide序号是'+this.activeIndex);
               console.log($('#mother-sound0')[0])
-              let audio = $('#mother-sound0')[0]
-              audio.addEventListener('canplay', () => { // 监听audio是否加载完毕，如果加载完毕，则读取audio播放时间
+              // let audio = $('#mother-sound0')[0]
+              // document.addEventListener('canplay', () => { // 监听audio是否加载完毕，如果加载完毕，则读取audio播放时间
+              //   audio.play()
+              // })
+              // audio.play()
+              let audio = document.getElementById('mother-sound' + this.activeIndex)
+              audio.play()
+              audio.onloadedmetadata = () => {
                 audio.play()
-              })
-              // $('#mother-sound0')[0].play()
+              }
+              audio.addEventListener('ended', () => {
+                audio.pause()
+              }, false)
               this.emit('transitionEnd');//在初始化时触发一次transitionEnd事件，需要先设置transitionEnd
             },
             slideChange: function () {
@@ -284,7 +292,7 @@ export default {
   // background: #0581D1;
   box-sizing: border-box;
   position: relative;
-  margin-top: 10%;
+  margin-top: 2%;
   .swiper-container {
     width: 100%;
     .swiper-wrapper {

@@ -380,8 +380,8 @@ export default {
             }
         });
     },
-    uploadQiniuVoice: function(token, callback){
-        return this.recorder.uploadQiniuVoice(token)
+    uploadQiniuVoice: function(token, fileKe, callback){
+        return this.recorder.uploadQiniuVoice(token, fileKe)
     },
     uploadQiniuVideo: function(file, token, fileKey, callback) {
         return this.recorder.uploadQiniuVideo(file, token, fileKey)
