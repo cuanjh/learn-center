@@ -275,14 +275,6 @@ export default {
     LearnCourseList,
     kidSongs
   },
-  // beforeRouteUpdate (to, from, next) {
-  //   if (to.name === 'kidCourseList') {
-  //     next()
-  //     this.initData()
-  //   } else {
-  //     next()
-  //   }
-  // },
   beforeRouteUpdate (to, from, next) {
     console.log('监听路由变化：', this.$route.path)
     if (to.name === 'kidCourseList') {

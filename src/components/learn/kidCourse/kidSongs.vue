@@ -74,7 +74,7 @@ export default {
       songs: [],
       songsAll: [],
       currentVideo: {},
-      isPlay: true, // 播放暂停按钮控制
+      isPlay: false, // 播放暂停按钮控制
       curTime: 0, // 当前的时间
       duration: 0, // 总时间
       isEnd: false,
@@ -88,7 +88,7 @@ export default {
     Bus.$on('showSongsModal', (data) => {
       console.log('儿歌详情data===>', data)
       this.isShow = true
-      this.isPlay = false
+      this.isPlay = true
       this.songsAll = data
       this.songs = data.hello
       this.currentVideo = data.hello[0]
@@ -113,8 +113,6 @@ export default {
     playSong (itemvideo) {
       console.log(itemvideo)
       this.currentVideo = itemvideo
-      // $('#myVideo')[0].play()
-      // let video = $('#myVideo')[0]
       this.video.pause()
       this.video.currentTime = 0
       this.play()
@@ -129,7 +127,6 @@ export default {
         document.addEventListener('canplaythrough', () => {
           this.video.play()
         })
-        // this.video.play()
         this.isPlay = true
         this.progressFlag = setInterval(this.getProgress, 60)
       } else {
