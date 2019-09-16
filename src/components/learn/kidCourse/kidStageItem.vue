@@ -2,14 +2,14 @@
   <div class="swiper-slide">
     <div class="slide-content">
       <div class="draw-img">
-        <img :src="item.image" alt="" @click="playMother('mother-sound'+index)">
+        <img class="img-box" :src="item.image" alt="" @click="playMother('mother-sound'+index)">
         <audio preload="load" class="mother-sound" :id="'mother-sound'+index" :src="item.sound"></audio>
       </div>
       <div class="draw-desc">
         <p class="text">{{item.content || item.word}}</p>
         <div class="record-content">
           <div class="start-button">
-            <i class="start-img" @click.stop.prevent="startRecord()" v-if="!isRecord"></i>
+            <i class="start-img" @click.stop.prevent="startRecord('mother-sound'+index)" v-if="!isRecord"></i>
           </div>
           <div class="recording-body-buttons" v-show="isRecord">
             <div class="recording-body-button" v-if="recording">
@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="record-end-button" v-if="playing">
-              <div class="record-clear-button" @click.stop.prevent="againRecord()">
+              <div class="record-clear-button" @click.stop.prevent="againRecord('mother-sound'+index)">
                 <i></i>
               </div>
               <div class="record-playVoice-button" @click.stop.prevent="startMySound()">
@@ -35,6 +35,7 @@
               </div>
               <div class="record-saveVoice-button" @click.stop.prevent="saveVoice(item)">
                 <i></i>
+                <i class="icon-save"></i>
               </div>
             </div>
           </div>
@@ -50,7 +51,7 @@ import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 
 export default {
-  props: ['item', 'index', 'courseCode'],
+  props: ['item', 'index', 'type', 'courseCode'],
   data () {
     return {
       animat: false,
@@ -63,6 +64,14 @@ export default {
   created () {
     this.$on('init', () => {
       this.init()
+    })
+    bus.$on('clearDate', (params) => {
+      this.isRecord = params
+      this.playing = params
+      this.animat = params
+      this.recording = params
+      Recorder.stopRecording()
+      bus.$off('record_setVolume')
     })
   },
   mounted () {
@@ -86,7 +95,7 @@ export default {
       updateSpeakWork: 'learn/updateSpeakWork'
     }),
     // 点击开始录音
-    startRecord () {
+    startRecord (e) {
       // 如果正在录音则停止录音
       if (this.recording) {
         this.recordStop()
@@ -105,6 +114,7 @@ export default {
       Recorder.startRecording()
       // let _this = this
       console.log('record start!!!!!')
+      $('#' + e)[0].pause()
     },
     // 点击停止录音
     recordStop () {
@@ -113,8 +123,8 @@ export default {
       console.log('record stop!!!!!')
       this.recording = false
       this.playing = true
-      this.animat = true
       this.recordActivity = false
+      this.startMySound()
     },
     // 是否可以录音
     checkRecording () {
@@ -136,14 +146,13 @@ export default {
       }
     },
     // 点击重新开始录音
-    againRecord () {
+    againRecord (e) {
       this.playing = false
-      this.startRecord()
+      this.startRecord(e)
     },
     // 点击保存录音上次七牛云
     saveVoice (card) {
       console.log(card, this.courseCode)
-      let _this = this
       let code = card.code
       let content = card.content
       Recorder.getTime((duration) => {
@@ -158,14 +167,22 @@ export default {
           let params = {
             sound_url: recorderUrl,
             sound_time: time,
-            course_code: _this.courseCod,
+            course_code: this.courseCode,
             code: code,
-            teacher_module: _this.$route.params.type
+            teacher_module: this.type
           }
           console.log(params)
-          _this.getKidRecordSave(params).then(res => {
+          this.getKidRecordSave(params).then(res => {
             console.log('res', res)
             // 返回成功之后再处理 返回失败具体提示
+            if (res.success) {
+              this.isRecord = false
+              this.playing = false
+              this.animat = false
+              Recorder.stopRecording()
+              bus.$off('record_setVolume')
+              this.$emit('initRecordState')
+            }
           })
         })
       })
@@ -181,14 +198,28 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.swiper-slide .slide-content {
+  width: 100%;
+  height: 100%;
+}
 .swiper-slide {
+  // width: 568px!important;
+  width: 36%!important;
+  // min-height: 358px!important;
+  height: 21%!important;
+  border-radius:4px;
+  padding-bottom: 20px;
+  background: #fff;
   .draw-img {
-    width: 568px;
-    height: 217px;
+    // width: 568px;
+    // width: 40%;
+    // height: 217px;
+    width: 100%;
+    height: 13% !important;
     border-radius: 4px 4px 0 0;
-    img {
+    .img-box {
       width: 100%;
-      height: 100%;
+      height: 100%!important;
       border-radius: 4px 4px 0 0;
       object-fit: cover;
     }
@@ -377,6 +408,7 @@ export default {
             }
           }
           .record-saveVoice-button {
+            position: relative;
             cursor: pointer;
             width: 50px;
             height: 50px;
@@ -386,6 +418,16 @@ export default {
               height: 50px;
               background: url('../../../../static/images/kidcontent/icon-record-send.png') no-repeat center;
               background-size: cover;
+            }
+            .icon-save {
+              display: inline-block;
+              width: 130px;
+              height: 76px;
+              background: url('../../../../static/images/kidcontent/pic-save-record.png') no-repeat center;
+              background-size: cover;
+              position: absolute;
+              top: -66px;
+              left: -40px;
             }
           }
         }
@@ -429,20 +471,7 @@ export default {
     border-color: rgba(156, 225, 82, .28);
   }
 }
-.swiper-slide {
-  width: 568px!important;
-  min-height: 358px!important;
-  border-radius:4px;
-  background: #fff;
-  -webkit-transform-style: preserve-3d;
-  -moz-transform-style: preserve-3d;
-  -ms-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-}
-.swiper-slide .slide-content {
-  width: 100%;
-  height: 100%;
-}
+
 .swiper-slide-prev {
   transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
@@ -496,6 +525,6 @@ export default {
   -moz-transform: scale(1,1);
   transform: scale(1,1);
   -webkit-overflow-scrolling:touch;
-  box-shadow:0px 48px 37px -30px rgba(0,0,0,0.11);
+  box-shadow:0px 28px 20px -16px rgba(0,0,0,0.11);
 }
 </style>

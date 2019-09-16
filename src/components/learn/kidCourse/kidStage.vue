@@ -26,7 +26,12 @@
     <div class="kid-draws" id="swiper-kid">
       <div class="swiper-container index-swiper">
         <div class="swiper-wrapper">
-          <kid-stage-item  v-for="(item, index) in list" :key="index" :item="item" :courseCode="code" :index="index"/>
+          <kid-stage-item  v-for="(item, index) in list"
+                           :key="index" :item="item"
+                           :index="index"
+                           :type="type"
+                           :courseCode="courseCode"
+                           @initRecordState="initState"/>
         </div>
       </div>
       <!-- 如果需要分页器 -->
@@ -39,6 +44,7 @@
 import { mapActions } from 'vuex'
 import $ from 'jquery'
 import Swiper from 'swiper'
+import bus from '../../../bus'
 import 'swiper/dist/css/swiper.min.css'
 import KidStageItem from './kidStageItem.vue'
 import Recorder from '../../../plugins/recorder'
@@ -47,7 +53,6 @@ export default {
   props: ['code', 'type'],
   data () {
     return {
-      courseCode: '',
       list: [],
       recordState: null
     }
@@ -60,6 +65,10 @@ export default {
       let arr = this.code.split('-')
       let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
       return num
+    },
+    courseCode () {
+      let arr = this.code.split('-')
+      return arr.slice(0, 2).join('-')
     }
   },
   created () {
@@ -68,8 +77,6 @@ export default {
     Recorder.init()
   },
   mounted () {
-    let arr = this.code.split('-')
-    this.courseCode = arr.slice(0, 2).join('-')
   },
   updated () {
     this.resetStyle()
@@ -131,7 +138,11 @@ export default {
               //Swiper初始化了
               console.log('当前的slide序号是'+this.activeIndex);
               console.log($('#mother-sound0')[0])
-              $('#mother-sound0')[0].play()
+              let audio = $('#mother-sound0')[0]
+              audio.addEventListener('canplay', () => { // 监听audio是否加载完毕，如果加载完毕，则读取audio播放时间
+                audio.play()
+              })
+              // $('#mother-sound0')[0].play()
               this.emit('transitionEnd');//在初始化时触发一次transitionEnd事件，需要先设置transitionEnd
             },
             slideChange: function () {
@@ -139,6 +150,7 @@ export default {
               $('#mother-sound'+this.activeIndex)[0].play()
               $('#mother-sound'+(this.previousIndex))[0].pause()
               $('#mother-sound'+(this.previousIndex))[0].currentTime = 0
+              bus.$emit('clearDate', false)
             }
           }
         })
@@ -162,6 +174,9 @@ export default {
     },
     goKidRecordList (code, type) {
       this.$router.push({path: '/kid-record-list', query: {code: code, type: type}})
+    },
+    initState () {
+      this.initRecordState()
     }
   }
 }
@@ -265,7 +280,7 @@ export default {
 .kid-stage-container .kid-draws {
   width: 100%;
   height: 100%;
-  padding: 40px 120px;
+  padding: 3.5% 7%;
   // background: #0581D1;
   box-sizing: border-box;
   position: relative;
@@ -280,7 +295,7 @@ export default {
 }
 
 .kid-stage-container .kid-draws #swiper-pagination {
-  bottom: -110px;
+  bottom: -6%;
   left: 50%;
 }
 .kid-stage-container .kid-draws #swiper-pagination .my-bullet {
@@ -299,21 +314,4 @@ export default {
   border-radius: 5px!important;
 }
 
-</style>
-<style scoped>
-#swiper-kid .swiper-pagination-bullet {
-  outline:none;
-  width: 20px!important;
-  height: 6px!important;
-  background: #D5DCDF!important;
-  border-radius: 5px!important;
-  transition: width 0.3s ease-in-out !important;
-  margin: 0 8px;
-}
-#swiper-kid .swiper-pagination-bullet-active {
-  width: 20px!important;
-  height: 6px!important;
-  background: #0581D1!important;
-  border-radius: 5px!important;
-}
 </style>

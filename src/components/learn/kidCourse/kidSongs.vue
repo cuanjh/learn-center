@@ -87,12 +87,13 @@ export default {
   created () {
     Bus.$on('showSongsModal', (data) => {
       console.log('儿歌详情data===>', data)
+      this.isShow = true
+      this.isPlay = false
       this.songsAll = data
       this.songs = data.hello
       this.currentVideo = data.hello[0]
       this.video = $('#myVideo')[0]
       this.play()
-      this.isShow = true
       console.log('当前的video===》', this.currentVideo)
     })
   },
@@ -118,20 +119,17 @@ export default {
       this.video.currentTime = 0
       this.play()
     },
-    // 关闭蒙层
-    closeModal () {
-      this.isShow = false
-      this.video.pause()
-      this.video.currentTime = 0
-      this.curIndex = 0
-    },
     // 点击播放
     play () {
       if (this.video.paused || this.video.ended) {
         if (this.video.ended) {
+          this.isPlay = false
           this.video.currentTime = 0
         }
-        this.video.play()
+        document.addEventListener('canplaythrough', () => {
+          this.video.play()
+        })
+        // this.video.play()
         this.isPlay = true
         this.progressFlag = setInterval(this.getProgress, 60)
       } else {
@@ -209,6 +207,14 @@ export default {
     setCurrentTime (time) {
       this.video.currentTime = time
     },
+    // 关闭蒙层
+    closeModal () {
+      this.isShow = !this.isShow
+      this.isPlay = !this.isPlay
+      this.video.pause()
+      this.video.currentTime = 0
+      this.curIndex = 0
+    },
     toParseTime (data) {
       let m = parseInt(data / 60)
       if (m < 10) {
@@ -236,6 +242,7 @@ export default {
   overflow: hidden;
   outline: 0;
   background: rgba(51,51,51,.39);
+  // padding: 100px 130px;
   .video-content {
     position: absolute;
     top: 50%;
@@ -244,23 +251,19 @@ export default {
     border-radius:5px;
     border:1px solid rgba(151,151,151,1);
     transform: translate(-50%, -50%);
-    padding: 36px;
     display: flex;
     justify-content: space-between;
+    width: 80%;
+    height: 70%;
+    padding: 20px;
     .kid-video-box {
-      width: 728px;
-      .video-player{
-        width: 728px!important;
-        height: 100%;
-        display: block;
-      }
-      .video-js.vjs-fluid, .video-js.vjs-16-9, .video-js.vjs-4-3 {
-        height: 604px!important;
-      }
-      .vjs_video_4926-dimensions.vjs-fluid {
-        padding-top: 0!important;
-      }
+      position: relative;
+      // width: 728px;
+      width: 70%;
+      padding-bottom: 54px;
       .controls {
+        position: absolute;
+        bottom: 0;
         width: 100%;
         height: 54px;
         background: #4A90E2;
@@ -364,13 +367,15 @@ export default {
     }
     .kid-video-box #myVideo {
       width: 100%;
-      height: 546px;
+      // height: 546px;
+      height: 100%;
       outline: none;
     }
     .right-list {
       display: flex;
       flex-direction: column;
-      width: 400px;
+      // width: 400px;
+      flex: 1;
       margin-left: 20px;
       .top-tabs {
         display: flex;
@@ -413,12 +418,14 @@ export default {
         border-radius:5px;
         display: flex;
         flex: 1;
+        height: 100%;
         ul {
           width: 100%;
           height: 100%;
           display: flex;
           flex-direction: column;
           padding: 24px 20px;
+          overflow-y: scroll;
           li {
             display: flex;
             align-items: center;
@@ -436,8 +443,8 @@ export default {
               }
             }
             .img-box {
-              width: 160px;
-              height: 86px;
+              width: 66%;
+              height: 90%;
               img {
                 width: 100%;
                 height: 100%;
@@ -461,19 +468,38 @@ export default {
               }
             }
           }
+          li:last-child {
+            margin-bottom: 0px;
+          }
+        }
+        /*滚动条样式*/
+        ul::-webkit-scrollbar {/*滚动条整体样式*/
+          width: 1px;     /*高宽分别对应横竖滚动条的尺寸*/
+          height: 4px;
+        }
+        ul::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+          border-radius: 5px;
+          -webkit-box-shadow: inset 0 0 5px #fff;
+          background: #EEF2F3;
+        }
+        ul::-webkit-scrollbar-track {/*滚动条里面轨道*/
+          -webkit-box-shadow: inset 0 0 5px rgba(255,255,255,1);
+          border-radius: 0;
+          background: rgba(255,255,255,1);
         }
       }
     }
   }
   .icon-close {
     position: absolute;
-    top: -48px;
+    top: -34px;
     right: -26px;
     width: 40px;
     height: 40px;
     background: url('../../../../static/images/icon-cloce.png') no-repeat center;
     background-size: cover;
     cursor: pointer;
+    transform: rotate(28deg)
   }
 }
 </style>
