@@ -334,7 +334,7 @@ export default {
     .record-playVoice-button {
       width: 100%;
       height: 50px;
-      margin: 6px 30px 0;
+      padding: 6px 30px 0;
       text-align: center;
       .play-box {
         display: inline-block;

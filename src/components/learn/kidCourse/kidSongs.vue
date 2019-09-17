@@ -89,6 +89,7 @@ export default {
       console.log('儿歌详情data===>', data)
       this.isShow = true
       // this.isPlay = true
+      this.curIndex = 0
       this.songsAll = data
       this.songs = data.hello
       this.currentVideo = data.hello[0]
@@ -207,11 +208,11 @@ export default {
     },
     // 关闭蒙层
     closeModal () {
-      this.isShow = !this.isShow
-      this.isPlay = !this.isPlay
+      this.isShow = false
+      this.isPlay = false
       this.video.pause()
       this.video.currentTime = 0
-      this.curIndex = 0
+      this.isActive = 'hello'
     },
     toParseTime (data) {
       let m = parseInt(data / 60)

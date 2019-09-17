@@ -322,14 +322,14 @@ export default {
     }
   },
   watch: {
-    $route (to, from) {
-      if (to.name === from.name) {
-        this.changeCourseCode = to.params.courseCode
-      }
-    },
-    changeCourseCode () {
-      this.initData()
-    }
+    // $route (to, from) {
+    //   if (to.name === from.name) {
+    //     this.changeCourseCode = to.params.courseCode
+    //   }
+    // },
+    // changeCourseCode () {
+    //   this.initData()
+    // }
   },
   methods: {
     ...mapActions({

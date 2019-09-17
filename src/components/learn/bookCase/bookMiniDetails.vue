@@ -62,7 +62,7 @@
               </div>
             </div>
             <!-- 分享 -->
-            <share-box :type="type"/>
+            <!-- <share-box :type="type"/> -->
           </div>
         </div>
       </div>
