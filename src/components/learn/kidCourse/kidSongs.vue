@@ -1,5 +1,5 @@
 <template>
-   <div class="video-container" v-show="isShow">
+   <div class="video-container">
     <div class="video-content" id="video-content">
       <div class="kid-video-box">
         <video id="myVideo" @ended.native="end()" autoplay="autoplay" :src="currentVideo.sound"></video>
@@ -63,13 +63,12 @@
 </template>
 <script>
 import $ from 'jquery'
-// import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import Bus from '../../../bus'
 
 export default {
   data () {
     return {
-      isShow: false,
       isActive: 'hello',
       songs: [],
       songsAll: [],
@@ -86,17 +85,7 @@ export default {
   },
   created () {
     Bus.$on('showSongsModal', (data) => {
-      console.log('儿歌详情data===>', data)
-      this.isShow = true
-      // this.isPlay = true
-      this.curIndex = 0
-      this.songsAll = data
-      this.songs = data.hello
-      this.currentVideo = data.hello[0]
-      this.video = $('#myVideo')[0]
-      this.isPlay = true
-      this.play()
-      console.log('当前的video===》', this.currentVideo)
+      this.initSongs(data)
     })
   },
   computed: {
@@ -104,6 +93,22 @@ export default {
   mounted () {
   },
   methods: {
+    ...mapActions([
+      'getKidCourseContent' // 儿歌
+    ]),
+    initSongs (code) {
+      this.getKidCourseContent({chapter_code: code}).then(res => {
+        console.log('儿歌返回==》', res)
+        if (res.success) {
+          this.curIndex = 0
+          this.songsAll = res.teacherContent.songs
+          this.songs = res.teacherContent.songs.hello
+          this.currentVideo = res.teacherContent.songs.hello[0]
+          this.video = $('#myVideo')[0]
+          this.play()
+        }
+      })
+    },
     tabChange (tabActive) {
       this.isActive = tabActive
       if (this.isActive === 'hello') {
@@ -115,6 +120,7 @@ export default {
     playSong (itemvideo) {
       console.log(itemvideo)
       this.currentVideo = itemvideo
+      this.curIndex = itemvideo.order - 1
       this.video.pause()
       this.video.currentTime = 0
       this.play()
@@ -126,14 +132,14 @@ export default {
           this.isPlay = false
           this.video.currentTime = 0
         }
-        document.addEventListener('canplaythrough', () => {
-          this.video.play()
-        })
         this.isPlay = true
         this.progressFlag = setInterval(this.getProgress, 60)
+        this.$nextTick(() => {
+          this.video.play()
+        })
       } else {
         this.video.pause()
-        this.isPlay = false
+        this.isPlay = !this.isPlay
         clearInterval(this.progressFlag)
       }
     },
@@ -150,8 +156,8 @@ export default {
       this.curIndex++
       console.log(this.curIndex)
       console.log(this.songs)
-      let lastLength = this.songs.length - 1
-      if (this.curIndex > lastLength) {
+      let lastLength = this.songs.length
+      if (this.curIndex === lastLength) {
         this.curIndex = 0
       }
       this.currentVideo = this.songs[this.curIndex]
@@ -208,11 +214,14 @@ export default {
     },
     // 关闭蒙层
     closeModal () {
-      this.isShow = false
       this.isPlay = false
       this.video.pause()
       this.video.currentTime = 0
       this.isActive = 'hello'
+      this.songsAll = []
+      this.songs = []
+      this.curIndex = 1
+      this.$emit('closeModal')
     },
     toParseTime (data) {
       let m = parseInt(data / 60)

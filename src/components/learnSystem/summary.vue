@@ -40,7 +40,7 @@
             <span v-if="own">系统已把你的录音自动生成了本节课程！</span>
             <span v-else>没有收录到你的课程语音，去听听其他语伴的吧！</span>
           </div>
-          <div class="record-box" @click="ShowDetail(code + '-' + core)">
+          <div class="record-box" @click="ShowDetail(id)">
             <dl>
               <dt><img :src="imgCover | urlFix('imageView2/0/w/183/h/86/format/jpg')" alt=""></dt>
               <dd>
