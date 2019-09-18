@@ -545,10 +545,18 @@ export default {
     jumpVipPage (isActive, id) {
       if (parseInt(this.isVip) !== 1) {
         // this.$router.push({ path: '/app/vip-home' })
-        let routeUrl = this.$router.resolve({
-          path: '/app/vip-home'
-        })
-        window.open(routeUrl.href, '_blank')
+        // let routeUrl = this.$router.resolve({
+        //   path: '/app/vip-home'
+        // })
+        // window.open(routeUrl.href, '_blank')
+        let obj = {
+          className: 'vipIcon',
+          description: '升级会员体验更多功能提高学习效率',
+          btnDesc: '升级会员',
+          isLink: true,
+          hyperLink: '/app/vip-home'
+        }
+        bus.$emit('showCommonModal', obj)
       } else {
         if (isActive) {
           this.$router.push({ name: 'stage', params: {id: id} })

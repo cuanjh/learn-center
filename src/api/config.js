@@ -62,6 +62,7 @@ export default {
   getMemberCard: '/member/card', // 会员卡激活账号的接口
   postUnlockChapter: '/chapters_state/unlock_chapter', // 解锁课程
   getBuyChapter: '/chapter_purchase/purchase',
+  umGetMemberProductsList: '/prdv1/product/lists', // 新的会员卡片接口有限时优惠
 
   // 书架
   bookCaseIndex: '/studyv1/shelf/v2/index', // 书架首页
@@ -168,7 +169,7 @@ export default {
   // kid课程接口
   umKidCourseDetailApi: '/kidv1/course/detail', // mini课程详情接口
   userSubCoursesApi: '/studyv1/user/course/subscribes/v2', // 获取更多订阅课程接口
-  userSubRadioCoursesApi: '/studyv1/user/course/subscribes/v3', // 用户订阅的电台课程
+  userSubRadioCoursesApi: '/studyv1/user/course/subscribes/v3', // 用户订阅的电台课程 废弃没用
   courseSubApi: '/studyv1/course/sub', // 单个课程订阅课程接口
   learnInfoV5Api: '/studyv1/learn_info/v5/index', // kid学习首页接口
   studyCatalogApi: '/studyv1/catalog',

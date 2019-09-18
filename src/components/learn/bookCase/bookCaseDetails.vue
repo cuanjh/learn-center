@@ -346,23 +346,28 @@ export default {
         Bus.$emit('showGoLoginBox')
         return false
       }
-      let isVip = this.userInfo.member_info.member_type
-      if (parseInt(isVip) !== 1 && this.subscribeLangCourses.length >= 3) {
-        let obj = {
-          className: 'vipIcon',
-          description: '升级会员免费订阅所有官方课程',
-          btnDesc: '升级会员',
-          isLink: true,
-          hyperLink: '/app/vip-home'
-        }
-        Bus.$emit('showCommonModal', obj)
-      } else {
-        let arr = this.courseCode.split('-')
-        let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
-        this.postPurchaseCourse({ code: courseCode }).then((res) => {
-          this.refreshSubscribeCourses()
-        })
-      }
+      // let isVip = this.userInfo.member_info.member_type
+      // if (parseInt(isVip) !== 1 && this.subscribeLangCourses.length >= 3) {
+      //   let obj = {
+      //     className: 'vipIcon',
+      //     description: '升级会员免费订阅所有官方课程',
+      //     btnDesc: '升级会员',
+      //     isLink: true,
+      //     hyperLink: '/app/vip-home'
+      //   }
+      //   Bus.$emit('showCommonModal', obj)
+      // } else {
+      //   let arr = this.courseCode.split('-')
+      //   let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
+      //   this.postPurchaseCourse({ code: courseCode }).then((res) => {
+      //     this.refreshSubscribeCourses()
+      //   })
+      // }
+      let arr = this.courseCode.split('-')
+      let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
+      this.postPurchaseCourse({ code: courseCode }).then((res) => {
+        this.refreshSubscribeCourses()
+      })
     },
     async initDataDetails () {
       let _this = this

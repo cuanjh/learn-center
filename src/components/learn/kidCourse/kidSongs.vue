@@ -105,7 +105,9 @@ export default {
           this.songs = res.teacherContent.songs.hello
           this.currentVideo = res.teacherContent.songs.hello[0]
           this.video = $('#myVideo')[0]
-          this.play()
+          this.$nextTick(() => {
+            this.play()
+          })
         }
       })
     },
@@ -161,8 +163,7 @@ export default {
         this.curIndex = 0
       }
       this.currentVideo = this.songs[this.curIndex]
-      // this.video.pause()
-      // this.video.currentTime = 0
+      this.isPlay = !this.isPlay
       this.play()
       console.log(this.currentVideo)
     },

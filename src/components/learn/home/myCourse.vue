@@ -211,15 +211,15 @@ export default {
       this.curCourseCode = res.info.current_course_code
       if (courseCode) {
         this.curCourseCode = courseCode
+        this.getOneCourseSub({course_code: this.curCourseCode}).then(res => {
+          console.log('courseSubInfo', res)
+          if (res.subInfo.course_type === 3) {
+            localStorage.setItem('isKid', '1')
+          } else if (res.subInfo.course_type === 0) {
+            localStorage.setItem('isKid', '0')
+          }
+        })
       }
-      this.getOneCourseSub({course_code: this.curCourseCode}).then(res => {
-        console.log('courseSubInfo', res)
-        if (res.subInfo.course_type === 3) {
-          localStorage.setItem('isKid', '1')
-        } else if (res.subInfo.course_type === 0) {
-          localStorage.setItem('isKid', '0')
-        }
-      })
       let subCourses = await this.getSubCourses()
       console.log('新的课程列表返回', subCourses)
       if (subCourses.success) {

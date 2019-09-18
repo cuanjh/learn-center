@@ -2,10 +2,11 @@
   <transition name="fade">
     <div class="common-modal-container" v-show="isShow">
       <div class="common-madal">
+        <div class="close-img" @click="closeModal()"></div>
         <p :class="className"><i></i></p>
         <p class="description" v-html="description"></p>
-        <a href="javacript:;" class="button" @click="commonHandler()"><span v-text="btnDesc"></span></a>
-        <a href="javacript:;" class="button" v-if="btnCancel" @click="commonCancel()"><span>{{btnCancel}}</span></a>
+        <a href="javacript:;" class="button" @click="commonHandler()" ><span v-text="btnDesc"></span></a>
+        <a href="javacript:;" class="button" v-if="btnCancel" @click="commonCancel()" ><span>{{btnCancel}}</span></a>
       </div>
     </div>
   </transition>
@@ -48,7 +49,12 @@ export default {
     commonHandler () {
       if (this.hyperLink) {
         this.isShow = false
-        this.$router.push({path: this.hyperLink})
+        // this.$router.push({path: this.hyperLink})
+        let routeUrl = this.$router.resolve({
+          path: this.hyperLink
+        })
+        window.open(routeUrl.href, '_blank')
+        return false
       }
       if (this.emitMethod) {
         this.isShow = false
@@ -57,6 +63,9 @@ export default {
       this.isShow = false
     },
     commonCancel () {
+      this.isShow = false
+    },
+    closeModal () {
       this.isShow = false
     }
   }
@@ -75,6 +84,20 @@ export default {
   background-color: rgba(0, 0, 0, .4);
   z-index:99999999;
   overflow: hidden;
+  .close-img {
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 30px;
+    height: 30px;
+    background: url('../../../static/images/icon-close-img.png') no-repeat center;
+    background-size: cover;
+    &:hover {
+      cursor: pointer;
+      background: url('../../../static/images/icon-close-img-active.png') no-repeat center;
+      background-size: cover;
+    }
+  }
   .common-madal {
     position: absolute;
     top: 50%;

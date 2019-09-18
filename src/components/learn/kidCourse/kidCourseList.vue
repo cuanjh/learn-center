@@ -87,7 +87,7 @@
                 <div class="tab-content">
                   <div class="tab-content-kid" v-show="!active">
                     <ul>
-                      <li  @click="goKidStage(item, 'draw')">
+                      <li  @click="goKidStage(item, 'draw', index + 1)">
                         <div class="icon">
                           <i></i>
                         </div>
@@ -95,11 +95,11 @@
                           <span>绘本阅读</span>
                         </div>
                       </li>
-                      <li @click="goKidStage(item, 'word')">
+                      <li @click="goKidStage(item, 'word', index + 1)">
                         <div class="icon"><i></i></div>
                         <div class="title"><span >核心单词</span></div>
                       </li>
-                      <li @click="goKidSongs(item)">
+                      <li @click="goKidSongs(item, index + 1)">
                         <div class="icon"><i></i></div>
                         <div class="title"><span>儿歌</span></div>
                       </li>
@@ -353,8 +353,7 @@ export default {
       'getLearnInfoV5',
       'getKidCatalog',
       'getMoreLearnCourses',
-      'getSubCourses', // 新的课程列表接口
-      'getKidCourseContent' // 儿歌
+      'getSubCourses' // 新的课程列表接口
     ]),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
@@ -439,7 +438,25 @@ export default {
       this.updateCurCourseCode(courseCode)
       Bus.$emit('changeCourseCode', courseCode)
     },
-    changeTab (index) {
+    async changeTab (index) {
+      let courseCode = this.$route.params.courseCode
+      let unlockChapters = await this.getUnlockChapter(courseCode)
+      this.unlockCourses = Object.keys(unlockChapters.unlock).join(',')
+      this.buyChapters = ''
+      Object.keys(unlockChapters.unlock).forEach(key => {
+        let item = unlockChapters.unlock[key]
+        if (item.Has_purchased) {
+          this.buyChapters += key + ','
+        }
+      })
+      console.log('curChapterCode', this.curChapterCode)
+      let arr = this.curChapterCode.split('-')
+      let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
+      console.log(num)
+      if (num > 1 && parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) {
+        Bus.$emit('showBuyChapterPanel', this.curChapterCode)
+        return false
+      }
       this.active = index
       if (index === 1) {
         this.drawProgress('core', this.curChapterData['core'])
@@ -447,11 +464,6 @@ export default {
         this.drawProgress('homework', this.homeworkData)
         this.drawProgress('vip', this.vipData)
       }
-    },
-    goKidStage (item, type) {
-      console.log(item, type)
-      let code = item.code
-      this.$router.push({path: '/kid-stage', query: {code: code, type: type}})
     },
     async initProData () {
       this.isShow = true
@@ -741,10 +753,18 @@ export default {
     },
     jumpVipPage (isActive, id) {
       if (parseInt(this.isVip) !== 1) {
-        let routeUrl = this.$router.resolve({
-          path: '/app/vip-home'
-        })
-        window.open(routeUrl.href, '_blank')
+        // let routeUrl = this.$router.resolve({
+        //   path: '/app/vip-home'
+        // })
+        // window.open(routeUrl.href, '_blank')
+        let obj = {
+          className: 'vipIcon',
+          description: '升级会员体验更多功能提高学习效率',
+          btnDesc: '升级会员',
+          isLink: true,
+          hyperLink: '/app/vip-home'
+        }
+        Bus.$emit('showCommonModal', obj)
       } else {
         if (isActive) {
           this.$router.push({ name: 'stage', params: {id: id} })
@@ -765,10 +785,17 @@ export default {
         Bus.$emit('setContinueLearn', this.tips)
         return false
       }
-      if (this.buyChapters.indexOf(chapterCode) === -1 && parseInt(this.isVip) !== 1) {
-        Bus.$emit('showBuyChapterPanel', chapterCode)
-        return false
-      }
+      // if (parseInt(this.isVip) !== 1) {
+      //   let routeUrl = this.$router.resolve({
+      //     path: '/app/vip-home'
+      //   })
+      //   window.open(routeUrl.href, '_blank')
+      //   return false
+      // }
+      // if (this.buyChapters.indexOf(chapterCode) === -1 && parseInt(this.isVip) !== 1) {
+      //   Bus.$emit('showBuyChapterPanel', chapterCode)
+      //   return false
+      // }
 
       if (chapterCode === this.curChapterCode) {
         if (this.isShow) {
@@ -791,18 +818,39 @@ export default {
     switchShow () {
       this.isShow = false
     },
+    // 绘本阅读和单词
+    goKidStage (item, type, index) {
+      console.log(item, type)
+      if (parseInt(this.isVip) !== 1 && index !== 1) {
+        let obj = {
+          className: 'vipIcon',
+          description: '升级会员免费订阅所有官方课程',
+          btnDesc: '升级会员',
+          isLink: true,
+          hyperLink: '/app/vip-home'
+        }
+        Bus.$emit('showCommonModal', obj)
+      } else {
+        let code = item.code
+        this.$router.push({path: '/kid-stage', query: {code: code, type: type}})
+      }
+    },
     // 儿歌
-    goKidSongs (item) {
-      console.log('儿歌详情每一个===>', item)
-      Bus.$emit('showSongsModal', item.code)
-      this.showSongs = true
-      // this.getKidCourseContent({chapter_code: item.code}).then(res => {
-      //   console.log(res)
-      //   if (res.success) {
-      //     let songs = res.teacherContent.songs
-      //     Bus.$emit('showSongsModal', songs)
-      //   }
-      // })
+    goKidSongs (item, index) {
+      console.log('儿歌详情每一个===>', item, index)
+      if (parseInt(this.isVip) !== 1 && index !== 1) {
+        let obj = {
+          className: 'vipIcon',
+          description: '升级会员免费订阅所有官方课程',
+          btnDesc: '升级会员',
+          isLink: true,
+          hyperLink: '/app/vip-home'
+        }
+        Bus.$emit('showCommonModal', obj)
+      } else {
+        Bus.$emit('showSongsModal', item.code)
+        this.showSongs = true
+      }
     },
     closeModal () {
       this.showSongs = false

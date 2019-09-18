@@ -41,7 +41,7 @@
                 <div class="project-header">
                   <div class="title">选择合适的计划来帮助您学习</div>
                 </div>
-                <div class="cards-list">
+                <!-- <div class="cards-list">
                   <ul>
                     <li v-for='(item, index) in productList' :key="index">
                       <div class="cards">
@@ -52,6 +52,64 @@
                         <div class="price">
                           <span>¥</span>
                           <span>{{ item.total_money }}</span>
+                          <span></span>
+                        </div>
+                        <div class="expect">
+                          <span>{{ item.product }}个月有效期</span>
+                        </div>
+                        <div class="button">
+                          <p @click="goBuy(item)">
+                            <span>立即购买</span>
+                            <i></i>
+                          </p>
+                        </div>
+                        <span class="hint" v-show="recommand === index">76%的人会选</span>
+                        <span class="green" v-show="value === index">最优惠</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div> -->
+                <div class="cards-list" v-if="vipDiscount.has_discount" :class="{'cross-list': vipDiscount.has_discount}">
+                  <ul>
+                    <li v-for='(item, index) in productListNew' :key="index">
+                      <div class="cards">
+                        <p class="title" v-if="index == 0">月卡</p>
+                        <p class="title" v-if="index == 1">季卡</p>
+                        <p class="title" v-if="index == 2">半年卡</p>
+                        <p class="title" v-if="index == 3">年卡</p>
+                        <div class="price">
+                          <span>¥</span>
+                          <span>{{ parseInt(item.discountInfo[0].total_money) }}</span>
+                        </div>
+                        <div class="cross-out">
+                          <span>¥</span>
+                          <span>{{ parseInt(item.total_money) }}</span>
+                        </div>
+                        <div class="expect">
+                          <span>{{ item.product }}个月有效期</span>
+                        </div>
+                        <div class="button">
+                          <p @click="goBuy(item.discountInfo[0])">
+                            <span>立即购买</span>
+                            <i></i>
+                          </p>
+                        </div>
+                        <span class="hint">限时优惠</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="cards-list" v-else>
+                  <ul>
+                    <li v-for='(item, index) in productListNew' :key="index">
+                      <div class="cards">
+                        <p class="title" v-if="index == 0">月卡</p>
+                        <p class="title" v-if="index == 1">季卡</p>
+                        <p class="title" v-if="index == 2">半年卡</p>
+                        <p class="title" v-if="index == 3">年卡</p>
+                        <div class="price">
+                          <span>¥</span>
+                          <span>{{ parseInt(item.total_money) }}</span>
                           <span></span>
                         </div>
                         <div class="expect">
@@ -255,11 +313,14 @@ export default {
   mounted () {
     this.getMemberProductsList()
     console.log('会员列表卡片充值', this.productList)
+    this.getMemberCardPrdv1()
   },
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
-      productList: state => state.user.productList
+      productList: state => state.user.productList,
+      vipDiscount: state => state.user.vipDiscount,
+      productListNew: state => state.user.productListNew
     }),
     isActivation () {
       let codes = this.codeNum1 + '-' + this.codeNum2 + '-' + this.codeNum3 + '-' + this.codeNum4
@@ -283,6 +344,7 @@ export default {
     ...mapActions({
       getMemberCard: 'user/getMemberCard', // 激活码激活接口
       getMemberProductsList: 'user/getMemberProductsList',
+      getMemberCardPrdv1: 'user/getMemberCardPrdv1',
       getUserInfo: 'getUserInfo'
     }),
     // 提示用户的信息不完整
@@ -916,6 +978,23 @@ export default {
             text-align: bottom;
           }
         }
+        .cross-out {
+          position: relative;
+          text-align: center;
+          text-decoration:line-through;
+          display: flex;
+          justify-content: center;
+          span:nth-child(1) {
+            font-size:26px;
+            font-weight:500;
+            color:rgba(0,42,91,1);
+          }
+          span:nth-child(2) {
+            font-size:26px;
+            font-weight:500;
+            color:rgba(0,42,91,1);
+          }
+        }
         .expect {
           width: 100%;
           text-align: center;
@@ -968,6 +1047,7 @@ export default {
           line-height: 144px;
           text-align: left;
           background-color: #FFBE29;
+          font-weight: 500;
           position: absolute;
           top: -23px;
           right: -74px;
@@ -997,6 +1077,27 @@ export default {
     }
     li:nth-child(4) {
       border:6px solid #91D249FF;
+    }
+  }
+}
+.cards-list.cross-list {
+  ul {
+    li {
+      border:2px solid #FFBE29;
+      .cards {
+        .expect {
+          width: 100%;
+          text-align: center;
+          padding: 26px 0 60px;
+        }
+      }
+      .hint {
+        top: -22px;
+        right: -82px;
+        font-size: 12px;
+        padding: 0 29px;
+        background-color: rgb(252, 65, 18);
+      }
     }
   }
 }

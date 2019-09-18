@@ -122,6 +122,7 @@ import $ from 'jquery'
 import NavComp from '../../common/nav.vue'
 import ShareBox from '../../common/shareBox'
 import VipPrompt from '../../../components/common/vipPrompt.vue'
+import Cookie from '../../../tool/cookie'
 
 /**
   * 订阅状态判断
@@ -135,6 +136,7 @@ import VipPrompt from '../../../components/common/vipPrompt.vue'
 export default {
   data () {
     return {
+      userId: '',
       btnDesc: '',
       btnState: '', // 0: 没订阅 1: 订阅了 2: 订阅后删除了
       subState: {}, // 课程订阅的数据
@@ -187,6 +189,7 @@ export default {
       {id: 3, path: '', text: '课程详情'}
     ]
     Bus.$emit('loadNavData', navList)
+    this.userId = Cookie.getCookie('user_id')
     this.initDataDetails()
     document.addEventListener('click', (e) => {
       if (e.target.className === 'video-box' && e.target.className !== 'video-dialog') {
@@ -199,7 +202,9 @@ export default {
     ...mapActions({
       getKidCourseDetail: 'getKidCourseDetail',
       getSubCourses: 'getSubCourses',
-      getOneCourseSub: 'getOneCourseSub'
+      getOneCourseSub: 'getOneCourseSub',
+      getLearnInfoV5: 'getLearnInfoV5',
+      setKidCurrentChapter: 'setKidCurrentChapter'
     }),
     // 播放视频
     playRadio () {
@@ -238,9 +243,31 @@ export default {
     },
     // 开始学习
     async startLearn () {
-      this.$router.push({path: '/app/kid-course-list/' + this.miniCode})
+      console.log(this.miniCode)
+      // this.$router.push({path: '/app/kid-course-list/' + this.miniCode})
+      // this.$router.push({path: '/app/index'})
+      let arr = this.miniCode.split('-')
+      let courseCode = (arr.length > 1) ? this.miniCode : this.miniCode.toUpperCase()
+      // Bus.$emit('loadIndexCourse', courseCode)
+      // setTimeout(() => {
+      //   this.$router.push({path: '/app/index'})
+      // }, 1000)
+      let res1 = await this.getLearnInfoV5({course_code: courseCode})
+      console.log(res1)
+      let curChapterCode = res1.info.learnConfig.current_chapter_code
+      let res2 = await this.setKidCurrentChapter({chapter_code: curChapterCode})
+      if (res2.success) {
+        Bus.$emit('loadIndexCourse', courseCode)
+        setTimeout(() => {
+          this.$router.push({path: '/app/index'})
+        }, 1000)
+      }
     },
     subscribeCourse () {
+      if (!this.userId) {
+        Bus.$emit('showGoLoginBox')
+        return false
+      }
       this.getOneCourseSub({course_code: this.miniCode}).then(res => {
         console.log('状态返回===》', res)
         if (res.success) {

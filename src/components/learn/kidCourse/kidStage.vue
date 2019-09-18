@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="kid-draws" id="swiper-kid">
-      <div class="swiper-container index-swiper">
+      <div class="swiper-container">
         <div class="swiper-wrapper">
           <kid-stage-item  v-for="(item, index) in list"
                            :key="index" :item="item"
@@ -33,9 +33,9 @@
                            :courseCode="courseCode"
                            @initRecordState="initState"/>
         </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
-      <!-- 如果需要分页器 -->
-      <div class="swiper-pagination" id="swiper-pagination"></div>
     </div>
   </div>
 </template>
@@ -100,8 +100,7 @@ export default {
           break
       }
       console.log('kid stage list', this.list)
-      await this.swiperInit()
-      this.resetStyle()
+      this.swiperInit()
     },
     async initRecordState () {
       let res = await this.getKidRecordState({chapter_code: this.code})
@@ -122,19 +121,20 @@ export default {
     swiperInit () {
       this.$nextTick(() => {
         /* eslint-disable */
-        var mySwiper = new Swiper('.index-swiper', {
+        var mySwiper = new Swiper('.swiper-container', {
           loop: false,
           autoplay: false, //自动轮播
-          speed: 1000,
+          speed: 500,
           slidesPerView: "auto",
           centeredSlides:true,
           mousewheel: true,
+          slideToClickedSlide: true,
           pagination: {
             el: '.swiper-pagination',
             clickable: true
           },
           on:{
-            init: function(){
+            init: function () {
               //Swiper初始化了
               console.log('当前的slide序号是'+this.activeIndex);
               console.log($('#mother-sound0')[0])
@@ -162,6 +162,7 @@ export default {
             }
           }
         })
+        this.resetStyle()
         /* eslint-enable */
       })
     },
@@ -281,13 +282,13 @@ export default {
   }
 }
 .kid-stage-container {
-  display: inline-block;
   width: 100%;
+  min-height: 660px;
   position: relative;
 }
 .kid-stage-container .kid-draws {
   width: 100%;
-  height: 100%;
+  min-height: 660px;
   padding: 3.5% 7%;
   // background: #0581D1;
   box-sizing: border-box;
@@ -295,6 +296,7 @@ export default {
   margin-top: 2%;
   .swiper-container {
     width: 100%;
+    min-height: 560px;
     .swiper-wrapper {
       width: 100%;
       height: 100%;
@@ -302,11 +304,9 @@ export default {
   }
 }
 
-.kid-stage-container .kid-draws #swiper-pagination {
-  bottom: -6%;
-  left: 50%;
+.kid-stage-container #swiper-pagination {
 }
-.kid-stage-container .kid-draws #swiper-pagination .my-bullet {
+.kid-stage-container #swiper-pagination .my-bullet {
   outline:none;
   width: 20px!important;
   height: 6px!important;
@@ -315,7 +315,7 @@ export default {
   transition: width 0.3s ease-in-out !important;
   margin: 0 8px;
 }
-.kid-stage-container .kid-draws #swiper-pagination .my-bullet.my-bullet-active {
+.kid-stage-container  #swiper-pagination .my-bullet.my-bullet-active {
   width: 20px!important;
   height: 6px!important;
   background: #0581D1!important;

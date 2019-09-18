@@ -72,6 +72,7 @@ export default {
   },
   mounted () {
     this.getUserInfo()
+    console.log(this.userBuy)
     let productId = this.userBuy.product_id
     console.log('productId', productId)
     let params = {
