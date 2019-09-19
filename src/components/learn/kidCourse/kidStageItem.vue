@@ -268,7 +268,6 @@ export default {
         }
       }
       .recording-body-buttons {
-        padding-bottom: 30px;
         position: relative;
         .close-record {
           display: inline-block;
@@ -278,8 +277,8 @@ export default {
           background: url('../../../../static/images/icon-cloce.png') no-repeat center;
           background-size: cover;
           position: absolute;
-          right: 0px;
-          top: 0;
+          right: -18px;
+          top: -50px;
           z-index: 999;
         }
         .recording-body-button {

@@ -341,7 +341,8 @@ export default {
     }
     .mouse-text {
       text-align: center;
-      padding-top: 6%;
+      position: absolute;
+      bottom: 12%;
       span {
         font-size:18px;
         font-weight:500;
