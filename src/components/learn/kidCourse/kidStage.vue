@@ -263,6 +263,7 @@ export default {
   box-sizing: border-box;
   margin-top: 2%;
   margin-bottom: 2%;
+  min-height: 50px;
   .record-lists-content{
     display: inline-block;
     position: relative;
