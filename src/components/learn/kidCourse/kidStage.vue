@@ -261,8 +261,8 @@ export default {
   position: relative;
   text-align: right;
   box-sizing: border-box;
-  margin-top: 40px;
-  min-height: 120px;
+  margin-top: 2%;
+  margin-bottom: 2%;
   .record-lists-content{
     display: inline-block;
     position: relative;
@@ -323,7 +323,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 3.5% 7%;
+  padding: 3.5% 7% 2%;
   // background: #0581D1;
   box-sizing: border-box;
   position: relative;
@@ -358,6 +358,7 @@ export default {
 }
 
 .kid-stage-container #swiper-pagination {
+  bottom: 0!important;
 }
 .kid-stage-container #swiper-pagination .my-bullet {
   outline:none;

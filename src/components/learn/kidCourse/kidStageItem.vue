@@ -234,7 +234,7 @@ export default {
     // width: 40%;
     // height: 217px;
     width: 100%;
-    height: 176px !important;
+    height: 170px !important;
     border-radius: 4px 4px 0 0;
     .img-box {
       width: 100%;
