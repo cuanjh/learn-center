@@ -223,7 +223,7 @@ export default {
 }
 .swiper-slide {
   // width: 568px!important;
-  width: 36%!important;
+  // width: 36%!important;
   // min-height: 358px!important;
   // height: 21%!important;
   border-radius:4px;
@@ -502,16 +502,24 @@ export default {
     border-color: rgba(156, 225, 82, .28);
   }
 }
-
-.swiper-slide-prev {
-  transition: all 2s ease-in-out;
-  -moz-transition: all 2s ease-in-out;
-  -webkit-transition: all 2s ease-in-out;
-  -webkit-transform: scale(0.6,0.6);
-  -moz-transform: scale(0.6,0.6);
-  transform: scale(0.6,0.6);
-  -webkit-overflow-scrolling:touch;
-  position: relative;
+.swiper-slide {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  transition: 300ms;
+  transform: scale(0.6);
+}
+.swiper-slide-active,.swiper-slide-duplicate-active{
+  transform: scale(1);
 }
 .swiper-slide-prev .slide-content::after {
   position:absolute;
@@ -525,17 +533,6 @@ export default {
   transition:all 1s ease;
   z-index: 2;
 }
-.swiper-slide-next {
-  transition: all 2s ease-in-out;
-  -moz-transition: all 2s ease-in-out;
-  -webkit-transition: all 2s ease-in-out;
-  -webkit-transform: scale(0.6,0.6);
-  -moz-transform: scale(0.6,0.6);
-  transform: scale(0.6,0.6);
-  -webkit-overflow-scrolling:touch;
-  position: relative;
-  z-index: 1;
-}
 .swiper-slide-next .slide-content::after {
   position:absolute;
   left: 0;
@@ -547,16 +544,5 @@ export default {
   content: attr(data-text);
   transition:all 1s ease;
   z-index: 2;
-}
-.swiper-slide-active {
-  // transition: transform .5s ease-in-out;
-  transition: all 1s ease-in-out;
-  -moz-transition: all 1s ease-in-out;
-  -webkit-transition: all 1s ease-in-out;
-  -webkit-transform: scale(1,1);
-  -moz-transform: scale(1,1);
-  transform: scale(1,1);
-  -webkit-overflow-scrolling:touch;
-  box-shadow:0px 28px 20px -16px rgba(0,0,0,0.11);
 }
 </style>

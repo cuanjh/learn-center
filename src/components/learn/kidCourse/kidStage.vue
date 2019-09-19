@@ -133,11 +133,12 @@ export default {
         this.mySwiper = new Swiper('.swiper-container', {
           loop: false,
           autoplay: false, //自动轮播
-          speed: 500,
-          slidesPerView: "auto",
           centeredSlides:true,
-          loopAdditionalSlides: 100,
-          mousewheel: true,
+          slidesPerView: 3,
+          spaceBetween: 30,
+          mousewheel: {
+            invert: true
+          },
           slideToClickedSlide: true,
           autoHeight : true,
           pagination: {
