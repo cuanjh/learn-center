@@ -6,27 +6,30 @@
         <audio preload="load" class="mother-sound" :id="'mother-sound'+index" :src="item.sound"></audio>
       </div>
       <div class="draw-desc">
-        <p class="text">{{item.content || item.word}}</p>
-        <div class="record-content">
+        <div class="no-record">
+          <p class="text">{{item.content || item.word}}</p>
           <div class="start-button">
             <i class="start-img" @click.stop.prevent="startRecord('mother-sound'+index)" v-if="!isRecord"></i>
           </div>
-          <div class="recording-body-buttons" v-show="isRecord">
+        </div>
+        <div class="record-content"  v-show="isRecord">
+          <p class="text text-small">{{item.content || item.word}}</p>
+          <div class="recording-body-buttons">
             <i class="close-record" @click="closeRecord()"></i>
-            <div class="recording-body-button" v-if="recording">
-              <div class="tip"><i class="tip-img"></i></div>
+            <div class="recording-body-button">
+              <div class="tip" v-if="recording"><i class="tip-img"></i></div>
               <div class="recording-button" @click.stop.prevent="recordStop()">
                 <i class="recording-img"></i>
-                <i class="circle circle1" ></i>
-                <i class="circle circle2" ></i>
+                <i class="circle circle1" v-if="recording"></i>
+                <i class="circle circle2" v-if="recording"></i>
               </div>
             </div>
             <div class="record-end-button" v-if="playing">
               <div class="record-clear-button" @click.stop.prevent="againRecord('mother-sound'+index)">
                 <i></i>
               </div>
-              <div class="record-playVoice-button" @click.stop.prevent="startMySound()">
-                <i :class="{'loading': animat}">
+              <div id="animatButton" class="record-playVoice-button" @click.stop.prevent="startMySound()">
+                <i :class="{'loading': animat}" >
                   <span></span>
                   <span></span>
                   <span></span>
@@ -112,7 +115,9 @@ export default {
         return false
       }
       this.isRecord = true
-      this.recording = true
+      setTimeout(() => {
+        this.recording = true
+      }, 1000)
       // 开始检测录音音量
       Recorder.startRecording()
       // let _this = this
@@ -159,6 +164,13 @@ export default {
       let code = card.code
       let content = card.content
       console.log('code,content', code, content)
+      let animatDiv = $('#animatButton')
+      let offset = animatDiv.offset()
+      let obj = {
+        left: offset.left + animatDiv.width() / 2,
+        top: offset.top + animatDiv.height() / 2
+      }
+      bus.$emit('animateRecord', obj)
       let _this = this
       // 上传七牛
       await _this.getUploadFileToken().then(res => {
@@ -250,14 +262,13 @@ export default {
       font-weight:600;
       color:rgba(60,91,111,1);
       line-height:28px;
-      padding: 22px 50px 0px 28px;
+      padding: 12px 50px 0px 18px;
     }
-    .record-content {
-      padding: 0 30px;
+    .no-record {
       .start-button {
         height: 50px;
         text-align: right;
-        right: 0;
+        padding: 0 30px;
         i {
           cursor: pointer;
           display: inline-block;
@@ -267,8 +278,26 @@ export default {
           background-size: cover;
         }
       }
+    }
+    .record-content {
+      position: absolute;
+      bottom: 0;
+      padding: 0 30px;
+      background: #fff;
+      width: 100%;
+      height: 160%;
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      flex-direction: column;
+      animation: heightShow .5s ease-in-out;
+      .text-small {
+        font-size: 14px;
+        padding: 10px ;
+        line-height: 20px;
+      }
       .recording-body-buttons {
         position: relative;
+        flex: 1;
         .close-record {
           display: inline-block;
           cursor: pointer;
@@ -277,19 +306,22 @@ export default {
           background: url('../../../../static/images/icon-cloce.png') no-repeat center;
           background-size: cover;
           position: absolute;
-          right: -18px;
-          top: -50px;
+          right: -6%;
+          top: -24%;
           z-index: 999;
         }
         .recording-body-button {
           text-align: center;
-          position: relative;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -16%);
           .tip {
             width: 118px;
             height: 70px;
             position: absolute;
-            top: -116px;
-            left: 0px;
+            top: -124px;
+            left: -28px;
             right: 0;
             bottom: 0;
             margin: auto;
@@ -344,10 +376,18 @@ export default {
           display: flex;
           justify-content: center;
           align-items: center;
+          position: absolute;
+          top: 50%;
+          transform: translate(0, -26%);
+          position: relative;
           .record-clear-button {
             cursor: pointer;
             width: 50px;
             height: 50px;
+            position: absolute;
+            z-index: 1;
+            animation: leftClearR .5s ease-in;
+            animation-fill-mode: forwards;
             i {
               display: inline-block;
               width: 50px;
@@ -358,17 +398,18 @@ export default {
           }
           .record-playVoice-button {
             cursor: pointer;
-            width: 76px;
-            height: 76px;
-            margin: 0 40px;
+            width: 70px;
+            height: 70px;
             background: #FFCE00;
             border-radius: 50%;
+            position: relative;
+            z-index: 10;
             i {
               display: flex;
               justify-content: space-around;
               align-items: center;
               width: 70px;
-              height: 76px;
+              height: 70px;
               padding: 0 10px;
               margin: 0 auto;
               box-sizing: border-box;
@@ -383,13 +424,13 @@ export default {
                 background-color: #fff;
               }
               span:nth-child(2){
-                height: 34px;
+                height: 30px;
               }
               span:nth-child(3){
-                height: 48px;
+                height: 43px;
               }
               span:nth-child(4){
-                height: 34px;
+                height: 30px;
               }
             }
             i.loading span:nth-child(3) {
@@ -401,10 +442,10 @@ export default {
             }
             @keyframes load3 {
               0%, 100%{
-                height: 48px;
+                height: 43px;
               }
               50%{
-                height: 38px;
+                height: 37px;
               }
             }
             i.loading span:nth-child(2), i.loading span:nth-child(4) {
@@ -416,7 +457,7 @@ export default {
             }
             @keyframes load2 {
               0%, 100%{
-                height: 34px;
+                height: 30px;
               }
               50%{
                 height: 24px;
@@ -439,10 +480,13 @@ export default {
             }
           }
           .record-saveVoice-button {
-            position: relative;
+            position: absolute;
+            z-index: 1;
             cursor: pointer;
             width: 50px;
             height: 50px;
+            animation: rightSaveR .5s ease-in;
+            animation-fill-mode: forwards;
             i {
               display: inline-block;
               width: 50px;
@@ -466,6 +510,49 @@ export default {
     }
   }
 }
+@keyframes heightShow {
+  0% {
+    height: 100%;
+  }
+  100% {
+    height: 160%;
+  }
+}
+@keyframes leftClearR {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(-20px, 0);
+    transform: stranslate(-20px, 0);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: translate(-60px, 0);
+    transform: stranslate(-60px, 0);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(-90px,0);
+    transform: stranslate(-90px,0);
+  }
+}
+@keyframes rightSaveR {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(20px, 0);
+    transform: stranslate(20px, 0);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: translate(60px, 0);
+    transform: stranslate(60px, 0);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(90px,0);
+    transform: stranslate(90px,0);
+  }
+}
+
 // 录音动画
 @keyframes circle-opacity {
   0% {

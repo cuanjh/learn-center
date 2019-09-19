@@ -14,7 +14,7 @@
     <div class="record-lists" @click="goKidRecordList(code, type)">
       <div class="record-lists-content" v-if="recordState>0">
         <div class="num-content">
-          <i class="icon-img"></i>
+          <i class="icon-img animat-target-img"></i>
           <div class="tip-blue">
             <i class="blue-img"></i>
             <span>我的{{type=='draw'?'绘本':'单词'}}录音</span>
@@ -37,6 +37,9 @@
         <!-- 如果需要分页器 -->
         <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
+    </div>
+    <div class="record-save-animat animated">
+      <i ></i>
     </div>
   </div>
 </template>
@@ -78,6 +81,29 @@ export default {
     this.initData()
     this.initRecordState()
     Recorder.init()
+    bus.$on('animateRecord', (offset) => {
+      $('.record-save-animat').css({
+        left: offset.left,
+        top: offset.top
+      })
+      $('.record-save-animat').show()
+      $('.record-save-animat').addClass('animated')
+      let targetOffest = $('.animat-target-img').offset()
+      console.log(targetOffest)
+      // $('.record-save-animat').stop().animate({
+      //   left: targetOffest.left,
+      //   top: targetOffest.top
+      // }, {
+      //   duration: 10000,
+      //   specialEasing: {
+      //     left: 'linear',
+      //     top: 'swing'
+      //   },
+      //   complete: () => {
+      //     $('.record-save-animat').hide()
+      //   }
+      // })
+    })
   },
   mounted () {
     // 给页面绑定滑轮滚动事件
@@ -258,7 +284,7 @@ export default {
 }
 .record-lists {
   width: 100%;
-  padding: 0px 98px;
+  padding: 1% 98px 0;
   position: relative;
   text-align: right;
   box-sizing: border-box;
@@ -379,5 +405,31 @@ export default {
   background: #0581D1!important;
   border-radius: 5px!important;
 }
-
+.record-save-animat {
+  position: absolute;
+  // display: none;
+  z-index: 999999;
+  i {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background: url('../../../../static/images/kidcontent/icon-record-list.png') no-repeat center;
+    background-size: cover;
+  }
+  &.animated {
+    animation: animX 3s 0.4s 1 linear, animY 3s 0.4s 1 cubic-bezier(.66,.1,1,.41);
+    // animation: run-right-right 3s 0.4s 1 linear, run-right-top 3s 0.4s 1 ease-out;
+    animation-fill-mode: forwards;
+  }
+}
+@keyframes animX{
+  0% {left: 0px;}
+  50%{left: 100px;}
+  100% {left: 300px;}
+}
+@keyframes animY{
+  0% {top: 500px;}
+  50%{top: 300px;}
+  100% {top: 0px;}
+}
 </style>
