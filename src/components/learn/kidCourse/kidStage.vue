@@ -261,8 +261,6 @@ export default {
   position: relative;
   text-align: right;
   box-sizing: border-box;
-  margin-top: 2%;
-  margin-bottom: 2%;
   min-height: 50px;
   .record-lists-content{
     display: inline-block;
@@ -324,16 +322,19 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 3.5% 7% 2%;
+  padding: 0 7% 2%;
   // background: #0581D1;
   box-sizing: border-box;
   position: relative;
-  margin-top: 2%;
   z-index: 999999;
   .swiper-container {
     width: 100%;
     // min-height: 500px;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     .swiper-wrapper {
       width: 100%;
       height: 100%;
