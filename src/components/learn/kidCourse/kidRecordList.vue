@@ -46,9 +46,10 @@
               </div>
             </div>
           </div>
+          <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
+          <!-- 如果需要分页器 -->
+          <div class="swiper-pagination" id="swiper-pagination"></div>
         </div>
-        <!-- 如果需要分页器 -->
-        <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
     </div>
   </div>
@@ -66,6 +67,7 @@ export default {
   props: ['code', 'type'],
   data () {
     return {
+      showMose: true,
       recordType: '4',
       courseInfo: {
         code: '',
@@ -92,6 +94,12 @@ export default {
   mounted () {
     console.log(this.code, this.type)
     this.initDataList()
+    // 给页面绑定滑轮滚动事件
+    if (document.addEventListener) { // firefox
+      document.addEventListener('DOMMouseScroll', this.scrollFunc, false)
+    }
+    // 滚动滑轮触发scrollFunc方法  //ie 谷歌
+    window.onmousewheel = document.onmousewheel = this.scrollFunc
   },
   updated () {
     this.resetStyle()
@@ -140,6 +148,8 @@ export default {
           slidesPerView: "auto",
           centeredSlides:true,
           mousewheel: true,
+          slideToClickedSlide: true,
+          autoHeight : true,
           pagination: {
             el: '.swiper-pagination',
             clickable: true
@@ -220,6 +230,24 @@ export default {
         'border-radius': '6px',
         'margin-right': '8px'
       })
+    },
+    scrollFunc (e) {
+      e = e || window.event
+      if (e.wheelDelta) { // 判断浏览器IE，谷歌滑轮事件
+        if (e.wheelDelta > 0) { // 当滑轮向上滚动时
+          this.showMose = false
+        }
+        if (e.wheelDelta < 0) { // 当滑轮向下滚动时
+          this.showMose = false
+        }
+      } else if (e.detail) { // Firefox滑轮事件
+        if (e.detail > 0) { // 当滑轮向上滚动时
+          this.showMose = false
+        }
+        if (e.detail < 0) { // 当滑轮向下滚动时
+          this.showMose = false
+        }
+      }
     }
   }
 }
@@ -227,6 +255,9 @@ export default {
 <style lang="less" scoped>
 .record-lists-container {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .header {
   width: 100%;
@@ -268,9 +299,12 @@ export default {
   }
 }
 .record-lists {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   .top-contant {
     text-align: center;
-    padding: 64px 126px;
+    padding: 5% 7%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -282,18 +316,39 @@ export default {
     }
     .this-share-box {
       position: absolute;
-      right: 126px;
+      right: 7%;
     }
   }
 }
 .record-swiper {
   width: 100%;
-  padding: 0 126px;
+  padding: 0 7%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   .swiper-container {
     width: 100%;
+    height: 100%;
     .swiper-wrapper {
       width: 100%;
       height: 100%;
+    }
+    .mouse-text {
+      text-align: center;
+      padding-top: 6%;
+      span {
+        font-size:18px;
+        font-weight:500;
+        color:rgba(74,74,74,1);
+        line-height: 36px;
+      }
+      i {
+        display: inline-block;
+        width: 26px;
+        height: 36px;
+        background: url('../../../../static/images/kidcontent/icon-mouse-img.png') no-repeat center;
+        background-size: cover;
+      }
     }
   }
 }
@@ -301,7 +356,7 @@ export default {
  // width: 568px!important;
   width: 36%!important;
   // min-height: 358px!important;
-  height: 21%!important;
+  // height: 21%!important;
   border-radius:4px;
   background: #fff;
   padding-bottom: 20px;
@@ -333,8 +388,7 @@ export default {
     }
     .record-playVoice-button {
       width: 100%;
-      height: 50px;
-      padding: 6px 30px 0;
+      padding: 16px 30px 0;
       text-align: center;
       .play-box {
         display: inline-block;
@@ -423,9 +477,9 @@ export default {
   }
 }
 .swiper-slide-prev {
-  transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s;
+  transition: all 2s ease;
+  -moz-transition: all 2s ease;
+  -webkit-transition: all 2s;
   -webkit-transform: scale(0.7,0.7);
   -moz-transform: scale(0.7,0.7);
   transform: scale(0.7,0.7);
@@ -445,9 +499,9 @@ export default {
   z-index: 2;
 }
 .swiper-slide-next {
-  transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s;
+  transition: all 2s ease;
+  -moz-transition: all 2s ease;
+  -webkit-transition: all 2s;
   -webkit-transform: scale(0.7,0.7);
   -moz-transform: scale(0.7,0.7);
   transform: scale(0.7,0.7);
@@ -468,9 +522,9 @@ export default {
   z-index: 2;
 }
 .swiper-slide-active {
-  transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
+  transition: all 2s ease;
+  -moz-transition: all 2s ease;
+  -webkit-transition: all 2s ease;
   -webkit-transform: scale(1,1);
   -moz-transform: scale(1,1);
   transform: scale(1,1);
@@ -479,8 +533,8 @@ export default {
 }
 .record-swiper #swiper-pagination {
   // bottom: 70px;
-  bottom: 0;
-  left: 50%;
+  // bottom: 0;
+  // left: 50%;
   .swiper-pagination-bullet {
     outline:none;
     width: 20px !important;

@@ -238,7 +238,7 @@ export default {
         font-weight: bold;
         width: 944px;
         margin: 0 auto;
-        padding: 0 28px;
+        padding: 0 28px 5px;
       }
       // .hot-courses {
       //   overflow: hidden;

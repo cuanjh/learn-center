@@ -42,12 +42,11 @@
           :key="'item' + index"
           :id="item.code">
           <div class="current-learn-course-info"
-            :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
             @click="jumpToCourse(item.code)"
             v-if="isShow ? curChapterCode !== item.code : !isShow">
             <div class="current-learn-course-flag">
               <img :src="item.flag">
-              <div class="fix-ie-bg" v-show="unlockCourses.indexOf(item.code) === -1"></div>
+              <!-- <div class="fix-ie-bg" v-show="unlockCourses.indexOf(item.code) === -1"></div> -->
             </div>
             <div class="current-learn-course-word-info">
               <div class="current-learn-course-title">
@@ -232,6 +231,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import { mapMutations, mapActions } from 'vuex'
 import moment from 'moment'
 import Bus from '../../../bus'
@@ -287,6 +287,9 @@ export default {
     // this.$on('draw', this.drawProgress)
     this.$on('changeIsShow', (flag) => {
       this.isShow = flag
+    })
+    this.$on('changeKidProChapter', () => {
+      this.initProData()
     })
   },
   mounted () {
@@ -438,25 +441,25 @@ export default {
       this.updateCurCourseCode(courseCode)
       Bus.$emit('changeCourseCode', courseCode)
     },
-    async changeTab (index) {
-      let courseCode = this.$route.params.courseCode
-      let unlockChapters = await this.getUnlockChapter(courseCode)
-      this.unlockCourses = Object.keys(unlockChapters.unlock).join(',')
-      this.buyChapters = ''
-      Object.keys(unlockChapters.unlock).forEach(key => {
-        let item = unlockChapters.unlock[key]
-        if (item.Has_purchased) {
-          this.buyChapters += key + ','
-        }
-      })
-      console.log('curChapterCode', this.curChapterCode)
-      let arr = this.curChapterCode.split('-')
-      let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
-      console.log(num)
-      if (num > 1 && parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) {
-        Bus.$emit('showBuyChapterPanel', this.curChapterCode)
-        return false
-      }
+    changeTab (index) {
+      // let courseCode = this.$route.params.courseCode
+      // let unlockChapters = await this.getUnlockChapter(courseCode)
+      // this.unlockCourses = Object.keys(unlockChapters.unlock).join(',')
+      // this.buyChapters = ''
+      // Object.keys(unlockChapters.unlock).forEach(key => {
+      //   let item = unlockChapters.unlock[key]
+      //   if (item.Has_purchased) {
+      //     this.buyChapters += key + ','
+      //   }
+      // })
+      // console.log('curChapterCode', this.curChapterCode)
+      // let arr = this.curChapterCode.split('-')
+      // let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
+      // console.log(num)
+      // if (num > 1 && parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) {
+      //   Bus.$emit('showBuyChapterPanel', this.curChapterCode)
+      //   return false
+      // }
       this.active = index
       if (index === 1) {
         this.drawProgress('core', this.curChapterData['core'])
@@ -481,11 +484,18 @@ export default {
       console.log('unlockChapters ==> ', unlockChapters)
       let curUnlockChapter = unlockChapters.unlock[unlockChapters.current_chapter_code]
       console.log('curUnlockChapter ==> ', curUnlockChapter)
-      this.updateUnlockCourseList(unlockChapters)
-      this.curChapterData['coreComplete'] = curUnlockChapter['Core_complete']
-      this.curChapterData['homework'] = curUnlockChapter['Homework']
-      this.curChapterData['homeworkComplete'] = curUnlockChapter['Homework_complete']
-      this.curChapterData['improvement'] = curUnlockChapter['Improvement']
+      if (curUnlockChapter) {
+        this.updateUnlockCourseList(unlockChapters)
+        this.curChapterData['coreComplete'] = curUnlockChapter['Core_complete']
+        this.curChapterData['homework'] = curUnlockChapter['Homework']
+        this.curChapterData['homeworkComplete'] = curUnlockChapter['Homework_complete']
+        this.curChapterData['improvement'] = curUnlockChapter['Improvement']
+      } else {
+        this.curChapterData['coreComplete'] = false
+        this.curChapterData['homework'] = false
+        this.curChapterData['homeworkComplete'] = false
+        this.curChapterData['improvement'] = false
+      }
 
       let curChapter = this.curLevelChapters.find(item => {
         return item.code === this.curChapterCode
@@ -538,7 +548,11 @@ export default {
         })
         let completedRate = !formNum ? '' : ((formNum / formLength) * 100).toFixed(0)
         let correctRate = (correctFormNum / formLength).toFixed(2)
-        let coreObj = {part_num: item.part_num, star: this.starNum(correctRate), completedRate: completedRate, isUnlock: isUnlock, isCompleted: curUnlockChapter['A0' + item.part_num]}
+        let isCompleted = false
+        if (curUnlockChapter) {
+          isCompleted = curUnlockChapter['A0' + item.part_num]
+        }
+        let coreObj = {part_num: item.part_num, star: this.starNum(correctRate), completedRate: completedRate, isUnlock: isUnlock, isCompleted: isCompleted}
         this.curChapterData['core'].push(coreObj)
       }
 
@@ -727,13 +741,40 @@ export default {
       }
       return stars
     },
-    startCore (id, isUnlock) {
+    async startCore (id, isUnlock) {
+      console.log('点击每一个课程的时候', id, isUnlock)
+      // if (isUnlock) {
+      //   this.$router.push({ name: 'stage', params: {id: id} })
+      // } else {
+      //   this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+      //   Bus.$emit('setContinueLearn', this.tips)
+      // }
+      let courseCode = this.$route.params.courseCode
+      let unlockChapters = await this.getUnlockChapter(courseCode)
+      this.unlockCourses = Object.keys(unlockChapters.unlock).join(',')
+      this.buyChapters = ''
+      Object.keys(unlockChapters.unlock).forEach(key => {
+        let item = unlockChapters.unlock[key]
+        if (item.Has_purchased) {
+          this.buyChapters += key + ','
+        }
+      })
+      // 上个核心是否学完
       if (isUnlock) {
+        let arr = this.curChapterCode.split('-')
+        let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
+        console.log(num)
+        // 判断非会员是否购买了课程
+        if (num > 1 && parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) { // 没买
+          Bus.$emit('showBuyChapterPanel', this.curChapterCode)
+          return false
+        }
         this.$router.push({ name: 'stage', params: {id: id} })
       } else {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         Bus.$emit('setContinueLearn', this.tips)
       }
+      console.log('curChapterCode', this.curChapterCode)
     },
     startTest (isCoreCompleted) {
       if (!isCoreCompleted) {
@@ -780,11 +821,11 @@ export default {
         Bus.$emit('showBindWin')
         return false
       }
-      if (this.unlockCourses.indexOf(chapterCode) === -1) {
-        this.tips = '完成上一课“核心课程”, <br>才能开启本课程！'
-        Bus.$emit('setContinueLearn', this.tips)
-        return false
-      }
+      // if (this.unlockCourses.indexOf(chapterCode) === -1) {
+      //   this.tips = '完成上一课“核心课程”, <br>才能开启本课程！'
+      //   Bus.$emit('setContinueLearn', this.tips)
+      //   return false
+      // }
       // if (parseInt(this.isVip) !== 1) {
       //   let routeUrl = this.$router.resolve({
       //     path: '/app/vip-home'
@@ -850,10 +891,12 @@ export default {
       } else {
         Bus.$emit('showSongsModal', item.code)
         this.showSongs = true
+        $('body').css('overflow', 'hidden')
       }
     },
     closeModal () {
       this.showSongs = false
+      $('body').css('overflow', 'auto')
     }
   }
 }

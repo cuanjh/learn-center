@@ -11,8 +11,8 @@
         </div>
       </header>
     </div>
-    <div class="record-lists" v-if="recordState>0" @click="goKidRecordList(code, type)">
-      <div class="record-lists-content">
+    <div class="record-lists" @click="goKidRecordList(code, type)">
+      <div class="record-lists-content" v-if="recordState>0">
         <div class="num-content">
           <i class="icon-img"></i>
           <div class="tip-blue">
@@ -33,6 +33,7 @@
                            :courseCode="courseCode"
                            @initRecordState="initState"/>
         </div>
+        <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
         <!-- 如果需要分页器 -->
         <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
@@ -53,8 +54,10 @@ export default {
   props: ['code', 'type'],
   data () {
     return {
+      showMose: true,
       list: [],
-      recordState: null
+      recordState: null,
+      mySwiper: null
     }
   },
   components: {
@@ -77,6 +80,12 @@ export default {
     Recorder.init()
   },
   mounted () {
+    // 给页面绑定滑轮滚动事件
+    if (document.addEventListener) { // firefox
+      document.addEventListener('DOMMouseScroll', this.scrollFunc, false)
+    }
+    // 滚动滑轮触发scrollFunc方法  //ie 谷歌
+    window.onmousewheel = document.onmousewheel = this.scrollFunc
   },
   updated () {
     this.resetStyle()
@@ -121,14 +130,16 @@ export default {
     swiperInit () {
       this.$nextTick(() => {
         /* eslint-disable */
-        var mySwiper = new Swiper('.swiper-container', {
+        this.mySwiper = new Swiper('.swiper-container', {
           loop: false,
           autoplay: false, //自动轮播
           speed: 500,
           slidesPerView: "auto",
           centeredSlides:true,
+          loopAdditionalSlides: 100,
           mousewheel: true,
           slideToClickedSlide: true,
+          autoHeight : true,
           pagination: {
             el: '.swiper-pagination',
             clickable: true
@@ -186,6 +197,24 @@ export default {
     },
     initState () {
       this.initRecordState()
+    },
+    scrollFunc (e) {
+      e = e || window.event
+      if (e.wheelDelta) { // 判断浏览器IE，谷歌滑轮事件
+        if (e.wheelDelta > 0) { // 当滑轮向上滚动时
+          this.showMose = false
+        }
+        if (e.wheelDelta < 0) { // 当滑轮向下滚动时
+          this.showMose = false
+        }
+      } else if (e.detail) { // Firefox滑轮事件
+        if (e.detail > 0) { // 当滑轮向上滚动时
+          this.showMose = false
+        }
+        if (e.detail < 0) { // 当滑轮向下滚动时
+          this.showMose = false
+        }
+      }
     }
   }
 }
@@ -233,6 +262,7 @@ export default {
   text-align: right;
   box-sizing: border-box;
   margin-top: 40px;
+  min-height: 120px;
   .record-lists-content{
     display: inline-block;
     position: relative;
@@ -283,23 +313,46 @@ export default {
 }
 .kid-stage-container {
   width: 100%;
-  min-height: 660px;
+  height: 100%;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 .kid-stage-container .kid-draws {
   width: 100%;
-  min-height: 660px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: 3.5% 7%;
   // background: #0581D1;
   box-sizing: border-box;
   position: relative;
   margin-top: 2%;
+  z-index: 999999;
   .swiper-container {
     width: 100%;
-    min-height: 560px;
+    // min-height: 500px;
+    height: 100%;
     .swiper-wrapper {
       width: 100%;
       height: 100%;
+    }
+    .mouse-text {
+      text-align: center;
+      padding-top: 6%;
+      span {
+        font-size:18px;
+        font-weight:500;
+        color:rgba(74,74,74,1);
+        line-height: 36px;
+      }
+      i {
+        display: inline-block;
+        width: 26px;
+        height: 36px;
+        background: url('../../../../static/images/kidcontent/icon-mouse-img.png') no-repeat center;
+        background-size: cover;
+      }
     }
   }
 }

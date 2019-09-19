@@ -103,7 +103,7 @@ export default {
           this.curIndex = 0
           this.songsAll = res.teacherContent.songs
           this.songs = res.teacherContent.songs.hello
-          this.currentVideo = res.teacherContent.songs.hello[0]
+          this.currentVideo = res.teacherContent.songs.hello[this.curIndex]
           this.video = $('#myVideo')[0]
           this.$nextTick(() => {
             this.play()
@@ -501,14 +501,17 @@ export default {
   }
   .icon-close {
     position: absolute;
-    top: -34px;
-    right: -26px;
-    width: 40px;
-    height: 40px;
-    background: url('../../../../static/images/icon-cloce.png') no-repeat center;
+    top: -30px;
+    right: -30px;
+    width: 30px;
+    height: 30px;
+    background: url('../../../../static/images/icon-close-img.png') no-repeat center;
     background-size: cover;
     cursor: pointer;
-    transform: rotate(28deg)
+    &:hover {
+      background: url('../../../../static/images/icon-close-img-active.png') no-repeat center;
+      background-size: cover;
+    }
   }
 }
 </style>

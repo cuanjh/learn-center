@@ -199,48 +199,6 @@ export default {
         })
         console.log('qiniuUrl', this.qiniuUrl)
       })
-      // Recorder.getTime((duration) => {
-      //   let Audiotime = Math.round(duration)
-      //   console.log('Audiotime', Audiotime)
-      //   // 上传七牛云
-      //   this.getUploadFileToken().then((res) => {
-      //     this.updateFileQiniuToken(res)
-      //     console.log('resupdateFileQiniuToken', res)
-      //     let date = new Date()
-      //     let d = date.format('yyyy/MM/dd')
-      //     let userId = Cookie.getCookie('user_id')
-      //     let time = date.getTime()
-      //     let fileAudioKey = 'feed/sound/' + d + '/' + userId + '/' + time + '.wav'
-      //     Recorder.uploadQiniuVoice(this.FileQiniuToken, fileAudioKey).then(data => {
-      //       console.log('data', data)
-      //       this.qiniuUrl = data.key
-      //     })
-      //     console.log('qiniuUrl', this.qiniuUrl)
-      //     // 请求后端接口
-      //     let params = {
-      //       sound_url: this.qiniuUrl,
-      //       sound_time: time,
-      //       course_code: this.courseCode,
-      //       code: code,
-      //       teacher_module: this.type
-      //     }
-      //     console.log(params)
-      //     this.getKidRecordSave(params).then(res => {
-      //       console.log('res', res)
-      //       // 返回成功之后再处理 返回失败具体提示
-      //       if (res.success) {
-      //         this.isRecord = false
-      //         this.playing = false
-      //         this.animat = false
-      //         Recorder.stopRecording()
-      //         bus.$off('record_setVolume')
-      //         this.$emit('initRecordState')
-      //       }
-      //     })
-      //   })
-      // })
-      // this.recording = false
-      // this.updateSpeakWork(false)
     },
     closeRecord () {
       this.isRecord = false
@@ -267,7 +225,7 @@ export default {
   // width: 568px!important;
   width: 36%!important;
   // min-height: 358px!important;
-  height: 21%!important;
+  // height: 21%!important;
   border-radius:4px;
   padding-bottom: 20px;
   background: #fff;
@@ -547,9 +505,9 @@ export default {
 }
 
 .swiper-slide-prev {
-  transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s;
+  transition: all 2s ease-in-out;
+  -moz-transition: all 2s ease-in-out;
+  -webkit-transition: all 2s ease-in-out;
   -webkit-transform: scale(0.6,0.6);
   -moz-transform: scale(0.6,0.6);
   transform: scale(0.6,0.6);
@@ -569,9 +527,9 @@ export default {
   z-index: 2;
 }
 .swiper-slide-next {
-  transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s;
+  transition: all 2s ease-in-out;
+  -moz-transition: all 2s ease-in-out;
+  -webkit-transition: all 2s ease-in-out;
   -webkit-transform: scale(0.6,0.6);
   -moz-transform: scale(0.6,0.6);
   transform: scale(0.6,0.6);
@@ -592,12 +550,13 @@ export default {
   z-index: 2;
 }
 .swiper-slide-active {
-  transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
-  -webkit-transform: scale(.9,.9);
-  -moz-transform: scale(.9,.9);
-  transform: scale(.9,.9);
+  // transition: transform .5s ease-in-out;
+  transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -webkit-transition: all 1s ease-in-out;
+  -webkit-transform: scale(1,1);
+  -moz-transform: scale(1,1);
+  transform: scale(1,1);
   -webkit-overflow-scrolling:touch;
   box-shadow:0px 28px 20px -16px rgba(0,0,0,0.11);
 }

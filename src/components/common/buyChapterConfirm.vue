@@ -107,7 +107,10 @@ export default {
       await _this.getUnlockChapter(courseCode).then((res) => {
         _this.updateUnlockCourseList(res)
       })
-
+      let isKid = localStorage.getItem('isKid')
+      if (isKid === '1') {
+        bus.$emit('changeKidProChapter')
+      }
       // 更新用户金币信息
       await _this.getUserInfo()
 
