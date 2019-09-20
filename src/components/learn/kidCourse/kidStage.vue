@@ -38,7 +38,7 @@
         <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
     </div>
-    <div class="record-save-animat animated">
+    <div class="record-save-animat">
       <i ></i>
     </div>
   </div>
@@ -48,8 +48,8 @@
 import { mapActions } from 'vuex'
 import $ from 'jquery'
 import Swiper from 'swiper'
-import bus from '../../../bus'
 import 'swiper/dist/css/swiper.min.css'
+import bus from '../../../bus'
 import KidStageItem from './kidStageItem.vue'
 import Recorder from '../../../plugins/recorder'
 
@@ -87,25 +87,27 @@ export default {
         top: offset.top
       })
       $('.record-save-animat').show()
-      $('.record-save-animat').addClass('animated')
       let targetOffest = $('.animat-target-img').offset()
       console.log(targetOffest)
-      // $('.record-save-animat').stop().animate({
-      //   left: targetOffest.left,
-      //   top: targetOffest.top
-      // }, {
-      //   duration: 10000,
-      //   specialEasing: {
-      //     left: 'linear',
-      //     top: 'swing'
-      //   },
-      //   complete: () => {
-      //     $('.record-save-animat').hide()
-      //   }
-      // })
+      $('.record-save-animat').stop().animate({
+        left: targetOffest.left,
+        top: targetOffest.top
+      }, {
+        duration: 800,
+        specialEasing: {
+          left: 'linear',
+          top: 'swing'
+        },
+        complete: () => {
+          $('.record-save-animat').hide()
+        }
+      })
     })
   },
   mounted () {
+    this.$nextTick(() => {
+      // this.removeStyle()
+    })
     // 给页面绑定滑轮滚动事件
     if (document.addEventListener) { // firefox
       document.addEventListener('DOMMouseScroll', this.scrollFunc, false)
@@ -114,7 +116,6 @@ export default {
     window.onmousewheel = document.onmousewheel = this.scrollFunc
   },
   updated () {
-    this.resetStyle()
   },
   methods: {
     ...mapActions([
@@ -135,7 +136,8 @@ export default {
           break
       }
       console.log('kid stage list', this.list)
-      this.swiperInit()
+      await this.swiperInit()
+      await this.mySwiper.init()
     },
     async initRecordState () {
       let res = await this.getKidRecordState({chapter_code: this.code})
@@ -154,9 +156,10 @@ export default {
       console.log('kid record State', this.recordState)
     },
     swiperInit () {
+      let that = this
+      /* eslint-disable */
       this.$nextTick(() => {
-        /* eslint-disable */
-        this.mySwiper = new Swiper('.swiper-container', {
+        that.mySwiper = new Swiper('.swiper-container', {
           loop: false,
           autoplay: false, //自动轮播
           centeredSlides:true,
@@ -176,11 +179,6 @@ export default {
               //Swiper初始化了
               console.log('当前的slide序号是'+this.activeIndex);
               console.log($('#mother-sound0')[0])
-              // let audio = $('#mother-sound0')[0]
-              // document.addEventListener('canplay', () => { // 监听audio是否加载完毕，如果加载完毕，则读取audio播放时间
-              //   audio.play()
-              // })
-              // audio.play()
               let audio = document.getElementById('mother-sound' + this.activeIndex)
               audio.play()
               audio.onloadedmetadata = () => {
@@ -189,7 +187,6 @@ export default {
               audio.addEventListener('ended', () => {
                 audio.pause()
               }, false)
-              this.emit('transitionEnd');//在初始化时触发一次transitionEnd事件，需要先设置transitionEnd
             },
             slideChange: function () {
               console.log('slideChange', this.activeIndex)
@@ -201,8 +198,8 @@ export default {
           }
         })
         this.resetStyle()
-        /* eslint-enable */
       })
+      /* eslint-enable */
     },
     resetStyle () {
       $('#swiper-pagination').find('.swiper-pagination-bullet').css({
@@ -386,28 +383,9 @@ export default {
     }
   }
 }
-
-.kid-stage-container #swiper-pagination {
-  bottom: 0!important;
-}
-.kid-stage-container #swiper-pagination .my-bullet {
-  outline:none;
-  width: 20px!important;
-  height: 6px!important;
-  background: #D5DCDF!important;
-  border-radius: 5px!important;
-  transition: width 0.3s ease-in-out !important;
-  margin: 0 8px;
-}
-.kid-stage-container  #swiper-pagination .my-bullet.my-bullet-active {
-  width: 20px!important;
-  height: 6px!important;
-  background: #0581D1!important;
-  border-radius: 5px!important;
-}
 .record-save-animat {
   position: absolute;
-  // display: none;
+  display: none;
   z-index: 999999;
   i {
     display: inline-block;
@@ -416,20 +394,25 @@ export default {
     background: url('../../../../static/images/kidcontent/icon-record-list.png') no-repeat center;
     background-size: cover;
   }
-  &.animated {
-    animation: animX 3s 0.4s 1 linear, animY 3s 0.4s 1 cubic-bezier(.66,.1,1,.41);
-    // animation: run-right-right 3s 0.4s 1 linear, run-right-top 3s 0.4s 1 ease-out;
-    animation-fill-mode: forwards;
-  }
 }
-@keyframes animX{
-  0% {left: 0px;}
-  50%{left: 100px;}
-  100% {left: 300px;}
+</style>
+<style lang="css" scoped>
+.swiper-pagination {
+  bottom: 0!important;
 }
-@keyframes animY{
-  0% {top: 500px;}
-  50%{top: 300px;}
-  100% {top: 0px;}
+.swiper-pagination .swiper-pagination-bullet {
+  outline:none;
+  width: 20px!important;
+  height: 6px!important;
+  background: #D5DCDF!important;
+  border-radius: 5px!important;
+  transition: width 0.3s ease-in-out !important;
+  margin: 0 8px;
+}
+.swiper-pagination .swiper-pagination-bullet-active {
+  width: 20px!important;
+  height: 6px!important;
+  background: #0581D1!important;
+  border-radius: 5px!important;
 }
 </style>

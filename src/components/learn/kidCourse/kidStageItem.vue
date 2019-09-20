@@ -9,17 +9,17 @@
         <div class="no-record">
           <p class="text">{{item.content || item.word}}</p>
           <div class="start-button">
-            <i class="start-img" @click.stop.prevent="startRecord('mother-sound'+index)" v-if="!isRecord"></i>
+            <i class="start-img" :class="{'showStart': showStart}" @click.stop.prevent="startRecord('mother-sound'+index)" v-if="!isRecord"></i>
           </div>
         </div>
-        <div class="record-content"  v-show="isRecord">
+        <div class="record-content" :class="{'heightHide': heightHide}" v-show="isRecord">
           <p class="text text-small">{{item.content || item.word}}</p>
           <div class="recording-body-buttons">
             <i class="close-record" @click="closeRecord()"></i>
             <div class="recording-body-button">
               <div class="tip" v-if="recording"><i class="tip-img"></i></div>
               <div class="recording-button" @click.stop.prevent="recordStop()">
-                <i class="recording-img"></i>
+                <i class="recording-img" v-if="!heightHide"></i>
                 <i class="circle circle1" v-if="recording"></i>
                 <i class="circle circle2" v-if="recording"></i>
               </div>
@@ -59,6 +59,8 @@ export default {
   props: ['item', 'index', 'type', 'courseCode'],
   data () {
     return {
+      showStart: false,
+      heightHide: false,
       animat: false,
       recording: false,
       playing: false,
@@ -117,7 +119,7 @@ export default {
       this.isRecord = true
       setTimeout(() => {
         this.recording = true
-      }, 1000)
+      }, 500)
       // 开始检测录音音量
       Recorder.startRecording()
       // let _this = this
@@ -167,10 +169,9 @@ export default {
       let animatDiv = $('#animatButton')
       let offset = animatDiv.offset()
       let obj = {
-        left: offset.left + animatDiv.width() / 2,
-        top: offset.top + animatDiv.height() / 2
+        left: offset.left,
+        top: offset.top
       }
-      bus.$emit('animateRecord', obj)
       let _this = this
       // 上传七牛
       await _this.getUploadFileToken().then(res => {
@@ -199,12 +200,18 @@ export default {
               console.log('res', res)
               // 返回成功之后再处理 返回失败具体提示
               if (res.success) {
-                this.isRecord = false
+                this.heightHide = true
+                // this.isRecord = false
                 this.playing = false
                 this.animat = false
                 Recorder.stopRecording()
                 bus.$off('record_setVolume')
                 this.$emit('initRecordState')
+                bus.$emit('animateRecord', obj)
+                setTimeout(() => {
+                  this.isRecord = false
+                  this.heightHide = false
+                }, 500)
               }
             })
           }
@@ -213,12 +220,18 @@ export default {
       })
     },
     closeRecord () {
-      this.isRecord = false
+      this.heightHide = true
       this.playing = false
       this.animat = false
       this.recording = false
       Recorder.stopRecording()
       bus.$off('record_setVolume')
+      setTimeout(() => {
+        this.isRecord = false
+        this.heightHide = false
+        this.showStart = true
+      }, 500)
+      this.showStart = false
     },
     // 点击图片播放母语音频
     playMother (e) {
@@ -258,10 +271,11 @@ export default {
   .draw-desc {
     position: relative;
     .text {
-      font-size:20px;
-      font-weight:600;
+      font-size:16px;
+      font-weight:500;
+      font-family:PingFangSC;
       color:rgba(60,91,111,1);
-      line-height:28px;
+      line-height:22px;
       padding: 12px 50px 0px 18px;
     }
     .no-record {
@@ -269,13 +283,16 @@ export default {
         height: 50px;
         text-align: right;
         padding: 0 30px;
-        i {
+        .start-img {
           cursor: pointer;
           display: inline-block;
           width: 50px;
           height: 50px;
           background: url('../../../../static/images/kidcontent/icon-record.png') no-repeat center;
           background-size: cover;
+          &.showStart {
+            animation:fadenum 1.5s;
+          }
         }
       }
     }
@@ -292,7 +309,7 @@ export default {
       animation: heightShow .5s ease-in-out;
       .text-small {
         font-size: 14px;
-        padding: 10px ;
+        padding: 10px;
         line-height: 20px;
       }
       .recording-body-buttons {
@@ -306,8 +323,8 @@ export default {
           background: url('../../../../static/images/icon-cloce.png') no-repeat center;
           background-size: cover;
           position: absolute;
-          right: -6%;
-          top: -24%;
+          right: -8%;
+          top: -36%;
           z-index: 999;
         }
         .recording-body-button {
@@ -507,6 +524,9 @@ export default {
           }
         }
       }
+      &.heightHide {
+        animation:  heightHide .5s ease;
+      }
     }
   }
 }
@@ -518,39 +538,40 @@ export default {
     height: 160%;
   }
 }
-@keyframes leftClearR {
+@keyframes heightHide {
   0% {
-    opacity: 0;
-    -webkit-transform: translate(-20px, 0);
-    transform: stranslate(-20px, 0);
-  }
-  50% {
     opacity: 1;
-    -webkit-transform: translate(-60px, 0);
-    transform: stranslate(-60px, 0);
+    height: 160%;
   }
   100% {
-    opacity: 1;
-    -webkit-transform: translate(-90px,0);
-    transform: stranslate(-90px,0);
+    opacity: 0;
+    height: 90%;
+  }
+}
+
+@keyframes leftClearR {
+   from {
+    -webkit-transform: translate(0px, 0);
+    transform: stranslate(0px, 0);
+  }
+  to {
+    -webkit-transform: translate(-90px, 0);
+    transform: stranslate(-90px, 0);
   }
 }
 @keyframes rightSaveR {
-  0% {
-    opacity: 0;
-    -webkit-transform: translate(20px, 0);
-    transform: stranslate(20px, 0);
+  from {
+    -webkit-transform: translate(0px, 0);
+    transform: stranslate(0px, 0);
   }
-  50% {
-    opacity: 1;
-    -webkit-transform: translate(60px, 0);
-    transform: stranslate(60px, 0);
+  to {
+    -webkit-transform: translate(90px, 0);
+    transform: stranslate(90px, 0);
   }
-  100% {
-    opacity: 1;
-    -webkit-transform: translate(90px,0);
-    transform: stranslate(90px,0);
-  }
+}
+@keyframes fadenum {
+  from {opacity:0;}
+  to {opacity:1;}
 }
 
 // 录音动画

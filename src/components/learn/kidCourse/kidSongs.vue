@@ -2,7 +2,7 @@
    <div class="video-container">
     <div class="video-content" id="video-content">
       <div class="kid-video-box">
-        <video id="myVideo" @ended.native="end()" autoplay="autoplay" :src="currentVideo.sound"></video>
+        <video id="myVideo" @ended.native="end()" autoplay="autoplay" :src="currentVideo.sound + '&v=2'"></video>
         <div class="controls">
           <div id="voice-player-progress" class="progress" >
             <i class="progress-load" style="width: 0%;"></i>

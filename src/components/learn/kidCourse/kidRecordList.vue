@@ -144,10 +144,12 @@ export default {
         var mySwiper = new Swiper('.swiper-container', {
           loop: false,
           autoplay: false, //自动轮播
-          speed: 1000,
-          slidesPerView: "auto",
           centeredSlides:true,
-          mousewheel: true,
+          slidesPerView: 3,
+          spaceBetween: 30,
+          mousewheel: {
+            invert: true
+          },
           slideToClickedSlide: true,
           autoHeight : true,
           pagination: {
@@ -329,13 +331,17 @@ export default {
   .swiper-container {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .swiper-wrapper {
       width: 100%;
       height: 100%;
     }
     .mouse-text {
       text-align: center;
-      padding-top: 6%;
+      position: absolute;
+      bottom: 12%;
       span {
         font-size:18px;
         font-weight:500;
@@ -354,12 +360,29 @@ export default {
 }
 .swiper-slide {
  // width: 568px!important;
-  width: 36%!important;
-  // min-height: 358px!important;
-  // height: 21%!important;
+  // width: 36%!important;
+  // // min-height: 358px!important;
+  // // height: 21%!important;
+  // border-radius:4px;
+  // background: #fff;
+  // padding-bottom: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  transition: 300ms;
+  transform: scale(0.6);
   border-radius:4px;
-  background: #fff;
   padding-bottom: 20px;
+  background: #fff;
 }
 .swiper-slide .slide-content {
   width: 100%;
@@ -368,7 +391,7 @@ export default {
     // width: 568px;
     // height: 217px;
     width: 100%;
-    height: 176px !important;
+    height: 160px !important;
     border-radius: 4px 4px 0 0;
     img {
       width: 100%;
@@ -380,11 +403,11 @@ export default {
   .record-desc {
     position: relative;
     .text {
-      font-size:20px;
+      font-size:18px;
       font-weight:600;
       color:rgba(60,91,111,1);
-      line-height:28px;
-      padding: 22px 50px 0px 28px;
+      line-height:22px;
+      padding: 12px 50px 0px 18px;
     }
     .record-playVoice-button {
       width: 100%;
@@ -476,15 +499,8 @@ export default {
     }
   }
 }
-.swiper-slide-prev {
-  transition: all 2s ease;
-  -moz-transition: all 2s ease;
-  -webkit-transition: all 2s;
-  -webkit-transform: scale(0.7,0.7);
-  -moz-transform: scale(0.7,0.7);
-  transform: scale(0.7,0.7);
-  -webkit-overflow-scrolling:touch;
-  position: relative;
+.swiper-slide-active,.swiper-slide-duplicate-active{
+  transform: scale(1);
 }
 .swiper-slide-prev .slide-content::after {
   position:absolute;
@@ -498,17 +514,6 @@ export default {
   transition:all 1s ease;
   z-index: 2;
 }
-.swiper-slide-next {
-  transition: all 2s ease;
-  -moz-transition: all 2s ease;
-  -webkit-transition: all 2s;
-  -webkit-transform: scale(0.7,0.7);
-  -moz-transform: scale(0.7,0.7);
-  transform: scale(0.7,0.7);
-  -webkit-overflow-scrolling:touch;
-  position: relative;
-  z-index: 1;
-}
 .swiper-slide-next .slide-content::after {
   position:absolute;
   left: 0;
@@ -520,16 +525,6 @@ export default {
   content: attr(data-text);
   transition:all 1s ease;
   z-index: 2;
-}
-.swiper-slide-active {
-  transition: all 2s ease;
-  -moz-transition: all 2s ease;
-  -webkit-transition: all 2s ease;
-  -webkit-transform: scale(1,1);
-  -moz-transform: scale(1,1);
-  transform: scale(1,1);
-  -webkit-overflow-scrolling:touch;
-  box-shadow:0px 48px 37px -30px rgba(0,0,0,0.11);
 }
 .record-swiper #swiper-pagination {
   // bottom: 70px;
