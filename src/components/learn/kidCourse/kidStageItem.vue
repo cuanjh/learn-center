@@ -276,7 +276,7 @@ export default {
       font-family:PingFangSC;
       color:rgba(60,91,111,1);
       line-height:22px;
-      padding: 12px 50px 0px 18px;
+      padding: 12px 50px 6px 18px;
     }
     .no-record {
       .start-button {
