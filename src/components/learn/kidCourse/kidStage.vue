@@ -78,8 +78,6 @@ export default {
     }
   },
   created () {
-    this.initData()
-    this.initRecordState()
     Recorder.init()
     bus.$on('animateRecord', (offset) => {
       $('.record-save-animat').css({
@@ -105,9 +103,8 @@ export default {
     })
   },
   mounted () {
-    this.$nextTick(() => {
-      // this.removeStyle()
-    })
+    this.initData()
+    this.initRecordState()
     // 给页面绑定滑轮滚动事件
     if (document.addEventListener) { // firefox
       document.addEventListener('DOMMouseScroll', this.scrollFunc, false)
