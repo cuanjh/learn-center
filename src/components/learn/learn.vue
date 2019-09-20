@@ -174,11 +174,10 @@ export default {
       if (route.path.indexOf('/kid-stage') > -1 || route.path.indexOf('/kid-record-list') > -1) {
         $('.headerShow').hide()
         $('.learn-wrap').css('padding-top', '0px')
+      } else {
+        $('.headerShow').show()
+        $('.learn-wrap').css('padding-top', '62px')
       }
-      // else if (route.path.indexOf('/kid-course-list/') > -1) {
-      //   $('.headerShow').show()
-      //   $('.learn-wrap').css('padding-top', '62px')
-      // }
     }
   }
 }
