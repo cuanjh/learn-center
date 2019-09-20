@@ -1,7 +1,7 @@
 <template>
   <div class="learn-wrap">
     <!-- 头部 -->
-    <learn-header ref="header"></learn-header>
+    <learn-header ref="header" class="headerShow"></learn-header>
     <div class="learn-cover learn-all-hide-cover" v-show="coverShow" @click="coverHide"></div> <!-- 遮罩 -->
     <div class="learn-cover learn-all-hide-cover" v-show="anonymousCover"></div>
     <transition name="fade" mode="out-in">
@@ -171,6 +171,14 @@ export default {
       } else {
         this.isShow = false
       }
+      if (route.path.indexOf('/kid-stage') > -1 || route.path.indexOf('/kid-record-list') > -1) {
+        $('.headerShow').hide()
+        $('.learn-wrap').css('padding-top', '0px')
+      }
+      // else if (route.path.indexOf('/kid-course-list/') > -1) {
+      //   $('.headerShow').show()
+      //   $('.learn-wrap').css('padding-top', '62px')
+      // }
     }
   }
 }

@@ -27,11 +27,11 @@
       <div class="swiper-container">
         <div class="swiper-wrapper">
           <kid-stage-item  v-for="(item, index) in list"
-                           :key="index" :item="item"
-                           :index="index"
-                           :type="type"
-                           :courseCode="courseCode"
-                           @initRecordState="initState"/>
+                          :key="index" :item="item"
+                          :index="index"
+                          :type="type"
+                          :courseCode="courseCode"
+                          @initRecordState="initState"/>
         </div>
         <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
         <!-- 如果需要分页器 -->
@@ -103,8 +103,10 @@ export default {
     })
   },
   mounted () {
-    this.initData()
-    this.initRecordState()
+    setTimeout(() => {
+      this.initData()
+      this.initRecordState()
+    }, 300)
     // 给页面绑定滑轮滚动事件
     if (document.addEventListener) { // firefox
       document.addEventListener('DOMMouseScroll', this.scrollFunc, false)
@@ -159,6 +161,7 @@ export default {
         that.mySwiper = new Swiper('.swiper-container', {
           loop: false,
           autoplay: false, //自动轮播
+          initialSlide: 0,
           centeredSlides:true,
           slidesPerView: 3,
           spaceBetween: 30,
@@ -316,6 +319,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    animation:  fadeUpDown 3s ease;
     .blue-img {
       display: inline-block;
       width: 180px;
@@ -329,6 +333,29 @@ export default {
       font-weight:600;
       color:rgba(255,255,255,1);
     }
+  }
+}
+ @keyframes fadeUpDown {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  17% {
+    transform: translate(0px, -10px);
+  }
+  34% {
+    transform: translate(0px, 0px);
+  }
+  51% {
+    transform: translate(0px, -10px);
+  }
+  68% {
+    transform: translate(0px, 0px);
+  }
+  85% {
+    transform: translate(0px, -10px);
+  }
+  100%{
+    transform: translate(0px, 0px);
   }
 }
 .kid-stage-container {
@@ -365,15 +392,15 @@ export default {
       position: absolute;
       bottom: 12%;
       span {
-        font-size:18px;
+        font-size:14px;
         font-weight:500;
         color:rgba(74,74,74,1);
-        line-height: 36px;
+        line-height: 30px;
       }
       i {
         display: inline-block;
-        width: 26px;
-        height: 36px;
+        width: 20px;
+        height: 30px;
         background: url('../../../../static/images/kidcontent/icon-mouse-img.png') no-repeat center;
         background-size: cover;
       }

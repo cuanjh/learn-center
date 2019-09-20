@@ -136,6 +136,24 @@ export default[
         component: kidCourseList
       },
       {
+        path: 'kid-stage',
+        name: 'kidStage',
+        component: kidStage,
+        props: (route) => ({
+          code: route.query.code,
+          type: route.query.type
+        })
+      },
+      {
+        path: 'kid-record-list',
+        name: 'kidRecordList',
+        component: kidRecordList,
+        props: (route) => ({
+          code: route.query.code,
+          type: route.query.type
+        })
+      },
+      {
         path: 'index',
         name: 'learnIndex',
         component: learnIndex
@@ -314,23 +332,23 @@ export default[
       }
     ]
   },
-  {
-    path: '/kid-stage',
-    component: kidStage,
-    props: (route) => ({
-      code: route.query.code,
-      type: route.query.type
-    })
-  },
-  {
-    path: '/kid-record-list',
-    name: 'kidRecordList',
-    component: kidRecordList,
-    props: (route) => ({
-      code: route.query.code,
-      type: route.query.type
-    })
-  },
+  // {
+  //   path: '/kid-stage',
+  //   component: kidStage,
+  //   props: (route) => ({
+  //     code: route.query.code,
+  //     type: route.query.type
+  //   })
+  // },
+  // {
+  //   path: '/kid-record-list',
+  //   name: 'kidRecordList',
+  //   component: kidRecordList,
+  //   props: (route) => ({
+  //     code: route.query.code,
+  //     type: route.query.type
+  //   })
+  // },
   {
     path: '/learn',
     component: learnSystem,

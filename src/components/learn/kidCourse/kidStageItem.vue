@@ -13,13 +13,14 @@
           </div>
         </div>
         <div class="record-content" :class="{'heightHide': heightHide}" v-show="isRecord">
-          <p class="text text-small">{{item.content || item.word}}</p>
-          <div class="recording-body-buttons">
+          <p class="text text-small">{{item.content || item.word}}
             <i class="close-record" @click="closeRecord()"></i>
+          </p>
+          <div class="recording-body-buttons">
             <div class="recording-body-button">
               <div class="tip" v-if="recording"><i class="tip-img"></i></div>
               <div class="recording-button" @click.stop.prevent="recordStop()">
-                <i class="recording-img" v-if="!heightHide"></i>
+                <i class="recording-img" v-if="showRecordingImg"></i>
                 <i class="circle circle1" v-if="recording"></i>
                 <i class="circle circle2" v-if="recording"></i>
               </div>
@@ -59,6 +60,7 @@ export default {
   props: ['item', 'index', 'type', 'courseCode'],
   data () {
     return {
+      showRecordingImg: false,
       showStart: false,
       heightHide: false,
       animat: false,
@@ -118,8 +120,11 @@ export default {
       }
       this.isRecord = true
       setTimeout(() => {
+        this.showRecordingImg = true
+      }, 300)
+      setTimeout(() => {
         this.recording = true
-      }, 500)
+      }, 600)
       // 开始检测录音音量
       Recorder.startRecording()
       // let _this = this
@@ -134,6 +139,7 @@ export default {
       this.recording = false
       this.playing = true
       this.recordActivity = false
+      this.showRecordingImg = false
       this.startMySound()
     },
     // 是否可以录音
@@ -157,6 +163,7 @@ export default {
     },
     // 点击重新开始录音
     againRecord (e) {
+      this.showRecordingImg = true
       this.playing = false
       this.startRecord(e)
     },
@@ -224,13 +231,14 @@ export default {
       this.playing = false
       this.animat = false
       this.recording = false
+      this.showRecordingImg = false
       Recorder.stopRecording()
       bus.$off('record_setVolume')
       setTimeout(() => {
         this.isRecord = false
         this.heightHide = false
         this.showStart = true
-      }, 500)
+      }, 300)
       this.showStart = false
     },
     // 点击图片播放母语音频
@@ -291,7 +299,7 @@ export default {
           background: url('../../../../static/images/kidcontent/icon-record.png') no-repeat center;
           background-size: cover;
           &.showStart {
-            animation:fadenum 1.5s;
+            animation:fadenum .3s;
           }
         }
       }
@@ -309,24 +317,25 @@ export default {
       animation: heightShow .5s ease-in-out;
       .text-small {
         font-size: 14px;
-        padding: 10px;
+        padding: 10px 0;
         line-height: 20px;
+        position: relative;
+      }
+      .close-record {
+        display: inline-block;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        background: url('../../../../static/images/icon-cloce.png') no-repeat center;
+        background-size: cover;
+        position: absolute;
+        right: -18px;
+        top: 10px;
+        z-index: 999;
       }
       .recording-body-buttons {
         position: relative;
         flex: 1;
-        .close-record {
-          display: inline-block;
-          cursor: pointer;
-          width: 20px;
-          height: 20px;
-          background: url('../../../../static/images/icon-cloce.png') no-repeat center;
-          background-size: cover;
-          position: absolute;
-          right: -8%;
-          top: -36%;
-          z-index: 999;
-        }
         .recording-body-button {
           text-align: center;
           position: absolute;
@@ -342,6 +351,7 @@ export default {
             right: 0;
             bottom: 0;
             margin: auto;
+            animation:  fadeUpDown 3s ease;
             .tip-img {
               display: inline-block;
               width: 118px;
@@ -520,6 +530,8 @@ export default {
               position: absolute;
               top: -66px;
               left: -40px;
+              animation:  fadeUpDown 3s ease;
+              animation-delay:.5s;
             }
           }
         }
@@ -544,7 +556,7 @@ export default {
     height: 160%;
   }
   100% {
-    opacity: 0;
+    opacity: 1;
     height: 90%;
   }
 }
@@ -572,6 +584,30 @@ export default {
 @keyframes fadenum {
   from {opacity:0;}
   to {opacity:1;}
+}
+
+ @keyframes fadeUpDown {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  17% {
+    transform: translate(0px, -10px);
+  }
+  34% {
+    transform: translate(0px, 0px);
+  }
+  51% {
+    transform: translate(0px, -10px);
+  }
+  68% {
+    transform: translate(0px, 0px);
+  }
+  85% {
+    transform: translate(0px, -10px);
+  }
+  100%{
+    transform: translate(0px, 0px);
+  }
 }
 
 // 录音动画

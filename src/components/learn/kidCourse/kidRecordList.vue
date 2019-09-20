@@ -148,7 +148,7 @@ export default {
           slidesPerView: 3,
           spaceBetween: 30,
           mousewheel: {
-            invert: true
+            releaseOnEdges: true,
           },
           slideToClickedSlide: true,
           autoHeight : true,

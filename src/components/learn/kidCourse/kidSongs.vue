@@ -164,6 +164,8 @@ export default {
       }
       this.currentVideo = this.songs[this.curIndex]
       this.isPlay = !this.isPlay
+      this.video.pause()
+      this.video.currentTime = 0
       this.play()
       console.log(this.currentVideo)
     },

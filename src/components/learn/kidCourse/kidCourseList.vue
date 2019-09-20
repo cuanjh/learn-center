@@ -873,7 +873,7 @@ export default {
         Bus.$emit('showCommonModal', obj)
       } else {
         let code = item.code
-        this.$router.push({path: '/kid-stage', query: {code: code, type: type}})
+        this.$router.push({path: '/app/kid-stage', query: {code: code, type: type}})
       }
     },
     // 儿歌
