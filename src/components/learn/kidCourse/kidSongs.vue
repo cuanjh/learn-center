@@ -510,6 +510,7 @@ export default {
     background: url('../../../../static/images/icon-close-img.png') no-repeat center;
     background-size: cover;
     cursor: pointer;
+    z-index: 999;
     &:hover {
       background: url('../../../../static/images/icon-close-img-active.png') no-repeat center;
       background-size: cover;

@@ -217,7 +217,7 @@ export default {
       })
     },
     goKidRecordList (code, type) {
-      this.$router.push({path: '/kid-record-list', query: {code: code, type: type}})
+      this.$router.push({path: '/app/kid-record-list', query: {code: code, type: type}})
     },
     initState () {
       this.initRecordState()

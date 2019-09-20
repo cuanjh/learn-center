@@ -197,7 +197,7 @@ export default {
       /* eslint-enable */
     },
     goKidStage () {
-      this.$router.push({path: '/kid-stage', query: {code: this.code, type: this.type}})
+      this.$router.push({path: '/app/kid-stage', query: {code: this.code, type: this.type}})
     },
     // 播放录音
     playClik (e) {
