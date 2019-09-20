@@ -118,6 +118,7 @@ export default {
       this.recordLists = res.records
       console.log('kid record Lists', this.recordLists)
       await this.swiperInit()
+      await this.mySwiper.init()
       // 1. 当前学习的语言课程
       let userInfo = await this.getUserInfo()
       console.log(userInfo)
@@ -139,16 +140,17 @@ export default {
       this.resetStyle()
     },
     swiperInit () {
+      let that = this
+      /* eslint-disable */
       this.$nextTick(() => {
-        /* eslint-disable */
-        var mySwiper = new Swiper('.swiper-container', {
+        that.mySwiper = new Swiper('.swiper-container', {
           loop: false,
           autoplay: false, //自动轮播
           centeredSlides:true,
           slidesPerView: 3,
           spaceBetween: 30,
           mousewheel: {
-            invert: true
+            releaseOnEdges: true,
           },
           slideToClickedSlide: true,
           autoHeight : true,
@@ -191,8 +193,8 @@ export default {
             }
           }
         })
-        /* eslint-enable */
       })
+      /* eslint-enable */
     },
     goKidStage () {
       this.$router.push({path: '/kid-stage', query: {code: this.code, type: this.type}})
