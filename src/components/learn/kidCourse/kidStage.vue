@@ -163,7 +163,7 @@ export default {
           autoplay: false, //自动轮播
           initialSlide: 0,
           centeredSlides:true,
-          slidesPerView: 3,
+          slidesPerView: 'auto',
           spaceBetween: 30,
           mousewheel: {
             releaseOnEdges: true,

@@ -147,7 +147,7 @@ export default {
           loop: false,
           autoplay: false, //自动轮播
           centeredSlides:true,
-          slidesPerView: 3,
+          slidesPerView: 'auto',
           spaceBetween: 30,
           mousewheel: {
             releaseOnEdges: true,
@@ -362,7 +362,7 @@ export default {
 }
 .swiper-slide {
  // width: 568px!important;
-  // width: 36%!important;
+  width: 36%!important;
   // // min-height: 358px!important;
   // // height: 21%!important;
   // border-radius:4px;

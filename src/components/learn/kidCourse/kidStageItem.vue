@@ -256,7 +256,7 @@ export default {
 }
 .swiper-slide {
   // width: 568px!important;
-  // width: 36%!important;
+  width: 36%!important;
   // min-height: 358px!important;
   // height: 21%!important;
   border-radius:4px;
