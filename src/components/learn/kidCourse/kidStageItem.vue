@@ -13,12 +13,13 @@
           </div>
         </div>
         <div class="record-content" :class="{'heightHide': heightHide}" v-show="isRecord">
-          <p class="text text-small">{{item.content || item.word}}
+          <p class="text text-small">
+            <span>{{item.content || item.word}}</span>
             <i class="close-record" @click="closeRecord()"></i>
           </p>
           <div class="recording-body-buttons">
             <div class="recording-body-button">
-              <div class="tip" v-if="recording"><i class="tip-img"></i></div>
+              <div class="tip" v-if="recording&&showTipsStop == 1"><i class="tip-img"></i></div>
               <div class="recording-button" @click.stop.prevent="recordStop()">
                 <i class="recording-img" v-if="showRecordingImg"></i>
                 <i class="circle circle1" v-if="recording"></i>
@@ -39,8 +40,8 @@
                 </i>
               </div>
               <div class="record-saveVoice-button" @click.stop.prevent="saveVoice(item)">
-                <i></i>
-                <i class="icon-save"></i>
+                <i ></i>
+                <i class="icon-save" v-if="showTipSave == 1"></i>
               </div>
             </div>
           </div>
@@ -57,9 +58,10 @@ import Recorder from '../../../plugins/recorder'
 import Cookie from '../../../tool/cookie.js'
 
 export default {
-  props: ['item', 'index', 'type', 'courseCode'],
+  props: ['item', 'index', 'type', 'courseCode', 'showTipsStop', 'showTipSave'],
   data () {
     return {
+      // showTipsStop: true, // 显示停止路由提示
       showRecordingImg: false,
       showStart: false,
       heightHide: false,
@@ -140,6 +142,7 @@ export default {
       this.playing = true
       this.recordActivity = false
       this.showRecordingImg = false
+      this.$emit('updateTipStop')
       this.startMySound()
     },
     // 是否可以录音
@@ -171,7 +174,7 @@ export default {
     async saveVoice (card) {
       console.log(card, this.courseCode)
       let code = card.code
-      let content = card.content
+      let content = card.content ? card.content : card.word
       console.log('code,content', code, content)
       let animatDiv = $('#animatButton')
       let offset = animatDiv.offset()
@@ -179,6 +182,7 @@ export default {
         left: offset.left,
         top: offset.top
       }
+      this.$emit('updateTipSave')
       let _this = this
       // 上传七牛
       await _this.getUploadFileToken().then(res => {
@@ -207,6 +211,8 @@ export default {
               console.log('res', res)
               // 返回成功之后再处理 返回失败具体提示
               if (res.success) {
+                console.log(obj)
+                bus.$emit('animateRecord', obj)
                 this.heightHide = true
                 // this.isRecord = false
                 this.playing = false
@@ -214,7 +220,6 @@ export default {
                 Recorder.stopRecording()
                 bus.$off('record_setVolume')
                 this.$emit('initRecordState')
-                bus.$emit('animateRecord', obj)
                 setTimeout(() => {
                   this.isRecord = false
                   this.heightHide = false
@@ -320,6 +325,10 @@ export default {
         padding: 10px 0;
         line-height: 20px;
         position: relative;
+        span {
+          display: inline-block;
+          max-width: 90%;
+        }
       }
       .close-record {
         display: inline-block;
@@ -351,7 +360,7 @@ export default {
             right: 0;
             bottom: 0;
             margin: auto;
-            animation:  fadeUpDown 3s ease;
+            animation:  fadeUpDown 2s ease;
             .tip-img {
               display: inline-block;
               width: 118px;
@@ -530,7 +539,7 @@ export default {
               position: absolute;
               top: -66px;
               left: -40px;
-              animation:  fadeUpDown 3s ease;
+              animation:  fadeUpDown 2s ease;
               animation-delay:.5s;
             }
           }
@@ -590,22 +599,16 @@ export default {
   0% {
     transform: translate(0px, 0px);
   }
-  17% {
+  25% {
     transform: translate(0px, -10px);
   }
-  34% {
+  50% {
     transform: translate(0px, 0px);
   }
-  51% {
+  75% {
     transform: translate(0px, -10px);
   }
-  68% {
-    transform: translate(0px, 0px);
-  }
-  85% {
-    transform: translate(0px, -10px);
-  }
-  100%{
+  100% {
     transform: translate(0px, 0px);
   }
 }

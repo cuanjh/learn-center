@@ -11,11 +11,12 @@
         </div>
       </header>
     </div>
-    <div class="record-lists" @click="goKidRecordList(code, type)">
-      <div class="record-lists-content" v-if="recordState>0">
-        <div class="num-content">
+    <div class="record-lists" >
+      <i class="icon-img animat-target-img" v-if="recordState==0"></i>
+      <div class="record-lists-content" @click="goKidRecordList(code, type)" v-if="recordState>0">
+        <div class="num-content" >
           <i class="icon-img animat-target-img"></i>
-          <div class="tip-blue">
+          <div class="tip-blue" @click="goKidRecordList(code, type)">
             <i class="blue-img"></i>
             <span>我的{{type=='draw'?'绘本':'单词'}}录音</span>
           </div>
@@ -31,7 +32,11 @@
                           :index="index"
                           :type="type"
                           :courseCode="courseCode"
-                          @initRecordState="initState"/>
+                          :showTipsStop="showTipsStop"
+                          :showTipSave="showTipSave"
+                          @initRecordState="initState"
+                          @updateTipStop="updateTipStop"
+                          @updateTipSave="updateTipSave"/>
         </div>
         <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
         <!-- 如果需要分页器 -->
@@ -57,6 +62,8 @@ export default {
   props: ['code', 'type'],
   data () {
     return {
+      showTipsStop: 1,
+      showTipSave: 1,
       showMose: true,
       list: [],
       recordState: null,
@@ -80,6 +87,7 @@ export default {
   created () {
     Recorder.init()
     bus.$on('animateRecord', (offset) => {
+      console.log('offset-->', offset)
       $('.record-save-animat').css({
         left: offset.left,
         top: offset.top
@@ -222,6 +230,15 @@ export default {
     initState () {
       this.initRecordState()
     },
+    // 更新值
+    updateTipStop (e) {
+      console.log(e)
+      this.showTipsStop = e
+    },
+    updateTipSave (e) {
+      console.log(e)
+      this.showTipSave = e
+    },
     scrollFunc (e) {
       e = e || window.event
       if (e.wheelDelta) { // 判断浏览器IE，谷歌滑轮事件
@@ -286,6 +303,14 @@ export default {
   text-align: right;
   box-sizing: border-box;
   min-height: 50px;
+  .animat-target-img {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background: url('../../../../static/images/kidcontent/icon-record-list.png') no-repeat center;
+    background-size: cover;
+    opacity: 0;
+  }
   .record-lists-content{
     display: inline-block;
     position: relative;
@@ -304,26 +329,29 @@ export default {
   .num-content {
     position: relative;
     text-align: center;
-    .icon-img {
+    .animat-target-img {
       display: inline-block;
       width: 50px;
       height: 50px;
       background: url('../../../../static/images/kidcontent/icon-record-list.png') no-repeat center;
       background-size: cover;
+      opacity: 1;
     }
   }
   .tip-blue {
     position: absolute;
-    top: 39px;
-    left: -62px;
+    z-index: 999;
+    cursor: pointer;
+    top: 44px;
+    left: -32px;
     display: flex;
     justify-content: center;
     align-items: center;
-    animation:  fadeUpDown 3s ease;
+    animation:  fadeUpDown 2s ease;
     .blue-img {
       display: inline-block;
-      width: 180px;
-      height: 104px;
+      width: 118px;
+      height: 70px;
       background: url('../../../../static/images/kidcontent/pic-blue-record-list.png') no-repeat center;
       background-size: cover;
     }
@@ -339,19 +367,13 @@ export default {
   0% {
     transform: translate(0px, 0px);
   }
-  17% {
+  25% {
     transform: translate(0px, -10px);
   }
-  34% {
+  50% {
     transform: translate(0px, 0px);
   }
-  51% {
-    transform: translate(0px, -10px);
-  }
-  68% {
-    transform: translate(0px, 0px);
-  }
-  85% {
+  75% {
     transform: translate(0px, -10px);
   }
   100%{
@@ -374,7 +396,6 @@ export default {
   // background: #0581D1;
   box-sizing: border-box;
   position: relative;
-  z-index: 999999;
   .swiper-container {
     width: 100%;
     // min-height: 500px;

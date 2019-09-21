@@ -16,7 +16,10 @@
     <div class="record-lists">
       <div class="top-contant">
         <h1 >我的{{type=='draw'?'绘本':'单词'}}录音</h1>
-        <share-box class="this-share-box" :type="recordType" />
+        <div class="share-record">
+          <span>分享到：</span>
+          <share-box class="this-share-box" :type="recordType" />
+        </div>
         <!-- <button class="share" @click="shareRecord()">分享</button> -->
       </div>
       <div class="record-swiper">
@@ -174,6 +177,7 @@ export default {
               }
               audio.addEventListener('ended', () => {
                 $('#loading' + this.activeIndex).removeClass('loading')
+                that.mySwiper.slideNext()
               }, false)
               this.emit('transitionEnd');//在初始化时触发一次transitionEnd事件，需要先设置transitionEnd
             },
@@ -189,6 +193,7 @@ export default {
               let audio = document.getElementById('record-sound' + this.activeIndex)
               audio.addEventListener('ended', () => {
                 $('#loading' + this.activeIndex).removeClass('loading')
+                that.mySwiper.slideNext()
               }, false)
             }
           }
@@ -213,6 +218,7 @@ export default {
     },
     audioEnd () {
       $('.play-box i').removeClass('loading')
+      this.mySwiper.slideNext()
     },
     // 播放母语
     // 点击图片播放母语音频
@@ -314,13 +320,21 @@ export default {
     align-items: center;
     position: relative;
     h1 {
-      font-size:36px;
+      font-size:30px;
       font-weight:600;
       color:rgba(60,91,111,1);
     }
-    .this-share-box {
+    .share-record {
+      display: flex;
       position: absolute;
       right: 7%;
+      span {
+        font-size: 14px;
+        font-weight: 500;
+        color: #4a4a4a;
+        line-height: 30px;
+        padding-right: 6px;
+      }
     }
   }
 }
@@ -345,15 +359,15 @@ export default {
       position: absolute;
       bottom: 12%;
       span {
-        font-size:18px;
-        font-weight:500;
-        color:rgba(74,74,74,1);
-        line-height: 36px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #4a4a4a;
+        line-height: 30px;
       }
       i {
         display: inline-block;
-        width: 26px;
-        height: 36px;
+        width: 20px;
+        height: 30px;
         background: url('../../../../static/images/kidcontent/icon-mouse-img.png') no-repeat center;
         background-size: cover;
       }
