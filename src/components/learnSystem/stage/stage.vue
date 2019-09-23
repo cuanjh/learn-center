@@ -99,11 +99,12 @@ export default {
     if (to.name === 'stage') {
       let isAnonymous = Cookie.getCookie('is_anonymous') === 'true'
       console.log('isAnonymous--->', isAnonymous)
-      if (isAnonymous) {
-        this.initAnonymousData()
-      } else {
-        this.initData()
-      }
+      this.initData()
+      // if (isAnonymous) {
+      //   this.initAnonymousData()
+      // } else {
+      //   this.initData()
+      // }
       // let id = to.params.id
       // if (id.indexOf('A0') > -1) {
       //   this.updateCurCoreParts(id)
