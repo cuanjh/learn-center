@@ -392,11 +392,12 @@ export default {
   mounted () {
     let isAnonymous = Cookie.getCookie('is_anonymous') === 'true'
     console.log('isAnonymous--->', isAnonymous)
-    if (isAnonymous) {
-      this.initAnonymousData()
-    } else {
-      this.initData()
-    }
+    this.initData()
+    // if (isAnonymous) {
+    //   this.initAnonymousData()
+    // } else {
+    //   this.initData()
+    // }
     // 弹出提示
 
     this.$nextTick(() => {
