@@ -1,6 +1,6 @@
 /* eslint-disable */
 import common from './common'
-import Cookie from 'js-cookie'
+import Cookie from '../tool/cookie'
 
 
 var Loader = function (array, loader) {
@@ -18,7 +18,7 @@ function perLoad(data, cb) {
   var loadObject;
 
   // 保证测评和学习系统公用loader
-  var assetsApi = Cookie.get('assetsApi')
+  var assetsApi = Cookie.getCookie('assetsApi')
   if (data.url && !(data.url.indexOf('http') > -1)) {
     data.url = assetsApi + data.url;
   }

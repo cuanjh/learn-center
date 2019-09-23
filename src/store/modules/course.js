@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 
 import _ from 'lodash'
-import Cookie from 'js-cookie'
+import Cookie from '../../tool/cookie'
 
 import { httpLogin, httpAssets, httpNoLogin } from '../../api/api'
 import config from '../../api/config'
@@ -441,7 +441,7 @@ const mutations = {
     let curChapterCode = state.learnInfo.current_chapter_code
     state.curLevel = curChapterCode.split('-')[2]
     state.assetsUrl = data.info.courseBaseInfo.content_config.assets_url
-    Cookie.set('assetsApi', state.assetsUrl)
+    Cookie.setCookie('assetsApi', state.assetsUrl)
     state.contentUrl = state.courseBaseInfo.content_config.content_url
     state.currentChapterCode = curChapterCode
     localStorage.setItem('currentChapterCode', state.currentChapterCode)
