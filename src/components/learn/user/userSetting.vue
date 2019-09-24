@@ -216,9 +216,6 @@ export default {
     Bus.$on('settingUpdate', (type) => {
       this.unbindEmitMethod(type)
     })
-    Bus.$on('loadDataUsr', () => {
-      this.loadData()
-    })
   },
   mounted () {
     this.$parent.$emit('activeNavUserItem', 'setting')

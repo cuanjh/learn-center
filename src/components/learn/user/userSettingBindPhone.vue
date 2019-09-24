@@ -102,7 +102,6 @@ export default {
           _this.alertMessageError('恭喜你，绑定手机号成功')
           _this.verificationCode = ''
           // _this.$parent.loadData()
-          cookie.delCookie('is_anonymous')
           cookie.setCookie('is_anonymous', false)
           _this.updateIsAnonymous(false)
           _this.$router.push({ path: '/app/index' })

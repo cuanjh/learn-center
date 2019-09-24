@@ -244,24 +244,7 @@ export default {
     // 开始学习
     async startLearn () {
       console.log(this.miniCode)
-      // this.$router.push({path: '/app/kid-course-list/' + this.miniCode})
-      // this.$router.push({path: '/app/index'})
-      let arr = this.miniCode.split('-')
-      let courseCode = (arr.length > 1) ? this.miniCode : this.miniCode.toUpperCase()
-      // Bus.$emit('loadIndexCourse', courseCode)
-      // setTimeout(() => {
-      //   this.$router.push({path: '/app/index'})
-      // }, 1000)
-      let res1 = await this.getLearnInfoV5({course_code: courseCode})
-      console.log(res1)
-      let curChapterCode = res1.info.learnConfig.current_chapter_code
-      let res2 = await this.setKidCurrentChapter({chapter_code: curChapterCode})
-      if (res2.success) {
-        Bus.$emit('loadIndexCourse', courseCode)
-        setTimeout(() => {
-          this.$router.push({path: '/app/index'})
-        }, 1000)
-      }
+      this.$router.push({path: '/app/kid-course-list/' + this.miniCode})
     },
     subscribeCourse () {
       if (!this.userId) {

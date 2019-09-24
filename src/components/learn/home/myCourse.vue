@@ -292,6 +292,7 @@ export default {
           let curLevel = this.catalogs.find(item => {
             return item.code === curLevelCode
           })
+          console.log(curLevel.levelNameDes)
           this.kidLevelName = curLevel.levelNameDes[this.$i18n.locale]
           this.kidChapterInfo = curLevel.chapters.find(item => {
             return item.code === curChapterCode

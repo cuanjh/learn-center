@@ -94,7 +94,7 @@
               <div class="user-control-sel" style="display:none">
                 <ul>
                   <!-- <li>置顶</li> -->
-                  <li @click="deleteCourse(item.code)">
+                  <li @click="deleteKidCourse(item.code)">
                     <a>取消订阅</a>
                   </li>
                 </ul>
@@ -218,7 +218,7 @@ export default {
     this.$parent.$emit('navItem', 'user')
     this.getLearnCourses()
     this.initData()
-    this.imitKidData()
+    this.initKidData()
   },
   computed: {
     ...mapState({
@@ -259,8 +259,16 @@ export default {
       this.selTab = flag
     },
     deleteCourse (code) {
+      console.log(code)
       this.getDeletePurchase(code).then(() => {
         this.initData()
+      })
+    },
+    deleteKidCourse (code) {
+      console.log(code)
+      this.getDeletePurchase(code).then(() => {
+        this.langKidCourse = []
+        this.initKidData()
       })
     },
     mouseoverControl (e) {
@@ -290,7 +298,7 @@ export default {
         }
       })
     },
-    imitKidData () {
+    initKidData () {
       this.getSubCourses().then(res => {
         console.log('新的课程列表返回===>', res)
         if (res.success) {
