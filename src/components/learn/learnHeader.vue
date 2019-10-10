@@ -724,6 +724,8 @@ export default {
   width: 4px;
   background-color: #fff;
   position: absolute;
+  bottom: -20%;
+  left: 6%;
   margin-left: 215px;
   margin-top: 4px;
   border-radius: 50%;

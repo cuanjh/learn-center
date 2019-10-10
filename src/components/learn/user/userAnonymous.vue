@@ -17,10 +17,12 @@
                     id="phoneNumber"
                     readonly="readonly"
                     @focus="onFocus()"
+                    @blur="phoneBlur()"
                     v-model="phone"
-                    autocomplete="off">
+                    autocomplete="off"
+                    maxlength="11">
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show="!phone">
+          <div class='learn-setting-error-tips-settingpage' v-show="!phoneNumberValidator&&phoneError">
             <i></i><em>请输入正确的手机号</em>
           </div>
           <div class="user-bind-content" :class="{'error':false}">
@@ -49,10 +51,11 @@
                     id="emailNumber"
                     readonly="readonly"
                     @focus="onFocus()"
+                    @blur="emailBlur()"
                     v-model="email"
                     autocomplete="off">
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show='!email'>
+          <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator&&emailError'>
             <i></i><em>请输入正确的邮箱账号</em>
           </div>
           <div class="user-bind-content learn-bind-psd" :class="{'error':false}">
@@ -103,6 +106,8 @@ import SettingBindPhone from './userSettingBindPhone.vue'
 export default {
   data () {
     return {
+      phoneError: false,
+      emailError: false,
       activeTab: true,
       phone: '',
       notice: false,
@@ -137,7 +142,13 @@ export default {
     ...mapState({
       userInfo: state => state.userInfo,
       alertType: state => state.user.alertType
-    })
+    }),
+    phoneNumberValidator () {
+      return /^1(3|4|5|6|7|8)\d{9}$/.test(this.phone)
+    },
+    mailValidator () {
+      return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.email)
+    }
   },
   methods: {
     ...mapMutations({
@@ -155,6 +166,18 @@ export default {
     }),
     onFocus () {
       $('#phoneNumber,#phonePwd,#emailNumber,#emailPwd').removeAttr('readOnly')
+      this.phoneError = false
+      this.emailError = false
+    },
+    phoneBlur () {
+      if (!this.phoneNumberValidator && this.phone) {
+        this.phoneError = true
+      }
+    },
+    emailBlur () {
+      if (!this.mailValidator && this.email) {
+        this.emailError = true
+      }
     },
     // 提示用户的信息不完整
     alertMessageNotBox (msg, icon) {
@@ -218,6 +241,7 @@ export default {
         console.log('res', res)
         if (res.exists) { // 存在
           this.phone = ''
+          this.newPsw = ''
           this.alertMessageNotBox('手机号已经存在！')
         } else { // 不存在
           Bus.$emit('showBindPhone', phone)

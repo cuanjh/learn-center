@@ -7,8 +7,17 @@ const vertifyEmail = (mail, password) => {
     return false
   }
 }
+const phoneNumber = (number) => {
+  var myreg = /^((1[3-9]{1})+\d{9})$/
+  console.log(myreg.test(number))
+  if (!myreg.test(number)) {
+    return false
+  } else {
+    return true
+  }
+}
 const vertifyPhone = (phone, password) => {
-  let regPhone = /^1(3|4|5|7|8)\d{9}$/
+  let regPhone = /^1(3|4|5|6|7|8)\d{9}$/
   let regPsw = /^(\w){6,15}$/
   if (regPhone.test(phone) && regPsw.test(password)) {
     return true
@@ -19,5 +28,6 @@ const vertifyPhone = (phone, password) => {
 
 export default {
   vertifyEmail,
-  vertifyPhone
+  vertifyPhone,
+  phoneNumber
 }
