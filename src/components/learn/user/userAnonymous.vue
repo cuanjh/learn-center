@@ -16,7 +16,7 @@
             <input  type="text" placeholder='请填写手机号' class='reg-input'
                     id="phoneNumber"
                     readonly="readonly"
-                    @focus="onFocus()"
+                    @focus="onFocusPhone()"
                     @blur="phoneBlur()"
                     v-model="phone"
                     autocomplete="off"
@@ -30,7 +30,7 @@
             <input  class='learn-bind-psd-input' type="password"
                     id="phonePwd"
                     readonly="readonly"
-                    @focus="onFocus()"
+                    @focus="onFocusPwd()"
                     placeholder='字母/数字/下划线 6-15位'
                     v-model="newPsw">
           </div>
@@ -50,7 +50,7 @@
             <input  type="text" placeholder='请填写邮箱账号' class='reg-input'
                     id="emailNumber"
                     readonly="readonly"
-                    @focus="onFocus()"
+                    @focus="onFocusEmail()"
                     @blur="emailBlur()"
                     v-model="email"
                     autocomplete="off">
@@ -63,7 +63,7 @@
             <input  class='learn-bind-psd-input' type="password"
                     id="emailPwd"
                     readonly="readonly"
-                    @focus="onFocus()"
+                    @focus="onFocusPwd()"
                     placeholder='字母/数字/下划线 6-15位'
                     v-model="newPsw2">
           </div>
@@ -164,12 +164,20 @@ export default {
       // resetAnonymous: 'user/resetAnonymous',
       anonymousUserBindEmail: 'anonymousUserBindEmail'
     }),
-    onFocus () {
+    onFocusPwd () {
+      $('#phoneNumber,#phonePwd,#emailNumber,#emailPwd').removeAttr('readOnly')
+    },
+    onFocusPhone () {
       $('#phoneNumber,#phonePwd,#emailNumber,#emailPwd').removeAttr('readOnly')
       this.phoneError = false
+    },
+    onFocusEmail () {
+      $('#phoneNumber,#phonePwd,#emailNumber,#emailPwd').removeAttr('readOnly')
       this.emailError = false
     },
     phoneBlur () {
+      console.log(this.phoneNumberValidator)
+      console.log(this.phone)
       if (!this.phoneNumberValidator && this.phone) {
         this.phoneError = true
       }
