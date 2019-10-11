@@ -64,6 +64,7 @@ export default {
     })
 
     this.$on('startInit', () => {
+      let that = this
       Sound.setSnd(this.sound.url)
       new DrawMask().disable()
       Sound.play(() => {
@@ -72,9 +73,9 @@ export default {
           this.finished = false
           this.$parent.$emit('next-component')
           setTimeout(() => {
-            this.showTip()
+            that.showTip()
             this.disabled = false
-          }, 4000)
+          }, 500)
         }, 1000)
       })
     })
@@ -82,7 +83,8 @@ export default {
   methods: {
     showTip () {
       let mask = new DrawMask()
-      let rightDom = $('.writewords')[0]
+      let rightDom = $('.writewords', $('.module-write'))[0]
+      console.log(rightDom)
       let { top, left, width, height } = rightDom.getClientRects()[0]
 
       mask.showRect({

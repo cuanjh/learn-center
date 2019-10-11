@@ -59,15 +59,15 @@ let resource = {
     {
       'form_show_type': 'fillGap',
       'sound': 'course/sounds/ENG/Basic/Level1/Unit1/Chapter1/A4/6-1.mp3',
-      'sentence': 'They are boys.',
-      'form_options': ['are', 'is'],
+      'sentence_show': 'They are boys.',
+      'options': ['are', 'is'],
       'image': 'course/images/common/Basic/Level1/Unit1/Chapter1/A4/6-1.webp'
     },
     {
       'form_show_type': 'fillGap',
       'sound': 'course/sounds/ENG/Basic/Level1/Unit1/Chapter1/A4/6-2.mp3',
-      'sentence': 'They are girls.',
-      'form_options': ['girls', 'girl'],
+      'sentence_show': 'They are girls.',
+      'options': ['girls', 'girl'],
       'image': 'course/images/common/Basic/Level1/Unit1/Chapter1/A4/6-2.webp'
     }
   ],

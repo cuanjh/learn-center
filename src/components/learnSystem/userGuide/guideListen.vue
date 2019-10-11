@@ -70,9 +70,9 @@ export default {
       Sound.setSnd(this.sound.url)
       Sound.play(() => {
         this.finished = false
+        this.$parent.$emit('next-component')
         new DrawMask().enable()
         setTimeout(() => {
-          this.$parent.$emit('next-component')
           setTimeout(() => {
             showTip.call(this)
             this.disabled = false
