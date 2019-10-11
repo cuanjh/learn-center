@@ -3,7 +3,7 @@
     <div class="img-wrap">
       <next-comp />
       <img :src="form.image" alt="">
-      <record-comp />
+      <record-comp ref="recordItem" :sentence="form.sentence" :code="form.code"/>
     </div>
     <div class="content">
       <span class="text">{{ form.sentence }}</span>
@@ -19,6 +19,11 @@ import nextComp from '../common/next'
 
 export default {
   props: ['form'],
+  data () {
+    return {
+      recordTime: 0 // 录音时间
+    }
+  },
   components: {
     TrumpetComp,
     RecordComp,
@@ -32,6 +37,7 @@ export default {
     this.$on('init', () => {
       console.log('repeatSpeak init')
       this.$refs['trumpet'].$emit('init')
+      this.$refs.recordItem.closeRecord()
     })
 
     this.$on('audioended', () => {

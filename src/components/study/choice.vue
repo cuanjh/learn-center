@@ -87,12 +87,22 @@ export default {
       let formObj = $('#form' + form.form_id)
       let offset = formObj.offset()
       let obj = {
-        left: offset.left + formObj.width() / 2,
-        top: offset.top + formObj.height() / 2
+        left1: offset.left + formObj.width() / 2,
+        top1: offset.top + formObj.height() / 2,
+        left2: offset.left + formObj.width() / 2 + 30,
+        top2: offset.top + formObj.height() / 2,
+        left3: offset.left + formObj.width() / 2 + 50,
+        top3: offset.top + formObj.height() / 2,
+        left4: offset.left + formObj.width() / 2,
+        top4: offset.top + formObj.height() / 2 + 20,
+        left5: offset.left + formObj.width() / 2 + 25,
+        top5: offset.top + formObj.height() / 2 + 20
       }
-      bus.$emit('animateGold', obj)
+      // bus.$emit('animateGold', obj)
       if (this.curForm.form_id === form.form_id) {
         formObj.addClass('correct')
+        bus.$emit('animateGold', obj)
+        bus.$emit('showCombo', obj)
         SoundManager.playSnd('correct', () => {
           formObj.removeClass('correct')
           this.curIndex++
@@ -112,6 +122,16 @@ export default {
         this.shake(form.form_id)
         SoundManager.playSnd('wrong', () => {
           formObj.removeClass('wrong')
+          if (this.curIndex !== this.slideForms.length) {
+            this.pos = common.randomItems(this.pos)
+            this.curForm = this.slideForms[this.curIndex]
+            setTimeout(() => {
+              this.$refs['trumpet'].$emit('init')
+            }, 100)
+          } else {
+            this.resetData()
+            this.$parent.$emit('nextSlide')
+          }
         })
       }
     })

@@ -84,6 +84,7 @@ export default {
         slidesPerView: 'auto',
         spaceBetween: 168,
         slidesOffsetBefore: 0,
+        slideToClickedSlide: true,
         simulateTouch: false,
         centeredSlides: true,
         grabCursor: true,

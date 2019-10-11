@@ -10,7 +10,20 @@
         />
       </div>
     </transition>
-    <div class="gold">
+    <div class="greenCombo"><h1>Good!</h1><p>Combo X 1</p></div>
+    <div class="gold gold1">
+      <i></i>
+    </div>
+    <div class="gold gold2">
+      <i></i>
+    </div>
+    <div class="gold gold3">
+      <i></i>
+    </div>
+    <div class="gold gold4">
+      <i></i>
+    </div>
+    <div class="gold gold5">
       <i></i>
     </div>
   </div>
@@ -84,11 +97,32 @@ export default {
     })
 
     bus.$on('animateGold', (offset) => {
-      $('.gold').css({
-        left: offset.left,
-        top: offset.top
+      console.log(offset)
+      $('.gold1').css({
+        left: offset.left1,
+        top: offset.top1
       })
-      $('.gold').show()
+      $('.gold2').css({
+        left: offset.left2,
+        top: offset.top2
+      })
+      $('.gold3').css({
+        left: offset.left3,
+        top: offset.top3
+      })
+      $('.gold4').css({
+        left: offset.left4,
+        top: offset.top4
+      })
+      $('.gold5').css({
+        left: offset.left5,
+        top: offset.top5
+      })
+      $('.gold1').show()
+      $('.gold2').show()
+      $('.gold3').show()
+      $('.gold4').show()
+      $('.gold5').show()
       let targetOffest = $('.gold-box').offset()
       console.log(targetOffest)
       // $('.gold').stop().animate({
@@ -96,20 +130,94 @@ export default {
       // }, 1000, 'linear').animate({
       //   top: targetOffest.top
       // }, 1000, 'swing')
-      $('.gold').stop().animate({
+      $('.gold1').stop().animate({
         left: targetOffest.left,
         top: targetOffest.top
       }, {
-        duration: 1000,
+        duration: 500,
         specialEasing: {
           left: 'linear',
           top: 'swing'
         },
         complete: () => {
           SoundManager.playSnd('gold')
-          $('.gold').hide()
+          $('.gold1').hide()
         }
       })
+      setTimeout(() => {
+        $('.gold2').stop().animate({
+          left: targetOffest.left,
+          top: targetOffest.top
+        }, {
+          duration: 600,
+          specialEasing: {
+            left: 'swing',
+            top: 'linear'
+          },
+          complete: () => {
+            SoundManager.playSnd('gold')
+            $('.gold2').hide()
+          }
+        })
+      }, 200)
+      setTimeout(() => {
+        $('.gold3').stop().animate({
+          left: targetOffest.left,
+          top: targetOffest.top
+        }, {
+          duration: 700,
+          specialEasing: {
+            left: 'linear',
+            top: 'swing'
+          },
+          complete: () => {
+            SoundManager.playSnd('gold')
+            $('.gold3').hide()
+          }
+        })
+      }, 300)
+      setTimeout(() => {
+        $('.gold4').stop().animate({
+          left: targetOffest.left,
+          top: targetOffest.top
+        }, {
+          duration: 800,
+          specialEasing: {
+            left: 'swing',
+            top: 'linear'
+          },
+          complete: () => {
+            SoundManager.playSnd('gold')
+            $('.gold4').hide()
+          }
+        })
+      }, 400)
+      setTimeout(() => {
+        $('.gold5').stop().animate({
+          left: targetOffest.left,
+          top: targetOffest.top
+        }, {
+          duration: 900,
+          specialEasing: {
+            left: 'linear',
+            top: 'swing'
+          },
+          complete: () => {
+            SoundManager.playSnd('gold')
+            $('.gold5').hide()
+          }
+        })
+      }, 500)
+    })
+    bus.$on('showCombo', (offset) => {
+      $('.greenCombo').css({
+        left: offset.left1 - 100,
+        top: offset.top1 - 30
+      })
+      $('.greenCombo').show()
+      setTimeout(() => {
+        $('.greenCombo').fadeOut()
+      }, 1500)
     })
   },
   mounted () {
@@ -362,13 +470,34 @@ export default {
 .gold {
   position: absolute;
   display: none;
+  z-index: 10;
   i {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     background-image: url('../../../static/images/study/icon-gold.svg');
     background-repeat: no-repeat;
     background-size: cover;
     display: inline-block;
+  }
+}
+.greenCombo {
+  position: absolute;
+  display: none;
+  width: 200px;
+  border-radius: 48px;
+  background: rgb(20, 235, 13);
+  text-align: center;
+  padding: 10px 0;
+  z-index: 1;
+  h1 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #fff;
+  }
+  p {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 600;
   }
 }
 </style>
