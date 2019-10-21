@@ -262,7 +262,7 @@ export default {
 .swiper-slide {
   // width: 568px!important;
   width: 36%!important;
-  height: 94%!important;
+  // height: 94%!important;
   // min-height: 358px!important;
   // height: 21%!important;
   border-radius:4px;
@@ -349,7 +349,7 @@ export default {
         .recording-body-button {
           text-align: center;
           position: absolute;
-          top: 50%;
+          top: 40%;
           left: 50%;
           transform: translate(-50%, -16%);
           .tip {
