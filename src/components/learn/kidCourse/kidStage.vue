@@ -26,7 +26,7 @@
     </div>
     <div class="kid-draws" id="swiper-kid">
       <div class="swiper-container">
-        <div class="swiper-wrapper">
+        <div class="swiper-wrapper" :class="{'draw': type == 'draw'}">
           <kid-stage-item  v-for="(item, index) in list"
                           :key="index" :item="item"
                           :index="index"
@@ -386,6 +386,7 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .kid-stage-container .kid-draws {
   width: 100%;
@@ -408,8 +409,14 @@ export default {
     .swiper-wrapper {
       width: 100%;
       height: 70%!important;
-      padding-top: 6%;
+      padding-top: 7%;
       // background: burlywood;
+    }
+    .draw {
+      width: 100%;
+      height: 64%!important;
+      padding-top: 8%;
+      // background: rgb(207, 124, 15);
     }
     .mouse-text {
       text-align: center;

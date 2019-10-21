@@ -24,7 +24,7 @@
       </div>
       <div class="record-swiper">
         <div class="swiper-container">
-          <div class="swiper-wrapper">
+          <div class="swiper-wrapper" :class="{'draw': type == 'draw'}">
             <div class="swiper-slide" v-for="(item, index) in recordLists" :key="index">
               <div class="slide-content">
                 <div class="record-img" @click="playMother('mother-sound'+index)">
@@ -350,9 +350,15 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    // background: pink;
     .swiper-wrapper {
       width: 100%;
-      height: 100%;
+      height: 86%!important;
+      // background: burlywood;
+    }
+    .draw {
+      width: 100%;
+      height: 76%!important;
     }
     .mouse-text {
       text-align: center;
@@ -377,11 +383,10 @@ export default {
 .swiper-slide {
  // width: 568px!important;
   width: 36%!important;
-  // // min-height: 358px!important;
-  // // height: 21%!important;
-  // border-radius:4px;
-  // background: #fff;
-  // padding-bottom: 20px;
+  height: 90%!important;
+  border-radius:4px;
+  background: #fff;
+  padding-bottom: 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -400,14 +405,16 @@ export default {
   padding-bottom: 20px;
   background: #fff;
 }
-.swiper-slide .slide-content {
+.slide-content {
   width: 100%;
   height: 100%;
+}
+.swiper-slide {
   .record-img {
     // width: 568px;
     // height: 217px;
     width: 100%;
-    height: 160px !important;
+    height: 70% !important;
     border-radius: 4px 4px 0 0;
     img {
       width: 100%;
@@ -512,6 +519,14 @@ export default {
           height: 8px;
         }
       }
+    }
+  }
+}
+.draw {
+  .swiper-slide {
+    .record-img {
+      width: 100%!important;
+      height: 60%!important;
     }
   }
 }

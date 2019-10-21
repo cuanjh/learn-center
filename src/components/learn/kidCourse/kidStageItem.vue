@@ -259,21 +259,17 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .swiper-slide {
   // width: 568px!important;
   width: 36%!important;
-  // height: 94%!important;
-  // min-height: 358px!important;
-  // height: 21%!important;
+  height: 90%!important;
   border-radius:4px;
   background: #fff;
   padding-bottom: 20px;
   .draw-img {
-    // width: 568px;
-    // width: 40%;
-    // height: 217px;
-    width: 100%;
-    height: 70% !important;
+    width: 100%!important;
+    height: 70%!important;
     border-radius: 4px 4px 0 0;
     .img-box {
       width: 100%;
@@ -549,6 +545,14 @@ export default {
       &.heightHide {
         animation:  heightHide .5s ease;
       }
+    }
+  }
+}
+.draw {
+  .swiper-slide {
+    .draw-img {
+      width: 100%!important;
+      height: 68%!important;
     }
   }
 }
