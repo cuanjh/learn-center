@@ -255,24 +255,25 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.swiper-slide .slide-content {
+.slide-content {
   width: 100%;
   height: 100%;
 }
 .swiper-slide {
   // width: 568px!important;
   width: 36%!important;
+  height: 94%!important;
   // min-height: 358px!important;
   // height: 21%!important;
   border-radius:4px;
-  padding-bottom: 20px;
   background: #fff;
+  padding-bottom: 20px;
   .draw-img {
     // width: 568px;
     // width: 40%;
     // height: 217px;
     width: 100%;
-    height: 170px !important;
+    height: 70% !important;
     border-radius: 4px 4px 0 0;
     .img-box {
       width: 100%;
@@ -665,8 +666,9 @@ export default {
   transition: 300ms;
   transform: scale(0.6);
 }
-.swiper-slide-active,.swiper-slide-duplicate-active{
+.swiper-slide-active,.swiper-slide-duplicate-active {
   transform: scale(1);
+  box-shadow:0px 48px 37px -30px rgba(0,0,0,0.11);
 }
 .swiper-slide-prev .slide-content::after {
   position:absolute;

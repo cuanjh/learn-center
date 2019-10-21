@@ -226,7 +226,9 @@
         </div>
       </div>
     </div>
-    <kid-songs v-show="showSongs" @closeModal="closeModal"/>
+    <transition name="fade" mode="out-in">
+      <kid-songs v-show="showSongs" @closeModal="closeModal"/>
+    </transition>
   </div>
 </template>
 
@@ -1862,13 +1864,20 @@ export default {
   animation: myfirst .1s reverse;
 }
 
-@keyframes myfirst
-{
+@keyframes myfirst {
   from {
     height: 0px;
   }
   to {
     height: 720px;
   }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0
 }
 </style>
