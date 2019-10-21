@@ -256,7 +256,7 @@ export default {
   // padding: 100px 130px;
   .video-content {
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 50%;
     background:rgba(255,255,255,1);
     border-radius:5px;
@@ -475,7 +475,7 @@ export default {
               color:rgba(155,155,155,1);
               span:nth-child(1) {
                 padding-bottom: 10px;
-                font-size: 20px;
+                font-size: 16px;
               }
             }
           }

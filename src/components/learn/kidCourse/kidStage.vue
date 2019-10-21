@@ -414,7 +414,7 @@ export default {
     }
     .draw {
       width: 100%;
-      height: 64%!important;
+      height: 66%!important;
       padding-top: 8%;
       // background: rgb(207, 124, 15);
     }

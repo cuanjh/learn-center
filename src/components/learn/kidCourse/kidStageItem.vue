@@ -552,7 +552,7 @@ export default {
   .swiper-slide {
     .draw-img {
       width: 100%!important;
-      height: 68%!important;
+      height: 64%!important;
     }
   }
 }

@@ -532,6 +532,7 @@ export default {
 }
 .swiper-slide-active,.swiper-slide-duplicate-active{
   transform: scale(1);
+  box-shadow:0px 48px 37px -30px rgba(0,0,0,0.11);
 }
 .swiper-slide-prev .slide-content::after {
   position:absolute;
