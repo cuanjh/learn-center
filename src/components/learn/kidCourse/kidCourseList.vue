@@ -897,6 +897,13 @@ export default {
     closeModal () {
       this.showSongs = false
       $('body').css('overflow', 'auto')
+    },
+    // 切换级别
+    selLevel (level) {
+      console.log(level)
+      this.curLevelCode = level.code
+      this.curLevelChapters = level.chapters
+      localStorage.setItem('curLevelChapters', JSON.stringify(this.curLevelChapters))
     }
   }
 }
