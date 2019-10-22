@@ -83,7 +83,7 @@
                 <span class="circle">{{item.num}}</span>
                 <div class="introduce">
                   <span class="li-title">{{item.title}}</span>
-                  <span class="dec">{{item.desc}}</span>
+                  <span class="dec" v-html="item.desc"></span>
                 </div>
                 <div class="img-box">
                   <img :class="'img' + item.num" :src="item.phtop" alt="">
@@ -159,7 +159,7 @@ export default {
         {
           num: 3,
           title: '专业化课程标准，可视化学习效果',
-          desc: '参照UNESCO WORLD ATLAS OF LANGUAGES·参照CEFR欧洲共同语言参考标准·运用权威蓝思分级阅读分级体系，结合中国儿童 实际阅读能力，进行有效的本土化定级调整。',
+          desc: '·参照UNESCO WORLD ATLAS OF LANGUAGES<br/>·参照CEFR欧洲共同语言参考标准<br/>·运用权威蓝思分级阅读分级体系，结合中国儿童 实际阅读能力，进行有效的本土化定级调整。',
           phtop: require('../../../../static/images/bookCase/mini/3.png')
         },
         {
