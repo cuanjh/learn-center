@@ -290,7 +290,7 @@ export default {
     this.$on('changeIsShow', (flag) => {
       this.isShow = flag
     })
-    this.$on('changeKidProChapter', () => {
+    Bus.$on('changeKidProChapter', () => {
       this.initProData()
     })
   },
@@ -765,13 +765,17 @@ export default {
           this.buyChapters += key + ','
         }
       })
+      if (this.curChapterCode.toLowerCase().indexOf('unit1-chapter1') > -1 && parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) {
+        Bus.$emit('showBuyChapterPanel', this.curChapterCode)
+        return false
+      }
       // 上个核心是否学完
       if (isUnlock) {
         let arr = this.curChapterCode.split('-')
         let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
         console.log(num)
         // 判断非会员是否购买了课程
-        if (num > 1 && parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) { // 没买
+        if (parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) { // 没买
           Bus.$emit('showBuyChapterPanel', this.curChapterCode)
           return false
         }

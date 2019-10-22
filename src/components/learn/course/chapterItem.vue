@@ -462,12 +462,13 @@ export default {
       updateHistoryCourseRecord: 'course/updateHistoryCourseRecord'
     }),
     jumpToCourse (chapterCode) {
+      console.log('chaptercode', chapterCode)
       let isAnonymous = cookie.getCookie('is_anonymous') === 'true'
       if (isAnonymous) {
         bus.$emit('showBindWin')
         return false
       }
-      if (this.unlockCourses.indexOf(chapterCode) === -1) {
+      if (this.unlockCourses.indexOf(chapterCode) === -1 && !(chapterCode.toLowerCase().indexOf('unit1-chapter1') > -1)) {
         this.tips = '完成上一课“核心课程”, <br>才能开启本课程！'
         bus.$emit('setContinueLearn', this.tips)
         return false
