@@ -11,7 +11,7 @@
           <div class="imgBox">
             <img :src="qnUrl(item.flag)" alt="">
           </div>
-          <p class="name"><span>{{ item.name }}</span></p>
+          <p class="name"><span>{{ item.name + 'Mini'}}</span></p>
         </li>
       </ul>
     </div>

@@ -266,7 +266,7 @@ export default {
     return {
       functionList: [
         {id: 1, title: '作业批改优先推送给母语使用者'},
-        {id: 2, title: '听力、口语、阅读、写作、语法、听说专享提升'},
+        {id: 2, title: '测试、听力、口语、阅读、写作、语法、听说专享提升'},
         {id: 3, title: '课程中心会员专区'},
         {id: 4, title: '支持移动端离线下载'},
         {id: 5, title: '语音评分'},

@@ -16,7 +16,7 @@
           <dt><img :src="kidCourseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
           <dd>
             <a :class="{'active': isShowSubscribeCourses}" @mouseenter="isShowSubscribeCourses = true">
-              <span>{{ kidCourseBaseInfo.name + 'Kid'}}</span>
+              <span>{{ kidCourseBaseInfo.name + 'Mini'}}</span>
               <div class="icon">
                 <i></i>
                 <transition name="fade">

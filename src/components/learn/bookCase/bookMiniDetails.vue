@@ -11,7 +11,7 @@
               </div>
               <div class="details-case">
                 <p>
-                  <span>{{ courseInfo.name }}</span>
+                  <span>{{ courseInfo.name + 'Mini'}}</span>
                 </p>
               </div>
             </div>
@@ -22,7 +22,7 @@
                     <div class="item">
                       <i class="language"></i>
                       <span>课时</span>
-                      <span class="fl" v-text="(courseInfo.chapter_num && courseInfo.chapter_num.length > 0) ? courseInfo.chapter_num.join('、') : '招募中'"></span>
+                      <span class="fl">{{ courseInfo.chapter_num }}课时</span>
                     </div>
                   </li>
                   <li>
@@ -159,13 +159,13 @@ export default {
         {
           num: 3,
           title: '专业化课程标准，可视化学习效果',
-          desc: '·参照UNESCO WORLD ATLAS OF LANGUAGES<br/>·参照CEFR欧洲共同语言参考标准<br/>·运用权威蓝思分级阅读分级体系，结合中国儿童 实际阅读能力，进行有效的本土化定级调整',
+          desc: '参照UNESCO WORLD ATLAS OF LANGUAGES·参照CEFR欧洲共同语言参考标准·运用权威蓝思分级阅读分级体系，结合中国儿童 实际阅读能力，进行有效的本土化定级调整。',
           phtop: require('../../../../static/images/bookCase/mini/3.png')
         },
         {
           num: 4,
           title: '秉承联合国教科文组织可持续发展终身优质教育的理念',
-          desc: '多年来，联合国教科文组织不断重申在学前儿童阶段推广以母语为基础的多语教育的重要性。全球说 Mini 多语课程在多语言课程体系与多元文化体验活动中把优质教育的培养落到每个孩子的成长中，借助语言的力量去探索无边的世界，把儿童培养成未来小公民',
+          desc: '多年来，联合国教科文组织不断重申在学前儿童阶段推广以母语为基础的多语教育的重要性。全球说 Mini 多语课程在多语言课程体系与多元文化体验活动中把优质教育的培养落到每个孩子的成长中，借助语言的力量去探索无边的世界，把儿童培养成未来小公民。',
           phtop: require('../../../../static/images/bookCase/mini/4.png')
         }
       ]
