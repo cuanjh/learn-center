@@ -18,7 +18,8 @@
                 </dt>
                 <dd>
                   <span class='mycourse-lang'>
-                    <a href="">{{ !course.name ? '' : course.name['zh-cn'] }}</a>
+                    <a href="" v-if="course.course_type == 3">{{ !course.name ? '' : course.name['zh-cn'] + 'Mini' }}</a>
+                    <a href="" v-else>{{ !course.name ? '' : course.name['zh-cn'] }}</a>
                   </span>
                 </dd>
               </dl>

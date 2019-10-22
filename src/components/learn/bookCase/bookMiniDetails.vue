@@ -11,7 +11,7 @@
               </div>
               <div class="details-case">
                 <p>
-                  <span>{{ courseInfo.name }}</span>
+                  <span>{{ courseInfo.name + 'Mini'}}</span>
                 </p>
               </div>
             </div>
@@ -22,7 +22,7 @@
                     <div class="item">
                       <i class="language"></i>
                       <span>课时</span>
-                      <span class="fl" v-text="(courseInfo.chapter_num && courseInfo.chapter_num.length > 0) ? courseInfo.chapter_num.join('、') : '招募中'"></span>
+                      <span class="fl">{{ courseInfo.chapter_num }}课时</span>
                     </div>
                   </li>
                   <li>

@@ -371,7 +371,7 @@ export default {
       console.log(res1)
       localStorage.setItem('courseBaseInfo', JSON.stringify(res1.info.courseBaseInfo))
       this.flag = res1.info.courseBaseInfo.flag
-      this.name = res1.info.courseBaseInfo.name + ' KID'
+      this.name = res1.info.courseBaseInfo.name + 'Mini'
       this.curChapterCode = res1.info.learnConfig.current_chapter_code
       this.curLevelCode = this.curChapterCode.split('-').slice(0, 3).join('-')
 
@@ -399,7 +399,7 @@ export default {
       console.log(res1)
       localStorage.setItem('courseBaseInfo', JSON.stringify(res1.info.courseBaseInfo))
       this.flag = res1.info.courseBaseInfo.flag
-      this.name = res1.info.courseBaseInfo.name + ' KID'
+      this.name = res1.info.courseBaseInfo.name + 'Mini'
       this.curChapterCode = res1.info.learnConfig.current_chapter_code
       this.curLevelCode = this.curChapterCode.split('-').slice(0, 3).join('-')
 
