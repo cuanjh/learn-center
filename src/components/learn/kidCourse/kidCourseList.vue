@@ -53,7 +53,7 @@
                 <span>课程</span>
                 <span>{{ index + 1 }}</span>
               </div>
-              <div class="current-learn-course-describe">{{ item['des']['zh-cn'] }}</div>
+              <div class="current-learn-course-describe">{{ item['title']['zh-cn'] }}</div>
             </div>
           </div>
           <transition name="expand" mode="out-in">
@@ -145,9 +145,9 @@
                             <div class="course-item-icon">
                               <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
                               <div class="review-test"></div>
-                              <i class="icon-review-lock" v-show="!curChapterData.coreComplete"></i>
+                              <i class="icon-review-lock" v-show="!(isVip == 1) || !(isVip == 1 && curChapterData['coreComplete'])"></i>
                             </div>
-                            <p class="course-item-title" :class="{'course-item-title-locked': !curChapterData.coreComplete }">测试</p>
+                            <p class="course-item-title" :class="{'course-item-title-locked': !(isVip == 1) || !(isVip == 1 && curChapterData['coreComplete']) }">测试</p>
                             <p class="course-item-star" v-show="testData.isTestCompleted">
                               <span class="course-yellow-star"><i v-for="index in testData.star" :key="index"></i></span>
                               <span class="course-yellow-star courseIsLock"><i v-for="index in testData.grayStar" :key="index"></i></span>
@@ -190,7 +190,7 @@
                     <div class="course-vip">
                       <div class="course-vip-name">
                         <p>强化</p>
-                        <p>(会员专享)</p>
+                        <!-- <p>(会员专享)</p> -->
                       </div>
                       <div class="course-item-box" v-for="(vip, i) in vipData" :key="i">
                         <a href="javascript:void(0);" @click="jumpVipPage(curChapterData['coreComplete'], item.code + '-A' + (i + 1))">
@@ -308,6 +308,10 @@ export default {
       this.userInfo = res.info
       this.isVip = res.info.member_info.member_type
     })
+    let kidTabActive = localStorage.getItem('kidTabActive')
+    if (kidTabActive) {
+      this.active = parseInt(kidTabActive)
+    }
     this.initData()
   },
   computed: {
@@ -431,7 +435,6 @@ export default {
         this.subscribeLangCourses = this.subscribeLangCourses.reverse()
         console.log('订阅的官方课程', this.subscribeLangCourses)
       }
-
       this.initProData()
     },
     jumpToPage (path) {
@@ -463,6 +466,7 @@ export default {
       //   return false
       // }
       this.active = index
+      localStorage.setItem('kidTabActive', this.active)
       if (index === 1) {
         this.drawProgress('core', this.curChapterData['core'])
         this.drawProgress('test', this.testData)
@@ -779,11 +783,22 @@ export default {
       console.log('curChapterCode', this.curChapterCode)
     },
     startTest (isCoreCompleted) {
-      if (!isCoreCompleted) {
-        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-        Bus.$emit('setContinueLearn', this.tips)
+      if (parseInt(this.isVip) !== 1) {
+        let obj = {
+          className: 'vipIcon',
+          description: '升级会员体验更多功能提高学习效率',
+          btnDesc: '升级会员',
+          isLink: true,
+          hyperLink: '/app/vip-home'
+        }
+        Bus.$emit('showCommonModal', obj)
       } else {
-        this.$router.push({ path: '/learn/pk/' + this.curChapterCode })
+        if (!isCoreCompleted) {
+          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+          Bus.$emit('setContinueLearn', this.tips)
+        } else {
+          this.$router.push({ path: '/learn/pk/' + this.curChapterCode })
+        }
       }
     },
     startHomework (isCoreCompleted) {
@@ -852,6 +867,7 @@ export default {
         setTimeout(() => {
           this.setKidCurrentChapter({chapter_code: chapterCode}).then(res => {
             this.active = 0
+            localStorage.setItem('kidTabActive', this.active)
             this.curChapterCode = chapterCode
             this.initProData()
           })
@@ -1690,10 +1706,11 @@ export default {
 
     .course-vip{
       width: 100%;
-      padding: 15px 0 15px;
+      padding: 15px 0 0px;
     }
 
     .course-vip-name{
+      width:72px;
       font-size: 16px;
       font-weight: bold;
       color:#F5A623;
@@ -1702,7 +1719,7 @@ export default {
       vertical-align: top;
       height: 80px;
       line-height: 20px;
-      margin: 10px 12px 0 0;
+      margin: 16px 12px 0 0;
     }
 
     .course-vip-name p{

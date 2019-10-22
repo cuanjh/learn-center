@@ -98,9 +98,9 @@
                   <div class="course-item-icon">
                     <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
                     <div class="review-test"></div>
-                    <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
+                    <i v-show="!(userInfo.member_info.member_type == 1) || !(userInfo.member_info.member_type == 1 && coreData['isCoreCompleted'])" class="icon-review-lock"></i>
                   </div>
-                  <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">测试</p>
+                  <p class="course-item-title" :class="{'course-item-title-locked': !(userInfo.member_info.member_type == 1) || !(userInfo.member_info.member_type == 1 && coreData['isCoreCompleted']) }">测试</p>
                     <p class="course-item-star" v-show="coreData['isCoreCompleted'] && testData['isTestCompleted']">
                     <span class="course-yellow-star"><i v-for="index in testData['starTestNum']" :key="index"></i></span>
                     <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - testData['starTestNum'])" :key="index"></i></span>
@@ -144,7 +144,7 @@
         <li class="course-vip">
             <div class="course-vip-name">
               <p>强化</p>
-              <p>(会员专享)</p>
+              <!-- <p>(会员专享)</p> -->
             </div>
             <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
               <a href="javascript:void(0);" @click="jumpVipPage(coreData['isCoreCompleted'], 'A' + (i + 1))">
@@ -527,11 +527,22 @@ export default {
       }
     },
     startTest (isCoreCompleted) {
-      if (!isCoreCompleted) {
-        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-        bus.$emit('setContinueLearn', this.tips)
+      if (parseInt(this.isVip) !== 1) {
+        let obj = {
+          className: 'vipIcon',
+          description: '升级会员体验更多功能提高学习效率',
+          btnDesc: '升级会员',
+          isLink: true,
+          hyperLink: '/app/vip-home'
+        }
+        bus.$emit('showCommonModal', obj)
       } else {
-        this.$router.push({ path: '/learn/pk/' + this.currentChapterCode })
+        if (!isCoreCompleted) {
+          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+          bus.$emit('setContinueLearn', this.tips)
+        } else {
+          this.$router.push({ path: '/learn/pk/' + this.currentChapterCode })
+        }
       }
     },
     startHomework (isCoreCompleted) {
@@ -1206,6 +1217,7 @@ export default {
   }
 
   .course-vip-name{
+    width: 72px;
     font-size: 16px;
     font-weight: bold;
     color:#F5A623;
@@ -1214,7 +1226,7 @@ export default {
     vertical-align: top;
     height: 80px;
     line-height: 20px;
-    margin: 10px 12px 0 0;
+    margin: 16px 12px 0 0;
   }
 
   .course-vip-name p{
