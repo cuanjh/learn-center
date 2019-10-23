@@ -6,7 +6,7 @@
     </div>
     <div class="content">
       <div class="chapter">
-        <img :src="kidChapterInfo.image_bg2" alt="">
+        <img :src="kidChapterInfo.image_bg2 | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="">
         <div class="name">
           {{ kidLevelName + '.课程' + kidChapterInfo.chapterNum + '：' + kidChapterInfo.chapterDesc}}
         </div>
