@@ -5,14 +5,15 @@
         <div class="userdoc-item-left-content">
           <div class="userdoc-item-top">
             <div class="img">
-              <img :src="archive.courseInfo ? archive.courseInfo.flag : ''" alt="">
+              <img :src="archive.courseInfo ? archive.courseInfo.flag + urlFix : ''" alt="">
             </div>
             <div class="course-text">
-              <p>
-                <span>{{archive.courseInfo ? archive.courseInfo.name : ''}}</span>
+              <p v-if="archive.courseInfo">
+                <span v-if="archive.courseInfo.course_type == 3">{{archive.courseInfo ? archive.courseInfo.name + 'Mini' : ''}}</span>
+                <span v-else>{{archive.courseInfo ? archive.courseInfo.name : ''}}</span>
               </p>
-               <p>
-                <span>{{ archive.courseInfo ? levelArr[0] + ' ~ ' + levelArr[archive.courseInfo.level_num - 1] : '' }}</span>
+              <p v-if="archive.courseInfo">
+                <span v-if="archive.courseInfo.course_type !== 3">{{ archive.courseInfo ? levelArr[0] + ' ~ ' + levelArr[archive.courseInfo.level_num - 1] : '' }}</span>
               </p>
             </div>
           </div>
@@ -56,6 +57,7 @@ export default {
   props: ['archive'],
   data () {
     return {
+      urlFix: '&imageView2/0/w/200/h/200/format/jpg',
       levelArr: ['初级 A1', '初级 A2', '中级 B1', '中级 B2', '高级 C1', '高级 C2']
       // cicleList: {ratio: this.archive['complete_rate'] >= 0 ? this.archive['complete_rate'] * 100 : '0'}
     }
@@ -118,6 +120,9 @@ export default {
           }
         }
         .course-text {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           p {
             font-size:15px;
             font-weight:500;

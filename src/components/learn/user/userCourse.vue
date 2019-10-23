@@ -637,14 +637,18 @@ export default {
 
 .user-control-btn {
   cursor: pointer;
+  display: flex;
 }
 
 .user-control-btn span{
-  display: inline-block;
+  display: block;
   width: 4px;
   height: 4px;
   border-radius: 50%;
   background-color: #b9cde2;
+}
+.user-control-btn span:nth-child(2) {
+  margin: 0 3px;
 }
 .user-control-btn:hover {
   span{
