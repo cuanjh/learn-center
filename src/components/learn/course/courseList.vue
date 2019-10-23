@@ -106,33 +106,26 @@ export default {
       updateCurLevel: 'course/updateCurLevel'
     }),
     async loadChapterInfo (chapterCode) {
-      if (this.unlockCourses.indexOf(chapterCode) > -1) {
-        console.log(this.historyCourseRecord)
-        if (this.historyCourseRecord[chapterCode] && Object.keys(this.historyCourseRecord[chapterCode]).length > 0) {
-          this.$refs['chapterItem'].$emit('changeIsHistory', true)
-          await this.setCurrentChapter(chapterCode)
-          this.$refs['chapterItem'].$emit('changeIsShow', true)
-        } else {
-          // this.showLoading()
-          this.$refs['chapterItem'].$emit('changeIsHistory', false)
-          await this.setCurrentChapter(chapterCode)
-          this.$refs['chapterItem'].$emit('changeIsShow', true)
-          await this.getChapterContent()
+      console.log(this.historyCourseRecord)
+      if (this.historyCourseRecord[chapterCode] && Object.keys(this.historyCourseRecord[chapterCode]).length > 0) {
+        this.$refs['chapterItem'].$emit('changeIsHistory', true)
+        await this.setCurrentChapter(chapterCode)
+        this.$refs['chapterItem'].$emit('changeIsShow', true)
+      } else {
+        // this.showLoading()
+        this.$refs['chapterItem'].$emit('changeIsHistory', false)
+        await this.setCurrentChapter(chapterCode)
+        this.$refs['chapterItem'].$emit('changeIsShow', true)
+        await this.getChapterContent()
 
-          await this.getProgress(chapterCode)
+        await this.getProgress(chapterCode)
 
-          await this.getCourseTestRanking(chapterCode)
+        await this.getCourseTestRanking(chapterCode)
 
-          await this.homeworkContent(this.currentChapterCode + '-A8')
+        await this.homeworkContent(this.currentChapterCode + '-A8')
 
-          // this.hideLoading()
-          this.$refs['chapterItem'].$emit('saveHistoryCourseData')
-        }
-
-        setTimeout(() => {
-          // let top = $('#' + chapterCode).offset().top - 116
-          // $('body,html').animate({ scrollTop: top }, 300, 'linear')
-        }, 0)
+        // this.hideLoading()
+        this.$refs['chapterItem'].$emit('saveHistoryCourseData')
       }
     },
     async initData () {

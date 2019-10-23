@@ -74,18 +74,6 @@ export default {
     LearnCourseList
   },
   mounted () {
-    // this.getMoreLearnCourses().then(res => {
-    //   if (res.success) {
-    //     let learnCourses = res.learn_courses
-    //     learnCourses.forEach(item => {
-    //       if (!parseInt(item.course_type)) {
-    //         this.subscribeLangCourses.push(item)
-    //       }
-    //     })
-    //     this.subscribeLangCourses = this.subscribeLangCourses.reverse()
-    //     console.log('订阅的官方课程', this.subscribeLangCourses)
-    //   }
-    // })
     this.getSubCourses().then(res => {
       console.log('新的课程列表返回', res)
       if (res.success) {
@@ -95,7 +83,10 @@ export default {
             this.subscribeLangCourses.push(item)
           }
         })
-        this.subscribeLangCourses = this.subscribeLangCourses.reverse()
+        // 按kid课程在前，pro课程在后，每个分组按后订阅的在前
+        this.subscribeLangCourses = this.subscribeLangCourses.sort((a, b) => {
+          return b.course_type - a.course_type
+        })
         console.log('订阅的官方课程', this.subscribeLangCourses)
       }
     })
