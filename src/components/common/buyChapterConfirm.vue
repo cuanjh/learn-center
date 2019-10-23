@@ -18,6 +18,7 @@
       <p>获取此课程需要150金币</p>
       <p>金币余额: {{ userCoins }}</p>
       <p>
+        <span class='learn-begin-study-warn-cancel' @click="close()">取消</span>
         <span class='learn-begin-study-warn-cancel' @click="gotoWallet">去充值</span>
       </p>
       <p class='vip-bottom' @click='gotoVip'>{{ $t("courseList.pay.openvip") }}</p>
@@ -189,7 +190,10 @@ export default {
   padding-top: 74px;
 }
 .vip-update-success p:nth-of-type(2){
-  padding-bottom: 66px;
+  padding-bottom: 40px;
+}
+.vip-update-success p:nth-of-type(3){
+  padding-bottom: 20px;
 }
 .vip-update-success .vip-back-tolearn{
   width: 168px;
@@ -290,12 +294,15 @@ export default {
 
 .vip-update-confirm p:nth-of-type(4) {
   height: 28px;
-  width: 100px;
+  width: 100%;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .vip-update-confirm p:nth-of-type(4) span {
-  width: 100%;
+  width: 100px;
   height: 28px;
   border-radius: 100px;
   padding: 0 10px;
@@ -305,6 +312,9 @@ export default {
   font-weight: 300;
   color: #0e8abe;
   cursor: pointer;
+}
+.vip-update-confirm p:nth-of-type(4) span:nth-child(1) {
+  margin-right: 20px;
 }
 
 .vip-update-confirm p:nth-of-type(4) span:hover {

@@ -498,10 +498,13 @@ export default {
         font-size:16px;
         font-weight:bold;
         color:#2A9FE4;
-        margin-right: 19px;
+        margin-right: 18px;
         display: inline-block;
         text-align: center;
         line-height: 26px;
+      }
+      a:last-child {
+        margin-right: 0;
       }
       .all {
         font-size: 14px;
@@ -511,7 +514,10 @@ export default {
         color: #fff;
         border-radius:18px;
       }
-      .cur {
+      a:hover {
+        color: rgba(42, 159, 228, .6);
+      }
+      a.cur {
         width:26px;
         height:26px;
         background:#0581D1;
