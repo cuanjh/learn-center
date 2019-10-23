@@ -440,7 +440,7 @@ export default {
           li {
             display: flex;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 10%;
             border-radius: 5px;
             &:hover {
               cursor: pointer;
@@ -455,7 +455,7 @@ export default {
             }
             .img-box {
               width: 50%;
-              height: 80%;
+              height: 100%;
               img {
                 width: 100%;
                 height: 100%;
@@ -464,7 +464,7 @@ export default {
               }
             }
             .text {
-              font-size: 16px;
+              font-size: 14px;
               display: flex;
               flex: 1;
               flex-direction: column;
@@ -475,7 +475,8 @@ export default {
               color:rgba(155,155,155,1);
               span:nth-child(1) {
                 padding-bottom: 10px;
-                font-size: 16px;
+                font-size: 18px;
+                font-weight: 500;
               }
             }
           }

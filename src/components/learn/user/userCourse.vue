@@ -72,7 +72,7 @@
             <img @click="goToKidDetails(item.code)" :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
             <ol>
               <router-link tag="li" :to="{path: '/app/book-mini-details/' + item.code}">
-                <span>{{ !item.name ? '' : item.name['zh-cn'] }}</span>
+                <span>{{ !item.name ? '' : item.name['zh-cn'] + 'Mini' }}</span>
               </router-link>
               <li>
                 <!-- <span v-text="levelDes[item['current_chapter_code'].split('-')[2]]"></span> - <span v-text="'课程' + (parseInt(item['current_chapter_code'].split('-')[3].replace('Unit', '')) * parseInt(item['current_chapter_code'].split('-')[4].replace('Chapter', '')))"></span> -->
@@ -334,8 +334,8 @@ export default {
       this.$router.push({path: '/app/book-details/' + courseCode})
     },
     //  儿童课程
-    goToKidDetails (item) {
-      this.$router.push({path: '/app/book-mini-details/' + item['code']})
+    goToKidDetails (code) {
+      this.$router.push({path: '/app/book-mini-details/' + code})
     },
     // 去电台详情
     goToRadioDetail (radioCode) {
