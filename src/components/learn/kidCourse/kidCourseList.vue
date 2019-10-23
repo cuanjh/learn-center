@@ -36,7 +36,8 @@
       </ul>
     </div>
     <div class="course-content">
-      <div class="course-list">
+      <transition name="fade" mode="out-in">
+      <div class="course-list" v-show="isShowList">
         <div class="course-item"
           v-for="(item, index) in curLevelChapters"
           :key="'item' + index"
@@ -225,6 +226,7 @@
           </transition>
         </div>
       </div>
+      </transition>
     </div>
     <transition name="fade" mode="out-in">
       <kid-songs v-show="showSongs" @closeModal="closeModal"/>
@@ -271,6 +273,7 @@ export default {
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
       active: 0,
       isShow: true,
+      isShowList: true,
       buyChapters: ''
     }
   },
@@ -923,9 +926,14 @@ export default {
     // 切换级别
     selLevel (level) {
       console.log(level)
-      this.curLevelCode = level.code
-      this.curLevelChapters = level.chapters
-      localStorage.setItem('curLevelChapters', JSON.stringify(this.curLevelChapters))
+      this.isShowList = false
+      this.curLevelChapters = []
+      setTimeout(() => {
+        this.curLevelCode = level.code
+        this.curLevelChapters = level.chapters
+        localStorage.setItem('curLevelChapters', JSON.stringify(this.curLevelChapters))
+        this.isShowList = true
+      }, 200)
     }
   }
 }
@@ -1011,15 +1019,15 @@ export default {
     width: 22px;
     height: 14px;
   }
-  .fade-enter-active {
-    transition: opacity .5s;
-  }
-  .fade-leave-active {
-    transition: opacity .1s;
-  }
-  .fade-enter, .fade-leave-to {
-    opacity: 0;
-  }
+  // .fade-enter-active {
+  //   transition: opacity .5s;
+  // }
+  // .fade-leave-active {
+  //   transition: opacity .1s;
+  // }
+  // .fade-enter, .fade-leave-to {
+  //   opacity: 0;
+  // }
   .lang-overview dd .triangle p i {
     cursor: pointer;
     display: inline-block;
