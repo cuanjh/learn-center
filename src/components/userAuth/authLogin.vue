@@ -26,6 +26,7 @@
                   readonly="readonly"
                   @focus="onFocus()"
                   placeholder="手机验证码"
+                  maxlength="4"
                   v-model="phoneCode"
                   @keyup.enter="goLogin">
           <button v-bind:disabled="!isGetCode" @click="getCode">{{ time === 60 ? message :time+'s' }}</button>
