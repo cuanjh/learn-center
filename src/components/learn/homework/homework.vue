@@ -44,12 +44,10 @@ export default {
   mounted () {
     this.$parent.$emit('initLayout')
     // 判断如果currentChapterCode不存在去localStorgae中取
-    if (!this.currentChapterCode) {
-      this.curChapterCode = localStorage.getItem('currentChapterCode')
-    } else {
-      this.curChapterCode = this.currentChapterCode
-    }
+    this.curChapterCode = localStorage.getItem('currentChapterCode')
+    console.log(this.curChapterCode)
     this.courseCode = this.curChapterCode.split('-').slice(0, 2).join('-')
+    console.log(this.courseCode)
     this.getOneCourseSub({course_code: this.courseCode}).then(res => {
       console.log('courseSubInfo', res)
       this.courseName = res.subInfo.name[this.$i18n.locale]
@@ -62,7 +60,11 @@ export default {
       currentChapterCode: state => state.course.currentChapterCode,
       tips: state => state.learn.tips,
       chapterDes: state => state.course.chapterDes
-    })
+    }),
+    isKid () {
+      let isKid = localStorage.getItem('isKid')
+      return isKid
+    }
   },
   methods: {
     ...mapActions({
@@ -90,7 +92,7 @@ export default {
       if (isKid === '1') {
         this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
       } else {
-        this.$router.push({path: '/app/course-list'})
+        this.$router.push({path: '/app/course-list/' + this.courseCode})
       }
     }
   }

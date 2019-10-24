@@ -91,6 +91,16 @@ export default {
   computed: {
   },
   mounted () {
+    let sessSongs = JSON.parse(sessionStorage.getItem('sessionSongsAll'))
+    if (!this.songsAll) {
+      this.songsAll = sessSongs
+      this.songs = sessSongs.hello
+      this.currentVideo = sessSongs.hello[0]
+      this.video = $('#myVideo')[0]
+      this.$nextTick(() => {
+        this.play()
+      })
+    }
   },
   methods: {
     ...mapActions([
@@ -102,6 +112,7 @@ export default {
         if (res.success) {
           this.curIndex = 0
           this.songsAll = res.teacherContent.songs
+          sessionStorage.setItem('sessionSongsAll', JSON.stringify(this.songsAll))
           this.songs = res.teacherContent.songs.hello
           this.currentVideo = res.teacherContent.songs.hello[this.curIndex]
           this.video = $('#myVideo')[0]
@@ -225,6 +236,7 @@ export default {
       this.songs = []
       this.curIndex = 1
       this.$emit('closeModal')
+      sessionStorage.removeItem('sessionSongsAll')
     },
     toParseTime (data) {
       let m = parseInt(data / 60)
@@ -381,6 +393,7 @@ export default {
       // height: 546px;
       height: 100%;
       outline: none;
+      object-fit: fill;
     }
     .right-list {
       display: flex;
@@ -456,7 +469,7 @@ export default {
               }
             }
             .img-box {
-              width: 50%;
+              width: 100px;
               height: 100%;
               img {
                 width: 100%;
@@ -476,10 +489,20 @@ export default {
               font-weight:400;
               color:rgba(155,155,155,1);
               span:nth-child(1) {
-                padding-bottom: 10px;
+                display: inline-block;
+                height: 40px;
                 font-size: 18px;
                 font-weight: 500;
-                line-height: 18px;
+                line-height: 20px;
+                text-overflow: -o-ellipsis-lastline;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+              }
+              span:nth-child(2) {
+                padding-top: 10px;
               }
             }
           }
