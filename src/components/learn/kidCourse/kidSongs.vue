@@ -95,7 +95,7 @@ export default {
     if (!this.songsAll) {
       this.songsAll = sessSongs
       this.songs = sessSongs.hello
-      this.currentVideo = sessSongs.hello[this.curIndex]
+      this.currentVideo = sessSongs.hello[0]
       this.video = $('#myVideo')[0]
       this.$nextTick(() => {
         this.play()
