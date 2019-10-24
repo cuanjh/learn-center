@@ -3,7 +3,7 @@
     <div  class="prompt">
       <i class="vip-img"></i>
         <span v-if="isVip == 1">您的会员服务{{ cardKind }}有效期为：{{startTime}} 至 {{endTime}}</span>
-        <span v-else>现在注册成为会员，12月圣诞好礼，新用户80%折！！！</span>
+        <span v-else>成为VIP会员，开启畅学新体验！</span>
     </div>
     <div @click="goVip()" class="vip-btn">
       <a v-if="isVip == 1">升级会员</a>

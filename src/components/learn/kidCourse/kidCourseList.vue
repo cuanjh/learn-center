@@ -813,6 +813,8 @@ export default {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         Bus.$emit('setContinueLearn', this.tips)
       } else {
+        let kidCode = this.$route.path.split('/').pop()
+        console.log(kidCode)
         this.$router.push({ path: '/app/homework' })
       }
     },
