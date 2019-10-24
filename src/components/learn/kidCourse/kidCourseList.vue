@@ -59,7 +59,7 @@
           </div>
           <transition name="expand" mode="out-in">
             <div class="course-item-detail" v-show="isShow && curChapterCode == item.code">
-              <div class="course-brief">
+              <div class="course-brief" @click="switchShow()">
                 <img :src="item.image_bg2" alt="">
                 <div class="course-brief-shade">
                   <div class="course-brief-title">
@@ -1336,6 +1336,7 @@ export default {
     position: relative;
     border-radius: 5px;
     height: 258px;
+    cursor: pointer;
   }
   .course-brief img{
     position: absolute;
