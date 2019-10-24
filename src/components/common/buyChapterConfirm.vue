@@ -24,12 +24,21 @@
       <p class='vip-bottom' @click='gotoVip'>{{ $t("courseList.pay.openvip") }}</p>
       <em @click='close'></em>
     </section>
+    <!-- 购买成功 -->
+    <div class="pay-success">
+      <div class="pay-content">
+        <p class="bg-img"><i></i></p>
+        <p>购买成功</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import bus from '../../bus'
+import $ from 'jquery'
+
 export default {
   data () {
     return {
@@ -116,7 +125,11 @@ export default {
       await _this.getUserInfo()
 
       _this.costAlert = false
-      _this.isShow = false
+      $('.pay-success').fadeIn(300)
+      setTimeout(() => {
+        _this.isShow = false
+        $('.pay-success').hide()
+      }, 1500)
     },
     close () {
       this.isShow = false
@@ -140,7 +153,50 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.pay-success {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  width: 354px;
+  background: #ffffff;
+  transform: translate(-230px, -50%);
+  box-shadow:0px 5px 12px 0px rgba(0,32,50,0.3);
+  border-radius:5px;
+  .pay-content {
+    width: 100%;
+    height: 100%;
+    padding: 51px 0 37px;
+    text-align: center;
+    .bg-img {
+      width: 100%;
+      i {
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        background: url('../../../static/images/discovery/subscribe-success.svg') no-repeat center;
+        background-size: cover;
+      }
+    }
+    p:nth-child(2) {
+      font-size:18px;
+      font-weight:bold;
+      color:rgba(10,43,64,1);
+      padding: 28px 0 20px;
+    }
+    p:last-child {
+      font-size:14px;
+      font-weight:500;
+      color:rgba(144,162,174,1);
+      line-height:20px;
+      span:hover {
+        cursor: pointer;
+        color: #2A9FE4FF;
+      }
+    }
+  }
+}
 /*弹出层*/
 .vip-container {
   position: fixed;
