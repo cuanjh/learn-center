@@ -435,13 +435,14 @@ export default {
           height: 100%;
           display: flex;
           flex-direction: column;
-          padding: 24px 20px;
-          overflow-y: scroll;
+          padding: 12px 0;
+          overflow-y: auto;
           li {
             display: flex;
             align-items: center;
-            margin-bottom: 10%;
-            border-radius: 5px;
+            // margin-bottom: 10%;
+            // border-radius: 5px;
+            padding: 12px 20px;
             &:hover {
               cursor: pointer;
               .text {
@@ -449,6 +450,7 @@ export default {
               }
             }
             &.active {
+              background: #EDF4FC;
               .text {
                 color: #4A90E2;
               }
@@ -477,6 +479,7 @@ export default {
                 padding-bottom: 10px;
                 font-size: 18px;
                 font-weight: 500;
+                line-height: 18px;
               }
             }
           }

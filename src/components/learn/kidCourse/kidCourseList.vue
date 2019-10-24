@@ -59,7 +59,7 @@
           </div>
           <transition name="expand" mode="out-in">
             <div class="course-item-detail" v-show="isShow && curChapterCode == item.code">
-              <div class="course-brief">
+              <div class="course-brief" @click="switchShow()">
                 <img :src="item.image_bg2" alt="">
                 <div class="course-brief-shade">
                   <div class="course-brief-title">
@@ -85,7 +85,7 @@
                   </ul>
                 </div>
                 <div class="tab-content">
-                  <div class="tab-content-kid" v-show="!active">
+                  <div class="tab-content-kid" v-show="active == 0">
                     <ul>
                       <li  @click="goKidStage(item, 'draw', index + 1)">
                         <div class="icon">
@@ -105,7 +105,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="tab-content-pro" v-show="active">
+                  <div class="tab-content-pro" v-show="active == 1">
                     <div class="course-core">
                       <div class="course-core-name">
                         <span>核心课程</span>
@@ -271,7 +271,7 @@ export default {
       subscribeLangCourses: [],
       tabNav: ['学习', '拓展'],
       vipItemList: ['listen', 'oral', 'reading', 'writing', 'grammar', 'speaking'],
-      active: 0,
+      active: -1,
       isShow: true,
       isShowList: true,
       buyChapters: ''
@@ -311,8 +311,9 @@ export default {
       this.userInfo = res.info
       this.isVip = res.info.member_info.member_type
     })
+    this.active = -1
     let kidTabActive = localStorage.getItem('kidTabActive')
-    if (kidTabActive) {
+    if (kidTabActive === '0') {
       this.active = parseInt(kidTabActive)
     }
     this.initData()
@@ -372,6 +373,8 @@ export default {
       updateUnlockCourseList: 'course/updateUnlockCourseList'
     }),
     async initKid () {
+      localStorage.removeItem('kidTabActive')
+      this.active = 0
       let courseCode = this.$route.params.courseCode
       // 1 获取该课程的学习信息
       let res1 = await this.getLearnInfoV5({course_code: courseCode})
@@ -435,7 +438,10 @@ export default {
             this.subscribeLangCourses.push(item)
           }
         })
-        this.subscribeLangCourses = this.subscribeLangCourses.reverse()
+        // 按kid课程在前，pro课程在后，每个分组按后订阅的在前
+        this.subscribeLangCourses = this.subscribeLangCourses.sort((a, b) => {
+          return b.course_type - a.course_type
+        })
         console.log('订阅的官方课程', this.subscribeLangCourses)
       }
       this.initProData()
@@ -468,14 +474,14 @@ export default {
       //   Bus.$emit('showBuyChapterPanel', this.curChapterCode)
       //   return false
       // }
-      this.active = index
-      localStorage.setItem('kidTabActive', this.active)
       if (index === 1) {
         this.drawProgress('core', this.curChapterData['core'])
         this.drawProgress('test', this.testData)
         this.drawProgress('homework', this.homeworkData)
         this.drawProgress('vip', this.vipData)
       }
+      this.active = index
+      localStorage.setItem('kidTabActive', this.active)
     },
     async initProData () {
       this.isShow = true
@@ -540,6 +546,9 @@ export default {
           if (item.part_num > 1 && curUnlockChapter['A0' + (item.part_num - 1)]) {
             isUnlock = true
           }
+        }
+        if (this.isVip && item.part_num === 1 && this.curChapterCode.toLowerCase().indexOf('unit1-chapter1') > -1) {
+          isUnlock = true
         }
         let formLength = item.end_form - item.start_form + 1
         let formNum = 0
@@ -685,6 +694,10 @@ export default {
       console.log(vipFormArray)
       console.log('vipdata', this.vipData)
       console.log('curChapterData', this.curChapterData)
+      let kidTabActive = localStorage.getItem('kidTabActive')
+      if (kidTabActive) {
+        this.active = parseInt(kidTabActive)
+      }
     },
     drawProgress (type, retObj) {
       console.log(retObj)
@@ -935,7 +948,7 @@ export default {
         this.curLevelChapters = level.chapters
         localStorage.setItem('curLevelChapters', JSON.stringify(this.curLevelChapters))
         this.isShowList = true
-      }, 200)
+      }, 500)
     }
   }
 }
@@ -1325,6 +1338,7 @@ export default {
     position: relative;
     border-radius: 5px;
     height: 258px;
+    cursor: pointer;
   }
   .course-brief img{
     position: absolute;

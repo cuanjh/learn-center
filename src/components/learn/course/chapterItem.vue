@@ -3,11 +3,11 @@
     <div :class="['course-item']" v-for="(item, index) in curLevelChapters" :key="'item' + index" :id="item.code">
       <!-- <transition name="fade" mode="out-in"> -->
       <div class="current-learn-course-info"
-          :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
+          :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1 && item.code.toLowerCase().indexOf('unit1-chapter1') == -1}"
           @click="jumpToCourse(item.code)"  v-if="isShow ? currentChapterCode !== item.code : !isShow">
         <div class="current-learn-course-flag">
           <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'">
-          <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1"></div>
+          <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1 && item.code.toLowerCase().indexOf('unit1-chapter1') == -1"></div>
         </div>
         <div class="current-learn-course-word-info">
           <div class="current-learn-course-title">
