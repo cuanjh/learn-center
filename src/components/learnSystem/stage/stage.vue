@@ -857,8 +857,7 @@ export default {
           homework_complete: (_this.homeworkComplete) ? 1 : 0,
           improvement_complete: (_this.improvementComplete) ? 1 : 0,
           learn_time: _this.last_time,
-          correct_rate: cr,
-          group_id: ''
+          correct_rate: cr
         }
         await _this.postUnlockChapter(params1).then((res) => {
           console.log(res)

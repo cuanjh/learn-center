@@ -67,6 +67,15 @@
                     <span>{{ index + 1 }}</span>
                   </div>
                   <div class="course-brief-describe">{{ item['des']['zh-cn'] }}</div>
+                  <div class="course-brief-progress-title">学习进度：</div>
+                  <div class="course-brief-progress-area">
+                    <div class="course-brief-progress-bg">
+                      <div class="course-brief-progress" :style="{width: curChapterData['completeRate'] + '%'}"></div>
+                    </div>
+                    <div class="course-brief-progress-val">
+                      {{ curChapterData['completeRate'] + '%'}}
+                    </div>
+                  </div>
                   <div class="course-brief-shrink">
                     <i class="shrink" @click="switchShow()"></i>
                   </div>
@@ -250,7 +259,8 @@ export default {
       showSongs: false,
       isVip: 0, // 是否是VIP
       curChapterData: {
-        core: []
+        core: [],
+        completeRate: '0'
       },
       coreData: [],
       testData: {},
@@ -265,6 +275,7 @@ export default {
       curLevelCode: '',
       curLevelChapters: [],
       curChapterCode: '',
+      curKidChapterCompleteRate: 0,
       catalogs: [],
       assetsServer: '',
       learnCourse: [],
@@ -365,6 +376,7 @@ export default {
       'getUserInfo',
       'getLearnInfoV5',
       'getKidCatalog',
+      'getKidUnlockInfo',
       'getMoreLearnCourses',
       'getSubCourses' // 新的课程列表接口
     ]),
@@ -487,7 +499,7 @@ export default {
       this.isShow = true
       let courseCode = this.$route.params.courseCode
       // 4. pro课程数据处理
-      let unlockChapters = await this.getUnlockChapter(courseCode)
+      let unlockChapters = await this.getKidUnlockInfo({course_code: courseCode})
       this.unlockCourses = Object.keys(unlockChapters.unlock).join(',')
       this.buyChapters = ''
       Object.keys(unlockChapters.unlock).forEach(key => {
@@ -505,11 +517,13 @@ export default {
         this.curChapterData['homework'] = curUnlockChapter['Homework']
         this.curChapterData['homeworkComplete'] = curUnlockChapter['Homework_complete']
         this.curChapterData['improvement'] = curUnlockChapter['Improvement']
+        this.curChapterData['completeRate'] = this.calCompleteRate(curUnlockChapter)
       } else {
         this.curChapterData['coreComplete'] = false
         this.curChapterData['homework'] = false
         this.curChapterData['homeworkComplete'] = false
         this.curChapterData['improvement'] = false
+        this.curChapterData['completeRate'] = 0
       }
 
       let curChapter = this.curLevelChapters.find(item => {
@@ -947,6 +961,60 @@ export default {
         localStorage.setItem('curLevelChapters', JSON.stringify(this.curLevelChapters))
         this.isShowList = true
       }, 500)
+    },
+    // 计算完成率
+    calCompleteRate (curUnlockKidChapter) {
+      let rate = 0
+      if (curUnlockKidChapter) {
+        // 绘本20%
+        if (curUnlockKidChapter['Draw']) {
+          rate += 0.2
+        }
+        // 单词20%
+        if (curUnlockKidChapter['Word']) {
+          rate += 0.2
+        }
+        if (curUnlockKidChapter['A01']) {
+          rate += 0.06
+        }
+        if (curUnlockKidChapter['A02']) {
+          rate += 0.06
+        }
+        if (curUnlockKidChapter['A03']) {
+          rate += 0.06
+        }
+        if (curUnlockKidChapter['A04']) {
+          rate += 0.06
+        }
+        if (curUnlockKidChapter['A05']) {
+          rate += 0.06
+        }
+        if (curUnlockKidChapter['A1']) {
+          rate += 0.03
+        }
+        if (curUnlockKidChapter['A2']) {
+          rate += 0.03
+        }
+        if (curUnlockKidChapter['A3']) {
+          rate += 0.03
+        }
+        if (curUnlockKidChapter['A4']) {
+          rate += 0.03
+        }
+        if (curUnlockKidChapter['A5']) {
+          rate += 0.03
+        }
+        if (curUnlockKidChapter['A6']) {
+          rate += 0.03
+        }
+        if (curUnlockKidChapter['A7']) {
+          rate += 0.06
+        }
+        if (curUnlockKidChapter['A8']) {
+          rate += 0.06
+        }
+      }
+      return rate.toFixed(2) * 100
     }
   }
 }
@@ -1370,6 +1438,45 @@ export default {
     font-weight: 500;
     margin: 2px 0 0 36px;
   }
+
+  .course-brief-progress-title{
+    position: relative;
+    font-size: 20px;
+    color: #ffffff;
+    line-height: 24px;
+    font-weight: bold;
+    margin: 35px 0 0 36px;
+  }
+
+  .course-brief-progress-area {
+    position: relative;
+    margin: 10px 0 0 36px;
+    display: inline-flex;
+    line-height: 10px;
+  }
+
+  .course-brief-progress-bg {
+    width: 200px;
+    height: 12px;
+    background-color: rgba(244,244,244,0.4);
+    border-radius: 100px;
+    margin: auto 10px 0 0;
+  }
+
+  .course-brief-progress{
+    background-color: #2097DD;
+    height: 12px;
+    border-radius: 100px;
+    width:0;
+  }
+
+  .course-brief-progress-val{
+    display: inline-block;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: bold;
+  }
+
   .course-brief-shrink {
     position: absolute;
     margin-top: 30px;

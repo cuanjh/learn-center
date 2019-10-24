@@ -127,7 +127,8 @@ export default {
   methods: {
     ...mapActions([
       'getKidCourseContent',
-      'getKidRecordState'
+      'getKidRecordState',
+      'kidUpload'
     ]),
     async initData () {
       let res = await this.getKidCourseContent({chapter_code: this.code})
@@ -202,6 +203,10 @@ export default {
               $('#mother-sound'+(this.previousIndex))[0].pause()
               $('#mother-sound'+(this.previousIndex))[0].currentTime = 0
               bus.$emit('clearDate', false)
+              if (that.list.length === this.activeIndex + 1) {
+                let activityCode = that.code + '-' + that.type.charAt(0).toUpperCase() + that.type.slice(1)
+                that.kidUpload({activity_code: activityCode})
+              }
             }
           }
         })

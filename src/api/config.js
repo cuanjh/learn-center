@@ -60,7 +60,8 @@ export default {
   createAliWebOrder: '/pay/ali_web_order', // 创建支付宝网页支付订单
   getMemberProductsList: '/product/lists', // 会员产品支付渠道暂定于国内
   getMemberCard: '/member/card', // 会员卡激活账号的接口
-  postUnlockChapter: '/chapters_state/unlock_chapter', // 解锁课程
+  // postUnlockChapter: '/chapters_state/unlock_chapter', // 解锁课程
+  postUnlockChapter: '/studyv1/records/chapter/unlock', // 解锁课程
   getBuyChapter: '/chapter_purchase/purchase',
   umGetMemberProductsList: '/prdv1/product/lists', // 新的会员卡片接口有限时优惠
 
@@ -138,7 +139,8 @@ export default {
   courseTestRanking: '/course_test/ranking', // 返回本课程测试的排行榜数据
   courseTestRecord: '/course_test/record', // 用来存储课程测试结束的测试结果及过程
   finishedInfo: '/study_info/finished_info', // 返回每部分学完的学习完成信息
-  activityRecord: '/chapters_state/activity_record', // 各个部分即A0-A8学完，上传统计结果
+  // activityRecord: '/chapters_state/activity_record', // 各个部分即A0-A8学完，上传统计结果
+  activityRecord: '/studyv1/activity/upload', // 各个部分即A0-A8学完，上传统计结果
   getGradeContent: '/level_grade/get_content', // 用来获取课程定级的内容
   postGradeResult: '/level_grade/grade_result', // 用来接收用户在定级的过程中学习的结果
   getRecordCourseList: '/study_info/record_course_list', // 获取用户录音课程
@@ -178,5 +180,7 @@ export default {
   umKidRecordState: '/kidv1/record/state', // 单个课程的录音状态接口
   umKidRecordLists: '/kidv1/record/lists', // 教师模块的录音列表接口
   umkidRecordShare: '/kidv1/course/record/share', // 模块学习信息分享接口
-  umKidRecordSave: '/kidv1/record/save' // 保存录音接口
+  umKidRecordSave: '/kidv1/record/save', // 保存录音接口
+  kidUploadApi: '/studyv1/activity/upload/kid', // kid课程内容学完上传统计信息接口
+  kidUnlockInfoApi: '/studyv1/records/chapter/unlock/info' // 获取Kid课程解锁信息接口
 }
