@@ -85,22 +85,23 @@ export default {
   },
   created () {
     Bus.$on('showSongsModal', (data) => {
-      this.initSongs(data)
+      let sessSongs = JSON.parse(sessionStorage.getItem('sessionSongsAll'))
+      if (!sessSongs) {
+        this.initSongs(data)
+      } else {
+        this.songsAll = sessSongs
+        this.songs = sessSongs.hello
+        this.currentVideo = sessSongs.hello[0]
+        this.video = $('#myVideo')[0]
+        this.$nextTick(() => {
+          this.play()
+        })
+      }
     })
   },
   computed: {
   },
   mounted () {
-    let sessSongs = JSON.parse(sessionStorage.getItem('sessionSongsAll'))
-    if (!this.songsAll) {
-      this.songsAll = sessSongs
-      this.songs = sessSongs.hello
-      this.currentVideo = sessSongs.hello[0]
-      this.video = $('#myVideo')[0]
-      this.$nextTick(() => {
-        this.play()
-      })
-    }
   },
   methods: {
     ...mapActions([
@@ -234,9 +235,9 @@ export default {
       this.isActive = 'hello'
       this.songsAll = []
       this.songs = []
-      this.curIndex = 1
+      this.curIndex = 0
       this.$emit('closeModal')
-      sessionStorage.removeItem('sessionSongsAll')
+      // sessionStorage.removeItem('sessionSongsAll')
     },
     toParseTime (data) {
       let m = parseInt(data / 60)

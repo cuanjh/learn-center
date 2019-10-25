@@ -143,6 +143,7 @@ export default {
     // 监听路由变化
     $route (to, from) {
       console.log('监听路由变化：', this.$route.path)
+      sessionStorage.removeItem('sessionSongsAll')
       if (this.$route.path.indexOf('/user/') > -1) {
         this.isActive = true
       } else {
