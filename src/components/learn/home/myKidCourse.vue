@@ -8,7 +8,7 @@
       <div class="chapter">
         <img :src="kidChapterInfo.image_bg2 | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="">
         <div class="name">
-          {{ kidLevelName + '.课程' + kidChapterInfo.chapterNum + '：' + kidChapterInfo.chapterDesc}}
+          {{ chapterDesc }}
         </div>
       </div>
       <div class="course">
@@ -16,7 +16,7 @@
           <dt><img :src="kidCourseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
           <dd>
             <a :class="{'active': isShowSubscribeCourses}" @mouseenter="isShowSubscribeCourses = true">
-              <span class="kidCourse_name">{{ kidCourseBaseInfo.name + 'Mini'}}</span>
+              <span class="kidCourse_name">{{ kedCourseName }}</span>
               <div class="icon">
                 <i></i>
                 <transition name="fade">
@@ -44,6 +44,22 @@ export default {
   },
   components: {
     LearnCourseList
+  },
+  computed: {
+    chapterDesc () {
+      let dec = ''
+      if (this.kidLevelName && this.kidChapterInfo.chapterNum && this.kidChapterInfo.chapterDesc) {
+        dec = this.kidLevelName + '.课程' + this.kidChapterInfo.chapterNum + '：' + this.kidChapterInfo.chapterDesc
+      }
+      return dec
+    },
+    kedCourseName () {
+      let name = ''
+      if (this.kidCourseBaseInfo.name) {
+        name = this.kidCourseBaseInfo.name + 'Mini'
+      }
+      return name
+    }
   },
   methods: {
     goCourseList () {
@@ -123,6 +139,9 @@ export default {
     .course dt {
       float: left;
       margin-right: 15px;
+      width: 75px;
+      height: 75px;
+      background: #D8D8D8;
     }
 
     .course dt img {
