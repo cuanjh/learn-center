@@ -238,9 +238,5 @@ export default {
   // kid课程内容学完上传统计信息接口
   kidUpload ({commit}, params) {
     return httpLogin(config.kidUploadApi, params)
-  },
-  // 获取kid课程解锁信息
-  getKidUnlockInfo ({commit}, params) {
-    return httpLogin(config.kidUnlockInfoApi, params)
   }
 }

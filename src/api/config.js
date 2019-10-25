@@ -45,7 +45,8 @@ export default {
   currentCourseApi: '/study/current_course', // 获取一个课程的详情
   learnInfo: '/studyv1/learn_info/index', // 1.一门课程基本配置 2.用户针对此课程学习基本配置 3.学习信息
   corePartInfoApi: '/study/core_part_info', // 核心课程切课信息
-  unlockChapter: '/chapters_state/get_unlock_chapter', // 最新的接口加入A0-A8是否完成的数据结构；返回正在学习的chapter编码；
+  // unlockChapter: '/chapters_state/get_unlock_chapter', // 最新的接口加入A0-A8是否完成的数据结构；返回正在学习的chapter编码；
+  unlockChapter: '/studyv1/records/chapter/unlock/info', // 最新的接口加入A0-A8是否完成的数据结构；返回正在学习的chapter编码；
   setCurChapter: '/chapters_state/set_current_chapter', // 设置正在学习的课程的最新chapter编码
   getRecord: '/chapters_state/get_record', // 查询学习结果
   getProgressApi: '/chapters_state/get_progress', // 获取学习结果

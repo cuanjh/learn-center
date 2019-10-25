@@ -151,7 +151,7 @@ const actions = {
       correct_hits: payload.correctHits,
       learn_time: payload.learnTime,
       correct_rate: payload.correctRate,
-      course_completed_rate: payload.courseCompleteRate
+      course_complete_rate: payload.courseCompleteRate
     })
   },
   getQiniuToken ({ commit }) {

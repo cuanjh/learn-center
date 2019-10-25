@@ -566,7 +566,7 @@ const mutations = {
     }
   },
   chapterProgress (state, params) {
-    let id = params.id
+    let id = params.id.split('-').pop()
     let group = {}
     let record = params.curChapterRecord.forms
 

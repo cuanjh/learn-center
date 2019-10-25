@@ -787,7 +787,7 @@ export default {
           })
           let arr1 = []
           _.forIn(_this.formScores, (value, key) => {
-            if (key.indexOf('-' + _this.id + '-') > -1) {
+            if (key.indexOf(_this.id + '-') > -1) {
               arr1.push(value)
             }
           })
@@ -817,24 +817,22 @@ export default {
             let chapter = 'Chapter' + (parseInt(arr[4].replace('Chapter', '')) + 1)
             nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + arr[3] + '-' + chapter
           }
-          var params = {
-            chapter_code: nextChapter,
-            core: 1,
-            homework: 0,
-            improvement: 0,
-            core_complete: 0,
-            homework_complete: 0,
-            improvement_complete: 0,
-            learn_time: 0,
-            correct_rate: 0,
-            group_id: ''
-          }
-
           if (_this.unlockCourses.indexOf(nextChapter) === -1) {
-            await _this.postUnlockChapter(params)
-            await _this.getUnlockChapter(nextChapter).then((res) => {
-              _this.updateUnlockCourseList(res)
-            })
+            var params = {
+              chapter_code: nextChapter,
+              core: 1,
+              homework: 0,
+              improvement: 0,
+              core_complete: 0,
+              homework_complete: 0,
+              improvement_complete: 0,
+              learn_time: 0,
+              correct_rate: 0
+            }
+
+            if (_this.unlockCourses.indexOf(nextChapter) === -1) {
+              await _this.postUnlockChapter(params)
+            }
           }
         }
         var payload = {
@@ -848,23 +846,6 @@ export default {
         await _this.postActivityRecord(payload).then((res) => {
           console.log(res)
         })
-        var params1 = {
-          chapter_code: _this.curChapterCode,
-          core: (_this.core) ? 1 : 0,
-          homework: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-          improvement: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-          core_complete: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-          homework_complete: (_this.homeworkComplete) ? 1 : 0,
-          improvement_complete: (_this.improvementComplete) ? 1 : 0,
-          learn_time: _this.last_time,
-          correct_rate: cr
-        }
-        await _this.postUnlockChapter(params1).then((res) => {
-          console.log(res)
-        })
-        // if (nextChapter) {
-        //   _this.updateCurChapter(nextChapter)
-        // }
         _this.$refs['summary'].$emit('coreSummary-show', _this.id)
         _this.setFormScoresNull()
         return false

@@ -376,7 +376,6 @@ export default {
       'getUserInfo',
       'getLearnInfoV5',
       'getKidCatalog',
-      'getKidUnlockInfo',
       'getMoreLearnCourses',
       'getSubCourses' // 新的课程列表接口
     ]),
@@ -499,7 +498,8 @@ export default {
       this.isShow = true
       let courseCode = this.$route.params.courseCode
       // 4. pro课程数据处理
-      let unlockChapters = await this.getKidUnlockInfo({course_code: courseCode})
+      let unlockChapters = await this.getUnlockChapter(courseCode)
+      this.updateUnlockCourseList(unlockChapters)
       this.unlockCourses = Object.keys(unlockChapters.unlock).join(',')
       this.buyChapters = ''
       Object.keys(unlockChapters.unlock).forEach(key => {
@@ -513,7 +513,7 @@ export default {
       console.log('curUnlockChapter ==> ', curUnlockChapter)
       if (curUnlockChapter) {
         this.updateUnlockCourseList(unlockChapters)
-        this.curChapterData['coreComplete'] = curUnlockChapter['Core_complete']
+        this.curChapterData['coreComplete'] = curUnlockChapter['A05']
         this.curChapterData['homework'] = curUnlockChapter['Homework']
         this.curChapterData['homeworkComplete'] = curUnlockChapter['Homework_complete']
         this.curChapterData['improvement'] = curUnlockChapter['Improvement']
@@ -712,6 +712,9 @@ export default {
       if (kidTabActive) {
         this.active = parseInt(kidTabActive)
       }
+      setTimeout(() => {
+        this.changeTab(this.active)
+      }, 100)
     },
     drawProgress (type, retObj) {
       console.log(retObj)
@@ -787,6 +790,7 @@ export default {
       // }
       let courseCode = this.$route.params.courseCode
       let unlockChapters = await this.getUnlockChapter(courseCode)
+      this.updateUnlockCourseList(unlockChapters)
       this.unlockCourses = Object.keys(unlockChapters.unlock).join(',')
       this.buyChapters = ''
       Object.keys(unlockChapters.unlock).forEach(key => {
