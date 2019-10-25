@@ -16,7 +16,7 @@
           <dt><img :src="kidCourseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
           <dd>
             <a :class="{'active': isShowSubscribeCourses}" @mouseenter="isShowSubscribeCourses = true">
-              <span class="kidCourse_name">{{ kedCourseName }}</span>
+              <span class="kidCourse_name">{{ kidCourseName }}</span>
               <div class="icon">
                 <i></i>
                 <transition name="fade">
@@ -53,7 +53,7 @@ export default {
       }
       return dec
     },
-    kedCourseName () {
+    kidCourseName () {
       let name = ''
       if (this.kidCourseBaseInfo.name) {
         name = this.kidCourseBaseInfo.name + 'Mini'

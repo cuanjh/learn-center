@@ -1,10 +1,12 @@
 <template>
   <div class="homework-wrap">
     <div class="homework-container">
-      <a href="javascript:;" class="homework-balk" @click="back()">
-        <p></p>
-        <span>返回</span>
-      </a>
+      <div class="back-box">
+        <a href="javascript:;" class="homework-balk" @click="back()">
+          <p></p>
+          <span>返回</span>
+        </a>
+      </div>
       <div class="homework-content">
         <div class="homework-title">
           <p>{{courseName + '·' + chapterDes.join('·')}}</p>
@@ -104,8 +106,12 @@ a {
   text-decoration:none;
 }
 .homework-container {
-  width: 890px;
+  // width: 890px;
   margin: 80px auto 0;
+  .back-box {
+    width: 890px;
+    margin: 0 auto;
+  }
   .homework-balk {
     display: block;
     width: 80px;
@@ -137,9 +143,10 @@ a {
   .homework-content {
     width: 100%;
     .homework-title {
-      width: 100%;
+      width: 890px;
       height: 70px;
       background: #2a9fe4;
+      margin: 0 auto;
       p {
         display: inline-block;
         vertical-align: middle;
@@ -150,10 +157,11 @@ a {
       }
     }
     .my-work {
-      width: 100%;
+      width: 890px;
       height: 60px;
       background: #ffffff;
       line-height: 60px;
+      margin: 0 auto;
       .line {
         display: inline-block;
         vertical-align: middle;
@@ -173,14 +181,15 @@ a {
     }
     // 语音css
     .homework-list {
-      width: 106%;
+      width: 940px;
       margin-top: 20px;
       overflow: hidden;
-
+      margin: 20px auto;
     }
     .homework-item {
       display: inline-block;
       width: 32.3333%;
+      padding-left: 30px;
     }
 
   }

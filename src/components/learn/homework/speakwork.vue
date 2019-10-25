@@ -277,6 +277,7 @@ export default {
   background: #ffffff;
   margin: 20px 0;
   border-radius: 6px;
+  padding: 6px 0;
   cursor: pointer;
   &:hover {
     box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);
