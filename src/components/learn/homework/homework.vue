@@ -69,7 +69,7 @@ export default {
   methods: {
     ...mapActions({
       getOneCourseSub: 'getOneCourseSub',
-      setHomeworkComplete: 'setHomeworkComplete',
+      setModuleComplete: 'setModuleComplete',
       getHomeworkContent: 'getHomeworkContent'
     }),
     ...mapMutations({
@@ -83,7 +83,7 @@ export default {
           return item.has_done === true
         })
         if (complete.length === this.homeworkList.length) {
-          this.setHomeworkComplete({chapter_code: this.curChapterCode, homework_complete: true})
+          this.setModuleComplete({chapter_code: this.curChapterCode, module: 'homework_complete'})
         }
       })
     },
