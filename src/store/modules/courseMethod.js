@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import Cookie from '../../tool/cookie'
 
 // 解锁课程的level实现方式
 function unlockArr (unLockChapters) {
@@ -59,7 +58,10 @@ function progressAgainTwo (obj) {
 }
 function progressAgainThree (obj) {
   var num = 0
-  if (obj['A8'] || obj['A7']) {
+  if (obj['A8']) {
+    num += 10
+  }
+  if (obj['A7']) {
     num += 10
   }
   return num
@@ -104,7 +106,6 @@ export var getCourseStructure = (themes, unLockChapters) => {
       chapter.purchased = false
       for (var i = 0; i < arr.length; i++) {
         if (arr[i] === chapter.code) {
-          console.log('chapter' + chapter)
           chapter.judge = true
           let obj = unLockChapters[arr[i]]
           if (obj['Core_complete'] || obj['A0']) {
@@ -127,14 +128,18 @@ export var getCourseStructure = (themes, unLockChapters) => {
             obj['A5'] = true
             obj['A6'] = true
           }
-          let isVip = Cookie.getCookie('isVip')
-          if (parseInt(isVip) !== 1) {
-            obj['A1'] = false
-            obj['A2'] = false
-            obj['A3'] = false
-            obj['A4'] = false
-            obj['A5'] = false
-            obj['A6'] = false
+
+          let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+          if (userInfo) {
+            let isVip = userInfo.member_info.member_type
+            if (parseInt(isVip) !== 1) {
+              obj['A1'] = false
+              obj['A2'] = false
+              obj['A3'] = false
+              obj['A4'] = false
+              obj['A5'] = false
+              obj['A6'] = false
+            }
           }
 
           if (!(obj['Core_complete'] || obj['A0'])) {
@@ -155,6 +160,7 @@ export var getCourseStructure = (themes, unLockChapters) => {
       var chapterArr = chapter.code.split('-')
       chapter.num = (parseInt(chapterArr[3][4]) - 1) * 6 + parseInt(chapterArr[4][7])
       // chapters.push(chapter)
+      console.log(chapter)
       structure.push(chapter)
     })
   })
