@@ -128,7 +128,8 @@ export default {
     ...mapActions([
       'getKidCourseContent',
       'getKidRecordState',
-      'kidUpload'
+      'kidUpload',
+      'setPartComplete'
     ]),
     async initData () {
       let res = await this.getKidCourseContent({chapter_code: this.code})
@@ -205,7 +206,7 @@ export default {
               bus.$emit('clearDate', false)
               if (that.list.length === this.activeIndex + 1) {
                 let activityCode = that.code + '-' + that.type.charAt(0).toUpperCase() + that.type.slice(1)
-                that.kidUpload({activity_code: activityCode})
+                that.setPartComplete({part_code: activityCode})
               }
             }
           }

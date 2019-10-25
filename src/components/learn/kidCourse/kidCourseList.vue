@@ -183,7 +183,7 @@
                               <i class="icon-review-lock" v-show="!curChapterData.coreComplete"></i>
                             </div>
                             <p class="course-item-title" :class="{'course-item-title-locked': !curChapterData.coreComplete }">作业</p>
-                            <p class="course-item-star" v-show="homeworkData['isCompleted']">
+                            <p class="course-item-star" v-show="homeworkData['isComplete']">
                               <span class="course-yellow-star"><i v-for="index in homeworkData['star']" :key="index"></i></span>
                               <span class="course-yellow-star courseIsLock"><i v-for="index in homeworkData['grayStar']" :key="index"></i></span>
                             </p>
@@ -377,7 +377,7 @@ export default {
       'getLearnInfoV5',
       'getKidCatalog',
       'getMoreLearnCourses',
-      'getSubCourses' // 新的课程列表接口
+      'getSubCourses'// 新的课程列表接口
     ]),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode',
@@ -624,19 +624,19 @@ export default {
           retObj['star'] = 5
           retObj['grayStar'] = 0
           retObj['completedHomeworkRate'] = 100
-          retObj['isComplete'] = '1'
+          retObj['isComplete'] = 1
           retObj['imgHomeworkStyle'] = ''
         } else {
           retObj['star'] = 0
           retObj['grayStar'] = 5
-          retObj['isComplete'] = '0'
+          retObj['isComplete'] = 0
           retObj['completedHomeworkRate'] = (doneNum === 0) ? '' : (doneNum / homeworkNum * 100).toFixed(0) + '%'
           retObj['imgHomeworkStyle'] = ''
         }
       } else {
         retObj['star'] = 0
         retObj['grayStar'] = 5
-        retObj['isComplete'] = '0'
+        retObj['isComplete'] = 0
         retObj['completedHomeworkRate'] = ''
         retObj['imgHomeworkStyle'] = ''
       }
@@ -709,6 +709,9 @@ export default {
       console.log('vipdata', this.vipData)
       console.log('curChapterData', this.curChapterData)
       let kidTabActive = localStorage.getItem('kidTabActive')
+      if (kidTabActive === '-1') {
+        kidTabActive = '0'
+      }
       if (kidTabActive) {
         this.active = parseInt(kidTabActive)
       }

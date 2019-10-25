@@ -183,5 +183,8 @@ export default {
   umkidRecordShare: '/kidv1/course/record/share', // 模块学习信息分享接口
   umKidRecordSave: '/kidv1/record/save', // 保存录音接口
   kidUploadApi: '/studyv1/activity/upload/kid', // kid课程内容学完上传统计信息接口
-  kidUnlockInfoApi: '/studyv1/records/chapter/unlock/info' // 获取Kid课程解锁信息接口
+  kidUnlockInfoApi: '/studyv1/records/chapter/unlock/info', // 获取Kid课程解锁信息接口
+  studyProgressCompleteApi: '/studyv1/progress/module/complete', // 内容模块完成接口
+  studyProgressPartCompleteApi: '/studyv1/progress/module/part/complete', // 内容模块各个部分完成接口
+  studyProgressUnlockApi: '/studyv1/progress/module/unlock' // 内容模块解锁接口
 }

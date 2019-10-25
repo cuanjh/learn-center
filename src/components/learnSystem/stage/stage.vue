@@ -500,7 +500,9 @@ export default {
       getCourseContent: 'course/getCourseContent',
       getRecord: 'course/getRecord',
       getCatalog: 'getCatalog',
-      getChapterContent: 'getChapterContent'
+      getChapterContent: 'getChapterContent',
+      setModuleComplete: 'setModuleComplete',
+      setPartComplete: 'setPartComplete'
     }),
     ...mapMutations({
       updateCurSlide: 'course/updateCurSlide',
@@ -800,6 +802,7 @@ export default {
 
         let nextChapter
         if (_this.id.indexOf('A05') > -1) {
+          _this.setModuleComplete({chapter_code: _this.curChapterCode, module: 'core_complete'})
           let arr = _this.curChapterCode.split('-')
           if (arr[4].toLowerCase() === 'chapter6') {
             if (arr[3] === 'Unit4') {
@@ -846,6 +849,7 @@ export default {
         await _this.postActivityRecord(payload).then((res) => {
           console.log(res)
         })
+        _this.setPartComplete({part_code: _this.id})
         _this.$refs['summary'].$emit('coreSummary-show', _this.id)
         _this.setFormScoresNull()
         return false

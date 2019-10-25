@@ -238,5 +238,13 @@ export default {
   // kid课程内容学完上传统计信息接口
   kidUpload ({commit}, params) {
     return httpLogin(config.kidUploadApi, params)
+  },
+  // 设置内容模块完成接口
+  setModuleComplete ({commit}, params) {
+    return httpLogin(config.studyProgressCompleteApi, params)
+  },
+  // 设置内容模块各个部分完成接口
+  setPartComplete ({commit}, params) {
+    return httpLogin(config.studyProgressPartCompleteApi, params)
   }
 }
