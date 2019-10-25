@@ -893,6 +893,7 @@ export default {
       //   return false
       // }
 
+      localStorage.setItem('currentChapterCode', chapterCode)
       if (chapterCode === this.curChapterCode) {
         if (this.isShow) {
           this.isShow = !this.isShow
@@ -1018,7 +1019,7 @@ export default {
           rate += 0.06
         }
       }
-      return rate.toFixed(2) * 100
+      return parseInt(rate.toFixed(2) * 100)
     }
   }
 }
