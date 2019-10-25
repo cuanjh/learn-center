@@ -92,7 +92,7 @@ export default {
       position: relative;
       width: 619px;
       height: 226px;
-      background: #B2C0C9;
+      background-color: #D8D8D8;
       border-radius: 8px;
       img {
         width: 619px;
