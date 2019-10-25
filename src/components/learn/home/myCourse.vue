@@ -420,7 +420,7 @@ export default {
 
       window._czc.push(['_trackEvent', '学习系统', '首页', '开始学习', '', '.start-learn'])
       if (this.curChapterCode === this.learnInfo.current_chapter_code) {
-        this.$router.push({path: '/learn/stage/A0' + this.curCourseObj['courseCore']})
+        this.$router.push({path: '/learn/stage/' + this.curChapterCode + '-A0' + this.curCourseObj['courseCore']})
       } else {
         this.changeChapter(this.curChapterCode)
       }
