@@ -151,7 +151,6 @@ export default {
       // $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
       // this.hideLoading()
-      this.$refs['chapterItem'].$emit('saveHistoryCourseData')
     },
     selLevel (level) {
       this.isShow = false
