@@ -3,7 +3,7 @@
     <div v-show="!isKid" class="my-course">
       <div class="title">我的课程</div>
       <div class="current-chapter" v-if="!isDefault && userId && curCourseCode">
-        <img :src="curCourseObj['courseBg'] | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="">
+        <img :src="curCourseObj['courseBg'] | urlFix('imageView2/0/w/820/h/360/format/jpg')" alt="">
         <div class="course-brief-shade">
           <div class="course-brief-title">
             <span> {{ courseDesc }} </span>
