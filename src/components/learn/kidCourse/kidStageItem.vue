@@ -39,7 +39,7 @@
                   <span></span>
                 </i>
               </div>
-              <div class="record-saveVoice-button" @click.stop.prevent="saveVoice(item)">
+              <div class="record-saveVoice-button" @click.stop.prevent="saveVoice(item)" :disabled="isDisable">
                 <i ></i>
                 <i class="icon-save" v-if="showTipSave == 1"></i>
               </div>
@@ -61,6 +61,7 @@ export default {
   props: ['item', 'index', 'type', 'courseCode', 'showTipsStop', 'showTipSave'],
   data () {
     return {
+      isDisable: false,
       // showTipsStop: true, // 显示停止路由提示
       showRecordingImg: false,
       showStart: false,
@@ -172,6 +173,10 @@ export default {
     },
     // 点击保存录音上次七牛云
     async saveVoice (card) {
+      this.isDisable = true
+      setTimeout(() => {
+        this.isDisable = false
+      }, 2000)
       console.log(card, this.courseCode)
       let code = card.code
       let content = card.content ? card.content : card.word
