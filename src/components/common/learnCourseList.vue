@@ -60,6 +60,7 @@ export default {
       console.log(course)
       let courseCode = course.code
       let courseType = course.course_type
+      localStorage.removeItem('kidTabActive')
       if (courseType === 3) {
         localStorage.setItem('isKid', '1')
         this.$router.push({path: '/app/kid-course-list/' + courseCode})

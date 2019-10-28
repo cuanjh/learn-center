@@ -236,6 +236,7 @@ export default {
     // 点击订阅状态按钮
     btnHandler () {
       if (this.btnState === '1') {
+        localStorage.removeItem('kidTabActive')
         this.startLearn()
       } else if (this.btnState === '0' || this.btnState === '2') {
         this.subscribeCourse()

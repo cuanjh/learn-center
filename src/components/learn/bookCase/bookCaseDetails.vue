@@ -319,6 +319,7 @@ export default {
       if (this.btnState === '1') {
         this.subscribeCourse()
       } else if (this.btnState === '2') {
+        localStorage.removeItem('kidTabActive')
         this.startLearn()
       }
     },
