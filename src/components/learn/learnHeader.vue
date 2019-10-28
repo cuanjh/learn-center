@@ -209,6 +209,11 @@ export default {
       this.courseDetailShow = false
     },
     gotoVIP () {
+      let userId = cookie.getCookie('user_id')
+      if (!userId) {
+        Bus.$emit('showGoLoginBox')
+        return false
+      }
       window._czc.push(['_trackEvent', '学习系统', 'header', '跳转到会员', '', 'VIP'])
       // this.$router.push({path: '/app/vip-home'})
       let routeUrl = this.$router.resolve({

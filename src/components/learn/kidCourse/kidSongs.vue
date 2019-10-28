@@ -190,6 +190,7 @@ export default {
       this.curProgress = percent.toFixed(4) * ($('#voice-player-progress').width() - 10)
       this.curTime = this.video.currentTime
       if (this.curTime === this.video.duration) {
+        console.log('播放完了！')
         this.isPlay = false
         this.next()
       }
