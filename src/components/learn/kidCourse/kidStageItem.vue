@@ -243,7 +243,7 @@ export default {
         this.isRecord = false
         this.heightHide = false
         this.showStart = true
-      }, 300)
+      }, 500)
       this.showStart = false
     },
     // 点击图片播放母语音频
@@ -543,7 +543,7 @@ export default {
         }
       }
       &.heightHide {
-        animation:  heightHide .5s ease;
+        animation:  heightHide 1s ease-in-out;
       }
     }
   }
@@ -568,6 +568,10 @@ export default {
   0% {
     opacity: 1;
     height: 160%;
+  }
+  50% {
+    opacity: 1;
+    height: 100%;
   }
   100% {
     opacity: 1;

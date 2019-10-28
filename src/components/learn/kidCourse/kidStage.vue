@@ -3,7 +3,7 @@
     <div class="header">
       <header>
         <div class="header-content">
-          <router-link :to="{path: '/app/kid-course-list/' + courseCode}" class="balk-icon" ></router-link>
+          <a @click="backKidList()" class="balk-icon" ></a>
           <p class="course-desc">
             <span>课程{{courseIndex}}</span>
             <span>{{type=='draw'?'绘本阅读':'绘本单词'}}</span>
@@ -16,7 +16,7 @@
       <div class="record-lists-content" @click="goKidRecordList(code, type)" v-if="recordState>0">
         <div class="num-content" >
           <i class="icon-img animat-target-img"></i>
-          <div class="tip-blue" @click="goKidRecordList(code, type)">
+          <div class="tip-blue" @click="goKidRecordList(code, type)" v-show="showMyRecordNumTip == 1">
             <i class="blue-img"></i>
             <span>我的{{type=='draw'?'绘本':'单词'}}录音</span>
           </div>
@@ -62,6 +62,7 @@ export default {
   props: ['code', 'type'],
   data () {
     return {
+      myRecordNumTip: 1,
       showTipsStop: 1,
       showTipSave: 1,
       showMose: true,
@@ -82,6 +83,13 @@ export default {
     courseCode () {
       let arr = this.code.split('-')
       return arr.slice(0, 2).join('-')
+    },
+    showMyRecordNumTip () {
+      let tip = JSON.parse(sessionStorage.getItem('myRecordNumTip'))
+      if (tip) {
+        return tip
+      }
+      return this.myRecordNumTip
     }
   },
   created () {
@@ -232,6 +240,8 @@ export default {
     },
     goKidRecordList (code, type) {
       this.$router.push({path: '/app/kid-record-list', query: {code: code, type: type}})
+      this.myRecordNumTip = 2
+      JSON.stringify(sessionStorage.setItem('myRecordNumTip', this.myRecordNumTip))
     },
     initState () {
       this.initRecordState()
@@ -262,6 +272,10 @@ export default {
           this.showMose = false
         }
       }
+    },
+    backKidList () {
+      this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
+      sessionStorage.removeItem('myRecordNumTip')
     }
   }
 }
