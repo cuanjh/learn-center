@@ -173,6 +173,9 @@ export default {
           autoplay: false, //自动轮播
           initialSlide: 0,
           centeredSlides:true,
+          simulateTouch: false,
+          grabCursor: true,
+          observer: true,
           slidesPerView: 'auto',
           spaceBetween: 0,
           mousewheel: {
