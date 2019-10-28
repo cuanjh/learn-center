@@ -135,9 +135,9 @@ export default {
   methods: {
     ...mapActions([
       'getKidCourseContent',
-      'getKidRecordState',
       'kidUpload',
-      'setPartComplete'
+      'setPartComplete',
+      'getKidRecordLists'
     ]),
     async initData () {
       let res = await this.getKidCourseContent({chapter_code: this.code})
@@ -156,21 +156,13 @@ export default {
       await this.swiperInit()
       await this.mySwiper.init()
     },
-    async initRecordState () {
-      let res = await this.getKidRecordState({chapter_code: this.code})
-      console.log('录音数量返回', res)
-      switch (this.type) {
-        case 'draw':
-          this.recordState = res.state.draw_record_num
-          break
-        case 'word':
-          this.recordState = res.state.word_record_num
-          break
-        default:
-          this.recordState = res.state.draw_record_num
-          break
-      }
-      console.log('kid record State', this.recordState)
+    initRecordState () {
+      this.getKidRecordLists({chapter_code: this.code, teacher_module: this.type}).then(res => {
+        console.log('录音数量返回', res)
+        if (res.success) {
+          this.recordState = res.records.length
+        }
+      })
     },
     swiperInit () {
       let that = this

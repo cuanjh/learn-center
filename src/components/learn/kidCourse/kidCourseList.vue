@@ -96,7 +96,7 @@
                 <div class="tab-content">
                   <div class="tab-content-kid" v-show="active == 0">
                     <ul>
-                      <li  @click="goKidStage(item, 'draw', index + 1)">
+                      <li  @click="goKidStage(item, 'draw')">
                         <div class="icon">
                           <i></i>
                         </div>
@@ -104,11 +104,11 @@
                           <span>绘本阅读</span>
                         </div>
                       </li>
-                      <li @click="goKidStage(item, 'word', index + 1)">
+                      <li @click="goKidStage(item, 'word')">
                         <div class="icon"><i></i></div>
                         <div class="title"><span >核心单词</span></div>
                       </li>
-                      <li @click="goKidSongs(item, index + 1)">
+                      <li @click="goKidSongs(item)">
                         <div class="icon"><i></i></div>
                         <div class="title"><span>儿歌</span></div>
                       </li>
@@ -155,9 +155,9 @@
                             <div class="course-item-icon">
                               <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
                               <div class="review-test"></div>
-                              <i class="icon-review-lock" v-show="!(isVip == 1) || !(isVip == 1 && curChapterData['coreComplete'])"></i>
+                              <i class="icon-review-lock" v-show="!((hasPurchased || isVip == 1) && curChapterData['coreComplete'])"></i>
                             </div>
-                            <p class="course-item-title" :class="{'course-item-title-locked': !(isVip == 1) || !(isVip == 1 && curChapterData['coreComplete']) }">测试</p>
+                            <p class="course-item-title" :class="{'course-item-title-locked': !((hasPurchased || isVip == 1) && curChapterData['coreComplete']) }">测试</p>
                             <p class="course-item-star" v-show="testData.isTestCompleted">
                               <span class="course-yellow-star"><i v-for="index in testData.star" :key="index"></i></span>
                               <span class="course-yellow-star courseIsLock"><i v-for="index in testData.grayStar" :key="index"></i></span>
@@ -208,12 +208,12 @@
                             <div class="course-item-icon">
                               <canvas width="300" height="300" :id="item.code + '-canvas-A' + (i + 1)"></canvas>
                               <div :class="'vip'+ (i + 1)"></div>
-                              <i class="icon-vip-lock" v-show="!(isVip == 1) || !(isVip == 1 && curChapterData['coreComplete'])"></i>
+                              <i class="icon-vip-lock" v-show="!((hasPurchased || isVip == 1) && curChapterData['coreComplete'])"></i>
                             </div>
                             <div class="continue-learn-vip">
                               <span>继续学习</span>
                             </div>
-                            <p class="course-item-title" :class="{'course-item-title-locked': !(isVip == 1) || !(isVip == 1 && curChapterData['coreComplete']) }">{{ $t("courseItem.vip."+vipItemList[i]) }}</p>
+                            <p class="course-item-title" :class="{'course-item-title-locked': !((hasPurchased || isVip == 1) && curChapterData['coreComplete']) }">{{ $t("courseItem.vip."+vipItemList[i]) }}</p>
                             <p class="course-item-star" v-if="vip['isCompleted']">
                               <span class="course-yellow-star"><i v-for="index in vip['starNum']" :key="index"></i></span>
                               <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - vip['starNum'])" :key="index"></i></span>
@@ -285,7 +285,8 @@ export default {
       active: -1,
       isShow: true,
       isShowList: true,
-      buyChapters: ''
+      buyChapters: '',
+      hasPurchased: false
     }
   },
   components: {
@@ -394,6 +395,7 @@ export default {
       localStorage.setItem('courseBaseInfo', JSON.stringify(res1.info.courseBaseInfo))
       this.flag = res1.info.courseBaseInfo.flag
       this.name = res1.info.courseBaseInfo.name + 'Mini'
+      this.hasPurchased = res1.info.purchaseState.has_purchased
       this.curChapterCode = res1.info.learnConfig.current_chapter_code
       this.curLevelCode = this.curChapterCode.split('-').slice(0, 3).join('-')
       // this.setChapterUnlock({chapter_code: this.curChapterCode, module: 'core'})
@@ -422,6 +424,7 @@ export default {
       localStorage.setItem('courseBaseInfo', JSON.stringify(res1.info.courseBaseInfo))
       this.flag = res1.info.courseBaseInfo.flag
       this.name = res1.info.courseBaseInfo.name + 'Mini'
+      this.hasPurchased = res1.info.purchaseState.has_purchased
       this.curChapterCode = res1.info.learnConfig.current_chapter_code
       this.curLevelCode = this.curChapterCode.split('-').slice(0, 3).join('-')
       // this.setChapterUnlock({chapter_code: this.curChapterCode, module: 'core'})
@@ -696,7 +699,7 @@ export default {
         }
 
         obj['isActive'] = 1
-        if (parseInt(this.isVip) !== 1) {
+        if (!(parseInt(this.isVip) === 1 || this.hasPurchased)) {
           obj['isCompleted'] = 0
           obj['isActive'] = 0
           obj['completedRate'] = ''
@@ -804,8 +807,10 @@ export default {
         }
       })
       if (this.curChapterCode.toLowerCase().indexOf('unit1-chapter1') > -1 && parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) {
-        Bus.$emit('showBuyChapterPanel', this.curChapterCode)
-        return false
+        if (!this.hasPurchased) {
+          Bus.$emit('showBuyChapterPanel', this.curChapterCode)
+          return false
+        }
       }
       // 上个核心是否学完
       if (isUnlock) {
@@ -813,11 +818,12 @@ export default {
         let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
         console.log(num)
         // 判断非会员是否购买了课程
-        if (parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) { // 没买
+        if (parseInt(this.isVip) === 1 || this.buyChapters.indexOf(this.curChapterCode) > -1 || this.hasPurchased) {
+          this.$router.push({ name: 'stage', params: {id: id} })
+        } else {
           Bus.$emit('showBuyChapterPanel', this.curChapterCode)
           return false
         }
-        this.$router.push({ name: 'stage', params: {id: id} })
       } else {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         Bus.$emit('setContinueLearn', this.tips)
@@ -825,7 +831,14 @@ export default {
       console.log('curChapterCode', this.curChapterCode)
     },
     startTest (isCoreCompleted) {
-      if (parseInt(this.isVip) !== 1) {
+      if (parseInt(this.isVip) === 1 || this.hasPurchased) {
+        if (!isCoreCompleted) {
+          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+          Bus.$emit('setContinueLearn', this.tips)
+        } else {
+          this.$router.push({ path: '/learn/pk/' + this.curChapterCode })
+        }
+      } else {
         let obj = {
           className: 'vipIcon',
           description: '升级会员体验更多功能提高学习效率',
@@ -834,13 +847,6 @@ export default {
           hyperLink: '/app/vip-home'
         }
         Bus.$emit('showCommonModal', obj)
-      } else {
-        if (!isCoreCompleted) {
-          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-          Bus.$emit('setContinueLearn', this.tips)
-        } else {
-          this.$router.push({ path: '/learn/pk/' + this.curChapterCode })
-        }
       }
     },
     startHomework (isCoreCompleted) {
@@ -852,11 +858,14 @@ export default {
       }
     },
     jumpVipPage (isActive, id) {
-      if (parseInt(this.isVip) !== 1) {
-        // let routeUrl = this.$router.resolve({
-        //   path: '/app/vip-home'
-        // })
-        // window.open(routeUrl.href, '_blank')
+      if (parseInt(this.isVip) === 1 || this.hasPurchased) {
+        if (isActive) {
+          this.$router.push({ name: 'stage', params: {id: id} })
+        } else {
+          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+          Bus.$emit('setContinueLearn', this.tips)
+        }
+      } else {
         let obj = {
           className: 'vipIcon',
           description: '升级会员体验更多功能提高学习效率',
@@ -865,13 +874,6 @@ export default {
           hyperLink: '/app/vip-home'
         }
         Bus.$emit('showCommonModal', obj)
-      } else {
-        if (isActive) {
-          this.$router.push({ name: 'stage', params: {id: id} })
-        } else {
-          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-          Bus.$emit('setContinueLearn', this.tips)
-        }
       }
     },
     jumpToCourse (chapterCode) {
@@ -921,9 +923,13 @@ export default {
       this.isShow = false
     },
     // 绘本阅读和单词
-    goKidStage (item, type, index) {
+    goKidStage (item, type) {
       console.log(item, type)
-      if (parseInt(this.isVip) !== 1 && index !== 1) {
+      console.log(this.buyChapters)
+      if (parseInt(this.isVip) === 1 || (parseInt(this.isVip) !== 1 && (this.hasPurchased || item.code.toLowerCase().indexOf('level1-unit1-chapter1') > -1))) {
+        let code = item.code
+        this.$router.push({path: '/app/kid-stage', query: {code: code, type: type}})
+      } else {
         let obj = {
           className: 'vipIcon',
           description: '升级会员免费订阅所有官方课程',
@@ -932,15 +938,16 @@ export default {
           hyperLink: '/app/vip-home'
         }
         Bus.$emit('showCommonModal', obj)
-      } else {
-        let code = item.code
-        this.$router.push({path: '/app/kid-stage', query: {code: code, type: type}})
       }
     },
     // 儿歌
-    goKidSongs (item, index) {
-      console.log('儿歌详情每一个===>', item, index)
-      if (parseInt(this.isVip) !== 1 && index !== 1) {
+    goKidSongs (item) {
+      console.log('儿歌详情每一个===>', item)
+      if (parseInt(this.isVip) === 1 || (parseInt(this.isVip) !== 1 && (this.hasPurchased || item.code.toLowerCase().indexOf('level1-unit1-chapter1') > -1))) {
+        Bus.$emit('showSongsModal', item.code)
+        this.showSongs = true
+        $('body').css('overflow', 'hidden')
+      } else {
         let obj = {
           className: 'vipIcon',
           description: '升级会员免费订阅所有官方课程',
@@ -949,10 +956,6 @@ export default {
           hyperLink: '/app/vip-home'
         }
         Bus.$emit('showCommonModal', obj)
-      } else {
-        Bus.$emit('showSongsModal', item.code)
-        this.showSongs = true
-        $('body').css('overflow', 'hidden')
       }
     },
     closeModal () {

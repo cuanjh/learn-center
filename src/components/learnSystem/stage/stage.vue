@@ -502,7 +502,8 @@ export default {
       getCatalog: 'getCatalog',
       getChapterContent: 'getChapterContent',
       setModuleComplete: 'setModuleComplete',
-      setPartComplete: 'setPartComplete'
+      setPartComplete: 'setPartComplete',
+      setChapterUnlock: 'setChapterUnlock'
     }),
     ...mapMutations({
       updateCurSlide: 'course/updateCurSlide',
@@ -832,10 +833,8 @@ export default {
               learn_time: 0,
               correct_rate: 0
             }
-
-            if (_this.unlockCourses.indexOf(nextChapter) === -1) {
-              await _this.postUnlockChapter(params)
-            }
+            await _this.postUnlockChapter(params)
+            this.setChapterUnlock({chapter_code: nextChapter, module: 'core'})
           }
         }
         var payload = {

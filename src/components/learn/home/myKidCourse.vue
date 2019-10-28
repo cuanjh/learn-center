@@ -6,7 +6,7 @@
     </div>
     <div class="content">
       <div class="chapter">
-        <img :src="kidChapterInfo.image_bg2 | urlFix('imageView2/0/w/200/h/200/format/jpg')" alt="">
+        <img :src="kidChapterInfo.image_bg2 | urlFix('imageView2/0/w/619/h/226/format/jpg')" alt="">
         <div class="name">
           {{ chapterDesc }}
         </div>
