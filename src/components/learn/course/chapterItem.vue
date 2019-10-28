@@ -35,7 +35,7 @@
       <div class="course-item-detail"
         v-show="isShow && currentChapterCode == item.code">
         <ul>
-          <li class="course-brief">
+          <li class="course-brief" @click="switchShow()">
             <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
             <div class="course-brief-shade">
               <div class="course-brief-title">
@@ -876,6 +876,7 @@ export default {
     position: relative;
     border-radius: 2.73px;
     height: 300px;
+    cursor: pointer;
   }
 
   .course-brief img{

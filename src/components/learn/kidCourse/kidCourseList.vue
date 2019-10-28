@@ -377,6 +377,7 @@ export default {
       'getLearnInfoV5',
       'getKidCatalog',
       'getMoreLearnCourses',
+      'setChapterUnlock',
       'getSubCourses'// 新的课程列表接口
     ]),
     ...mapMutations({
@@ -395,7 +396,7 @@ export default {
       this.name = res1.info.courseBaseInfo.name + 'Mini'
       this.curChapterCode = res1.info.learnConfig.current_chapter_code
       this.curLevelCode = this.curChapterCode.split('-').slice(0, 3).join('-')
-
+      // this.setChapterUnlock({chapter_code: this.curChapterCode, module: 'core'})
       // 2.设置当前学习的课程
       this.setKidCurrentChapter({chapter_code: this.curChapterCode})
       localStorage.setItem('currentChapterCode', this.curChapterCode)
@@ -423,7 +424,7 @@ export default {
       this.name = res1.info.courseBaseInfo.name + 'Mini'
       this.curChapterCode = res1.info.learnConfig.current_chapter_code
       this.curLevelCode = this.curChapterCode.split('-').slice(0, 3).join('-')
-
+      // this.setChapterUnlock({chapter_code: this.curChapterCode, module: 'core'})
       // 2.设置当前学习的课程
       this.setKidCurrentChapter({chapter_code: this.curChapterCode})
       localStorage.setItem('currentChapterCode', this.curChapterCode)
@@ -709,7 +710,7 @@ export default {
       console.log('vipdata', this.vipData)
       console.log('curChapterData', this.curChapterData)
       let kidTabActive = localStorage.getItem('kidTabActive')
-      if (kidTabActive === '-1') {
+      if (!kidTabActive || kidTabActive === '-1') {
         kidTabActive = '0'
       }
       if (kidTabActive) {

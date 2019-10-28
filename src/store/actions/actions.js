@@ -246,5 +246,9 @@ export default {
   // 设置内容模块各个部分完成接口
   setPartComplete ({commit}, params) {
     return httpLogin(config.studyProgressPartCompleteApi, params)
+  },
+  // 设置内容模块解锁
+  setChapterUnlock ({commit}, params) {
+    return httpLogin(config.studyProgressUnlockApi, params)
   }
 }
