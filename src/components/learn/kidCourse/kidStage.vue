@@ -32,8 +32,6 @@
                           :index="index"
                           :type="type"
                           :courseCode="courseCode"
-                          :showRecordTipsStop="showRecordTipsStop"
-                          :showRecordTipsSave="showRecordTipsSave"
                           @initRecordState="initState"
                           />
         </div>
@@ -62,8 +60,8 @@ export default {
   data () {
     return {
       myRecordNumTip: 1,
-      showTipsStop: 1,
-      showTipSave: 1,
+      // showTipsStop: 1,
+      // showTipSave: 1,
       showMose: true,
       list: [],
       recordState: null,
@@ -89,21 +87,21 @@ export default {
         return tip
       }
       return this.myRecordNumTip
-    },
-    showRecordTipsStop () {
-      let stop = JSON.parse(localStorage.getItem('recordTipStop'))
-      if (stop) {
-        return stop
-      }
-      return this.showTipsStop
-    },
-    showRecordTipsSave () {
-      let save = JSON.parse(localStorage.getItem('recordTipSave'))
-      if (save) {
-        return save
-      }
-      return this.showTipSave
     }
+    // showRecordTipsStop () {
+    //   let stop = JSON.parse(localStorage.getItem('recordTipStop'))
+    //   if (stop) {
+    //     return stop
+    //   }
+    //   return this.showTipsStop
+    // },
+    // showRecordTipsSave () {
+    //   let save = JSON.parse(localStorage.getItem('recordTipSave'))
+    //   if (save) {
+    //     return save
+    //   }
+    //   return this.showTipSave
+    // }
   },
   created () {
     Recorder.init()

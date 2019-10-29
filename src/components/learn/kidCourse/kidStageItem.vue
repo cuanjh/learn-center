@@ -20,7 +20,7 @@
           </p>
           <div class="recording-body-buttons">
             <div class="recording-body-button">
-              <div class="tip" v-if="recording&&showRecordTipsStop == 1"><i class="tip-img"></i></div>
+              <div class="tip" v-if="recording&&showTipsStop == 1"><i class="tip-img"></i></div>
               <div class="recording-button" @click.stop.prevent="recordStop()">
                 <i class="recording-img" v-if="showRecordingImg"></i>
                 <i class="circle circle1" v-if="recording"></i>
@@ -42,7 +42,7 @@
               </div>
               <div class="record-saveVoice-button" @click.stop.prevent="saveVoice(item)" :disabled="isDisable">
                 <i ></i>
-                <i class="icon-save" v-if="showRecordTipsSave == 1"></i>
+                <i class="icon-save" v-if="showTipSave == 1"></i>
               </div>
             </div>
           </div>
@@ -59,9 +59,11 @@ import Recorder from '../../../plugins/recorder'
 import Cookie from '../../../tool/cookie.js'
 
 export default {
-  props: ['item', 'index', 'type', 'courseCode', 'showRecordTipsStop', 'showRecordTipsSave'],
+  props: ['item', 'index', 'type', 'courseCode'],
   data () {
     return {
+      showTipsStop: 1,
+      showTipSave: 1,
       isDisable: false,
       // showTipsStop: true, // 显示停止路由提示
       showRecordingImg: false,
@@ -99,6 +101,20 @@ export default {
       canRecord: state => state.learn.canRecord,
       FileQiniuToken: state => state.FileQiniuToken // 七牛的token
     })
+    // showRecordTipsStop () {
+    //   let stop = JSON.parse(localStorage.getItem('recordTipStop'))
+    //   if (stop) {
+    //     return stop
+    //   }
+    //   return this.showTipsStop
+    // },
+    // showRecordTipsSave () {
+    //   let save = JSON.parse(localStorage.getItem('recordTipSave'))
+    //   if (save) {
+    //     return save
+    //   }
+    //   return this.showTipSave
+    // }
   },
   methods: {
     ...mapActions({
@@ -113,9 +129,9 @@ export default {
     startRecord (e) {
       let stop = JSON.parse(localStorage.getItem('recordTipStop'))
       if (stop) {
-        this.showRecordTipsStop = stop
+        this.showTipsStop = stop
       } else {
-        this.showRecordTipsStop = 1
+        this.showTipsStop = 1
       }
       // 如果正在录音则停止录音
       if (this.recording) {
@@ -146,9 +162,9 @@ export default {
     recordStop () {
       let save = JSON.parse(localStorage.getItem('recordTipSave'))
       if (save) {
-        this.showRecordTipsSave = save
+        this.showTipSave = save
       } else {
-        this.showRecordTipsSave = 1
+        this.showTipSave = 1
       }
       Recorder.stopRecording()
       bus.$off('record_setVolume')
