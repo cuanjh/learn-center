@@ -173,6 +173,7 @@ export default {
           slidesPerView: 'auto',
           spaceBetween: 0,
           slideToClickedSlide: true,
+          allowTouchMove: false,
           mousewheel: {
             releaseOnEdges: true,
           },
