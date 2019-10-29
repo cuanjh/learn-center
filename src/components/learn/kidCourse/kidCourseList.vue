@@ -414,6 +414,10 @@ export default {
       this.curLevelChapters = curLevel.chapters
       localStorage.setItem('curLevelChapters', JSON.stringify(this.curLevelChapters))
       console.log('curLevelChapters', this.curLevelChapters)
+      setTimeout(() => {
+        let top = $('#' + this.curChapterCode).offset().top - 130
+        $('body,html').scrollTop(top)
+      }, 0)
       this.initProData()
     },
     async initData () {
@@ -443,6 +447,10 @@ export default {
       this.curLevelChapters = curLevel.chapters
       localStorage.setItem('curLevelChapters', JSON.stringify(this.curLevelChapters))
       console.log('curLevelChapters', this.curLevelChapters)
+      setTimeout(() => {
+        let top = $('#' + this.curChapterCode).offset().top - 130
+        $('body,html').scrollTop(top)
+      }, 0)
       // 3. 获取订阅课程
       let res3 = await this.getSubCourses()
       console.log('新的课程列表返回', res3)
@@ -459,6 +467,7 @@ export default {
         })
         console.log('订阅的官方课程', this.subscribeLangCourses)
       }
+
       this.initProData()
     },
     jumpToPage (path) {
@@ -471,24 +480,6 @@ export default {
       Bus.$emit('changeCourseCode', courseCode)
     },
     changeTab (index) {
-      // let courseCode = this.$route.params.courseCode
-      // let unlockChapters = await this.getUnlockChapter(courseCode)
-      // this.unlockCourses = Object.keys(unlockChapters.unlock).join(',')
-      // this.buyChapters = ''
-      // Object.keys(unlockChapters.unlock).forEach(key => {
-      //   let item = unlockChapters.unlock[key]
-      //   if (item.Has_purchased) {
-      //     this.buyChapters += key + ','
-      //   }
-      // })
-      // console.log('curChapterCode', this.curChapterCode)
-      // let arr = this.curChapterCode.split('-')
-      // let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
-      // console.log(num)
-      // if (num > 1 && parseInt(this.isVip) !== 1 && this.buyChapters.indexOf(this.curChapterCode) === -1) {
-      //   Bus.$emit('showBuyChapterPanel', this.curChapterCode)
-      //   return false
-      // }
       if (index === 1) {
         this.drawProgress('core', this.curChapterData['core'])
         this.drawProgress('test', this.testData)
@@ -915,6 +906,8 @@ export default {
             this.active = 0
             localStorage.setItem('kidTabActive', this.active)
             this.curChapterCode = chapterCode
+            let top = $('#' + this.curChapterCode).offset().top - 130
+            $('body,html').animate({ scrollTop: top }, 500, 'linear')
             this.initProData()
           })
         }, 300)
