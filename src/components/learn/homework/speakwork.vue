@@ -54,7 +54,7 @@
                   <span :class="{'animat':animat}"></span>
                 </i>
               </div>
-              <div class="send" @click.prevent="exit()">
+              <div class="send" @click="exit()">
                 <i></i>
                 <span>发送</span>
               </div>
@@ -155,7 +155,7 @@ export default {
       // 录音状态下不可点
       this.recording = true
       // 开始检测录音音量
-      bus.$on('record_setVolume', this.setVolume)
+      bus.$on('record_setVolume', this.setVolume) // 开始动画
       Recorder.startRecording()
       var _this = this
       console.log('record start!!!!!')
@@ -229,6 +229,7 @@ export default {
     },
     // 发送作业 先调七牛云上传音频，调后台写作业接口
     exit () {
+      let that = this
       let code = this.homework.form_id
       let sentence = this.homework.sentence
       Recorder.getTime((duration) => {
@@ -249,6 +250,7 @@ export default {
             this.mShow = false
             this.lastShow = false
             this.animat = false
+            that.$emit('initData')
           })
         })
       })
@@ -275,6 +277,7 @@ export default {
   background: #ffffff;
   margin: 20px 0;
   border-radius: 6px;
+  padding: 6px 0;
   cursor: pointer;
   &:hover {
     box-shadow: 0 0 26px 0 rgba(000, 000, 000, 0.3);

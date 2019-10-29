@@ -1,7 +1,8 @@
 <template>
   <div class="nolock-test-check" v-show="isShow">
-    <p class="animated flipInX">快去绑定，<br>开启全球说学习之旅吧！
-      <i></i>
+    <p class="animated flipInX">快去绑定账号，<br>开启全球说学习之旅吧！
+      <i class="close-img" @click="closeModal()"></i>
+      <i class="top-img"></i>
       <span class="goBackCore" @click="goToBind()">去绑定</span>
     </p>
   </div>
@@ -24,12 +25,15 @@ export default {
     goToBind () {
       this.isShow = false
       this.$router.push({path: '/app/user/bind'})
+    },
+    closeModal () {
+      this.isShow = false
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   .nolock-test-check{
     position:fixed;
     width:100%;
@@ -62,7 +66,7 @@ export default {
     margin:auto;
   }
 
-  .nolock-test-check p i{
+  .nolock-test-check p .top-img {
     position:absolute;
     width:110px;
     height:110px;
@@ -90,5 +94,19 @@ export default {
     line-height: 40px;
     text-align: center;
     background-color: #2A9FE4;
+  }
+  .nolock-test-check p .close-img {
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 30px;
+    height: 30px;
+    background: url('../../../static/images/icon-close-img.png') no-repeat center;
+    background-size: cover;
+    &:hover {
+      cursor: pointer;
+      background: url('../../../static/images/icon-close-img-active.png') no-repeat center;
+      background-size: cover;
+    }
   }
 </style>

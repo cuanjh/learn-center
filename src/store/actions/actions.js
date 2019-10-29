@@ -1,4 +1,4 @@
-import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken, clearCookie } from '../../api/api'
+import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken, clearCookie, httpAssets } from '../../api/api'
 import config from '../../api/config'
 import cookie from '../../tool/cookie'
 
@@ -86,9 +86,20 @@ export default {
     return httpLogin(config.courseListApi)
   },
   // 获取语言列表
+  // getLangsList ({commit}) {
+  //   return httpNoLogin(config.umLangsListApi).then(res => {
+  //     commit('updateCourseLangsList', res.hotLangsInfo.concat(res.langsInfo))
+  //     return res
+  //   })
+  // },
   getLangsList ({commit}) {
     return httpNoLogin(config.umLangsListApi).then(res => {
-      commit('updateCourseLangsList', res.hotLangsInfo.concat(res.langsInfo))
+      console.log('res====>', res)
+      // this.courseNew = [...this.courseNew, ...this.allCourse]
+      // let hotList = res.courseInfo.hotCourses.concat(res.courseInfo.kidCourses)
+      // let allCourseList = res.courseInfo.kidCourses.concat(res.courseInfo.listCourses)
+      // console.log('hotList, allCourseList', hotList, allCourseList)
+      commit('updateCourseLangsList', res.courseInfo)
       return res
     })
   },
@@ -163,5 +174,85 @@ export default {
   // 获取课程档案
   getUserArchive ({commit}, params) {
     return httpLogin(config.userArchiveApi, params)
+  },
+  // 获取mini的课程详情
+  getKidCourseDetail ({commit}, params) {
+    return httpLogin(config.umKidCourseDetailApi, params)
+  },
+  // 获取用户课程列表接口
+  getSubCourses ({commit}, params) {
+    return httpLogin(config.userSubCoursesApi, params)
+  },
+  // mini课程订阅接口
+  getOneCourseSub ({commit}, params) {
+    return httpLogin(config.courseSubApi, params)
+  },
+  // 获取kid学习信息
+  getLearnInfoV5 ({commit}, params) {
+    return httpLogin(config.learnInfoV5Api, params)
+  },
+  // 设置当前学习课程
+  setKidCurrentChapter ({ commit }, params) {
+    return httpLogin(config.setCurChapter, params)
+  },
+  // 获取目录结构
+  getCatalog ({ commit }, params) {
+    return httpLogin(config.studyCatalogApi, params)
+  },
+  // kid教师内容接口(包含绘本，单词，儿歌)
+  getKidCourseContent ({commit}, params) {
+    return httpLogin(config.umKidCourseContent, params)
+  },
+  // 获取学习进度
+  getProgress ({commit}, params) {
+    return httpLogin(config.getProgressApi, params)
+  },
+  // 获取章节资源内容
+  getChapterContent ({ commit, state }, chapterUrl) {
+    return httpAssets(chapterUrl)
+  },
+  // 获取测试排行榜数据
+  getCourseTestRanking ({ commit, state }, chapterCode) {
+    return httpLogin(config.courseTestRanking, { chapter_code: chapterCode })
+  },
+  // 获取作业内容数据
+  getHomeworkContent ({ commit, state }, activityCode) {
+    return httpLogin(config.homeworkContent, { activity_code: activityCode })
+  },
+  // 设置作业完成接口
+  setHomeworkComplete ({commit, state}, params) {
+    return httpLogin(config.setHomeworkCompleteApi, params)
+  },
+  // 单个课程的录音状态接口
+  getKidRecordState ({commit}, params) {
+    return httpLogin(config.umKidRecordState, params)
+  },
+  // 录音列表接口
+  getKidRecordLists ({commit}, params) {
+    return httpLogin(config.umKidRecordLists, params)
+  },
+  // 保存录音接口
+  getKidRecordSave ({commit}, params) {
+    return httpLogin(config.umKidRecordSave, params)
+  },
+  // 分享的标题
+  getkidRecordShare ({commit}, params) {
+    return httpLogin(config.umkidRecordShare, params)
+  },
+  // kid课程内容学完上传统计信息接口
+  kidUpload ({commit}, params) {
+    return httpLogin(config.kidUploadApi, params)
+  },
+  // 设置内容模块完成接口
+  setModuleComplete ({commit}, params) {
+    return httpLogin(config.studyProgressCompleteApi, params)
+  },
+  // 设置内容模块各个部分完成接口
+  setPartComplete ({commit}, params) {
+    return httpLogin(config.studyProgressPartCompleteApi, params)
+  },
+  // 设置内容模块解锁
+  setChapterUnlock ({commit}, params) {
+    return httpLogin(config.studyProgressUnlockApi, params)
   }
 }

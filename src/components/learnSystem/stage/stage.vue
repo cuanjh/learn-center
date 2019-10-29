@@ -58,6 +58,8 @@ export default {
   props: ['id'],
   data () {
     return {
+      curChapterContent: {},
+      curChapterRecord: {},
       cur: -1, // 当前的子组件
       isTeacher: 0,
       totalCoin: 0, // 所有的金币数
@@ -95,26 +97,34 @@ export default {
   beforeRouteUpdate (to, form, next) {
     console.log('router update')
     if (to.name === 'stage') {
-      let id = to.params.id
-      if (id.indexOf('A0') > -1) {
-        this.updateCurCoreParts(id)
-      }
-      this.chapterProgress(id)
-      this.timeCount()
+      let isAnonymous = Cookie.getCookie('is_anonymous') === 'true'
+      console.log('isAnonymous--->', isAnonymous)
+      this.initData()
+      // if (isAnonymous) {
+      //   this.initAnonymousData()
+      // } else {
+      //   this.initData()
+      // }
+      // let id = to.params.id
+      // if (id.indexOf('A0') > -1) {
+      //   this.updateCurCoreParts(id)
+      // }
+      // this.chapterProgress({id: id, curChapterRecord: this.curChapterRecord, curChapterContent: this.curChapterContent})
+      // this.timeCount()
 
-      var that = this
-      let _coinCache = coinCache.get(that.completePath)
-      if (_coinCache === null) {
-        coinCache.set(that.completePath, that.coin)
-      } else {
-        that.coin = _coinCache
-        let coins = parseInt(this.totalCoin) + _coinCache
-        this.totalCoin = coins
-        // that.updateTotalCoin(coins)
-      }
+      // var that = this
+      // let _coinCache = coinCache.get(that.completePath)
+      // if (_coinCache === null) {
+      //   coinCache.set(that.completePath, that.coin)
+      // } else {
+      //   that.coin = _coinCache
+      //   let coins = parseInt(this.totalCoin) + _coinCache
+      //   this.totalCoin = coins
+      //   // that.updateTotalCoin(coins)
+      // }
 
-      var resource = this.getResource(this.curSlide)
-      this.changeData(this, Loader(resource))
+      // var resource = this.getResource(this.curSlide)
+      // this.changeData(this, Loader(resource))
 
       next()
     } else {
@@ -237,11 +247,10 @@ export default {
       this.postProgress().then(() => {
         coinCache.update(this.coin)
       })
-      this.getProgress(this.curChapterCode)
+      this.getProgress({chapter_code: this.curChapterCode})
       // 退出学习日志数据收集
       var whetherFirst = (this.progress[0] === -1) - 0
-      var chapterCode = localStorage.getItem('currentChapterCode')
-      var currentForm = chapterCode + '-' + this.id + '-' + this.curSlide + '-' + (this.cur + 1)
+      var currentForm = this.id + '-' + this.curSlide + '-' + (this.cur + 1)
       console.log(currentForm)
       logCollect.learnExit(whetherFirst, currentForm)
 
@@ -252,7 +261,14 @@ export default {
           item[0].$emit('break')
         }
       })
-      this.$router.push({path: '/app/course-list'})
+      // 判断是否KID课程
+      let isKid = localStorage.getItem('isKid')
+      let courseCode = this.id.split('-').slice(0, 2).join('-')
+      if (isKid === '1') {
+        this.$router.push({path: '/app/kid-course-list/' + courseCode})
+      } else {
+        this.$router.push({path: '/app/course-list/' + courseCode})
+      }
       // this.$dispatch('change-router', _.take(this.data, 3).join('/'))
     })
 
@@ -266,7 +282,7 @@ export default {
         this.postProgress().then(() => {
           coinCache.update(this.coin)
         })
-        this.getProgress(this.curChapterCode)
+        this.getProgress({chapter_code: this.curChapterCode})
       }
       // console.log('slides done:', this.cur_slide)
       if (this.curSlide + 1 === this.progress.length) {
@@ -377,17 +393,36 @@ export default {
   mounted () {
     let isAnonymous = Cookie.getCookie('is_anonymous') === 'true'
     console.log('isAnonymous--->', isAnonymous)
-    if (isAnonymous) {
-      this.initAnonymousData()
-    } else {
-      this.initData()
-    }
+    this.initData()
+    // if (isAnonymous) {
+    //   this.initAnonymousData()
+    // } else {
+    //   this.initData()
+    // }
+    // 弹出提示
+
+    this.$nextTick(() => {
+      if (
+        Recorder.isActivity() !== true &&
+        Recorder.refuseRecord !== true &&
+        this.canRecord
+      ) {
+        this.micphoneTip = this.tips.micphone
+        this.isPop = true
+      } else if (Recorder.refuseRecord) {
+        this.micphoneTip = this.tips.micphone_failed
+        this.isPop = true
+      }
+      if (this.isPop) {
+        this.$refs.tipbox.$emit('tipbox-show')
+        this.updatePause(true)
+      }
+    })
   },
   computed: {
     ...mapState({
       currentCourseCode: state => state.course.currentCourseCode,
       curCorePart: state => state.course.curCorePart,
-      curChapterContent: state => state.course.curChapterContent,
       recordForm: state => state.course.recordForm,
       currentChapterCode: state => state.course.currentChapterCode,
       progress: state => state.course.progress,
@@ -411,7 +446,7 @@ export default {
       return _.flattenDeep(this.list).length
     },
     completePath () {
-      let path = this.curChapterCode + '-' + this.id + '-Slide' + this.curSlide
+      let path = this.id + '-Slide' + this.curSlide
       return path
     },
     isLayout3 () {
@@ -459,12 +494,16 @@ export default {
       postCoin: 'learn/postCoin',
       postUnlockChapter: 'course/postUnlockChapter',
       getUnlockChapter: 'course/getUnlockChapter',
-      getProgress: 'course/getProgress',
+      getProgress: 'getProgress',
       getUserInfo: 'getUserInfo',
-      getChapterContent: 'course/getChapterContent',
       getLearnInfo: 'course/getLearnInfo',
       getCourseContent: 'course/getCourseContent',
-      getRecord: 'course/getRecord'
+      getRecord: 'course/getRecord',
+      getCatalog: 'getCatalog',
+      getChapterContent: 'getChapterContent',
+      setModuleComplete: 'setModuleComplete',
+      setPartComplete: 'setPartComplete',
+      setChapterUnlock: 'setChapterUnlock'
     }),
     ...mapMutations({
       updateCurSlide: 'course/updateCurSlide',
@@ -561,20 +600,14 @@ export default {
     },
     getResource (curSlide) {
       let forms = {}
-      let curChapterContent = {}
-      if (Object.keys(this.curChapterContent).length === 0) {
-        curChapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
-      } else {
-        curChapterContent = this.curChapterContent
-      }
       if (this.id.indexOf('A0') > -1) {
-        let startSlideNum = this.curCorePart.Slides[0]
+        let startSlideNum = this.curCorePart.slides[0]
         let realSlideNum = startSlideNum + curSlide - 1
 
-        forms = curChapterContent.coreLessons.parts[0]
+        forms = this.curChapterContent.coreLessons.parts[0]
           .slides[realSlideNum].forms
       } else {
-        curChapterContent.improvement.parts.forEach((item) => {
+        this.curChapterContent.improvement.parts.forEach((item) => {
           if (item.slide_type_code.indexOf(this.id) > -1) {
             forms = item.slides[curSlide].forms
           }
@@ -625,13 +658,34 @@ export default {
       await this.getChapterContent()
 
       await this.getRecord(this.currentChapterCode + '-A0')
-      await this.getProgress(this.currentChapterCode)
+      await this.getProgress({chapter_code: this.currentChapterCode})
       console.log(5555)
       this.initData()
     },
     async initData () {
       await this.getUserInfo()
-      console.log(3333)
+      let courseCode = this.id.split('-').slice(0, 2).join('-')
+      let curLevelCode = this.id.split('-').slice(0, 3).join('-')
+      let curChapterCode = this.id.split('-').slice(0, 5).join('-')
+      let catalog = await this.getCatalog({course_code: courseCode})
+      console.log('catalog', catalog)
+      Cookie.setCookie('assetsApi', catalog.assets_server)
+      let curLevelObj = catalog.catalogInfo.catalogs.find(item => {
+        return item.code === curLevelCode
+      })
+      let curChapterObj = curLevelObj.chapters.find(item => {
+        return item.code === curChapterCode
+      })
+
+      let progressObj = await this.getProgress({chapter_code: curChapterCode})
+      this.curChapterRecord = progressObj.record
+      console.log('progressObj', progressObj)
+
+      console.log('curChapterObj', curChapterObj)
+      let chapterUrl = curChapterObj.chapter_url
+      this.curChapterContent = await this.getChapterContent(chapterUrl)
+      console.log('curChapterContent', this.curChapterContent)
+
       this.totalCoin = this.userInfo.coins
       localStorage.setItem('userCoin', this.userInfo.coins)
       // var that = this
@@ -650,7 +704,7 @@ export default {
         this.updateCurCoreParts(id)
       }
 
-      this.chapterProgress(this.id)
+      await this.chapterProgress({id: this.id, curChapterRecord: this.curChapterRecord, curChapterContent: this.curChapterContent})
       // this.typeList = this.getTypeList()
       // this.list = this.getList()
 
@@ -660,25 +714,7 @@ export default {
       this.changeData(this, Loader(resource))
 
       // this.$emit('next-component')
-      // 弹出提示、/////////////////////////////////////////////
 
-      this.$nextTick(() => {
-        if (
-          Recorder.isActivity() !== true &&
-          Recorder.refuseRecord !== true &&
-          this.canRecord
-        ) {
-          this.micphoneTip = this.tips.micphone
-          this.isPop = true
-        } else if (Recorder.refuseRecord) {
-          this.micphoneTip = this.tips.micphone_failed
-          this.isPop = true
-        }
-        if (this.isPop) {
-          this.$refs.tipbox.$emit('tipbox-show')
-          this.updatePause(true)
-        }
-      })
       await this.getCoinCalculationRule()
       this.isFirst = Number(this.progress[0] === -1)
       // 判断是否是第一次进入，日志数据提交
@@ -704,7 +740,7 @@ export default {
         await _this.postProgress()
         _this.stopCount() // 停止计时器
 
-        await _this.getProgress(_this.curChapterCode)
+        await _this.getProgress({chapter_code: _this.curChapterCode})
         console.log(_this.coin)
         _this.$emit('calCoin') // 结束前清算结果
         console.log(_this.coin)
@@ -727,7 +763,7 @@ export default {
           // let arr = _.values(_this.formScores)
           // let formsRecord = arr.slice(_this.curCorePart.start_form - 1, _this.curCorePart.end_form)
           let formsRecord = []
-          _this.curCorePart.Slides.forEach((slide) => {
+          _this.curCorePart.slides.forEach((slide) => {
             Object.keys(_this.formScores).filter((item) => {
               return item.indexOf('A0-' + slide + '-') > -1
             }).map((el) => {
@@ -743,15 +779,8 @@ export default {
           cr = (correctArr.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
           ccr = (formsRecord.length / (_this.curCorePart.end_form - _this.curCorePart.start_form + 1)).toFixed(2)
         } else {
-          let curChapterContent = {}
-          if (Object.keys(_this.curChapterContent).length === 0) {
-            curChapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
-          } else {
-            curChapterContent = _this.curChapterContent
-          }
-
           let formsLength = 0
-          curChapterContent.improvement.parts.forEach((item) => {
+          this.curChapterContent.improvement.parts.forEach((item) => {
             if (item.slide_type_code.indexOf(_this.id) > -1) {
               var slides = item.slides
               slides.forEach((i) => {
@@ -761,7 +790,7 @@ export default {
           })
           let arr1 = []
           _.forIn(_this.formScores, (value, key) => {
-            if (key.indexOf('-' + _this.id + '-') > -1) {
+            if (key.indexOf(_this.id + '-') > -1) {
               arr1.push(value)
             }
           })
@@ -774,6 +803,7 @@ export default {
 
         let nextChapter
         if (_this.id.indexOf('A05') > -1) {
+          _this.setModuleComplete({chapter_code: _this.curChapterCode, module: 'core_complete'})
           let arr = _this.curChapterCode.split('-')
           if (arr[4].toLowerCase() === 'chapter6') {
             if (arr[3] === 'Unit4') {
@@ -791,28 +821,24 @@ export default {
             let chapter = 'Chapter' + (parseInt(arr[4].replace('Chapter', '')) + 1)
             nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + arr[3] + '-' + chapter
           }
-          var params = {
-            chapter_code: nextChapter,
-            core: 1,
-            homework: 0,
-            improvement: 0,
-            core_complete: 0,
-            homework_complete: 0,
-            improvement_complete: 0,
-            learn_time: 0,
-            correct_rate: 0,
-            group_id: ''
-          }
-
           if (_this.unlockCourses.indexOf(nextChapter) === -1) {
+            var params = {
+              chapter_code: nextChapter,
+              core: 1,
+              homework: 0,
+              improvement: 0,
+              core_complete: 0,
+              homework_complete: 0,
+              improvement_complete: 0,
+              learn_time: 0,
+              correct_rate: 0
+            }
             await _this.postUnlockChapter(params)
-            await _this.getUnlockChapter(nextChapter).then((res) => {
-              _this.updateUnlockCourseList(res)
-            })
+            this.setChapterUnlock({chapter_code: nextChapter, module: 'core'})
           }
         }
         var payload = {
-          activityCode: _this.curChapterCode + '-' + _this.id,
+          activityCode: _this.id,
           coins: _this.coin,
           correctHits: _this.continue_correct,
           learnTime: _this.last_time,
@@ -822,24 +848,7 @@ export default {
         await _this.postActivityRecord(payload).then((res) => {
           console.log(res)
         })
-        var params1 = {
-          chapter_code: _this.curChapterCode,
-          core: (_this.core) ? 1 : 0,
-          homework: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-          improvement: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-          core_complete: (_this.id.indexOf('A05') > -1) ? 1 : 0,
-          homework_complete: (_this.homeworkComplete) ? 1 : 0,
-          improvement_complete: (_this.improvementComplete) ? 1 : 0,
-          learn_time: _this.last_time,
-          correct_rate: cr,
-          group_id: ''
-        }
-        await _this.postUnlockChapter(params1).then((res) => {
-          console.log(res)
-        })
-        // if (nextChapter) {
-        //   _this.updateCurChapter(nextChapter)
-        // }
+        _this.setPartComplete({part_code: _this.id})
         _this.$refs['summary'].$emit('coreSummary-show', _this.id)
         _this.setFormScoresNull()
         return false

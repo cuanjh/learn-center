@@ -1,82 +1,92 @@
 <template>
-  <div class="my-course">
-    <div class="title">我的课程</div>
-    <div class="current-chapter" v-if="!isDefault && userId && curCourseCode">
-      <img :src="curCourseObj['courseBg']" alt="">
-      <div class="course-brief-shade">
-        <div class="course-brief-title">
-          <span> {{ courseDesc }} </span>
-        </div>
-        <div class="course-brief-core">
-          <span>{{ curCourseObj['courseCore'] ? '核心' + curCourseObj['courseCore'] : '' }}</span>
-        </div>
-        <div class="course-brief-words">{{ curCourseObj['courseWords'] }}</div>
-        <div class="change-course">
-          <span class="pre" @click="pre()" v-show="isShowPre"><i></i></span>
-          <span class="next" @click="next()" v-show="isShowNext"><i></i></span>
-        </div>
-        <a class="start-learn" @click="startLearn()">开始学习</a>
-      </div>
-    </div>
-    <div class="current-chapter-none" v-else-if="!isDefault">
-      <img alt="">
-      <div class="course-brief-shade">
-        <div class="course-brief-title">
-          <span>学习一门语言，了解一个新的世界</span>
+  <div>
+    <div v-show="!isKid" class="my-course">
+      <div class="title">我的课程</div>
+      <div class="current-chapter" v-if="!isDefault && userId && curCourseCode">
+        <img :src="curCourseObj['courseBg'] | urlFix('imageView2/0/w/820/h/360/format/jpg')" alt="">
+        <div class="course-brief-shade">
+          <div class="course-brief-title">
+            <span> {{ courseDesc }} </span>
+          </div>
+          <div class="course-brief-core">
+            <span>{{ curCourseObj['courseCore'] ? '核心' + curCourseObj['courseCore'] : '' }}</span>
+          </div>
+          <div class="course-brief-words">{{ curCourseObj['courseWords'] }}</div>
+          <div class="change-course">
+            <span class="pre" @click="pre()" v-show="isShowPre"><i></i></span>
+            <span class="next" @click="next()" v-show="isShowNext"><i></i></span>
+          </div>
+          <a class="start-learn" @click="startLearn()">开始学习</a>
         </div>
       </div>
-    </div>
-    <div class="current-chapter" v-else>
-      <div class="course-brief-shade">
-      </div>
-    </div>
-    <div class="current-course" v-if="!isDefault && userId && curChapterCode" >
-      <dl @mouseleave="isShowSubscribeCourses = false">
-        <dt><img :src="courseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
-        <dd>
-          <a :class="{'active': isShowSubscribeCourses}" @mouseenter="isShowSubscribeCourses = true">
-            <span>{{ courseBaseInfo.name }}</span>
-            <i></i>
-          </a>
-          <p>世界语言地图官方课程</p>
-          <transition name="fade">
-            <learn-course-list :type="'index'" :subscribeLangCourses="subscribeLangCourses" class="subscribe-courses" v-show="isShowSubscribeCourses" />
-          </transition>
-        </dd>
-      </dl>
-      <div class="progress-area">
-        <p>学完 {{ (learnInfo.chapter_num_finished ? learnInfo.chapter_num_finished : 0) + '/' + (courseBaseInfo.chapter_num ? courseBaseInfo.chapter_num : 0) }}</p>
-        <div class="progress-bg">
-          <div class="progress" :style="{width: (curArchiveCourse['complete_rate'] ? curArchiveCourse['complete_rate']*100 : 0) +'%'}"></div>
+      <div class="current-chapter-none" v-else-if="!isDefault">
+        <img alt="">
+        <div class="course-brief-shade">
+          <div class="course-brief-title">
+            <span>学习一门语言，了解一个新的世界</span>
+          </div>
         </div>
       </div>
-      <div class="correct-rate">
-        <p>正确率 {{ curChapterCorrectRate }}</p>
-        <div class="progress-bg">
-          <div class="progress" :style="{width: curChapterCorrectRate }"></div>
+      <div class="current-chapter" v-else>
+        <div class="course-brief-shade">
         </div>
       </div>
-      <div class="learn-hours"><span>已学习 </span><span>{{ curArchiveCourse['learn_time']>0?parseInt(curArchiveCourse['learn_time']/(60*60))+' 小时':'0 小时' }}</span></div>
-      <a class="all-courses" @click="goCourseList()">全部课程</a>
+      <div class="current-course" v-if="!isDefault && userId && curChapterCode" >
+        <dl @mouseleave="isShowSubscribeCourses = false">
+          <dt><img :src="courseBaseInfo['flag'] | urlFix('imageView2/0/w/200/h/200/format/jpg')"></dt>
+          <dd>
+            <a :class="{'active': isShowSubscribeCourses}" @mouseenter="isShowSubscribeCourses = true">
+              <span>{{ courseBaseInfo.name }}</span>
+              <i></i>
+            </a>
+            <p>世界语言地图官方课程</p>
+            <transition name="fade">
+              <learn-course-list :type="'index'" :subscribeLangCourses="subscribeLangCourses" class="subscribe-courses" v-show="isShowSubscribeCourses" />
+            </transition>
+          </dd>
+        </dl>
+        <div class="progress-area">
+          <p>学完 {{ (learnInfo.chapter_num_finished ? learnInfo.chapter_num_finished : 0) + '/' + (courseBaseInfo.chapter_num ? courseBaseInfo.chapter_num : 0) }}</p>
+          <div class="progress-bg">
+            <div class="progress" :style="{width: (curArchiveCourse['complete_rate'] ? curArchiveCourse['complete_rate']*100 : 0) +'%'}"></div>
+          </div>
+        </div>
+        <div class="correct-rate">
+          <p>正确率 {{ curChapterCorrectRate }}</p>
+          <div class="progress-bg">
+            <div class="progress" :style="{width: curChapterCorrectRate }"></div>
+          </div>
+        </div>
+        <div class="learn-hours"><span>已学习 </span><span>{{ curArchiveCourse['learn_time']>0?parseInt(curArchiveCourse['learn_time']/(60*60))+' 小时':'0 小时' }}</span></div>
+        <a class="all-courses" @click="goCourseList()">全部课程</a>
+      </div>
+      <div class="current-course-none" v-else-if="!isDefault">
+        <i></i>
+        <router-link :to="{path: '/app/book-case'}" class="add-course">添加课程</router-link>
+      </div>
+      <div class="current-course" v-else>
+      </div>
     </div>
-    <div class="current-course-none" v-else-if="!isDefault">
-      <i></i>
-      <router-link :to="{path: '/app/book-case'}" class="add-course">添加课程</router-link>
-    </div>
-    <div class="current-course" v-else>
-    </div>
+    <my-kid-course v-show="isKid"
+      :kidCourseBaseInfo="kidCourseBaseInfo"
+      :kidChapterInfo="kidChapterInfo"
+      :subscribeLangCourses="subscribeLangCourses"
+      :kidLevelName="kidLevelName">
+    </my-kid-course>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import LearnCourseList from '../../common/learnCourseList.vue'
+import MyKidCourse from './myKidCourse'
 import bus from '../../../bus'
 import cookie from '../../../tool/cookie'
 export default {
   data () {
     return {
       isDefault: true, // 默认展示内容
+      isKid: false,
       userId: '',
       curCourseCode: '',
       curCourseObj: {
@@ -103,7 +113,10 @@ export default {
       isShowSubscribeCourses: false,
       isShowNext: true,
       isShowPre: true,
-      subscribeLangCourses: []
+      subscribeLangCourses: [],
+      kidCourseBaseInfo: {},
+      kidChapterInfo: {},
+      kidLevelName: ''
     }
   },
   created () {
@@ -115,18 +128,6 @@ export default {
   mounted () {
     // this.getUserInfo()
     this.userId = cookie.getCookie('user_id')
-    this.getMoreLearnCourses().then(res => {
-      if (res.success) {
-        let learnCourses = res.learn_courses
-        learnCourses.forEach(item => {
-          if (!parseInt(item.course_type)) {
-            this.subscribeLangCourses.push(item)
-          }
-        })
-        this.subscribeLangCourses = this.subscribeLangCourses.reverse()
-        console.log('订阅的官方课程', this.subscribeLangCourses)
-      }
-    })
     if (this.userId) {
       let courseCode = ''
       if (cookie.getCookie('purchaseCourseCode')) {
@@ -139,7 +140,8 @@ export default {
     }
   },
   components: {
-    LearnCourseList
+    LearnCourseList,
+    MyKidCourse
   },
   computed: {
     ...mapState({
@@ -174,6 +176,8 @@ export default {
     }),
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
+      getLearnInfoV5: 'getLearnInfoV5',
+      getCatalog: 'getCatalog',
       setCurrentChapter: 'course/setCurrentChapter',
       getLearnCourses: 'course/getLearnCourses',
       getMoreLearnCourses: 'getMoreLearnCourses',
@@ -184,7 +188,9 @@ export default {
       getCourseTestRanking: 'course/getCourseTestRanking',
       homeworkContent: 'course/homeworkContent',
       getCourseArchives: 'user/getCourseArchives',
-      getUserInfo: 'getUserInfo'
+      getUserInfo: 'getUserInfo',
+      getOneCourseSub: 'getOneCourseSub',
+      getSubCourses: 'getSubCourses' // 新的课程列表接口
     }),
     async initData (courseCode) {
       var _this = this
@@ -193,50 +199,100 @@ export default {
       this.curCourseCode = res.info.current_course_code
       if (courseCode) {
         this.curCourseCode = courseCode
-      }
-      if (this.curCourseCode) {
-        let res1 = await _this.getLearnInfo(this.curCourseCode)
-        await _this.getUnlockChapter(this.curCourseCode).then((res) => {
-          _this.updateUnlockCourseList(res)
-        })
-        this.curChapterCode = res1.info.learnInfo.current_chapter_code
-        this.maxLevelNum = res1.info.courseBaseInfo.level_num
-        let contentUrl = res1.info.courseBaseInfo.content_config.content_url
-        await _this.getCourseContent(contentUrl)
-        // await _this.getLearnCourses()
-        await this.setCurrentChapter(this.curChapterCode)
-        await this.getChapterContent()
-        bus.$emit('loadRecommendRadio', this.curCourseCode)
-        let obj = this.chapters.filter((item) => {
-          return item.code === this.curChapterCode
-        })[0]
-        this.curCourseObj['courseLevel'] = this.levelObj[this.curChapterCode.split('-')[2]]
-        this.curCourseObj['courseNum'] = obj ? parseInt(obj.code.split('-')[3].split('').pop() - 1) * 6 + parseInt(obj.code.split('-')[4].split('').pop()) : 1
-        this.curCourseObj['courseCore'] = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
-        this.curCourseObj['courseDesc'] = obj ? obj.info['zh-cn'].describe : ''
-        this.curCourseObj['courseWords'] = obj ? obj.info['zh-cn'].words.split('/').join('、') : ''
-        this.curCourseObj['courseBg'] = this.assetsUrl + (obj ? obj.image.replace('200x200', '1200x488') : '')
-        this.curCourseObj['purchased'] = obj ? obj.purchased : false
-        console.log(this.curCourseObj)
-
-        _this.curChapterCorrectRate = '0%'
-        let arr = this.curChapterCode.split('-')
-        _this.learnInfo.correct_rates.forEach(item => {
-          if (item.level_code === arr[2]) {
-            item.rates.forEach(rate => {
-              if (rate.unit === arr[3] && rate.chapter === arr[4]) {
-                _this.curChapterCorrectRate = Math.round(rate.correct_rate * 100) + '%'
-              }
-            })
+        this.getOneCourseSub({course_code: this.curCourseCode}).then(res => {
+          console.log('courseSubInfo', res)
+          if (res.subInfo.course_type === 3) {
+            localStorage.setItem('isKid', '1')
+          } else if (res.subInfo.course_type === 0) {
+            localStorage.setItem('isKid', '0')
           }
         })
-
-        await _this.getCourseArchives().then((res) => {
-          _this.curArchiveCourse = res.archives.filter(item => {
-            return item.course_code === this.curCourseCode
-          })[0]
-          console.log('curArchiveCourse', _this.curArchiveCourse)
+      }
+      let subCourses = await this.getSubCourses()
+      console.log('新的课程列表返回', subCourses)
+      if (subCourses.success) {
+        let learnCourses = subCourses.courses
+        learnCourses.forEach(item => {
+          if (item.course_type === 0 || item.course_type === 3) {
+            this.subscribeLangCourses.push(item)
+            if (this.curCourseCode === item.code && item.course_type === 3) {
+              this.isKid = true
+            }
+          }
         })
+        // 按kid课程在前，pro课程在后，每个分组按后订阅的在前
+        this.subscribeLangCourses = this.subscribeLangCourses.sort((a, b) => {
+          return b.course_type - a.course_type
+        })
+        console.log('订阅的官方课程', this.subscribeLangCourses)
+      }
+      if (this.curCourseCode) {
+        if (!this.isKid) {
+          let res1 = await _this.getLearnInfo(this.curCourseCode)
+          await _this.getUnlockChapter(this.curCourseCode).then((res) => {
+            _this.updateUnlockCourseList(res)
+          })
+          this.curChapterCode = res1.info.learnInfo.current_chapter_code
+          this.maxLevelNum = res1.info.courseBaseInfo.level_num
+          let contentUrl = res1.info.courseBaseInfo.content_config.content_url
+          await _this.getCourseContent(contentUrl)
+          // await _this.getLearnCourses()
+          await this.setCurrentChapter(this.curChapterCode)
+          await this.getChapterContent()
+          bus.$emit('loadRecommendRadio', this.curCourseCode)
+          let obj = this.chapters.filter((item) => {
+            return item.code === this.curChapterCode
+          })[0]
+          this.curCourseObj['courseLevel'] = this.levelObj[this.curChapterCode.split('-')[2]]
+          this.curCourseObj['courseNum'] = obj ? parseInt(obj.code.split('-')[3].split('').pop() - 1) * 6 + parseInt(obj.code.split('-')[4].split('').pop()) : 1
+          this.curCourseObj['courseCore'] = _this.learnInfo.core_part_num_finished === 5 ? 5 : _this.learnInfo.core_part_num_finished + 1
+          this.curCourseObj['courseDesc'] = obj ? obj.info['zh-cn'].describe : ''
+          this.curCourseObj['courseWords'] = obj ? obj.info['zh-cn'].words.split('/').join('、') : ''
+          this.curCourseObj['courseBg'] = this.assetsUrl + (obj ? obj.image.replace('200x200', '1200x488') : '')
+          this.curCourseObj['purchased'] = obj ? obj.purchased : false
+          console.log(this.curCourseObj)
+
+          _this.curChapterCorrectRate = '0%'
+          let arr = this.curChapterCode.split('-')
+          _this.learnInfo.correct_rates.forEach(item => {
+            if (item.level_code === arr[2]) {
+              item.rates.forEach(rate => {
+                if (rate.unit === arr[3] && rate.chapter === arr[4]) {
+                  _this.curChapterCorrectRate = Math.round(rate.correct_rate * 100) + '%'
+                }
+              })
+            }
+          })
+
+          await _this.getCourseArchives().then((res) => {
+            _this.curArchiveCourse = res.archives.filter(item => {
+              return item.course_code === this.curCourseCode
+            })[0]
+            console.log('curArchiveCourse', _this.curArchiveCourse)
+          })
+        } else {
+          bus.$emit('loadRecommendRadio', this.curCourseCode)
+          let resKid = await this.getLearnInfoV5({course_code: this.curCourseCode})
+          console.log(resKid)
+          this.kidCourseBaseInfo = resKid.info.courseBaseInfo
+          let curChapterCode = resKid.info.learnConfig.current_chapter_code
+          let resKidCatalog = await this.getCatalog({course_code: this.curCourseCode})
+          console.log(resKidCatalog)
+          let curLevelCode = curChapterCode.split('-').slice(0, 3).join('-')
+          this.catalogs = resKidCatalog.catalogInfo.catalogs
+          let curLevel = this.catalogs.find(item => {
+            return item.code === curLevelCode
+          })
+          console.log(curLevel.levelNameDes)
+          this.kidLevelName = curLevel.levelNameDes[this.$i18n.locale]
+          this.kidChapterInfo = curLevel.chapters.find(item => {
+            return item.code === curChapterCode
+          })
+          let arr = curChapterCode.split('-')
+          this.kidChapterInfo['chapterNum'] = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
+          this.kidChapterInfo['chapterDesc'] = this.kidChapterInfo.des[this.$i18n.locale]
+          console.log(this.kidChapterInfo)
+        }
       } else {
         bus.$emit('loadRecommendRadio', this.curCourseCode)
       }
@@ -364,7 +420,7 @@ export default {
 
       window._czc.push(['_trackEvent', '学习系统', '首页', '开始学习', '', '.start-learn'])
       if (this.curChapterCode === this.learnInfo.current_chapter_code) {
-        this.$router.push({path: '/learn/stage/A0' + this.curCourseObj['courseCore']})
+        this.$router.push({path: '/learn/stage/' + this.curChapterCode + '-A0' + this.curCourseObj['courseCore']})
       } else {
         this.changeChapter(this.curChapterCode)
       }
@@ -379,12 +435,12 @@ export default {
         await this.getCourseTestRanking(chapterCode)
         await this.homeworkContent(chapterCode + '-A8')
       }
-      this.$router.push({path: '/learn/stage/A0' + this.curCourseObj['courseCore']})
+      this.$router.push({path: '/learn/stage/' + chapterCode + '-A0' + this.curCourseObj['courseCore']})
     },
     goCourseList () {
       bus.$emit('radioPause')
       window._czc.push(['_trackEvent', '学习系统', '首页', '全部课程', '', '.all-courses'])
-      this.$router.push({ path: '/app/course-list' })
+      this.$router.push({ path: '/app/course-list/' + this.curCourseCode })
     }
   }
 }

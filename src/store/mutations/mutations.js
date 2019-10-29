@@ -2,17 +2,35 @@ import _ from 'lodash'
 import simplePinyin from 'simple-pinyin'
 
 export default {
+  // updateCourseLangsList (state, data) {
+  //   let arr = []
+  //   data.forEach((item) => {
+  //     let obj = item
+  //     let name = item.name
+  //     let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
+  //     obj['pinyin'] = pinyin
+  //     obj['letter'] = pinyin.slice(0, 1).toUpperCase()
+  //     arr.push(obj)
+  //   })
+  //   state.courseLangsList = data
+  // },
   updateCourseLangsList (state, data) {
+    console.log('data==========>', data)
+    // let hotCourseMini = data.hotCourses.concat(data.kidCourses)
+    let allCourseList = [...data.kidCourses, ...data.listCourses]
     let arr = []
-    data.forEach((item) => {
+    allCourseList.forEach((item) => {
       let obj = item
       let name = item.name
-      let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
-      obj['pinyin'] = pinyin
-      obj['letter'] = pinyin.slice(0, 1).toUpperCase()
+      if (!item.pinyin && !item.letter) {
+        let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
+        obj['pinyin'] = pinyin
+        obj['letter'] = pinyin.slice(0, 1).toUpperCase()
+      }
       arr.push(obj)
     })
-    state.courseLangsList = data
+    state.courseLangsList = arr
+    console.log(state.courseLangsList)
   },
   // 更新快速登录登录用户的信息
   updateLoginInfo (state, data) {

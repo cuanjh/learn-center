@@ -3,11 +3,11 @@
     <div :class="['course-item']" v-for="(item, index) in curLevelChapters" :key="'item' + index" :id="item.code">
       <!-- <transition name="fade" mode="out-in"> -->
       <div class="current-learn-course-info"
-          :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1}"
+          :class="{'current-learn-course-disabled': unlockCourses.indexOf(item.code) === -1 && item.code.toLowerCase().indexOf('unit1-chapter1') == -1}"
           @click="jumpToCourse(item.code)"  v-if="isShow ? currentChapterCode !== item.code : !isShow">
         <div class="current-learn-course-flag">
           <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'">
-          <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1"></div>
+          <div class="fix-ie-bg" v-if="unlockCourses.indexOf(item.code) === -1 && item.code.toLowerCase().indexOf('unit1-chapter1') == -1"></div>
         </div>
         <div class="current-learn-course-word-info">
           <div class="current-learn-course-title">
@@ -35,7 +35,7 @@
       <div class="course-item-detail"
         v-show="isShow && currentChapterCode == item.code">
         <ul>
-          <li class="course-brief">
+          <li class="course-brief" @click="switchShow()">
             <img v-bind:src="'https://course-assets1.talkmate.com/'+item.image.replace('200x200', '1200x488')+'/format/jpeg'" alt="">
             <div class="course-brief-shade">
               <div class="course-brief-title">
@@ -62,7 +62,7 @@
               <span>核心课程</span>
             </div>
             <div class="course-item-box" v-for="i in 5" :key="i">
-              <a href="javascript:void(0)" @click="startCore('A0' + i, coreData[i]['isActive'])" :to="{ name: 'stage', params: {id: 'A0' + i}}">
+              <a href="javascript:void(0)" @click="startCore(item.code + '-A0' + i, coreData[i]['isActive'])" :to="{ name: 'stage', params: {id: 'A0' + i}}">
                 <div class="current-course-item">
                   <div class="course-item-icon">
                     <canvas width="300" height="300" :id="item.code + '-canvas-A0' + i"></canvas>
@@ -98,9 +98,9 @@
                   <div class="course-item-icon">
                     <canvas width="300" height="300" :id="item.code + '-canvas-A7'"></canvas>
                     <div class="review-test"></div>
-                    <i v-show="!coreData['isCoreCompleted']" class="icon-review-lock"></i>
+                    <i v-show="!(userInfo.member_info.member_type == 1) || !(userInfo.member_info.member_type == 1 && coreData['isCoreCompleted'])" class="icon-review-lock"></i>
                   </div>
-                  <p class="course-item-title" :class="{'course-item-title-locked': !coreData['isCoreCompleted'] }">测试</p>
+                  <p class="course-item-title" :class="{'course-item-title-locked': !(userInfo.member_info.member_type == 1) || !(userInfo.member_info.member_type == 1 && coreData['isCoreCompleted']) }">测试</p>
                     <p class="course-item-star" v-show="coreData['isCoreCompleted'] && testData['isTestCompleted']">
                     <span class="course-yellow-star"><i v-for="index in testData['starTestNum']" :key="index"></i></span>
                     <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - testData['starTestNum'])" :key="index"></i></span>
@@ -144,7 +144,7 @@
         <li class="course-vip">
             <div class="course-vip-name">
               <p>强化</p>
-              <p>(会员专享)</p>
+              <!-- <p>(会员专享)</p> -->
             </div>
             <div class="course-item-box" v-for="(vipitem, i) in vipItemList" :key="i">
               <a href="javascript:void(0);" @click="jumpVipPage(coreData['isCoreCompleted'], 'A' + (i + 1))">
@@ -239,7 +239,8 @@ export default {
       // 核心课程
       if (!that.isHistory) {
         let curChapterCode = that.currentChapterCode
-        let corePartInfos = that.$store.state.course.courseBaseInfo.corePartInfos
+        let corePartInfos = JSON.parse(localStorage.getItem('corePartInfos'))
+        console.log(corePartInfos)
         let coreParts = corePartInfos.filter((item) => curChapterCode.indexOf(item.chapter_code) > 0)
 
         let partObj = coreParts[0].parts
@@ -248,7 +249,7 @@ export default {
           let startForm = element.start_form - 1
           let endForm = element.end_form
           let coreForms = []
-          element.Slides.forEach((slide) => {
+          element.slides.forEach((slide) => {
             Object.keys(that.curChapterProgress).filter((item) => {
               return item.indexOf('A0-' + slide + '-') > -1
             }).map((el) => {
@@ -461,12 +462,13 @@ export default {
       updateHistoryCourseRecord: 'course/updateHistoryCourseRecord'
     }),
     jumpToCourse (chapterCode) {
+      console.log('chaptercode', chapterCode)
       let isAnonymous = cookie.getCookie('is_anonymous') === 'true'
       if (isAnonymous) {
         bus.$emit('showBindWin')
         return false
       }
-      if (this.unlockCourses.indexOf(chapterCode) === -1) {
+      if (this.unlockCourses.indexOf(chapterCode) === -1 && !(chapterCode.toLowerCase().indexOf('unit1-chapter1') > -1)) {
         this.tips = '完成上一课“核心课程”, <br>才能开启本课程！'
         bus.$emit('setContinueLearn', this.tips)
         return false
@@ -526,11 +528,22 @@ export default {
       }
     },
     startTest (isCoreCompleted) {
-      if (!isCoreCompleted) {
-        this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
-        bus.$emit('setContinueLearn', this.tips)
+      if (parseInt(this.isVip) !== 1) {
+        let obj = {
+          className: 'vipIcon',
+          description: '升级会员体验更多功能提高学习效率',
+          btnDesc: '升级会员',
+          isLink: true,
+          hyperLink: '/app/vip-home'
+        }
+        bus.$emit('showCommonModal', obj)
       } else {
-        this.$router.push({ path: '/learn/pk' })
+        if (!isCoreCompleted) {
+          this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
+          bus.$emit('setContinueLearn', this.tips)
+        } else {
+          this.$router.push({ path: '/learn/pk/' + this.currentChapterCode })
+        }
       }
     },
     startHomework (isCoreCompleted) {
@@ -544,13 +557,21 @@ export default {
     jumpVipPage (isActive, id) {
       if (parseInt(this.isVip) !== 1) {
         // this.$router.push({ path: '/app/vip-home' })
-        let routeUrl = this.$router.resolve({
-          path: '/app/vip-home'
-        })
-        window.open(routeUrl.href, '_blank')
+        // let routeUrl = this.$router.resolve({
+        //   path: '/app/vip-home'
+        // })
+        // window.open(routeUrl.href, '_blank')
+        let obj = {
+          className: 'vipIcon',
+          description: '升级会员体验更多功能提高学习效率',
+          btnDesc: '升级会员',
+          isLink: true,
+          hyperLink: '/app/vip-home'
+        }
+        bus.$emit('showCommonModal', obj)
       } else {
         if (isActive) {
-          this.$router.push({ name: 'stage', params: {id: id} })
+          this.$router.push({ name: 'stage', params: {id: this.currentChapterCode + '-' + id} })
         } else {
           this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
           bus.$emit('setContinueLearn', this.tips)
@@ -587,7 +608,7 @@ export default {
       }
     },
     draw (id, rate, color) {
-      if (this.$el && this.$el.querySelector(id)) {
+      if (this.$el && this.$el.querySelector && this.$el.querySelector(id)) {
         rate = (rate === 1) ? 0 : rate
         let canvas = this.$el.querySelector(id)
         let ctx = canvas.getContext('2d')
@@ -855,6 +876,7 @@ export default {
     position: relative;
     border-radius: 2.73px;
     height: 300px;
+    cursor: pointer;
   }
 
   .course-brief img{
@@ -1197,6 +1219,7 @@ export default {
   }
 
   .course-vip-name{
+    width: 72px;
     font-size: 16px;
     font-weight: bold;
     color:#F5A623;
@@ -1205,7 +1228,7 @@ export default {
     vertical-align: top;
     height: 80px;
     line-height: 20px;
-    margin: 10px 12px 0 0;
+    margin: 16px 12px 0 0;
   }
 
   .course-vip-name p{

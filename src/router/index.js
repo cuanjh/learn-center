@@ -22,6 +22,11 @@ const gradeLevelShow = r => require.ensure([], () => r(require('@/components/lea
 const gradeLevelConfirm = r => require.ensure([], () => r(require('@/components/learn/gradeLevel/gradeLevelConfirm.vue')), 'grade-level-confirm')
 const homework = r => require.ensure([], () => r(require('@/components/learn/homework/homework.vue')), 'homework')
 const introduceApp = r => require.ensure([], () => r(require('@/components/learn/home/introduceApp.vue')), 'introduce-app')
+// mini
+const bookMiniDetails = r => require.ensure([], () => r(require('@/components/learn/bookCase/bookMiniDetails.vue')), 'book-mini-details')
+const kidCourseList = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidCourseList.vue')), 'kid-course-list')
+const kidStage = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidStage.vue')), 'kid-stage')
+const kidRecordList = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidRecordList.vue')), 'kid-record-list')
 
 // 学习 --- 我的
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue')), 'user')
@@ -119,12 +124,35 @@ export default[
     component: learn,
     children: [
       {
-        path: 'course-list',
+        path: 'course-list/:courseCode',
         name: 'courseList',
-        meta: {
-          keepAlive: true
-        },
+        // meta: {
+        //   keepAlive: true
+        // },
         component: courseList
+      },
+      {
+        path: 'kid-course-list/:courseCode',
+        name: 'kidCourseList',
+        component: kidCourseList
+      },
+      {
+        path: 'kid-stage',
+        name: 'kidStage',
+        component: kidStage,
+        props: (route) => ({
+          code: route.query.code,
+          type: route.query.type
+        })
+      },
+      {
+        path: 'kid-record-list',
+        name: 'kidRecordList',
+        component: kidRecordList,
+        props: (route) => ({
+          code: route.query.code,
+          type: route.query.type
+        })
       },
       {
         path: 'index',
@@ -139,6 +167,11 @@ export default[
         path: 'book-details/:courseCode',
         name: 'bookCaseDetails',
         component: bookCaseDetails
+      },
+      {
+        path: 'book-mini-details/:miniCode',
+        name: 'bookMiniDetails',
+        component: bookMiniDetails
       },
       {
         path: 'hot-courses',
@@ -305,6 +338,23 @@ export default[
       }
     ]
   },
+  // {
+  //   path: '/kid-stage',
+  //   component: kidStage,
+  //   props: (route) => ({
+  //     code: route.query.code,
+  //     type: route.query.type
+  //   })
+  // },
+  // {
+  //   path: '/kid-record-list',
+  //   name: 'kidRecordList',
+  //   component: kidRecordList,
+  //   props: (route) => ({
+  //     code: route.query.code,
+  //     type: route.query.type
+  //   })
+  // },
   {
     path: '/learn',
     component: learnSystem,
@@ -319,7 +369,7 @@ export default[
         component: stage
       },
       {
-        path: 'pk',
+        path: 'pk/:chapterCode',
         name: 'pk',
         component: pk
       },

@@ -48,7 +48,7 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -58,11 +58,8 @@ export default {
   },
   mounted () {
     this.$parent.$emit('initLayout')
-    console.log(this.currentCourseCode)
-    let courseCode = this.currentCourseCode
-    if (!courseCode) {
-      courseCode = localStorage.getItem('currentCourseCode')
-    }
+    let curChapterCode = localStorage.getItem('currentChapterCode')
+    let courseCode = curChapterCode.split('-').slice(0, 2).join('-')
     this.getGradeInfo(courseCode).then((res) => {
       console.log(res)
       this.currLevel = res.grade_info.grade_level_num
@@ -81,11 +78,6 @@ export default {
   //     })
   //   }
   // },
-  computed: {
-    ...mapState({
-      currentCourseCode: state => state.course.currentCourseCode
-    })
-  },
   methods: {
     ...mapActions({
       getGradeInfo: 'course/getGradeInfo'

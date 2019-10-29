@@ -22,7 +22,8 @@
 </template>
 <script>
 import Bus from '../../../bus.js'
-import { mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
+import cookie from '../../../tool/cookie'
 
 export default {
   data () {
@@ -42,6 +43,9 @@ export default {
     })
   },
   computed: {
+    ...mapState({
+      userInfo: state => state.userInfo
+    }),
     // 手机验证码获取
     isGetCode () {
       return this.time === 60
@@ -51,8 +55,12 @@ export default {
   },
   methods: {
     ...mapActions({
+      getUserInfo: 'getUserInfo', // 获取用户信息
       userBindPhone: 'userBindPhone', // 绑定手机号
       sendCode: 'getSendCode'
+    }),
+    ...mapMutations({
+      updateIsAnonymous: 'updateIsAnonymous'
     }),
     initSendCode (phone) {
       this.sendCode({phonenumber: phone, codeLen: '4'}).then(res => {
@@ -83,13 +91,21 @@ export default {
       params.phonenumber = this.phone
       params.code = this.verificationCode
       console.log(params)
+      if (!this.verificationCode) {
+        _this.alertMessageError('输入验证码不正确！')
+        return false
+      }
       _this.userBindPhone(params).then((res) => {
         console.log('res', res)
         if (res.success) {
           _this.isShow = false
           _this.alertMessageError('恭喜你，绑定手机号成功')
           _this.verificationCode = ''
-          _this.$parent.loadData()
+          // _this.$parent.loadData()
+          cookie.setCookie('is_anonymous', false)
+          _this.updateIsAnonymous(false)
+          _this.$router.push({ path: '/app/index' })
+          _this.getUserInfo()
         } else {
           _this.alertMessageError(res)
         }

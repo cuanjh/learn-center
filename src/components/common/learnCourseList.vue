@@ -11,14 +11,15 @@
               :class="{'mycourse-container-light': true }">
               <dl>
                 <dt>
-                  <a class='changeColor' @click="changeCourseCodes(course['code'])">
+                  <a class='changeColor' @click="changeCourseCodes(course)">
                     <img :src="course.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')">
                     <div class='fix-ie-filter-bug'></div>
                   </a>
                 </dt>
                 <dd>
                   <span class='mycourse-lang'>
-                    <a href="">{{ !course.name ? '' : course.name['zh-CN'] }}</a>
+                    <a href="" v-if="course.course_type == 3">{{ !course.name ? '' : course.name['zh-cn'] + 'Mini' }}</a>
+                    <a href="" v-else>{{ !course.name ? '' : course.name['zh-cn'] }}</a>
                   </span>
                 </dd>
               </dl>
@@ -36,7 +37,7 @@
 </template>
 <script>
 import { mapActions, mapMutations } from 'vuex'
-import Bus from '../../bus'
+// import Bus from '../../bus'
 export default {
   props: ['type', 'subscribeLangCourses'],
   data () {
@@ -55,13 +56,17 @@ export default {
       updateCurCourseCode: 'course/updateCurCourseCode'
     }),
     // 点击订阅的课程跳转到点击的课程开始学习
-    changeCourseCodes (courseCode) {
-      localStorage.setItem('lastCourseCode', courseCode)
-      this.updateCurCourseCode(courseCode)
-      if (this.type === 'index') {
-        Bus.$emit('loadIndexCourse', courseCode)
+    changeCourseCodes (course) {
+      console.log(course)
+      let courseCode = course.code
+      let courseType = course.course_type
+      localStorage.removeItem('kidTabActive')
+      if (courseType === 3) {
+        localStorage.setItem('isKid', '1')
+        this.$router.push({path: '/app/kid-course-list/' + courseCode})
       } else {
-        Bus.$emit('changeCourseCode', courseCode)
+        localStorage.setItem('isKid', '0')
+        this.$router.push({path: '/app/course-list/' + courseCode})
       }
     }
   }
@@ -116,13 +121,12 @@ export default {
 //   font-weight: bold;
 // }
 .mycourse-container > section ul {
-  // display: flex;
+  display: flex;
   flex-flow: row wrap;
   align-content: flex-start;
 }
 .mycourse-container > section ul > li {
   display: inline-block;
-  flex: 0 0 20%;
   cursor: pointer;
   margin-bottom: 30px;
   margin-right: 30px;

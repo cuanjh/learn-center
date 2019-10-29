@@ -9,6 +9,8 @@ const state = {
   showLoading: true, // 用来判断加载状态程序
   courseShow: false, // 课程为空时的逻辑判断
   productList: {}, // 会员产品接口
+  productListNew: {}, // 新会员产品接口
+  vipDiscount: {}, // 表示是否有优惠
   courseRader: {}, // 档案和课程数据接口
   courseRaderRastart: {}, // 档案和课程数据过渡防止刷新和数据过渡报错
   courseArchives: {}, // 新的档案接口---后端直接生成
@@ -158,6 +160,19 @@ const actions = {
       commit('hideLoading')
     })
   },
+  // 新的会员卡接口
+  getMemberCardPrdv1 ({commit, state}) {
+    commit('showLoading')
+    httpLogin(config.umGetMemberProductsList, {
+      product_type: 'member',
+      pay_area: 'CN',
+      plat_form: 'WEB',
+      inner_product_version: 1
+    }).then((res) => {
+      commit('updateMemberProductsListNew', res)
+      commit('hideLoading')
+    })
+  },
   // 会员卡激活账号
   getMemberCard ({commit, state}, codeNum) {
     return httpLogin(config.getMemberCard, { card_no: codeNum })
@@ -268,6 +283,12 @@ const mutations = {
   updateMemberProductsList (state, response) {
     state.productList = response
     console.log('productList', state.productList)
+  },
+  updateMemberProductsListNew (state, response) {
+    console.log(response)
+    state.vipDiscount = response.discount
+    state.productListNew = response.products
+    console.log('新的产品列表返回productList', state.vipDiscount, state.productListNew)
   },
   updatePurchaseIconPay (state, flag) {
     state.purchaseIconPay = flag

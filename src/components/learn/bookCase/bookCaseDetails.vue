@@ -271,7 +271,9 @@ export default {
       postPurchaseCourse: 'course/postPurchaseCourse',
       getMoreLearnCourses: 'getMoreLearnCourses',
       getEndangeredDetail: 'getEndangeredDetail',
-      getCountryLanguages: 'getCountryLanguages'
+      getCountryLanguages: 'getCountryLanguages',
+      getLearnInfoV5: 'getLearnInfoV5',
+      setKidCurrentChapter: 'setKidCurrentChapter'
     }),
     tabChange (tabFlag) {
       this.tabFlag = tabFlag
@@ -317,40 +319,56 @@ export default {
       if (this.btnState === '1') {
         this.subscribeCourse()
       } else if (this.btnState === '2') {
+        localStorage.removeItem('kidTabActive')
         this.startLearn()
       }
     },
     // 点开始学习
-    startLearn () {
+    async startLearn () {
       let arr = this.courseCode.split('-')
       let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase()
-      Bus.$emit('loadIndexCourse', courseCode)
-      setTimeout(() => {
-        this.$router.push({path: '/app/index'})
-      }, 1000)
+      // Bus.$emit('loadIndexCourse', courseCode)
+      // setTimeout(() => {
+      //   this.$router.push({path: '/app/index'})
+      // }, 1000)
+      let res1 = await this.getLearnInfoV5({course_code: courseCode})
+      console.log(res1)
+      let curChapterCode = res1.info.learnConfig.current_chapter_code
+      let res2 = await this.setKidCurrentChapter({chapter_code: curChapterCode})
+      if (res2.success) {
+        Bus.$emit('loadIndexCourse', courseCode)
+        setTimeout(() => {
+          this.$router.push({path: '/app/index'})
+        }, 1000)
+      }
     },
     subscribeCourse () {
       if (!this.userId) {
         Bus.$emit('showGoLoginBox')
         return false
       }
-      let isVip = this.userInfo.member_info.member_type
-      if (parseInt(isVip) !== 1 && this.subscribeLangCourses.length >= 3) {
-        let obj = {
-          className: 'vipIcon',
-          description: '升级会员免费订阅所有官方课程',
-          btnDesc: '升级会员',
-          isLink: true,
-          hyperLink: '/app/vip-home'
-        }
-        Bus.$emit('showCommonModal', obj)
-      } else {
-        let arr = this.courseCode.split('-')
-        let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
-        this.postPurchaseCourse({ code: courseCode }).then((res) => {
-          this.refreshSubscribeCourses()
-        })
-      }
+      // let isVip = this.userInfo.member_info.member_type
+      // if (parseInt(isVip) !== 1 && this.subscribeLangCourses.length >= 3) {
+      //   let obj = {
+      //     className: 'vipIcon',
+      //     description: '升级会员免费订阅所有官方课程',
+      //     btnDesc: '升级会员',
+      //     isLink: true,
+      //     hyperLink: '/app/vip-home'
+      //   }
+      //   Bus.$emit('showCommonModal', obj)
+      // } else {
+      //   let arr = this.courseCode.split('-')
+      //   let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
+      //   this.postPurchaseCourse({ code: courseCode }).then((res) => {
+      //     this.refreshSubscribeCourses()
+      //   })
+      // }
+      let arr = this.courseCode.split('-')
+      let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
+      this.postPurchaseCourse({ code: courseCode }).then((res) => {
+        this.refreshSubscribeCourses()
+      })
     },
     async initDataDetails () {
       let _this = this

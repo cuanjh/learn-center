@@ -18,17 +18,27 @@
       <p>获取此课程需要150金币</p>
       <p>金币余额: {{ userCoins }}</p>
       <p>
+        <span class='learn-begin-study-warn-cancel' @click="close()">取消</span>
         <span class='learn-begin-study-warn-cancel' @click="gotoWallet">去充值</span>
       </p>
       <p class='vip-bottom' @click='gotoVip'>{{ $t("courseList.pay.openvip") }}</p>
       <em @click='close'></em>
     </section>
+    <!-- 购买成功 -->
+    <div class="pay-success">
+      <div class="pay-content">
+        <p class="bg-img"><i></i></p>
+        <p>购买成功</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import bus from '../../bus'
+import $ from 'jquery'
+
 export default {
   data () {
     return {
@@ -107,12 +117,19 @@ export default {
       await _this.getUnlockChapter(courseCode).then((res) => {
         _this.updateUnlockCourseList(res)
       })
-
+      let isKid = localStorage.getItem('isKid')
+      if (isKid === '1') {
+        bus.$emit('changeKidProChapter')
+      }
       // 更新用户金币信息
       await _this.getUserInfo()
 
       _this.costAlert = false
-      _this.isShow = false
+      $('.pay-success').fadeIn(300)
+      setTimeout(() => {
+        _this.isShow = false
+        $('.pay-success').hide()
+      }, 1500)
     },
     close () {
       this.isShow = false
@@ -136,7 +153,50 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.pay-success {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  width: 354px;
+  background: #ffffff;
+  transform: translate(-230px, -50%);
+  box-shadow:0px 5px 12px 0px rgba(0,32,50,0.3);
+  border-radius:5px;
+  .pay-content {
+    width: 100%;
+    height: 100%;
+    padding: 51px 0 37px;
+    text-align: center;
+    .bg-img {
+      width: 100%;
+      i {
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        background: url('../../../static/images/discovery/subscribe-success.svg') no-repeat center;
+        background-size: cover;
+      }
+    }
+    p:nth-child(2) {
+      font-size:18px;
+      font-weight:bold;
+      color:rgba(10,43,64,1);
+      padding: 28px 0 20px;
+    }
+    p:last-child {
+      font-size:14px;
+      font-weight:500;
+      color:rgba(144,162,174,1);
+      line-height:20px;
+      span:hover {
+        cursor: pointer;
+        color: #2A9FE4FF;
+      }
+    }
+  }
+}
 /*弹出层*/
 .vip-container {
   position: fixed;
@@ -186,7 +246,10 @@ export default {
   padding-top: 74px;
 }
 .vip-update-success p:nth-of-type(2){
-  padding-bottom: 66px;
+  padding-bottom: 40px;
+}
+.vip-update-success p:nth-of-type(3){
+  padding-bottom: 20px;
 }
 .vip-update-success .vip-back-tolearn{
   width: 168px;
@@ -287,12 +350,15 @@ export default {
 
 .vip-update-confirm p:nth-of-type(4) {
   height: 28px;
-  width: 100px;
+  width: 100%;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .vip-update-confirm p:nth-of-type(4) span {
-  width: 100%;
+  width: 100px;
   height: 28px;
   border-radius: 100px;
   padding: 0 10px;
@@ -302,6 +368,9 @@ export default {
   font-weight: 300;
   color: #0e8abe;
   cursor: pointer;
+}
+.vip-update-confirm p:nth-of-type(4) span:nth-child(1) {
+  margin-right: 20px;
 }
 
 .vip-update-confirm p:nth-of-type(4) span:hover {

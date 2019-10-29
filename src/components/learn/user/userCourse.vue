@@ -1,10 +1,11 @@
 <template>
   <section class='user-course-wrap' >
     <div class="user-course-nav">
-      <a :class="['user-course-wrap-title', {'active': selTab}]" @click="selTab = !selTab">官方课程</a>
-      <a :class="['user-course-wrap-title', {'active': !selTab}]" @click="selTab = !selTab">电台课程</a>
+      <a :class="['user-course-wrap-title', {'active': selTab == 'pro'}]" @click="changeTab('pro')">官方课程</a>
+      <a :class="['user-course-wrap-title', {'active': selTab == 'kid'}]" @click="changeTab('kid')">儿童课程</a>
+      <a :class="['user-course-wrap-title', {'active': selTab == 'rudio'}]" @click="changeTab('rudio')">电台课程</a>
     </div>
-    <div class='user-course-item-wrap' v-show="selTab" :class="{ 'userifloading': judgeLoading  }">
+    <div class='user-course-item-wrap' v-show="selTab == 'pro'" :class="{ 'userifloading': judgeLoading  }">
       <div class="user-course-list">
         <div class='user-course-item' v-for='(item, index) in showLangCourses' :key="item.course_code + index">
           <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
@@ -64,7 +65,62 @@
         </dl>
       </div>
     </div>
-    <div class='user-radio-course-item-wrap' v-show="!selTab">
+    <div class='user-course-item-wrap' v-show="selTab == 'kid'">
+      <div class="user-course-list" v-if="langKidCourse.length>0">
+        <div class='user-course-item' v-for='(item, index) in langKidCourse' :key="item.code + index">
+          <div class="user-course-item-box" @mouseleave="mouseleaveControl($event)">
+            <img @click="goToKidDetails(item.code)" :src="item.flag | urlFix('imageView2/0/w/400/h/400/format/jpg')">
+            <ol>
+              <router-link tag="li" :to="{path: '/app/book-mini-details/' + item.code}">
+                <span>{{ !item.name ? '' : item.name['zh-cn'] + 'Mini' }}</span>
+              </router-link>
+              <li>
+                <!-- <span v-text="levelDes[item['current_chapter_code'].split('-')[2]]"></span> - <span v-text="'课程' + (parseInt(item['current_chapter_code'].split('-')[3].replace('Unit', '')) * parseInt(item['current_chapter_code'].split('-')[4].replace('Chapter', '')))"></span> -->
+              </li>
+              <li>
+                <span :style="{ width: (item['complete_rate'] * 100) + '%' }"></span>
+                <div class="progress-bg">
+                  <!-- <div class="progress" :style="{width: (curArchiveCourse['complete_rate'] ? curArchiveCourse['complete_rate']*100 : 0) +'%'}"></div> -->
+                </div>
+              </li>
+              <span class='user-course-del-btn-tag' v-show='showIdx === index ? delBtn : false' @click='deleteCourse(item.code)'><i></i>删除课程</span>
+            </ol>
+            <div class="user-control">
+              <div class="user-control-btn" @mouseenter="mouseoverControl($event)">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="user-control-sel" style="display:none">
+                <ul>
+                  <!-- <li>置顶</li> -->
+                  <li @click="deleteKidCourse(item.code)">
+                    <a>取消订阅</a>
+                  </li>
+                </ul>
+                <div class="triangle_border_down">
+                  <span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="up-all" v-if="langKidCourse.length>0">
+        <div>
+          <span>已经是全部内容了</span>
+        </div>
+      </div>
+      <div class='user-course-nocourse' v-else>
+        <dl>
+          <dt></dt>
+          <dd>
+            <p>您还没有订阅儿童课程哦！</p>
+          </dd>
+        </dl>
+      </div>
+    </div>
+    <div class='user-radio-course-item-wrap' v-show="selTab == 'rudio'">
       <ul>
         <li class='user-radio-course-item' v-for='item in showRadioCourses' :key="item.course_code">
           <div class="user-radio-course-item-box" @mouseleave="mouseleaveControl($event)">
@@ -137,16 +193,17 @@ export default {
     return {
       showMoreCourse: false,
       showMoreRados: false,
-      selTab: true,
+      selTab: 'pro', // pro:官方课程 kid:儿童课程 rudio:电台
       delBtn: false,
       arrowDown: false,
       showIdx: '',
       judgeLoading: false,
       isShowCourse: false,
       isShowRadioCourse: false,
-      langCourses: [],
+      langCourses: [], // Pro课程
       showLangCourses: [],
-      radioCourseList: [],
+      langKidCourse: [], // kid课程
+      radioCourseList: [], // 电台课程
       showRadioCourses: []
     }
   },
@@ -161,6 +218,7 @@ export default {
     this.$parent.$emit('navItem', 'user')
     this.getLearnCourses()
     this.initData()
+    this.initKidData()
   },
   computed: {
     ...mapState({
@@ -193,11 +251,24 @@ export default {
     ...mapActions({
       getDeletePurchase: 'course/getDeletePurchase',
       getLearnCourses: 'course/getLearnCourses',
-      getUserCourseList: 'getUserCourseList'
+      getUserCourseList: 'getUserCourseList',
+      getSubCourses: 'getSubCourses' // 新的课程列表接口
     }),
+    // 点击切换tab
+    changeTab (flag) {
+      this.selTab = flag
+    },
     deleteCourse (code) {
+      console.log(code)
       this.getDeletePurchase(code).then(() => {
         this.initData()
+      })
+    },
+    deleteKidCourse (code) {
+      console.log(code)
+      this.getDeletePurchase(code).then(() => {
+        this.langKidCourse = []
+        this.initKidData()
       })
     },
     mouseoverControl (e) {
@@ -227,6 +298,19 @@ export default {
         }
       })
     },
+    initKidData () {
+      this.getSubCourses().then(res => {
+        console.log('新的课程列表返回===>', res)
+        if (res.success) {
+          let learnCourses = res.courses
+          learnCourses.forEach(item => {
+            if (item.course_type === 3) { // 0:pro 1:电台 2:视频 3: mini
+              this.langKidCourse.push(item)
+            }
+          })
+        }
+      })
+    },
     // 课程加载更多
     loadMoreCourse () {
       this.showMoreCourse = !this.showMoreCourse
@@ -248,6 +332,10 @@ export default {
     // 去课程详情
     goToDetails (courseCode) {
       this.$router.push({path: '/app/book-details/' + courseCode})
+    },
+    //  儿童课程
+    goToKidDetails (code) {
+      this.$router.push({path: '/app/book-mini-details/' + code})
     },
     // 去电台详情
     goToRadioDetail (radioCode) {
@@ -549,14 +637,18 @@ export default {
 
 .user-control-btn {
   cursor: pointer;
+  display: flex;
 }
 
 .user-control-btn span{
-  display: inline-block;
+  display: block;
   width: 4px;
   height: 4px;
   border-radius: 50%;
   background-color: #b9cde2;
+}
+.user-control-btn span:nth-child(2) {
+  margin: 0 3px;
 }
 .user-control-btn:hover {
   span{

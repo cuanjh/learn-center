@@ -40,7 +40,7 @@
             <span v-if="own">系统已把你的录音自动生成了本节课程！</span>
             <span v-else>没有收录到你的课程语音，去听听其他语伴的吧！</span>
           </div>
-          <div class="record-box" @click="ShowDetail(code + '-' + core)">
+          <div class="record-box" @click="ShowDetail(id)">
             <dl>
               <dt><img :src="imgCover | urlFix('imageView2/0/w/183/h/86/format/jpg')" alt=""></dt>
               <dd>
@@ -79,6 +79,7 @@ import RecordList from './recordList.vue'
 export default {
   data () {
     return {
+      id: '',
       active: true, // 星星动画
       window: {},
       isShow: false,
@@ -129,12 +130,12 @@ export default {
   created () {
     var _this = this
     this.$on('coreSummary-show', (id) => {
-      let curChapterCode = _this.code
-      var arr = curChapterCode.split('-')
+      this.id = id
+      var arr = id.split('-')
+      _this.core = arr.pop()
       _this.level = arr[2].toLowerCase()
       _this.chapter = arr[4].toLowerCase().replace('chapter', '课程')
-      _this.core = id
-      let activityCode = curChapterCode + '-' + _this.core
+      let activityCode = id
 
       _this.getFinishedInfo(activityCode).then(() => {
         console.log(_this.finishedInfo)
@@ -172,18 +173,8 @@ export default {
   },
   computed: {
     ...mapState({
-      curChapterCode: state => state.course.currentChapterCode,
       finishedInfo: state => state.learn.finishedInfo
-    }),
-    code () {
-      let curChapterCode
-      if (!this.curChapterCode) {
-        curChapterCode = localStorage.getItem('currentChapterCode')
-      } else {
-        curChapterCode = this.curChapterCode
-      }
-      return curChapterCode
-    }
+    })
   },
   methods: {
     ...mapActions({
@@ -196,17 +187,23 @@ export default {
     },
     back () {
       this.show = false
-      this.$router.push({ path: '/app/course-list' })
+      let isKid = localStorage.getItem('isKid')
+      let courseCode = this.id.split('-').slice(0, 2).join('-')
+      if (isKid === '1') {
+        this.$router.push({ path: '/app/kid-course-list/' + courseCode })
+      } else {
+        this.$router.push({ path: '/app/course-list/' + courseCode })
+      }
     },
     continueLearn () {
       this.show = false
-      let currentRoute = this.$router.currentRoute
-      let id = currentRoute.params.id
-      let core = parseInt(id.replace('A0', ''))
+      let arr = this.id.split('-')
+      let curChapterCode = arr.slice(0, 5).join('-')
+      let core = parseInt(this.core.replace('A0', ''))
       if (core < 5) {
-        this.$router.push('/learn/stage/A0' + (core + 1))
+        this.$router.push('/learn/stage/' + curChapterCode + '-A0' + (core + 1))
       } else {
-        this.$router.push('/app/course-list')
+        this.back()
       }
     },
     ShowDetail (activityCode) {

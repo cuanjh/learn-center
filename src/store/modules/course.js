@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 
 import _ from 'lodash'
-import Cookie from 'js-cookie'
+import Cookie from '../../tool/cookie'
 
 import { httpLogin, httpAssets, httpNoLogin } from '../../api/api'
 import config from '../../api/config'
@@ -71,7 +71,7 @@ const state = {
 
 const actions = {
   currentCourse () {
-    return httpLogin(config.currentCourse, {
+    return httpLogin(config.currentCourseApi, {
       content_version: '1.5'
     })
   },
@@ -100,6 +100,18 @@ const actions = {
       return res
     })
   },
+  getLearnInfoV5 ({commit}, params) {
+    return httpLogin(config.learnInfoV5Api, params).then(res => {
+      commit('updateCourseInfoV5', res)
+      return res
+    })
+  },
+  // 课程的核心课程切课信息
+  getCorePartInfo ({commit, state}, params) {
+    return httpLogin(config.corePartInfoApi, params).then(res => {
+      commit('updateCorePartInfo', res)
+    })
+  },
   getCourseContent ({ commit, state }, contentUrl) {
     return httpAssets(contentUrl).then((res) => {
       commit('updateChapters', res)
@@ -124,7 +136,7 @@ const actions = {
     return httpLogin(config.postProgress, { forms: JSON.stringify(state.formScores) })
   },
   getProgress ({ commit }, currentChapterCode) {
-    return httpLogin(config.getProgress, { chapter_code: currentChapterCode, state: '' }).then((res) => {
+    return httpLogin(config.getProgressApi, { chapter_code: currentChapterCode, state: '' }).then((res) => {
       if (res.state !== 0) {
         commit('updateCurChapterProgress', res.record.forms)
       } else {
@@ -432,8 +444,22 @@ const mutations = {
     let curChapterCode = state.learnInfo.current_chapter_code
     state.curLevel = curChapterCode.split('-')[2]
     state.assetsUrl = data.info.courseBaseInfo.content_config.assets_url
-    Cookie.set('assetsApi', state.assetsUrl)
+    Cookie.setCookie('assetsApi', state.assetsUrl)
     state.contentUrl = state.courseBaseInfo.content_config.content_url
+    state.currentChapterCode = curChapterCode
+    localStorage.setItem('currentChapterCode', state.currentChapterCode)
+  },
+  updateCourseInfoV5 (state, data) {
+    console.log('updateCourseInfo', data)
+    state.courseBaseInfo = data.info.courseBaseInfo
+    localStorage.setItem('courseBaseInfo', JSON.stringify(state.courseBaseInfo))
+    state.learnConfig = data.info.learnConfig
+    state.chapterNum = state.courseBaseInfo.chapter_num
+    state.levelNum = state.courseBaseInfo.level_num
+    let levelDetail = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6']
+    state.levelDetail = levelDetail.slice(0, state.courseBaseInfo.level_num)
+    let curChapterCode = state.learnConfig.current_chapter_code
+    state.curLevel = curChapterCode.split('-')[2]
     state.currentChapterCode = curChapterCode
     localStorage.setItem('currentChapterCode', state.currentChapterCode)
   },
@@ -509,13 +535,12 @@ const mutations = {
     state.curChapterProgress = forms
     localStorage.setItem('curChapterProgress', JSON.stringify(forms))
   },
+  updateCorePartInfo (state, res) {
+    console.log('corepartInfo', res)
+    localStorage.setItem('corePartInfos', JSON.stringify(res.parts_info))
+  },
   updateCurCoreParts (state, id) {
-    let corePartInfos = {}
-    if (Object.keys(state.courseBaseInfo).length === 0) {
-      corePartInfos = JSON.parse(localStorage.getItem('courseBaseInfo')).corePartInfos
-    } else {
-      corePartInfos = state.courseBaseInfo.corePartInfos
-    }
+    let corePartInfos = JSON.parse(localStorage.getItem('corePartInfos'))
 
     let currentChapterCode = state.currentChapterCode
     if (!currentChapterCode) {
@@ -536,35 +561,27 @@ const mutations = {
       curLevelChapters = state.curLevelChapters
     }
 
-    let chapter = curLevelChapters.filter(
-      (item) => {
-        return item.code === currentChapterCode
-      })[0]
-    state.curChapterUrl = chapter.chapter_url
-  },
-  chapterProgress (state, id) {
-    let group = {}
-    let record = {}
-    if (Object.keys(state.curChapterProgress).length === 0) {
-      record = JSON.parse(localStorage.getItem('curChapterProgress'))
-    } else {
-      record = state.curChapterProgress
+    let chapter = curLevelChapters.filter((item) => {
+      return item.code === currentChapterCode
+    })[0]
+    if (chapter) {
+      state.curChapterUrl = chapter.chapter_url
     }
+  },
+  chapterProgress (state, params) {
+    let id = params.id.split('-').pop()
+    let group = {}
+    let record = params.curChapterRecord.forms
 
     let startSlideNum = 0
     let slideNumber = 0
     let slides = []
-    let chapterContent = {}
-    if (Object.keys(state.curChapterContent).length === 0) {
-      chapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
-    } else {
-      chapterContent = state.curChapterContent
-    }
+    let chapterContent = params.curChapterContent
 
     if (id.indexOf('A0') > -1) {
-      slides = state.curCorePart.Slides
-      startSlideNum = state.curCorePart.Slides[0]
-      slideNumber = state.curCorePart.Slides.length
+      slides = state.curCorePart.slides
+      startSlideNum = state.curCorePart.slides[0]
+      slideNumber = state.curCorePart.slides.length
       let formSlides = chapterContent.coreLessons.parts[0].slides
       slides.forEach((slide) => {
         let forms = formSlides[slide - 1].forms
@@ -732,11 +749,7 @@ const mutations = {
     if (Object.keys(learnMoreCourse).length === 0) {
       learnMoreCourse = JSON.parse(localStorage.getItem('learnMoreCourses'))
     }
-    let course = learnMoreCourse.filter((item) => {
-      return item.lan_code === arr[0]
-    })
     state.chapterDes = []
-    state.chapterDes.push(course[0].name['zh-CN'])
     state.chapterDes.push(state.levelDes[arr[2]])
     let unitNum = parseInt(arr[3].replace('Unit', ''))
     let chapterNum = parseInt(arr[4].replace('Chapter', ''))

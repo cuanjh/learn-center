@@ -1,5 +1,5 @@
 <template>
-  <div class="share">
+  <div class="share" id="share-box">
     <div class="gb_resLay">
       <div class="bdsharebuttonbox">
         <ul class="gb_resItms">
@@ -20,7 +20,7 @@ import Bus from '../../bus.js'
 import $ from 'jquery'
 import cookie from '../../tool/cookie'
 export default {
-  props: ['type'], // 1: 电台详情分享 2: 电台卡片分享 3: 官方课程详情分享
+  props: ['type'], // 1: 电台详情分享 2: 电台卡片分享 3: 官方课程详情分享 4:kid录音分享
   data () {
     return {
       shareCourse: {}
@@ -80,11 +80,18 @@ export default {
           //   "bdSelectMiniList":["weixin","tsina","sqq","qzone"]
           // }
         }
-      } else {
+      } else if (this.type === '3') {
         bdDesc = '全球说-WAL世界语言地图' //分享时的标题
         bdText = '我从#全球说-世界语言地图#中推荐了' + course.name + '，传承语言文化，扩充语言知识！我在全球说，跟随世界语言地图学习多样语言，传承多样文化' //分享时的文本摘要
         bdPic = course.flag //此处为分享时自带的图片
         bdUrl = 'http://share.talkmate.com/course_new/' + course.course_code //此处为后台要进行分享的内容的定义
+      } else {
+        bdDesc = course.title //分享时的标题
+        bdText = course.text
+        bdPic = course.flag //此处为分享时自带的图片
+        // https://mobile-static.talkmate.com/operate/activities/html/miniRecordShare/index.html // 正式
+        // http://test-learn.talkmate.com:82/miniRecordShare/index.html // 测试
+        bdUrl = encodeURI('http://test-learn.talkmate.com:82/miniRecordShare/index.html?chapterCode=' + course.chapterCode + '&teacherModule=' + course.teacherModule +'&course='+ course.courseName + '&user_id='+ userId +'&time='+ new Date().getTime())  //此处为后台要进行分享的内容的定义
       }
 
       window._bd_share_config = {
@@ -111,9 +118,11 @@ export default {
     }
   }
 }
+// bdUrl = 'http://share.talkmate.com/record/' + course.chapterCode + '/' + course.teacherModule + '/' + userId + '/'+ encodeURI(course.courseName)  //此处为后台要进行分享的内容的定义
+
 </script>
 <style lang="less" scoped>
-.share {
+#share-box {
   .bdsharebuttonbox {
     .gb_resItms {
       display: flex;
@@ -139,21 +148,25 @@ export default {
   }
   .bdsharebuttonbox .bds_tsina {
     background: url('../../../static/images/shareImg/weibo.svg') no-repeat center center/28px 28px;
+    background-size: cover;
     &:hover {
       background-image: url('../../../static/images/shareImg/weibo-hover.svg');
     }
   }
   .bdsharebuttonbox .bds_sqq {
     background: url(../../../static/images/shareImg/qq.svg) no-repeat center center/28px 28px;
+    background-size: cover;
     &:hover {
       background-image: url('../../../static/images/shareImg/qq-hover.svg');
     }
   }
   .bdsharebuttonbox .bds_qzone {
     background: url(../../../static/images/shareImg/qq-space.svg) no-repeat center center/28px 28px;
+    background-size: cover;
     &:hover {
       background-image: url('../../../static/images/shareImg/qq-space-hover.svg');
     }
   }
 }
+
 </style>

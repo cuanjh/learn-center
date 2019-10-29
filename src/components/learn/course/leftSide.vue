@@ -74,15 +74,19 @@ export default {
     LearnCourseList
   },
   mounted () {
-    this.getMoreLearnCourses().then(res => {
+    this.getSubCourses().then(res => {
+      console.log('新的课程列表返回', res)
       if (res.success) {
-        let learnCourses = res.learn_courses
+        let learnCourses = res.courses
         learnCourses.forEach(item => {
-          if (!parseInt(item.course_type)) {
+          if (item.course_type === 0 || item.course_type === 3) {
             this.subscribeLangCourses.push(item)
           }
         })
-        this.subscribeLangCourses = this.subscribeLangCourses.reverse()
+        // 按kid课程在前，pro课程在后，每个分组按后订阅的在前
+        this.subscribeLangCourses = this.subscribeLangCourses.sort((a, b) => {
+          return b.course_type - a.course_type
+        })
         console.log('订阅的官方课程', this.subscribeLangCourses)
       }
     })
@@ -117,7 +121,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getMoreLearnCourses'
+      'getMoreLearnCourses',
+      'getSubCourses' // 新的课程列表接口
     ]),
     ...mapMutations({
       updateCurCourseCode: 'course/updateCurCourseCode'

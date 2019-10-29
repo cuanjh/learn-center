@@ -6,7 +6,7 @@ window._bd_share_main.F.module("trans/trans_weixin", function (n, i) {
     p = n("base/tangram").T,
     u = (n("conf/const").URLS, function (n) {
       var i = Math.round(70 / n.length);
-      i = 2 > i ? 2 : i, r = i * n.length;
+      i = 1 > i ? 1 : i, r = i * n.length;
       var e = '<table style="direction:ltr;border: 0; width:' + r + 'px; border-collapse: collapse;background-color:#fff;margin:0 auto;" align="center">',
         o = [e],
         t = "";
@@ -63,7 +63,7 @@ window._bd_share_main.F.module("trans/trans_weixin", function (n, i) {
         c = (d - i) / 2;
       var offset = $('.bds_weixin').offset()
       c = offset.left - 81;
-      r = offset.top - 140;
+      r = offset.top - 130;
       r = 0 > r ? 0 : r, c = 0 > c ? 0 : c, o.width(i).height(t).css({
         left: c,
         top: r

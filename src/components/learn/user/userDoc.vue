@@ -9,7 +9,8 @@
               <i class="grading"></i>
               <p>
                 <span>测试定级</span>
-                <span>{{ (userArchive.learnInfo && userArchive.learnInfo.grade_info.has_set_grade_status) ?  levelArr[userArchive.learnInfo.grade_info.grade_level] : '无'}}</span>
+                <span v-if="userArchive.courseInfo&&userArchive.courseInfo.course_type == 3">{{ (userArchive.learnInfo && userArchive.learnInfo.grade_info.has_set_grade_status) ?  levelArr[userArchive.learnInfo.grade_info.grade_level] : '暂未开放'}}</span>
+                <span v-else>{{ (userArchive.learnInfo && userArchive.learnInfo.grade_info.has_set_grade_status) ?  levelArr[userArchive.learnInfo.grade_info.grade_level] : '无'}}</span>
               </p>
             </li>
             <li>
@@ -58,10 +59,16 @@ export default {
 
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     let courseCode = userInfo.current_course_code
-    this.getUserArchive({course_code: courseCode}).then(res => {
-      console.log('用户课程档案', res)
-      this.userArchive = res
-    })
+    if (!courseCode) {
+      this.getSubCourses().then(res => {
+        if (res.success) {
+          courseCode = res.courses[0].code
+          this.initArchive(courseCode)
+        }
+      })
+    } else {
+      this.initArchive(courseCode)
+    }
   },
   computed: {
     ...mapState({
@@ -72,8 +79,17 @@ export default {
   methods: {
     ...mapActions({
       getCourseArchives: 'user/getCourseArchives',
-      getUserArchive: 'getUserArchive'
-    })
+      getUserArchive: 'getUserArchive',
+      getSubCourses: 'getSubCourses' // 新的课程列表接口
+    }),
+    initArchive (courseCode) {
+      this.getUserArchive({course_code: courseCode}).then(res => {
+        console.log('用户课程档案', res)
+        if (res.success) {
+          this.userArchive = res
+        }
+      })
+    }
   }
 }
 </script>

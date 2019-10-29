@@ -1,13 +1,15 @@
 <template>
   <div class="homework-wrap">
     <div class="homework-container">
-      <router-link class="homework-balk" :to="{path: '/app/course-list'}">
-        <p></p>
-        <span>返回</span>
-      </router-link>
+      <div class="back-box">
+        <a href="javascript:;" class="homework-balk" @click="back()">
+          <p></p>
+          <span>返回</span>
+        </a>
+      </div>
       <div class="homework-content">
         <div class="homework-title">
-          <p>{{chapterDes.join('·')}}</p>
+          <p>{{courseName + '·' + chapterDes.join('·')}}</p>
         </div>
         <div class="my-work">
           <p class="line"></p>
@@ -15,7 +17,7 @@
         </div>
         <!-- 作业列表，分为语音和写作 -->
         <div class="homework-list">
-          <speakwork class="homework-item" v-for="(homework, index) in homeworkList" :key="index" :homework="homework"/>
+          <speakwork class="homework-item" @initData="initData" v-for="(homework, index) in homeworkList" :key="index" :homework="homework"/>
         </div>
       </div>
     </div>
@@ -28,7 +30,12 @@ import Recorder from '../../../plugins/recorder'
 
 export default {
   data () {
-    return {}
+    return {
+      curChapterCode: '',
+      courseCode: '',
+      courseName: '',
+      homeworkList: []
+    }
   },
   created () {
     Recorder.init()
@@ -38,32 +45,58 @@ export default {
   },
   mounted () {
     this.$parent.$emit('initLayout')
-    let curChapterCode
     // 判断如果currentChapterCode不存在去localStorgae中取
-    if (!this.currentChapterCode) {
-      curChapterCode = localStorage.getItem('currentChapterCode')
-    } else {
-      curChapterCode = this.currentChapterCode
-    }
-    let activityCode = curChapterCode + '-A8'
-    this.homeworkContent(activityCode)
-    this.updateChapterDes(curChapterCode)
+    this.curChapterCode = localStorage.getItem('currentChapterCode')
+    console.log(this.curChapterCode)
+    this.courseCode = this.curChapterCode.split('-').slice(0, 2).join('-')
+    console.log(this.courseCode)
+    this.getOneCourseSub({course_code: this.courseCode}).then(res => {
+      console.log('courseSubInfo', res)
+      this.courseName = res.subInfo.name[this.$i18n.locale]
+    })
+    this.updateChapterDes(this.curChapterCode)
+    this.initData()
   },
   computed: {
     ...mapState({
       currentChapterCode: state => state.course.currentChapterCode,
       tips: state => state.learn.tips,
-      chapterDes: state => state.course.chapterDes,
-      homeworkList: state => state.course.homeworkContent
-    })
+      chapterDes: state => state.course.chapterDes
+    }),
+    isKid () {
+      let isKid = localStorage.getItem('isKid')
+      return isKid
+    }
   },
   methods: {
+    ...mapActions({
+      getOneCourseSub: 'getOneCourseSub',
+      setModuleComplete: 'setModuleComplete',
+      getHomeworkContent: 'getHomeworkContent'
+    }),
     ...mapMutations({
       updateChapterDes: 'course/updateChapterDes'
     }),
-    ...mapActions({
-      homeworkContent: 'course/homeworkContent'
-    })
+    initData () {
+      let activityCode = this.curChapterCode + '-A8'
+      this.getHomeworkContent(activityCode).then(res => {
+        this.homeworkList = res.contents
+        let complete = this.homeworkList.filter(item => {
+          return item.has_done === true
+        })
+        if (complete.length === this.homeworkList.length) {
+          this.setModuleComplete({chapter_code: this.curChapterCode, module: 'homework_complete'})
+        }
+      })
+    },
+    back () {
+      let isKid = localStorage.getItem('isKid')
+      if (isKid === '1') {
+        this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
+      } else {
+        this.$router.push({path: '/app/course-list/' + this.courseCode})
+      }
+    }
   }
 }
 </script>
@@ -73,8 +106,12 @@ a {
   text-decoration:none;
 }
 .homework-container {
-  width: 890px;
+  // width: 890px;
   margin: 80px auto 0;
+  .back-box {
+    width: 890px;
+    margin: 0 auto;
+  }
   .homework-balk {
     display: block;
     width: 80px;
@@ -106,9 +143,10 @@ a {
   .homework-content {
     width: 100%;
     .homework-title {
-      width: 100%;
+      width: 890px;
       height: 70px;
       background: #2a9fe4;
+      margin: 0 auto;
       p {
         display: inline-block;
         vertical-align: middle;
@@ -119,10 +157,11 @@ a {
       }
     }
     .my-work {
-      width: 100%;
+      width: 890px;
       height: 60px;
       background: #ffffff;
       line-height: 60px;
+      margin: 0 auto;
       .line {
         display: inline-block;
         vertical-align: middle;
@@ -142,14 +181,15 @@ a {
     }
     // 语音css
     .homework-list {
-      width: 106%;
+      width: 940px;
       margin-top: 20px;
       overflow: hidden;
-
+      margin: 20px auto;
     }
     .homework-item {
       display: inline-block;
       width: 32.3333%;
+      padding-left: 30px;
     }
 
   }

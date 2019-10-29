@@ -3,6 +3,19 @@
     <nav-comp />
     <vip-prompt class="vip"/>
     <div class="hot-course-box">
+      <p class="title">儿童课程
+      </p>
+      <ul class="course-item">
+        <li v-for="(item, index) in kidCourse"
+          :key="'kid' + index" @click="routerGoKid(item)">
+          <div class="imgBox">
+            <img :src="qnUrl(item.flag)" alt="">
+          </div>
+          <p class="name"><span>{{ item.name + 'Mini'}}</span></p>
+        </li>
+      </ul>
+    </div>
+    <div class="hot-course-box">
       <p class="title">热门课程
       </p>
       <ul class="course-item">
@@ -84,7 +97,8 @@ export default {
       curLetter: '全部',
       defaultCourseLangs: [],
       courseLangs: [],
-      searchVal: ''
+      searchVal: '',
+      kidCourse: [] // 儿童课程
     }
   },
   components: {
@@ -107,8 +121,9 @@ export default {
 
     this.getLangsList().then(res => {
       console.log('官方课程', res)
-      _this.hotCourse = res.hotLangsInfo
-      _this.courseLangs = res.langsInfo
+      _this.hotCourse = res.courseInfo.hotCourses
+      _this.kidCourse = res.courseInfo.kidCourses
+      _this.courseLangs = res.courseInfo.listCourses
       this.defaultCourseLangs = _this.courseLangs
     })
   },
@@ -142,9 +157,9 @@ export default {
     hideDetails () {
       this.showDetailsHot = this.showDetailsChina = null
     },
-    goDetails (courseCode) {
-      this.$router.push({path: '/app/book-details/' + courseCode + '-Basic'})
-    },
+    // goDetails (courseCode) {
+    //   this.$router.push({path: '/app/book-details/' + courseCode + '-Basic'})
+    // },
     // 数字每三位添加逗号
     toThousands (num) {
       return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
@@ -186,10 +201,15 @@ export default {
       }
       return arr
     },
-    async routerGo (item) {
+    routerGo (item) {
       console.log('item', item)
-      let langCode = item['lan_code']
-      this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
+      let langCode = item['code']
+      // this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
+      this.$router.push({path: '/app/book-details/' + langCode})
+    },
+    routerGoKid (item) {
+      let langCode = item['code']
+      this.$router.push({path: '/app/book-mini-details/' + langCode})
     },
     search () {
       this.courseLangs = this.defaultCourseLangs.filter((item) => {
@@ -215,9 +235,10 @@ export default {
       .title {
         font-size: 20px;
         color: #333333;
-        margin: 0 20px 10px 0;
         font-weight: bold;
-        text-align: center;
+        width: 944px;
+        margin: 0 auto;
+        padding: 0 28px 5px;
       }
       // .hot-courses {
       //   overflow: hidden;
@@ -477,10 +498,13 @@ export default {
         font-size:16px;
         font-weight:bold;
         color:#2A9FE4;
-        margin-right: 19px;
+        margin-right: 18px;
         display: inline-block;
         text-align: center;
         line-height: 26px;
+      }
+      a:last-child {
+        margin-right: 0;
       }
       .all {
         font-size: 14px;
@@ -490,7 +514,10 @@ export default {
         color: #fff;
         border-radius:18px;
       }
-      .cur {
+      a:hover {
+        color: rgba(42, 159, 228, .6);
+      }
+      a.cur {
         width:26px;
         height:26px;
         background:#0581D1;

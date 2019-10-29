@@ -10,7 +10,7 @@
 
 <script>
 import _ from 'lodash'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 
 import gradeProgress from './gradeProgress.vue'
 import pkMenu from '../pk/pkMenu.vue'
@@ -73,10 +73,8 @@ export default {
     }
   },
   mounted () {
-    this.courseCode = this.currentCourseCode
-    if (!this.courseCode) {
-      this.courseCode = localStorage.getItem('currentCourseCode')
-    }
+    let curChapterCode = localStorage.getItem('currentChapterCode')
+    this.courseCode = curChapterCode.split('-').slice(0, 2).join('-')
     this.getGradeContent(this.courseCode).then((res) => {
       console.log(res)
       this.contentInfo = res.content_info
@@ -98,9 +96,6 @@ export default {
     })
   },
   computed: {
-    ...mapState({
-      currentCourseCode: state => state.course.currentCourseCode
-    }),
     questionNum () {
       console.log(this.data)
       return Math.floor(this.data.length / 2)
@@ -201,7 +196,7 @@ export default {
     })
 
     this.$on('back', (content) => {
-      this.$router.push({path: '/app/course-list'})
+      this.$router.push({path: '/app/course-list/' + this.courseCode})
       // window.location.href =
       //   Config.index +
       //   'v2/learn/index/' +

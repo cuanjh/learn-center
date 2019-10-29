@@ -33,7 +33,8 @@ export default {
   data () {
     return {
       levels: [],
-      isShow: true
+      isShow: true,
+      changeCourseCode: ''
     }
   },
   components: {
@@ -46,7 +47,15 @@ export default {
     this.$parent.$emit('initLayout')
     this.$parent.$emit('navItem', 'course')
     // this.showLoading()
-
+    let courseCode = this.$route.params.courseCode
+    this.getOneCourseSub({course_code: courseCode}).then(res => {
+      console.log('courseSubInfo', res)
+      if (res.subInfo.course_type === 3) {
+        localStorage.setItem('isKid', '1')
+      } else if (res.subInfo.course_type === 0) {
+        localStorage.setItem('isKid', '0')
+      }
+    })
     this.initData()
   },
   computed: {
@@ -66,6 +75,16 @@ export default {
       historyCourseRecord: state => state.course.historyCourseRecord
     })
   },
+  watch: {
+    $route (to, from) {
+      if (to.name === from.name) {
+        this.changeCourseCode = to.params.courseCode
+      }
+    },
+    changeCourseCode () {
+      this.initData()
+    }
+  },
   methods: {
     ...mapActions({
       getLearnInfo: 'course/getLearnInfo',
@@ -77,7 +96,8 @@ export default {
       setCurrentChapter: 'course/setCurrentChapter',
       getCourseTestRanking: 'course/getCourseTestRanking',
       homeworkContent: 'course/homeworkContent',
-      getUserInfo: 'getUserInfo'
+      getUserInfo: 'getUserInfo',
+      getOneCourseSub: 'getOneCourseSub'
     }),
     ...mapMutations({
       updateUnlockCourseList: 'course/updateUnlockCourseList',
@@ -86,38 +106,32 @@ export default {
       updateCurLevel: 'course/updateCurLevel'
     }),
     async loadChapterInfo (chapterCode) {
-      if (this.unlockCourses.indexOf(chapterCode) > -1) {
-        console.log(this.historyCourseRecord)
-        if (this.historyCourseRecord[chapterCode] && Object.keys(this.historyCourseRecord[chapterCode]).length > 0) {
-          this.$refs['chapterItem'].$emit('changeIsHistory', true)
-          await this.setCurrentChapter(chapterCode)
-          this.$refs['chapterItem'].$emit('changeIsShow', true)
-        } else {
-          // this.showLoading()
-          this.$refs['chapterItem'].$emit('changeIsHistory', false)
-          await this.setCurrentChapter(chapterCode)
-          this.$refs['chapterItem'].$emit('changeIsShow', true)
-          await this.getChapterContent()
+      console.log(this.historyCourseRecord)
+      if (this.historyCourseRecord[chapterCode] && Object.keys(this.historyCourseRecord[chapterCode]).length > 0) {
+        this.$refs['chapterItem'].$emit('changeIsHistory', true)
+        await this.setCurrentChapter(chapterCode)
+        this.$refs['chapterItem'].$emit('changeIsShow', true)
+      } else {
+        // this.showLoading()
+        this.$refs['chapterItem'].$emit('changeIsHistory', false)
+        await this.setCurrentChapter(chapterCode)
+        this.$refs['chapterItem'].$emit('changeIsShow', true)
+        await this.getChapterContent()
 
-          await this.getProgress(chapterCode)
+        await this.getProgress(chapterCode)
 
-          await this.getCourseTestRanking(chapterCode)
+        await this.getCourseTestRanking(chapterCode)
 
-          await this.homeworkContent(this.currentChapterCode + '-A8')
+        await this.homeworkContent(this.currentChapterCode + '-A8')
 
-          // this.hideLoading()
-          this.$refs['chapterItem'].$emit('saveHistoryCourseData')
-        }
-
-        setTimeout(() => {
-          // let top = $('#' + chapterCode).offset().top - 116
-          // $('body,html').animate({ scrollTop: top }, 300, 'linear')
-        }, 0)
+        // this.hideLoading()
+        this.$refs['chapterItem'].$emit('saveHistoryCourseData')
       }
     },
     async initData () {
-      let res = await this.getUserInfo()
-      let curCourseCode = res.info.current_course_code
+      // let res = await this.getUserInfo()
+      // let curCourseCode = res.info.current_course_code
+      let curCourseCode = this.$route.params.courseCode
       console.log('courselist initData', curCourseCode)
       this.$refs['chapterItem'].$emit('changeIsHistory', false)
       await this.getLearnInfo(curCourseCode)
@@ -127,7 +141,7 @@ export default {
       })
       await this.getCourseContent(this.contentUrl)
       await this.getChapterContent()
-
+      await this.setCurrentChapter(this.currentChapterCode)
       await this.getRecord(this.currentChapterCode + '-A0')
       await this.getProgress(this.currentChapterCode)
       await this.homeworkContent(this.currentChapterCode + '-A8')
@@ -137,7 +151,6 @@ export default {
       // $('body,html').animate({ scrollTop: top }, 100, 'linear')
 
       // this.hideLoading()
-      this.$refs['chapterItem'].$emit('saveHistoryCourseData')
     },
     selLevel (level) {
       this.isShow = false

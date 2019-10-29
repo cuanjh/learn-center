@@ -42,12 +42,14 @@ export default {
 
   // 课程
   moreLearnCoursesApi: '/study/more_learn_courses', // 获取更多的订阅课程
-  currentCourse: '/study/current_course', // 获取一个课程的详情
+  currentCourseApi: '/study/current_course', // 获取一个课程的详情
   learnInfo: '/studyv1/learn_info/index', // 1.一门课程基本配置 2.用户针对此课程学习基本配置 3.学习信息
-  unlockChapter: '/chapters_state/get_unlock_chapter', // 最新的接口加入A0-A8是否完成的数据结构；返回正在学习的chapter编码；
+  corePartInfoApi: '/study/core_part_info', // 核心课程切课信息
+  // unlockChapter: '/chapters_state/get_unlock_chapter', // 最新的接口加入A0-A8是否完成的数据结构；返回正在学习的chapter编码；
+  unlockChapter: '/studyv1/records/chapter/unlock/info', // 最新的接口加入A0-A8是否完成的数据结构；返回正在学习的chapter编码；
   setCurChapter: '/chapters_state/set_current_chapter', // 设置正在学习的课程的最新chapter编码
   getRecord: '/chapters_state/get_record', // 查询学习结果
-  getProgress: '/chapters_state/get_progress', // 获取学习结果
+  getProgressApi: '/chapters_state/get_progress', // 获取学习结果
   hasGrade: '/level_grade/has_grade', // 返回用户对当前课程是否进行过定级操作
   levelGradeGrade: '/level_grade/grade', // 定级确认
   homeworkContent: '/feedv1/homework/content', // 获取作业内容接口
@@ -59,8 +61,10 @@ export default {
   createAliWebOrder: '/pay/ali_web_order', // 创建支付宝网页支付订单
   getMemberProductsList: '/product/lists', // 会员产品支付渠道暂定于国内
   getMemberCard: '/member/card', // 会员卡激活账号的接口
-  postUnlockChapter: '/chapters_state/unlock_chapter', // 解锁课程
+  // postUnlockChapter: '/chapters_state/unlock_chapter', // 解锁课程
+  postUnlockChapter: '/studyv1/records/chapter/unlock', // 解锁课程
   getBuyChapter: '/chapter_purchase/purchase',
+  umGetMemberProductsList: '/prdv1/product/lists', // 新的会员卡片接口有限时优惠
 
   // 书架
   bookCaseIndex: '/studyv1/shelf/v2/index', // 书架首页
@@ -137,11 +141,13 @@ export default {
   courseTestRanking: '/course_test/ranking', // 返回本课程测试的排行榜数据
   courseTestRecord: '/course_test/record', // 用来存储课程测试结束的测试结果及过程
   finishedInfo: '/study_info/finished_info', // 返回每部分学完的学习完成信息
-  activityRecord: '/chapters_state/activity_record', // 各个部分即A0-A8学完，上传统计结果
+  // activityRecord: '/chapters_state/activity_record', // 各个部分即A0-A8学完，上传统计结果
+  activityRecord: '/studyv1/activity/upload', // 各个部分即A0-A8学完，上传统计结果
   getGradeContent: '/level_grade/get_content', // 用来获取课程定级的内容
   postGradeResult: '/level_grade/grade_result', // 用来接收用户在定级的过程中学习的结果
   getRecordCourseList: '/study_info/record_course_list', // 获取用户录音课程
   getRecordCourse: '/study_info/record_course', // 获取用户录音课程
+  setHomeworkCompleteApi: '/chapters_state/set_complete', // 设置作业完成接口
 
   /**
    * 新登录接口
@@ -159,7 +165,27 @@ export default {
   anonymousUserBindEmailApi: '/umv1/user/regist_by_email', // 匿名用户绑定邮箱
   umUserExistsPhoneApi: '/umv1/user/exists/phone', // 验证手机号是否存在接口
   umUserExistsEmailApi: '/umv1/user/exists/email', // 验证邮箱是否存在接口
-  umLangsListApi: '/umv1/langs/lists', // 语言列表接口
+  // umLangsListApi: '/umv1/langs/lists', // 语言列表接口
+  umLangsListApi: '/studyv1/course/list', // 语言列表接口
   umLangsStateApi: '/umv1/langs/state', // 语言设置状态接口
-  umUserAnonyApi: '/umv1/user/anony' // 匿名登录
+  umUserAnonyApi: '/umv1/user/anony', // 匿名登录
+
+  // kid课程接口
+  umKidCourseDetailApi: '/kidv1/course/detail', // mini课程详情接口
+  userSubCoursesApi: '/studyv1/user/course/subscribes/v2', // 获取更多订阅课程接口
+  userSubRadioCoursesApi: '/studyv1/user/course/subscribes/v3', // 用户订阅的电台课程 废弃没用
+  courseSubApi: '/studyv1/course/sub', // 单个课程订阅课程接口
+  learnInfoV5Api: '/studyv1/learn_info/v5/index', // kid学习首页接口
+  studyCatalogApi: '/studyv1/catalog',
+  umKidLearnMoreCoursesApi: '/studyv1/user/course/subscribes', // 获取更多订阅课程接口
+  umKidCourseContent: '/kidv1/course/teacher/content', // kid教师内容接口(包含绘本，单词，儿歌)
+  umKidRecordState: '/kidv1/record/state', // 单个课程的录音状态接口
+  umKidRecordLists: '/kidv1/record/lists', // 教师模块的录音列表接口
+  umkidRecordShare: '/kidv1/course/record/share', // 模块学习信息分享接口
+  umKidRecordSave: '/kidv1/record/save', // 保存录音接口
+  kidUploadApi: '/studyv1/activity/upload/kid', // kid课程内容学完上传统计信息接口
+  kidUnlockInfoApi: '/studyv1/records/chapter/unlock/info', // 获取Kid课程解锁信息接口
+  studyProgressCompleteApi: '/studyv1/progress/module/complete', // 内容模块完成接口
+  studyProgressPartCompleteApi: '/studyv1/progress/module/part/complete', // 内容模块各个部分完成接口
+  studyProgressUnlockApi: '/studyv1/progress/module/unlock' // 内容模块解锁接口
 }

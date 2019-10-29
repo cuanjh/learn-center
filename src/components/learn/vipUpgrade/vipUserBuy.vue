@@ -72,6 +72,7 @@ export default {
   },
   mounted () {
     this.getUserInfo()
+    console.log(this.userBuy)
     let productId = this.userBuy.product_id
     console.log('productId', productId)
     let params = {
@@ -182,10 +183,12 @@ export default {
             background:rgba(255,255,255,1);
             box-shadow:0px 6px 13px 0px rgba(76,37,4,0.2);
             border:2px solid rgba(255,190,41,1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             .price {
-              padding-top: 32px;
               position: relative;
-              margin-left: 90px;
               span:nth-child(1) {
                 font-size: 20px;
                 font-weight: 500;

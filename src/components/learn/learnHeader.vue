@@ -143,6 +143,7 @@ export default {
     // 监听路由变化
     $route (to, from) {
       console.log('监听路由变化：', this.$route.path)
+      sessionStorage.removeItem('sessionSongsAll')
       if (this.$route.path.indexOf('/user/') > -1) {
         this.isActive = true
       } else {
@@ -208,6 +209,11 @@ export default {
       this.courseDetailShow = false
     },
     gotoVIP () {
+      let userId = cookie.getCookie('user_id')
+      if (!userId) {
+        Bus.$emit('showGoLoginBox')
+        return false
+      }
       window._czc.push(['_trackEvent', '学习系统', 'header', '跳转到会员', '', 'VIP'])
       // this.$router.push({path: '/app/vip-home'})
       let routeUrl = this.$router.resolve({
@@ -724,6 +730,8 @@ export default {
   width: 4px;
   background-color: #fff;
   position: absolute;
+  bottom: -20%;
+  left: 6%;
   margin-left: 215px;
   margin-top: 4px;
   border-radius: 50%;

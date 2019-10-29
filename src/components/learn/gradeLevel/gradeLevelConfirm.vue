@@ -43,15 +43,17 @@ export default {
   props: ['level'],
   data () {
     return {
+      courseCode: ''
     }
   },
   mounted () {
     this.$parent.$emit('initLayout')
+    let curChapterCode = localStorage.getItem('currentChapterCode')
+    this.courseCode = curChapterCode.split('-').slice(0, 2).join('-')
   },
   computed: {
     ...mapState({
-      levelActivity: state => state.course.levelActivity,
-      courseCode: state => state.course.currentCourseCode
+      levelActivity: state => state.course.levelActivity
     })
   },
   methods: {
@@ -73,7 +75,7 @@ export default {
       this.$router.push({path: '/learn/gradeLevel/level1'})
     },
     _gotoCourseListView () {
-      this.$router.push({path: '/app/course-list'})
+      this.$router.push({path: '/app/course-list/' + this.courseCode})
     }
   }
 }

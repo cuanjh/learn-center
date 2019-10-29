@@ -151,7 +151,7 @@ const actions = {
       correct_hits: payload.correctHits,
       learn_time: payload.learnTime,
       correct_rate: payload.correctRate,
-      course_completed_rate: payload.courseCompleteRate
+      course_complete_rate: payload.courseCompleteRate
     })
   },
   getQiniuToken ({ commit }) {
@@ -181,8 +181,8 @@ const mutations = {
     let group = {}
     let record = state.recordForms
 
-    let startSlideNum = state.curCorePart.Slides[0]
-    let slideNumber = state.curCorePart.Slides.length
+    let startSlideNum = state.curCorePart.slides[0]
+    let slideNumber = state.curCorePart.slides.length
     let progressBar = _.fill(Array(slideNumber), state.debug ? 1 : -1)
 
     // 对数据进行分组
@@ -196,7 +196,7 @@ const mutations = {
     })
 
     let newGroup = {}
-    state.curCorePart.Slides.forEach((val) => {
+    state.curCorePart.slides.forEach((val) => {
       if (_.get(group, val)) {
         newGroup[val - startSlideNum] = _.get(group, val)
       }

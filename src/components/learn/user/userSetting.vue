@@ -22,7 +22,8 @@
             <span>手机</span>
             <input type="text" placeholder=''
                     :class="['reg-input', {'error':!phoneNumberValidator}]"
-                    v-model="phone">
+                    v-model="phone"
+                    maxlength="11">
             <div class="bind-phone-box" v-if="!phonenumberConfirmed">
               <em class=''>未绑定</em>
               <a class=''
@@ -35,7 +36,7 @@
                  @click="unbindIdentityFun('phonenumber')">解除绑定</a>
             </div>
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator'>
+          <div class='learn-setting-error-tips-settingpage' v-show='!phoneNumberValidator&&phone'>
             <i></i><em>请输入正确的手机号</em>
           </div>
         </div>
@@ -64,7 +65,7 @@
                  @click="unbindIdentityFun('email')">解除绑定</a>
             </div>
           </div>
-          <div class='learn-setting-error-tips-settingpage' v-show='!mailValidator'>
+          <div class='learn-setting-error-tips-settingpage' v-show="!mailValidator&&email">
             <i></i><em>请输入正确的邮箱账号</em>
           </div>
         </div>

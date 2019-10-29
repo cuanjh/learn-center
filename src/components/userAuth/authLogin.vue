@@ -16,6 +16,8 @@
                   type="text"
                   placeholder="输入手机号码"
                   v-model="phone"
+                  maxlength="11"
+                  @blur="phoneBlur"
                   @keyup.enter="getCode">
         </div>
         <div class="item phone-code">
@@ -24,6 +26,7 @@
                   readonly="readonly"
                   @focus="onFocus()"
                   placeholder="手机验证码"
+                  maxlength="4"
                   v-model="phoneCode"
                   @keyup.enter="goLogin">
           <button v-bind:disabled="!isGetCode" @click="getCode">{{ time === 60 ? message :time+'s' }}</button>
@@ -194,6 +197,14 @@ export default {
     onFocus () {
       $('#phoneCode').removeAttr('readOnly')
     },
+    // 手机号失去焦点
+    phoneBlur () {
+      console.log(this.phone)
+      if (this.phone.length === 11 && validation.phoneNumber(this.phone)) {
+        $('input[type="text"]').css('border-color', '#E6EBEE')
+        this.errText = ''
+      }
+    },
     // 更新type
     updateType (type) {
       this.type = type
@@ -201,11 +212,21 @@ export default {
     // 邮箱登录
     goEmail () {
       this.type = 2
+      if (!this.phoneCode && this.time === 60) {
+        this.phone = ''
+        this.time = 60
+        this.phoneCode = ''
+      }
       console.log('type', this.type)
     },
     // 手机密码登录
     goPwdLogin () {
       this.type = 1
+      if (!this.phoneCode && this.time === 60) {
+        this.phone = ''
+        this.time = 60
+        this.phoneCode = ''
+      }
       console.log('type', this.type)
     },
     // 控制隐私的显示隐藏
