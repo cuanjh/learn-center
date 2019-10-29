@@ -157,6 +157,7 @@ export default {
             releaseOnEdges: true,
           },
           slideToClickedSlide: true,
+          allowTouchMove: false,
           autoHeight : true,
           pagination: {
             el: '.swiper-pagination',
