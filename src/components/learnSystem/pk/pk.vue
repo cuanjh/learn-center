@@ -23,6 +23,7 @@ import singleResult from './singleResult.vue'
 import logCollect from '../../../plugins/logCollect'
 import { onlyId } from '../../../plugins/onlyId'
 import Loader from '../../../plugins/loader'
+import cookie from '../../../tool/cookie'
 
 export default {
   data () {
@@ -271,6 +272,7 @@ export default {
       // 2.2 获取kid目录结构
       let res = await this.getCatalog({course_code: courseCode})
       console.log(res)
+      cookie.setCookie('assetsApi', res.assets_server)
       this.catalogs = res.catalogInfo.catalogs
       let curLevel = this.catalogs.find(item => {
         return item.code === curLevelCode
