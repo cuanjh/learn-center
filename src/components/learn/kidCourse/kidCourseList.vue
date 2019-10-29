@@ -214,11 +214,11 @@
                               <span>继续学习</span>
                             </div>
                             <p class="course-item-title" :class="{'course-item-title-locked': !((hasPurchased || isVip == 1) && curChapterData['coreComplete']) }">{{ $t("courseItem.vip."+vipItemList[i]) }}</p>
-                            <p class="course-item-star" v-if="vip['isCompleted']">
+                            <p class="course-item-star" v-show="vip['isCompleted']">
                               <span class="course-yellow-star"><i v-for="index in vip['starNum']" :key="index"></i></span>
                               <span class="course-yellow-star courseIsLock"><i v-for="index in (5 - vip['starNum'])" :key="index"></i></span>
                             </p>
-                            <p class="course-item-progress" v-else>
+                            <p class="course-item-progress" v-show="!vip['isCompleted']">
                               <span v-text="vip['completedRate']"></span>
                             </p>
                           </div>
