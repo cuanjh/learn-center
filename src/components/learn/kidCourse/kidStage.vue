@@ -88,20 +88,6 @@ export default {
       }
       return this.myRecordNumTip
     }
-    // showRecordTipsStop () {
-    //   let stop = JSON.parse(localStorage.getItem('recordTipStop'))
-    //   if (stop) {
-    //     return stop
-    //   }
-    //   return this.showTipsStop
-    // },
-    // showRecordTipsSave () {
-    //   let save = JSON.parse(localStorage.getItem('recordTipSave'))
-    //   if (save) {
-    //     return save
-    //   }
-    //   return this.showTipSave
-    // }
   },
   created () {
     Recorder.init()

@@ -101,20 +101,6 @@ export default {
       canRecord: state => state.learn.canRecord,
       FileQiniuToken: state => state.FileQiniuToken // 七牛的token
     })
-    // showRecordTipsStop () {
-    //   let stop = JSON.parse(localStorage.getItem('recordTipStop'))
-    //   if (stop) {
-    //     return stop
-    //   }
-    //   return this.showTipsStop
-    // },
-    // showRecordTipsSave () {
-    //   let save = JSON.parse(localStorage.getItem('recordTipSave'))
-    //   if (save) {
-    //     return save
-    //   }
-    //   return this.showTipSave
-    // }
   },
   methods: {
     ...mapActions({
