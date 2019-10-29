@@ -9,8 +9,8 @@
       <div class="draw-desc">
         <div class="no-record">
           <p class="text">{{item.content || item.word}}</p>
-          <div class="start-button">
-            <i class="start-img" :class="{'showStart': showStart}" @click.stop.prevent="startRecord('mother-sound'+index)" v-if="!isRecord"></i>
+          <div class="start-button" @click.stop.prevent="startRecord('mother-sound'+index)">
+            <i class="start-img" :class="{'showStart': showStart}" v-if="!isRecord"></i>
           </div>
         </div>
         <div class="record-content" :class="{'heightHide': heightHide}" v-show="isRecord">
@@ -20,7 +20,7 @@
           </p>
           <div class="recording-body-buttons">
             <div class="recording-body-button">
-              <div class="tip" v-if="recording&&showTipsStop == 1"><i class="tip-img"></i></div>
+              <div class="tip" v-if="recording&&showRecordTipsStop == 1"><i class="tip-img"></i></div>
               <div class="recording-button" @click.stop.prevent="recordStop()">
                 <i class="recording-img" v-if="showRecordingImg"></i>
                 <i class="circle circle1" v-if="recording"></i>
@@ -42,7 +42,7 @@
               </div>
               <div class="record-saveVoice-button" @click.stop.prevent="saveVoice(item)" :disabled="isDisable">
                 <i ></i>
-                <i class="icon-save" v-if="showTipSave == 1"></i>
+                <i class="icon-save" v-if="showRecordTipsSave == 1"></i>
               </div>
             </div>
           </div>
@@ -59,7 +59,7 @@ import Recorder from '../../../plugins/recorder'
 import Cookie from '../../../tool/cookie.js'
 
 export default {
-  props: ['item', 'index', 'type', 'courseCode', 'showTipsStop', 'showTipSave'],
+  props: ['item', 'index', 'type', 'courseCode', 'showRecordTipsStop', 'showRecordTipsSave'],
   data () {
     return {
       isDisable: false,
@@ -89,6 +89,7 @@ export default {
     })
   },
   mounted () {
+    console.log('11111111')
     // 初始化
     Recorder.init()
   },
@@ -110,6 +111,12 @@ export default {
     }),
     // 点击开始录音
     startRecord (e) {
+      let stop = JSON.parse(localStorage.getItem('recordTipStop'))
+      if (stop) {
+        this.showRecordTipsStop = stop
+      } else {
+        this.showRecordTipsStop = 1
+      }
       // 如果正在录音则停止录音
       if (this.recording) {
         this.recordStop()
@@ -137,6 +144,12 @@ export default {
     },
     // 点击停止录音
     recordStop () {
+      let save = JSON.parse(localStorage.getItem('recordTipSave'))
+      if (save) {
+        this.showRecordTipsSave = save
+      } else {
+        this.showRecordTipsSave = 1
+      }
       Recorder.stopRecording()
       bus.$off('record_setVolume')
       console.log('record stop!!!!!')
@@ -144,7 +157,8 @@ export default {
       this.playing = true
       this.recordActivity = false
       this.showRecordingImg = false
-      this.$emit('updateTipStop')
+      // this.$emit('updateTipStop')
+      JSON.stringify(localStorage.setItem('recordTipStop', 2))
       this.startMySound()
     },
     // 是否可以录音
@@ -188,7 +202,8 @@ export default {
         left: offset.left,
         top: offset.top
       }
-      this.$emit('updateTipSave')
+      // this.$emit('updateTipSave')
+      JSON.stringify(localStorage.setItem('recordTipSave', 2))
       let _this = this
       // 上传七牛
       await _this.getUploadFileToken().then(res => {
@@ -272,7 +287,7 @@ export default {
   height: 90%!important;
   border-radius:4px;
   background: #fff;
-  padding-bottom: 20px;
+  // padding-bottom: 20px;
   .draw-img {
     width: 100%!important;
     height: 70%!important;
@@ -286,19 +301,26 @@ export default {
   }
   .draw-desc {
     position: relative;
+    height: 30%;
     .text {
       font-size:16px;
       font-weight:500;
       font-family:PingFangSC;
       color:rgba(60,91,111,1);
       line-height:22px;
-      padding: 12px 50px 6px 18px;
+      padding: 12px 50px 0px 18px;
     }
     .no-record {
+      position: relative;
+      height: 100%;
       .start-button {
+        position: absolute;
+        right: 0;
+        bottom: 15%;
         height: 50px;
         text-align: right;
         padding: 0 30px;
+        cursor: pointer;
         .start-img {
           cursor: pointer;
           display: inline-block;
@@ -558,8 +580,11 @@ export default {
   .swiper-slide {
     .draw-img {
       width: 100%!important;
-      height: 64%!important;
+      height: 60%!important;
     }
+  }
+  .swiper-slide .draw-desc .no-record .start-button {
+    bottom: -5%!important;
   }
 }
 @keyframes heightShow {

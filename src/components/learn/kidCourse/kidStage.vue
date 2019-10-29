@@ -3,7 +3,7 @@
     <div class="header">
       <header>
         <div class="header-content">
-          <a @click="backKidList()" class="balk-icon" ></a>
+          <router-link :to="{path:'/app/kid-course-list/' + courseCode}" class="balk-icon" ></router-link>
           <p class="course-desc">
             <span>课程{{courseIndex}}</span>
             <span>{{type=='draw'?'绘本阅读':'绘本单词'}}</span>
@@ -32,11 +32,10 @@
                           :index="index"
                           :type="type"
                           :courseCode="courseCode"
-                          :showTipsStop="showTipsStop"
-                          :showTipSave="showTipSave"
+                          :showRecordTipsStop="showRecordTipsStop"
+                          :showRecordTipsSave="showRecordTipsSave"
                           @initRecordState="initState"
-                          @updateTipStop="updateTipStop"
-                          @updateTipSave="updateTipSave"/>
+                          />
         </div>
         <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
         <!-- 如果需要分页器 -->
@@ -90,6 +89,20 @@ export default {
         return tip
       }
       return this.myRecordNumTip
+    },
+    showRecordTipsStop () {
+      let stop = JSON.parse(localStorage.getItem('recordTipStop'))
+      if (stop) {
+        return stop
+      }
+      return this.showTipsStop
+    },
+    showRecordTipsSave () {
+      let save = JSON.parse(localStorage.getItem('recordTipSave'))
+      if (save) {
+        return save
+      }
+      return this.showTipSave
     }
   },
   created () {
@@ -173,15 +186,12 @@ export default {
           autoplay: false, //自动轮播
           initialSlide: 0,
           centeredSlides:true,
-          simulateTouch: false,
-          grabCursor: true,
-          observer: true,
           slidesPerView: 'auto',
           spaceBetween: 0,
+          slideToClickedSlide: true,
           mousewheel: {
             releaseOnEdges: true,
           },
-          slideToClickedSlide: true,
           autoHeight : true,
           pagination: {
             el: '.swiper-pagination',
@@ -241,15 +251,6 @@ export default {
     initState () {
       this.initRecordState()
     },
-    // 更新值
-    updateTipStop (e) {
-      console.log(e)
-      this.showTipsStop = e
-    },
-    updateTipSave (e) {
-      console.log(e)
-      this.showTipSave = e
-    },
     scrollFunc (e) {
       e = e || window.event
       if (e.wheelDelta) { // 判断浏览器IE，谷歌滑轮事件
@@ -267,10 +268,6 @@ export default {
           this.showMose = false
         }
       }
-    },
-    backKidList () {
-      this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
-      sessionStorage.removeItem('myRecordNumTip')
     }
   }
 }
