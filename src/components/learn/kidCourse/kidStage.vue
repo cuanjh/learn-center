@@ -191,16 +191,24 @@ export default {
               audio.play()
               audio.onloadedmetadata = () => {
                 audio.play()
+                $('.trumpet' + this.activeIndex).addClass('trumpetPlaying')
               }
               audio.addEventListener('ended', () => {
                 audio.pause()
+                $('.trumpet' + this.activeIndex).removeClass('trumpetPlaying')
               }, false)
             },
             slideChange: function () {
+              let audio = document.getElementById('mother-sound' + this.activeIndex)
               console.log('slideChange', this.activeIndex)
               $('#mother-sound'+this.activeIndex)[0].play()
               $('#mother-sound'+(this.previousIndex))[0].pause()
               $('#mother-sound'+(this.previousIndex))[0].currentTime = 0
+              $('.trumpet' + this.previousIndex).removeClass('trumpetPlaying')
+              $('.trumpet' + this.activeIndex).addClass('trumpetPlaying')
+              audio.addEventListener('ended', () => {
+                $('.trumpet' + this.activeIndex).removeClass('trumpetPlaying')
+              }, false)
               bus.$emit('clearDate', false)
               if (that.list.length === this.activeIndex + 1) {
                 let activityCode = that.code + '-' + that.type.charAt(0).toUpperCase() + that.type.slice(1)

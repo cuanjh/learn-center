@@ -8,7 +8,7 @@
       </div>
       <div class="draw-desc">
         <div class="no-record">
-          <p class="text">{{item.content || item.word}}</p>
+          <p class="text"><i :class="'trumpet trumpet' + index" @click="playMother('mother-sound'+index)"></i> {{item.content || item.word}}</p>
           <div class="start-button" @click.stop.prevent="startRecord('mother-sound'+index)">
             <i class="start-img" :class="{'showStart': showStart}" v-if="!isRecord"></i>
           </div>
@@ -272,7 +272,20 @@ export default {
     // 点击图片播放母语音频
     playMother (e) {
       console.log(e)
-      $('#' + e)[0].play()
+      let audio = $('#' + e)[0]
+      // audio.play()
+      // $('.trumpet' + this.index).addClass('trumpetPlaying')
+      // audio.addEventListener('ended', () => {
+      //   $('.trumpet' + this.index).removeClass('trumpetPlaying')
+      // })
+      if (audio.paused) {
+        audio.play()
+        $('.trumpet' + this.index).addClass('trumpetPlaying')
+      } else {
+        audio.pause()
+        audio.currentTime = 0
+        $('.trumpet' + this.index).removeClass('trumpetPlaying')
+      }
     }
   }
 }
@@ -305,16 +318,31 @@ export default {
     position: relative;
     height: 30%;
     .text {
+      position: relative;
       font-size:16px;
       font-weight:500;
       font-family:PingFangSC;
       color:rgba(60,91,111,1);
       line-height:22px;
-      padding: 12px 50px 0px 18px;
+      padding: 12px 50px 0px 38px;
     }
     .no-record {
       position: relative;
       height: 100%;
+      .trumpet {
+        background: url('../../../../static/images/learnSystem/trumpet_grey.png') no-repeat center;
+        background-size: cover;
+        width: 18px;
+        height: 16px;
+        position: absolute;
+        left: 10px;
+        top: 16px;
+        cursor: pointer;
+        &.trumpetPlaying {
+          background: url('../../../../static/images/learnSystem/trumpet_grey.gif') no-repeat center;
+          background-size: cover;
+        }
+      }
       .start-button {
         position: absolute;
         right: 0;
