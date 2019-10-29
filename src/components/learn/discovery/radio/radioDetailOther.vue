@@ -5,7 +5,7 @@
           v-for="(radio, index) in otherRadios.slice(0, 4)" :key="'other-radio' + index"
           :to="{path: '/app/discovery/radio-detail/' + radio.code}"
           >
-      <img :src="radio.cover" alt="">
+      <img :src="radio.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" alt="">
       <div class="mask"></div>
       <div class="subscribe">
         <i></i>

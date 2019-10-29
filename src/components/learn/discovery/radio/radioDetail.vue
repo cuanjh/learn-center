@@ -5,7 +5,7 @@
       <div class="radio-left">
         <div class="course">
           <div class="top-course">
-            <img v-lazy="courseInfo.cover" :key="courseInfo.cover" alt="">
+            <img :src="courseInfo.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" :key="courseInfo.cover" alt="">
             <div class="course-right">
               <div class="module-name" v-text="courseInfo.module_name"></div>
               <div class="count">

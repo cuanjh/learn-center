@@ -17,7 +17,7 @@
         <div class="swiper-container">
           <div id="swiper-wrapper" class="swiper-wrapper">
             <div id="swiper-slide" class="swiper-slide" v-for="(item, index) in banners" :key="index" @click="get(item.code)">
-              <img class="wheeling_img" :src="item.cover" alt="">
+              <img class="wheeling_img" :src="item.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" alt="">
               <div class="news_item_right_swipper" v-show="false">
                 <div class="news_item_right1">
                   <span class="news_item_title">{{item.title}}</span>
@@ -82,7 +82,7 @@
               <div class="radio-list">
                 <div class="radio-item" :id="radio.code" v-for="radio in recomendRadiosList" :key="radio.code">
                   <div class="play-radio">
-                    <img v-lazy="radio.cover" :key="radio.cover" alt="">
+                    <img :src="radio.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" :key="radio.cover" alt="">
                     <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
                       <span>会员免费</span>
                     </div> -->
@@ -115,7 +115,7 @@
               <div class="radio-list" v-if="item.radios">
                 <div class="radio-item" :id="radio.code" v-for="radio in item.radios.slice(0, 5)" :key="radio.code">
                   <div class="play-radio">
-                    <img v-lazy="radio.cover" :key="radio.cover" alt="">
+                    <img :src="radio.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" :key="radio.cover" alt="">
                     <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + radio.code}" class="mask"></router-link>
                     <!-- <div class="free-vip" v-if="radio.free_for_member === true || radio.free_for_member === 1">
                       <span>会员免费</span>

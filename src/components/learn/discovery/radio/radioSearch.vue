@@ -29,7 +29,7 @@
             <div class="item" v-for="(radio, index) in pageCards" :key="index">
               <div class="item-left">
                 <div class="play-radio">
-                  <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="">
+                  <img @click="goDetail(radio.code)" v-lazy="radio.cover + '?imageView2/0/w/0/h/0/format/jpg'" :key="radio.cover" alt="">
                   <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                     <i class="play"></i>
                   </div>
