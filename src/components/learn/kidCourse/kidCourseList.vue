@@ -513,6 +513,10 @@ export default {
         this.curChapterData['homeworkComplete'] = curUnlockChapter['Homework_complete']
         this.curChapterData['improvement'] = curUnlockChapter['Improvement']
         this.curChapterData['completeRate'] = this.calCompleteRate(curUnlockChapter)
+        if (curUnlockChapter.Has_purchased) {
+          this.setChapterUnlock({chapter_code: this.curChapterCode, module: 'core'})
+          curUnlockChapter['Core'] = true
+        }
       } else {
         this.curChapterData['coreComplete'] = false
         this.curChapterData['homework'] = false
