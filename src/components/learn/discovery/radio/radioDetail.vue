@@ -5,7 +5,7 @@
       <div class="radio-left">
         <div class="course">
           <div class="top-course">
-            <img v-lazy="courseInfo.cover" :key="courseInfo.cover" alt="">
+            <img :src="courseInfo.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" :key="courseInfo.cover" alt="">
             <div class="course-right">
               <div class="module-name" v-text="courseInfo.module_name"></div>
               <div class="count">
@@ -151,7 +151,7 @@
           <div class="course-card-box">
             <div class="course-item" :id="card.card_id" v-for="(card, index) in pageCards" :key="card.card_id">
               <div class="course-play-img">
-                <img :src="card.cover_url" alt="">
+                <img :src="card.cover_url | urlFix('imageView2/0/w/0/h/0/format/jpg')" alt="">
                 <div class="gradient-layer-play" @click="loadRadioList($event, courseInfo,index, card)">
                   <i class="play"></i>
                 </div>

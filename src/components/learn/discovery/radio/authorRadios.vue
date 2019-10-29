@@ -6,7 +6,7 @@
           <li :id="radio.code" v-for="(radio, index) in radios" :key="index+radio.code">
             <div class="item">
               <div class="item-img">
-                <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="电台的图片">
+                <img @click="goDetail(radio.code)" :src="radio.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" :key="radio.cover" alt="电台的图片">
                 <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                   <i class="play"></i>
                 </div>

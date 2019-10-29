@@ -31,7 +31,7 @@
                     <div class="radio-li" :id="radio.code" v-for="(radio, index) in hostRadios" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
-                          <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
+                          <img @click="goDetail(radio.code)" :src="radio.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" :key="radio.cover" alt="背景图片">
                           <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                             <i class="play"></i>
                           </div>
@@ -55,7 +55,7 @@
                   </div>
                   <div class="up-all">
                     <span v-if="showMoreHost === -1">已显示全部内容</span>
-                    <span @click="changeHostRadio(hostRadioLists)" v-else>全部展开<i></i></span>
+                    <span @click="changeHostRadio(hostRadioLists)" v-else>加载更多<i></i></span>
                   </div>
                 </div>
                 <!-- 学习推荐 -->
@@ -64,7 +64,7 @@
                     <div class="radio-li" :id="radio.code" v-for="(radio, index) in recommendRadios" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
-                          <img  @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
+                          <img  @click="goDetail(radio.code)" :src="radio.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" :key="radio.cover" alt="背景图片">
                           <div class="gradient-layer-play" @click="loadRadioList($event, radio)">
                             <i class="play"></i>
                           </div>
@@ -90,7 +90,7 @@
                   </div>
                   <div class="up-all">
                     <span v-if="showMore === -1">已显示全部内容</span>
-                    <span @click="changeBatch()" v-else>全部展开<i></i></span>
+                    <span @click="changeBatch()" v-else>加载更多<i></i></span>
                   </div>
                 </div>
                 <!-- 最新发布 -->
@@ -99,7 +99,7 @@
                     <div class="radio-li" :id="radio.code" v-for="(radio, index) in releaseRadio" :key="index">
                       <div class="radio-li-left">
                         <div class="play-radio">
-                          <img @click="goDetail(radio.code)" v-lazy="radio.cover" :key="radio.cover" alt="背景图片">
+                          <img @click="goDetail(radio.code)" :src="radio.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" :key="radio.cover" alt="背景图片">
                           <div class="gradient-layer-play"  @click="loadRadioList($event, radio)">
                             <i class="play"></i>
                           </div>
@@ -123,7 +123,7 @@
                   </div>
                   <div class="up-all">
                     <span v-if="showMoreRelease === -1">已显示全部内容</span>
-                    <span @click="changeReleaseRadio(latestReleaseRadio)" v-else>全部展开<i></i></span>
+                    <span @click="changeReleaseRadio(latestReleaseRadio)" v-else>加载更多<i></i></span>
                   </div>
                 </div>
               </div>

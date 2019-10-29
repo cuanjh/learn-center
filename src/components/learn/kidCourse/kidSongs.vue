@@ -47,7 +47,7 @@
                 @click="playSong(item)"
                 :class="{'active':item.code == currentVideo.code}">
               <div class="img-box">
-                <img :src="item.image" alt="">
+                <img :src="item.image | urlFix('imageView2/0/w/390/h/210/format/jpg')" alt="">
               </div>
               <p class="text">
                 <span>{{item.title}}</span>

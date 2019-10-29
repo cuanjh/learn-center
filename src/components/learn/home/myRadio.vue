@@ -28,7 +28,7 @@
       <div class="radio-list">
         <div class="radio-item" :id="item.code" v-for="item in recommendRadios.slice(0, 6)" :key="item.code">
           <div class="play-radio">
-            <img v-lazy="item.cover" :key="item.cover" alt="">
+            <img :src="item.cover | urlFix('imageView2/0/w/0/h/0/format/jpg')" :key="item.cover" alt="">
             <router-link tag="div" :to="{path: '/app/discovery/radio-detail/' + item.code}" class="mask"></router-link>
             <div class="gradient-layer-play" @click="loadRadioList($event, item)">
               <i class="play"></i>
