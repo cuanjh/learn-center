@@ -3,7 +3,7 @@
     <div class="header">
       <header>
         <div class="header-content">
-          <a @click="backKidList()" class="balk-icon" ></a>
+          <router-link :to="{path:'/app/kid-course-list/' + courseCode}" class="balk-icon" ></router-link>
           <p class="course-desc">
             <span>课程{{courseIndex}}</span>
             <span>{{type=='draw'?'绘本阅读':'绘本单词'}}</span>
@@ -173,15 +173,12 @@ export default {
           autoplay: false, //自动轮播
           initialSlide: 0,
           centeredSlides:true,
-          simulateTouch: false,
-          grabCursor: true,
-          observer: true,
           slidesPerView: 'auto',
           spaceBetween: 0,
+          slideToClickedSlide: true,
           mousewheel: {
             releaseOnEdges: true,
           },
-          slideToClickedSlide: true,
           autoHeight : true,
           pagination: {
             el: '.swiper-pagination',
@@ -267,10 +264,6 @@ export default {
           this.showMose = false
         }
       }
-    },
-    backKidList () {
-      this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
-      sessionStorage.removeItem('myRecordNumTip')
     }
   }
 }

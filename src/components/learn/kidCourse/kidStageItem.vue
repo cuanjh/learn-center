@@ -272,7 +272,7 @@ export default {
   height: 90%!important;
   border-radius:4px;
   background: #fff;
-  padding-bottom: 20px;
+  // padding-bottom: 20px;
   .draw-img {
     width: 100%!important;
     height: 70%!important;
@@ -286,16 +286,22 @@ export default {
   }
   .draw-desc {
     position: relative;
+    height: 30%;
     .text {
       font-size:16px;
       font-weight:500;
       font-family:PingFangSC;
       color:rgba(60,91,111,1);
       line-height:22px;
-      padding: 12px 50px 6px 18px;
+      padding: 12px 50px 0px 18px;
     }
     .no-record {
+      position: relative;
+      height: 100%;
       .start-button {
+        position: absolute;
+        right: 0;
+        bottom: 15%;
         height: 50px;
         text-align: right;
         padding: 0 30px;
@@ -558,8 +564,11 @@ export default {
   .swiper-slide {
     .draw-img {
       width: 100%!important;
-      height: 64%!important;
+      height: 60%!important;
     }
+  }
+  .swiper-slide .draw-desc .no-record .start-button {
+    bottom: -5%!important;
   }
 }
 @keyframes heightShow {

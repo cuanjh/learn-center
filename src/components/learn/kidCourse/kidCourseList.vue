@@ -46,7 +46,7 @@
             @click="jumpToCourse(item.code)"
             v-if="isShow ? curChapterCode !== item.code : !isShow">
             <div class="current-learn-course-flag">
-              <img :src="item.flag | urlFix('imageView2/0/w/168/h/80/format/jpg')">
+              <img :src="item.flag | urlFix('imageView2/0/w/200/h/200/format/jpg')">
               <!-- <div class="fix-ie-bg" v-show="unlockCourses.indexOf(item.code) === -1"></div> -->
             </div>
             <div class="current-learn-course-word-info">
@@ -60,7 +60,7 @@
           <transition name="expand" mode="out-in">
             <div class="course-item-detail" v-show="isShow && curChapterCode == item.code">
               <div class="course-brief" @click="switchShow()">
-                <img :src="item.image_bg2 | urlFix('imageView2/0/w/704/h/260/format/jpg')" alt="">
+                <img :src="item.image_bg2 | urlFix('imageView2/0/w/980/h/360/format/jpg')" alt="">
                 <div class="course-brief-shade">
                   <div class="course-brief-title">
                     <span>课程</span>
