@@ -2,7 +2,8 @@
   <div class="swiper-slide">
     <div class="slide-content">
       <div class="draw-img">
-        <img class="img-box" :src="item.image" alt="" @click="playMother('mother-sound'+index)">
+        <img class="img-box" v-if="type == 'draw'" :src="item.image | urlFix('imageView2/0/w/2000/h/900/format/jpg')" alt="" @click="playMother('mother-sound'+index)">
+        <img class="img-box" v-else :src="item.image | urlFix('imageView2/0/w/858/h/618/format/jpg')" alt="" @click="playMother('mother-sound'+index)">
         <audio preload="load" class="mother-sound" :id="'mother-sound'+index" :src="item.sound"></audio>
       </div>
       <div class="draw-desc">
