@@ -528,6 +528,7 @@ export default {
         this.curChapterData['homeworkComplete'] = false
         this.curChapterData['improvement'] = false
         this.curChapterData['completeRate'] = 0
+        this.setChapterUnlock({chapter_code: this.curChapterCode})
       }
 
       let curChapter = this.curLevelChapters.find(item => {
