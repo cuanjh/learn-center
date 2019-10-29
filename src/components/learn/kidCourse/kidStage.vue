@@ -32,11 +32,10 @@
                           :index="index"
                           :type="type"
                           :courseCode="courseCode"
-                          :showTipsStop="showTipsStop"
-                          :showTipSave="showTipSave"
+                          :showRecordTipsStop="showRecordTipsStop"
+                          :showRecordTipsSave="showRecordTipsSave"
                           @initRecordState="initState"
-                          @updateTipStop="updateTipStop"
-                          @updateTipSave="updateTipSave"/>
+                          />
         </div>
         <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
         <!-- 如果需要分页器 -->
@@ -90,6 +89,20 @@ export default {
         return tip
       }
       return this.myRecordNumTip
+    },
+    showRecordTipsStop () {
+      let stop = JSON.parse(localStorage.getItem('recordTipStop'))
+      if (stop) {
+        return stop
+      }
+      return this.showTipsStop
+    },
+    showRecordTipsSave () {
+      let save = JSON.parse(localStorage.getItem('recordTipSave'))
+      if (save) {
+        return save
+      }
+      return this.showTipSave
     }
   },
   created () {
@@ -237,15 +250,6 @@ export default {
     },
     initState () {
       this.initRecordState()
-    },
-    // 更新值
-    updateTipStop (e) {
-      console.log(e)
-      this.showTipsStop = e
-    },
-    updateTipSave (e) {
-      console.log(e)
-      this.showTipSave = e
     },
     scrollFunc (e) {
       e = e || window.event
