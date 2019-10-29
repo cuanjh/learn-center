@@ -28,7 +28,8 @@
             <div class="swiper-slide" v-for="(item, index) in recordLists" :key="index">
               <div class="slide-content">
                 <div class="record-img" @click="playMother('mother-sound'+index)">
-                  <img :src="item.image" alt="">
+                  <img v-if="type == 'draw'" :src="item.image | urlFix('imageView2/0/w/2000/h/900/format/jpg')" alt="">
+                  <img v-else :src="item.image | urlFix('imageView2/0/w/858/h/618/format/jpg')" alt="">
                   <audio preload="load" class="mother-sound" :id="'mother-sound'+index" :src="item.sound_url"></audio>
                 </div>
                 <div class="record-desc">
@@ -434,8 +435,9 @@ export default {
     }
     .record-playVoice-button {
       width: 100%;
-      padding: 16px 30px 0;
+      padding: 16px 30px 10px;
       text-align: center;
+      background: #fff;
       .play-box {
         display: inline-block;
         width: 50px;
