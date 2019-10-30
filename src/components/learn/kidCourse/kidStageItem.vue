@@ -113,6 +113,7 @@ export default {
     }),
     // 点击开始录音
     startRecord (e) {
+      $('.trumpet').removeClass('trumpetPlaying')
       let stop = JSON.parse(localStorage.getItem('recordTipStop'))
       if (stop) {
         this.showTipsStop = stop
