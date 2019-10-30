@@ -4,7 +4,7 @@
       <div class="bdsharebuttonbox">
         <ul class="gb_resItms">
           <li>
-            <a title="分享到微信" href="javascript:;" class="bds_weixin" data-cmd="weixin" @click="shareCourseCard(shareCourse)" @mouseleave="leaveWX()">
+            <a title="分享到微信" href="javascript:;" class="bds_weixin" data-cmd="weixin" @click="shareCourseCard(shareCourse)" @mouseleave="leaveWX()" >
             </a>
           </li>
           <li> <a title="分享到新浪微博" href="javascript:;" class="bds_tsina" data-cmd="tsina" @click="shareCourseCard(shareCourse)"></a></li>
@@ -41,10 +41,12 @@ export default {
   },
   mounted () {
     console.log('type', this.type)
+    window._bd_share_main ? window._bd_share_main.init() : this.shareCourseCard()
   },
   methods: {
     leaveWX () {
       $('#bdshare_weixin_qrcode_dialog').hide()
+      $('#bdshare_weixin_qrcode_dialog_bg').hide()
     },
     shareCourseCard (course) {
       console.log('course', course)
@@ -87,6 +89,7 @@ export default {
         bdUrl = 'http://share.talkmate.com/course_new/' + course.course_code //此处为后台要进行分享的内容的定义
       } else {
         console.log(process.env.KID_SHARE)
+        console.log(course)
         bdDesc = course.title //分享时的标题
         bdText = course.text
         bdPic = course.flag //此处为分享时自带的图片
