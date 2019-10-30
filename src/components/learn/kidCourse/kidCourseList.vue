@@ -406,7 +406,7 @@ export default {
       // 2.2 获取kid目录结构
       let res22 = await this.getCatalog({course_code: courseCode})
       console.log(res22)
-      this.assetsServer = res22.assets_server
+      this.assetsServer = 'https://course-assets1.talkmate.com/'
       this.catalogs = res22.catalogInfo.catalogs
       let curLevel = this.catalogs.find(item => {
         return item.code === this.curLevelCode
@@ -439,7 +439,7 @@ export default {
       // 2.2 获取kid目录结构
       let res22 = await this.getCatalog({course_code: courseCode})
       console.log(res22)
-      this.assetsServer = res22.assets_server
+      this.assetsServer = 'https://course-assets1.talkmate.com/'
       this.catalogs = res22.catalogInfo.catalogs
       let curLevel = this.catalogs.find(item => {
         return item.code === this.curLevelCode

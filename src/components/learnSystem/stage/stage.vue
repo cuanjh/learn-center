@@ -669,7 +669,7 @@ export default {
       let curChapterCode = this.id.split('-').slice(0, 5).join('-')
       let catalog = await this.getCatalog({course_code: courseCode})
       console.log('catalog', catalog)
-      Cookie.setCookie('assetsApi', catalog.assets_server)
+      Cookie.setCookie('assetsApi', 'https://course-assets1.talkmate.com/')
       let curLevelObj = catalog.catalogInfo.catalogs.find(item => {
         return item.code === curLevelCode
       })
