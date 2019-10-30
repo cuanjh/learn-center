@@ -669,7 +669,7 @@ export default {
       let curChapterCode = this.id.split('-').slice(0, 5).join('-')
       let catalog = await this.getCatalog({course_code: courseCode})
       console.log('catalog', catalog)
-      Cookie.setCookie('assetsApi', catalog.assets_server)
+      Cookie.setCookie('assetsApi', 'https://course-assets1.talkmate.com/')
       let curLevelObj = catalog.catalogInfo.catalogs.find(item => {
         return item.code === curLevelCode
       })
@@ -682,7 +682,7 @@ export default {
       console.log('progressObj', progressObj)
 
       console.log('curChapterObj', curChapterObj)
-      let chapterUrl = curChapterObj.chapter_url
+      let chapterUrl = curChapterObj.chapter_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
       this.curChapterContent = await this.getChapterContent(chapterUrl)
       console.log('curChapterContent', this.curChapterContent)
 
@@ -821,21 +821,21 @@ export default {
             let chapter = 'Chapter' + (parseInt(arr[4].replace('Chapter', '')) + 1)
             nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + arr[3] + '-' + chapter
           }
-          if (_this.unlockCourses.indexOf(nextChapter) === -1) {
-            var params = {
-              chapter_code: nextChapter,
-              core: 1,
-              homework: 0,
-              improvement: 0,
-              core_complete: 0,
-              homework_complete: 0,
-              improvement_complete: 0,
-              learn_time: 0,
-              correct_rate: 0
-            }
-            await _this.postUnlockChapter(params)
-            this.setChapterUnlock({chapter_code: nextChapter, module: 'core'})
-          }
+          // if (_this.unlockCourses.indexOf(nextChapter) === -1) {
+          //   var params = {
+          //     chapter_code: nextChapter,
+          //     core: 1,
+          //     homework: 0,
+          //     improvement: 0,
+          //     core_complete: 0,
+          //     homework_complete: 0,
+          //     improvement_complete: 0,
+          //     learn_time: 0,
+          //     correct_rate: 0
+          //   }
+          //   await _this.postUnlockChapter(params)
+          // }
+          this.setChapterUnlock({chapter_code: nextChapter, module: 'core'})
         }
         var payload = {
           activityCode: _this.id,

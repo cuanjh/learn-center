@@ -272,7 +272,7 @@ export default {
       // 2.2 获取kid目录结构
       let res = await this.getCatalog({course_code: courseCode})
       console.log(res)
-      cookie.setCookie('assetsApi', res.assets_server)
+      cookie.setCookie('assetsApi', 'https://course-assets1.talkmate.com/')
       this.catalogs = res.catalogInfo.catalogs
       let curLevel = this.catalogs.find(item => {
         return item.code === curLevelCode
@@ -282,16 +282,18 @@ export default {
         return item.code === chapterCode
       })
 
-      let chapterContent = await this.getChapterContent(curChapter.chapter_url)
+      let chapterContent = await this.getChapterContent(curChapter.chapter_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/'))
       var forms = this.getPkForms(chapterContent, slideTypeCode)
       var resource = this.getResource(forms)
+      let _this = this
       Loader(resource).then((cb, data) => {
         console.log(data)
         let _slide = forms
         _.map(data, (val) => {
           _slide[val.idx][val.type] = val.url
         })
-        this.$set(this, 'dataPK', _slide)
+        // this.$set(this, 'dataPK', _slide)
+        _this.dataPK = _slide
       }).catch((cb, err) => {
         console.log(err.stack)
       })

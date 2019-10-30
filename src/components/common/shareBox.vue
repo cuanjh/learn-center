@@ -91,7 +91,8 @@ export default {
         bdPic = course.flag //此处为分享时自带的图片
         // https://mobile-static.talkmate.com/operate/activities/html/miniRecordShare/index.html // 正式
         // http://test-learn.talkmate.com:82/miniRecordShare/index.html // 测试
-        bdUrl = encodeURI('http://test-learn.talkmate.com:82/miniRecordShare/index.html?chapterCode=' + course.chapterCode + '&teacherModule=' + course.teacherModule +'&course='+ course.courseName + '&user_id='+ userId +'&time='+ new Date().getTime())  //此处为后台要进行分享的内容的定义
+        // bdUrl = encodeURI('http://test-learn.talkmate.com:82/miniRecordShare/index.html?chapterCode=' + course.chapterCode + '&teacherModule=' + course.teacherModule +'&course='+ course.courseName + '&user_id='+ userId +'&time='+ new Date().getTime())  //此处为后台要进行分享的内容的定义
+        bdUrl = encodeURI('https://mobile-static.talkmate.com/operate/activities/html/miniRecordShare/index.html?chapterCode=' + course.chapterCode + '&teacherModule=' + course.teacherModule +'&course='+ course.courseName + '&user_id='+ userId +'&time='+ new Date().getTime())  //此处为后台要进行分享的内容的定义
       }
 
       window._bd_share_config = {

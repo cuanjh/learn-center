@@ -406,7 +406,7 @@ export default {
       // 2.2 获取kid目录结构
       let res22 = await this.getCatalog({course_code: courseCode})
       console.log(res22)
-      this.assetsServer = res22.assets_server
+      this.assetsServer = 'https://course-assets1.talkmate.com/'
       this.catalogs = res22.catalogInfo.catalogs
       let curLevel = this.catalogs.find(item => {
         return item.code === this.curLevelCode
@@ -439,7 +439,7 @@ export default {
       // 2.2 获取kid目录结构
       let res22 = await this.getCatalog({course_code: courseCode})
       console.log(res22)
-      this.assetsServer = res22.assets_server
+      this.assetsServer = 'https://course-assets1.talkmate.com/'
       this.catalogs = res22.catalogInfo.catalogs
       let curLevel = this.catalogs.find(item => {
         return item.code === this.curLevelCode
@@ -644,7 +644,7 @@ export default {
       console.log(this.homeworkData)
       // await this.getCourseContent(curChapter.chapter_url)
       // vip 课程数据
-      let chapterContent = await this.getChapterContent(curChapter.chapter_url)
+      let chapterContent = await this.getChapterContent(curChapter.chapter_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/'))
       console.log('chapterContent', chapterContent)
       this.vipData = []
       let srcVipArray = []
