@@ -191,6 +191,9 @@ export default {
       let audio = document.getElementById('record-sound')
       audio.loop = false
       this.loading = true
+      if (audio.duration) {
+        audio.play()
+      }
       audio.onloadedmetadata = () => {
         audio.play()
       }
