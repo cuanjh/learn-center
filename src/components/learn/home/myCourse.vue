@@ -234,7 +234,7 @@ export default {
           })
           this.curChapterCode = res1.info.learnInfo.current_chapter_code
           this.maxLevelNum = res1.info.courseBaseInfo.level_num
-          let contentUrl = res1.info.courseBaseInfo.content_config.content_url
+          let contentUrl = res1.info.courseBaseInfo.content_config.content_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
           await _this.getCourseContent(contentUrl)
           // await _this.getLearnCourses()
           await this.setCurrentChapter(this.curChapterCode)
