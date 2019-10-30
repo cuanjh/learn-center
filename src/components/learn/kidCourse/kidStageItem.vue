@@ -287,14 +287,18 @@ export default {
           $(ev.target).removeClass('scale')
         }, 100)
       }
-      if (audio.paused) {
-        audio.play()
-        $('.trumpet' + this.index).addClass('trumpetPlaying')
-      } else {
-        audio.pause()
-        audio.currentTime = 0
-        $('.trumpet' + this.index).removeClass('trumpetPlaying')
-      }
+      audio.currentTime = 0
+      audio.play()
+      $('.trumpet' + this.index).addClass('trumpetPlaying')
+      // 点击先暂停再播放
+      // if (audio.paused) {
+      //   audio.play()
+      //   $('.trumpet' + this.index).addClass('trumpetPlaying')
+      // } else {
+      //   audio.pause()
+      //   audio.currentTime = 0
+      //   $('.trumpet' + this.index).removeClass('trumpetPlaying')
+      // }
     }
   }
 }
@@ -663,21 +667,21 @@ export default {
 @keyframes leftClearR {
    from {
     -webkit-transform: translate(0px, 0);
-    transform: stranslate(0px, 0);
+    transform: translate(0px, 0);
   }
   to {
     -webkit-transform: translate(-90px, 0);
-    transform: stranslate(-90px, 0);
+    transform: translate(-90px, 0);
   }
 }
 @keyframes rightSaveR {
   from {
     -webkit-transform: translate(0px, 0);
-    transform: stranslate(0px, 0);
+    transform: translate(0px, 0);
   }
   to {
     -webkit-transform: translate(90px, 0);
-    transform: stranslate(90px, 0);
+    transform: translate(90px, 0);
   }
 }
 @keyframes fadenum {
