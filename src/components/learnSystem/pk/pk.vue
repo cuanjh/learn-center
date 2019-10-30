@@ -285,13 +285,15 @@ export default {
       let chapterContent = await this.getChapterContent(curChapter.chapter_url)
       var forms = this.getPkForms(chapterContent, slideTypeCode)
       var resource = this.getResource(forms)
+      let _this = this
       Loader(resource).then((cb, data) => {
         console.log(data)
         let _slide = forms
         _.map(data, (val) => {
           _slide[val.idx][val.type] = val.url
         })
-        this.$set(this, 'dataPK', _slide)
+        // this.$set(this, 'dataPK', _slide)
+        _this.dataPK = _slide
       }).catch((cb, err) => {
         console.log(err.stack)
       })

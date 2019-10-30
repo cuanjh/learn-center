@@ -821,21 +821,21 @@ export default {
             let chapter = 'Chapter' + (parseInt(arr[4].replace('Chapter', '')) + 1)
             nextChapter = arr[0] + '-' + arr[1] + '-' + arr[2] + '-' + arr[3] + '-' + chapter
           }
-          if (_this.unlockCourses.indexOf(nextChapter) === -1) {
-            var params = {
-              chapter_code: nextChapter,
-              core: 1,
-              homework: 0,
-              improvement: 0,
-              core_complete: 0,
-              homework_complete: 0,
-              improvement_complete: 0,
-              learn_time: 0,
-              correct_rate: 0
-            }
-            await _this.postUnlockChapter(params)
-            this.setChapterUnlock({chapter_code: nextChapter, module: 'core'})
-          }
+          // if (_this.unlockCourses.indexOf(nextChapter) === -1) {
+          //   var params = {
+          //     chapter_code: nextChapter,
+          //     core: 1,
+          //     homework: 0,
+          //     improvement: 0,
+          //     core_complete: 0,
+          //     homework_complete: 0,
+          //     improvement_complete: 0,
+          //     learn_time: 0,
+          //     correct_rate: 0
+          //   }
+          //   await _this.postUnlockChapter(params)
+          // }
+          this.setChapterUnlock({chapter_code: nextChapter, module: 'core'})
         }
         var payload = {
           activityCode: _this.id,
