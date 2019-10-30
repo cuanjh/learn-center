@@ -358,8 +358,9 @@ export default {
           top: -4px;
           left: 0;
           width: 100%;
-          height: 4px;
+          height: 6px;
           background-color: rgba(255, 255, 255, .2);
+          background: pink;
           .progress-load {
             height: 100%;
             width: 0%;
@@ -369,7 +370,7 @@ export default {
           .progress-cur {
             position: relative;
             left: 0;
-            top: -2px;
+            top: -5px;
             display: block;
             height: 100%;
             width: 0%;
@@ -381,8 +382,8 @@ export default {
               top: -4px;
               font-size: 0;
               background-color: #FFB131;
-              height: 10px;
-              width: 10px;
+              height: 12px;
+              width: 12px;
               border-radius: 50%;
               cursor: pointer;
             }
