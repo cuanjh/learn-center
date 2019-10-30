@@ -41,6 +41,7 @@ export default {
   },
   mounted () {
     console.log('type', this.type)
+    window._bd_share_main ? window._bd_share_main.init() : this.shareCourseCard()
   },
   methods: {
     leaveWX () {
