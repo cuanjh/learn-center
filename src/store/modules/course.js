@@ -445,7 +445,7 @@ const mutations = {
     state.curLevel = curChapterCode.split('-')[2]
     state.assetsUrl = data.info.courseBaseInfo.content_config.assets_url
     Cookie.setCookie('assetsApi', state.assetsUrl)
-    state.contentUrl = state.courseBaseInfo.content_config.content_url
+    state.contentUrl = state.courseBaseInfo.content_config.content_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
     state.currentChapterCode = curChapterCode
     localStorage.setItem('currentChapterCode', state.currentChapterCode)
   },
