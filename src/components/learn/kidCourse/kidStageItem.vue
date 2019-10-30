@@ -2,8 +2,8 @@
   <div class="swiper-slide">
     <div class="slide-content">
       <div class="draw-img">
-        <img class="img-box" v-if="type == 'draw'" :src="item.image | urlFix('imageView2/0/w/2000/h/900/format/jpg')" alt="" @click="playMother('mother-sound'+index)">
-        <img class="img-box" v-else :src="item.image | urlFix('imageView2/0/w/858/h/618/format/jpg')" alt="" @click="playMother('mother-sound'+index)">
+        <img class="img-box" v-if="type == 'draw'" :src="item.image | urlFix('imageView2/0/w/2000/h/900/format/jpg')" alt="" @click="playMother('mother-sound'+index, $event)">
+        <img class="img-box" v-else :src="item.image | urlFix('imageView2/0/w/858/h/618/format/jpg')" alt="" @click="playMother('mother-sound'+index, $event)">
         <audio preload="load" class="mother-sound" :id="'mother-sound'+index" :src="item.sound"></audio>
       </div>
       <div class="draw-desc">
@@ -143,6 +143,7 @@ export default {
       // let _this = this
       console.log('record start!!!!!')
       $('#' + e)[0].pause()
+      $('.img-box').css('pointer-events', 'none')
     },
     // 点击停止录音
     recordStop () {
@@ -190,6 +191,7 @@ export default {
     },
     // 点击保存录音上次七牛云
     async saveVoice (card) {
+      $('.img-box').removeAttr('style', 'pointer-events')
       this.isDisable = true
       setTimeout(() => {
         this.isDisable = false
@@ -255,6 +257,7 @@ export default {
       })
     },
     closeRecord () {
+      $('.img-box').removeAttr('style', 'pointer-events')
       this.heightHide = true
       this.playing = false
       this.animat = false
@@ -270,14 +273,20 @@ export default {
       this.showStart = false
     },
     // 点击图片播放母语音频
-    playMother (e) {
-      console.log(e)
-      let audio = $('#' + e)[0]
+    playMother (id, ev) {
+      console.log(id, ev)
+      let audio = $('#' + id)[0]
       // audio.play()
       // $('.trumpet' + this.index).addClass('trumpetPlaying')
       // audio.addEventListener('ended', () => {
       //   $('.trumpet' + this.index).removeClass('trumpetPlaying')
       // })
+      if (ev) {
+        $(ev.target).addClass('scale')
+        setTimeout(() => {
+          $(ev.target).removeClass('scale')
+        }, 100)
+      }
       if (audio.paused) {
         audio.play()
         $('.trumpet' + this.index).addClass('trumpetPlaying')
@@ -303,6 +312,7 @@ export default {
   border-radius:4px;
   background: #fff;
   // padding-bottom: 20px;
+  overflow: hidden;
   .draw-img {
     width: 100%!important;
     height: 70%!important;
@@ -311,12 +321,22 @@ export default {
       width: 100%;
       height: 100%!important;
       border-radius: 4px 4px 0 0;
+      transition: all 0.1s;
+      -ms-transition: all 0.1s;
+      &.scale {
+        transform: scale(1.03);
+        -ms-transform: scale(1.03);
+      }
       object-fit: cover;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
   .draw-desc {
     position: relative;
     height: 30%;
+    background: #fff;
     .text {
       position: relative;
       font-size:16px;
