@@ -120,6 +120,9 @@ export default {
       this.initData()
       this.initRecordState()
     }, 300)
+    setTimeout(() => {
+      this.showMose = false
+    }, 3000)
     // 给页面绑定滑轮滚动事件
     if (document.addEventListener) { // firefox
       document.addEventListener('DOMMouseScroll', this.scrollFunc, false)
@@ -214,6 +217,7 @@ export default {
                 let activityCode = that.code + '-' + that.type.charAt(0).toUpperCase() + that.type.slice(1)
                 that.setPartComplete({part_code: activityCode})
               }
+              $('.kid-draws .swiper-slide .img-box').removeAttr('style', 'pointer-events')
             }
           }
         })
