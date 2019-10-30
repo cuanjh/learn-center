@@ -2,7 +2,11 @@
    <div class="video-container">
     <div class="video-content" id="video-content">
       <div class="kid-video-box">
-        <video id="myVideo" @ended.native="end()" autoplay="autoplay" :src="currentVideo.sound + '&v=2'"></video>
+        <video id="myVideo" @ended.native="end()" autoplay="autoplay" :src="currentVideo.sound + '&v=2'" @click="clickVideo()"></video>
+        <div class="video-shade" v-show="isShowShade" >
+          <i class="icon-play" v-if="!isPlay" @click="play()"></i>
+          <i class="icon-plause" v-if="isPlay" @click="play()"></i>
+        </div>
         <div class="controls">
           <div id="voice-player-progress" class="progress" >
             <i class="progress-load" style="width: 0%;"></i>
@@ -10,7 +14,7 @@
               <span id="progressCurBtn"
                     class="progress-btn"
                     @mousedown="onMouseDownProgress($event)"
-                    :style="{'left': curProgress + 'px'}">
+                    :style="{'left': (curProgress - 1) + 'px'}">
               </span>
             </i>
           </div>
@@ -69,6 +73,7 @@ import Bus from '../../../bus'
 export default {
   data () {
     return {
+      isShowShade: false,
       isActive: 'hello',
       songs: [],
       songsAll: [],
@@ -147,6 +152,7 @@ export default {
           this.video.currentTime = 0
         }
         this.isPlay = true
+        this.isShowShade = false
         this.progressFlag = setInterval(this.getProgress, 60)
         this.$nextTick(() => {
           this.video.play()
@@ -155,6 +161,7 @@ export default {
         this.video.pause()
         this.isPlay = !this.isPlay
         clearInterval(this.progressFlag)
+        this.isShowShade = true
       }
     },
     end () {
@@ -250,6 +257,10 @@ export default {
         s = '0' + s
       }
       return m + ':' + s
+    },
+    clickVideo () {
+      this.isShowShade = true
+      this.play()
     }
   }
 }
@@ -360,7 +371,6 @@ export default {
           width: 100%;
           height: 6px;
           background-color: rgba(255, 255, 255, .2);
-          background: pink;
           .progress-load {
             height: 100%;
             width: 0%;
@@ -376,7 +386,7 @@ export default {
             width: 0%;
             background-color: #FFB131;
             z-index: 1;
-            .progress-btn{
+            .progress-btn {
               position: absolute;
               right: -5px;
               top: -4px;
@@ -391,12 +401,51 @@ export default {
         }
       }
     }
-    .kid-video-box #myVideo {
-      width: 100%;
-      // height: 546px;
-      height: 100%;
-      outline: none;
-      object-fit: fill;
+    .kid-video-box {
+      #myVideo {
+        width: 100%;
+        // height: 546px;
+        height: 100%;
+        outline: none;
+        object-fit: fill;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      .video-shade {
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, .3);
+        position: absolute;
+        top: 0;
+        // pointer-events: none;
+        .icon-play {
+          display:inline-block;
+          width: 50px;
+          height: 50px;
+          background: url('../../../../static/images/radionoPlay.svg') no-repeat center;
+          background-size: cover;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin-top: -25px;
+          margin-left: -25px;
+          cursor: pointer;
+        }
+        .icon-plause {
+          display:inline-block;
+          width: 50px;
+          height: 50px;
+          background: url('../../../../static/images/radioPlay.svg') no-repeat center;
+          background-size: cover;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin-top: -25px;
+          margin-left: -25px;
+          cursor: pointer;
+        }
+      }
     }
     .right-list {
       display: flex;
@@ -410,7 +459,7 @@ export default {
         margin-bottom: 20px;
         background:#fff;
         box-shadow:0px 0px 6px 2px rgba(0,0,0,0.19);
-          border-radius:5px;
+        border-radius:5px;
         .item {
           width: 50%;
           text-align: center;
