@@ -43,6 +43,14 @@
     <div class="record-save-animat">
       <i ></i>
     </div>
+    <audio id="myYeah" src="../../../../static/sounds/yeah.mp3"></audio>
+    <transition name="fade">
+      <div class="common-modal-container" v-show="isFinish">
+        <div class="common-madal">
+          <div class="finish"></div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -65,7 +73,9 @@ export default {
       showMose: true,
       list: [],
       recordState: null,
-      mySwiper: null
+      mySwiper: null,
+      isFinish: false,
+      finishedCount: 0
     }
   },
   components: {
@@ -116,6 +126,7 @@ export default {
     })
   },
   mounted () {
+    this.finishedCount = 0
     setTimeout(() => {
       this.initData()
       this.initRecordState()
@@ -209,8 +220,17 @@ export default {
               $('#mother-sound'+(this.previousIndex))[0].currentTime = 0
               $('.trumpet' + this.previousIndex).removeClass('trumpetPlaying')
               $('.trumpet' + this.activeIndex).addClass('trumpetPlaying')
+              let activeIndex = this.activeIndex
               audio.addEventListener('ended', () => {
-                $('.trumpet' + this.activeIndex).removeClass('trumpetPlaying')
+                if (that.list.length === activeIndex + 1 && that.finishedCount === 0) { 
+                  that.isFinish = true
+                  $('#myYeah')[0].play()
+                  that.finishedCount++
+                  setTimeout(() => {
+                    that.isFinish = false
+                  }, 3000)
+                }
+                $('.trumpet' + activeIndex).removeClass('trumpetPlaying')
               }, false)
               bus.$emit('clearDate', false)
               if (that.list.length === this.activeIndex + 1) {
@@ -458,6 +478,44 @@ export default {
     background: url('../../../../static/images/kidcontent/icon-record-list.png') no-repeat center;
     background-size: cover;
   }
+}
+
+.common-modal-container {
+  position: fixed;
+  width:100%;
+  height:100%;
+  top:0px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .4);
+  z-index:99999999;
+  overflow: hidden;
+  .common-madal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 25px;
+    margin-left: -334px;
+    margin-top: -229px;
+    width:668px;
+    height:458px;
+    border-radius:5px;
+    text-align: center;
+  }
+  .finish {
+    width: 100%;
+    height: 100%;;
+    background: url('../../../../static/images/kidcontent/pic-kid-finished.png') no-repeat center;
+    background-size: cover;
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
 <style lang="css" scoped>
