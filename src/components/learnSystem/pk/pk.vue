@@ -282,7 +282,7 @@ export default {
         return item.code === chapterCode
       })
 
-      let chapterContent = await this.getChapterContent(curChapter.chapter_url)
+      let chapterContent = await this.getChapterContent(curChapter.chapter_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/'))
       var forms = this.getPkForms(chapterContent, slideTypeCode)
       var resource = this.getResource(forms)
       let _this = this

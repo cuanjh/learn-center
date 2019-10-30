@@ -644,7 +644,7 @@ export default {
       console.log(this.homeworkData)
       // await this.getCourseContent(curChapter.chapter_url)
       // vip 课程数据
-      let chapterContent = await this.getChapterContent(curChapter.chapter_url)
+      let chapterContent = await this.getChapterContent(curChapter.chapter_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/'))
       console.log('chapterContent', chapterContent)
       this.vipData = []
       let srcVipArray = []

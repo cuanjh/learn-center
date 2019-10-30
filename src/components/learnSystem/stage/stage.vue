@@ -682,7 +682,7 @@ export default {
       console.log('progressObj', progressObj)
 
       console.log('curChapterObj', curChapterObj)
-      let chapterUrl = curChapterObj.chapter_url
+      let chapterUrl = curChapterObj.chapter_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
       this.curChapterContent = await this.getChapterContent(chapterUrl)
       console.log('curChapterContent', this.curChapterContent)
 

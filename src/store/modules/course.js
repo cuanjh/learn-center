@@ -565,7 +565,7 @@ const mutations = {
       return item.code === currentChapterCode
     })[0]
     if (chapter) {
-      state.curChapterUrl = chapter.chapter_url
+      state.curChapterUrl = chapter.chapter_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
     }
   },
   chapterProgress (state, params) {
@@ -720,7 +720,7 @@ const mutations = {
       (item) => {
         return item.code === currentChapterCode
       })[0]
-    state.curChapterUrl = chapter.chapter_url
+    state.curChapterUrl = chapter.chapter_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
   },
   updateGradeLevelActivity (state, level) {
     state.levelActivity = level
