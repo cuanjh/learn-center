@@ -348,7 +348,7 @@ export default {
       font-weight:500;
       font-family:PingFangSC;
       color:rgba(60,91,111,1);
-      line-height:22px;
+      line-height:20px;
       padding: 12px 50px 0px 38px;
     }
     .no-record {
@@ -370,11 +370,11 @@ export default {
       }
       .start-button {
         position: absolute;
-        right: 0;
+        right: 16px;
         bottom: 15%;
         height: 50px;
         text-align: right;
-        padding: 0 30px;
+        // padding: 0 30px;
         cursor: pointer;
         .start-img {
           cursor: pointer;
@@ -395,7 +395,7 @@ export default {
       padding: 0 30px;
       background: #fff;
       width: 100%;
-      height: 160%;
+      height: 180%;
       border-radius: 4px 4px 0 0;
       display: flex;
       flex-direction: column;
@@ -403,7 +403,7 @@ export default {
       .text-small {
         font-size: 14px;
         padding: 10px 0;
-        line-height: 20px;
+        line-height: 18px;
         position: relative;
         span {
           display: inline-block;
@@ -430,13 +430,13 @@ export default {
           position: absolute;
           top: 40%;
           left: 50%;
-          transform: translate(-50%, -16%);
+          transform: translate(-50%, -10%);
           .tip {
             width: 118px;
             height: 70px;
             position: absolute;
-            top: -124px;
-            left: -28px;
+            top: -112px;
+            left: -33px;
             right: 0;
             bottom: 0;
             margin: auto;
@@ -452,28 +452,28 @@ export default {
           }
           .recording-button {
             display: inline-block;
-            width: 62px;
-            height: 62px;
+            width: 52px;
+            height: 52px;
             text-align: center;
             position: relative;
             cursor: pointer;
             .recording-img {
               display: inline-block;
-              width: 62px;
-              height: 62px;
+              width: 52px;
+              height: 52px;
               background: url('../../../../static/images/kidcontent/icon-record.png') no-repeat center;
               background-size: cover;
               cursor: pointer;
             }
             .circle {
               position: absolute;
-              top: 0;
-              left: -6px;
+              top: 0px;
+              left: -4px;
               right: 0;
               bottom: 0;
               margin: auto;
-              width: 72px;
-              height: 72px;
+              width: 60px;
+              height: 60px;
               &.circle1 {
                 border: 1px solid #89DA31;
                 border-radius: 50%;
@@ -514,8 +514,8 @@ export default {
           }
           .record-playVoice-button {
             cursor: pointer;
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             background: #FFCE00;
             border-radius: 50%;
             position: relative;
@@ -524,8 +524,8 @@ export default {
               display: flex;
               justify-content: space-around;
               align-items: center;
-              width: 70px;
-              height: 70px;
+              width: 60px;
+              height: 60px;
               padding: 0 10px;
               margin: 0 auto;
               box-sizing: border-box;
@@ -534,19 +534,19 @@ export default {
               }
               span {
                 display: inline-block;
-                width: 4px;
-                height: 20px;
+                width: 3px;
+                height: 18px;
                 border-radius: 4px;
                 background-color: #fff;
               }
               span:nth-child(2){
-                height: 30px;
+                height: 26px;
               }
               span:nth-child(3){
-                height: 43px;
+                height: 36px;
               }
               span:nth-child(4){
-                height: 30px;
+                height: 26px;
               }
             }
             i.loading span:nth-child(3) {
@@ -558,10 +558,10 @@ export default {
             }
             @keyframes load3 {
               0%, 100%{
-                height: 43px;
+                height: 36px;
               }
               50%{
-                height: 37px;
+                height: 30px;
               }
             }
             i.loading span:nth-child(2), i.loading span:nth-child(4) {
@@ -573,10 +573,10 @@ export default {
             }
             @keyframes load2 {
               0%, 100%{
-                height: 30px;
+                height: 26px;
               }
               50%{
-                height: 24px;
+                height: 20px;
               }
             }
             i.loading span:nth-child(1), i.loading span:nth-child(5) {
@@ -588,10 +588,10 @@ export default {
             }
             @keyframes load1 {
               0%, 100%{
-                height: 20px;
+                height: 18px;
               }
               50%{
-                height: 14px;
+                height: 12px;
               }
             }
           }
@@ -647,13 +647,13 @@ export default {
     height: 100%;
   }
   100% {
-    height: 160%;
+    height: 180%;
   }
 }
 @keyframes heightHide {
   0% {
     opacity: 1;
-    height: 160%;
+    height: 180%;
   }
   50% {
     opacity: 1;
@@ -732,7 +732,7 @@ export default {
     border-color: #89DA31;
   }
   30% {
-    transform:scale(1.25);
+    transform:scale(1.2);
     border-color: rgba(156, 225, 82, .79);
   }
   60% {

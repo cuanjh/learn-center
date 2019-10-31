@@ -252,7 +252,7 @@ export default {
         'border-radius': '6px',
         'margin-right': '8px'
       })
-      $('#swiper-pagination').find('.swiper-pagination-bullet-active').css({
+      $('#swiper-pagination').find('.swiper-pagination-bullet .swiper-pagination-bullet-active').css({
         'width': '20px',
         'height': '6px',
         'background': '#0581D1',

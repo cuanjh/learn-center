@@ -27,7 +27,7 @@
           <div class="swiper-wrapper" :class="{'draw': type == 'draw'}">
             <div class="swiper-slide" v-for="(item, index) in recordLists" :key="index">
               <div class="slide-content">
-                <div class="record-img" @click="playMother('mother-sound'+index)">
+                <div class="record-img" @click="playClik('record-sound'+index, 'loading'+index)">
                   <img v-if="type == 'draw'" :src="item.image | urlFix('imageView2/0/w/2000/h/900/format/jpg')" alt="">
                   <img v-else :src="item.image | urlFix('imageView2/0/w/858/h/618/format/jpg')" alt="">
                   <audio preload="load" class="mother-sound" :id="'mother-sound'+index" :src="item.sound_url"></audio>
@@ -37,7 +37,7 @@
                   <div class="record-playVoice-button">
                     <div class="play-box">
                       <audio preload="load" @ended.native="audioEnd()" class="record-sound" :id="'record-sound'+index" :src="item.record_sound_url"></audio>
-                      <i :id="'loading'+index" @click="playClik('loading'+(item.list_order-1))">
+                      <i :id="'loading'+index" @click="playClik('record-sound'+index, 'loading'+index)">
                         <span></span>
                         <span></span>
                         <span></span>
@@ -95,9 +95,16 @@ export default {
       return num
     }
   },
+  created () {
+  },
   mounted () {
     console.log(this.code, this.type)
-    this.initDataList()
+    setTimeout(() => {
+      this.initDataList()
+    }, 300)
+    setTimeout(() => {
+      this.showMose = false
+    }, 3000)
     // 给页面绑定滑轮滚动事件
     if (document.addEventListener) { // firefox
       document.addEventListener('DOMMouseScroll', this.scrollFunc, false)
@@ -118,7 +125,6 @@ export default {
     async initDataList () {
       // 录音列表
       let res = await this.getKidRecordLists({chapter_code: this.code, teacher_module: this.type})
-      console.log(res)
       this.recordLists = res.records
       console.log('kid record Lists', this.recordLists)
       await this.swiperInit()
@@ -150,8 +156,11 @@ export default {
         that.mySwiper = new Swiper('.swiper-container', {
           loop: false,
           autoplay: false, //自动轮播
+          slidesPerView: 3,
+          initialSlide: 0,
           centeredSlides:true,
           slidesPerView: 'auto',
+          observer: true,
           spaceBetween: 0,
           mousewheel: {
             releaseOnEdges: true,
@@ -168,8 +177,6 @@ export default {
               //Swiper初始化了
               console.log('当前的slide序号是'+this.activeIndex);
               console.log($('#record-sound0')[0])
-              // $('#loading0').addClass('loading')
-              // $('#record-sound0')[0].play()
               $('.play-box i').removeClass('loading')
               $('#loading' + this.activeIndex).addClass('loading')
               let audio = document.getElementById('record-sound' + this.activeIndex)
@@ -181,18 +188,16 @@ export default {
                 $('#loading' + this.activeIndex).removeClass('loading')
                 that.mySwiper.slideNext()
               }, false)
-              this.emit('transitionEnd');//在初始化时触发一次transitionEnd事件，需要先设置transitionEnd
             },
             slideChange: function () {
               console.log('slideChange', this.activeIndex)
+              that.mySwiper.initialSlide = this.activeIndex
+              let audio = document.getElementById('record-sound' + this.activeIndex)
               $('#loading'+this.activeIndex).addClass('loading')
               $('#loading'+this.previousIndex).removeClass('loading')
               $('#record-sound'+this.activeIndex)[0].play()
-              $('#record-sound'+(this.previousIndex))[0].pause()
-              $('#mother-sound'+(this.previousIndex))[0].pause()
-              $('#record-sound'+(this.previousIndex))[0].currentTime = 0
-              $('#mother-sound'+(this.previousIndex))[0].currentTime = 0
-              let audio = document.getElementById('record-sound' + this.activeIndex)
+              $('#record-sound'+this.previousIndex)[0].pause()
+              $('#record-sound'+this.previousIndex)[0].currentTime = 0
               audio.addEventListener('ended', () => {
                 $('#loading' + this.activeIndex).removeClass('loading')
                 that.mySwiper.slideNext()
@@ -207,15 +212,17 @@ export default {
       this.$router.push({path: '/app/kid-stage', query: {code: this.code, type: this.type}})
     },
     // 播放录音
-    playClik (e) {
-      console.log(e)
-      if ($('#' + e).prev()[0].paused) {
-        $('#' + e).prev()[0].play()
-        $('#' + e).addClass('loading')
+    playClik (id1, id2) {
+      console.log(id1, id2)
+      let audio = $('#' + id1)[0]
+      let load = $('#' + id2)
+      if (audio.paused) {
+        audio.play()
+        load.addClass('loading')
       } else {
-        $('#' + e).prev()[0].pause()
-        $('#' + e).prev()[0].currentTime = 0
-        $('#' + e).removeClass('loading')
+        audio.pause()
+        audio.currentTime = 0
+        load.removeClass('loading')
       }
     },
     audioEnd () {
@@ -235,7 +242,7 @@ export default {
         'border-radius': '6px',
         'margin-right': '8px'
       })
-      $('#swiper-pagination').find('.swiper-pagination-bullet-active').css({
+      $('#swiper-pagination').find('.swiper-pagination-bullet .swiper-pagination-bullet-active').css({
         'width': '20px',
         'height': '6px',
         'background': '#0581D1',
@@ -404,7 +411,6 @@ export default {
   transition: 300ms;
   transform: scale(0.6);
   border-radius:4px;
-  padding-bottom: 20px;
   background: #fff;
 }
 .slide-content {
@@ -423,22 +429,25 @@ export default {
       height: 100%;
       border-radius: 4px 4px 0 0;
       object-fit: cover;
+      cursor: pointer;
     }
   }
   .record-desc {
     position: relative;
+    height: 30%;
     .text {
-      font-size:18px;
+      font-size:16px;
       font-weight:600;
       color:rgba(60,91,111,1);
-      line-height:22px;
+      line-height:18px;
       padding: 12px 50px 0px 18px;
     }
     .record-playVoice-button {
       width: 100%;
-      padding: 16px 30px 10px;
+      padding: 16px 30px 0px;
       text-align: center;
-      background: #fff;
+      position: absolute;
+      bottom: 0;
       .play-box {
         display: inline-block;
         width: 50px;
@@ -527,9 +536,14 @@ export default {
 }
 .draw {
   .swiper-slide {
+    height: 100%;
     .record-img {
       width: 100%!important;
       height: 60%!important;
+    }
+    .record-desc {
+      position: relative;
+      height: 40%;
     }
   }
 }
