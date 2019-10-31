@@ -518,23 +518,3 @@ export default {
   opacity: 0;
 }
 </style>
-<style lang="css" scoped>
-.swiper-pagination {
-  bottom: 0!important;
-}
-.swiper-pagination .swiper-pagination-bullet {
-  outline:none;
-  width: 20px!important;
-  height: 6px!important;
-  background: #D5DCDF!important;
-  border-radius: 5px!important;
-  transition: width 0.3s ease-in-out !important;
-  margin: 0 8px;
-}
-.swiper-pagination .swiper-pagination-bullet-active {
-  width: 20px!important;
-  height: 6px!important;
-  background: #0581D1!important;
-  border-radius: 5px!important;
-}
-</style>

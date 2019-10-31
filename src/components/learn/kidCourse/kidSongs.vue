@@ -2,7 +2,7 @@
    <div class="video-container">
     <div class="video-content" id="video-content">
       <div class="kid-video-box">
-        <video id="myVideo" @ended.native="end()" autoplay="autoplay" :src="currentVideo.sound + '&v=2'" @click="clickVideo()"></video>
+        <video id="myVideo" @ended="end()" autoplay="autoplay" :src="currentVideo.sound + '&v=2'" @click="clickVideo()"></video>
         <div class="video-shade" v-show="isShowShade" >
           <i class="icon-play" v-if="!isPlay" @click="play()"></i>
           <i class="icon-plause" v-if="isPlay" @click="play()"></i>
@@ -14,7 +14,7 @@
               <span id="progressCurBtn"
                     class="progress-btn"
                     @mousedown="onMouseDownProgress($event)"
-                    :style="{'left': (curProgress - 1) + 'px'}">
+                    :style="{'left': (curProgress - 4) + 'px'}">
               </span>
             </i>
           </div>
@@ -171,6 +171,7 @@ export default {
       this.video.currentTime = 0
       this.curProgress = $('#voice-player-progress').width()
       this.isEnd = true
+      this.next()
     },
     // 点击next
     next () {
@@ -196,11 +197,6 @@ export default {
       let percent = this.video.currentTime / this.video.duration
       this.curProgress = percent.toFixed(4) * ($('#voice-player-progress').width() - 10)
       this.curTime = this.video.currentTime
-      if (this.curTime === this.video.duration) {
-        console.log('播放完了！')
-        this.isPlay = false
-        this.next()
-      }
     },
     onMouseDownProgress (ev) {
       let _this = this
@@ -388,7 +384,7 @@ export default {
             z-index: 1;
             .progress-btn {
               position: absolute;
-              right: -5px;
+              right: 0px;
               top: -4px;
               font-size: 0;
               background-color: #FFB131;

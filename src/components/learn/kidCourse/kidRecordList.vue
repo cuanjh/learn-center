@@ -36,7 +36,7 @@
                   <p class="text">{{item.content || item.word}}</p>
                   <div class="record-playVoice-button">
                     <div class="play-box">
-                      <audio preload="load" @ended.native="audioEnd()" class="record-sound" :id="'record-sound'+index" :src="item.record_sound_url"></audio>
+                      <audio preload="load" @canplay="audioPlay()" @ended="audioEnd()" class="record-sound" :id="'record-sound'+index" :src="item.record_sound_url"></audio>
                       <i :id="'loading'+index" @click="playClik('record-sound'+index, 'loading'+index)">
                         <span></span>
                         <span></span>
@@ -95,13 +95,12 @@ export default {
       return num
     }
   },
-  created () {
+  beforeMount () {
+    this.initDataList()
   },
   mounted () {
     console.log(this.code, this.type)
-    setTimeout(() => {
-      this.initDataList()
-    }, 300)
+    this.initDataList()
     setTimeout(() => {
       this.showMose = false
     }, 3000)
@@ -113,7 +112,6 @@ export default {
     window.onmousewheel = document.onmousewheel = this.scrollFunc
   },
   updated () {
-    this.resetStyle()
   },
   methods: {
     ...mapActions([
@@ -147,7 +145,6 @@ export default {
       this.courseInfo.teacherModule = this.type
       console.log(this.courseInfo)
       Bus.$emit('shareCardContent', this.courseInfo)
-      this.resetStyle()
     },
     swiperInit () {
       let that = this
@@ -156,17 +153,14 @@ export default {
         that.mySwiper = new Swiper('.swiper-container', {
           loop: false,
           autoplay: false, //自动轮播
-          slidesPerView: 3,
-          initialSlide: 0,
           centeredSlides:true,
           slidesPerView: 'auto',
-          observer: true,
           spaceBetween: 0,
+          slideToClickedSlide: true,
+          allowTouchMove: false,
           mousewheel: {
             releaseOnEdges: true,
           },
-          slideToClickedSlide: true,
-          allowTouchMove: false,
           autoHeight : true,
           pagination: {
             el: '.swiper-pagination',
@@ -185,13 +179,12 @@ export default {
                 audio.play()
               }
               audio.addEventListener('ended', () => {
+                audio.pause()
                 $('#loading' + this.activeIndex).removeClass('loading')
-                that.mySwiper.slideNext()
               }, false)
             },
             slideChange: function () {
               console.log('slideChange', this.activeIndex)
-              that.mySwiper.initialSlide = this.activeIndex
               let audio = document.getElementById('record-sound' + this.activeIndex)
               $('#loading'+this.activeIndex).addClass('loading')
               $('#loading'+this.previousIndex).removeClass('loading')
@@ -200,11 +193,11 @@ export default {
               $('#record-sound'+this.previousIndex)[0].currentTime = 0
               audio.addEventListener('ended', () => {
                 $('#loading' + this.activeIndex).removeClass('loading')
-                that.mySwiper.slideNext()
               }, false)
             }
           }
         })
+        this.resetStyle()
       })
       /* eslint-enable */
     },
@@ -226,14 +219,12 @@ export default {
       }
     },
     audioEnd () {
+      console.log('audio end')
       $('.play-box i').removeClass('loading')
       this.mySwiper.slideNext()
     },
-    // 播放母语
-    // 点击图片播放母语音频
-    playMother (e) {
-      console.log(e)
-      $('#' + e)[0].play()
+    audioPlay () {
+      console.log('audio play')
     },
     resetStyle () {
       $('#swiper-pagination').find('.swiper-pagination-bullet').css({
@@ -575,24 +566,5 @@ export default {
   transition:all 1s ease;
   z-index: 2;
 }
-.record-swiper #swiper-pagination {
-  // bottom: 70px;
-  // bottom: 0;
-  // left: 50%;
-  .swiper-pagination-bullet {
-    outline:none;
-    width: 20px !important;
-    height: 6px !important;
-    background: #D5DCDF !important;
-    border-radius: 5px !important;
-    transition: width 0.3s ease-in-out  !important;
-    margin: 0 8px !important;
-  }
-  .swiper-pagination-bullet-active {
-    width: 20px !important;
-    height: 6px !important;
-    background: #0581D1 !important;
-    border-radius: 5px !important;
-  }
-}
+
 </style>
