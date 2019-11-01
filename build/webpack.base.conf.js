@@ -59,6 +59,10 @@ module.exports = {
         // include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
         exclude: /node_modules/
       },
+      {  
+        test: /\.worker\.js$/,         // 以.worker.js结尾的文件将被worker-loader加载 
+        loader: 'worker-loader'        // 指定文件的加载器
+      },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',

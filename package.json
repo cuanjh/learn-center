@@ -42,6 +42,7 @@
     "vue-seamless-scroll": "^1.1.16",
     "vue-spinner": "^1.0.3",
     "vue-validator": "^3.0.0-alpha.2",
+    "vue-worker": "^1.2.1",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -103,7 +104,8 @@
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.9.1",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "worker-loader": "^2.0.0"
   },
   "engines": {
     "node": ">= 6.0.0",

@@ -4,6 +4,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import VueI18n from 'vue-i18n'
+import VueWorker from 'vue-worker'
 import moment from 'moment'
 import VueLazyLoad from 'vue-lazyload'
 import md5 from 'md5'
@@ -30,6 +31,7 @@ require('./../static/bootstrap.min.js')
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VueI18n)
+Vue.use(VueWorker)
 Vue.prototype.$emoji = emoji
 Vue.prototype.$md5 = md5
 Vue.use(ElementUI)

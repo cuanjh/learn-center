@@ -27,7 +27,7 @@ const bookMiniDetails = r => require.ensure([], () => r(require('@/components/le
 const kidCourseList = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidCourseList.vue')), 'kid-course-list')
 const kidStage = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidStage.vue')), 'kid-stage')
 const kidRecordList = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidRecordList.vue')), 'kid-record-list')
-
+const yuyin = r => require.ensure([], () => r(require('@/components/learn/kidCourse/testYuyin.vue')), 'test-yuyin')
 // 学习 --- 我的
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue')), 'user')
 const userCourse = r => require.ensure([], () => r(require('@/components/learn/user/userCourse.vue')), 'user-course')
@@ -392,5 +392,10 @@ export default[
   {
     path: '/download',
     component: download
+  },
+  // 测试语音识别
+  {
+    path: '/yuyin',
+    component: yuyin
   }
 ]
