@@ -1,8 +1,8 @@
 /**
  * Created by lycheng on 2019/8/9.
  */
-let self = this
-this.onmessage = (e) => {
+
+self.onmessage = (e) => {
   switch (e.data.command) {
     case 'transform':
       transform.transaction(e.data.buffer)
@@ -15,7 +15,7 @@ var transform = {
     let bufTo16kHz = transform.to16kHz(buffer)
     let bufTo16BitPCM = transform.to16BitPCM(bufTo16kHz)
     // let bufToBase64 = transform.toBase64(bufTo16BitPCM)
-    self.postMessage({'buffer': bufTo16BitPCM})
+    self.postMessage({buffer: bufTo16BitPCM})
   },
   to16kHz (buffer) {
     var data = new Float32Array(buffer)

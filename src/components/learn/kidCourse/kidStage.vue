@@ -43,6 +43,7 @@
     <div class="record-save-animat">
       <i ></i>
     </div>
+    <test-yuyin :chapterCode="code"/>
     <audio id="myYeah" src="../../../../static/sounds/yeah.mp3"></audio>
     <transition name="fade">
       <div class="common-modal-container" v-show="isFinish">
@@ -61,6 +62,7 @@ import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
 import bus from '../../../bus'
 import KidStageItem from './kidStageItem.vue'
+import TestYuyin from './testYuyin.vue'
 import Recorder from '../../../plugins/recorder'
 
 export default {
@@ -79,7 +81,8 @@ export default {
     }
   },
   components: {
-    KidStageItem
+    KidStageItem,
+    TestYuyin
   },
   computed: {
     courseIndex () {

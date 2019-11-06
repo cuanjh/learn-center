@@ -1,6 +1,6 @@
 <template>
   <div class="service-item service-item-taste">
-    <h2 class="service-item-title">产品体验</h2>
+    <h2 class="service-item-title" v-show="false">产品体验</h2>
     <div class="service-item-content service-item-taste-content">
       <div class="taste-content">
         <button class="taste-button ready-button" id="taste_button" @click="tasteBtn">开始识别</button>
@@ -25,7 +25,7 @@
             </span>
           </div>
           <div class="start-taste-button">
-            <button class="taste-button start-button" @click="startBtn($event)">结束识别</button>
+            <button class="taste-button start-button1" @click="startBtn($event)">结束识别</button>
           </div>
         </div>
         <div class="output-box" id="result_output"></div>
@@ -37,7 +37,9 @@
 <script>
 import $ from 'jquery'
 import ASR from '../../../plugins/asr.js'
+import bus from '../../../bus'
 export default {
+  props: ['chapterCode'],
   data () {
     return {
       notSupportTip: '请试用chrome浏览器且域名为localhost或127.0.0.1测试',
@@ -49,11 +51,28 @@ export default {
       text: {
         start: '开始识别',
         stop: '结束识别'
+      },
+      langObj: {
+        KEN: 'en_us',
+        KFR: 'fr_fr',
+        KSP: 'es_es'
       }
     }
   },
   mounted () {
+    console.log('testYuyin', this.chapterCode)
+    let arr = this.chapterCode.split('-')
+    let language = this.langObj[arr[0]]
+    let url = 'wss: //iat-api.xfyun.cn/v2/iat'
+    let host = 'iat-api.xfyun.cn'
+    if (arr[0] !== 'KEN') {
+      url = 'wss: //iat-niche-api.xfyun.cn/v2/iat'
+      host = 'iat-niche-api.xfyun.cn'
+    }
     this.iatRecorder = new ASR.IatRecorder({
+      language: language,
+      host: host,
+      url: url,
       onClose: () => {
         this.stop()
         this.reset()
@@ -75,27 +94,17 @@ export default {
         $('.taste-content').css('display', 'none')
         $('.start-taste').addClass('flex-display-1')
         $('.dialect-select').css('display', 'none')
-        $('.start-button').text('结束识别')
+        $('.start-button1').text('结束识别')
         $('.time-box').addClass('flex-display-1')
         $('.dialect').text(dialect).css('display', 'inline-block')
         this.counterDown()
       }
     })
-    let worker = this.$worker.create([
-      {
-        message: 'transformpcm',
-        func: (arg1, arg2) => {
-          console.log(arg1)
-          console.log(arg2)
-        }
-      }
-    ])
-    this.iatRecorder.createWorker(worker)
     this.counterDownDOM = $('.used-time')
   },
   methods: {
     tasteBtn () {
-      if (navigator.getUserMedia && ASR.AudioContext && ASR.recorderWorker) {
+      if (navigator.getUserMedia && ASR.AudioContext) {
         this.start()
       } else {
         alert(this.notSupportTip)
@@ -123,7 +132,7 @@ export default {
       clearTimeout(this.counterDownTimeout)
       this.iatRecorder.reset()
       $('.time-box').removeClass('flex-display-1').css('display', 'none')
-      $('.start-button').text(this.text.start)
+      $('.start-button1').text(this.text.start)
       $('.dialect').css('display', 'none')
       $('.dialect-select').css('display', 'inline-block')
     },
@@ -140,6 +149,7 @@ export default {
         this.resultText = $('#result_output').text()
       }
       resultStr = this.resultText + str
+      bus.$emit('yuyinSet', resultStr)
       $('#result_output').text(resultStr)
     },
     counterDown () {
@@ -323,7 +333,7 @@ export default {
 }
 
 .ready-button,
-.start-button {
+.start-button1 {
   margin: 0 auto;
   height: 40px;
   width: 160px;

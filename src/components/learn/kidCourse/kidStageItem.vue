@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-slide">
+  <div class="swiper-slide" :id="item.code">
     <div class="slide-content">
       <div class="draw-img">
         <img class="img-box" v-if="type == 'draw'" :src="item.image | urlFix('imageView2/0/w/2000/h/900/format/jpg')" alt="" @click="playMother('mother-sound'+index, $event)">
@@ -8,7 +8,7 @@
       </div>
       <div class="draw-desc">
         <div class="no-record">
-          <p class="text"><i :class="'trumpet trumpet' + index" @click="playMother('mother-sound'+index)"></i> {{item.content || item.word}}</p>
+          <div class="text"><i :class="'trumpet trumpet' + index" @click="playMother('mother-sound'+index)"></i><p :data-content="item.content || item.word" v-html="formatContent"></p></div>
           <div class="start-button" @click.stop.prevent="startRecord('mother-sound'+index)">
             <i class="start-img" :class="{'showStart': showStart}" v-if="!isRecord"></i>
           </div>
@@ -74,7 +74,8 @@ export default {
       playing: false,
       isRecord: false,
       recordActivity: false, // 录音是否激活
-      qiniuUrl: ''
+      qiniuUrl: '',
+      contentArr: []
     }
   },
   created () {
@@ -89,9 +90,46 @@ export default {
       Recorder.stopRecording()
       bus.$off('record_setVolume')
     })
+    bus.$on('yuyinSet', (text) => {
+      $('.swiper-slide-active').find('.text p span').removeClass('right')
+      $('.swiper-slide-active').find('.text p span').removeClass('wrong')
+      let content = $('.swiper-slide-active').find('.text p').data('content')
+      let arr1 = content.toLowerCase()
+        .replace(new RegExp(/\?/, 'g'), ' ')
+        .replace(new RegExp(',', 'g'), ' ')
+        .replace(new RegExp(/\./, 'g'), ' ')
+        .replace(new RegExp('-', 'g'), ' ')
+        .replace(new RegExp('!', 'g'), ' ')
+        .replace(new RegExp('“', 'g'), ' ')
+        .replace(new RegExp('”', 'g'), ' ')
+        .replace(new RegExp('"', 'g'), ' ')
+        .replace(new RegExp(':', 'g'), ' ')
+        .trim(' ').split(' ')
+      let contentArr = []
+      for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i].trim().length > 0) {
+          contentArr.push(arr1[i].replace(new RegExp('—', 'g'), '').trim())
+        }
+      }
+      console.log('content', contentArr)
+      let arr = text.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').split(' ')
+      let result = []
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].trim().length > 0) {
+          result.push(arr[i].trim())
+        }
+      }
+      for (let j = 0; j < result.length; j++) {
+        if (result[j] === contentArr[j]) {
+          $('.swiper-slide-active').find('.text p span:nth-child(' + (j + 1) + ')').addClass('right')
+        } else {
+          $('.swiper-slide-active').find('.text p span:nth-child(' + (j + 1) + ')').addClass('wrong')
+        }
+      }
+      console.log(result)
+    })
   },
   mounted () {
-    console.log('11111111')
     // 初始化
     Recorder.init()
   },
@@ -100,7 +138,60 @@ export default {
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
       FileQiniuToken: state => state.FileQiniuToken // 七牛的token
-    })
+    }),
+    formatContent () {
+      let content = this.item.content || this.item.word
+      if (!content) {
+        return ''
+      }
+      let result = ''
+      let arr = content.replace(new RegExp('\\n', 'g'), '<br/>').split(' ')
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].trim().length > 0) {
+          if (arr[i].indexOf('<br/>') > -1) {
+            let r = arr[i].split('<br/>')
+            for (let l = 0; l < r.length; l++) {
+              if (r[l].trim().length > 0) {
+                let tag = ''
+                if (l === 0) {
+                  tag = '<br/>'
+                }
+                result += '<span> ' + r[l].trim() + ' </span>' + tag
+              }
+            }
+          } else if (arr[i].indexOf('?') > -1) {
+            let r = arr[i].split('?')
+            for (let j = 0; j < r.length; j++) {
+              if (r[j].trim().length > 0) {
+                let tag = ''
+                if (j === 0) {
+                  tag = '?'
+                }
+                result += '<span> ' + r[j].trim() + tag + ' </span>'
+              }
+            }
+          } else if (arr[i].indexOf('”') > -1) {
+            let r = arr[i].split('”')
+            for (let k = 0; k < r.length; k++) {
+              if (r[k].trim().length > 0) {
+                let tag = ''
+                if (k === 0) {
+                  tag = '”'
+                }
+                result += '<span> ' + r[k].trim() + tag + ' </span>'
+              }
+            }
+          } else {
+            if (arr[i].trim() === '—') {
+              result += arr[i].trim()
+            } else {
+              result += '<span> ' + arr[i].trim() + ' </span>'
+            }
+          }
+        }
+      }
+      return result
+    }
   },
   methods: {
     ...mapActions({
@@ -788,4 +879,5 @@ export default {
   transition:all 1s ease;
   z-index: 2;
 }
+
 </style>

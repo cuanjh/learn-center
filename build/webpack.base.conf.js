@@ -61,7 +61,11 @@ module.exports = {
       },
       {  
         test: /\.worker\.js$/,         // 以.worker.js结尾的文件将被worker-loader加载 
-        loader: 'worker-loader'        // 指定文件的加载器
+        // loader: 'worker-loader'        // 指定文件的加载器
+        use: {
+          loader: 'worker-loader',
+          options: { inline: true, name: 'WorkerName.[hash].js' }
+        }
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

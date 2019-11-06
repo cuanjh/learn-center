@@ -16,8 +16,8 @@ import CryptoJS from 'crypto-js'
 
 // 音频转码worker
 import Worker from './transformpcm.worker.js'
+
 let recorderWorker = new Worker()
-let worker1 = null
 
 // 记录处理的缓存音频
 let buffer = []
@@ -25,7 +25,7 @@ let AudioContext = window.AudioContext || window.webkitAudioContext
 let notSupportTip = '请试用chrome浏览器且域名为localhost或127.0.0.1测试'
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
 
-recorderWorker.onmessage = function (e) {
+recorderWorker.onmessage = (e) => {
   buffer.push(...e.data.buffer)
 }
 
@@ -35,7 +35,8 @@ class IatRecorder {
     this.state = 'ing'
     this.language = config.language || 'zh_cn'
     this.accent = config.accent || 'mandarin'
-
+    this.url = config.url || 'wss://iat-api.xfyun.cn/v2/iat'
+    this.host = config.host || 'iat-api.xfyun.cn'
     // 以下信息在控制台-我的应用-语音听写（流式版）页面获取
     this.appId = '5db3aa5f'
     this.apiKey = 'b1ae2466345960371e55acb5a22363eb'
@@ -102,15 +103,10 @@ class IatRecorder {
     } catch (e) {}
   }
 
-  sendData (buffer) {
-    worker1.postMessage('transformpcm', ['transform', buffer]).then((res) => {
-      console.log(res)
-    }).catch(err => {
-      console.log(err)
-    })
+  sendData (b) {
     recorderWorker.postMessage({
       command: 'transform',
-      buffer: buffer
+      buffer: b
     })
   }
   connectWebsocket () {
@@ -241,62 +237,8 @@ class IatRecorder {
   reset () {
     buffer = []
   }
-
-  createWorker (worker) {
-    worker1 = worker
-  }
 }
-
-var transform = {
-  transaction (buffer) {
-    let bufTo16kHz = transform.to16kHz(buffer)
-    let bufTo16BitPCM = transform.to16BitPCM(bufTo16kHz)
-    // let bufToBase64 = transform.toBase64(bufTo16BitPCM)
-    // self.postMessage({'buffer': bufTo16BitPCM})
-    worker1.postMessage('buffer', [bufTo16BitPCM])
-  },
-  to16kHz (buffer) {
-    var data = new Float32Array(buffer)
-    var fitCount = Math.round(data.length * (16000 / 44100))
-    var newData = new Float32Array(fitCount)
-    var springFactor = (data.length - 1) / (fitCount - 1)
-    newData[0] = data[0]
-    for (let i = 1; i < fitCount - 1; i++) {
-      var tmp = i * springFactor
-      var before = Math.floor(tmp).toFixed()
-      var after = Math.ceil(tmp).toFixed()
-      var atPoint = tmp - before
-      newData[i] = data[before] + (data[after] - data[before]) * atPoint
-    }
-    newData[fitCount - 1] = data[data.length - 1]
-    return newData
-  },
-
-  to16BitPCM (input) {
-    var dataLength = input.length * (16 / 8)
-    var dataBuffer = new ArrayBuffer(dataLength)
-    var dataView = new DataView(dataBuffer)
-    var offset = 0
-    for (var i = 0; i < input.length; i++, offset += 2) {
-      var s = Math.max(-1, Math.min(1, input[i]))
-      dataView.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true)
-    }
-    return Array.from(new Int8Array(dataView.buffer))
-  },
-  toBase64 (buffer) {
-    var binary = ''
-    var bytes = new Uint8Array(buffer)
-    var len = bytes.byteLength
-    for (var i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i])
-    }
-    return window.btoa(binary)
-  }
-}
-
 export default {
   IatRecorder,
-  AudioContext,
-  recorderWorker,
-  transform
+  AudioContext
 }

@@ -4,7 +4,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import VueI18n from 'vue-i18n'
-import VueWorker from 'vue-worker'
 import moment from 'moment'
 import VueLazyLoad from 'vue-lazyload'
 import md5 from 'md5'
@@ -31,7 +30,6 @@ require('./../static/bootstrap.min.js')
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VueI18n)
-Vue.use(VueWorker)
 Vue.prototype.$emoji = emoji
 Vue.prototype.$md5 = md5
 Vue.use(ElementUI)
@@ -141,6 +139,16 @@ const i18n = new VueI18n({
   locale: Vue.config.lang,
   messages: moreLanguage
 })
+
+// import Worker from './plugins/file.worker.js'
+// const worker = new Worker()
+// worker.postMessage({a: 1})
+// worker.onmessage = (event) => {
+//   console.log(event)
+// }
+// worker.addEventListener('message', (event) => {
+//   console.log('message')
+// })
 
 // store.subscribe((mutation, state) => {
 //   console.log(mutation.type)
