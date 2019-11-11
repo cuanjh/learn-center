@@ -58,6 +58,11 @@ var copyList = [
 		toType: 'dir'
 	},
 	{
+		from: _from + '/sounds/gold.mp3',
+		to: _to + '/sounds',
+		toType: 'dir'
+	},
+	{
 		from: _from + '/api',
 		to: _to + '/api',
 		toType: 'dir'

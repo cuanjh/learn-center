@@ -79,6 +79,10 @@ function setCurrentTime (time) {
   audio.currentTime = time;
 }
 
+function setRate (rate) {
+  audio.playbackRate = rate;
+}
+
 
 export default {
   Audio: audio,
@@ -89,5 +93,6 @@ export default {
   stop: stop,
   setSnd: setSnd,
   setVolume: setVolume,
-  setCurrentTime: setCurrentTime
+  setCurrentTime: setCurrentTime,
+  setRate: setRate
 };

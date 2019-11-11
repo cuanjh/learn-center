@@ -1,9 +1,6 @@
 /* eslint-disable */
 import bus from '../bus'
 import Cookie from '../tool/cookie'
-import { userInfo } from 'os';
-import { Upload } from 'element-ui';
-import { resolve, reject } from 'any-promise';
 var qiniu = require('qiniu-js')
 // or
 // import * as qiniu from 'qiniu-js'
@@ -386,9 +383,6 @@ export default {
     uploadQiniuVideo: function(file, token, fileKey, callback) {
         return this.recorder.uploadQiniuVideo(file, token, fileKey)
     },
-    getBlobData: function (file) {
-        return this.recorder ? this.recorder.GetBlobVideo(file) : null;
-    },
     startRecording: function () {
         if (this.recorder) {
             this.recorder.start();
@@ -424,6 +418,13 @@ export default {
     },
     getTime: function (cb) {
         return this.recorder ? this.recorder.getSoundTime(cb) : 0;
+    },
+    isHaveRecord: function () {
+        var flag = false
+        if (this.recorder && this.recorder.getBlob()) {
+            flag = true
+        }
+        return flag
     },
     // 是否激活
     isActivity: function (speakwork, canRecord) {

@@ -1,6 +1,7 @@
 import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken, clearCookie, httpAssets } from '../../api/api'
 import config from '../../api/config'
 import cookie from '../../tool/cookie'
+import _ from 'lodash'
 
 export default {
   // 新登录接口手机快速登录
@@ -203,9 +204,20 @@ export default {
   getKidCourseContent ({commit}, params) {
     return httpLogin(config.umKidCourseContent, params)
   },
+  postProgress ({ commit }, params) {
+    let forms = {}
+    _.forIn(params.recordForms, (value, key) => {
+      forms[params.chapterCode + '-' + key] = value
+    })
+    console.log(forms)
+    // return httpLogin(config.postProgress, { forms: JSON.stringify(forms) })
+  },
   // 获取学习进度
   getProgress ({commit}, params) {
     return httpLogin(config.getProgressApi, params)
+  },
+  getStudyCoinRules ({ commit, state }) {
+    return httpLogin(config.coinRules)
   },
   // 获取章节资源内容
   getChapterContent ({ commit, state }, chapterUrl) {

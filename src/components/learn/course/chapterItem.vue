@@ -521,7 +521,8 @@ export default {
     },
     startCore (id, isActive) {
       if (isActive) {
-        this.$router.push({ name: 'stage', params: {id: id} })
+        // this.$router.push({ name: 'stage', params: {id: id} })
+        this.$router.push({ path: '/study', query: {id: id} })
       } else {
         this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
         bus.$emit('setContinueLearn', this.tips)
@@ -571,7 +572,9 @@ export default {
         bus.$emit('showCommonModal', obj)
       } else {
         if (isActive) {
-          this.$router.push({ name: 'stage', params: {id: this.currentChapterCode + '-' + id} })
+          // this.$router.push({ name: 'stage', params: {id: this.currentChapterCode + '-' + id} })
+          // this.$router.push({ name: 'stage', params: {id: id} })
+          this.$router.push({ path: '/study', query: {id: this.currentChapterCode + '-' + id} })
         } else {
           this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
           bus.$emit('setContinueLearn', this.tips)

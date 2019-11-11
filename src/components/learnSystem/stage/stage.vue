@@ -400,7 +400,7 @@ export default {
     //   this.initData()
     // }
     // 弹出提示
-
+    Recorder.init()
     this.$nextTick(() => {
       if (
         Recorder.isActivity() !== true &&
