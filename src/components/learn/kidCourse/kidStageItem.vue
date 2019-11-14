@@ -54,12 +54,12 @@
 <script>
 import { mapMutations, mapState, mapActions } from 'vuex'
 import $ from 'jquery'
+import _ from 'lodash'
 import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 import Cookie from '../../../tool/cookie.js'
-
 export default {
-  props: ['item', 'index', 'type', 'courseCode'],
+  props: ['item', 'index', 'type', 'chapterCode'],
   data () {
     return {
       showTipsStop: 1,
@@ -88,7 +88,6 @@ export default {
       this.animat = params
       this.recording = params
       Recorder.stopRecording()
-      bus.$off('record_setVolume')
     })
     bus.$on('yuyinSet', (text) => {
       $('.swiper-slide-active').find('.text p span').removeClass('right')
@@ -131,13 +130,14 @@ export default {
   },
   mounted () {
     // 初始化
-    Recorder.init()
+    Recorder.init({inputSampleRate: 50400, sampleRate: 16000})
   },
   computed: {
     ...mapState({
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
-      FileQiniuToken: state => state.FileQiniuToken // 七牛的token
+      FileQiniuToken: state => state.FileQiniuToken, // 七牛的token
+      xfLang: state => state.xfLang
     }),
     formatContent () {
       let content = this.item.content || this.item.word
@@ -194,10 +194,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      getUploadFileToken: 'getUploadFileToken', // 上传七牛
-      getKidRecordSave: 'getKidRecordSave'
-    }),
+    ...mapActions([
+      'getUploadFileToken', // 上传七牛
+      'getKidRecordSave',
+      'xfISE' // 讯飞语音评测
+    ]),
     ...mapMutations({
       updateFileQiniuToken: 'updateFileQiniuToken', // 更新上传七牛token
       updateSpeakWork: 'learn/updateSpeakWork'
@@ -217,12 +218,12 @@ export default {
         return
       }
       // 判断是否在录音
-      if (!this.checkRecording()) {
-        alert('对不起：无法打开麦克风！')
-        this.isRecord = false
-        this.recording = false
-        return false
-      }
+      // if (!this.checkRecording()) {
+      //   alert('对不起：无法打开麦克风！')
+      //   this.isRecord = false
+      //   this.recording = false
+      //   return false
+      // }
       this.isRecord = true
       setTimeout(() => {
         this.showRecordingImg = true
@@ -246,13 +247,10 @@ export default {
         this.showTipSave = 1
       }
       Recorder.stopRecording()
-      bus.$off('record_setVolume')
-      console.log('record stop!!!!!')
       this.recording = false
       this.playing = true
       this.recordActivity = false
       this.showRecordingImg = false
-      // this.$emit('updateTipStop')
       JSON.stringify(localStorage.setItem('recordTipStop', 2))
       this.startMySound()
     },
@@ -266,11 +264,8 @@ export default {
     startMySound () {
       this.animat = !this.animat
       if (this.animat) {
-        let audio = Recorder.audio
         Recorder.playRecording()
-        audio.addEventListener('ended', () => {
-          this.animat = false
-        })
+        this.animat = false
       } else {
         Recorder.stopRecordSoud()
       }
@@ -281,14 +276,13 @@ export default {
       this.playing = false
       this.startRecord(e)
     },
-    // 点击保存录音上次七牛云
-    async saveVoice (card) {
+    // 点击保存录音上传七牛云
+    saveVoice (card) {
       $('.img-box').removeAttr('style', 'pointer-events')
       this.isDisable = true
       setTimeout(() => {
         this.isDisable = false
       }, 2000)
-      console.log(card, this.courseCode)
       let code = card.code
       let content = card.content ? card.content : card.word
       console.log('code,content', code, content)
@@ -302,7 +296,7 @@ export default {
       JSON.stringify(localStorage.setItem('recordTipSave', 2))
       let _this = this
       // 上传七牛
-      await _this.getUploadFileToken().then(res => {
+      _this.getUploadFileToken().then(res => {
         _this.updateFileQiniuToken(res)
         console.log('Token', res)
         let date = new Date()
@@ -313,13 +307,28 @@ export default {
         Recorder.uploadQiniuVoice(_this.FileQiniuToken, fileAudioKey).then(data => {
           console.log('data', data)
           _this.qiniuUrl = data.key
+          let url = process.env.QINIU_DOMAIN + _this.qiniuUrl
+          // 讯飞语音测评服务
+          _this.xfISE({language: _this.xfLang[_this.chapterCode.split('-')[0]], text: content, url: url}).then(res => {
+            console.log(res)
+            if (res.code === '0' && res.data.read_sentence.rec_paper.read_chapter.except_info === '0') {
+              let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+              if (!xfISEResult) {
+                xfISEResult = {}
+              }
+              let id = this.chapterCode + '-' + this.item.code
+              _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter.sentence)
+              localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
+            }
+          })
           console.log('qiniuUrl', _this.qiniuUrl)
+          let courseCode = this.chapterCode.split('-').slice(0, 2).join('-')
           if (_this.qiniuUrl) {
             // 请求后端接口
             let params = {
               sound_url: this.qiniuUrl,
               sound_time: time,
-              course_code: this.courseCode,
+              course_code: courseCode,
               code: code,
               teacher_module: this.type
             }
@@ -335,7 +344,6 @@ export default {
                 this.playing = false
                 this.animat = false
                 Recorder.stopRecording()
-                bus.$off('record_setVolume')
                 this.$emit('initRecordState')
                 setTimeout(() => {
                   this.isRecord = false
@@ -356,7 +364,6 @@ export default {
       this.recording = false
       this.showRecordingImg = false
       Recorder.stopRecording()
-      bus.$off('record_setVolume')
       setTimeout(() => {
         this.isRecord = false
         this.heightHide = false

@@ -266,5 +266,9 @@ export default {
   // 设置内容模块解锁
   setChapterUnlock ({commit}, params) {
     return httpLogin(config.studyProgressUnlockApi, params)
+  },
+  // 讯飞语音评测
+  xfISE ({commit}, params) {
+    return httpLogin(config.xfISEApi, params)
   }
 }

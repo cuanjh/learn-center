@@ -28,6 +28,7 @@
     "lodash": "^4.17.10",
     "md5": "^2.2.1",
     "moment": "^2.22.2",
+    "mp3-mediarecorder": "^3.4.5",
     "qiniu-js": "^2.4.0",
     "simple-pinyin": "^3.0.2",
     "swiper": "^4.5.0",

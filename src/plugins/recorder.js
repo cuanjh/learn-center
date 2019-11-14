@@ -17,6 +17,7 @@ class Recorder {
         this.config             = _config || {};
         this.config.sampleBits  = this.config.sampleBits || 16; //采样数位 8, 16
         this.config.sampleRate  = this.config.sampleRate || 11025; //采样率(1/6 44100)
+        this.config.inputSampleRate = this.config.inputSampleRate || 44100
         // 是否支持录音
 
         this.canRecording     = (navigator.getUserMedia != null)
@@ -30,7 +31,7 @@ class Recorder {
 
             buffer: [], //录音缓存
 
-            inputSampleRate: this.context.sampleRate, //输入采样率
+            inputSampleRate: this.config.inputSampleRate, //输入采样率
 
             inputSampleBits: 16, //输入采样数位 8, 16
 
@@ -276,6 +277,7 @@ class Recorder {
                 complete: complete
             }
             // var fileKey = that.GetFileKey();
+            
             var observable = qiniu.upload(that.getBlob(), fileKey, token, putExtra, config)
             var subscription = observable.subscribe(observer);
         })
@@ -368,14 +370,14 @@ export default {
     recorderUrl: '',
     refuseRecord: false,
     audio: new Audio(),
-    init: function () {
+    init: function (config) {
         init( (rec) => {
             if (rec) {
                 this.recorder = rec;
             } else {
                 this.recorder = false;
             }
-        });
+        }, config);
     },
     uploadQiniuVoice: function(token, fileKe, callback){
         return this.recorder.uploadQiniuVoice(token, fileKe)

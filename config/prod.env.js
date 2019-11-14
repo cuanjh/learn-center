@@ -6,6 +6,7 @@ module.exports = {
   LOGIN_URL: '"http://test-learn.talkmate.com"',
   HOME_URL: '"http://test-learn.talkmate.com/app/index"',
   REDIRECT_URL: '"http://test-learn.talkmate.com/app/pay-success"',
+  QINIU_DOMAIN: '"https://uploadfile1.talkmate.com/"',
   KID_SHARE: '"https://mobile-static.talkmate.com/operate/activities/html/miniRecordShare/index.html"', // 线上
   // KID_SHARE: '"http://test-learn.talkmate.com:82/miniRecordShare/index.html"' // 测试
   APP_KEY: '"talkmateVersion"',

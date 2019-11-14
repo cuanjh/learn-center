@@ -36,7 +36,7 @@
 
 <script>
 import $ from 'jquery'
-import ASR from '../../../plugins/asr.js'
+import ASR from '../../../plugins/xf_asr.js'
 import bus from '../../../bus'
 export default {
   props: ['chapterCode'],

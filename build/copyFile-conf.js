@@ -63,6 +63,11 @@ var copyList = [
 		toType: 'dir'
 	},
 	{
+		from: _from + '/sounds/vmsg.wasm',
+		to: _to + '/sounds',
+		toType: 'dir'
+	},
+	{
 		from: _from + '/api',
 		to: _to + '/api',
 		toType: 'dir'

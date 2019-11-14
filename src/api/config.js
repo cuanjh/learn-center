@@ -187,5 +187,8 @@ export default {
   kidUnlockInfoApi: '/studyv1/records/chapter/unlock/info', // 获取Kid课程解锁信息接口
   studyProgressCompleteApi: '/studyv1/progress/module/complete', // 内容模块完成接口
   studyProgressPartCompleteApi: '/studyv1/progress/module/part/complete', // 内容模块各个部分完成接口
-  studyProgressUnlockApi: '/studyv1/progress/module/unlock' // 内容模块解锁接口
+  studyProgressUnlockApi: '/studyv1/progress/module/unlock', // 内容模块解锁接口
+
+  // 讯飞语音
+  xfISEApi: '/web/xf/ise' // 讯飞语音评测接口
 }

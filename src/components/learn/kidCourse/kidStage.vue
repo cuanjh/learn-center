@@ -31,7 +31,7 @@
                           :key="index" :item="item"
                           :index="index"
                           :type="type"
-                          :courseCode="courseCode"
+                          :chapterCode="code"
                           @initRecordState="initState"
                           />
         </div>
@@ -42,6 +42,9 @@
     </div>
     <div class="record-save-animat">
       <i ></i>
+    </div>
+    <div>
+      <button class="btn primary" @click="ttsStart">语音合成测试</button>
     </div>
     <test-yuyin :chapterCode="code"/>
     <audio id="myYeah" src="../../../../static/sounds/yeah.mp3"></audio>
@@ -63,7 +66,8 @@ import 'swiper/dist/css/swiper.min.css'
 import bus from '../../../bus'
 import KidStageItem from './kidStageItem.vue'
 import TestYuyin from './testYuyin.vue'
-import Recorder from '../../../plugins/recorder'
+import TTS from '../../../plugins/xf_tts'
+// import Recorder from '../../../plugins/recorder'
 
 export default {
   props: ['code', 'type'],
@@ -77,7 +81,9 @@ export default {
       recordState: null,
       mySwiper: null,
       isFinish: false,
-      finishedCount: 0
+      finishedCount: 0,
+      ttsRecorder: null,
+      audioCtx: null
     }
   },
   components: {
@@ -103,7 +109,7 @@ export default {
     }
   },
   created () {
-    Recorder.init()
+    // Recorder.init()
     bus.$on('animateRecord', (offset) => {
       console.log('offset-->', offset)
       $('.record-save-animat').css({
@@ -143,6 +149,54 @@ export default {
     }
     // 滚动滑轮触发scrollFunc方法  //ie 谷歌
     window.onmousewheel = document.onmousewheel = this.scrollFunc
+
+    this.ttsRecorder = new TTS.TtsRecorder({
+      lang: 'en',
+      text: 'how',
+      onClose: (e) => {
+        console.log(e)
+        // this.stop()
+        // this.reset()
+      },
+      onError: (data) => {
+        // this.stop()
+        // this.reset()
+        alert('WebSocket连接失败')
+      },
+      onMessage: (e) => {
+        let jsonData = JSON.parse(e.data)
+        if (jsonData.data) {
+          console.log(jsonData.data)
+
+          // let bstr = atob(jsonData.data.audio)
+          // let n = bstr.length
+          // let u8arr = new Uint8Array(n)
+          // while (n--) {
+          //   u8arr[n] = bstr.charCodeAt(n)
+          // }
+          // let blob1 = new Blob([u8arr], {type: 'audio/pcm'})
+          // let objURL = URL.createObjectURL(blob1)
+          // console.log(objURL)
+          let blob = this.dataURLtoBlob(jsonData.data.audio)
+          let audio = new Audio()
+          audio.src = window.URL.createObjectURL(blob)
+          console.log(audio.src)
+          audio.oncanplay = () => {
+            audio.play()
+          }
+
+          // this.audioCtx.decodeAudioData(blob, (buffer) => {
+          //   console.log(buffer)
+          // })
+          // let myUrl = URL.createObjectURL(blob)
+          // console.log(myUrl)
+        }
+      },
+      onStart: () => {
+        console.log('onStart')
+      }
+    })
+    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
   },
   updated () {
   },
@@ -288,6 +342,85 @@ export default {
           this.showMose = false
         }
       }
+    },
+    ttsStart () {
+      this.ttsRecorder.start()
+    },
+    dataURLtoBlob (audio) {
+      let sampleRate = 16000
+      let sampleBits = 8
+      let bytes = atob(audio)
+      let dataLength = bytes.length * (sampleBits / 8)
+
+      let buffer = new ArrayBuffer(44 + dataLength)
+      let data = new DataView(buffer)
+
+      let channelCount = 1 // 单声道
+      let offset = 0
+
+      let writeString = (str) => {
+        for (let i = 0; i < str.length; i++) {
+          data.setUint8(offset + i, str.charCodeAt(i))
+        }
+      }
+
+      // 资源交换文件标识符
+      writeString('RIFF')
+      offset += 4
+      // 下个地址开始到文件尾总字节数,即文件大小-8
+      data.setUint32(offset, 36 + dataLength, true)
+      offset += 4
+      // WAV文件标志
+      writeString('WAVE')
+      offset += 4
+      // 波形格式标志
+      writeString('fmt ')
+      offset += 4
+      // 过滤字节,一般为 0x10 = 16
+      data.setUint32(offset, 16, true)
+      offset += 4
+      // 格式类别 (PCM形式采样数据)
+      data.setUint16(offset, 1, true)
+      offset += 2
+      // 通道数
+      data.setUint16(offset, channelCount, true)
+      offset += 2
+      // 采样率,每秒样本数,表示每个通道的播放速度
+      data.setUint32(offset, sampleRate, true)
+      offset += 4
+      // 波形数据传输率 (每秒平均字节数) 单声道×每秒数据位数×每样本数据位/8
+      data.setUint32(offset, channelCount * sampleRate * (sampleBits / 8), true)
+      offset += 4
+      // 快数据调整数 采样一次占用字节数 单声道×每样本的数据位数/8
+      data.setUint16(offset, channelCount * (sampleBits / 8), true)
+      offset += 2
+      // 每样本数据位数
+      data.setUint16(offset, sampleBits, true)
+      offset += 2
+      // 数据标识符
+      writeString('data')
+      offset += 4
+      // 采样数据总数,即数据总大小-44
+      data.setUint32(offset, dataLength, true)
+      offset += 4
+      // 写入采样数据
+      if (sampleBits === 8) {
+        for (let i = 0; i < bytes.length; i++, offset++) {
+          let s = Math.max(-1, Math.min(1, bytes[i]))
+          let val = s < 0 ? s * 0x8000 : s * 0x7FFF
+          val = parseInt(255 / (65535 / (val + 32768)))
+          data.setInt8(offset, val, true)
+        }
+      } else {
+        for (let i = 0; i < bytes.length; i++, offset += 2) {
+          // let s = Math.max(-1, Math.min(1, bytes[i]))
+          // data.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true)
+          data.setInt16(offset, bytes[i], true)
+        }
+      }
+      return new Blob([data], {
+        type: 'audio/wav'
+      })
     }
   }
 }
