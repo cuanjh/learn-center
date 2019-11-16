@@ -56,7 +56,7 @@
 
 <script>
 import _ from 'lodash'
-// import $ from 'jquery'
+import $ from 'jquery'
 import Swiper from 'swiper'
 import { mapActions, mapState } from 'vuex'
 import IseArea from './iseArea.vue'
@@ -116,7 +116,9 @@ export default {
     ...mapActions([
       'getKidCourseContent',
       'getUploadFileToken',
-      'xfISE'
+      'xfISE',
+      'getKidRecordSave',
+      'getKidRecordList'
     ]),
     // 初始化数据
     initData () {
@@ -323,49 +325,61 @@ export default {
               xfISEResult = {}
             }
             let id = _this.chapterCode + '-' + item.code
-            _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter.sentence)
+            _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter)
             localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
           }
         })
         // 2-2: 保存录音到后台
         let courseCode = this.chapterCode.split('-').slice(0, 2).join('-')
-        // 请求后端接口
-        let params = {
-          sound_url: qiniuUrl,
-          sound_time: time,
-          course_code: courseCode,
-          code: item.code,
-          teacher_module: this.type
-        }
-        console.log(params)
-        this.getKidRecordSave(params).then(res => {
-          console.log('res', res)
-          // 返回成功之后再处理 返回失败具体提示
-          // if (res.success) {
-          //   let animatDiv = $('#animatButton')
-          //   let offset = animatDiv.offset()
-          //   let obj = {
-          //     left: offset.left,
-          //     top: offset.top
-          //   }
-          //   bus.$emit('animateRecord', obj)
-          //   this.heightHide = true
-          //   // this.isRecord = false
-          //   this.playing = false
-          //   this.animat = false
-          //   Recorder.stopRecording()
-          //   this.$emit('initRecordState')
-          //   setTimeout(() => {
-          //     this.isRecord = false
-          //     this.heightHide = false
-          //   }, 500)
-          // }
+        Recorder.getTime((duration) => {
+          // 请求后端接口
+          let params = {
+            sound_url: qiniuUrl,
+            sound_time: Math.round(duration),
+            course_code: courseCode,
+            code: item.code,
+            teacher_module: this.type
+          }
+          console.log(params)
+          this.getKidRecordSave(params).then(res => {
+            console.log('res', res)
+            // 返回成功之后再处理 返回失败具体提示
+            if (res.success) {
+              this.getKidRecordList({chapter_code: this.chapterCode, teacher_module: this.type})
+              this.recordAnimate()
+            }
+          })
         })
       })
     },
     // 点击头像的弹框
     goGradeBox () {
       this.$refs.gradeBox.showGradeBox()
+    },
+    // 录音保存后，动画效果
+    recordAnimate () {
+      console.log($('.ise-area .play').offset())
+      let offset = $('.ise-area .play').offset()
+      $('.record-save-animat').css({
+        left: offset.left,
+        top: offset.top
+      })
+      $('.record-save-animat').show()
+      let targetOffest = $('.record-box .record-icon').offset()
+      console.log(targetOffest)
+      $('.record-save-animat').stop().animate({
+        left: targetOffest.left,
+        top: targetOffest.top
+      }, {
+        duration: 800,
+        specialEasing: {
+          left: 'linear',
+          top: 'swing'
+        },
+        complete: () => {
+          $('.record-save-animat').hide()
+        }
+      })
     }
   }
 }
@@ -478,6 +492,19 @@ export default {
     font-size: 18px;
     font-weight: 600;
     color: #B9BFC3;
+  }
+}
+
+.record-save-animat {
+  position: absolute;
+  display: none;
+  z-index: 999999;
+  i {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background: url('../../../../../static/images/kidcontent/icon-record-list.png') no-repeat center;
+    background-size: cover;
   }
 }
 </style>

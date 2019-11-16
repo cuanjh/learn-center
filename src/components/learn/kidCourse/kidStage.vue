@@ -7,6 +7,9 @@
         <swiper-comp :chapterCode="code" :type="type" @setProgress="setProgress"/>
       </div>
     </div>
+    <div class="record-save-animat">
+      <i ></i>
+    </div>
     <!-- <div class="record-lists" v-show="false">
       <i class="icon-img animat-target-img" v-if="recordState==0"></i>
       <div class="record-lists-content" @click="goKidRecordList(code, type)" v-if="recordState>0">
@@ -34,9 +37,6 @@
         <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
         <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
-    </div>
-    <div class="record-save-animat" v-show="false">
-      <i ></i>
     </div>
     <div v-show="false">
       <button class="btn primary" @click="ttsStart">语音合成测试</button>
