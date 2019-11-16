@@ -67,9 +67,8 @@ import ProgressBar from './common/progress.vue'
 import SwiperComp from './common/swiper.vue'
 import TestYuyin from './testYuyin.vue'
 // import TTS from '../../../plugins/xf_tts'
-import TTS from '../../../plugins/xf_tts'
-import GradeBox from './gradeBox.vue'
-import EvaluatingBox from './evaluatingBox.vue'
+import GradeBox from './common/gradeBox.vue'
+import EvaluatingBox from './common/evaluatingBox.vue'
 // import Recorder from '../../../plugins/recorder'
 
 export default {
