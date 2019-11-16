@@ -50,6 +50,8 @@
         </div>
       </div>
     </transition>
+    <grade-box />
+    <evaluating-box />
   </div>
 </template>
 
@@ -65,6 +67,9 @@ import ProgressBar from './common/progress.vue'
 import SwiperComp from './common/swiper.vue'
 import TestYuyin from './testYuyin.vue'
 // import TTS from '../../../plugins/xf_tts'
+import TTS from '../../../plugins/xf_tts'
+import GradeBox from './gradeBox.vue'
+import EvaluatingBox from './evaluatingBox.vue'
 // import Recorder from '../../../plugins/recorder'
 
 export default {
@@ -90,7 +95,9 @@ export default {
     NavComp,
     ProgressBar,
     SwiperComp,
-    TestYuyin
+    TestYuyin,
+    GradeBox,
+    EvaluatingBox
   },
   computed: {
     courseIndex () {
@@ -240,7 +247,7 @@ export default {
       let that = this
       /* eslint-disable */
       this.$nextTick(() => {
-        that.mySwiper = new Swiper('.swiper-container', {
+        that.mySwiper = new Swiper('.swiper-container2', {
           loop: false,
           autoplay: false, //自动轮播
           initialSlide: 0,
@@ -321,8 +328,8 @@ export default {
         'margin-right': '8px'
       })
     },
-    goKidRecordList (code, type) {
-      this.$router.push({path: '/app/kid-record-list', query: {code: code, type: type}})
+    goKidRecordList () {
+      this.$router.push({path: '/app/kid-record-list', query: {code: this.code, type: this.type}})
       this.myRecordNumTip = 2
       JSON.stringify(sessionStorage.setItem('myRecordNumTip', this.myRecordNumTip))
     },
