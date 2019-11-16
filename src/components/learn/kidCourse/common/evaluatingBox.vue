@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="evaluating-modal-box" v-show="isShowModal">
+    <div class="evaluating-modal-box" v-show="isShowEvaluatingModal">
       <div class="evaluating-content">
         <div class="close-img" @click="closeModal()"></div>
         <!-- 非会员显示 -->
@@ -268,7 +268,7 @@ const starOff = 'off'
 export default {
   data () {
     return {
-      isShowModal: false,
+      isShowEvaluatingModal: false,
       isShowEndPrompt: true,
       isHalf: true,
       score: 4
@@ -277,7 +277,7 @@ export default {
   created () {
     Bus.$on('showScoreDetail', (data) => {
       console.log('点击了评分详情', data)
-      this.isShowModal = true
+      this.isShowEvaluatingModal = true
       this.initSwiper()
     })
   },
@@ -358,7 +358,7 @@ export default {
       /* eslint-enable */
     },
     closeModal () {
-      this.isShowModal = false
+      this.isShowEvaluatingModal = false
     },
     // 立即强化
     strengthening () {

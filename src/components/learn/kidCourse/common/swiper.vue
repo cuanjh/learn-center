@@ -15,6 +15,7 @@
             @stopRecord="stopRecord"
             @playRecord="playRecord"
             @startEvaluate="startEvaluate"
+            @goGradeBox="goGradeBox"
           />
         </div>
       </div>
@@ -48,6 +49,8 @@
         <span>{{ curPage }}</span> / <span>{{ totalPage }}</span>
       </p>
     </div>
+    <grade-box ref="gradeBox"/>
+    <evaluating-box />
   </div>
 </template>
 
@@ -60,6 +63,9 @@ import IseArea from './iseArea.vue'
 import Recorder from '../../../../plugins/recorder'
 import cookie from '../../../../tool/cookie'
 // import bus from '../../../../bus'
+import GradeBox from './gradeBox.vue'
+import EvaluatingBox from './evaluatingBox.vue'
+
 export default {
   props: ['chapterCode', 'type'],
   data () {
@@ -75,7 +81,9 @@ export default {
     }
   },
   components: {
-    IseArea
+    IseArea,
+    GradeBox,
+    EvaluatingBox
   },
   mounted () {
     // 录音插件初始化
@@ -354,6 +362,10 @@ export default {
           // }
         })
       })
+    },
+    // 点击头像的弹框
+    goGradeBox () {
+      this.$refs.gradeBox.showGradeBox()
     }
   }
 }

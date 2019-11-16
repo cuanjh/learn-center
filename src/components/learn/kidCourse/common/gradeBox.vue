@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="grade-modal-box" v-show="isShowModal">
+    <div class="grade-modal-box" v-show="isShowGradeModal">
       <div class="grade-content">
         <div class="close-img" @click="closeModal()"></div>
         <!-- 70分以上的显示 -->
@@ -42,8 +42,9 @@ import Bus from '../../../../bus'
 export default {
   data () {
     return {
-      isShowModal: false,
-      isGood: true
+      isShowGradeModal: false,
+      isGood: true,
+      gradeData: {}
     }
   },
   created () {
@@ -57,20 +58,26 @@ export default {
   },
   mounted () {
     console.log(this.courseCode)
+    let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+    this.gradeData = xfISEResult
+    console.log('gradeData==>', this.gradeData)
   },
   methods: {
     closeModal () {
-      this.isShowModal = false
+      this.isShowGradeModal = false
     },
     // 分享我的绘本
     shareMyRecord () {
-      this.isShowModal = false
+      this.isShowGradeModal = false
       this.$parent.goKidRecordList()
     },
     // 我的评分详情
     gradeDetails () {
-      this.isShowModal = false
+      this.isShowGradeModal = false
       Bus.$emit('showScoreDetail')
+    },
+    showGradeBox () {
+      this.isShowGradeModal = true
     }
   }
 }
