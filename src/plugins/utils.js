@@ -126,7 +126,13 @@ function getPos (num) {
   }
 }
 
+// 获取一段数字区间的随机数，比如[-10, 10]
+function getRndInteger (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
 export default {
   resize,
-  getPos
+  getPos,
+  getRndInteger
 }

@@ -88,5 +88,8 @@ export default {
   // 更新匿名状态
   updateIsAnonymous (state, flag) {
     state.isAnonymous = flag
+  },
+  updateKidRecordList (state, records) {
+    state.kidRecordList = records
   }
 }

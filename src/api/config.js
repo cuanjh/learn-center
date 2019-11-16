@@ -180,7 +180,7 @@ export default {
   umKidLearnMoreCoursesApi: '/studyv1/user/course/subscribes', // 获取更多订阅课程接口
   umKidCourseContent: '/kidv1/course/teacher/content', // kid教师内容接口(包含绘本，单词，儿歌)
   umKidRecordState: '/kidv1/record/state', // 单个课程的录音状态接口
-  umKidRecordLists: '/kidv1/record/lists', // 教师模块的录音列表接口
+  umKidRecordListApi: '/kidv1/record/lists', // 教师模块的录音列表接口
   umkidRecordShare: '/kidv1/course/record/share', // 模块学习信息分享接口
   umKidRecordSave: '/kidv1/record/save', // 保存录音接口
   kidUploadApi: '/studyv1/activity/upload/kid', // kid课程内容学完上传统计信息接口

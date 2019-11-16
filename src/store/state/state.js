@@ -9,6 +9,7 @@ export default {
   recommendRadios: [],
   isAnonymous: false,
   langCodesSel: [], // 课程相关
+  kidRecordList: [], // kid录音列表
   xfLang: {
     'KEN': 'en_us'
   },

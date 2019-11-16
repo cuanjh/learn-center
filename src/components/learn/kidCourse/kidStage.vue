@@ -1,17 +1,13 @@
 <template>
   <div class="kid-stage-container">
-    <div class="header">
-      <header>
-        <div class="header-content">
-          <router-link :to="{path:'/app/kid-course-list/' + courseCode}" class="balk-icon" ></router-link>
-          <p class="course-desc">
-            <span>课程{{courseIndex}}</span>
-            <span>{{type=='draw'?'绘本阅读':'绘本单词'}}</span>
-          </p>
-        </div>
-      </header>
+    <nav-comp :chapterCode="code" :type="type"/>
+    <progress-bar ref="progress"/>
+    <div class="kid-content">
+      <div class="kid-content-wrap" :style="{height: kidContentHeight + 'px'}">
+        <swiper-comp :chapterCode="code" :type="type" @setProgress="setProgress"/>
+      </div>
     </div>
-    <div class="record-lists" >
+    <!-- <div class="record-lists" v-show="false">
       <i class="icon-img animat-target-img" v-if="recordState==0"></i>
       <div class="record-lists-content" @click="goKidRecordList(code, type)" v-if="recordState>0">
         <div class="num-content" >
@@ -24,7 +20,7 @@
         <p>{{recordState}}</p>
       </div>
     </div>
-    <div class="kid-draws" id="swiper-kid">
+    <div class="kid-draws" id="swiper-kid" v-show="false">
       <div class="swiper-container">
         <div class="swiper-wrapper" :class="{'draw': type == 'draw'}">
           <kid-stage-item  v-for="(item, index) in list"
@@ -36,17 +32,16 @@
                           />
         </div>
         <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
-        <!-- 如果需要分页器 -->
         <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
     </div>
-    <div class="record-save-animat">
+    <div class="record-save-animat" v-show="false">
       <i ></i>
     </div>
-    <div>
+    <div v-show="false">
       <button class="btn primary" @click="ttsStart">语音合成测试</button>
-    </div>
-    <test-yuyin :chapterCode="code"/>
+    </div> -->
+    <test-yuyin v-show="false" :chapterCode="code"/>
     <audio id="myYeah" src="../../../../static/sounds/yeah.mp3"></audio>
     <transition name="fade">
       <div class="common-modal-container" v-show="isFinish">
@@ -65,8 +60,11 @@ import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
 import bus from '../../../bus'
 import KidStageItem from './kidStageItem.vue'
+import NavComp from './common/nav.vue'
+import ProgressBar from './common/progress.vue'
+import SwiperComp from './common/swiper.vue'
 import TestYuyin from './testYuyin.vue'
-import TTS from '../../../plugins/xf_tts'
+// import TTS from '../../../plugins/xf_tts'
 // import Recorder from '../../../plugins/recorder'
 
 export default {
@@ -83,11 +81,15 @@ export default {
       isFinish: false,
       finishedCount: 0,
       ttsRecorder: null,
-      audioCtx: null
+      audioCtx: null,
+      kidContentHeight: 0
     }
   },
   components: {
     KidStageItem,
+    NavComp,
+    ProgressBar,
+    SwiperComp,
     TestYuyin
   },
   computed: {
@@ -135,68 +137,70 @@ export default {
     })
   },
   mounted () {
-    this.finishedCount = 0
-    setTimeout(() => {
-      this.initData()
-      this.initRecordState()
-    }, 300)
-    setTimeout(() => {
-      this.showMose = false
-    }, 3000)
-    // 给页面绑定滑轮滚动事件
-    if (document.addEventListener) { // firefox
-      document.addEventListener('DOMMouseScroll', this.scrollFunc, false)
-    }
-    // 滚动滑轮触发scrollFunc方法  //ie 谷歌
-    window.onmousewheel = document.onmousewheel = this.scrollFunc
+    console.log('kid-stage-container', $('.kid-stage-container').height())
+    this.kidContentHeight = $('.kid-stage-container').height() - 150
+    // this.finishedCount = 0
+    // setTimeout(() => {
+    //   this.initData()
+    //   this.initRecordState()
+    // }, 300)
+    // setTimeout(() => {
+    //   this.showMose = false
+    // }, 3000)
+    // // 给页面绑定滑轮滚动事件
+    // if (document.addEventListener) { // firefox
+    //   document.addEventListener('DOMMouseScroll', this.scrollFunc, false)
+    // }
+    // // 滚动滑轮触发scrollFunc方法  //ie 谷歌
+    // window.onmousewheel = document.onmousewheel = this.scrollFunc
 
-    this.ttsRecorder = new TTS.TtsRecorder({
-      lang: 'en',
-      text: 'how',
-      onClose: (e) => {
-        console.log(e)
-        // this.stop()
-        // this.reset()
-      },
-      onError: (data) => {
-        // this.stop()
-        // this.reset()
-        alert('WebSocket连接失败')
-      },
-      onMessage: (e) => {
-        let jsonData = JSON.parse(e.data)
-        if (jsonData.data) {
-          console.log(jsonData.data)
+    // this.ttsRecorder = new TTS.TtsRecorder({
+    //   lang: 'en',
+    //   text: 'how',
+    //   onClose: (e) => {
+    //     console.log(e)
+    //     // this.stop()
+    //     // this.reset()
+    //   },
+    //   onError: (data) => {
+    //     // this.stop()
+    //     // this.reset()
+    //     alert('WebSocket连接失败')
+    //   },
+    //   onMessage: (e) => {
+    //     let jsonData = JSON.parse(e.data)
+    //     if (jsonData.data) {
+    //       console.log(jsonData.data)
 
-          // let bstr = atob(jsonData.data.audio)
-          // let n = bstr.length
-          // let u8arr = new Uint8Array(n)
-          // while (n--) {
-          //   u8arr[n] = bstr.charCodeAt(n)
-          // }
-          // let blob1 = new Blob([u8arr], {type: 'audio/pcm'})
-          // let objURL = URL.createObjectURL(blob1)
-          // console.log(objURL)
-          let blob = this.dataURLtoBlob(jsonData.data.audio)
-          let audio = new Audio()
-          audio.src = window.URL.createObjectURL(blob)
-          console.log(audio.src)
-          audio.oncanplay = () => {
-            audio.play()
-          }
+    //       // let bstr = atob(jsonData.data.audio)
+    //       // let n = bstr.length
+    //       // let u8arr = new Uint8Array(n)
+    //       // while (n--) {
+    //       //   u8arr[n] = bstr.charCodeAt(n)
+    //       // }
+    //       // let blob1 = new Blob([u8arr], {type: 'audio/pcm'})
+    //       // let objURL = URL.createObjectURL(blob1)
+    //       // console.log(objURL)
+    //       let blob = this.dataURLtoBlob(jsonData.data.audio)
+    //       let audio = new Audio()
+    //       audio.src = window.URL.createObjectURL(blob)
+    //       console.log(audio.src)
+    //       audio.oncanplay = () => {
+    //         audio.play()
+    //       }
 
-          // this.audioCtx.decodeAudioData(blob, (buffer) => {
-          //   console.log(buffer)
-          // })
-          // let myUrl = URL.createObjectURL(blob)
-          // console.log(myUrl)
-        }
-      },
-      onStart: () => {
-        console.log('onStart')
-      }
-    })
-    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+    //       // this.audioCtx.decodeAudioData(blob, (buffer) => {
+    //       //   console.log(buffer)
+    //       // })
+    //       // let myUrl = URL.createObjectURL(blob)
+    //       // console.log(myUrl)
+    //     }
+    //   },
+    //   onStart: () => {
+    //     console.log('onStart')
+    //   }
+    // })
+    // this.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
   },
   updated () {
   },
@@ -205,7 +209,7 @@ export default {
       'getKidCourseContent',
       'kidUpload',
       'setPartComplete',
-      'getKidRecordLists'
+      'getKidRecordList'
     ]),
     async initData () {
       let res = await this.getKidCourseContent({chapter_code: this.code})
@@ -221,11 +225,11 @@ export default {
           break
       }
       console.log('kid stage list', this.list)
-      await this.swiperInit()
+      // await this.swiperInit()
       await this.mySwiper.init()
     },
     initRecordState () {
-      this.getKidRecordLists({chapter_code: this.code, teacher_module: this.type}).then(res => {
+      this.getKidRecordList({chapter_code: this.code, teacher_module: this.type}).then(res => {
         console.log('录音数量返回', res)
         if (res.success) {
           this.recordState = res.records.length
@@ -421,44 +425,32 @@ export default {
       return new Blob([data], {
         type: 'audio/wav'
       })
+    },
+    setProgress (progress) {
+      console.log(progress)
+      this.$refs['progress'].setProgress(progress)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.header {
+.kid-content {
+  height: 100%;
   width: 100%;
-  height: 62px;
-  background: #fff;
-  header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-image: url('../../../../static/images/kid/pic-kid-content-bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  // background-position: center;
+  background-position-y: center;
+  .kid-content-wrap {
     width: 100%;
-    height: 62px;
-    .header-content {
-      padding: 0 80px;
-      width: 100%;
-      height: 62px;
-      display: flex;
-      align-items: center;
-      .balk-icon {
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        background: url('../../../../static/images/kidcontent/icon-back.png') no-repeat center;
-        background-size: cover;
-        border-radius: 50%;
-        margin-right: 26px;
-        &:hover {
-          background: url('../../../../static/images/kidcontent/icon-back-active.png') no-repeat center;
-          background-size: cover;
-        }
-      }
-      .course-desc {
-        font-size:17px;
-        font-weight:600;
-        color:rgba(60,91,111,1);
-      }
-    }
+    max-height: 530px;
+    // opacity: 0;
+    background: rgba(0, 0, 0, 0);
   }
 }
 .record-lists {
@@ -562,46 +554,46 @@ export default {
   // background: #0581D1;
   box-sizing: border-box;
   position: relative;
-  .swiper-container {
-    width: 100%;
-    // min-height: 500px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    // justify-content: center;
-    // background: pink;
-    .swiper-wrapper {
-      width: 100%;
-      height: 70%!important;
-      padding-top: 7%;
-      // background: burlywood;
-    }
-    .draw {
-      width: 100%;
-      height: 66%!important;
-      padding-top: 8%;
-      // background: rgb(207, 124, 15);
-    }
-    .mouse-text {
-      text-align: center;
-      position: absolute;
-      bottom: 12%;
-      span {
-        font-size:14px;
-        font-weight:500;
-        color:rgba(74,74,74,1);
-        line-height: 30px;
-      }
-      i {
-        display: inline-block;
-        width: 20px;
-        height: 30px;
-        background: url('../../../../static/images/kidcontent/icon-mouse-img.png') no-repeat center;
-        background-size: cover;
-      }
-    }
-  }
+  // .swiper-container {
+  //   width: 100%;
+  //   // min-height: 500px;
+  //   height: 100%;
+  //   display: flex;
+  //   flex-direction: column;
+  //   align-items: center;
+  //   // justify-content: center;
+  //   // background: pink;
+  //   .swiper-wrapper {
+  //     width: 100%;
+  //     height: 70%!important;
+  //     padding-top: 7%;
+  //     // background: burlywood;
+  //   }
+  //   .draw {
+  //     width: 100%;
+  //     height: 66%!important;
+  //     padding-top: 8%;
+  //     // background: rgb(207, 124, 15);
+  //   }
+  //   .mouse-text {
+  //     text-align: center;
+  //     position: absolute;
+  //     bottom: 12%;
+  //     span {
+  //       font-size:14px;
+  //       font-weight:500;
+  //       color:rgba(74,74,74,1);
+  //       line-height: 30px;
+  //     }
+  //     i {
+  //       display: inline-block;
+  //       width: 20px;
+  //       height: 30px;
+  //       background: url('../../../../static/images/kidcontent/icon-mouse-img.png') no-repeat center;
+  //       background-size: cover;
+  //     }
+  //   }
+  // }
 }
 .record-save-animat {
   position: absolute;

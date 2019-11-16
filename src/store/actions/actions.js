@@ -240,8 +240,11 @@ export default {
     return httpLogin(config.umKidRecordState, params)
   },
   // 录音列表接口
-  getKidRecordLists ({commit}, params) {
-    return httpLogin(config.umKidRecordLists, params)
+  getKidRecordList ({commit}, params) {
+    return httpLogin(config.umKidRecordListApi, params).then(res => {
+      commit('updateKidRecordList', res.records)
+      return res
+    })
   },
   // 保存录音接口
   getKidRecordSave ({commit}, params) {

@@ -120,11 +120,11 @@ export default {
       'getUserInfo',
       'getLearnInfoV5',
       'getkidRecordShare',
-      'getKidRecordLists'
+      'getKidRecordList'
     ]),
     async initDataList () {
       // 录音列表
-      let res = await this.getKidRecordLists({chapter_code: this.code, teacher_module: this.type})
+      let res = await this.getKidRecordList({chapter_code: this.code, teacher_module: this.type})
       this.recordLists = res.records
       console.log('kid record Lists', this.recordLists)
       await this.swiperInit()

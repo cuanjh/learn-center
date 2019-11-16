@@ -163,9 +163,21 @@ class Recorder {
         return this.audioData.encodeWAV();
     }
     //回放
-    play(audio) {
+    play(audio, cb) {
         audio.src = window.URL.createObjectURL(this.getBlob());
-        audio.play();
+        // 录音加载完成
+        audio.oncanplay = function () {
+            audio.play()
+            if (cb) {
+                cb(false)
+            }
+        }
+        // 录音播放结束
+        audio.onended = function () {
+            if (cb) {
+                cb(true)
+            }
+        }
     }
     getSoundTime(cb) {
         let audio = new Audio;
@@ -409,8 +421,8 @@ export default {
       this.recorder.uploadQiniu(token, code, sentence)
       this.recorderUrl = this.recorder.GetKey(code)
     },
-    playRecording: function () {
-        if (this.recorder) this.recorder.play(this.audio);
+    playRecording: function (cb) {
+        if (this.recorder) this.recorder.play(this.audio, cb);
     },
     stopRecordSoud: function () {
         this.audio.pause();
