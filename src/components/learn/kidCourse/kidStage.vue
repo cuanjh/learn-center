@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="kid-draws" id="swiper-kid">
-      <div class="swiper-container">
+      <div class="swiper-container swiper-container2">
         <div class="swiper-wrapper" :class="{'draw': type == 'draw'}">
           <kid-stage-item  v-for="(item, index) in list"
                           :key="index" :item="item"
@@ -55,6 +55,8 @@
         </div>
       </div>
     </transition>
+    <grade-box />
+    <evaluating-box />
   </div>
 </template>
 
@@ -67,6 +69,8 @@ import bus from '../../../bus'
 import KidStageItem from './kidStageItem.vue'
 import TestYuyin from './testYuyin.vue'
 import TTS from '../../../plugins/xf_tts'
+import GradeBox from './gradeBox.vue'
+import EvaluatingBox from './evaluatingBox.vue'
 // import Recorder from '../../../plugins/recorder'
 
 export default {
@@ -88,7 +92,9 @@ export default {
   },
   components: {
     KidStageItem,
-    TestYuyin
+    TestYuyin,
+    GradeBox,
+    EvaluatingBox
   },
   computed: {
     courseIndex () {
@@ -236,7 +242,7 @@ export default {
       let that = this
       /* eslint-disable */
       this.$nextTick(() => {
-        that.mySwiper = new Swiper('.swiper-container', {
+        that.mySwiper = new Swiper('.swiper-container2', {
           loop: false,
           autoplay: false, //自动轮播
           initialSlide: 0,
@@ -317,8 +323,8 @@ export default {
         'margin-right': '8px'
       })
     },
-    goKidRecordList (code, type) {
-      this.$router.push({path: '/app/kid-record-list', query: {code: code, type: type}})
+    goKidRecordList () {
+      this.$router.push({path: '/app/kid-record-list', query: {code: this.code, type: this.type}})
       this.myRecordNumTip = 2
       JSON.stringify(sessionStorage.setItem('myRecordNumTip', this.myRecordNumTip))
     },
