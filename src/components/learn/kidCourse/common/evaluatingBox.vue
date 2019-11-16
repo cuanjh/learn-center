@@ -256,7 +256,7 @@
 <script>
 import { mapState } from 'vuex'
 import $ from 'jquery'
-import Bus from '../../../bus'
+import Bus from '../../../../bus'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
 
@@ -414,7 +414,7 @@ export default {
       right: -30px;
       width: 30px;
       height: 30px;
-      background: url('../../../../static/images/kid/icon-close.png') no-repeat center;
+      background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;
       background-size: cover;
       cursor: pointer;
       &:hover {
@@ -530,13 +530,13 @@ export default {
                     margin-right: 0;
                   }
                   &.on {
-                    background-image: url('../../../../static/images/kid/star-on.png');
+                    background-image: url('../../../../../static/images/kid/star-on.png');
                   }
                   &.half {
-                    background-image: url('../../../../static/images/kid/star-half.png');
+                    background-image: url('../../../../../static/images/kid/star-half.png');
                   }
                   &.off {
-                    background-image: url('../../../../static/images/kid/star-off.png');
+                    background-image: url('../../../../../static/images/kid/star-off.png');
                   }
                 }
               }
@@ -576,7 +576,7 @@ export default {
               display: inline-block;
               width:16px;
               height:13px;
-              background: url('../../../../static/images/kid/icon-horn.png') no-repeat center;
+              background: url('../../../../../static/images/kid/icon-horn.png') no-repeat center;
               background-size: cover;
             }
             .mother-sentence-box {
@@ -611,7 +611,7 @@ export default {
                     display: inline-block;
                     width: 13px;
                     height: 16px;
-                    background: url('../../../../static/images/kid/icon-collection.png') no-repeat center;
+                    background: url('../../../../../static/images/kid/icon-collection.png') no-repeat center;
                     background-size: cover;
                     margin-right: 4px;
                   }
@@ -655,7 +655,7 @@ export default {
                       display: inline-block;
                       width: 13px;
                       height: 16px;
-                      background: url('../../../../static/images/kid/icon-collection.png') no-repeat center;
+                      background: url('../../../../../static/images/kid/icon-collection.png') no-repeat center;
                       background-size: cover;
                       margin-right: 4px;
                     }

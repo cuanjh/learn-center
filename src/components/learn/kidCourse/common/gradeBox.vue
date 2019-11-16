@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import Bus from '../../../bus'
+import Bus from '../../../../bus'
 
 export default {
   data () {
@@ -103,7 +103,7 @@ export default {
       right: -30px;
       width: 30px;
       height: 30px;
-      background: url('../../../../static/images/kid/icon-close.png') no-repeat center;
+      background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;
       background-size: cover;
       cursor: pointer;
       &:hover {
@@ -138,7 +138,7 @@ export default {
         display: inline-block;
         width: 100%;
         height: 100%;
-        background: url('../../../../static/images/kid/pic-img-up.png') no-repeat center;
+        background: url('../../../../../static/images/kid/pic-img-up.png') no-repeat center;
         background-size: cover;
         margin: 0 auto;
         animation: sport 1.5s ease-in forwards;
@@ -148,7 +148,7 @@ export default {
         display: inline-block;
         width: 333px;
         height: 213px;
-        background: url('../../../../static/images/kid/pic-novip-img.png') no-repeat center;
+        background: url('../../../../../static/images/kid/pic-novip-img.png') no-repeat center;
         background-size: cover;
         margin: 0 auto;
         margin-top: 46px;
