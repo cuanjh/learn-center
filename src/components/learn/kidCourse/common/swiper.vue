@@ -10,6 +10,7 @@
           </div>
           <ise-area
             ref="ise"
+            :index="index"
             @startRecord="startRecord"
             @stopRecord="stopRecord"
             @playRecord="playRecord"

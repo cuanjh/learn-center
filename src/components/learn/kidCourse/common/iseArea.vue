@@ -1,6 +1,6 @@
 <template>
   <div class="ise-area">
-    <div class="play" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord">
+    <div class="play" :style="{transform: 'translateX('+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="playRecord">
       <span v-for="n in 5" :key="n" :style="{height: playLineHeight[n - 1] + 'px'}"></span>
     </div>
     <div class="record" @mouseenter="isShowStopTip = true" @mouseleave="isShowStopTip = false">
@@ -11,14 +11,16 @@
         <div class="tip" v-show="isShowStopTip && isRecording"></div>
       </transition>
     </div>
-    <div class="user" :style="{transform: 'translateX(-'+ translateX +'px)'}">
+    <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}">
       <img :src="photo" alt="">
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
+  props: ['index'],
   data () {
     return {
       photo: '',
@@ -34,6 +36,17 @@ export default {
   mounted () {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.photo = userInfo.photo
+  },
+  computed: {
+    ...mapState({
+      kidRecordList: state => state.kidRecordList
+    }),
+    isHaveRecord () {
+      if (this.kidRecordList[this.index]) {
+        return true
+      }
+      return false
+    }
   },
   methods: {
     recordOpt () {
