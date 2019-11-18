@@ -10,6 +10,7 @@
           </div>
           <ise-area
             ref="ise"
+            :isEvaluation="true"
             :index="index"
             @startRecord="startRecord"
             @stopRecord="stopRecord"
@@ -48,6 +49,12 @@
         <span>{{ curPage }}</span> / <span>{{ totalPage }}</span>
       </p>
     </div>
+    <word-panel
+      ref="wordPanel"
+      @startRecord="startRecord"
+      @stopRecord="stopRecord"
+      @playRecord="playWordRecord"
+    />
   </div>
 </template>
 
@@ -57,6 +64,7 @@ import $ from 'jquery'
 import Swiper from 'swiper'
 import { mapActions, mapState } from 'vuex'
 import IseArea from './iseArea.vue'
+import WordPanel from './wordPanel.vue'
 import Recorder from '../../../../plugins/recorder'
 import cookie from '../../../../tool/cookie'
 // import bus from '../../../../bus'
@@ -68,6 +76,7 @@ export default {
       totalPage: 0,
       curPage: 1,
       audio: new Audio(),
+      recordAudio: new Audio(),
       isPlay: false,
       qiniuToken: '',
       timerInterval: null, // 录音间隔器
@@ -75,7 +84,8 @@ export default {
     }
   },
   components: {
-    IseArea
+    IseArea,
+    WordPanel
   },
   mounted () {
     // 录音插件初始化
@@ -101,7 +111,8 @@ export default {
   },
   computed: {
     ...mapState({
-      xfLang: state => state.xfLang
+      xfLang: state => state.xfLang,
+      kidRecordList: state => state.kidRecordList
     })
   },
   methods: {
@@ -148,6 +159,7 @@ export default {
         allowTouchMove: false,
         on: {
           init: () => {
+            this.iseResultSet()
             this.playSourceSound(this.curPage - 1)
           },
           slideChange: () => {
@@ -159,6 +171,9 @@ export default {
             this.setProgress()
             swiper2.slideTo(activeIndex - 1)
             swiper3.slideTo(activeIndex + 1)
+            setTimeout(() => {
+              this.iseResultSet()
+            }, 100)
           }
         }
       })
@@ -258,6 +273,11 @@ export default {
         this.isPlay = false
       }
     },
+    // 暂停原始录音播放
+    pauseSourceSound () {
+      this.audio.pause()
+      this.isPlay = false
+    },
     // 开始录音
     startRecord () {
       this.timerInterval = setInterval(() => {
@@ -275,17 +295,41 @@ export default {
     // 播放录音
     playRecord (flag) {
       console.log('playRecord', flag)
+      let item = this.kidRecordList[this.curPage - 1]
+      if (!item) return
+      let index = this.curPage - 1
+      if (flag) {
+        this.recordAudio.src = item.record_sound_url
+        this.recordAudio.oncanplay = () => {
+          this.pauseSourceSound()
+          this.recordAudio.play()
+          this.$refs['ise'][index].recordPlaying()
+        }
+        this.recordAudio.onended = () => {
+          this.$refs['ise'][index].resetPlay()
+        }
+      } else {
+        // 暂停播放
+        this.recordAudio.pause()
+        this.$refs['ise'][index].resetPlay()
+      }
+    },
+    playWordRecord (flag) {
+      console.log('playWordRecord', flag)
+      let index = this.curPage - 1
       if (flag) {
         Recorder.playRecording((data) => {
           if (data) {
-            this.$refs['ise'][this.curPage - 1].resetPlay()
+            this.$refs['ise'][index].resetPlay()
           } else {
-            this.$refs['ise'][this.curPage - 1].recordPlaying()
+            this.pauseSourceSound()
+            this.$refs['ise'][index].recordPlaying()
           }
         })
       } else {
         // 暂停播放
         Recorder.stopRecordSoud()
+        this.$refs['ise'][index].resetPlay()
       }
     },
     // 开始测评录音
@@ -319,6 +363,7 @@ export default {
             let id = _this.chapterCode + '-' + item.code
             _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter)
             localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
+            this.iseResultSet()
           }
         })
         // 2-2: 保存录音到后台
@@ -347,7 +392,7 @@ export default {
     // 录音保存后，动画效果
     recordAnimate () {
       console.log($('.ise-area .play').offset())
-      let offset = $('.ise-area .play').offset()
+      let offset = $('.swiper-slide-active .ise-area .play').offset()
       $('.record-save-animat').css({
         left: offset.left,
         top: offset.top
@@ -368,6 +413,48 @@ export default {
           $('.record-save-animat').hide()
         }
       })
+    },
+    // 评测结果处理
+    iseResultSet () {
+      let id = this.chapterCode + '-' + this.list[this.curPage - 1].code
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      console.log(xfISEResult[id])
+      if (xfISEResult[id]) {
+        let words = []
+        if (Array.isArray(xfISEResult[id].sentence)) {
+          xfISEResult[id].sentence.forEach(sentence => {
+            sentence.word.forEach(word => {
+              if (word.content !== 'sil') {
+                words.push(word)
+              }
+            })
+          })
+        } else {
+          words = xfISEResult[id].sentence.word.filter(item => {
+            return item.content !== 'fil'
+          })
+        }
+        console.log(words)
+        $('.swiper-slide-active').find('.content p span').removeClass('right')
+        $('.swiper-slide-active').find('.content p span').removeClass('wrong')
+        words.forEach((word, index) => {
+          let score = parseFloat(word.total_score)
+          switch (true) {
+            case score >= 90:
+              $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').addClass('right')
+              break
+            case score <= 70:
+              $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').addClass('wrong')
+              $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').click((ele) => {
+                let offset = $(ele.currentTarget).offset()
+                this.$refs['wordPanel'].show({word, offset})
+              })
+              break
+            default:
+              break
+          }
+        })
+      }
     }
   }
 }

@@ -1252,4 +1252,5 @@ html.lt-ie10 .row > [class*="col-lg-preffix-"] {
 }
 .wrong {
   color: red;
+  cursor: pointer;
 }

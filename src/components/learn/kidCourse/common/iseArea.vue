@@ -11,7 +11,7 @@
         <div class="tip" v-show="isShowStopTip && isRecording"></div>
       </transition>
     </div>
-    <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}">
+    <div class="user" v-show="isEvaluation" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}">
       <img :src="photo" alt="">
     </div>
   </div>
@@ -20,7 +20,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  props: ['index'],
+  props: ['index', 'isEvaluation'],
   data () {
     return {
       photo: '',
@@ -65,13 +65,17 @@ export default {
       } else {
         this.translateX = 0
       }
-      this.$emit('startEvaluate')
+      // 判断是否需要语音测评
+      if (this.isEvaluation) {
+        this.$emit('startEvaluate')
+      }
     },
     playRecord () {
       this.isPlaying = !this.isPlaying
       this.$emit('playRecord', this.isPlaying)
     },
     recordPlaying () {
+      if (this.timerInterval) return
       let n = 1
       this.timerInterval = setInterval(() => {
         if (n % 3 === 0) {
@@ -86,6 +90,7 @@ export default {
     },
     resetPlay () {
       clearInterval(this.timerInterval)
+      this.timerInterval = null
       this.playLineHeight = [8, 16, 24, 16, 8]
       this.isPlaying = false
     }
@@ -95,12 +100,14 @@ export default {
 
 <style lang="less" scoped>
 .ise-area {
-  position: absolute;
-  bottom: 30px;
-  left: 192px;
+  // position: absolute;
+  // bottom: 30px;
+  // left: 192px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .play {
