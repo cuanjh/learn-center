@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="evaluating-modal-box" v-show="isShowModal">
+    <div class="evaluating-modal-box" v-show="isShowEvaluatingModal">
       <div class="evaluating-content">
         <div class="close-img" @click="closeModal()"></div>
         <!-- 非会员显示 -->
@@ -55,15 +55,16 @@
             <div class="swiper-content">
               <div class="swiper-container swiper-evaluating">
                 <div class="swiper-wrapper">
-                  <div class="swiper-slide">
+                  <div class="swiper-slide" v-for="(score, index) in evaluatingData" :key="'score' + index">
                     <!-- 母语的句子 -->
                     <div class="mother-sentence-box">
                       <div class="mother-grade">
                         <i class="icon-horn"></i>
-                        <p class="grade-color">
-                          <span class="sentence">What <em class="red">are</em> you <em class="green">doing</em>? Walking, walking, walking, I’m walking.</span>
-                          <span class="score red"><em>30</em>分</span>
-                        </p>
+                        <div class="grade-color">
+                          <!-- <span class="sentence">What <em class="red">are</em> you <em class="green">doing</em>? Walking, walking, walking, I’m walking.</span> -->
+                          <p class="sentence" :data-content="score.content || score.word" v-html="score.formatContent"></p>
+                          <span class="score" :class="{'green': colorClass(score.total_score) == 'green', 'red': colorClass(score.total_score) == 'red'}"><em>{{Math.round(score.total_score)}}</em>分</span>
+                        </div>
                       </div>
                       <div class="bottom-line">
                         <p>评分详情</p>
@@ -74,62 +75,54 @@
                       </div>
                     </div>
                     <!-- 讯飞的识别列表音节 -->
-                    <ul>
-                      <li>
-                        <div class="review-item">
-                          <p class="core-word">
-                            <span class="word red">are</span>
-                            <i class="collection"></i>
-                          </p>
-                          <div class="syllable">
-                            <p class="first">[miːt]</p>
-                            <p class="syllable-list">
-                              <span>音素 [ɑː] 朗读正常</span>
-                              <span>音素 [eu] 朗读正常</span>
+                    <div v-if="!Array.isArray(score.sentence)">
+                      <ul>
+                        <li v-for="(item, index) in score.sentence.word" :key="'sentence-word' + index">
+                          <div class="li-item" v-if="item.total_score">
+                            <div class="review-item">
+                              <p class="core-word">
+                                <span class="word" :class="{'green': colorClass(item.total_score) == 'green', 'red': colorClass(item.total_score) == 'red'}">{{item.content}}</span>
+                                <i class="collection"></i>
+                              </p>
+                              <div class="syllable">
+                                <p class="first">[miːt]</p>
+                                <p class="syllable-list">
+                                  <span>音素 [ɑː] 朗读正常</span>
+                                  <span>音素 [eu] 朗读正常</span>
+                                </p>
+                              </div>
+                            </div>
+                            <p class="grade-color">
+                              <span class="score" :class="{'green': colorClass(item.total_score) == 'green', 'red': colorClass(item.total_score) == 'red'}"><em>{{Math.round(item.total_score)}}</em>分</span>
                             </p>
                           </div>
-                        </div>
-                        <p class="grade-color">
-                          <span class="score red"><em>30</em>分</span>
-                        </p>
-                      </li>
-                      <li>
-                        <div class="review-item">
-                          <p class="core-word">
-                            <span class="word green">are</span>
-                            <i class="collection"></i>
-                          </p>
-                          <div class="syllable">
-                            <p class="first">[miːt]</p>
-                            <p class="syllable-list">
-                              <span>音素 [ɑː] 朗读正常</span>
-                              <span>音素 [eu] 朗读正常</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div v-else>
+                      <ul v-for="(sent, index) in score.sentence" :key="'sent' + index">
+                        <li v-for="(item, index) in sent.word" :key="'sentence-word' + index">
+                          <div class="li-item" v-if="item.total_score">
+                            <div class="review-item">
+                              <p class="core-word">
+                                <span class="word" :class="{'green': colorClass(item.total_score) == 'green', 'red': colorClass(item.total_score) == 'red'}">{{item.content}}</span>
+                                <i class="collection"></i>
+                              </p>
+                              <div class="syllable">
+                                <p class="first">[miːt]</p>
+                                <p class="syllable-list">
+                                  <span>音素 [ɑː] 朗读正常</span>
+                                  <span>音素 [eu] 朗读正常</span>
+                                </p>
+                              </div>
+                            </div>
+                            <p class="grade-color">
+                              <span class="score" :class="{'green': colorClass(item.total_score) == 'green', 'red': colorClass(item.total_score) == 'red'}"><em>{{Math.round(item.total_score)}}</em>分</span>
                             </p>
                           </div>
-                        </div>
-                        <p class="grade-color">
-                          <span class="score green"><em>30</em>分</span>
-                        </p>
-                      </li>
-                      <li>
-                        <div class="review-item">
-                          <p class="core-word">
-                            <span class="word">are</span>
-                            <i class="collection"></i>
-                          </p>
-                          <div class="syllable">
-                            <p class="first">[miːt]</p>
-                            <p class="syllable-list">
-                              <span>音素 [ɑː] 朗读正常</span>
-                              <span>音素 [eu] 朗读正常</span>
-                            </p>
-                          </div>
-                        </div>
-                        <p class="grade-color">
-                          <span class="score"><em>30</em>分</span>
-                        </p>
-                      </li>
-                    </ul>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -168,76 +161,24 @@
                 <!-- 讯飞的识别列表音节 -->
                 <ul>
                   <li>
-                    <div class="review-item">
-                      <p class="core-word">
-                        <span class="word">are</span>
-                        <i class="icon-horn"></i>
-                      </p>
-                      <div class="syllable">
-                        <p class="first">[miːt]</p>
-                        <p class="syllable-list">
-                          <span>音素 [ɑː] 朗读正常</span>
-                          <span>音素 [eu] 朗读正常</span>
+                    <div class="li-item">
+                      <div class="review-item">
+                        <p class="core-word">
+                          <span class="word">are</span>
+                          <i class="icon-horn"></i>
                         </p>
+                        <div class="syllable">
+                          <p class="first">[miːt]</p>
+                          <p class="syllable-list">
+                            <span>音素 [ɑː] 朗读正常</span>
+                            <span>音素 [eu] 朗读正常</span>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <p class="grade-color">
-                      <span class="score"><em>30</em>分</span>
-                    </p>
-                  </li>
-                  <li>
-                    <div class="review-item">
-                      <p class="core-word">
-                        <span class="word red">are</span>
-                        <i class="icon-horn"></i>
+                      <p class="grade-color">
+                        <span class="score"><em>30</em>分</span>
                       </p>
-                      <div class="syllable">
-                        <p class="first">[miːt]</p>
-                        <p class="syllable-list">
-                          <span>音素 [ɑː] 朗读正常</span>
-                          <span>音素 [eu] 朗读正常</span>
-                        </p>
-                      </div>
                     </div>
-                    <p class="grade-color">
-                      <span class="score red"><em>30</em>分</span>
-                    </p>
-                  </li>
-                  <li>
-                    <div class="review-item">
-                      <p class="core-word">
-                        <span class="word green">are</span>
-                        <i class="icon-horn"></i>
-                      </p>
-                      <div class="syllable">
-                        <p class="first">[miːt]</p>
-                        <p class="syllable-list">
-                          <span>音素 [ɑː] 朗读正常</span>
-                          <span>音素 [eu] 朗读正常</span>
-                        </p>
-                      </div>
-                    </div>
-                    <p class="grade-color">
-                      <span class="score green"><em>30</em>分</span>
-                    </p>
-                  </li>
-                  <li>
-                    <div class="review-item">
-                      <p class="core-word">
-                        <span class="word">are</span>
-                        <i class="icon-horn"></i>
-                      </p>
-                      <div class="syllable">
-                        <p class="first">[miːt]</p>
-                        <p class="syllable-list">
-                          <span>音素 [ɑː] 朗读正常</span>
-                          <span>音素 [eu] 朗读正常</span>
-                        </p>
-                      </div>
-                    </div>
-                    <p class="grade-color">
-                      <span class="score"><em>30</em>分</span>
-                    </p>
                   </li>
                 </ul>
               </div>
@@ -268,16 +209,31 @@ const starOff = 'off'
 export default {
   data () {
     return {
-      isShowModal: false,
+      isShowEvaluatingModal: false,
       isShowEndPrompt: true,
       isHalf: true,
-      score: 4
+      totalScore: '',
+      evaluatingData: [],
+      curSwiperPage: 0
     }
   },
   created () {
-    Bus.$on('showScoreDetail', (data) => {
-      console.log('点击了评分详情', data)
-      this.isShowModal = true
+    Bus.$on('showScoreDetail', (params) => {
+      console.log('点击了评分详情', params)
+      this.isShowEvaluatingModal = true
+      let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      let data = []
+      this.evaluatingData = []
+      for (let i in localXfResult) {
+        data.push(localXfResult[i])
+      }
+      data.forEach(item => {
+        let obj = item
+        obj['formatContent'] = this.formatContent(obj.content || obj.words)
+        this.evaluatingData.push(obj)
+      })
+      console.log(this.evaluatingData)
+      this.totalScore = this.evaluatingData[this.curSwiperPage].total_score
       this.initSwiper()
     })
   },
@@ -285,22 +241,33 @@ export default {
     ...mapState({
       userInfo: state => state.userInfo // 用户信息
     }),
+    // 是否vip
     isVip () {
       if (!this.userInfo || !this.userInfo.member_info) {
         return 0
       }
       return this.userInfo.member_info.member_type
     },
+    // 是绘本还是单词
     isType () {
       return this.$parent.type
     },
+    // 几颗星
     itemClasslass () { // 星星的数组
       let result = []
-      let score = Math.floor(this.score * 2) / 2 // 例如：把分数处理成在4.5以上及4.5就变成向上取整5，在4.5以下就变成4.5
-      // 是否需要半星
-      // let starhalf = score % 1 !== 0 ? this.isHalf : !this.isHalf
+      let fullstar = this.totalScore
       // 几颗全星
-      let fullstar = Math.floor(score)
+      console.log(fullstar)
+      if (fullstar >= 90) {
+        fullstar = 5
+      } else if (fullstar >= 80 && fullstar < 90) {
+        fullstar = 4
+      } else if (fullstar >= 70 && fullstar < 80) {
+        fullstar = 3
+      } else {
+        fullstar = 2
+      }
+      console.log(fullstar)
       for (var i = 0; i < fullstar; i++) { // 放全星
         result.push(starOn)
       }
@@ -314,6 +281,12 @@ export default {
         }
       }
       return result
+    },
+    // 课程编码
+    courseCode () {
+      let code = this.$route.query.code
+      let arr = code.split('-')
+      return arr.slice(0, 2).join('-')
     }
   },
   updated () {
@@ -335,9 +308,7 @@ export default {
           slidesPerView: 'auto',
           slideToClickedSlide: true,
           spaceBetween: 20,
-          mousewheel: {
-            releaseOnEdges: true,
-          }
+          mousewheel: false
         })
         new Swiper('.swiper-lists', {
           loop: false,
@@ -347,9 +318,7 @@ export default {
           slidesPerView: 'auto',
           slideToClickedSlide: true,
           spaceBetween: 20,
-          mousewheel: {
-            releaseOnEdges: true,
-          },
+          mousewheel: true,
           pagination: {
             el: '.swiper-pagination'
           }
@@ -358,15 +327,15 @@ export default {
       /* eslint-enable */
     },
     closeModal () {
-      this.isShowModal = false
+      this.isShowEvaluatingModal = false
     },
     // 立即强化
     strengthening () {
-      this.$router.push({path: '/app/kid-course-list/' + this.$parent.courseCode})
+      this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
     },
     // 听儿歌
     listenSongs () {
-      this.$router.push({path: '/app/kid-course-list/' + this.$parent.courseCode})
+      this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
     },
     swiperStyle () {
       $('.swiper-pagination').find('.swiper-pagination-bullet').css({
@@ -382,6 +351,74 @@ export default {
         'border-radius': '6px',
         'margin-right': '8px'
       })
+    },
+    // 格式化内容，添加span标签
+    formatContent (content) {
+      if (!content) {
+        return ''
+      }
+      let result = ''
+      let arr = content.replace(new RegExp('\\n', 'g'), '<br/>').split(' ')
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].trim().length > 0) {
+          if (arr[i].indexOf('<br/>') > -1) {
+            let r = arr[i].split('<br/>')
+            for (let l = 0; l < r.length; l++) {
+              if (r[l].trim().length > 0) {
+                let tag = ''
+                if (l === 0) {
+                  tag = '<br/>'
+                }
+                result += '<span> ' + r[l].trim() + ' </span>' + tag
+              }
+            }
+          } else if (arr[i].indexOf('?') > -1) {
+            let r = arr[i].split('?')
+            for (let j = 0; j < r.length; j++) {
+              if (r[j].trim().length > 0) {
+                let tag = ''
+                if (j === 0) {
+                  tag = '?'
+                }
+                result += '<span> ' + r[j].trim() + tag + ' </span>'
+              }
+            }
+          } else if (arr[i].indexOf('”') > -1) {
+            let r = arr[i].split('”')
+            for (let k = 0; k < r.length; k++) {
+              if (r[k].trim().length > 0) {
+                let tag = ''
+                if (k === 0) {
+                  tag = '”'
+                }
+                result += '<span> ' + r[k].trim() + tag + ' </span>'
+              }
+            }
+          } else {
+            if (arr[i].trim() === '—') {
+              result += arr[i].trim()
+            } else {
+              result += '<span> ' + arr[i].trim() + ' </span>'
+            }
+          }
+        }
+      }
+      return result
+    },
+    // 判断是否是数组
+    getDataType (points) {
+      if (points.constructor === Array) {
+        return true
+      } else {
+        return false
+      }
+    },
+    colorClass (totalScore) {
+      if (totalScore >= 90) {
+        return 'green'
+      } else if (totalScore <= 70) {
+        return 'red'
+      }
     }
   }
 }
@@ -526,6 +563,7 @@ export default {
                   background-position: center;
                   background-size: 20px 20px;
                   margin-right: 6px;
+                  // box-shadow:0px 0px 4px 0px #FFC81F;
                   &:last-child {
                     margin-right: 0;
                   }
@@ -562,7 +600,7 @@ export default {
             padding-top: 28px;
             padding-bottom: 16px;
           }
-          .swiper-slide,.coreWord-slide {
+          .swiper-slide, .coreWord-slide {
             max-height: 330px;
             overflow-y: auto;
             width: 83%;
@@ -635,11 +673,13 @@ export default {
             }
             ul {
               li {
-                padding: 16px 0 14px;
-                border-top: 1px solid rgba(151, 151, 151, .13);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+                .li-item {
+                  padding: 16px 0 14px;
+                  border-top: 1px solid rgba(151, 151, 151, .13);
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                }
                 .review-item {
                   .core-word {
                     display: flex;
@@ -694,18 +734,18 @@ export default {
               }
             }
           }
-          .swiper-slide::-webkit-scrollbar,.coreWord-slide::-webkit-scrollbar { /*滚动条整体样式*/
+          .swiper-slide::-webkit-scrollbar, .coreWord-slide::-webkit-scrollbar { /*滚动条整体样式*/
             width: 1px;     /*高宽分别对应横竖滚动条的尺寸*/
             height: 1px;
             scrollbar-arrow-color:#fff;
           }
-          .swiper-slide::-webkit-scrollbar-thumb,.coreWord-slide::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+          .swiper-slide::-webkit-scrollbar-thumb, .coreWord-slide::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
             border-radius: 5px;
             -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);
             background: rgba(0,0,0,0);
             scrollbar-arrow-color:#fff;
           }
-          .swiper-slide::-webkit-scrollbar-track,.coreWord-slide::-webkit-scrollbar-track {/*滚动条里面轨道*/
+          .swiper-slide::-webkit-scrollbar-track, .coreWord-slide::-webkit-scrollbar-track {/*滚动条里面轨道*/
             -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);
             border-radius: 0;
             background: rgba(0,0,0,0);

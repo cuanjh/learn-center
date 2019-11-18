@@ -11,7 +11,7 @@
         <div class="tip" v-show="isShowStopTip && isRecording"></div>
       </transition>
     </div>
-    <div class="user" v-show="isEvaluation" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}">
+    <div class="user" v-show="isEvaluation" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="goGradeBox()">
       <img :src="photo" alt="">
     </div>
   </div>
@@ -93,6 +93,11 @@ export default {
       this.timerInterval = null
       this.playLineHeight = [8, 16, 24, 16, 8]
       this.isPlaying = false
+    },
+    // 点击头像出现录音评测的弹框
+    goGradeBox () {
+      console.log('弹录音评测=>')
+      this.$emit('goGradeBox')
     }
   }
 }
@@ -160,6 +165,7 @@ export default {
 }
 
 .user {
+  cursor: pointer;
   z-index: 1;
   transition: transform .5s ease-in;
   img {

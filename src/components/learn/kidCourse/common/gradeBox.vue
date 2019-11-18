@@ -1,18 +1,18 @@
 <template>
   <transition name="fade">
-    <div class="grade-modal-box" v-show="isShowModal">
+    <div class="grade-modal-box" v-show="isShowGradeModal">
       <div class="grade-content">
         <div class="close-img" @click="closeModal()"></div>
         <!-- 70分以上的显示 -->
-        <div class="good" v-if="isGood">
+        <div class="good" v-if="isGood > 70">
           <p class="title">
             <span>棒棒哒!</span>
-            <span>你超越了全国<em> 75% </em>的小可爱</span>
+            <span>你超越了全国<em> {{beyondFriend}} </em>的小可爱</span>
           </p>
           <div class="center-box">
             <div class="center-good-img">
               <p class="grade">
-                <span><em>80</em>分</span>
+                <span><em>{{isGood}}</em>分</span>
               </p>
             </div>
           </div>
@@ -42,35 +42,58 @@ import Bus from '../../../../bus'
 export default {
   data () {
     return {
-      isShowModal: false,
-      isGood: true
+      isShowGradeModal: false,
+      gradeData: {}
     }
   },
   created () {
   },
   computed: {
-    courseCode () {
+    chapterCode () {
       let code = this.$route.query.code
-      let arr = code.split('-')
-      return arr.slice(0, 2).join('-')
+      return code
+    },
+    curType () {
+      let type = this.$route.query.type
+      return type
+    },
+    isGood () {
+      let good = Math.round(this.gradeData.total_score)
+      return good
+    },
+    beyondFriend () {
+      if (this.isGood > 70 && this.isGood < 80) {
+        return '75%'
+      } else if (this.isGood > 80 && this.isGood < 90) {
+        return '85%'
+      } else {
+        return '95%'
+      }
     }
   },
   mounted () {
-    console.log(this.courseCode)
+    console.log('localXfISEResult==>', this.localXfISEResult)
   },
   methods: {
     closeModal () {
-      this.isShowModal = false
+      this.isShowGradeModal = false
     },
     // 分享我的绘本
     shareMyRecord () {
-      this.isShowModal = false
-      this.$parent.goKidRecordList()
+      this.isShowGradeModal = false
+      this.$router.push({path: '/app/kid-record-list', query: {code: this.chapterCode, type: this.curType}})
     },
     // 我的评分详情
     gradeDetails () {
-      this.isShowModal = false
+      this.isShowGradeModal = false
       Bus.$emit('showScoreDetail')
+    },
+    showGradeBox (curItem) {
+      let curCode = this.chapterCode + '-' + curItem.code
+      console.log(curCode)
+      this.gradeData = JSON.parse(localStorage.getItem('xfISEResult'))[curCode]
+      console.log(this.gradeData)
+      this.isShowGradeModal = true
     }
   }
 }

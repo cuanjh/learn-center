@@ -50,8 +50,6 @@
         </div>
       </div>
     </transition>
-    <grade-box />
-    <evaluating-box />
   </div>
 </template>
 
@@ -67,8 +65,6 @@ import ProgressBar from './common/progress.vue'
 import SwiperComp from './common/swiper.vue'
 import TestYuyin from './testYuyin.vue'
 // import TTS from '../../../plugins/xf_tts'
-import GradeBox from './common/gradeBox.vue'
-import EvaluatingBox from './common/evaluatingBox.vue'
 // import Recorder from '../../../plugins/recorder'
 
 export default {
@@ -94,9 +90,7 @@ export default {
     NavComp,
     ProgressBar,
     SwiperComp,
-    TestYuyin,
-    GradeBox,
-    EvaluatingBox
+    TestYuyin
   },
   computed: {
     courseIndex () {

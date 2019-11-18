@@ -16,6 +16,7 @@
             @stopRecord="stopRecord"
             @playRecord="playRecord"
             @startEvaluate="startEvaluate"
+            @goGradeBox="goGradeBox"
           />
         </div>
       </div>
@@ -55,6 +56,8 @@
       @stopRecord="stopRecord"
       @playRecord="playWordRecord"
     />
+    <grade-box ref="gradeBox"/>
+    <evaluating-box />
   </div>
 </template>
 
@@ -68,6 +71,9 @@ import WordPanel from './wordPanel.vue'
 import Recorder from '../../../../plugins/recorder'
 import cookie from '../../../../tool/cookie'
 // import bus from '../../../../bus'
+import GradeBox from './gradeBox.vue'
+import EvaluatingBox from './evaluatingBox.vue'
+
 export default {
   props: ['chapterCode', 'type'],
   data () {
@@ -85,7 +91,9 @@ export default {
   },
   components: {
     IseArea,
-    WordPanel
+    WordPanel,
+    GradeBox,
+    EvaluatingBox
   },
   mounted () {
     // 录音插件初始化
@@ -144,6 +152,7 @@ export default {
           this.preload(item.image)
           this.list.push(obj)
         })
+        console.log('=========', data)
         this.totalPage = this.list.length
         this.curPage = 1
         this.setProgress()
@@ -388,6 +397,10 @@ export default {
           })
         })
       })
+    },
+    // 点击头像的弹框
+    goGradeBox () {
+      this.$refs.gradeBox.showGradeBox(this.list[this.curPage - 1])
     },
     // 录音保存后，动画效果
     recordAnimate () {
