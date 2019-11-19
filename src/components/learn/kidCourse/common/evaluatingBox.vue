@@ -46,7 +46,11 @@
                 <div class="right-left">
                   <p class="nikename" v-text="userInfo ? userInfo.nickname : ''"></p>
                   <div class="star">
-                    <span v-for="(itemClass,index) in itemClasslass" :class="itemClass" class="star-item" :key="index"></span>
+                    <span
+                      v-for="(itemClass,index) in itemClasslass"
+                      :class="itemClass" class="star-item"
+                      :key="index">
+                    </span>
                   </div>
                 </div>
                 <a href="javascript:;" class="go-intensify" @click="strengthening()">立即强化</a>
@@ -61,9 +65,8 @@
                       <div class="mother-grade">
                         <i class="icon-horn"></i>
                         <div class="grade-color">
-                          <!-- <span class="sentence">What <em class="red">are</em> you <em class="green">doing</em>? Walking, walking, walking, I’m walking.</span> -->
-                          <p class="sentence" :data-content="score.content || score.word" v-html="score.formatContent"></p>
-                          <span class="score" :class="{'green': colorClass(score.total_score) == 'green', 'red': colorClass(score.total_score) == 'red'}"><em>{{Math.round(score.total_score)}}</em>分</span>
+                          <p class="sentence" :data-content="parentList[index].content || parentList[index].word" v-html="parentList[index].formatContent"></p>
+                          <span class="score" :class="{'right': colorClass(score.total_score) == 'right', 'wrong': colorClass(score.total_score) == 'wrong'}"><em>{{Math.round(score.total_score)}}</em>分</span>
                         </div>
                       </div>
                       <div class="bottom-line">
@@ -74,50 +77,33 @@
                         </p>
                       </div>
                     </div>
-                    <!-- 讯飞的识别列表音节 -->
-                    <div v-if="!Array.isArray(score.sentence)">
+                    <!-- 讯飞的识别列表音节 v-if="!Array.isArray(score.sentence)" -->
+                    <div >
                       <ul>
-                        <li v-for="(item, index) in score.sentence.word" :key="'sentence-word' + index">
+                        <li v-for="(item, index) in score.words" :key="'sentence-word' + index">
                           <div class="li-item" v-if="item.total_score">
                             <div class="review-item">
                               <p class="core-word">
-                                <span class="word" :class="{'green': colorClass(item.total_score) == 'green', 'red': colorClass(item.total_score) == 'red'}">{{item.content}}</span>
+                                <span class="word" :class="{'right': colorClass(item.total_score) == 'right', 'wrong': colorClass(item.total_score) == 'wrong'}">{{item.content}}</span>
                                 <i class="collection"></i>
                               </p>
-                              <div class="syllable">
-                                <p class="first">[miːt]</p>
+                              <div class="syllable" v-for="(phone, index) in item.iphones" :key="'phone' + index">
+                                <p class="first">{{'[' + phone.syll +']'}}</p>
                                 <p class="syllable-list">
                                   <span>音素 [ɑː] 朗读正常</span>
                                   <span>音素 [eu] 朗读正常</span>
                                 </p>
                               </div>
+                              <table class="syllable">
+                                <tr v-for="(phone, index) in item.phones[0]" :key="index">
+                                  <td class="first">{{ (index == 0) ? item.phones[0].syll : '' }}</td>
+                                  <td>{{ '音素 [' + xfSyllPhone[phone.content] + ']' }}</td>
+                                  <td>{{ phone.dp_message == '0' ? '朗读正常' : '未朗读' }}</td>
+                                </tr>
+                              </table>
                             </div>
-                            <p class="grade-color">
-                              <span class="score" :class="{'green': colorClass(item.total_score) == 'green', 'red': colorClass(item.total_score) == 'red'}"><em>{{Math.round(item.total_score)}}</em>分</span>
-                            </p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                    <div v-else>
-                      <ul v-for="(sent, index) in score.sentence" :key="'sent' + index">
-                        <li v-for="(item, index) in sent.word" :key="'sentence-word' + index">
-                          <div class="li-item" v-if="item.total_score">
-                            <div class="review-item">
-                              <p class="core-word">
-                                <span class="word" :class="{'green': colorClass(item.total_score) == 'green', 'red': colorClass(item.total_score) == 'red'}">{{item.content}}</span>
-                                <i class="collection"></i>
-                              </p>
-                              <div class="syllable">
-                                <p class="first">[miːt]</p>
-                                <p class="syllable-list">
-                                  <span>音素 [ɑː] 朗读正常</span>
-                                  <span>音素 [eu] 朗读正常</span>
-                                </p>
-                              </div>
-                            </div>
-                            <p class="grade-color">
-                              <span class="score" :class="{'green': colorClass(item.total_score) == 'green', 'red': colorClass(item.total_score) == 'red'}"><em>{{Math.round(item.total_score)}}</em>分</span>
+                            <p class="grade-score-color">
+                              <span class="score" :class="{'right': colorClass(item.total_score) == 'right', 'wrong': colorClass(item.total_score) == 'wrong'}"><em>{{Math.round(item.total_score)}}</em>分</span>
                             </p>
                           </div>
                         </li>
@@ -131,7 +117,7 @@
             <div class="bottom-prompt" v-if="!isShowEndPrompt">
               <p class="bottom-title blue">读的真棒！</p>
               <p>共有<em class="blue">5</em>个</p>
-              <p>{{isType}}需要强化，快去学习一下吧～</p>
+              <p>核心单词需要强化，快去学习一下吧～</p>
             </div>
             <!-- 70分以上 -->
             <div class="bottom-prompt" v-else>
@@ -195,7 +181,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import $ from 'jquery'
 import Bus from '../../../../bus'
 import Swiper from 'swiper'
@@ -212,34 +198,67 @@ export default {
       isShowEvaluatingModal: false,
       isShowEndPrompt: true,
       isHalf: true,
-      totalScore: '',
+      // totalScore: '',
       evaluatingData: [],
-      curSwiperPage: 0
+      curSwiperPage: 0,
+      parentList: [],
+      totalScore: [],
+      coreWords: []
     }
   },
   created () {
     Bus.$on('showScoreDetail', (params) => {
       console.log('点击了评分详情', params)
+      this.parentList = params
       this.isShowEvaluatingModal = true
-      let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      let data = []
-      this.evaluatingData = []
-      for (let i in localXfResult) {
-        data.push(localXfResult[i])
+      if (this.$parent.type === 'draw') {
+        let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+        let data = []
+        this.evaluatingData = []
+        for (let i in localXfResult) {
+          localXfResult[i]['formatContent'] = this.formatContent(localXfResult[i].content || localXfResult[i].words)
+          data.push(localXfResult[i])
+        }
+        console.log(data)
+        data.forEach(item => {
+          this.totalScore.push(Math.round(item.total_score))
+          if (Array.isArray(item.sentence)) {
+            let w = []
+            item.sentence.forEach((sentence, index) => {
+              sentence.word.forEach(word => {
+                word.phones = []
+                if (word.total_score) {
+                  // word.phones = word.phones.concat(this.syllMethods(word))
+                  word.phones.push(this.syllMethods(word))
+                  w.push(word)
+                }
+              })
+            })
+            item.words = w
+            this.evaluatingData.push(item)
+          } else {
+            item.words = item.sentence.word
+            item.sentence.word.forEach(word => {
+              word.phones = []
+              if (word.total_score) {
+                // word.phones = word.phones.concat(this.syllMethods(word))
+                word.phones.push(this.syllMethods(word))
+              }
+            })
+            this.evaluatingData.push(item)
+          }
+        })
       }
-      data.forEach(item => {
-        let obj = item
-        obj['formatContent'] = this.formatContent(obj.content || obj.words)
-        this.evaluatingData.push(obj)
-      })
       console.log(this.evaluatingData)
-      this.totalScore = this.evaluatingData[this.curSwiperPage].total_score
+      // this.totalScore = this.evaluatingData[this.curSwiperPage].total_score
+      console.log(this.totalScore)
       this.initSwiper()
     })
   },
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo // 用户信息
+      userInfo: state => state.userInfo, // 用户信息
+      xfSyllPhone: state => state.xfSyllPhone // 因素的对应表
     }),
     // 是否vip
     isVip () {
@@ -252,23 +271,34 @@ export default {
     isType () {
       return this.$parent.type
     },
+    chapterCode () {
+      let code = this.$route.query.code
+      return code
+    },
     // 几颗星
     itemClasslass () { // 星星的数组
       let result = []
-      let fullstar = this.totalScore
-      // 几颗全星
-      console.log(fullstar)
-      if (fullstar >= 90) {
-        fullstar = 5
-      } else if (fullstar >= 80 && fullstar < 90) {
-        fullstar = 4
-      } else if (fullstar >= 70 && fullstar < 80) {
-        fullstar = 3
-      } else {
-        fullstar = 2
+      // let fullstar = this.totalScore
+      let fullstar = 0
+      for (var t in this.totalScore) {
+        fullstar += this.totalScore[t]
       }
-      console.log(fullstar)
-      for (var i = 0; i < fullstar; i++) { // 放全星
+      let total = fullstar / this.totalScore.length
+      // 几颗全星
+      console.log(fullstar, total)
+      if (total > 90) {
+        total = 5
+      } else if (total >= 80 && total <= 90) {
+        total = 4
+      } else if (total >= 60 && total < 80) {
+        total = 3
+      } else if (total > 30 && total < 60) {
+        total = 2
+      } else {
+        total = 1
+      }
+      console.log(total)
+      for (var i = 0; i < total; i++) { // 放全星
         result.push(starOn)
       }
       // if (starhalf) { // 放半星
@@ -294,13 +324,24 @@ export default {
   },
   mounted () {
     console.log(this.isType)
+    this.initWordData()
   },
   methods: {
+    ...mapActions([
+      'getKidCourseContent'
+    ]),
+    // 是绘本的时候单词列表
+    initWordData () {
+      this.getKidCourseContent({chapter_code: this.chapterCode}).then(res => {
+        console.log(res)
+        this.coreWords = res.teacherContent.words
+      })
+    },
     // 初始化swiper
     initSwiper () {
       /* eslint-disable */
       this.$nextTick(() => {
-        new Swiper('.swiper-evaluating', {
+        var swiperScore = new Swiper('.swiper-evaluating', {
           loop: false,
           autoplay: false, //自动轮播
           initialSlide: 0,
@@ -308,7 +349,16 @@ export default {
           slidesPerView: 'auto',
           slideToClickedSlide: true,
           spaceBetween: 20,
-          mousewheel: false
+          mousewheel: false,
+          on: {
+            init: () => {
+              this.iseResultSet(0)
+            },
+            slideChange: () => {
+              console.log(swiperScore.activeIndex)
+              this.iseResultSet(swiperScore.activeIndex)
+            }
+          }
         })
         new Swiper('.swiper-lists', {
           loop: false,
@@ -414,10 +464,79 @@ export default {
       }
     },
     colorClass (totalScore) {
-      if (totalScore >= 90) {
-        return 'green'
-      } else if (totalScore <= 70) {
-        return 'red'
+      if (totalScore >= 80) {
+        return 'right'
+      } else if (totalScore < 60) {
+        return 'wrong'
+      }
+    },
+    // 提取因素
+    syllMethods (word) {
+      let phones = []
+      if (Array.isArray(word.syll)) {
+        word.syll.forEach(item => {
+          if (Array.isArray(item.phone)) {
+            item.phone.forEach(p => {
+              phones.push(p)
+            })
+          } else {
+            phones.push(item.phone)
+          }
+        })
+      } else {
+        if (Array.isArray(word.syll.phone)) {
+          word.syll.phone.forEach(item => {
+            phones.push(item)
+          })
+        } else {
+          phones.push(word.syll.phone)
+        }
+      }
+      phones.syll = '['
+      phones.forEach(p => {
+        phones.syll += this.xfSyllPhone[p.content]
+      })
+      phones.syll += ']'
+      return phones
+    },
+    // 评测结果处理
+    iseResultSet (page) {
+      console.log(this.evaluatingData)
+      console.log($('.swiper-slide-active').find('.sentence p span'))
+      let id = this.chapterCode + '-' + this.parentList[page].code
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      console.log(xfISEResult[id])
+      if (xfISEResult[id]) {
+        let words = []
+        if (Array.isArray(xfISEResult[id].sentence)) {
+          xfISEResult[id].sentence.forEach(sentence => {
+            sentence.word.forEach(word => {
+              if (word.total_score) {
+                words.push(word)
+              }
+            })
+          })
+        } else {
+          words = xfISEResult[id].sentence.word.filter(item => {
+            return item.total_score
+          })
+        }
+        console.log(words)
+        $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('right')
+        $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('wrong')
+        words.forEach((word, index) => {
+          let score = parseFloat(word.total_score)
+          switch (true) {
+            case score >= 80:
+              $('.swiper-slide-active .grade-color').find('.sentence span:nth-child(' + (index + 1) + ')').addClass('right')
+              break
+            case score < 60:
+              $('.swiper-slide-active .grade-color').find('.sentence span:nth-child(' + (index + 1) + ')').addClass('wrong')
+              break
+            default:
+              break
+          }
+        })
       }
     }
   }
@@ -437,7 +556,7 @@ export default {
   z-index:99999999;
   overflow: hidden;
   .evaluating-content {
-    width: 500px;
+    width: 600px;
     min-height: 200px;
     position: absolute;
     top: 50%;
@@ -601,10 +720,10 @@ export default {
             padding-bottom: 16px;
           }
           .swiper-slide, .coreWord-slide {
-            max-height: 330px;
+            max-height: 430px;
             overflow-y: auto;
             width: 83%;
-            padding: 20px;
+            padding: 20px 26px;
             background: #fff;
             box-shadow:0px 0px 16px 0px rgba(0,0,0,0.14);
             border-radius:8px;
@@ -624,10 +743,14 @@ export default {
                   justify-content: space-between;
                   align-items: center;
                   .sentence {
-                    max-width: 260px;
-                    font-size:16px;
+                    font-size:18px;
                     font-weight:500;
                     color:#3c5b6f;
+                    span {
+                      font-size:18px;
+                      font-weight:500;
+                      color:#3c5b6f;
+                    }
                   }
                 }
               }
@@ -701,7 +824,7 @@ export default {
                     }
                   }
                   .syllable {
-                    display: flex;
+                    // display: flex;
                     .first {
                       font-size: 16px;
                       font-weight: 500;
@@ -714,6 +837,19 @@ export default {
                       font-size:14px;
                       font-weight:400;
                       color:#5d717f;
+                    }
+                    tr {
+                      td {
+                        padding: 6px 12px 0 0;
+                        font-size: 14px;
+                        color: #5D717F;
+                        line-height: 20px;
+                        font-weight: 400;
+                        &:first-child {
+                          font-size: 16px;
+                          font-weight: 500;
+                        }
+                      }
                     }
                   }
                 }
@@ -779,10 +915,10 @@ export default {
 .blue {
   color:#2ca0e5 !important;
 }
-.red {
+.wrong {
   color: #FF3B30 !important;
 }
-.green {
+.right {
   color: #1FBD3A !important;
 }
 .fade-enter-active, .fade-leave-active {
