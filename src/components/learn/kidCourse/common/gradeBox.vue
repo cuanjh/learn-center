@@ -3,8 +3,18 @@
     <div class="grade-modal-box" v-show="isShowGradeModal">
       <div class="grade-content">
         <div class="close-img" @click="closeModal()"></div>
+        <!-- 70分以下的显示 -->
+        <div class="no-good" v-if="isVip !== 1 || isGood < 70">
+          <p class="title">
+            <span>炫耀一下</span>
+            <span>让小伙伴听听你的声音吧~</span>
+          </p>
+          <div class="center-box">
+            <div class="center-nogood-img"></div>
+          </div>
+        </div>
         <!-- 70分以上的显示 -->
-        <div class="good" v-if="isGood >= 70">
+        <div class="good" v-else>
           <p class="title">
             <span>棒棒哒!</span>
             <span>你超越了全国<em> {{beyondFriend}} </em>的小可爱</span>
@@ -17,19 +27,12 @@
             </div>
           </div>
         </div>
-        <!-- 70分以下的显示 -->
-        <div class="no-good" v-else>
-          <p class="title">
-            <span>炫耀一下</span>
-            <span>让小伙伴听听你的声音吧~</span>
-          </p>
-          <div class="center-box">
-            <div class="center-nogood-img"></div>
-          </div>
-        </div>
         <div class="btns">
           <p class="btn share" @click="shareMyRecord()"><span>分享我的专属绘本</span></p>
-          <p class="btn grade-details" @click="gradeDetails()">评分详情</p>
+          <p class="btn grade-details" @click="gradeDetails()" >
+            <i class="icon-vip" v-if="isVip !== 1"></i>
+            {{isVip !== 1 ? '会员评分详情' : '评分详情'}}
+          </p>
         </div>
       </div>
     </div>
@@ -37,6 +40,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Bus from '../../../../bus'
 
 export default {
@@ -51,6 +55,16 @@ export default {
   created () {
   },
   computed: {
+    ...mapState({
+      userInfo: state => state.userInfo // 用户信息
+    }),
+    // 是否vip
+    isVip () {
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
+    },
     chapterCode () {
       let code = this.$route.query.code
       return code
@@ -114,6 +128,7 @@ export default {
       // console.log(curCode)
       // this.gradeData = JSON.parse(localStorage.getItem('xfISEResult'))
       let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      this.AllScore = []
       for (let i in localXfResult) {
         this.AllScore.push(Math.round(localXfResult[i].total_score))
       }
@@ -245,6 +260,15 @@ export default {
         background: #10D2A7;
         color: #fff;
         margin-left: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .icon-vip {
+          width: 16px;
+          height: 12px;
+          background: yellow;
+          margin-right: 6px;
+        }
       }
     }
   }

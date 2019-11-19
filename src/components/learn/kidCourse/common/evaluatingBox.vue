@@ -16,19 +16,19 @@
                 <div class="swiper-slide">
                   <div class="item">
                     <p>1. 智能评分颜色说明</p>
-                    <i></i>
+                    <i class="pic-novip-1"></i>
                   </div>
                 </div>
                 <div class="swiper-slide">
                   <div class="item">
                     <p>2. 专属智能评分</p>
-                    <i></i>
+                    <i class="pic-novip-2"></i>
                   </div>
                 </div>
                 <div class="swiper-slide">
                   <div class="item">
                     <p>3.专属评分详情</p>
-                    <i></i>
+                    <i class="pic-novip-3"></i>
                   </div>
                 </div>
               </div>
@@ -65,7 +65,7 @@
                       <div class="mother-grade">
                         <i class="icon-horn" @click="playRecordSound(index)"></i>
                         <div class="grade-color">
-                          <p class="sentence" :data-content="parentList[index].content || parentList[index].word" v-html="parentList[index].formatContent"></p>
+                          <p class="sentence" :data-content="score.content || score.word" v-html="score.formatContent"></p>
                           <span class="score" :class="{'right': colorClass(score.total_score) == 'right', 'wrong': colorClass(score.total_score) == 'wrong'}"><em>{{Math.round(score.total_score)}}</em>分</span>
                         </div>
                       </div>
@@ -87,16 +87,9 @@
                                 <span class="word" :class="{'right': colorClass(item.total_score) == 'right', 'wrong': colorClass(item.total_score) == 'wrong'}">{{item.content}}</span>
                                 <i class="collection" v-if="coreWords.indexOf(item.content) > -1"></i>
                               </p>
-                              <div class="syllable" v-for="(phone, index) in item.iphones" :key="'phone' + index">
-                                <p class="first">{{'[' + phone.syll +']'}}</p>
-                                <p class="syllable-list">
-                                  <span>音素 [ɑː] 朗读正常</span>
-                                  <span>音素 [eu] 朗读正常</span>
-                                </p>
-                              </div>
                               <table class="syllable">
-                                <tr v-for="(phone, index) in item.phones[0]" :key="index">
-                                  <td class="first">{{ (index == 0) ? item.phones[0].syll : '' }}</td>
+                                <tr v-for="(phone, index) in item.phones" :key="index">
+                                  <td class="first">{{ (index == 0) ? item.sylls : '' }}</td>
                                   <td>{{ '音素 [' + xfSyllPhone[phone.content] + ']' }}</td>
                                   <td>{{ phone.dp_message == '0' ? '朗读正常' : '未朗读' }}</td>
                                 </tr>
@@ -202,9 +195,8 @@ export default {
       evaluatingData: [],
       curSwiperPage: 0,
       parentList: [],
-      totalScore: [],
+      averageScore: null,
       coreWords: [],
-      myRecordLists: [],
       audio: new Audio(),
       isPlay: false
     }
@@ -213,49 +205,50 @@ export default {
     Bus.$on('showScoreDetail', (params) => {
       console.log('点击了评分详情', params)
       this.initData()
+      this.initSwiper()
       this.parentList = params
       this.isShowEvaluatingModal = true
-      if (this.$parent.type === 'draw') {
-        let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
-        let data = []
-        this.evaluatingData = []
-        for (let i in localXfResult) {
-          localXfResult[i]['formatContent'] = this.formatContent(localXfResult[i].content || localXfResult[i].words)
-          data.push(localXfResult[i])
-        }
-        console.log(data)
-        data.forEach(item => {
-          this.totalScore.push(Math.round(item.total_score))
-          if (Array.isArray(item.sentence)) {
-            let w = []
-            item.sentence.forEach((sentence, index) => {
-              sentence.word.forEach(word => {
-                word.phones = []
-                if (word.total_score) {
-                  // word.phones = word.phones.concat(this.syllMethods(word))
-                  word.phones.push(this.syllMethods(word))
-                  w.push(word)
-                }
-              })
-            })
-            item.words = w
-            this.evaluatingData.push(item)
-          } else {
-            item.words = item.sentence.word
-            item.sentence.word.forEach(word => {
-              word.phones = []
-              if (word.total_score) {
-                // word.phones = word.phones.concat(this.syllMethods(word))
-                word.phones.push(this.syllMethods(word))
-              }
-            })
-            this.evaluatingData.push(item)
-          }
-        })
-        console.log(this.evaluatingData)
-        console.log(this.coreWords)
-        this.initSwiper()
-      }
+      // if (this.$parent.type === 'draw') {
+      //   let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      //   let data = []
+      //   this.evaluatingData = []
+      //   for (let i in localXfResult) {
+      //     localXfResult[i]['formatContent'] = this.formatContent(localXfResult[i].content || localXfResult[i].words)
+      //     data.push(localXfResult[i])
+      //   }
+      //   console.log(data)
+      //   data.forEach(item => {
+      //     this.totalScore.push(Math.round(item.total_score))
+      //     if (Array.isArray(item.sentence)) {
+      //       let w = []
+      //       item.sentence.forEach((sentence, index) => {
+      //         sentence.word.forEach(word => {
+      //           word.phones = []
+      //           if (word.total_score) {
+      //             // word.phones = word.phones.concat(this.syllMethods(word))
+      //             word.phones.push(this.syllMethods(word))
+      //             w.push(word)
+      //           }
+      //         })
+      //       })
+      //       item.words = w
+      //       this.evaluatingData.push(item)
+      //     } else {
+      //       item.words = item.sentence.word
+      //       item.sentence.word.forEach(word => {
+      //         word.phones = []
+      //         if (word.total_score) {
+      //           // word.phones = word.phones.concat(this.syllMethods(word))
+      //           word.phones.push(this.syllMethods(word))
+      //         }
+      //       })
+      //       this.evaluatingData.push(item)
+      //     }
+      //   })
+      //   console.log(this.evaluatingData)
+      //   console.log(this.coreWords)
+      //   this.initSwiper()
+      // }
       // this.totalScore = this.evaluatingData[this.curSwiperPage].total_score
       console.log(this.totalScore)
     })
@@ -263,7 +256,8 @@ export default {
   computed: {
     ...mapState({
       userInfo: state => state.userInfo, // 用户信息
-      xfSyllPhone: state => state.xfSyllPhone // 因素的对应表
+      xfSyllPhone: state => state.xfSyllPhone, // 因素的对应表
+      kidRecordList: state => state.kidRecordList
     }),
     // 是否vip
     isVip () {
@@ -283,14 +277,8 @@ export default {
     // 几颗星
     itemClasslass () { // 星星的数组
       let result = []
-      // let fullstar = this.totalScore
-      let fullstar = 0
-      for (var t in this.totalScore) {
-        fullstar += this.totalScore[t]
-      }
-      let total = fullstar / this.totalScore.length
-      // 几颗全星
-      console.log(fullstar, total)
+      let total = this.averageScore
+      // // 几颗全星
       if (total > 90) {
         total = 5
       } else if (total >= 80 && total <= 90) {
@@ -325,17 +313,15 @@ export default {
     }
   },
   updated () {
-    this.swiperStyle()
   },
   mounted () {
     console.log(this.isType)
     this.initWordData()
-    this.initMyRecordList()
+    this.swiperStyle()
   },
   methods: {
     ...mapActions([
-      'getKidCourseContent',
-      'getKidRecordList'
+      'getKidCourseContent'
     ]),
     initData () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
@@ -354,9 +340,10 @@ export default {
         totalScore += parseFloat(item[1].total_score)
         data.push(sentence)
       })
-      let averageScore = totalScore / 3
-      console.log(data)
-      console.log('average score', averageScore)
+      this.averageScore = totalScore / data.length
+      this.evaluatingData = data
+      console.log('initData===>', data)
+      console.log('average score', this.averageScore)
     },
     getWords (sentence) {
       let words = []
@@ -391,6 +378,7 @@ export default {
     },
     // 获取所有的音素
     getPhones (syll) {
+      console.log(syll)
       let phones = []
       if (Array.isArray(syll)) {
         syll.forEach(item => {
@@ -403,24 +391,29 @@ export default {
           }
         })
       } else {
-        if (Array.isArray(syll.phone)) {
-          syll.phone.forEach(item => {
-            phones.push(item)
-          })
-        } else {
-          phones.push(syll.phone)
+        if (syll) {
+          if (Array.isArray(syll.phone)) {
+            syll.phone.forEach(item => {
+              phones.push(item)
+            })
+          } else {
+            phones.push(syll.phone)
+          }
         }
       }
       return phones
     },
     // 获取单词发音
     getSylls (phones) {
-      let syll = '['
-      phones.forEach(p => {
-        syll += this.xfSyllPhone[p.content]
-      })
-      syll += ']'
-      return syll
+      console.log(phones)
+      if (phones) {
+        let syll = '['
+        phones.forEach(p => {
+          syll += this.xfSyllPhone[p.content]
+        })
+        syll += ']'
+        return syll
+      }
     },
     // 是绘本的时候单词列表
     initWordData () {
@@ -430,13 +423,6 @@ export default {
           this.coreWords = this.coreWords.concat(item.word)
         })
         // this.coreWords = res.teacherContent.words
-      })
-    },
-    // 初始化自己的录音列表
-    initMyRecordList () {
-      this.getKidRecordList({chapter_code: this.chapterCode, teacher_module: this.isType}).then(res => {
-        console.log('录音列表===>', res)
-        this.myRecordLists = res.records
       })
     },
     // 初始化swiper
@@ -476,6 +462,10 @@ export default {
           mousewheel: true,
           pagination: {
             el: '.swiper-pagination'
+          },
+          on: {
+            init: () => {
+            }
           }
         })
       })
@@ -576,34 +566,34 @@ export default {
       }
     },
     // 提取因素
-    syllMethods (word) {
-      let phones = []
-      if (Array.isArray(word.syll)) {
-        word.syll.forEach(item => {
-          if (Array.isArray(item.phone)) {
-            item.phone.forEach(p => {
-              phones.push(p)
-            })
-          } else {
-            phones.push(item.phone)
-          }
-        })
-      } else {
-        if (Array.isArray(word.syll.phone)) {
-          word.syll.phone.forEach(item => {
-            phones.push(item)
-          })
-        } else {
-          phones.push(word.syll.phone)
-        }
-      }
-      phones.syll = '['
-      phones.forEach(p => {
-        phones.syll += this.xfSyllPhone[p.content]
-      })
-      phones.syll += ']'
-      return phones
-    },
+    // syllMethods (word) {
+    //   let phones = []
+    //   if (Array.isArray(word.syll)) {
+    //     word.syll.forEach(item => {
+    //       if (Array.isArray(item.phone)) {
+    //         item.phone.forEach(p => {
+    //           phones.push(p)
+    //         })
+    //       } else {
+    //         phones.push(item.phone)
+    //       }
+    //     })
+    //   } else {
+    //     if (Array.isArray(word.syll.phone)) {
+    //       word.syll.phone.forEach(item => {
+    //         phones.push(item)
+    //       })
+    //     } else {
+    //       phones.push(word.syll.phone)
+    //     }
+    //   }
+    //   phones.syll = '['
+    //   phones.forEach(p => {
+    //     phones.syll += this.xfSyllPhone[p.content]
+    //   })
+    //   phones.syll += ']'
+    //   return phones
+    // },
     // 评测结果处理
     iseResultSet (page) {
       console.log(page)
@@ -647,7 +637,7 @@ export default {
     // 点击播放自己的录音
     playRecordSound () {
       if (!this.isPlay) {
-        let item = this.myRecordLists[this.curSwiperPage]
+        let item = this.kidRecordList[this.curSwiperPage]
         this.audio.src = item.record_sound_url
         this.audio.oncanplay = () => {
           this.audio.play()
@@ -757,9 +747,20 @@ export default {
           }
           i {
             display: inline-block;
-            width: 240px;
-            height: 120px;
-            background: pink;
+            width: 340px;
+            height: 228px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            &.pic-novip-1 {
+              background-image: url('../../../../../static/images/kid/pic-novip-1.png');
+            }
+            &.pic-novip-2 {
+              background-image: url('../../../../../static/images/kid/pic-novip-2.png');
+            }
+            &.pic-novip-3 {
+              background-image: url('../../../../../static/images/kid/pic-novip-3.png');
+            }
           }
         }
         .item {
@@ -1049,7 +1050,10 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-.swiper-pagination {
-  bottom: -15px;
+.swiper-lists .swiper-pagination {
+  bottom: -10px;
+}
+.swiper-lists .swiper-container-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet{
+  padding: 0 16px!important;
 }
 </style>

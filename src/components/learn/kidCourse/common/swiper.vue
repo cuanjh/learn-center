@@ -18,6 +18,7 @@
             @stopRecord="stopRecord"
             @playRecord="playRecord"
             @startEvaluate="startEvaluate"
+            @goWordListBox="goWordListBox"
           />
         </div>
       </div>
@@ -58,6 +59,7 @@
     <button @click="goGradeBox()">测试学完后的弹框</button>
     <grade-box ref="gradeBox"/>
     <evaluating-box />
+    <word-list-box ref="WordListBox"/>
   </div>
 </template>
 
@@ -72,6 +74,7 @@ import cookie from '../../../../tool/cookie'
 // import bus from '../../../../bus'
 import GradeBox from './gradeBox.vue'
 import EvaluatingBox from './evaluatingBox.vue'
+import WordListBox from './wordListBox.vue'
 
 export default {
   props: ['chapterCode', 'type'],
@@ -93,7 +96,8 @@ export default {
   components: {
     IseArea,
     GradeBox,
-    EvaluatingBox
+    EvaluatingBox,
+    WordListBox
   },
   mounted () {
     // 录音插件初始化
@@ -383,9 +387,12 @@ export default {
         })
       })
     },
-    // 点击头像的弹框
+    // 点击最后的出现评测的弹框
     goGradeBox () {
       this.$refs.gradeBox.showGradeBox(this.list)
+    },
+    goWordListBox () {
+      this.$refs.WordListBox.showWordListBox()
     },
     // 录音保存后，动画效果
     recordAnimate () {
