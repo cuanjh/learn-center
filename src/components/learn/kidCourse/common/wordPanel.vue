@@ -104,61 +104,22 @@ export default {
         this.syll += this.xfSyllPhone[p.content]
       })
       this.syll += ']'
-      this.isShow = !this.isShow
-      this.initTTS(this.word)
+      this.isShow = true
     },
     hide () {
       this.isShow = false
-      this.left = 0
-      this.top = 0
-      this.word = ''
-      this.syll = ''
-      this.phones = []
-      this.isRecording = false
-      this.timerInterval = null
-      this.timerIntervalPlay = null
-      this.time = 0
-      this.playLineHeight = [8, 16, 24, 16, 8]
-      this.isPlaying = false
-      this.translateX = 116
-    },
-    // 初始化语音合成
-    initTTS (word) {
-      this.ttsRecorder = new TTS.TtsRecorder({
-        lang: 'en',
-        text: word,
-        onClose: (e) => {
-          console.log('onClose')
-        },
-        onError: (data) => {
-          alert('WebSocket连接失败')
-        },
-        onMessage: (e) => {
-          let jsonData = JSON.parse(e.data)
-          if (jsonData.data) {
-            // atob ascii to binary
-            let bstr = atob(jsonData.data.audio)
-            let n = bstr.length
-            let u8arr = new Uint8Array(n)
-            while (n--) {
-              u8arr[n] = bstr.charCodeAt(n)
-            }
-            let pcm2wav = new PCM2WAV()
-            pcm2wav.write(u8arr, (res) => {
-              let data = pcm2wav.read()
-              let blob = new Blob([data], {type: 'audio/wav'})
-              let audio = new Audio()
-              audio.src = URL.createObjectURL(blob)
-              audio.oncanplay = () => {
-                audio.play()
-              }
-            })
-          }
-        },
-        onStart: () => {
-          console.log('onStart')
-        }
-      })
+      // this.left = 0
+      // this.top = 0
+      // this.word = ''
+      // this.syll = ''
+      // this.phones = []
+      // this.isRecording = false
+      // this.timerInterval = null
+      // this.timerIntervalPlay = null
+      // this.time = 0
+      // this.playLineHeight = [8, 16, 24, 16, 8]
+      // this.isPlaying = false
+      // this.translateX = 116
     },
     recordOpt () {
       this.isRecording = !this.isRecording
@@ -224,7 +185,43 @@ export default {
     },
     // 播放科大讯飞合成的语音
     read () {
-      this.ttsRecorder.start()
+      let word = this.word
+      let ttsRecorder = new TTS.TtsRecorder({
+        lang: 'en',
+        text: word,
+        onClose: (e) => {
+          console.log('onClose')
+        },
+        onError: (data) => {
+          alert('WebSocket连接失败')
+        },
+        onMessage: (e) => {
+          let jsonData = JSON.parse(e.data)
+          if (jsonData.data) {
+            // atob ascii to binary
+            let bstr = atob(jsonData.data.audio)
+            let n = bstr.length
+            let u8arr = new Uint8Array(n)
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n)
+            }
+            let pcm2wav = new PCM2WAV()
+            pcm2wav.write(u8arr, (res) => {
+              let data = pcm2wav.read()
+              let blob = new Blob([data], {type: 'audio/wav'})
+              let audio = new Audio()
+              audio.src = URL.createObjectURL(blob)
+              audio.oncanplay = () => {
+                audio.play()
+              }
+            })
+          }
+        },
+        onStart: () => {
+          console.log('onStart')
+        }
+      })
+      ttsRecorder.start()
     }
   }
 }

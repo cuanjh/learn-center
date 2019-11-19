@@ -2,11 +2,13 @@
   <div class="swiper">
     <div class="current-swiper swiper-container">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" v-for="(item, index) in list" :key="'current-swiper-' + item.code">
+        <div class="swiper-slide" v-for="(item, index) in list" :key="'current-swiper-' + item.code" :id="chapterCode + '-' + item.code">
           <img class="picture" :src="item.image" alt="">
           <div class="content">
             <i @click="playSourceSound(index)"></i>
-            <p :data-content="item.content || item.word" v-html="item.formatContent"></p>
+            <p :data-content="item.content || item.word">
+              <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '" @click="showWordPanel($event, index)"></span>
+            </p>
           </div>
           <ise-area
             ref="ise"
@@ -27,7 +29,9 @@
           <img class="picture" :src="item.image" alt="">
           <div class="content">
             <i></i>
-            <p :data-content="item.content || item.word" v-html="item.formatContent"></p>
+            <p :data-content="item.content || item.word">
+              <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '"></span>
+            </p>
           </div>
         </div>
       </div>
@@ -39,7 +43,9 @@
           <img class="picture" :src="item.image" alt="">
           <div class="content">
             <i></i>
-            <p :data-content="item.content || item.word" v-html="item.formatContent"></p>
+            <p :data-content="item.content || item.word">
+              <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '"></span>
+            </p>
           </div>
         </div>
       </div>
@@ -78,6 +84,8 @@ export default {
       recordAudio: new Audio(),
       isPlay: false,
       qiniuToken: '',
+      iseWords: [],
+      repeatIndex: -1,
       timerInterval: null, // 录音间隔器
       time: 0 // 录音计时
     }
@@ -166,12 +174,13 @@ export default {
           },
           slideChange: () => {
             console.log('改变了，activeIndex为' + swiper1.activeIndex)
+            this.repeatIndex = -1
+            this.$parent.$emit('hideWordPanel')
             let activeIndex = swiper1.activeIndex
             this.curPage = activeIndex + 1
             this.isPlay = false
             this.playSourceSound(activeIndex)
             this.setProgress()
-            this.$parent.$emit('hideWordPanel')
             swiper2.slideTo(activeIndex - 1)
             swiper3.slideTo(activeIndex + 1)
             setTimeout(() => {
@@ -201,7 +210,7 @@ export default {
       if (!content) {
         return ''
       }
-      let result = ''
+      let result = []
       let arr = content.replace(new RegExp('\\n', 'g'), '<br/>').split(' ')
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].trim().length > 0) {
@@ -213,7 +222,7 @@ export default {
                 if (l === 0) {
                   tag = '<br/>'
                 }
-                result += '<span> ' + r[l].trim() + ' </span>' + tag
+                result.push(r[l].trim() + tag)
               }
             }
           } else if (arr[i].indexOf('?') > -1) {
@@ -224,7 +233,7 @@ export default {
                 if (j === 0) {
                   tag = '?'
                 }
-                result += '<span> ' + r[j].trim() + tag + ' </span>'
+                result.push(r[j].trim() + tag)
               }
             }
           } else if (arr[i].indexOf('”') > -1) {
@@ -235,14 +244,14 @@ export default {
                 if (k === 0) {
                   tag = '”'
                 }
-                result += '<span> ' + r[k].trim() + tag + ' </span>'
+                result.push(r[k].trim() + tag)
               }
             }
           } else {
             if (arr[i].trim() === '—') {
-              result += arr[i].trim()
+              result.push(arr[i].trim())
             } else {
-              result += '<span> ' + arr[i].trim() + ' </span>'
+              result.push(arr[i].trim())
             }
           }
         }
@@ -408,25 +417,25 @@ export default {
       let id = this.chapterCode + '-' + this.list[this.curPage - 1].code
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
       console.log(xfISEResult[id])
+      this.iseWords = []
       if (xfISEResult[id]) {
-        let words = []
         if (Array.isArray(xfISEResult[id].sentence)) {
           xfISEResult[id].sentence.forEach(sentence => {
             sentence.word.forEach(word => {
               if (word.content !== 'sil' && word.content !== 'fil') {
-                words.push(word)
+                this.iseWords.push(word)
               }
             })
           })
         } else {
-          words = xfISEResult[id].sentence.word.filter(item => {
+          this.iseWords = xfISEResult[id].sentence.word.filter(item => {
             return item.content !== 'sil' && item.content !== 'fil'
           })
         }
-        console.log(words)
+        console.log(this.iseWords)
         $('.swiper-slide-active').find('.content p span').removeClass('right')
         $('.swiper-slide-active').find('.content p span').removeClass('wrong')
-        words.forEach((word, index) => {
+        this.iseWords.forEach((word, index) => {
           let score = parseFloat(word.total_score)
           switch (true) {
             case score >= 90:
@@ -434,15 +443,29 @@ export default {
               break
             case score < 60:
               $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').addClass('wrong')
-              $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').click((ele) => {
-                let offset = $(ele.currentTarget).offset()
-                this.$parent.$emit('showWordPanel', {word: word, offset: offset})
-              })
+              // $('#' + id).find('.content p span:nth-child(' + (index + 1) + ')').click((ele) => {
+              //   let offset = $(ele.currentTarget).offset()
+              //   this.$parent.$emit('showWordPanel', {word: word, offset: offset})
+              // })
               break
             default:
               break
           }
         })
+      }
+    },
+    showWordPanel (event, index) {
+      if (this.iseWords.length > 0 && this.iseWords[index]) {
+        let offset = $(event.target).offset()
+        let word = this.iseWords[index]
+        if (this.repeatIndex !== index) {
+          this.$parent.$emit('hideWordPanel')
+          this.$parent.$emit('showWordPanel', {word: word, offset: offset})
+          this.repeatIndex = index
+        } else {
+          this.$parent.$emit('hideWordPanel')
+          this.repeatIndex = -1
+        }
       }
     }
   }
@@ -477,6 +500,11 @@ export default {
     font-size: 20px;
     font-weight: 600;
     color: #3C5B6F;
+    p {
+      span {
+        cursor: pointer;
+      }
+    }
   }
   i {
     display: inline-block;
