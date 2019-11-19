@@ -152,6 +152,7 @@ export default {
           this.preload(item.image)
           this.list.push(obj)
         })
+        console.log(this.list)
         console.log('=========', data)
         this.totalPage = this.list.length
         this.curPage = 1
@@ -400,7 +401,7 @@ export default {
     },
     // 点击头像的弹框
     goGradeBox () {
-      this.$refs.gradeBox.showGradeBox(this.list[this.curPage - 1])
+      this.$refs.gradeBox.showGradeBox(this.list)
     },
     // 录音保存后，动画效果
     recordAnimate () {

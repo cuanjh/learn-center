@@ -4,7 +4,7 @@
       <div class="grade-content">
         <div class="close-img" @click="closeModal()"></div>
         <!-- 70分以上的显示 -->
-        <div class="good" v-if="isGood > 70">
+        <div class="good" v-if="isGood >= 70">
           <p class="title">
             <span>棒棒哒!</span>
             <span>你超越了全国<em> {{beyondFriend}} </em>的小可爱</span>
@@ -43,7 +43,9 @@ export default {
   data () {
     return {
       isShowGradeModal: false,
-      gradeData: {}
+      chapterList: [],
+      AllScore: [],
+      isGood: 0
     }
   },
   created () {
@@ -57,17 +59,35 @@ export default {
       let type = this.$route.query.type
       return type
     },
-    isGood () {
-      let good = Math.round(this.gradeData.total_score)
-      return good
-    },
+    // isGood () {
+    //   let good = Math.round(this.AllScore.total_score)
+    //   return good
+    // },
     beyondFriend () {
-      if (this.isGood > 70 && this.isGood < 80) {
-        return '75%'
-      } else if (this.isGood > 80 && this.isGood < 90) {
-        return '85%'
-      } else {
+      if (this.isGood >= 98 && this.isGood <= 99) {
         return '95%'
+      } else if (this.isGood >= 96 && this.isGood <= 97) {
+        return '93%'
+      } else if (this.isGood >= 94 && this.isGood <= 95) {
+        return '91%'
+      } else if (this.isGood >= 91 && this.isGood <= 93) {
+        return '90%'
+      } else if (this.isGood >= 89 && this.isGood <= 90) {
+        return '85%'
+      } else if (this.isGood >= 86 && this.isGood <= 88) {
+        return '83%'
+      } else if (this.isGood >= 84 && this.isGood <= 85) {
+        return '80%'
+      } else if (this.isGood >= 81 && this.isGood <= 83) {
+        return '79%'
+      } else if (this.isGood >= 79 && this.isGood <= 80) {
+        return '77%'
+      } else if (this.isGood >= 76 && this.isGood <= 78) {
+        return '75%'
+      } else if (this.isGood >= 73 && this.isGood <= 75) {
+        return '72%'
+      } else if (this.isGood >= 70 && this.isGood <= 72) {
+        return '68%'
       }
     }
   },
@@ -86,13 +106,24 @@ export default {
     // 我的评分详情
     gradeDetails () {
       this.isShowGradeModal = false
-      Bus.$emit('showScoreDetail')
+      Bus.$emit('showScoreDetail', this.chapterList)
     },
-    showGradeBox (curItem) {
-      let curCode = this.chapterCode + '-' + curItem.code
-      console.log(curCode)
-      this.gradeData = JSON.parse(localStorage.getItem('xfISEResult'))[curCode]
-      console.log(this.gradeData)
+    showGradeBox (chapterList) {
+      this.chapterList = chapterList
+      // let curCode = this.chapterCode + '-' + curItem.code
+      // console.log(curCode)
+      // this.gradeData = JSON.parse(localStorage.getItem('xfISEResult'))
+      let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      for (let i in localXfResult) {
+        this.AllScore.push(Math.round(localXfResult[i].total_score))
+      }
+      console.log(this.AllScore)
+      let fullstar = 0
+      for (var t in this.AllScore) {
+        fullstar += this.AllScore[t]
+      }
+      this.isGood = Math.round(fullstar / this.AllScore.length)
+      console.log(this.isGood)
       this.isShowGradeModal = true
     }
   }
@@ -164,7 +195,7 @@ export default {
         background: url('../../../../../static/images/kid/pic-img-up.png') no-repeat center;
         background-size: cover;
         margin: 0 auto;
-        animation: sport 1.5s ease-in forwards;
+        // animation: sport 1.5s ease-in forwards;
       }
       .center-nogood-img {
         position: relative;
@@ -175,7 +206,7 @@ export default {
         background-size: cover;
         margin: 0 auto;
         margin-top: 46px;
-        animation: sport 1.5s ease-in forwards;
+        // animation: sport 1.5s ease-in forwards;
       }
       .grade {
         position: absolute;
