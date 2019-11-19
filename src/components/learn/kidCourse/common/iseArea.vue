@@ -11,7 +11,7 @@
         <div class="tip" v-show="isShowStopTip && isRecording"></div>
       </transition>
     </div>
-    <div class="user" v-show="isEvaluation" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="goGradeBox()">
+    <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="goGradeBox()">
       <img :src="photo" alt="">
     </div>
   </div>
@@ -20,7 +20,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  props: ['index', 'isEvaluation'],
+  props: ['index'],
   data () {
     return {
       photo: '',
@@ -66,9 +66,7 @@ export default {
         this.translateX = 0
       }
       // 判断是否需要语音测评
-      if (this.isEvaluation) {
-        this.$emit('startEvaluate')
-      }
+      this.$emit('startEvaluate')
     },
     playRecord () {
       this.isPlaying = !this.isPlaying

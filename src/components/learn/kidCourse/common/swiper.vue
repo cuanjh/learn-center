@@ -50,12 +50,6 @@
         <span>{{ curPage }}</span> / <span>{{ totalPage }}</span>
       </p>
     </div>
-    <word-panel
-      ref="wordPanel"
-      @startRecord="startRecord"
-      @stopRecord="stopRecord"
-      @playRecord="playWordRecord"
-    />
     <grade-box ref="gradeBox"/>
     <evaluating-box />
   </div>
@@ -67,7 +61,6 @@ import $ from 'jquery'
 import Swiper from 'swiper'
 import { mapActions, mapState } from 'vuex'
 import IseArea from './iseArea.vue'
-import WordPanel from './wordPanel.vue'
 import Recorder from '../../../../plugins/recorder'
 import cookie from '../../../../tool/cookie'
 // import bus from '../../../../bus'
@@ -91,7 +84,6 @@ export default {
   },
   components: {
     IseArea,
-    WordPanel,
     GradeBox,
     EvaluatingBox
   },
@@ -178,6 +170,7 @@ export default {
             this.isPlay = false
             this.playSourceSound(activeIndex)
             this.setProgress()
+            this.$parent.$emit('hideWordPanel')
             swiper2.slideTo(activeIndex - 1)
             swiper3.slideTo(activeIndex + 1)
             setTimeout(() => {
@@ -323,24 +316,6 @@ export default {
         this.$refs['ise'][index].resetPlay()
       }
     },
-    playWordRecord (flag) {
-      console.log('playWordRecord', flag)
-      let index = this.curPage - 1
-      if (flag) {
-        Recorder.playRecording((data) => {
-          if (data) {
-            this.$refs['ise'][index].resetPlay()
-          } else {
-            this.pauseSourceSound()
-            this.$refs['ise'][index].recordPlaying()
-          }
-        })
-      } else {
-        // 暂停播放
-        Recorder.stopRecordSoud()
-        this.$refs['ise'][index].resetPlay()
-      }
-    },
     // 开始测评录音
     startEvaluate () {
       console.log('startEvaluate')
@@ -437,14 +412,14 @@ export default {
         if (Array.isArray(xfISEResult[id].sentence)) {
           xfISEResult[id].sentence.forEach(sentence => {
             sentence.word.forEach(word => {
-              if (word.content !== 'sil') {
+              if (word.content !== 'sil' && word.content !== 'fil') {
                 words.push(word)
               }
             })
           })
         } else {
           words = xfISEResult[id].sentence.word.filter(item => {
-            return item.content !== 'fil'
+            return item.content !== 'sil' && item.content !== 'fil'
           })
         }
         console.log(words)
@@ -456,11 +431,11 @@ export default {
             case score >= 90:
               $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').addClass('right')
               break
-            case score <= 70:
+            case score < 60:
               $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').addClass('wrong')
               $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').click((ele) => {
                 let offset = $(ele.currentTarget).offset()
-                this.$refs['wordPanel'].show({word, offset})
+                this.$parent.$emit('showWordPanel', {word: word, offset: offset})
               })
               break
             default:
