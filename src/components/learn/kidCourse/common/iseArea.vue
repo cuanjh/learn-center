@@ -95,7 +95,7 @@ export default {
     // 点击头像出现录音评测的弹框
     goWordListBox () {
       console.log('弹录录音的列表=>')
-      // this.$emit('goGradeBox')
+      this.$emit('goWordListBox')
     }
   }
 }
