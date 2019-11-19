@@ -139,7 +139,7 @@ export default {
         this.list = []
         data.forEach(item => {
           let obj = item
-          obj['formatContent'] = this.formatContent(obj.content || obj.words)
+          obj['formatContent'] = this.formatContent(obj.content || obj.word)
           this.preload(item.sound)
           this.preload(item.image)
           this.list.push(obj)
@@ -468,6 +468,7 @@ export default {
   .picture {
     width: 100%;
     height: 280px;
+    object-fit: cover;
   }
   .content {
     display: inline-flex;

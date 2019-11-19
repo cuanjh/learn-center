@@ -209,6 +209,7 @@ export default {
   created () {
     Bus.$on('showScoreDetail', (params) => {
       console.log('点击了评分详情', params)
+      this.initData()
       this.parentList = params
       this.isShowEvaluatingModal = true
       if (this.$parent.type === 'draw') {
@@ -330,6 +331,91 @@ export default {
     ...mapActions([
       'getKidCourseContent'
     ]),
+    initData () {
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      console.log(xfISEResult)
+      console.log(Object.entries(xfISEResult))
+      let totalScore = 0
+      let data = []
+      Object.entries(xfISEResult).forEach(item => {
+        let key = item[0]
+        let sentence = {}
+        sentence['key'] = key
+        sentence['content'] = item[1].content
+        sentence['formatContent'] = this.formatContent(item[1].content)
+        sentence['total_score'] = item[1].total_score
+        sentence['words'] = this.getWords(item[1].sentence)
+        totalScore += parseFloat(item[1].total_score)
+        data.push(sentence)
+      })
+      let averageScore = totalScore / 3
+      console.log(data)
+      console.log('average score', averageScore)
+    },
+    getWords (sentence) {
+      let words = []
+      if (Array.isArray(sentence)) {
+        sentence.forEach(sentence => {
+          sentence.word.forEach(word => {
+            if (word.content !== 'sil' && word.content !== 'fil') {
+              let w = {}
+              w['content'] = word.content
+              w['total_score'] = word.total_score
+              w['is_core'] = false
+              w['phones'] = this.getPhones(word.syll)
+              w['sylls'] = this.getSylls(this.getPhones(word.syll))
+              words.push(w)
+            }
+          })
+        })
+      } else {
+        sentence.word.forEach(word => {
+          if (word.content !== 'sil' && word.content !== 'fil') {
+            let w = {}
+            w['content'] = word.content
+            w['total_score'] = word.total_score
+            w['is_core'] = false
+            w['phones'] = this.getPhones(word.syll)
+            w['sylls'] = this.getSylls(this.getPhones(word.syll))
+            words.push(w)
+          }
+        })
+      }
+      return words
+    },
+    // 获取所有的音素
+    getPhones (syll) {
+      let phones = []
+      if (Array.isArray(syll)) {
+        syll.forEach(item => {
+          if (Array.isArray(item.phone)) {
+            item.phone.forEach(p => {
+              phones.push(p)
+            })
+          } else {
+            phones.push(item.phone)
+          }
+        })
+      } else {
+        if (Array.isArray(syll.phone)) {
+          syll.phone.forEach(item => {
+            phones.push(item)
+          })
+        } else {
+          phones.push(syll.phone)
+        }
+      }
+      return phones
+    },
+    // 获取单词发音
+    getSylls (phones) {
+      let syll = '['
+      phones.forEach(p => {
+        syll += this.xfSyllPhone[p.content]
+      })
+      syll += ']'
+      return syll
+    },
     // 是绘本的时候单词列表
     initWordData () {
       this.getKidCourseContent({chapter_code: this.chapterCode}).then(res => {
