@@ -11,7 +11,7 @@
         <div class="tip" v-show="isShowStopTip && isRecording"></div>
       </transition>
     </div>
-    <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="goGradeBox()">
+    <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="goWordListBox()">
       <img :src="photo" alt="">
     </div>
   </div>
@@ -93,9 +93,9 @@ export default {
       this.isPlaying = false
     },
     // 点击头像出现录音评测的弹框
-    goGradeBox () {
-      console.log('弹录音评测=>')
-      this.$emit('goGradeBox')
+    goWordListBox () {
+      console.log('弹录录音的列表=>')
+      // this.$emit('goGradeBox')
     }
   }
 }

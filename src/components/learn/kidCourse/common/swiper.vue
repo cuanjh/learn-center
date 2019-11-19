@@ -16,7 +16,6 @@
             @stopRecord="stopRecord"
             @playRecord="playRecord"
             @startEvaluate="startEvaluate"
-            @goGradeBox="goGradeBox"
           />
         </div>
       </div>
@@ -50,6 +49,7 @@
         <span>{{ curPage }}</span> / <span>{{ totalPage }}</span>
       </p>
     </div>
+    <button @click="goGradeBox()">测试学完后的弹框</button>
     <grade-box ref="gradeBox"/>
     <evaluating-box />
   </div>

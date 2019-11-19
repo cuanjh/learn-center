@@ -63,7 +63,7 @@
                     <!-- 母语的句子 -->
                     <div class="mother-sentence-box">
                       <div class="mother-grade">
-                        <i class="icon-horn"></i>
+                        <i class="icon-horn" @click="playRecordSound(index)"></i>
                         <div class="grade-color">
                           <p class="sentence" :data-content="parentList[index].content || parentList[index].word" v-html="parentList[index].formatContent"></p>
                           <span class="score" :class="{'right': colorClass(score.total_score) == 'right', 'wrong': colorClass(score.total_score) == 'wrong'}"><em>{{Math.round(score.total_score)}}</em>分</span>
@@ -85,7 +85,7 @@
                             <div class="review-item">
                               <p class="core-word">
                                 <span class="word" :class="{'right': colorClass(item.total_score) == 'right', 'wrong': colorClass(item.total_score) == 'wrong'}">{{item.content}}</span>
-                                <i class="collection"></i>
+                                <i class="collection" v-if="coreWords.indexOf(item.content) > -1"></i>
                               </p>
                               <div class="syllable" v-for="(phone, index) in item.iphones" :key="'phone' + index">
                                 <p class="first">{{'[' + phone.syll +']'}}</p>
@@ -114,9 +114,9 @@
               </div>
             </div>
             <!-- 不同显示70分以下 -->
-            <div class="bottom-prompt" v-if="!isShowEndPrompt">
+            <div class="bottom-prompt" v-if="itemClasslass != 5">
               <p class="bottom-title blue">读的真棒！</p>
-              <p>共有<em class="blue">5</em>个</p>
+              <p>共有<em class="blue">{{evaluatingData.length}}</em>个</p>
               <p>核心单词需要强化，快去学习一下吧～</p>
             </div>
             <!-- 70分以上 -->
@@ -203,7 +203,10 @@ export default {
       curSwiperPage: 0,
       parentList: [],
       totalScore: [],
-      coreWords: []
+      coreWords: [],
+      myRecordLists: [],
+      audio: new Audio(),
+      isPlay: false
     }
   },
   created () {
@@ -249,11 +252,12 @@ export default {
             this.evaluatingData.push(item)
           }
         })
+        console.log(this.evaluatingData)
+        console.log(this.coreWords)
+        this.initSwiper()
       }
-      console.log(this.evaluatingData)
       // this.totalScore = this.evaluatingData[this.curSwiperPage].total_score
       console.log(this.totalScore)
-      this.initSwiper()
     })
   },
   computed: {
@@ -326,10 +330,12 @@ export default {
   mounted () {
     console.log(this.isType)
     this.initWordData()
+    this.initMyRecordList()
   },
   methods: {
     ...mapActions([
-      'getKidCourseContent'
+      'getKidCourseContent',
+      'getKidRecordList'
     ]),
     initData () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
@@ -419,8 +425,18 @@ export default {
     // 是绘本的时候单词列表
     initWordData () {
       this.getKidCourseContent({chapter_code: this.chapterCode}).then(res => {
-        console.log(res)
-        this.coreWords = res.teacherContent.words
+        console.log('单词列表====>', res)
+        res.teacherContent.words.forEach(item => {
+          this.coreWords = this.coreWords.concat(item.word)
+        })
+        // this.coreWords = res.teacherContent.words
+      })
+    },
+    // 初始化自己的录音列表
+    initMyRecordList () {
+      this.getKidRecordList({chapter_code: this.chapterCode, teacher_module: this.isType}).then(res => {
+        console.log('录音列表===>', res)
+        this.myRecordLists = res.records
       })
     },
     // 初始化swiper
@@ -440,8 +456,11 @@ export default {
             init: () => {
               this.iseResultSet(0)
             },
-            slideChange: () => {
+            slideChangeTransitionStart: () => {
               console.log(swiperScore.activeIndex)
+              this.curSwiperPage = swiperScore.activeIndex
+              this.audio.pause()
+              this.isPlay = false
               this.iseResultSet(swiperScore.activeIndex)
             }
           }
@@ -587,7 +606,7 @@ export default {
     },
     // 评测结果处理
     iseResultSet (page) {
-      console.log(this.evaluatingData)
+      console.log(page)
       console.log($('.swiper-slide-active').find('.sentence p span'))
       let id = this.chapterCode + '-' + this.parentList[page].code
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
@@ -623,6 +642,23 @@ export default {
               break
           }
         })
+      }
+    },
+    // 点击播放自己的录音
+    playRecordSound () {
+      if (!this.isPlay) {
+        let item = this.myRecordLists[this.curSwiperPage]
+        this.audio.src = item.record_sound_url
+        this.audio.oncanplay = () => {
+          this.audio.play()
+          this.isPlay = true
+        }
+        this.audio.onended = () => {
+          this.isPlay = false
+        }
+      } else {
+        this.audio.pause()
+        this.isPlay = false
       }
     }
   }
@@ -817,9 +853,9 @@ export default {
             .icon-horn {
               cursor: pointer;
               display: inline-block;
-              width:16px;
-              height:13px;
-              background: url('../../../../../static/images/kid/icon-horn.png') no-repeat center;
+              width:20px;
+              height:16px;
+              background: url('../../../../../static/images/kid/icon-laba.png') no-repeat center;
               background-size: cover;
             }
             .mother-sentence-box {
