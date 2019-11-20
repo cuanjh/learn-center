@@ -48,6 +48,7 @@
         </div>
       </div>
     </transition>
+    <guide v-show="false"/>
   </div>
 </template>
 
@@ -62,6 +63,7 @@ import NavComp from './common/nav.vue'
 import ProgressBar from './common/progress.vue'
 import SwiperComp from './common/swiper.vue'
 import WordPanel from './common/wordPanel.vue'
+import Guide from './common/guide.vue'
 import TestYuyin from './testYuyin.vue'
 // import Recorder from '../../../plugins/recorder'
 
@@ -87,7 +89,8 @@ export default {
     ProgressBar,
     SwiperComp,
     WordPanel,
-    TestYuyin
+    TestYuyin,
+    Guide
   },
   computed: {
     courseIndex () {

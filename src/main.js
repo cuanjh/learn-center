@@ -10,8 +10,6 @@ import md5 from 'md5'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-import VueIntro from 'vue-introjs'
-import 'intro.js/introjs.css'
 // import BootstrapVue from 'bootstrap-vue'
 
 import routes from './router/index'
@@ -32,7 +30,6 @@ require('./../static/bootstrap.min.js')
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VueI18n)
-Vue.use(VueIntro)
 Vue.prototype.$emoji = emoji
 Vue.prototype.$md5 = md5
 Vue.use(ElementUI)

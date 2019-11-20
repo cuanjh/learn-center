@@ -6,7 +6,7 @@
           <img class="picture" :src="item.image" alt="">
           <div class="content">
             <i :class="{'playing': isPlay}" @click="playSourceSound(index)"></i>
-            <p :data-content="item.content || item.word" data-step="1" data-intro="this is a tooltip">
+            <p :data-content="item.content || item.word" data-step="1">
               <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '" @click="showWordPanel($event, index)"></span>
             </p>
           </div>
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="nocurrent-swiper left-swiper swiper-container swiper-no-swiping" v-show="false">
+    <div class="nocurrent-swiper left-swiper swiper-container swiper-no-swiping">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="item in list" :key="'left-swiper-' + item.code">
           <img class="picture" :src="item.image" alt="">
@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div class="nocurrent-swiper right-swiper swiper-container swiper-no-swiping" v-show="false">
+    <div class="nocurrent-swiper right-swiper swiper-container swiper-no-swiping">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="item in list" :key="'right-swiper-' + item.code">
           <img class="picture" :src="item.image" alt="">
@@ -75,6 +75,7 @@ import cookie from '../../../../tool/cookie'
 import GradeBox from './gradeBox.vue'
 import EvaluatingBox from './evaluatingBox.vue'
 import WordListBox from './wordListBox.vue'
+import bus from '../../../../bus'
 
 export default {
   props: ['chapterCode', 'type'],
@@ -169,23 +170,20 @@ export default {
     // 获取数据后，初始化swiper
     initSwiper () {
       var swiper1 = new Swiper('.current-swiper', {
+        // virtualTranslate: true,
         mousewheel: true,
         allowTouchMove: false,
         on: {
           init: () => {
-            alert('init')
             this.iseResultSet()
             this.playSourceSound(this.curPage - 1)
+            bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
           },
-          slideChangeTransitionEnd: () => {
-            this.$intro().start()
-            alert('slideChangeTransitionEnd')
-          },
-          transitionEnd: () => {
-            alert('transitionEnd')
+          transitionStart: () => {
+            // alert('transition')
           },
           slideChange: () => {
-            alert('slideChange')
+            // alert('slideChange')
             console.log('改变了，activeIndex为' + swiper1.activeIndex)
             this.repeatIndex = -1
             this.$parent.$emit('hideWordPanel')
@@ -198,6 +196,9 @@ export default {
             swiper3.slideTo(activeIndex + 1)
             setTimeout(() => {
               this.iseResultSet()
+              setTimeout(() => {
+                bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
+              }, 1000)
             }, 100)
           }
         }
@@ -439,8 +440,9 @@ export default {
         id = this.list[this.curPage - 1].code
       }
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      console.log(xfISEResult[id])
       this.iseWords = []
-      if (xfISEResult && xfISEResult[id]) {
+      if (xfISEResult[id]) {
         this.$refs['ise'][this.curPage - 1].setScore(xfISEResult[id].total_score)
         if (Array.isArray(xfISEResult[id].sentence)) {
           xfISEResult[id].sentence.forEach(sentence => {
