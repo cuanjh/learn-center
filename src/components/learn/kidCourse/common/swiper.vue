@@ -6,7 +6,7 @@
           <img class="picture" :src="item.image" alt="">
           <div class="content">
             <i :class="{'playing': isPlay}" @click="playSourceSound(index)"></i>
-            <p :data-content="item.content || item.word">
+            <p :data-content="item.content || item.word" data-step="1" data-intro="this is a tooltip">
               <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '" @click="showWordPanel($event, index)"></span>
             </p>
           </div>
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="nocurrent-swiper left-swiper swiper-container swiper-no-swiping">
+    <div class="nocurrent-swiper left-swiper swiper-container swiper-no-swiping" v-show="false">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="item in list" :key="'left-swiper-' + item.code">
           <img class="picture" :src="item.image" alt="">
@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div class="nocurrent-swiper right-swiper swiper-container swiper-no-swiping">
+    <div class="nocurrent-swiper right-swiper swiper-container swiper-no-swiping" v-show="false">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="item in list" :key="'right-swiper-' + item.code">
           <img class="picture" :src="item.image" alt="">
@@ -173,10 +173,19 @@ export default {
         allowTouchMove: false,
         on: {
           init: () => {
+            alert('init')
             this.iseResultSet()
             this.playSourceSound(this.curPage - 1)
           },
+          slideChangeTransitionEnd: () => {
+            this.$intro().start()
+            alert('slideChangeTransitionEnd')
+          },
+          transitionEnd: () => {
+            alert('transitionEnd')
+          },
           slideChange: () => {
+            alert('slideChange')
             console.log('改变了，activeIndex为' + swiper1.activeIndex)
             this.repeatIndex = -1
             this.$parent.$emit('hideWordPanel')
