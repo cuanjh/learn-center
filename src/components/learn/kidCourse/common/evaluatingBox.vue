@@ -318,6 +318,18 @@ export default {
     console.log(this.isType)
     this.initWordData()
     this.swiperStyle()
+    // let arr = [
+    //   {
+    //     order: 1,
+    //     a: 'a'
+    //   },
+    //   {
+    //     order: 2,
+    //     a: 'b'
+    //   }
+    // ]
+    // console.log(this.curString(arr, 2))
+    console.log(this.StringPop('KEN-Basic-Level1-Unit1-Chapter1-K1A1-1'))
   },
   methods: {
     ...mapActions([
@@ -378,7 +390,6 @@ export default {
     },
     // 获取所有的音素
     getPhones (syll) {
-      console.log(syll)
       let phones = []
       if (Array.isArray(syll)) {
         syll.forEach(item => {
@@ -405,7 +416,6 @@ export default {
     },
     // 获取单词发音
     getSylls (phones) {
-      console.log(phones)
       if (phones) {
         let syll = '['
         phones.forEach(p => {
@@ -564,6 +574,17 @@ export default {
       } else if (totalScore < 60) {
         return 'wrong'
       }
+    },
+    // 截取字符串的最后一个
+    StringPop (str) {
+      return str.split('-').pop()
+    },
+    curString (arr, or) {
+      let obj = arr.find((obj) => {
+        console.log(obj)
+        return obj.order === or
+      })
+      return obj
     },
     // 提取因素
     // syllMethods (word) {
