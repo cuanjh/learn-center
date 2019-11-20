@@ -13,7 +13,7 @@
     </div>
     <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="goWordListBox()">
       <img :src="photo" alt="">
-      <div :class="['mask', scoreClass]">
+      <div :class="['mask', scoreClass]" v-show="score">
         <span>{{ score }}</span>
       </div>
     </div>
@@ -34,7 +34,7 @@ export default {
       isPlaying: false,
       translateX: 116,
       timerInterval: null,
-      score: 0,
+      score: '',
       scoreClass: ''
     }
   },

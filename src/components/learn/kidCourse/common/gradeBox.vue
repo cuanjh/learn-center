@@ -4,7 +4,7 @@
       <div class="grade-content">
         <div class="close-img" @click="closeModal()"></div>
         <!-- 70分以下的显示 -->
-        <div class="no-good" v-if="isVip !== 1 || isGood < 70">
+        <div class="no-good" v-if="isVip !== 1 || isGood < 70 || !isGood">
           <p class="title">
             <span>炫耀一下</span>
             <span>让小伙伴听听你的声音吧~</span>
@@ -55,7 +55,7 @@ export default {
       isShowGradeModal: false,
       chapterList: [],
       AllScore: [],
-      isGood: 0,
+      isGood: '',
       promptBox: false
     }
   },
