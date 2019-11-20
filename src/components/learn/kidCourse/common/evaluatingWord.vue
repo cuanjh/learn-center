@@ -5,7 +5,7 @@
         <div class="review-item">
           <p class="core-word">
             <span class="word" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}">{{word.content}}</span>
-            <i class="icon-horn"></i>
+            <i class="icon-horn" :id="'word' + index" @click="playRecordWordSound(word, index)"></i>
           </p>
           <table class="syllable">
             <tr v-for="(phone, index) in word.phones" :key="index">
@@ -25,11 +25,19 @@
 
 <script>
 import { mapState } from 'vuex'
+import $ from 'jquery'
 
 export default {
   props: ['evaluatingData'],
+  data () {
+    return {
+      audio: new Audio(),
+      isPlay: false
+    }
+  },
   computed: {
     ...mapState({
+      kidRecordList: state => state.kidRecordList,
       xfSyllPhone: state => state.xfSyllPhone // 因素的对应表
     })
   },
@@ -39,6 +47,33 @@ export default {
         return 'right'
       } else if (totalScore < 60) {
         return 'wrong'
+      }
+    },
+    // 截取字符串的最后一个
+    stringPop (str) {
+      return parseInt(str.split('-').pop())
+    },
+    // 点击播放自己的录音
+    playRecordWordSound (word, index) {
+      $('.icon-horn').removeClass('playing')
+      if (!this.isPlay) {
+        let curorder = this.stringPop(word.key)
+        let item = this.kidRecordList[index]
+        console.log(curorder, item)
+        this.audio.src = item.record_sound_url
+        this.audio.oncanplay = () => {
+          this.audio.play()
+          this.isPlay = true
+          $('#word' + index).addClass('playing')
+        }
+        this.audio.onended = () => {
+          this.isPlay = false
+          $('#word' + index).removeClass('playing')
+        }
+      } else {
+        this.audio.pause()
+        this.isPlay = false
+        $('#word' + index).removeClass('playing')
       }
     }
   }

@@ -3,7 +3,12 @@
   <div class="word-modal-box" v-show="showWordBox">
     <div class="word-box-content">
       <div class="close-img-box" @click="closeModal()"></div>
-      <word-item :newWords="newWords"/>
+      <div v-if="isVip !== 1">
+        <noVip-guide-box />
+      </div>
+      <div v-else>
+        <word-item :newWords="newWords"/>
+      </div>
     </div>
   </div>
 </transition>
@@ -12,6 +17,9 @@
 <script>
 import WordItem from './wordItem.vue'
 import { mapState } from 'vuex'
+import NoVipGuideBox from './noVipGuideBox.vue'
+import Swiper from 'swiper'
+import 'swiper/dist/css/swiper.min.css'
 
 export default {
   data () {
@@ -21,12 +29,24 @@ export default {
     }
   },
   components: {
-    WordItem
+    WordItem,
+    NoVipGuideBox
+  },
+  mounted () {
+    this.initGuideSwiper()
   },
   computed: {
     ...mapState({
+      userInfo: state => state.userInfo, // 用户信息
       xfSyllPhone: state => state.xfSyllPhone // 因素的对应表
-    })
+    }),
+    // 是否vip
+    isVip () {
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
+    }
   },
   methods: {
     showWordListBox (params) {
@@ -84,6 +104,31 @@ export default {
         }
       }
       return phones
+    },
+    initGuideSwiper () {
+      this.$nextTick(() => {
+        var guideSwiper2 = new Swiper('.word-box-content #swiper-lists', {
+          loop: false,
+          autoplay: false, // 自动轮播
+          paginationClickable: true,
+          observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+          observeParents: true, // 修改swiper的父元素时，自动初始化swiper
+          initialSlide: 0,
+          centeredSlides: true,
+          slidesPerView: 'auto',
+          slideToClickedSlide: true,
+          mousewheel: true,
+          allowTouchMove: true,
+          pagination: {
+            el: '.swiper-pagination'
+          },
+          on: {
+            init: () => {
+            }
+          }
+        })
+        console.log(guideSwiper2)
+      })
     }
   }
 }
@@ -106,9 +151,9 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 470px;
-    min-height: 260px;
-    max-height: 600px;
+    // width: 470px;
+    // min-height: 260px;
+    // max-height: 600px;
     background: #fff;
     box-shadow:0px 24px 24px 0px rgba(0,0,0,0.12);
     border-radius:8px;

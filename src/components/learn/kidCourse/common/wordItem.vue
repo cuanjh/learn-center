@@ -94,6 +94,7 @@ export default {
 
 <style lang="less" scoped>
 .word-item {
+  width: 470px;
   min-height: 260px;
   max-height: 600px;
   padding: 24px 32px;
