@@ -119,7 +119,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
 
     // copy custom static assets
-    new CopyWebpackPlugin(copyList)
+    new CopyWebpackPlugin(copyList),
+    new webpack.ProvidePlugin({
+      introJs: ['intro.js', 'introJs']
+    })
   ]
 })
 

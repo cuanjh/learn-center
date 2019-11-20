@@ -5,7 +5,7 @@
         <i></i>
       </router-link>
       <span>{{ chapterDes }}</span>
-      <span>{{ type == 'draw' ? '绘本阅读' : '绘本单词' }}</span>
+      <span data-intro="this is a tooltip">{{ type == 'draw' ? '绘本阅读' : '绘本单词' }}</span>
     </div>
     <record-box :chapterCode="chapterCode" :type="type"/>
   </div>
