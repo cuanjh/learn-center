@@ -39,27 +39,30 @@
         <!-- 是会员 -->
         <div class="evaluating" v-else>
           <!-- 这是绘本阅读 -->
-          <div class="content-box" v-if="isType == 'draw'">
-            <div class="user-avatar">
-              <img :src="userInfo ? userInfo.photo : ''" alt="">
-              <div class="right">
-                <div class="right-left">
-                  <p class="nikename" v-text="userInfo ? userInfo.nickname : ''"></p>
-                  <div class="star">
-                    <span
-                      v-for="(itemClass,index) in itemClasslass"
-                      :class="itemClass" class="star-item"
-                      :key="index">
-                    </span>
-                  </div>
+          <div class="user-avatar">
+            <img :src="userInfo ? userInfo.photo : ''" alt="">
+            <div class="right">
+              <div class="right-left">
+                <p class="nikename" v-text="userInfo ? userInfo.nickname : ''"></p>
+                <div class="star">
+                  <span
+                    v-for="(itemClass,index) in itemClasslass"
+                    :class="itemClass" class="star-item"
+                    :key="index">
+                  </span>
                 </div>
-                <a href="javascript:;" class="go-intensify" @click="strengthening()">立即强化</a>
               </div>
+              <a href="javascript:;" class="go-intensify" @click="strengthening()">
+                {{isType == 'draw' ? '立即强化' : '听首儿歌'}}
+              </a>
             </div>
+          </div>
+          <!-- 绘本阅读 -->
+          <div class="content-box" v-if="isType == 'draw'">
             <div class="swiper-content">
               <div class="swiper-container swiper-evaluating">
                 <div class="swiper-wrapper">
-                  <div class="swiper-slide" v-for="(score, index) in evaluatingData" :key="'score' + index">
+                  <div class="swiper-slide" v-for="(score, index) in evaluatingData" :key="'draw' + index">
                     <!-- 母语的句子 -->
                     <div class="mother-sentence-box">
                       <div class="mother-grade">
@@ -122,18 +125,6 @@
           </div>
           <!-- 绘本单词学习完展示 -->
           <div class="content-box" v-if="isType == 'word'">
-            <div class="user-avatar">
-              <img :src="userInfo ? userInfo.photo : ''" alt="">
-              <div class="right">
-                <div class="right-left">
-                  <p class="nikename" v-text="userInfo ? userInfo.nickname : ''"></p>
-                  <div class="star">
-                    <span v-for="(itemClass,index) in itemClasslass" :class="itemClass" class="star-item" :key="index"></span>
-                  </div>
-                </div>
-                <a href="javascript:;" class="go-intensify" @click="listenSongs()">听首儿歌</a>
-              </div>
-            </div>
             <div class="coreWord-content">
               <div class="coreWord-slide">
                 <!-- 母语的句子 -->
@@ -141,31 +132,32 @@
                   <p>本课核心单词得分</p>
                 </div>
                 <!-- 讯飞的识别列表音节 -->
-                <ul>
-                  <li>
+                <!-- <ul>
+                  <li v-for="(word, index) in evaluatingData" :key="'word' + index">
                     <div class="li-item">
                       <div class="review-item">
                         <p class="core-word">
-                          <span class="word">are</span>
+                          <span class="word" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}">{{word.content}}</span>
                           <i class="icon-horn"></i>
                         </p>
-                        <div class="syllable">
-                          <p class="first">[miːt]</p>
-                          <p class="syllable-list">
-                            <span>音素 [ɑː] 朗读正常</span>
-                            <span>音素 [eu] 朗读正常</span>
-                          </p>
-                        </div>
+                        <table class="syllable">
+                          <tr v-for="(phone, index) in word.phones" :key="index">
+                            <td class="first">{{ (index == 0) ? word.sylls : '' }}</td>
+                            <td>{{ '音素 [' + xfSyllPhone[phone.content] + ']' }}</td>
+                            <td>{{ phone.dp_message == '0' ? '朗读正常' : '未朗读' }}</td>
+                          </tr>
+                        </table>
                       </div>
                       <p class="grade-color">
-                        <span class="score"><em>30</em>分</span>
+                        <span class="score" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}"><em>{{Math.round(word.total_score)}}</em>分</span>
                       </p>
                     </div>
                   </li>
-                </ul>
+                </ul> -->
+                <evaluating-word :evaluatingData="evaluatingData"/>
               </div>
             </div>
-            <!-- 70分以上 -->
+            <!-- 核心单词 -->
             <div class="bottom-prompt">
               <p>小朋友，核心单词已经学完啦，<br/>去听首儿歌放松一下吧！</p>
             </div>
@@ -182,6 +174,7 @@ import $ from 'jquery'
 import Bus from '../../../../bus'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
+import EvaluatingWord from './evaluatingWord.vue'
 
 const lengths = 5
 const starOn = 'on'
@@ -204,14 +197,20 @@ export default {
       isPlay: false
     }
   },
+  components: {
+    EvaluatingWord
+  },
   created () {
     Bus.$on('showScoreDetail', (params) => {
       console.log('点击了评分详情', params)
-      this.initData()
-      this.initSwiper()
       this.parentList = params
+      if (this.isType === 'draw') {
+        this.initData()
+        this.initSwiper()
+      } else {
+        this.initDataWord()
+      }
       this.isShowEvaluatingModal = true
-      console.log(this.totalScore)
     })
   },
   computed: {
@@ -284,6 +283,7 @@ export default {
     ...mapActions([
       'getKidCourseContent'
     ]),
+    // 处理句子录音
     initData () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
       console.log(xfISEResult)
@@ -291,15 +291,46 @@ export default {
       let totalScore = 0
       let data = []
       Object.entries(xfISEResult).forEach(item => {
-        let key = item[0]
-        let sentence = {}
-        sentence['key'] = key
-        sentence['content'] = item[1].content
-        sentence['formatContent'] = this.formatContent(item[1].content)
-        sentence['total_score'] = item[1].total_score
-        sentence['words'] = this.getWords(item[1].sentence)
-        totalScore += parseFloat(item[1].total_score)
-        data.push(sentence)
+        this.parentList.forEach(li => {
+          if (item[0].indexOf(li.code) > -1) {
+            let key = item[0]
+            let sentence = {}
+            sentence['key'] = key
+            sentence['content'] = item[1].content
+            sentence['formatContent'] = this.formatContent(item[1].content)
+            sentence['total_score'] = item[1].total_score
+            sentence['words'] = this.getWords(item[1].sentence)
+            totalScore += parseFloat(item[1].total_score)
+            data.push(sentence)
+          }
+        })
+      })
+      this.averageScore = totalScore / data.length
+      this.evaluatingData = data
+      console.log('initData===>', data)
+      console.log('average score', this.averageScore)
+    },
+    // 处理单词录音
+    initDataWord () {
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      console.log(xfISEResult)
+      console.log(Object.entries(xfISEResult))
+      let totalScore = 0
+      let data = []
+      Object.entries(xfISEResult).forEach(item => {
+        this.parentList.forEach(li => {
+          if (item[0] === li.code) {
+            let key = item[0]
+            let obj = {}
+            obj['key'] = key
+            obj['content'] = item[1].content
+            obj['total_score'] = item[1].total_score
+            obj['phones'] = this.getPhones(item[1].sentence.word.syll)
+            obj['sylls'] = this.getSylls(this.getPhones(item[1].sentence.word.syll))
+            totalScore += parseFloat(item[1].total_score)
+            data.push(obj)
+          }
+        })
       })
       this.averageScore = totalScore / data.length
       this.evaluatingData = data
@@ -439,13 +470,13 @@ export default {
     closeModal () {
       this.isShowEvaluatingModal = false
     },
-    // 立即强化
+    // 立即强化/听儿歌
     strengthening () {
-      this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
-    },
-    // 听儿歌
-    listenSongs () {
-      this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
+      if (this.isType === 'draw') {
+        this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
+      } else {
+        this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
+      }
     },
     swiperStyle () {
       $('.swiper-pagination').find('.swiper-pagination-bullet').css({
@@ -714,71 +745,92 @@ export default {
       }
     }
     .evaluating {
-      .content-box {
-        min-height: 500px;
-        .user-avatar {
+      .user-avatar {
+        display: flex;
+        width: 100%;
+        padding: 22px 32px;
+        background: #2CA0E5;
+        border-radius: 8px 8px 0 0;
+        img {
+          width: 70px;
+          height: 70px;
+          object-fit: cover;
+          border-radius: 50%;
+          margin-right: 20px;
+        }
+        .right {
           display: flex;
-          width: 100%;
-          padding: 22px 32px;
-          background: #2CA0E5;
-          border-radius: 8px 8px 0 0;
-          img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-right: 20px;
-          }
-          .right {
-            display: flex;
-            flex: 1;
-            justify-content: space-between;
-            align-items: center;
-            .right-left {
-              .nikename {
-                font-size:20px;
-                font-weight:500;
-                color:rgba(255,255,255,1);
-                line-height:42px;
-              }
-              .star {
-                .star-item {
-                  display: inline-block;
-                  width: 20px;
-                  height: 20px;
-                  background-repeat: no-repeat;
-                  background-position: center;
-                  background-size: 20px 20px;
-                  margin-right: 6px;
-                  // box-shadow:0px 0px 4px 0px #FFC81F;
-                  &:last-child {
-                    margin-right: 0;
-                  }
-                  &.on {
-                    background-image: url('../../../../../static/images/kid/star-on.png');
-                  }
-                  &.half {
-                    background-image: url('../../../../../static/images/kid/star-half.png');
-                  }
-                  &.off {
-                    background-image: url('../../../../../static/images/kid/star-off.png');
-                  }
+          flex: 1;
+          justify-content: space-between;
+          align-items: center;
+          .right-left {
+            .nikename {
+              font-size:20px;
+              font-weight:500;
+              color:rgba(255,255,255,1);
+              line-height:42px;
+            }
+            .star {
+              .star-item {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 20px 20px;
+                margin-right: 6px;
+                // box-shadow:0px 0px 4px 0px #FFC81F;
+                &:last-child {
+                  margin-right: 0;
+                }
+                &.on {
+                  background-image: url('../../../../../static/images/kid/star-on.png');
+                }
+                &.half {
+                  background-image: url('../../../../../static/images/kid/star-half.png');
+                }
+                &.off {
+                  background-image: url('../../../../../static/images/kid/star-off.png');
                 }
               }
             }
-            .go-intensify {
-              font-size:18px;
-              font-weight:500;
-              color:rgba(111,89,8,1);
-              padding: 4px 24px;
-              background: #FECB08;
-              border-radius: 22px;
-              &:hover {
-                opacity: .9;
-              }
+          }
+          .go-intensify {
+            font-size:18px;
+            font-weight:500;
+            color:rgba(111,89,8,1);
+            padding: 4px 24px;
+            background: #FECB08;
+            border-radius: 22px;
+            &:hover {
+              opacity: .9;
             }
           }
         }
+      }
+      // 下面的展示
+      .bottom-prompt {
+        p {
+          font-size:14px;
+          font-weight:500;
+          color:rgba(145,145,145,1);
+          text-align: center;
+        }
+        .bottom-title {
+          font-size:20px;
+          font-weight:500;
+          line-height:40px;
+          color:#2ca0e5;
+        }
+        em {
+          font-size:18px;
+          font-weight:600;
+          line-height:24px;
+          padding: 0 4px;
+        }
+      }
+      .content-box {
+        min-height: 262px;
         // 显示句子的颜色
         .swiper-content,.coreWord-content {
           .swiper-container {
@@ -957,27 +1009,6 @@ export default {
             -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);
             border-radius: 0;
             background: rgba(0,0,0,0);
-          }
-        }
-        // 下面的展示
-        .bottom-prompt {
-          p {
-            font-size:14px;
-            font-weight:500;
-            color:rgba(145,145,145,1);
-            text-align: center;
-          }
-          .bottom-title {
-            font-size:20px;
-            font-weight:500;
-            line-height:40px;
-            color:#2ca0e5;
-          }
-          em {
-            font-size:18px;
-            font-weight:600;
-            line-height:24px;
-            padding: 0 4px;
           }
         }
       }

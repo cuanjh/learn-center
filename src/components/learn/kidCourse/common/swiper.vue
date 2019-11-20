@@ -439,9 +439,8 @@ export default {
         id = this.list[this.curPage - 1].code
       }
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      console.log(xfISEResult[id])
       this.iseWords = []
-      if (xfISEResult[id]) {
+      if (xfISEResult && xfISEResult[id]) {
         this.$refs['ise'][this.curPage - 1].setScore(xfISEResult[id].total_score)
         if (Array.isArray(xfISEResult[id].sentence)) {
           xfISEResult[id].sentence.forEach(sentence => {
