@@ -6,7 +6,7 @@
       </div>
       <div class="word">
         {{ word }}
-        <i @click="read"></i>
+        <i :class="{'playing': isPlaytts}" @click="read"></i>
       </div>
       <table class="syll-phone">
         <tr v-for="(phone, index) in phones" :key="index">
@@ -51,6 +51,7 @@ export default {
       time: 0,
       playLineHeight: [8, 16, 24, 16, 8],
       isPlaying: false,
+      isPlaytts: false,
       translateX: 116,
       ttsRecorder: null
     }
@@ -108,18 +109,14 @@ export default {
     },
     hide () {
       this.isShow = false
-      // this.left = 0
-      // this.top = 0
-      // this.word = ''
-      // this.syll = ''
-      // this.phones = []
-      // this.isRecording = false
-      // this.timerInterval = null
-      // this.timerIntervalPlay = null
-      // this.time = 0
-      // this.playLineHeight = [8, 16, 24, 16, 8]
-      // this.isPlaying = false
-      // this.translateX = 116
+      this.phones = []
+      this.isRecording = false
+      this.timerInterval = null
+      this.timerIntervalPlay = null
+      this.time = 0
+      this.playLineHeight = [8, 16, 24, 16, 8]
+      this.isPlaying = false
+      this.translateX = 116
     },
     recordOpt () {
       this.isRecording = !this.isRecording
@@ -212,7 +209,11 @@ export default {
               let audio = new Audio()
               audio.src = URL.createObjectURL(blob)
               audio.oncanplay = () => {
+                this.isPlaytts = true
                 audio.play()
+              }
+              audio.onended = () => {
+                this.isPlaytts = false
               }
             })
           }
@@ -251,6 +252,9 @@ export default {
       margin-top: 6px;
       margin-left: 6px;
       cursor: pointer;
+    }
+    .playing {
+      background-image: url('../../../../../static/images/kid/icon-laba.gif');
     }
   }
   .syll-phone {
@@ -401,7 +405,7 @@ export default {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity .3s;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;

@@ -5,7 +5,7 @@
         <div class="swiper-slide" v-for="(item, index) in list" :key="'current-swiper-' + item.code" :id="chapterCode + '-' + item.code">
           <img class="picture" :src="item.image" alt="">
           <div class="content">
-            <i @click="playSourceSound(index)"></i>
+            <i :class="{'playing': isPlay}" @click="playSourceSound(index)"></i>
             <p :data-content="item.content || item.word">
               <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '" @click="showWordPanel($event, index)"></span>
             </p>
@@ -13,7 +13,7 @@
           <ise-area
             ref="ise"
             :isEvaluation="true"
-            :index="index"
+            :id="chapterCode + '-' + item.code"
             @startRecord="startRecord"
             @stopRecord="stopRecord"
             @playRecord="playRecord"
@@ -268,8 +268,8 @@ export default {
         let audio = new Audio()
         audio.src = url
       } else {
-        let image = new Image()
-        image.src = url
+        // let image = new Image()
+        // image.src = url
       }
     },
     // 播放原始音频
@@ -426,6 +426,7 @@ export default {
       console.log(xfISEResult[id])
       this.iseWords = []
       if (xfISEResult[id]) {
+        this.$refs['ise'][this.curPage - 1].setScore(xfISEResult[id].total_score)
         if (Array.isArray(xfISEResult[id].sentence)) {
           xfISEResult[id].sentence.forEach(sentence => {
             sentence.word.forEach(word => {
@@ -522,6 +523,9 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     cursor: pointer;
+  }
+  .playing {
+    background-image: url('../../../../../static/images/kid/icon-laba.gif');
   }
 }
 .left-swiper {

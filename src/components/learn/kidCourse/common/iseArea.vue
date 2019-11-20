@@ -13,6 +13,9 @@
     </div>
     <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="goWordListBox()">
       <img :src="photo" alt="">
+      <div :class="['mask', scoreClass]">
+        <span>{{ score }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -20,7 +23,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  props: ['index'],
+  props: ['id'],
   data () {
     return {
       photo: '',
@@ -30,7 +33,9 @@ export default {
       isEvaluated: false,
       isPlaying: false,
       translateX: 116,
-      timerInterval: null
+      timerInterval: null,
+      score: 0,
+      scoreClass: ''
     }
   },
   mounted () {
@@ -42,7 +47,11 @@ export default {
       kidRecordList: state => state.kidRecordList
     }),
     isHaveRecord () {
-      if (this.kidRecordList[this.index]) {
+      let order = this.id.split('-').pop()
+      let index = this.kidRecordList.findIndex(item => {
+        return item.list_order + '' === order
+      })
+      if (index !== -1) {
         return true
       }
       return false
@@ -96,6 +105,22 @@ export default {
     goWordListBox () {
       console.log('弹录录音的列表=>')
       this.$emit('goWordListBox')
+    },
+    setScore (score) {
+      console.log(score)
+      this.score = Math.round(parseFloat(score))
+      this.scoreClass = ''
+      switch (true) {
+        case score >= 80:
+          this.scoreClass = 'perfect'
+          break
+        case score >= 60:
+          this.scoreClass = 'good'
+          break
+        default:
+          this.scoreClass = 'try'
+          break
+      }
     }
   }
 }
@@ -163,6 +188,7 @@ export default {
 }
 
 .user {
+  position: relative;
   cursor: pointer;
   z-index: 1;
   transition: transform .5s ease-in;
@@ -170,6 +196,32 @@ export default {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+  }
+  .mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background:rgba(151,151,151, .7);
+    border-radius: 50%;
+    top: 0;
+    text-align: center;
+    span {
+      line-height: 50px;
+      font-size: 16px;
+      font-weight: normal;
+      color: #fff;
+      font-family: 'DIN-BlackItalic,DIN';
+      text-shadow:0px 1px 3px rgba(0,0,0,0.5);
+    }
+  }
+  .perfect {
+    border: 2px solid #20C03B;
+  }
+  .good {
+    border: 2px solid #515151;
+  }
+  .try {
+    border: 2px solid #FF685F;
   }
 }
 
