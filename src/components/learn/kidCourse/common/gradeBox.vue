@@ -35,6 +35,12 @@
           </p>
         </div>
       </div>
+      <!--领取过月卡了-->
+      <div class="prompt-box" v-show="promptBox">
+        <div>
+          <span class="content">你还没有录音哦，快去录音吧！</span>
+        </div>
+      </div>
     </div>
   </transition>
 </template>
@@ -49,7 +55,8 @@ export default {
       isShowGradeModal: false,
       chapterList: [],
       AllScore: [],
-      isGood: 0
+      isGood: 0,
+      promptBox: false
     }
   },
   created () {
@@ -119,6 +126,14 @@ export default {
     },
     // 我的评分详情
     gradeDetails () {
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      if (!xfISEResult) {
+        this.promptBox = true
+        setTimeout(() => {
+          this.promptBox = false
+        }, 3000)
+        return false
+      }
       this.isShowGradeModal = false
       Bus.$emit('showScoreDetail', this.chapterList)
     },
@@ -292,5 +307,29 @@ export default {
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
+}
+.prompt-box {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  div {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+  .content {
+    font-size:16px;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    background: rgba(0, 0, 0, 74);
+    line-height:22px;
+    padding: 10px 16px;
+    border-radius: 4px;
+  }
 }
 </style>
