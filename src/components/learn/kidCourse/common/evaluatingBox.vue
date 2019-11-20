@@ -323,17 +323,21 @@ export default {
           })
         })
       } else {
-        sentence.word.forEach(word => {
-          if (word.content !== 'sil' && word.content !== 'fil') {
-            let w = {}
-            w['content'] = word.content
-            w['total_score'] = word.total_score
-            w['is_core'] = false
-            w['phones'] = this.getPhones(word.syll)
-            w['sylls'] = this.getSylls(this.getPhones(word.syll))
-            words.push(w)
-          }
-        })
+        if (Array.isArray(sentence.word)) {
+          sentence.word.forEach(word => {
+            if (word.content !== 'sil' && word.content !== 'fil') {
+              let w = {}
+              w['content'] = word.content
+              w['total_score'] = word.total_score
+              w['is_core'] = false
+              w['phones'] = this.getPhones(word.syll)
+              w['sylls'] = this.getSylls(this.getPhones(word.syll))
+              words.push(w)
+            }
+          })
+        } else {
+          words.push(sentence.word)
+        }
       }
       return words
     },
