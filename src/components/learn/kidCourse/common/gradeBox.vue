@@ -80,10 +80,6 @@ export default {
       let type = this.$route.query.type
       return type
     },
-    // isGood () {
-    //   let good = Math.round(this.AllScore.total_score)
-    //   return good
-    // },
     beyondFriend () {
       if (this.isGood >= 98 && this.isGood <= 99) {
         return '95%'
@@ -138,21 +134,31 @@ export default {
       Bus.$emit('showScoreDetail', this.chapterList)
     },
     showGradeBox (chapterList) {
+      console.log(chapterList)
       this.chapterList = chapterList
-      // let curCode = this.chapterCode + '-' + curItem.code
-      // console.log(curCode)
-      // this.gradeData = JSON.parse(localStorage.getItem('xfISEResult'))
       let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      this.AllScore = []
-      for (let i in localXfResult) {
-        this.AllScore.push(Math.round(localXfResult[i].total_score))
+      let totalScore = 0
+      let data = []
+      if (this.curType === 'draw') {
+        Object.entries(localXfResult).forEach(item => {
+          chapterList.forEach(li => {
+            if (item[0].indexOf(li.code) > -1) {
+              totalScore += parseFloat(item[1].total_score)
+              data.push(item[1])
+            }
+          })
+        })
+      } else {
+        Object.entries(localXfResult).forEach(item => {
+          chapterList.forEach(li => {
+            if (item[0] === li.code) {
+              totalScore += parseFloat(item[1].total_score)
+              data.push(item[1])
+            }
+          })
+        })
       }
-      console.log(this.AllScore)
-      let fullstar = 0
-      for (var t in this.AllScore) {
-        fullstar += this.AllScore[t]
-      }
-      this.isGood = Math.round(fullstar / this.AllScore.length)
+      this.isGood = parseInt(totalScore / data.length)
       console.log(this.isGood)
       this.isShowGradeModal = true
     }
