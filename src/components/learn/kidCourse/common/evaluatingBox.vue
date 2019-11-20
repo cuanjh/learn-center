@@ -63,9 +63,12 @@
                     <!-- 母语的句子 -->
                     <div class="mother-sentence-box">
                       <div class="mother-grade">
-                        <i class="icon-horn" @click="playRecordSound(index)"></i>
+                        <i class="icon-horn" :class="{'playing': isPlay}" @click="playRecordSound(score)"></i>
                         <div class="grade-color">
-                          <p class="sentence" :data-content="score.content || score.word" v-html="score.formatContent"></p>
+                          <!-- <p class="sentence" :data-content="score.content || score.word" v-html="score.formatContent"></p> -->
+                          <p class="sentence" :data-content="parentList[(stringPop(score.key) - 1)].content || parentList[(stringPop(score.key) - 1)].word">
+                            <span v-for="(content, index) in parentList[(stringPop(score.key) - 1)].formatContent" :key="index" v-html="content + ' '"></span>
+                          </p>
                           <span class="score" :class="{'right': colorClass(score.total_score) == 'right', 'wrong': colorClass(score.total_score) == 'wrong'}"><em>{{Math.round(score.total_score)}}</em>分</span>
                         </div>
                       </div>
@@ -208,48 +211,6 @@ export default {
       this.initSwiper()
       this.parentList = params
       this.isShowEvaluatingModal = true
-      // if (this.$parent.type === 'draw') {
-      //   let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      //   let data = []
-      //   this.evaluatingData = []
-      //   for (let i in localXfResult) {
-      //     localXfResult[i]['formatContent'] = this.formatContent(localXfResult[i].content || localXfResult[i].words)
-      //     data.push(localXfResult[i])
-      //   }
-      //   console.log(data)
-      //   data.forEach(item => {
-      //     this.totalScore.push(Math.round(item.total_score))
-      //     if (Array.isArray(item.sentence)) {
-      //       let w = []
-      //       item.sentence.forEach((sentence, index) => {
-      //         sentence.word.forEach(word => {
-      //           word.phones = []
-      //           if (word.total_score) {
-      //             // word.phones = word.phones.concat(this.syllMethods(word))
-      //             word.phones.push(this.syllMethods(word))
-      //             w.push(word)
-      //           }
-      //         })
-      //       })
-      //       item.words = w
-      //       this.evaluatingData.push(item)
-      //     } else {
-      //       item.words = item.sentence.word
-      //       item.sentence.word.forEach(word => {
-      //         word.phones = []
-      //         if (word.total_score) {
-      //           // word.phones = word.phones.concat(this.syllMethods(word))
-      //           word.phones.push(this.syllMethods(word))
-      //         }
-      //       })
-      //       this.evaluatingData.push(item)
-      //     }
-      //   })
-      //   console.log(this.evaluatingData)
-      //   console.log(this.coreWords)
-      //   this.initSwiper()
-      // }
-      // this.totalScore = this.evaluatingData[this.curSwiperPage].total_score
       console.log(this.totalScore)
     })
   },
@@ -318,18 +279,6 @@ export default {
     console.log(this.isType)
     this.initWordData()
     this.swiperStyle()
-    // let arr = [
-    //   {
-    //     order: 1,
-    //     a: 'a'
-    //   },
-    //   {
-    //     order: 2,
-    //     a: 'b'
-    //   }
-    // ]
-    // console.log(this.curString(arr, 2))
-    console.log(this.StringPop('KEN-Basic-Level1-Unit1-Chapter1-K1A1-1'))
   },
   methods: {
     ...mapActions([
@@ -457,7 +406,9 @@ export default {
               this.curSwiperPage = swiperScore.activeIndex
               this.audio.pause()
               this.isPlay = false
-              this.iseResultSet(swiperScore.activeIndex)
+              let key = this.evaluatingData[swiperScore.activeIndex].key
+              let index = this.stringPop(key)
+              this.iseResultSet(index - 1)
             }
           }
         })
@@ -512,7 +463,7 @@ export default {
       if (!content) {
         return ''
       }
-      let result = ''
+      let result = []
       let arr = content.replace(new RegExp('\\n', 'g'), '<br/>').split(' ')
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].trim().length > 0) {
@@ -524,7 +475,7 @@ export default {
                 if (l === 0) {
                   tag = '<br/>'
                 }
-                result += '<span> ' + r[l].trim() + ' </span>' + tag
+                result.push(r[l].trim() + tag)
               }
             }
           } else if (arr[i].indexOf('?') > -1) {
@@ -535,7 +486,7 @@ export default {
                 if (j === 0) {
                   tag = '?'
                 }
-                result += '<span> ' + r[j].trim() + tag + ' </span>'
+                result.push(r[j].trim() + tag)
               }
             }
           } else if (arr[i].indexOf('”') > -1) {
@@ -546,14 +497,14 @@ export default {
                 if (k === 0) {
                   tag = '”'
                 }
-                result += '<span> ' + r[k].trim() + tag + ' </span>'
+                result.push(r[k].trim() + tag)
               }
             }
           } else {
             if (arr[i].trim() === '—') {
-              result += arr[i].trim()
+              result.push(arr[i].trim())
             } else {
-              result += '<span> ' + arr[i].trim() + ' </span>'
+              result.push(arr[i].trim())
             }
           }
         }
@@ -576,50 +527,15 @@ export default {
       }
     },
     // 截取字符串的最后一个
-    StringPop (str) {
-      return str.split('-').pop()
+    stringPop (str) {
+      return parseInt(str.split('-').pop())
     },
-    curString (arr, or) {
-      let obj = arr.find((obj) => {
-        console.log(obj)
-        return obj.order === or
-      })
-      return obj
-    },
-    // 提取因素
-    // syllMethods (word) {
-    //   let phones = []
-    //   if (Array.isArray(word.syll)) {
-    //     word.syll.forEach(item => {
-    //       if (Array.isArray(item.phone)) {
-    //         item.phone.forEach(p => {
-    //           phones.push(p)
-    //         })
-    //       } else {
-    //         phones.push(item.phone)
-    //       }
-    //     })
-    //   } else {
-    //     if (Array.isArray(word.syll.phone)) {
-    //       word.syll.phone.forEach(item => {
-    //         phones.push(item)
-    //       })
-    //     } else {
-    //       phones.push(word.syll.phone)
-    //     }
-    //   }
-    //   phones.syll = '['
-    //   phones.forEach(p => {
-    //     phones.syll += this.xfSyllPhone[p.content]
-    //   })
-    //   phones.syll += ']'
-    //   return phones
-    // },
     // 评测结果处理
     iseResultSet (page) {
       console.log(page)
       console.log($('.swiper-slide-active').find('.sentence p span'))
       let id = this.chapterCode + '-' + this.parentList[page].code
+      console.log(id)
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
       console.log(xfISEResult[id])
       if (xfISEResult[id]) {
@@ -656,9 +572,11 @@ export default {
       }
     },
     // 点击播放自己的录音
-    playRecordSound () {
+    playRecordSound (score) {
       if (!this.isPlay) {
-        let item = this.kidRecordList[this.curSwiperPage]
+        let curorder = this.stringPop(score.key)
+        let item = this.kidRecordList[curorder - 1]
+        console.log(curorder, item)
         this.audio.src = item.record_sound_url
         this.audio.oncanplay = () => {
           this.audio.play()
@@ -740,9 +658,10 @@ export default {
           line-height:25px;
           i {
             display: inline-block;
-            width: 23px;
-            height: 20px;
-            background: #2CA0E5;
+            width: 22px;
+            height: 18px;
+            background: url('../../../../../static/images/kid/icon-vip.png') no-repeat center;
+            background-size: cover;
             margin-right: 10px;
           }
         }
@@ -750,7 +669,8 @@ export default {
           display: inline-block;
           width: 8px;
           height: 14px;
-          background: #2CA0E5;
+          background: url('../../../../../static/images/kid/icon-go.png') no-repeat center;
+          background-size: cover;
           cursor: pointer;
         }
       }
@@ -877,8 +797,12 @@ export default {
               display: inline-block;
               width:20px;
               height:16px;
-              background: url('../../../../../static/images/kid/icon-laba.png') no-repeat center;
+              background-image: url('../../../../../static/images/kid/icon-laba.png');
+              background-repeat: no-repeat;
               background-size: cover;
+            }
+            .playing {
+              background-image: url('../../../../../static/images/kid/icon-laba.gif');
             }
             .mother-sentence-box {
               .mother-grade {
