@@ -392,7 +392,8 @@ export default {
       this.$refs.gradeBox.showGradeBox(this.list)
     },
     goWordListBox () {
-      this.$refs.WordListBox.showWordListBox()
+      console.log(this.iseWords)
+      this.$refs.WordListBox.showWordListBox(this.iseWords)
     },
     // 录音保存后，动画效果
     recordAnimate () {
