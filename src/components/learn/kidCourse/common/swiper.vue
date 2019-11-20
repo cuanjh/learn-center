@@ -335,7 +335,7 @@ export default {
       console.log('startEvaluate')
       let _this = this
       let item = this.list[this.curPage - 1]
-      let content = item.content || item.words
+      let content = item.content || item.word
       // 1: 上传七牛云
       let date = new Date()
       let d = date.format('yyyy/MM/dd')
