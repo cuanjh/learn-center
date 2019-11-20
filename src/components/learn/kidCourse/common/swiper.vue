@@ -447,7 +447,7 @@ export default {
         this.iseWords.forEach((word, index) => {
           let score = parseFloat(word.total_score)
           switch (true) {
-            case score >= 90:
+            case score >= 80:
               $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').addClass('right')
               break
             case score < 60:
@@ -499,12 +499,12 @@ export default {
   background: #fff;
   .picture {
     width: 100%;
-    height: 280px;
+    height: 270px;
     object-fit: cover;
   }
   .content {
     display: inline-flex;
-    padding-top: 8px;
+    padding-top: 16px;
     padding-left: 16px;
     font-size: 20px;
     font-weight: 600;

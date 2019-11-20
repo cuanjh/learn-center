@@ -135,7 +135,7 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 36px;
 }
 
 .play {

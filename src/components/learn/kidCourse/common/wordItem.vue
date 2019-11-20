@@ -4,7 +4,7 @@
     <div class="review-item">
       <p class="core-word">
         <span class="word" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}">{{word.content}}</span>
-        <i class="icon-horn"></i>
+        <i class="icon-horn" @click="startTTS($event, word.content)"></i>
       </p>
       <table class="syllable">
         <tr v-for="(phone, index) in word.phones" :key="'phone-' + index">
@@ -23,13 +23,15 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import { mapState } from 'vuex'
+import TTS from '../../../../plugins/xf_tts'
+import { PCM2WAV } from '../../../../plugins/pcm2wav'
 
 export default {
   props: ['newWords'],
   data () {
-    return {
-    }
+    return {}
   },
   computed: {
     ...mapState({
@@ -43,6 +45,48 @@ export default {
       } else if (totalScore < 60) {
         return 'wrong'
       }
+    },
+    startTTS (event, word) {
+      let ttsRecorder = new TTS.TtsRecorder({
+        lang: 'en',
+        text: word,
+        onClose: (e) => {
+          console.log('onClose')
+        },
+        onError: (data) => {
+          alert('WebSocket连接失败')
+        },
+        onMessage: (e) => {
+          let jsonData = JSON.parse(e.data)
+          if (jsonData.data) {
+            // atob ascii to binary
+            let bstr = atob(jsonData.data.audio)
+            let n = bstr.length
+            let u8arr = new Uint8Array(n)
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n)
+            }
+            let pcm2wav = new PCM2WAV()
+            pcm2wav.write(u8arr, (res) => {
+              let data = pcm2wav.read()
+              let blob = new Blob([data], {type: 'audio/wav'})
+              let audio = new Audio()
+              audio.src = URL.createObjectURL(blob)
+              audio.oncanplay = () => {
+                $(event.target).addClass('playing')
+                audio.play()
+              }
+              audio.onended = () => {
+                $(event.target).removeClass('playing')
+              }
+            })
+          }
+        },
+        onStart: () => {
+          console.log('onStart')
+        }
+      })
+      ttsRecorder.start()
     }
   }
 }
@@ -98,6 +142,9 @@ export default {
         height:16px;
         background: url('../../../../../static/images/kid/icon-laba.png') no-repeat center;
         background-size: cover;
+      }
+      .playing {
+        background-image: url('../../../../../static/images/kid/icon-laba.gif');
       }
     }
     .syllable {
