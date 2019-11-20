@@ -29,7 +29,7 @@
         </div>
         <div class="btns">
           <p class="btn share" @click="shareMyRecord()"><span>分享我的专属绘本</span></p>
-          <p class="btn grade-details" @click="gradeDetails()" >
+          <p class="btn grade-details" :class="{'no-vip': isVip !== 1}" @click="gradeDetails()" >
             <i class="icon-vip" v-if="isVip !== 1"></i>
             {{isVip !== 1 ? '会员评分详情' : '评分详情'}}
           </p>
@@ -263,10 +263,14 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        &.no-vip {
+          background: #FFB542;
+        }
         .icon-vip {
-          width: 16px;
-          height: 12px;
-          background: yellow;
+          width: 22px;
+          height: 18px;
+          background: url('../../../../../static/images/kid/icon-vip.png') no-repeat center;
+          background-size: cover;
           margin-right: 6px;
         }
       }

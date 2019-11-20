@@ -658,9 +658,10 @@ export default {
           line-height:25px;
           i {
             display: inline-block;
-            width: 23px;
-            height: 20px;
-            background: #2CA0E5;
+            width: 22px;
+            height: 18px;
+            background: url('../../../../../static/images/kid/icon-vip.png') no-repeat center;
+            background-size: cover;
             margin-right: 10px;
           }
         }
@@ -668,7 +669,8 @@ export default {
           display: inline-block;
           width: 8px;
           height: 14px;
-          background: #2CA0E5;
+          background: url('../../../../../static/images/kid/icon-go.png') no-repeat center;
+          background-size: cover;
           cursor: pointer;
         }
       }
