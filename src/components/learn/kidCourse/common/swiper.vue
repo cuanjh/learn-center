@@ -359,6 +359,9 @@ export default {
               xfISEResult = {}
             }
             let id = _this.chapterCode + '-' + item.code
+            if (_this.type === 'word') {
+              id = item.code
+            }
             _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter)
             localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
             this.iseResultSet()
@@ -423,6 +426,9 @@ export default {
     // 评测结果处理
     iseResultSet () {
       let id = this.chapterCode + '-' + this.list[this.curPage - 1].code
+      if (this.type === 'word') {
+        id = this.list[this.curPage - 1].code
+      }
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
       console.log(xfISEResult[id])
       this.iseWords = []
@@ -437,13 +443,18 @@ export default {
             })
           })
         } else {
-          this.iseWords = xfISEResult[id].sentence.word.filter(item => {
-            return item.content !== 'sil' && item.content !== 'fil'
-          })
+          if (Array.isArray(xfISEResult[id].sentence.word)) {
+            this.iseWords = xfISEResult[id].sentence.word.filter(item => {
+              return item.content !== 'sil' && item.content !== 'fil'
+            })
+          } else {
+            this.iseWords.push(xfISEResult[id].sentence.word)
+          }
         }
         console.log(this.iseWords)
         $('.swiper-slide-active').find('.content p span').removeClass('right')
         $('.swiper-slide-active').find('.content p span').removeClass('wrong')
+
         this.iseWords.forEach((word, index) => {
           let score = parseFloat(word.total_score)
           switch (true) {
