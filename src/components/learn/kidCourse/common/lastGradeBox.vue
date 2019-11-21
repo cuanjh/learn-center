@@ -2,7 +2,7 @@
   <transition name="fade">
     <div class="grade-content">
       <!-- 70分以下的显示 -->
-      <div class="no-good" v-if="isVip !== 1 || isGood < 70 || !isGood">
+      <div class="no-good" v-if="isVip !== 1 || score < 70 || !score">
         <p class="title">
           <span>炫耀一下</span>
           <span>让小伙伴听听你的声音吧~</span>
@@ -20,7 +20,7 @@
         <div class="center-box">
           <div class="center-good-img">
             <p class="grade">
-              <span><em>{{isGood}}</em>分</span>
+              <span><em>{{score}}</em>分</span>
             </p>
           </div>
         </div>
@@ -51,8 +51,7 @@ export default {
     return {
       isShowGradeModal: false,
       chapterList: [],
-      AllScore: [],
-      isGood: '',
+      score: '',
       promptBox: false
     }
   },
@@ -82,29 +81,29 @@ export default {
       return type
     },
     beyondFriend () {
-      if (this.isGood >= 98 && this.isGood <= 99) {
+      if (this.score >= 98 && this.score <= 99) {
         return '95%'
-      } else if (this.isGood >= 96 && this.isGood <= 97) {
+      } else if (this.score >= 96 && this.score <= 97) {
         return '93%'
-      } else if (this.isGood >= 94 && this.isGood <= 95) {
+      } else if (this.score >= 94 && this.score <= 95) {
         return '91%'
-      } else if (this.isGood >= 91 && this.isGood <= 93) {
+      } else if (this.score >= 91 && this.score <= 93) {
         return '90%'
-      } else if (this.isGood >= 89 && this.isGood <= 90) {
+      } else if (this.score >= 89 && this.score <= 90) {
         return '85%'
-      } else if (this.isGood >= 86 && this.isGood <= 88) {
+      } else if (this.score >= 86 && this.score <= 88) {
         return '83%'
-      } else if (this.isGood >= 84 && this.isGood <= 85) {
+      } else if (this.score >= 84 && this.score <= 85) {
         return '80%'
-      } else if (this.isGood >= 81 && this.isGood <= 83) {
+      } else if (this.score >= 81 && this.score <= 83) {
         return '79%'
-      } else if (this.isGood >= 79 && this.isGood <= 80) {
+      } else if (this.score >= 79 && this.score <= 80) {
         return '77%'
-      } else if (this.isGood >= 76 && this.isGood <= 78) {
+      } else if (this.score >= 76 && this.score <= 78) {
         return '75%'
-      } else if (this.isGood >= 73 && this.isGood <= 75) {
+      } else if (this.score >= 73 && this.score <= 75) {
         return '72%'
-      } else if (this.isGood >= 70 && this.isGood <= 72) {
+      } else if (this.score >= 70 && this.score <= 72) {
         return '68%'
       }
     }
@@ -120,7 +119,7 @@ export default {
     // 我的评分详情
     gradeDetails () {
       // let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (!this.isGood) {
+      if (this.isVip === 1 && !this.score) {
         this.promptBox = true
         setTimeout(() => {
           this.promptBox = false
@@ -157,8 +156,8 @@ export default {
           })
         })
       }
-      this.isGood = Math.round(totalScore / data.length)
-      console.log(this.isGood)
+      this.score = Math.round(totalScore / data.length)
+      console.log(this.score)
     }
   }
 }

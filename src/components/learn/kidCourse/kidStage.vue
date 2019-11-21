@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import $ from 'jquery'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
@@ -93,6 +93,16 @@ export default {
     Guide
   },
   computed: {
+    ...mapState({
+      userInfo: state => state.userInfo // 用户信息
+    }),
+    // 是否vip
+    isVip () {
+      if (!this.userInfo || !this.userInfo.member_info) {
+        return 0
+      }
+      return this.userInfo.member_info.member_type
+    },
     courseIndex () {
       let arr = this.code.split('-')
       let num = (parseInt(arr[3].toLowerCase().replace('unit', '')) - 1) * 6 + parseInt(arr[4].toLowerCase().replace('chapter', ''))
@@ -146,6 +156,7 @@ export default {
   mounted () {
     console.log('kid-stage-container', $('.kid-stage-container').height())
     this.kidContentHeight = $('.kid-stage-container').height() - 150
+    this.initData()
     // this.finishedCount = 0
     // setTimeout(() => {
     //   this.initData()
@@ -183,9 +194,14 @@ export default {
           this.list = res.teacherContent.words
           break
       }
-      console.log('kid stage list', this.list)
+      // let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      // console.log('kid stage list', this.list)
+      // if (localXfResult && this.isVip === 1) {
+      //   await bus.$emit('busGradeBox', this.list)
+      // }
+
       // await this.swiperInit()
-      await this.mySwiper.init()
+      // await this.mySwiper.init()
     },
     initRecordState () {
       this.getKidRecordList({chapter_code: this.code, teacher_module: this.type}).then(res => {

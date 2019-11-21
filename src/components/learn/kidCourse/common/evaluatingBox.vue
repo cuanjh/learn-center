@@ -238,10 +238,13 @@ export default {
     // 处理句子录音
     initData () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      console.log(xfISEResult)
-      console.log(Object.entries(xfISEResult))
+      if (!xfISEResult) {
+        return
+      }
       let totalScore = 0
       let data = []
+      console.log(xfISEResult)
+      console.log(Object.entries(xfISEResult))
       Object.entries(xfISEResult).forEach(item => {
         this.parentList.forEach(li => {
           if (item[0].indexOf(li.code) > -1) {
@@ -265,8 +268,9 @@ export default {
     // 处理单词录音
     initDataWord () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      console.log(xfISEResult)
-      console.log(Object.entries(xfISEResult))
+      if (!xfISEResult) {
+        return
+      }
       let totalScore = 0
       let data = []
       Object.entries(xfISEResult).forEach(item => {
@@ -390,7 +394,6 @@ export default {
               this.iseResultSet(0)
             },
             slideChangeTransitionStart: () => {
-              console.log(swiperScore.activeIndex)
               this.curSwiperPage = swiperScore.activeIndex
               this.audio.pause()
               this.isPlay = false
@@ -588,7 +591,7 @@ export default {
   z-index:99999999;
   overflow: hidden;
   .evaluating-content {
-    width: 600px;
+    width: 669px;
     min-height: 200px;
     position: absolute;
     top: 50%;

@@ -54,7 +54,6 @@ export default {
 
 <style lang="less" scoped>
 .guide-box {
-  width: 600px;
   min-height: 260px;
 }
 .title {

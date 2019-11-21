@@ -20,6 +20,7 @@
             @startEvaluate="startEvaluate"
             @goWordListBox="goWordListBox"
           />
+
         </div>
         <div class="swiper-slide">
           <last-grade-box v-show="isLast"/>
@@ -58,11 +59,13 @@
       </div>
     </div>
     <div class="swiper-page-container">
+      <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
       <p>
         <span>{{ curPage }}</span> / <span>{{ totalPage }}</span>
       </p>
     </div>
-    <button @click="goGradeBox()">测试学完后的弹框</button>
+    <!-- <button @click="goGradeBox()">测试学完后的弹框</button> -->
+    <score-result-box ref="scoreResult"/>
     <grade-box ref="gradeBox"/>
     <evaluating-box />
     <word-list-box ref="WordListBox"/>
@@ -82,12 +85,14 @@ import GradeBox from './gradeBox.vue'
 import EvaluatingBox from './evaluatingBox.vue'
 import WordListBox from './wordListBox.vue'
 import LastGradeBox from './lastGradeBox.vue'
+import ScoreResultBox from './scoreResultBox.vue'
 import bus from '../../../../bus'
 
 export default {
   props: ['chapterCode', 'type'],
   data () {
     return {
+      showMose: true,
       list: [],
       totalPage: 0,
       curPage: 1,
@@ -108,9 +113,13 @@ export default {
     GradeBox,
     EvaluatingBox,
     WordListBox,
-    LastGradeBox
+    LastGradeBox,
+    ScoreResultBox
   },
   mounted () {
+    setTimeout(() => {
+      this.showMose = false
+    }, 3000)
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.isVip = userInfo.member_info.member_type === 1
     // 录音插件初始化
@@ -396,6 +405,7 @@ export default {
               _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter)
               localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
               this.iseResultSet()
+              this.$refs['scoreResult'].setScoreResult(xfISEResult[id].total_score)
             }
           })
         }
@@ -647,6 +657,26 @@ export default {
     font-size: 18px;
     font-weight: 600;
     color: #B9BFC3;
+  }
+  .mouse-text {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 22%;
+    bottom: 10px;
+    span {
+      font-size:14px;
+      font-weight:500;
+      color:rgba(74,74,74,1);
+      line-height: 30px;
+    }
+    i {
+      display: inline-block;
+      width: 20px;
+      height: 30px;
+      background: url('../../../../../static/images/kidcontent/icon-mouse-img.png') no-repeat center;
+      background-size: cover;
+    }
   }
 }
 

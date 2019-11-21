@@ -13,12 +13,23 @@
     </div>
     <div class="user" :style="{transform: 'translateX(-'+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" >
       <img :src="photo" alt="" @click="goWordListBox()">
-      <div :class="['mask', scoreClass]" v-show="score" @click="goWordListBox()">
+      <div class="user-img-circle circle1" v-if="!isVip"></div>
+      <div class="user-img-circle circle2" v-if="!isVip"></div>
+      <div :class="['mask', scoreClass]" v-show="score && isVip" @click="goWordListBox()">
         <span>{{ score }}</span>
       </div>
       <router-link :to="{path: '/app/vip-home'}" target="_blank" class="icon-vip-tip" v-if="!isVip && translateX === 0">
         <span>VIP专属智能评分</span>
       </router-link>
+      <!-- 评分中。。。。 -->
+      <div class="reviewing-tip" v-show="isShowScoring && isVip && translateX === 0">
+        <p>评</p>
+        <p>分</p>
+        <p>中</p>
+        <p>.</p>
+        <p>&nbsp;.&nbsp;</p>
+        <p>.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -31,6 +42,7 @@ export default {
     return {
       photo: '',
       playLineHeight: [8, 16, 24, 16, 8],
+      isShowScoring: false,
       isRecording: false,
       isShowStopTip: false,
       isEvaluated: false,
@@ -85,6 +97,7 @@ export default {
       } else {
         this.translateX = 0
       }
+      this.isShowScoring = true
       // 判断是否需要语音测评
       this.$emit('startEvaluate')
     },
@@ -132,6 +145,7 @@ export default {
           this.scoreClass = 'try'
           break
       }
+      this.isShowScoring = false
     }
   }
 }
@@ -208,6 +222,26 @@ export default {
     height: 50px;
     border-radius: 50%;
   }
+  .user-img-circle {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    z-index: -1;
+    background:rgba(245,166,35,.09);
+    border-radius: 50%;
+    &.circle1 {
+      transform:scale(1.3);
+    }
+    &.circle2 {
+      background:rgba(245,166,35,.04);
+      transform:scale(1.7);
+    }
+  }
   .mask {
     position: absolute;
     width: 100%;
@@ -255,8 +289,60 @@ export default {
       line-height:18px;
     }
   }
+  .reviewing-tip {
+    display: flex;
+    position: absolute;
+    top: -40px;
+    left: -12px;
+    p {
+      font-size: 20px;
+      font-family: DFWaWaSC-W5,DFWaWaSC;
+      font-weight: normal;
+      color: #78c624;
+      line-height: 28px;
+      text-transform: uppercase;
+      transform: scale(.5);
+      -webkit-text-stroke: 1px gray;
+      animation: hover linear 1s infinite;
+      &:nth-child(1) {
+        animation-delay:0s;
+      }
+      &:nth-child(2) {
+        animation-delay:0.25s;
+      }
+      &:nth-child(3) {
+        animation-delay:0.375s;
+      }
+      &:nth-child(4) {
+        animation-delay:0.5s;
+      }
+      &:nth-child(5) {
+        animation-delay:0.675s;
+      }
+      &:nth-child(6) {
+        animation-delay:0.75s;
+      }
+    }
+  }
 }
-
+@keyframes hover {
+  0% {
+    transform: scale(.5);
+    color: gray;
+    -webkit-text-stroke: 1px #78c624;
+  }
+  20% {
+    transform: scale(1);
+    color: #78c624;
+    // -webkit-text-stroke: 3px gray;
+    // filter: drop-shadow(0 0 1px #78c624)drop-shadow(0 0 1px gray)drop-shadow(0 0 3px #78c624)drop-shadow(0 0 5px gray)hue-rotate(10turn);
+  }
+  50% {
+    transform: scale(.5);
+    color: gray;
+    -webkit-text-stroke: 1px #78c624;
+  }
+}
 .circle {
   position: absolute;
   top: 0px;
