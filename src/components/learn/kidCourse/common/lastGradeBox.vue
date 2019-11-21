@@ -133,6 +133,9 @@ export default {
       console.log(chapterList)
       this.chapterList = chapterList
       let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      if (!localXfResult) {
+        return
+      }
       let totalScore = 0
       let data = []
       if (this.curType === 'draw') {
