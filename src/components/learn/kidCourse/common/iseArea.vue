@@ -1,6 +1,6 @@
 <template>
   <div class="ise-area">
-    <div class="play" :style="{transform: 'translateX('+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="playRecord">
+    <div class="play" :style="{transform: 'translateX('+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" @click="playRecord">
       <span v-for="n in 5" :key="n" :style="{height: playLineHeight[n - 1] + 'px'}"></span>
     </div>
     <div class="record" @mouseenter="isShowStopTip = true" @mouseleave="isShowStopTip = false">
@@ -11,12 +11,12 @@
         <div class="tip" v-show="isShowStopTip && isRecording"></div>
       </transition>
     </div>
-    <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" >
+    <div class="user" :style="{transform: 'translateX(-'+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" >
       <img :src="photo" alt="" @click="goWordListBox()">
       <div :class="['mask', scoreClass]" v-show="score" @click="goWordListBox()">
         <span>{{ score }}</span>
       </div>
-      <router-link :to="{path: '/app/vip-home'}" target="_blank" class="icon-vip-tip" v-if="isVip !== 1 && score">
+      <router-link :to="{path: '/app/vip-home'}" target="_blank" class="icon-vip-tip" v-if="!isVip && translateX === 0">
         <span>VIP专属智能评分</span>
       </router-link>
     </div>
@@ -39,13 +39,19 @@ export default {
       timerInterval: null,
       score: '',
       scoreClass: '',
-      isVip: ''
+      isVip: false
     }
   },
   mounted () {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.photo = userInfo.photo
-    this.isVip = userInfo.member_info.member_type
+    this.isVip = userInfo.member_info.member_type === 1
+    let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+    if (xfISEResult && xfISEResult[this.id]) {
+      this.isEvaluated = true
+    } else {
+      this.isEvaluated = false
+    }
   },
   computed: {
     ...mapState({

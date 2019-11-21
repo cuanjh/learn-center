@@ -3,7 +3,7 @@
     <div class="current-swiper swiper-container">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(item, index) in list" :key="'current-swiper-' + item.code" :id="chapterCode + '-' + item.code">
-          <img class="picture" :src="item.image" alt="">
+          <img class="picture" :src="item.image | urlFix('imageView2/0/w/668/h/270/format/jpg')" alt="">
           <div class="content">
             <i :class="{'playing': isPlay}" @click="playSourceSound(index)"></i>
             <p :data-content="item.content || item.word" data-step="1">
@@ -91,7 +91,8 @@ export default {
       iseWords: [],
       repeatIndex: -1,
       timerInterval: null, // 录音间隔器
-      time: 0 // 录音计时
+      time: 0, // 录音计时
+      isVip: false
     }
   },
   components: {
@@ -101,6 +102,8 @@ export default {
     WordListBox
   },
   mounted () {
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.isVip = userInfo.member_info.member_type === 1
     // 录音插件初始化
     Recorder.init({inputSampleRate: 50400, sampleRate: 16000})
     // 获取课程数据
@@ -134,7 +137,8 @@ export default {
       'getUploadFileToken',
       'xfISE',
       'getKidRecordSave',
-      'getKidRecordList'
+      'getKidRecordList',
+      'setPartComplete'
     ]),
     // 初始化数据
     initData () {
@@ -177,7 +181,6 @@ export default {
           init: () => {
             this.iseResultSet()
             this.playSourceSound(this.curPage - 1)
-            bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
           },
           transitionStart: () => {
             // alert('transition')
@@ -196,10 +199,11 @@ export default {
             swiper3.slideTo(activeIndex + 1)
             setTimeout(() => {
               this.iseResultSet()
-              setTimeout(() => {
-                bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
-              }, 1000)
             }, 100)
+            if (this.list.length === activeIndex + 1) {
+              let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
+              this.setPartComplete({part_code: activityCode})
+            }
           }
         }
       })
@@ -361,22 +365,24 @@ export default {
         }
         let url = process.env.QINIU_DOMAIN + qiniuUrl
         // 讯飞语音测评服务
-        _this.xfISE({language: _this.xfLang[_this.chapterCode.split('-')[0]], text: content, url: url}).then(res => {
-          console.log(res)
-          if (res.code === '0' && res.data.read_sentence.rec_paper.read_chapter.except_info === '0') {
-            let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-            if (!xfISEResult) {
-              xfISEResult = {}
+        if (this.isVip) {
+          _this.xfISE({language: _this.xfLang[_this.chapterCode.split('-')[0]], text: content, url: url}).then(res => {
+            console.log(res)
+            if (res.code === '0' && res.data.read_sentence.rec_paper.read_chapter.except_info === '0') {
+              let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+              if (!xfISEResult) {
+                xfISEResult = {}
+              }
+              let id = _this.chapterCode + '-' + item.code
+              if (_this.type === 'word') {
+                id = item.code
+              }
+              _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter)
+              localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
+              this.iseResultSet()
             }
-            let id = _this.chapterCode + '-' + item.code
-            if (_this.type === 'word') {
-              id = item.code
-            }
-            _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter)
-            localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
-            this.iseResultSet()
-          }
-        })
+          })
+        }
         // 2-2: 保存录音到后台
         let courseCode = this.chapterCode.split('-').slice(0, 2).join('-')
         Recorder.getTime((duration) => {
@@ -440,7 +446,6 @@ export default {
         id = this.list[this.curPage - 1].code
       }
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      console.log(xfISEResult[id])
       this.iseWords = []
       if (xfISEResult && xfISEResult[id]) {
         this.$refs['ise'][this.curPage - 1].setScore(xfISEResult[id].total_score)
@@ -482,6 +487,14 @@ export default {
               break
           }
         })
+
+        let isShowKidGuide = localStorage.getItem('isShowKidGuide')
+        if (isShowKidGuide !== '1' && this.isVip) {
+          setTimeout(() => {
+            bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
+            localStorage.setItem('isShowKidGuide', '1')
+          }, 10)
+        }
       }
     },
     showWordPanel (event, index) {
