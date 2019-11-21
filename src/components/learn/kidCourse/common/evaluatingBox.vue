@@ -103,28 +103,6 @@
                   <p>本课核心单词得分</p>
                 </div>
                 <!-- 讯飞的识别列表音节 -->
-                <!-- <ul>
-                  <li v-for="(word, index) in evaluatingData" :key="'word' + index">
-                    <div class="li-item">
-                      <div class="review-item">
-                        <p class="core-word">
-                          <span class="word" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}">{{word.content}}</span>
-                          <i class="icon-horn"></i>
-                        </p>
-                        <table class="syllable">
-                          <tr v-for="(phone, index) in word.phones" :key="index">
-                            <td class="first">{{ (index == 0) ? word.sylls : '' }}</td>
-                            <td>{{ '音素 [' + xfSyllPhone[phone.content] + ']' }}</td>
-                            <td>{{ phone.dp_message == '0' ? '朗读正常' : '未朗读' }}</td>
-                          </tr>
-                        </table>
-                      </div>
-                      <p class="grade-color">
-                        <span class="score" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}"><em>{{Math.round(word.total_score)}}</em>分</span>
-                      </p>
-                    </div>
-                  </li>
-                </ul> -->
                 <evaluating-word :evaluatingData="evaluatingData"/>
               </div>
             </div>

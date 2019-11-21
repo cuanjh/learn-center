@@ -21,6 +21,9 @@
             @goWordListBox="goWordListBox"
           />
         </div>
+        <div class="swiper-slide">
+          <last-grade-box v-show="isLast"/>
+        </div>
       </div>
     </div>
 
@@ -49,6 +52,9 @@
             </p>
           </div>
         </div>
+        <div class="swiper-slide">
+          <last-grade-box v-show="isLast"/>
+        </div>
       </div>
     </div>
     <div class="swiper-page-container">
@@ -75,6 +81,7 @@ import cookie from '../../../../tool/cookie'
 import GradeBox from './gradeBox.vue'
 import EvaluatingBox from './evaluatingBox.vue'
 import WordListBox from './wordListBox.vue'
+import LastGradeBox from './lastGradeBox.vue'
 import bus from '../../../../bus'
 
 export default {
@@ -91,14 +98,16 @@ export default {
       iseWords: [],
       repeatIndex: -1,
       timerInterval: null, // 录音间隔器
-      time: 0 // 录音计时
+      time: 0, // 录音计时
+      isLast: false
     }
   },
   components: {
     IseArea,
     GradeBox,
     EvaluatingBox,
-    WordListBox
+    WordListBox,
+    LastGradeBox
   },
   mounted () {
     // 录音插件初始化
@@ -159,12 +168,13 @@ export default {
         })
         console.log(this.list)
         console.log('=========', data)
-        this.totalPage = this.list.length
+        this.totalPage = this.list.length + 1
         this.curPage = 1
         this.setProgress()
         setTimeout(() => {
           this.initSwiper()
         }, 100)
+        this.isLast = true
       })
     },
     // 获取数据后，初始化swiper
@@ -183,12 +193,17 @@ export default {
             // alert('transition')
           },
           slideChange: () => {
-            // alert('slideChange')
+            console.log(this.curPage, this.totalPage)
             console.log('改变了，activeIndex为' + swiper1.activeIndex)
             this.repeatIndex = -1
             this.$parent.$emit('hideWordPanel')
             let activeIndex = swiper1.activeIndex
             this.curPage = activeIndex + 1
+            if (this.curPage === this.totalPage) {
+              swiper2.slideTo(activeIndex + 1)
+              bus.$emit('busLastGradeBox', this.list)
+              return false
+            }
             this.isPlay = false
             this.playSourceSound(activeIndex)
             this.setProgress()
@@ -200,6 +215,7 @@ export default {
                 bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
               }, 1000)
             }, 100)
+            console.log(this.curPage)
           }
         }
       })
@@ -440,7 +456,6 @@ export default {
         id = this.list[this.curPage - 1].code
       }
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      console.log(xfISEResult[id])
       this.iseWords = []
       if (xfISEResult && xfISEResult[id]) {
         this.$refs['ise'][this.curPage - 1].setScore(xfISEResult[id].total_score)
