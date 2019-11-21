@@ -122,8 +122,8 @@ export default {
     },
     // 我的评分详情
     gradeDetails () {
-      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (!xfISEResult) {
+      // let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      if (!this.isGood) {
         this.promptBox = true
         setTimeout(() => {
           this.promptBox = false
@@ -158,7 +158,7 @@ export default {
           })
         })
       }
-      this.isGood = parseInt(totalScore / data.length)
+      this.isGood = Math.round(totalScore / data.length)
       console.log(this.isGood)
       this.isShowGradeModal = true
     }
