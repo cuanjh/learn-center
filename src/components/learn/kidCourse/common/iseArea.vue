@@ -16,6 +16,9 @@
       <div :class="['mask', scoreClass]" v-show="score">
         <span>{{ score }}</span>
       </div>
+      <div class="icon-vip-tip" v-if="isVip !== 1 && score">
+        <span>VIP专属智能评分</span>
+      </div>
     </div>
   </div>
 </template>
@@ -35,12 +38,14 @@ export default {
       translateX: 116,
       timerInterval: null,
       score: '',
-      scoreClass: ''
+      scoreClass: '',
+      isVip: ''
     }
   },
   mounted () {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.photo = userInfo.photo
+    this.isVip = userInfo.member_info.member_type
   },
   computed: {
     ...mapState({
@@ -222,6 +227,27 @@ export default {
   }
   .try {
     border: 2px solid #FF685F;
+  }
+  .icon-vip-tip {
+    position: absolute;
+    top: -84px;
+    left: -16px;
+    display: inline-block;
+    width: 82px;
+    height: 76px;
+    background: url('../../../../../static/images/kid/icon-vip-tip.png') no-repeat center;
+    background-size: cover;
+    text-align: center;
+    span {
+      display: inline-block;
+      width: 100%;
+      padding: 24px 14px;
+      font-size:13px;
+      font-family:PingFangSC-Semibold,PingFang SC;
+      font-weight:600;
+      color:rgba(255,255,255,1);
+      line-height:18px;
+    }
   }
 }
 
