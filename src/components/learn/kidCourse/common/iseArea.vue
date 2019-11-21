@@ -11,14 +11,14 @@
         <div class="tip" v-show="isShowStopTip && isRecording"></div>
       </transition>
     </div>
-    <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" @click="goWordListBox()">
-      <img :src="photo" alt="">
-      <div :class="['mask', scoreClass]" v-show="score">
+    <div class="user" :style="{transform: 'translateX(-'+ (isHaveRecord ? '0' : translateX) +'px)'}" >
+      <img :src="photo" alt="" @click="goWordListBox()">
+      <div :class="['mask', scoreClass]" v-show="score" @click="goWordListBox()">
         <span>{{ score }}</span>
       </div>
-      <div class="icon-vip-tip" v-if="isVip !== 1 && score">
+      <router-link :to="{path: '/app/vip-home'}" target="_blank" class="icon-vip-tip" v-if="isVip !== 1 && score">
         <span>VIP专属智能评分</span>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>

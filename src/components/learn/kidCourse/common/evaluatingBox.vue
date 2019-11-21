@@ -387,8 +387,9 @@ export default {
     initWordData () {
       this.getKidCourseContent({chapter_code: this.chapterCode}).then(res => {
         console.log('单词列表====>', res)
+        this.coreWords = []
         res.teacherContent.words.forEach(item => {
-          this.coreWords = this.coreWords.concat(item.word)
+          this.coreWords.push(item.word)
         })
         // this.coreWords = res.teacherContent.words
       })
