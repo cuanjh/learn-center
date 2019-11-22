@@ -39,9 +39,8 @@
                       <div class="mother-grade">
                         <i class="icon-horn" :class="{'playing': isPlay}" @click="playRecordSound(score)"></i>
                         <div class="grade-color">
-                          <!-- <p class="sentence" :data-content="score.content || score.word" v-html="score.formatContent"></p> -->
-                          <p class="sentence" :data-content="parentList[(stringPop(score.key) - 1)].content || parentList[(stringPop(score.key) - 1)].word">
-                            <span v-for="(content, index) in parentList[(stringPop(score.key) - 1)].formatContent" :key="index" v-html="content + ' '"></span>
+                          <p class="sentence" :data-content="score.content">
+                            <span v-for="(content, index) in score.formatContent" :key="index" v-html="content + ' '"></span>
                           </p>
                           <span class="score" :class="{'right': colorClass(score.total_score) == 'right', 'wrong': colorClass(score.total_score) == 'wrong'}"><em>{{Math.round(score.total_score)}}</em>分</span>
                         </div>
@@ -251,8 +250,9 @@ export default {
             let key = item[0]
             let sentence = {}
             sentence['key'] = key
-            sentence['content'] = item[1].content
-            sentence['formatContent'] = this.formatContent(item[1].content)
+            sentence['content'] = li.content
+            sentence['order'] = li.order
+            sentence['formatContent'] = this.formatContent(li.content)
             sentence['total_score'] = item[1].total_score
             sentence['words'] = this.getWords(item[1].sentence)
             totalScore += parseFloat(item[1].total_score)
@@ -261,6 +261,7 @@ export default {
         })
       })
       this.averageScore = totalScore / data.length
+      data.sort(this.sortSentence('order'))
       this.evaluatingData = data
       console.log('initData===>', data)
       console.log('average score', this.averageScore)
@@ -279,7 +280,7 @@ export default {
             let key = item[0]
             let obj = {}
             obj['key'] = key
-            obj['content'] = item[1].content
+            obj['content'] = li.content
             obj['total_score'] = item[1].total_score
             obj['phones'] = this.getPhones(item[1].sentence.word.syll)
             obj['sylls'] = this.getSylls(this.getPhones(item[1].sentence.word.syll))
@@ -327,6 +328,13 @@ export default {
         }
       }
       return words
+    },
+    sortSentence (key) {
+      return (a, b) => {
+        let val1 = a[key]
+        let val2 = b[key]
+        return val1 - val2
+      }
     },
     // 获取所有的音素
     getPhones (syll) {
@@ -517,11 +525,9 @@ export default {
     // 评测结果处理
     iseResultSet (page) {
       console.log(page)
-      console.log($('.swiper-slide-active').find('.sentence p span'))
       let id = this.chapterCode + '-' + this.parentList[page].code
       console.log(id)
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      console.log(xfISEResult[id])
       if (xfISEResult[id]) {
         let words = []
         if (Array.isArray(xfISEResult[id].sentence)) {
@@ -537,7 +543,6 @@ export default {
             return item.total_score
           })
         }
-        console.log(words)
         $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('right')
         $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('wrong')
         words.forEach((word, index) => {
