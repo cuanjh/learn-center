@@ -69,6 +69,7 @@ import TestYuyin from './testYuyin.vue'
 
 export default {
   props: ['code', 'type'],
+  inject: ['reload'],
   data () {
     return {
       myRecordNumTip: 1,
@@ -325,6 +326,12 @@ export default {
     setProgress (progress) {
       console.log(progress)
       this.$refs['progress'].setProgress(progress)
+    }
+  },
+  watch: {
+    $route (to, from) {
+      console.log('监听子路由的变化', to)
+      this.reload()
     }
   }
 }

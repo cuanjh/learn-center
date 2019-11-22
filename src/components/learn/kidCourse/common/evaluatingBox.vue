@@ -437,7 +437,7 @@ export default {
     // 立即强化/听儿歌
     strengthening () {
       if (this.isType === 'draw') {
-        this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
+        this.$router.push({path: '/app/kid-stage?code=' + this.chapterCode + '&type=word'})
       } else {
         this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
       }
