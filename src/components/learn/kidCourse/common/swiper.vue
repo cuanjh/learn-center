@@ -1,8 +1,11 @@
 <template>
-  <div class="swiper">
+  <div class="swiper" id="certify">
     <div class="current-swiper swiper-container">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" v-for="(item, index) in list" :key="'current-swiper-' + item.code" :id="chapterCode + '-' + item.code">
+        <div class="swiper-slide"
+          v-for="(item, index) in list"
+          :key="'current-swiper-' + item.code"
+          :id="chapterCode + '-' + item.code">
           <img class="picture" :src="item.image | urlFix('imageView2/0/w/668/h/270/format/jpg')" alt="">
           <div class="content">
             <i :class="{'playing': isPlay}" @click="playSourceSound(index)"></i>
@@ -28,7 +31,7 @@
       </div>
     </div>
 
-    <div class="nocurrent-swiper left-swiper swiper-container swiper-no-swiping">
+    <!-- <div class="nocurrent-swiper left-swiper swiper-container swiper-no-swiping">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="item in list" :key="'left-swiper-' + item.code">
           <img class="picture" :src="item.image" alt="">
@@ -54,7 +57,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="swiper-page-container">
       <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面哦！</span></div>
@@ -215,9 +218,74 @@ export default {
       })
     },
     // 获取数据后，初始化swiper
+    // initSwiper () {
+    //   var swiper1 = new Swiper('.current-swiper', {
+    //     // virtualTranslate: true,
+    //     mousewheel: true,
+    //     allowTouchMove: false,
+    //     on: {
+    //       init: () => {
+    //         this.iseResultSet()
+    //         this.playSourceSound(this.curPage - 1)
+    //       },
+    //       transitionStart: () => {
+    //         // alert('transition')
+    //       },
+    //       slideChange: () => {
+    //         console.log(this.curPage, this.totalPage)
+    //         console.log('改变了，activeIndex为' + swiper1.activeIndex)
+    //         this.repeatIndex = -1
+    //         this.$parent.$emit('hideWordPanel')
+    //         let activeIndex = swiper1.activeIndex
+    //         this.curPage = activeIndex + 1
+    //         if (this.curPage === this.totalPage) {
+    //           // swiper2.slideTo(activeIndex + 1)
+    //           $('.right-swiper').hide()
+    //           swiper2.slideTo(activeIndex + 1)
+    //           bus.$emit('busLastGradeBox', this.list)
+    //           return false
+    //         }
+    //         if (activeIndex === 0) {
+    //           $('.left-swiper').hide()
+    //           return false
+    //         }
+    //         $('.left-swiper').show()
+    //         $('.right-swiper').show()
+    //         this.isPlay = false
+    //         this.playSourceSound(activeIndex)
+    //         this.setProgress()
+    //         swiper2.slideTo(activeIndex - 1)
+    //         swiper3.slideTo(activeIndex + 1)
+    //         setTimeout(() => {
+    //           this.iseResultSet()
+    //         }, 100)
+    //         if (this.list.length === activeIndex + 1) {
+    //           let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
+    //           this.setPartComplete({part_code: activityCode})
+    //         }
+    //         console.log(this.curPage)
+    //       }
+    //     }
+    //   })
+    //   var swiper2 = new Swiper('.left-swiper', {
+    //     noSwiping: true,
+    //     observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+    //     observeParents: true // 修改swiper的父元素时，自动初始化swiper
+    //   })
+    //   var swiper3 = new Swiper('.right-swiper', {
+    //     initialSlide: 1,
+    //     noSwiping: true
+    //   })
+    //   console.log(swiper1)
+    //   console.log(swiper2)
+    //   console.log(swiper3)
+    // },
     initSwiper () {
-      var swiper1 = new Swiper('.current-swiper', {
-        // virtualTranslate: true,
+      var swiper1 = new Swiper('#certify .swiper-container', {
+        watchSlidesProgress: true,
+        slidesPerView: 'auto',
+        centeredSlides: true,
+        autoplay: false,
         mousewheel: true,
         allowTouchMove: false,
         on: {
@@ -225,34 +293,20 @@ export default {
             this.iseResultSet()
             this.playSourceSound(this.curPage - 1)
           },
-          transitionStart: () => {
-            // alert('transition')
-          },
           slideChange: () => {
-            console.log(this.curPage, this.totalPage)
-            console.log('改变了，activeIndex为' + swiper1.activeIndex)
+            console.log(this.curPage, this.totalPage, swiper1.progress)
+            console.log('改变了，activeIndex为' + this.activeIndex)
             this.repeatIndex = -1
             this.$parent.$emit('hideWordPanel')
             let activeIndex = swiper1.activeIndex
             this.curPage = activeIndex + 1
             if (this.curPage === this.totalPage) {
-              // swiper2.slideTo(activeIndex + 1)
-              $('.right-swiper').hide()
-              swiper2.slideTo(activeIndex + 1)
-              bus.$emit('busLastGradeBox', this.list)
+              console.log('最后一张显示')
               return false
             }
-            if (activeIndex === 0) {
-              $('.left-swiper').hide()
-              return false
-            }
-            $('.left-swiper').show()
-            $('.right-swiper').show()
             this.isPlay = false
             this.playSourceSound(activeIndex)
             this.setProgress()
-            swiper2.slideTo(activeIndex - 1)
-            swiper3.slideTo(activeIndex + 1)
             setTimeout(() => {
               this.iseResultSet()
             }, 100)
@@ -261,66 +315,35 @@ export default {
               this.setPartComplete({part_code: activityCode})
             }
             console.log(this.curPage)
+          },
+          progress: function (progress) {
+            for (let i = 0; i < this.slides.length; i++) {
+              let slide = this.slides.eq(i)
+              let slideProgress = this.slides[i].progress
+              let modify = 1
+              if (Math.abs(slideProgress) > 1) {
+                modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
+              }
+              let translate = slideProgress * modify * 260 + 'px'
+              let scale = 1 - Math.abs(slideProgress) / 3
+              let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
+              slide.transform('translateX(' + translate + ') scale(' + scale + ')')
+              slide.css('zIndex', zIndex)
+              slide.css('opacity', 1)
+              if (Math.abs(slideProgress) > 3) {
+                slide.css('opacity', 0)
+              }
+            }
+          },
+          setTransition: function (transition) {
+            for (var i = 0; i < this.slides.length; i++) {
+              var slide = this.slides.eq(i)
+              slide.transition(transition)
+            }
           }
         }
       })
-      var swiper2 = new Swiper('.left-swiper', {
-        noSwiping: true,
-        observer: true, // 修改swiper自己或子元素时，自动初始化swiper
-        observeParents: true // 修改swiper的父元素时，自动初始化swiper
-      })
-      var swiper3 = new Swiper('.right-swiper', {
-        initialSlide: 1,
-        noSwiping: true
-      })
       console.log(swiper1)
-      console.log(swiper2)
-      console.log(swiper3)
-      // var swiper1 = new Swiper('.current-swiper', {
-      //   // virtualTranslate: true,
-      //   mousewheel: true,
-      //   allowTouchMove: false,
-      //   watchSlidesProgress: true,
-      //   slidesPerView: 'auto',
-      //   centeredSlides: true,
-      //   loop: false,
-      //   autoplay: false,
-      //   loopedSlides: 3,
-      //   on: {
-      //     init: () => {
-      //       this.iseResultSet()
-      //       this.playSourceSound(this.curPage - 1)
-      //     },
-      //     transitionStart: () => {
-      //       // alert('transition')
-      //     },
-      //     slideChange: () => {
-      //       console.log(this.curPage, this.totalPage)
-      //       console.log('改变了，activeIndex为' + swiper1.activeIndex)
-      //       this.repeatIndex = -1
-      //       this.$parent.$emit('hideWordPanel')
-      //       let activeIndex = swiper1.activeIndex
-      //       this.curPage = activeIndex + 1
-      //       if (this.curPage === this.totalPage) {
-      //         // swiper2.slideTo(activeIndex + 1)
-      //         $('.right-swiper').hide()
-      //         bus.$emit('busLastGradeBox', this.list)
-      //         return false
-      //       }
-      //       this.isPlay = false
-      //       this.playSourceSound(activeIndex)
-      //       this.setProgress()
-      //       setTimeout(() => {
-      //         this.iseResultSet()
-      //       }, 100)
-      //       if (this.list.length === activeIndex + 1) {
-      //         let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
-      //         this.setPartComplete({part_code: activityCode})
-      //       }
-      //       console.log(this.curPage)
-      //     }
-      //   }
-      // })
     },
     // 设置学习进度
     setProgress () {
@@ -632,21 +655,19 @@ export default {
   position:relative;
 }
 .current-swiper {
-  width:668px;
+  // width:668px;
   height:480px;
-  border-radius:10px;
+  // border-radius:10px;
   margin:0 auto;
-  box-shadow:0 0 20px rgba(0,0,0,0.05);
+  // box-shadow:0 0 20px rgba(0,0,0,0.05);
   position:relative;
   z-index:99;
   background: #fff;
-  .swiper-slide {
-    background: #fff;
-  }
   .picture {
     width: 100%;
     height: 270px;
     object-fit: cover;
+    border-radius: 10px 10px 0 0;
   }
   .content {
     display: inline-flex;
@@ -673,6 +694,14 @@ export default {
   }
   .playing {
     background-image: url('../../../../../static/images/kid/icon-laba.gif');
+  }
+  .swiper-slide {
+    width:668px;
+    height:480px;
+    background: #fff;
+    border-radius:10px;
+    box-shadow: 0 8px 30px #ddd;
+    box-shadow:0px 3px 10px 0px rgba(196,208,213,0.1);
   }
 }
 .left-swiper {
@@ -780,5 +809,24 @@ export default {
     background: url('../../../../../static/images/kidcontent/icon-record-list.png') no-repeat center;
     background-size: cover;
   }
+}
+</style>
+<style scoped>
+#certify {
+  position: relative;
+  width: 1200px;
+  margin: 0 auto
+}
+#certify .swiper-container {
+  padding-bottom: 60px;
+}
+#certify .swiper-slide {
+  width:668px;
+  height:480px;
+  background: #fff;
+  border-radius: 8px;
+}
+#certify .swiper-slide-active {
+  box-shadow:0px 3px 10px 0px rgba(196,208,213,0.1);
 }
 </style>
