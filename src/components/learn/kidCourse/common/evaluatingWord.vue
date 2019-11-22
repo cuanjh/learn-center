@@ -61,7 +61,7 @@ export default {
       if (!this.isPlay) {
         let curorder = this.stringPop(word.key)
         this.kidRecordList.forEach(res => {
-          if (res.list_order === curorder) {
+          if (res.list_order === word.order) {
             item = res
           }
         })
