@@ -91,5 +91,9 @@ export default {
   },
   updateKidRecordList (state, records) {
     state.kidRecordList = records
+  },
+  // 更新浏览器是否可以录音
+  updateCanRecord (state, flag) {
+    state.isCanRecord = flag
   }
 }

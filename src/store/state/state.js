@@ -8,6 +8,7 @@ export default {
   recommendRadioPage: 1,
   recommendRadios: [],
   isAnonymous: false,
+  isCanRecord: false, // 判断浏览器是否可以录音
   langCodesSel: [], // 课程相关
   kidRecordList: [], // kid录音列表
   xfLang: {

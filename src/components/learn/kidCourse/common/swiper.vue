@@ -69,6 +69,7 @@
     <grade-box ref="gradeBox"/>
     <evaluating-box />
     <word-list-box ref="WordListBox"/>
+    <tipbox ref="tipbox" :tip="tip"/>
   </div>
 </template>
 
@@ -76,7 +77,7 @@
 import _ from 'lodash'
 import $ from 'jquery'
 import Swiper from 'swiper'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 import IseArea from './iseArea.vue'
 import Recorder from '../../../../plugins/recorder'
 import cookie from '../../../../tool/cookie'
@@ -86,6 +87,7 @@ import EvaluatingBox from './evaluatingBox.vue'
 import WordListBox from './wordListBox.vue'
 import LastGradeBox from './lastGradeBox.vue'
 import ScoreResultBox from './scoreResultBox.vue'
+import Tipbox from './tipbox.vue'
 import bus from '../../../../bus'
 
 export default {
@@ -105,7 +107,8 @@ export default {
       timerInterval: null, // 录音间隔器
       time: 0, // 录音计时
       isVip: false,
-      isLast: false
+      isLast: false,
+      tip: ''
     }
   },
   components: {
@@ -114,7 +117,14 @@ export default {
     EvaluatingBox,
     WordListBox,
     LastGradeBox,
-    ScoreResultBox
+    ScoreResultBox,
+    Tipbox
+  },
+  created () {
+    this.$on('showTip', () => {
+      this.tip = this.tips.micphone
+      this.$refs['tipbox'].$emit('tipbox-show')
+    })
   },
   mounted () {
     setTimeout(() => {
@@ -122,8 +132,8 @@ export default {
     }, 3000)
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.isVip = userInfo.member_info.member_type === 1
-    // 录音插件初始化
-    Recorder.init({inputSampleRate: 50400, sampleRate: 16000})
+    // 初始化录音插件
+    this.initRecorder()
     // 获取课程数据
     this.initData()
     // 获取qiniu token
@@ -146,7 +156,8 @@ export default {
   computed: {
     ...mapState({
       xfLang: state => state.xfLang,
-      kidRecordList: state => state.kidRecordList
+      kidRecordList: state => state.kidRecordList,
+      tips: state => state.learn.tips
     })
   },
   methods: {
@@ -158,6 +169,20 @@ export default {
       'getKidRecordList',
       'setPartComplete'
     ]),
+    ...mapMutations([
+      'updateCanRecord'
+    ]),
+    // 初始化录音
+    initRecorder () {
+      // 录音插件初始化
+      Recorder.init({inputSampleRate: 50400, sampleRate: 16000}, (flag) => {
+        this.updateCanRecord(flag)
+        if (!flag) {
+          this.tip = this.tips.micphone
+          this.$refs['tipbox'].$emit('tipbox-show')
+        }
+      })
+    },
     // 初始化数据
     initData () {
       this.getKidCourseContent({chapter_code: this.chapterCode}).then(res => {

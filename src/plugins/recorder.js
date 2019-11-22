@@ -382,12 +382,18 @@ export default {
     recorderUrl: '',
     refuseRecord: false,
     audio: new Audio(),
-    init: function (config) {
+    init: function (config, cb) {
         init( (rec) => {
+            var flag = false
             if (rec) {
                 this.recorder = rec;
+                flag = true;
             } else {
                 this.recorder = false;
+                flag = false;
+            }
+            if (cb) {
+                cb(flag)
             }
         }, config);
     },

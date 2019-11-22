@@ -67,7 +67,8 @@ export default {
   },
   computed: {
     ...mapState({
-      kidRecordList: state => state.kidRecordList
+      kidRecordList: state => state.kidRecordList,
+      isCanRecord: state => state.isCanRecord
     }),
     isHaveRecord () {
       let order = this.id.split('-').pop()
@@ -82,6 +83,10 @@ export default {
   },
   methods: {
     recordOpt () {
+      if (!this.isCanRecord) {
+        this.$parent.$emit('showTip')
+        return false
+      }
       this.isRecording = !this.isRecording
       this.isShowStopTip = true
       if (this.isRecording) {
