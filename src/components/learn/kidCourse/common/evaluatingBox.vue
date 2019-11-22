@@ -564,9 +564,16 @@ export default {
     },
     // 点击播放自己的录音
     playRecordSound (score) {
+      console.log('score', score)
       if (!this.isPlay) {
         let curorder = this.stringPop(score.key)
-        let item = this.kidRecordList[curorder - 1]
+        // let item = this.kidRecordList[curorder - 1]
+        let item = {}
+        this.kidRecordList.forEach(res => {
+          if (res.list_order === score.order) {
+            item = res
+          }
+        })
         console.log(curorder, item)
         this.audio.src = item.record_sound_url
         this.audio.oncanplay = () => {
