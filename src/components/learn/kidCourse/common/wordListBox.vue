@@ -147,12 +147,11 @@ export default {
   z-index:99999999;
   overflow: hidden;
   .word-box-content {
-    width: 669px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    // width: 470px;
+    width: 470px;
     // min-height: 260px;
     // max-height: 600px;
     background: #fff;

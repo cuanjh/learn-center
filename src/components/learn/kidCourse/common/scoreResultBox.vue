@@ -1,23 +1,25 @@
 <template>
 <transition name="fade" >
-  <div class="score-result-box" v-show="isShowScoreResult">
-    <div :class="['score-result-content', scoreClass]">
-      <span class="score">{{score}}</span>
+  <div class="score-result-box" v-show="isShowScoreResult" v-if="!noResult">
+    <div :class="['score-result-content', scoreClass]" >
+      <span class="score">{{ score }}</span>
     </div>
+    <audio id="myYeah" src="../../../../../static/sounds/yeah.mp3"></audio>
   </div>
 </transition>
 </template>
 
 <script>
 // import Bus from '../../../../bus'
-
+import $ from 'jquery'
 export default {
   data () {
     return {
       isShowScoreResult: false,
       score: '',
       scoreClass: '',
-      isVip: false
+      isVip: false,
+      noResult: ''
     }
   },
   created () {
@@ -28,7 +30,7 @@ export default {
   },
   methods: {
     setScoreResult (score) {
-      console.log(score)
+      console.log('评分===》', score)
       this.score = Math.round(score)
       this.scoreClass = ''
       switch (true) {
@@ -44,10 +46,34 @@ export default {
       }
       if (this.isVip) {
         this.isShowScoreResult = true
+        setTimeout(() => {
+          if (score >= 80) {
+            $('.perfect').css({
+              'background-image': 'url(../../../../../static/images/kid/pic-perfect.gif)'
+            })
+          } else if (score >= 60 && score < 80) {
+            $('.good').css({
+              'background-image': 'url(../../../../../static/images/kid/pic-good.gif)'
+            })
+          } else {
+            $('.nice').css({
+              'background-image': 'url(../../../../../static/images/kid/pic-nice-try.png)'
+            })
+          }
+          $('#myYeah')[0].play()
+        }, 300)
       }
       setTimeout(() => {
         this.isShowScoreResult = false
-      }, 3000)
+        $('.perfect').css({'background-image': ''})
+        $('.good').css({'background-image': ''})
+        $('.nice').css({'background-image': ''})
+      }, 2000)
+    },
+    noSetScoreResult (str) {
+      console.log(str)
+      this.noResult = str
+      alert(this.noResult)
     }
   }
 }
@@ -80,29 +106,31 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-      font-size: 60px;
+      font-size: 50px;
       font-weight: bold;
-      top: 68%;
+      top: 51%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
     &.perfect {
       width: 262px;
-      height: 278px;
-      background-image: url('../../../../../static/images/kid/pic-perfect.png');
+      height: 398px;
+      // background-image: url('../../../../../static/images/kid/pic-perfect.gif');
       .score {
         color: #20C03B;
       }
     }
     &.good {
-      background-image: url('../../../../../static/images/kid/pic-good.png');
+      height: 384px;
+      // background-image: url('../../../../../static/images/kid/pic-good.gif');
       .score {
         color: #515151;
       }
     }
     &.nice {
-      background-image: url('../../../../../static/images/kid/pic-nice-try.png');
+      // background-image: url('../../../../../static/images/kid/pic-nice-try.png');
       .score {
+        top: 68%;
         color: #FF685F;
       }
     }

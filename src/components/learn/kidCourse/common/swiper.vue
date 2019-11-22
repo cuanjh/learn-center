@@ -53,13 +53,11 @@
             </p>
           </div>
         </div>
-        <div class="swiper-slide">
-          <last-grade-box v-show="isLast"/>
-        </div>
       </div>
     </div>
+
     <div class="swiper-page-container">
-      <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面</span></div>
+      <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面哦！</span></div>
       <p>
         <span>{{ curPage }}</span> / <span>{{ totalPage }}</span>
       </p>
@@ -127,9 +125,10 @@ export default {
     })
   },
   mounted () {
+    $('.left-swiper').hide()
     setTimeout(() => {
       this.showMose = false
-    }, 3000)
+    }, 5000)
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.isVip = userInfo.member_info.member_type === 1
     // 初始化录音插件
@@ -237,10 +236,18 @@ export default {
             let activeIndex = swiper1.activeIndex
             this.curPage = activeIndex + 1
             if (this.curPage === this.totalPage) {
+              // swiper2.slideTo(activeIndex + 1)
+              $('.right-swiper').hide()
               swiper2.slideTo(activeIndex + 1)
               bus.$emit('busLastGradeBox', this.list)
               return false
             }
+            if (activeIndex === 0) {
+              $('.left-swiper').hide()
+              return false
+            }
+            $('.left-swiper').show()
+            $('.right-swiper').show()
             this.isPlay = false
             this.playSourceSound(activeIndex)
             this.setProgress()
@@ -258,7 +265,9 @@ export default {
         }
       })
       var swiper2 = new Swiper('.left-swiper', {
-        noSwiping: true
+        noSwiping: true,
+        observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+        observeParents: true // 修改swiper的父元素时，自动初始化swiper
       })
       var swiper3 = new Swiper('.right-swiper', {
         initialSlide: 1,
@@ -267,6 +276,51 @@ export default {
       console.log(swiper1)
       console.log(swiper2)
       console.log(swiper3)
+      // var swiper1 = new Swiper('.current-swiper', {
+      //   // virtualTranslate: true,
+      //   mousewheel: true,
+      //   allowTouchMove: false,
+      //   watchSlidesProgress: true,
+      //   slidesPerView: 'auto',
+      //   centeredSlides: true,
+      //   loop: false,
+      //   autoplay: false,
+      //   loopedSlides: 3,
+      //   on: {
+      //     init: () => {
+      //       this.iseResultSet()
+      //       this.playSourceSound(this.curPage - 1)
+      //     },
+      //     transitionStart: () => {
+      //       // alert('transition')
+      //     },
+      //     slideChange: () => {
+      //       console.log(this.curPage, this.totalPage)
+      //       console.log('改变了，activeIndex为' + swiper1.activeIndex)
+      //       this.repeatIndex = -1
+      //       this.$parent.$emit('hideWordPanel')
+      //       let activeIndex = swiper1.activeIndex
+      //       this.curPage = activeIndex + 1
+      //       if (this.curPage === this.totalPage) {
+      //         // swiper2.slideTo(activeIndex + 1)
+      //         $('.right-swiper').hide()
+      //         bus.$emit('busLastGradeBox', this.list)
+      //         return false
+      //       }
+      //       this.isPlay = false
+      //       this.playSourceSound(activeIndex)
+      //       this.setProgress()
+      //       setTimeout(() => {
+      //         this.iseResultSet()
+      //       }, 100)
+      //       if (this.list.length === activeIndex + 1) {
+      //         let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
+      //         this.setPartComplete({part_code: activityCode})
+      //       }
+      //       console.log(this.curPage)
+      //     }
+      //   }
+      // })
     },
     // 设置学习进度
     setProgress () {
@@ -431,6 +485,10 @@ export default {
               localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
               this.iseResultSet()
               this.$refs['scoreResult'].setScoreResult(xfISEResult[id].total_score)
+            } else {
+              this.tip = '评分不成功，请根据句子发音！'
+              this.$refs['tipbox'].$emit('tipbox-show')
+              this.$refs['ise'][this.curPage - 1].noResultAlert()
             }
           })
         }
@@ -582,6 +640,9 @@ export default {
   position:relative;
   z-index:99;
   background: #fff;
+  .swiper-slide {
+    background: #fff;
+  }
   .picture {
     width: 100%;
     height: 270px;
@@ -633,6 +694,9 @@ export default {
   border-radius:8px;
   box-shadow:0 0 20px rgba(0,0,0,0.05);
   background: #fff;
+  .swiper-slide {
+    background: #fff;
+  }
   .picture {
     width: 100%;
     max-height: 190px;
