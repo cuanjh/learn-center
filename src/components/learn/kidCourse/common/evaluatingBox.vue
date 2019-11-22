@@ -280,7 +280,8 @@ export default {
             let key = item[0]
             let obj = {}
             obj['key'] = key
-            obj['content'] = li.content
+            obj['content'] = item[1].content
+            obj['order'] = li.order
             obj['total_score'] = item[1].total_score
             obj['phones'] = this.getPhones(item[1].sentence.word.syll)
             obj['sylls'] = this.getSylls(this.getPhones(item[1].sentence.word.syll))
@@ -290,6 +291,7 @@ export default {
         })
       })
       this.averageScore = totalScore / data.length
+      data.sort(this.sortSentence('order'))
       this.evaluatingData = data
       console.log('initData===>', data)
       console.log('average score', this.averageScore)
@@ -562,9 +564,16 @@ export default {
     },
     // 点击播放自己的录音
     playRecordSound (score) {
+      console.log('score', score)
       if (!this.isPlay) {
         let curorder = this.stringPop(score.key)
-        let item = this.kidRecordList[curorder - 1]
+        // let item = this.kidRecordList[curorder - 1]
+        let item = {}
+        this.kidRecordList.forEach(res => {
+          if (res.list_order === score.order) {
+            item = res
+          }
+        })
         console.log(curorder, item)
         this.audio.src = item.record_sound_url
         this.audio.oncanplay = () => {

@@ -56,9 +56,16 @@ export default {
     // 点击播放自己的录音
     playRecordWordSound (word, index) {
       $('.icon-horn').removeClass('playing')
+      console.log(this.kidRecordList)
+      let item = {}
       if (!this.isPlay) {
         let curorder = this.stringPop(word.key)
-        let item = this.kidRecordList[index]
+        this.kidRecordList.forEach(res => {
+          if (res.list_order === word.order) {
+            item = res
+          }
+        })
+        // let item = this.kidRecordList[curorder - 1]
         console.log(curorder, item)
         this.audio.src = item.record_sound_url
         this.audio.oncanplay = () => {

@@ -147,6 +147,7 @@ export default {
   z-index:99999999;
   overflow: hidden;
   .word-box-content {
+    width: 669px;
     position: absolute;
     top: 50%;
     left: 50%;

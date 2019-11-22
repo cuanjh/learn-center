@@ -165,7 +165,7 @@ export default {
 
 <style lang="less" scoped>
 .grade-content {
-  width: 669px;
+  width: 100%;
   height: 480px;
   position: absolute;
   top: 50%;
@@ -219,9 +219,12 @@ export default {
     }
     .grade {
       position: absolute;
-      top: 102px;
-      right: 158px;
-      font-size:38px;
+      // top: 102px;
+      // right: 158px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-36%, -50%);
+      font-size:28px;
       font-weight:500;
       color:rgba(255,255,255,1);
       line-height:70px;
