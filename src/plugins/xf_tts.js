@@ -11,9 +11,9 @@ class TtsRecorder {
     this.url = config.url || 'wss://tts-api.xfyun.cn/v2/tts'
     this.host = config.host || 'tts-api.xfyun.cn'
     // 以下信息在控制台-我的应用-语音听写（流式版）页面获取
-    this.appId = '5db3aa5f'
-    this.apiKey = 'b1ae2466345960371e55acb5a22363eb'
-    this.apiSecret = '7cffb16b750c97db72ba8ae22cb5353f'
+    this.appId = process.env.XF_APPID
+    this.apiKey = process.env.XF_APIKEY
+    this.apiSecret = process.env.XF_APISECRET
   }
 
   start () {

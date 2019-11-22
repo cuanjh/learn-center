@@ -544,7 +544,7 @@ export default {
           setTimeout(() => {
             bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
             localStorage.setItem('isShowKidGuide', '1')
-          }, 10)
+          }, 3500)
         }
       }
     },

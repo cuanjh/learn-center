@@ -173,8 +173,6 @@ export default {
     // // 滚动滑轮触发scrollFunc方法  //ie 谷歌
     // window.onmousewheel = document.onmousewheel = this.scrollFunc
   },
-  updated () {
-  },
   methods: {
     ...mapActions([
       'getKidCourseContent',
