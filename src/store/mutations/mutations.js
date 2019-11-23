@@ -99,5 +99,8 @@ export default {
   // 更新讯飞语音分类
   updatexfSpeechType (state, flag) {
     state.xfSpeechType = flag
+  },
+  updatexfISEResult (state, result) {
+    state.xfISEResult = result
   }
 }

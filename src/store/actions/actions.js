@@ -273,5 +273,15 @@ export default {
   // 讯飞语音评测
   xfISE ({commit}, params) {
     return httpLogin(config.xfISEApi, params)
+  },
+  // 上报讯飞测评结果
+  xfISEUpload ({commit}, params) {
+    return httpLogin(config.xfISEUploadApi, params)
+  },
+  // 拉取讯飞测评结果
+  xfISEPull ({commit}, params) {
+    return httpLogin(config.xfISEPullApi, params).then(res => {
+      return res
+    })
   }
 }

@@ -24,25 +24,25 @@
                 </div>
               </div>
               <a href="javascript:;" class="go-intensify" @click="strengthening()">
-                {{isType == 'draw' ? '立即强化' : '听首儿歌'}}
+                {{type == 'draw' ? '立即强化' : '听首儿歌'}}
               </a>
             </div>
           </div>
           <!-- 绘本阅读 -->
-          <div class="content-box" v-if="isType == 'draw'">
+          <div class="content-box" v-if="type == 'draw'">
             <div class="swiper-content">
               <div class="swiper-container swiper-evaluating">
                 <div class="swiper-wrapper">
-                  <div class="swiper-slide" v-for="(score, index) in evaluatingData" :key="'draw' + index">
+                  <div class="swiper-slide" v-for="item in evaluatingData" :key="item.form_code">
                     <!-- 母语的句子 -->
                     <div class="mother-sentence-box">
                       <div class="mother-grade">
-                        <i class="icon-horn" :class="{'playing': isPlay}" @click="playRecordSound(score)"></i>
+                        <i class="icon-horn" :class="{'playing': isPlay}" @click="playRecordSound(item)"></i>
                         <div class="grade-color">
-                          <p class="sentence" :data-content="score.content">
-                            <span v-for="(content, index) in score.formatContent" :key="index" v-html="content + ' '"></span>
+                          <p class="sentence" :data-content="item.sentence">
+                            <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '"></span>
                           </p>
-                          <span class="score" :class="{'right': colorClass(score.total_score) == 'right', 'wrong': colorClass(score.total_score) == 'wrong'}"><em>{{Math.round(score.total_score)}}</em>分</span>
+                          <span class="score" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}"><em>{{item.score}}</em>分</span>
                         </div>
                       </div>
                       <div class="bottom-line">
@@ -56,23 +56,23 @@
                     <!-- 讯飞的识别列表音节 v-if="!Array.isArray(score.sentence)" -->
                     <div >
                       <ul>
-                        <li v-for="(item, index) in score.words" :key="'sentence-word' + index">
-                          <div class="li-item" v-if="item.total_score">
+                        <li v-for="(w, index) in item.words_score" :key="'sentence-word' + index">
+                          <div class="li-item" v-if="w.score">
                             <div class="review-item">
                               <p class="core-word">
-                                <span class="word" :class="{'right': colorClass(item.total_score) == 'right', 'wrong': colorClass(item.total_score) == 'wrong'}">{{item.content}}</span>
-                                <i class="collection" v-if="coreWords.indexOf(item.content) > -1"></i>
+                                <span class="word" :class="{'right': colorClass(w.score) == 'right', 'wrong': colorClass(w.score) == 'wrong'}">{{w.word}}</span>
+                                <i class="collection" v-if="coreWords.indexOf(w.word) > -1"></i>
                               </p>
                               <table class="syllable">
-                                <tr v-for="(phone, index) in item.phones" :key="index">
-                                  <td class="first">{{ (index == 0) ? item.sylls : '' }}</td>
-                                  <td>{{ '音素 [' + xfSyllPhone[phone.content] + ']' }}</td>
-                                  <td>{{ phone.dp_message == '0' ? '朗读正常' : '未朗读' }}</td>
+                                <tr v-for="(phone, index) in w.phonemes" :key="index">
+                                  <td class="first">{{ (index == 0) ? w.phonetic_symbol : '' }}</td>
+                                  <td>{{ '音素 ' + phone.phoneme }}</td>
+                                  <td>{{ phone.state == 0 ? '朗读正常' : '未朗读' }}</td>
                                 </tr>
                               </table>
                             </div>
                             <p class="grade-score-color">
-                              <span class="score" :class="{'right': colorClass(item.total_score) == 'right', 'wrong': colorClass(item.total_score) == 'wrong'}"><em>{{Math.round(item.total_score)}}</em>分</span>
+                              <span class="score" :class="{'right': colorClass(w.score) == 'right', 'wrong': colorClass(w.score) == 'wrong'}"><em>{{Math.round(w.score)}}</em>分</span>
                             </p>
                           </div>
                         </li>
@@ -94,7 +94,7 @@
             </div>
           </div>
           <!-- 绘本单词学习完展示 -->
-          <div class="content-box" v-if="isType == 'word'">
+          <div class="content-box" v-if="type == 'word'">
             <div class="coreWord-content">
               <div class="coreWord-slide">
                 <!-- 母语的句子 -->
@@ -152,13 +152,26 @@ export default {
   },
   created () {
     Bus.$on('showScoreDetail', (params) => {
-      console.log('点击了评分详情', params)
-      this.parentList = params
-      if (this.isType === 'draw') {
-        this.initData()
+      console.log('点击了评分详情', this.$router)
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      let curResult = xfISEResult.filter(item => {
+        return item.form_code.toLowerCase().indexOf(this.chapterCode.toLowerCase() + '-' + this.type.toLowerCase()) > -1
+      }).sort((obj1, obj2) => {
+        if (obj1.form_code < obj2.form_code) {
+          return -1
+        } else if (obj1.form_code > obj2.form_code) {
+          return 1
+        } else {
+          return 0
+        }
+      })
+      console.log(curResult)
+      // this.parentList = params
+      if (this.type === 'draw') {
+        this.initData(curResult)
         this.initEvaluSwiper()
       } else {
-        this.initDataWord()
+        this.initDataWord(curResult)
       }
       this.isShowEvaluatingModal = true
     })
@@ -176,13 +189,12 @@ export default {
       }
       return this.userInfo.member_info.member_type
     },
-    // 是绘本还是单词
-    isType () {
-      return this.$parent.type
-    },
     chapterCode () {
-      let code = this.$route.query.code
-      return code
+      return this.$route.query.code
+    },
+    // 是绘本还是单词
+    type () {
+      return this.$route.query.type
     },
     // 几颗星
     itemClasslass () { // 星星的数组
@@ -214,18 +226,9 @@ export default {
         }
       }
       return result
-    },
-    // 课程编码
-    courseCode () {
-      let code = this.$route.query.code
-      let arr = code.split('-')
-      return arr.slice(0, 2).join('-')
     }
   },
-  updated () {
-  },
   mounted () {
-    console.log(this.isType)
     this.initWordData()
     this.initGuideSwiper()
     console.log(this.kidRecordList)
@@ -235,145 +238,37 @@ export default {
       'getKidCourseContent'
     ]),
     // 处理句子录音
-    initData () {
-      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (!xfISEResult) {
+    initData (result) {
+      if (result.length === 0) {
         return
       }
       let totalScore = 0
       let data = []
-      console.log(xfISEResult)
-      console.log(Object.entries(xfISEResult))
-      Object.entries(xfISEResult).forEach(item => {
-        this.parentList.forEach(li => {
-          if (item[0].indexOf(li.code) > -1) {
-            let key = item[0]
-            let sentence = {}
-            sentence['key'] = key
-            sentence['content'] = li.content
-            sentence['order'] = li.order
-            sentence['formatContent'] = this.formatContent(li.content)
-            sentence['total_score'] = item[1].total_score
-            sentence['words'] = this.getWords(item[1].sentence)
-            totalScore += parseFloat(item[1].total_score)
-            data.push(sentence)
-          }
-        })
+      result.forEach(item => {
+        let sentence = item
+        sentence['formatContent'] = this.formatContent(item.sentence)
+        totalScore += parseFloat(item.score)
+        data.push(sentence)
       })
       this.averageScore = totalScore / data.length
-      data.sort(this.sortSentence('order'))
       this.evaluatingData = data
       console.log('initData===>', data)
       console.log('average score', this.averageScore)
     },
     // 处理单词录音
-    initDataWord () {
-      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (!xfISEResult) {
+    initDataWord (result) {
+      if (result.length === 0) {
         return
       }
       let totalScore = 0
       let data = []
-      Object.entries(xfISEResult).forEach(item => {
-        this.parentList.forEach(li => {
-          if (item[0] === li.code) {
-            let key = item[0]
-            let obj = {}
-            obj['key'] = key
-            obj['content'] = item[1].content
-            obj['order'] = li.order
-            obj['total_score'] = item[1].total_score
-            obj['phones'] = this.getPhones(item[1].sentence.word.syll)
-            obj['sylls'] = this.getSylls(this.getPhones(item[1].sentence.word.syll))
-            totalScore += parseFloat(item[1].total_score)
-            data.push(obj)
-          }
-        })
+      result.forEach(item => {
+        let obj = item
+        totalScore += parseFloat(item.score)
+        data.push(obj)
       })
       this.averageScore = totalScore / data.length
-      data.sort(this.sortSentence('order'))
       this.evaluatingData = data
-      console.log('initData===>', data)
-      console.log('average score', this.averageScore)
-    },
-    getWords (sentence) {
-      let words = []
-      if (Array.isArray(sentence)) {
-        sentence.forEach(sentence => {
-          sentence.word.forEach(word => {
-            if (word.content !== 'sil' && word.content !== 'fil') {
-              let w = {}
-              w['content'] = word.content
-              w['total_score'] = word.total_score
-              w['is_core'] = false
-              w['phones'] = this.getPhones(word.syll)
-              w['sylls'] = this.getSylls(this.getPhones(word.syll))
-              words.push(w)
-            }
-          })
-        })
-      } else {
-        if (Array.isArray(sentence.word)) {
-          sentence.word.forEach(word => {
-            if (word.content !== 'sil' && word.content !== 'fil') {
-              let w = {}
-              w['content'] = word.content
-              w['total_score'] = word.total_score
-              w['is_core'] = false
-              w['phones'] = this.getPhones(word.syll)
-              w['sylls'] = this.getSylls(this.getPhones(word.syll))
-              words.push(w)
-            }
-          })
-        } else {
-          words.push(sentence.word)
-        }
-      }
-      return words
-    },
-    sortSentence (key) {
-      return (a, b) => {
-        let val1 = a[key]
-        let val2 = b[key]
-        return val1 - val2
-      }
-    },
-    // 获取所有的音素
-    getPhones (syll) {
-      let phones = []
-      if (Array.isArray(syll)) {
-        syll.forEach(item => {
-          if (Array.isArray(item.phone)) {
-            item.phone.forEach(p => {
-              phones.push(p)
-            })
-          } else {
-            phones.push(item.phone)
-          }
-        })
-      } else {
-        if (syll) {
-          if (Array.isArray(syll.phone)) {
-            syll.phone.forEach(item => {
-              phones.push(item)
-            })
-          } else {
-            phones.push(syll.phone)
-          }
-        }
-      }
-      return phones
-    },
-    // 获取单词发音
-    getSylls (phones) {
-      if (phones) {
-        let syll = '['
-        phones.forEach(p => {
-          syll += this.xfSyllPhone[p.content]
-        })
-        syll += ']'
-        return syll
-      }
     },
     // 是绘本的时候单词列表
     initWordData () {
@@ -407,7 +302,7 @@ export default {
               this.curSwiperPage = swiperScore.activeIndex
               this.audio.pause()
               this.isPlay = false
-              let key = this.evaluatingData[swiperScore.activeIndex].key
+              let key = this.evaluatingData[swiperScore.activeIndex].form_code
               let index = this.stringPop(key)
               this.iseResultSet(index - 1)
             }
@@ -446,10 +341,11 @@ export default {
     },
     // 立即强化/听儿歌
     strengthening () {
-      if (this.isType === 'draw') {
+      if (this.type === 'draw') {
         this.$router.push({path: '/app/kid-stage?code=' + this.chapterCode + '&type=word'})
       } else {
-        this.$router.push({path: '/app/kid-course-list/' + this.courseCode})
+        let courseCode = this.chapterCode.split('-').slice(0, 2).join('-')
+        this.$router.push({path: '/app/kid-course-list/' + courseCode})
       }
     },
     // 格式化内容，添加span标签
@@ -505,14 +401,6 @@ export default {
       }
       return result
     },
-    // 判断是否是数组
-    getDataType (points) {
-      if (points.constructor === Array) {
-        return true
-      } else {
-        return false
-      }
-    },
     colorClass (totalScore) {
       if (totalScore >= 80) {
         return 'right'
@@ -526,55 +414,30 @@ export default {
     },
     // 评测结果处理
     iseResultSet (page) {
-      console.log(page)
-      let id = this.chapterCode + '-' + this.parentList[page].code
-      console.log(id)
-      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (xfISEResult[id]) {
-        let words = []
-        if (Array.isArray(xfISEResult[id].sentence)) {
-          xfISEResult[id].sentence.forEach(sentence => {
-            sentence.word.forEach(word => {
-              if (word.total_score) {
-                words.push(word)
-              }
-            })
-          })
-        } else {
-          words = xfISEResult[id].sentence.word.filter(item => {
-            return item.total_score
-          })
+      let words = this.evaluatingData[page].words_score
+      $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('right')
+      $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('wrong')
+      words.forEach((word, index) => {
+        let score = parseFloat(word.score)
+        switch (true) {
+          case score >= 80:
+            $('.swiper-slide-active .grade-color').find('.sentence span:nth-child(' + (index + 1) + ')').addClass('right')
+            break
+          case score < 60:
+            $('.swiper-slide-active .grade-color').find('.sentence span:nth-child(' + (index + 1) + ')').addClass('wrong')
+            break
+          default:
+            break
         }
-        $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('right')
-        $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('wrong')
-        words.forEach((word, index) => {
-          let score = parseFloat(word.total_score)
-          switch (true) {
-            case score >= 80:
-              $('.swiper-slide-active .grade-color').find('.sentence span:nth-child(' + (index + 1) + ')').addClass('right')
-              break
-            case score < 60:
-              $('.swiper-slide-active .grade-color').find('.sentence span:nth-child(' + (index + 1) + ')').addClass('wrong')
-              break
-            default:
-              break
-          }
-        })
-      }
+      })
     },
     // 点击播放自己的录音
-    playRecordSound (score) {
-      console.log('score', score)
+    playRecordSound (form) {
       if (!this.isPlay) {
-        let curorder = this.stringPop(score.key)
-        // let item = this.kidRecordList[curorder - 1]
-        let item = {}
-        this.kidRecordList.forEach(res => {
-          if (res.list_order === score.order) {
-            item = res
-          }
+        let curorder = this.stringPop(form.form_code)
+        let item = this.kidRecordList.find(res => {
+          return res.list_order === curorder
         })
-        console.log(curorder, item)
         this.audio.src = item.record_sound_url
         this.audio.oncanplay = () => {
           this.audio.play()

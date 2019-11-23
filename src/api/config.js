@@ -190,5 +190,7 @@ export default {
   studyProgressUnlockApi: '/studyv1/progress/module/unlock', // 内容模块解锁接口
 
   // 讯飞语音
-  xfISEApi: '/web/xf/ise' // 讯飞语音评测接口
+  xfISEApi: '/web/xf/ise', // 讯飞语音评测接口
+  xfISEUploadApi: '/studyv1/xunfei/upload', // 上传讯飞测评结果
+  xfISEPullApi: '/studyv1/xunfei/pull' // 拉取测评结果
 }

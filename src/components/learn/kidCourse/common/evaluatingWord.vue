@@ -1,22 +1,22 @@
 <template>
   <ul>
-    <li v-for="(word, index) in evaluatingData" :key="'word' + index">
+    <li v-for="(form, index) in evaluatingData" :key="form.form_code">
       <div class="li-item">
         <div class="review-item">
           <p class="core-word">
-            <span class="word" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}">{{word.content}}</span>
-            <i class="icon-horn" :id="'word' + index" @click="playRecordWordSound(word, index)"></i>
+            <span class="word" :class="{'right': colorClass(form.score) == 'right', 'wrong': colorClass(form.score) == 'wrong'}">{{form.sentence}}</span>
+            <i class="icon-horn" :id="'word' + index" @click="playRecordWordSound(form, index)"></i>
           </p>
           <table class="syllable">
-            <tr v-for="(phone, index) in word.phones" :key="index">
-              <td class="first">{{ (index == 0) ? word.sylls : '' }}</td>
-              <td>{{ '音素 [' + xfSyllPhone[phone.content] + ']' }}</td>
-              <td>{{ phone.dp_message == '0' ? '朗读正常' : '未朗读' }}</td>
+            <tr v-for="(phone, index) in form.words_score[0].phonemes" :key="index">
+              <td class="first">{{ (index == 0) ? phone.phonetic_symbol : '' }}</td>
+              <td>{{ '音素 ' + phone.phoneme }}</td>
+              <td>{{ phone.state == 0 ? '朗读正常' : '未朗读' }}</td>
             </tr>
           </table>
         </div>
         <p class="grade-color">
-          <span class="score" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}"><em>{{Math.round(word.total_score)}}</em>分</span>
+          <span class="score" :class="{'right': colorClass(form.score) == 'right', 'wrong': colorClass(form.score) == 'wrong'}"><em>{{Math.round(form.score)}}</em>分</span>
         </p>
       </div>
     </li>
@@ -37,8 +37,7 @@ export default {
   },
   computed: {
     ...mapState({
-      kidRecordList: state => state.kidRecordList,
-      xfSyllPhone: state => state.xfSyllPhone // 因素的对应表
+      kidRecordList: state => state.kidRecordList
     })
   },
   methods: {
@@ -57,16 +56,11 @@ export default {
     playRecordWordSound (word, index) {
       $('.icon-horn').removeClass('playing')
       console.log(this.kidRecordList)
-      let item = {}
       if (!this.isPlay) {
-        let curorder = this.stringPop(word.key)
-        this.kidRecordList.forEach(res => {
-          if (res.list_order === word.order) {
-            item = res
-          }
+        let curorder = this.stringPop(word.form_code)
+        let item = this.kidRecordList.filter(res => {
+          return res.list_order === curorder
         })
-        // let item = this.kidRecordList[curorder - 1]
-        console.log(curorder, item)
         this.audio.src = item.record_sound_url
         this.audio.oncanplay = () => {
           this.audio.play()

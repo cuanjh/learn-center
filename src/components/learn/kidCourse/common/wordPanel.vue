@@ -11,8 +11,8 @@
       <table class="syll-phone">
         <tr v-for="(phone, index) in phones" :key="index">
           <td>{{ (index == 0) ? syll : '' }}</td>
-          <td>{{ '音素 [' + xfSyllPhone[phone.content] + ']' }}</td>
-          <td>{{ phone.dp_message == '0' ? '朗读正常' : '未朗读' }}</td>
+          <td>{{ '音素 ' + phone.phoneme }}</td>
+          <td>{{ phone.state == 0 ? '朗读正常' : '未朗读' }}</td>
         </tr>
       </table>
       <div class="ise-area">
@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import IseArea from './iseArea.vue'
 import Recorder from '../../../../plugins/recorder.js'
 import TTS from '../../../../plugins/xf_tts'
@@ -69,42 +68,14 @@ export default {
       this.isShow = false
     }
   },
-  computed: {
-    ...mapState({
-      xfSyllPhone: state => state.xfSyllPhone
-    })
-  },
   methods: {
     show (params) {
       console.log(params)
       this.left = params.offset.left - 70
       this.top = params.offset.top + 35
-      this.word = params.word.content
-      this.phones = []
-      if (Array.isArray(params.word.syll)) {
-        params.word.syll.forEach(item => {
-          if (Array.isArray(item.phone)) {
-            item.phone.forEach(p => {
-              this.phones.push(p)
-            })
-          } else {
-            this.phones.push(item.phone)
-          }
-        })
-      } else {
-        if (Array.isArray(params.word.syll.phone)) {
-          params.word.syll.phone.forEach(item => {
-            this.phones.push(item)
-          })
-        } else {
-          this.phones.push(params.word.syll.phone)
-        }
-      }
-      this.syll = '['
-      this.phones.forEach(p => {
-        this.syll += this.xfSyllPhone[p.content]
-      })
-      this.syll += ']'
+      this.word = params.word.word
+      this.phones = params.word.phonemes
+      this.syll = params.word.phonetic_symbol
       this.isShow = true
     },
     hide () {

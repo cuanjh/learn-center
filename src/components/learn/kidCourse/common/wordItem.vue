@@ -1,21 +1,21 @@
 <template>
 <div class="word-item">
-  <div class="item" v-for="(word, index) in newWords" :key="index">
+  <div class="item" v-for="(item, index) in newWords" :key="index">
     <div class="review-item">
       <p class="core-word">
-        <span class="word" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}">{{word.content}}</span>
-        <i class="icon-horn" @click="startTTS($event, word.content)"></i>
+        <span class="word" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}">{{item.word}}</span>
+        <i class="icon-horn" @click="startTTS($event, item.word)"></i>
       </p>
       <table class="syllable">
-        <tr v-for="(phone, index) in word.phones" :key="'phone-' + index">
-          <td class="first">{{ (index == 0) ? word.sylls : '' }}</td>
-          <td>{{ '音素 [' + xfSyllPhone[phone.content] + ']' }}</td>
-          <td>{{ phone.dp_message == '0' ? '朗读正常' : '未朗读' }}</td>
+        <tr v-for="(phone, index) in item.phonemes" :key="'phone-' + index">
+          <td class="first">{{ (index == 0) ? item.phonetic_symbol : '' }}</td>
+          <td>{{ '音素 ' + phone.phoneme }}</td>
+          <td>{{ phone.state == 0 ? '朗读正常' : '未朗读' }}</td>
         </tr>
       </table>
     </div>
     <p class="score-color">
-      <span class="score" :class="{'right': colorClass(word.total_score) == 'right', 'wrong': colorClass(word.total_score) == 'wrong'}"><em>{{Math.round(word.total_score)}}</em>分</span>
+      <span class="score" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}"><em>{{Math.round(item.score)}}</em>分</span>
     </p>
   </div>
 </div>
@@ -24,7 +24,6 @@
 
 <script>
 import $ from 'jquery'
-import { mapState } from 'vuex'
 import TTS from '../../../../plugins/xf_tts'
 import { PCM2WAV } from '../../../../plugins/pcm2wav'
 
@@ -32,11 +31,6 @@ export default {
   props: ['newWords'],
   data () {
     return {}
-  },
-  computed: {
-    ...mapState({
-      xfSyllPhone: state => state.xfSyllPhone // 因素的对应表
-    })
   },
   methods: {
     colorClass (totalScore) {

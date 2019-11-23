@@ -38,7 +38,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  props: ['id'],
+  props: ['formCode'],
   data () {
     return {
       photo: '',
@@ -60,10 +60,13 @@ export default {
     this.photo = userInfo.photo
     this.isVip = userInfo.member_info.member_type === 1
     let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-    if (xfISEResult && xfISEResult[this.id]) {
-      this.isEvaluated = true
-    } else {
+    let findIndex = xfISEResult.findIndex(item => {
+      return item.form_code === this.formCode
+    })
+    if (findIndex === -1) {
       this.isEvaluated = false
+    } else {
+      this.isEvaluated = true
     }
   },
   computed: {
@@ -73,7 +76,7 @@ export default {
       xfSpeechType: state => state.xfSpeechType
     }),
     isHaveRecord () {
-      let order = this.id.split('-').pop()
+      let order = this.formCode.split('-').pop()
       let index = this.kidRecordList.findIndex(item => {
         return item.list_order + '' === order
       })

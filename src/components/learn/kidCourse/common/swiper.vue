@@ -6,7 +6,7 @@
           v-for="(item, index) in list"
           :key="'current-swiper-' + item.code"
           :id="chapterCode + '-' + item.code">
-          <img class="picture" :src="item.image | urlFix('imageView2/0/w/668/h/270/format/jpg')" alt="">
+          <img class="picture" :src="item.image | urlFix('imageView2/0/w/2001/h/900/format/jpg')" alt="">
           <div class="content">
             <i @click="playSourceSound(index)"></i>
             <p :data-content="item.content || item.word" data-step="1">
@@ -17,7 +17,7 @@
           <ise-area
             ref="ise"
             :isEvaluation="true"
-            :id="chapterCode + '-' + item.code"
+            :formCode="formCode"
             @startRecord="startRecord"
             @stopRecord="stopRecord"
             @playRecord="playRecord"
@@ -26,8 +26,8 @@
           />
           <div class="shade"></div>
         </div>
-        <div class="swiper-slide">
-          <last-grade-box v-show="isLast"/>
+        <div class="swiper-slide" v-show="xfSpeechType === 'ise'">
+          <last-grade-box :score="avaScore" v-show="isLast"/>
           <div class="shade"></div>
         </div>
       </div>
@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import $ from 'jquery'
 import Swiper from 'swiper'
 import { mapActions, mapState, mapMutations } from 'vuex'
@@ -72,6 +71,7 @@ export default {
       showMose: true,
       list: [],
       totalPage: 0,
+      avaScore: 0,
       curPage: 1,
       audio: new Audio(),
       recordAudio: new Audio(),
@@ -107,6 +107,13 @@ export default {
     }, 5000)
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.isVip = userInfo.member_info.member_type === 1
+    // 拉取讯飞测评数据
+    this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
+      if (res.success) {
+        localStorage.setItem('xfISEResult', JSON.stringify(res.forms))
+        this.getAvarageScore()
+      }
+    })
     // 初始化录音插件
     this.initRecorder()
     // 获取课程数据
@@ -133,8 +140,12 @@ export default {
       xfLang: state => state.xfLang,
       kidRecordList: state => state.kidRecordList,
       tips: state => state.learn.tips,
-      xfSpeechType: state => state.xfSpeechType
-    })
+      xfSpeechType: state => state.xfSpeechType,
+      xfSyllPhone: state => state.xfSyllPhone
+    }),
+    formCode () {
+      return this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1) + '-' + this.curPage
+    }
   },
   methods: {
     ...mapActions([
@@ -143,7 +154,9 @@ export default {
       'xfISE',
       'getKidRecordSave',
       'getKidRecordList',
-      'setPartComplete'
+      'setPartComplete',
+      'xfISEUpload',
+      'xfISEPull'
     ]),
     ...mapMutations([
       'updateCanRecord'
@@ -182,7 +195,10 @@ export default {
         })
         console.log(this.list)
         console.log('=========', data)
-        this.totalPage = this.list.length + 1
+        this.totalPage = this.list.length
+        if (this.xfSpeechType === 'ise') {
+          this.totalPage = this.list.length + 1
+        }
         this.curPage = 1
         this.setProgress()
         setTimeout(() => {
@@ -228,6 +244,7 @@ export default {
             if (this.list.length === activeIndex + 1) {
               let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
               this.setPartComplete({part_code: activityCode})
+              this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
             }
             console.log(this.curPage)
           },
@@ -425,16 +442,28 @@ export default {
             if (res.code === '0') {
               let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
               if (!xfISEResult) {
-                xfISEResult = {}
+                xfISEResult = []
               }
-              let id = _this.chapterCode + '-' + item.code
-              if (_this.type === 'word') {
-                id = item.code
+              let formObj = {
+                form_code: this.formCode,
+                sentence: item.content || item.word,
+                score: Math.round(parseFloat(res.data.read_sentence.rec_paper.read_chapter.total_score)),
+                record_url: url
               }
-              _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter)
+              let words = this.getWords(res.data.read_sentence.rec_paper.read_chapter.sentence)
+              formObj['words_score'] = words
+              console.log('fromObj', formObj)
+              let formIndex = xfISEResult.findIndex(item => {
+                return item.form_code === this.formCode
+              })
+              if (formIndex === -1) {
+                xfISEResult.push(formObj)
+              } else {
+                xfISEResult.splice(formIndex, 1, formObj)
+              }
               localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
+              this.getAvarageScore()
               this.iseResultSet()
-              this.$refs['scoreResult'].setScoreResult(xfISEResult[id].total_score)
             } else {
               this.tip = '评分不成功，请根据句子发音！'
               this.$refs['tipbox'].$emit('tipbox-show')
@@ -479,47 +508,29 @@ export default {
     },
     // 评测结果处理
     iseResultSet () {
-      let id = this.chapterCode + '-' + this.list[this.curPage - 1].code
-      if (this.type === 'word') {
-        id = this.list[this.curPage - 1].code
-      }
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
       this.iseWords = []
-      if (xfISEResult && xfISEResult[id]) {
-        this.$refs['ise'][this.curPage - 1].setScore(xfISEResult[id].total_score)
-        if (Array.isArray(xfISEResult[id].sentence)) {
-          xfISEResult[id].sentence.forEach(sentence => {
-            sentence.word.forEach(word => {
-              if (word.content !== 'sil' && word.content !== 'fil') {
-                this.iseWords.push(word)
-              }
-            })
-          })
-        } else {
-          if (Array.isArray(xfISEResult[id].sentence.word)) {
-            this.iseWords = xfISEResult[id].sentence.word.filter(item => {
-              return item.content !== 'sil' && item.content !== 'fil'
-            })
-          } else {
-            this.iseWords.push(xfISEResult[id].sentence.word)
-          }
+      if (xfISEResult && xfISEResult.length > 0) {
+        let formObj = xfISEResult.find(item => {
+          return item.form_code === this.formCode
+        })
+        if (!formObj) {
+          return false
         }
+        this.$refs['ise'][this.curPage - 1].setScore(formObj.score)
+        this.iseWords = formObj.words_score
         console.log(this.iseWords)
         $('.swiper-slide-active').find('.content p span').removeClass('right')
         $('.swiper-slide-active').find('.content p span').removeClass('wrong')
 
         this.iseWords.forEach((word, index) => {
-          let score = parseFloat(word.total_score)
+          let score = parseInt(word.score)
           switch (true) {
             case score >= 80:
               $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').addClass('right')
               break
             case score < 60:
               $('.swiper-slide-active').find('.content p span:nth-child(' + (index + 1) + ')').addClass('wrong')
-              // $('#' + id).find('.content p span:nth-child(' + (index + 1) + ')').click((ele) => {
-              //   let offset = $(ele.currentTarget).offset()
-              //   this.$parent.$emit('showWordPanel', {word: word, offset: offset})
-              // })
               break
             default:
               break
@@ -592,6 +603,106 @@ export default {
           $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('wrong')
         }
       }
+    },
+    // 获取句子中所有的单词
+    getWords (sentence) {
+      let words = []
+      if (Array.isArray(sentence)) {
+        sentence.forEach(sentence => {
+          sentence.word.forEach(word => {
+            if (word.content !== 'sil' && word.content !== 'fil') {
+              let w = {}
+              w['word'] = word.content
+              w['score'] = word.total_score
+              w['phonemes'] = this.getPhones(word.syll)
+              w['phonetic_symbol'] = this.getSylls(this.getPhones(word.syll))
+              words.push(w)
+            }
+          })
+        })
+      } else {
+        if (Array.isArray(sentence.word)) {
+          sentence.word.forEach(word => {
+            if (word.content !== 'sil' && word.content !== 'fil') {
+              let w = {}
+              w['word'] = word.content
+              w['score'] = Math.round(parseFloat(word.total_score))
+              w['phonemes'] = this.getPhones(word.syll)
+              w['phonetic_symbol'] = this.getSylls(this.getPhones(word.syll))
+              words.push(w)
+            }
+          })
+        } else {
+          let w = {}
+          w['word'] = sentence.word.content
+          w['score'] = Math.round(parseFloat(sentence.word.total_score))
+          w['phonemes'] = this.getPhones(sentence.word.syll)
+          w['phonetic_symbol'] = this.getSylls(this.getPhones(sentence.word.syll))
+          words.push(w)
+        }
+      }
+      return words
+    },
+    // 获取所有的音素
+    getPhones (syll) {
+      let phones = []
+      if (Array.isArray(syll)) {
+        syll.forEach(item => {
+          if (Array.isArray(item.phone)) {
+            item.phone.forEach(p => {
+              let pObj = {}
+              pObj['phoneme'] = '[' + this.xfSyllPhone[p.content] + ']'
+              pObj['state'] = parseInt(p.dp_message)
+              phones.push(pObj)
+            })
+          } else {
+            let pObj = {}
+            pObj['phoneme'] = '[' + this.xfSyllPhone[item.content] + ']'
+            pObj['state'] = parseInt(item.dp_message)
+            phones.push(pObj)
+          }
+        })
+      } else {
+        if (syll) {
+          if (Array.isArray(syll.phone)) {
+            syll.phone.forEach(item => {
+              let pObj = {}
+              pObj['phoneme'] = '[' + this.xfSyllPhone[item.content] + ']'
+              pObj['state'] = parseInt(item.dp_message)
+              phones.push(pObj)
+            })
+          } else {
+            let pObj = {}
+            pObj['phoneme'] = '[' + this.xfSyllPhone[syll.phone.content] + ']'
+            pObj['state'] = parseInt(syll.phone.dp_message)
+            phones.push(pObj)
+          }
+        }
+      }
+      return phones
+    },
+    // 获取单词发音
+    getSylls (phones) {
+      if (phones) {
+        let syll = '['
+        phones.forEach(p => {
+          syll += p.phoneme.replace('[', '').replace(']', '')
+        })
+        syll += ']'
+        return syll
+      }
+    },
+    getAvarageScore () {
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      let sumScore = 0
+      let count = 0
+      xfISEResult.forEach(item => {
+        if (item.form_code.indexOf(this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1) + '-') > -1) {
+          sumScore += item.score
+          count++
+        }
+      })
+      this.avaScore = Math.round(sumScore * 1.0 / count)
     }
   }
 }

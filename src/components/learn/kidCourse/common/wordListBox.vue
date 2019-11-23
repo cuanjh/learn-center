@@ -49,61 +49,12 @@ export default {
     }
   },
   methods: {
-    showWordListBox (params) {
-      let words = params
-      this.newWords = []
-      words.forEach(word => {
-        if (word.content !== 'sil' && word.content !== 'fil') {
-          let w = {}
-          w['content'] = word.content
-          w['total_score'] = word.total_score
-          w['phones'] = this.getPhones(word.syll)
-          w['sylls'] = this.getSylls(this.getPhones(word.syll))
-          this.newWords.push(w)
-        }
-      })
-      console.log(this.newWords)
+    showWordListBox (words) {
+      this.newWords = words
       this.showWordBox = true
     },
     closeModal () {
       this.showWordBox = false
-    },
-    // 获取单词发音
-    getSylls (phones) {
-      if (phones) {
-        let syll = '['
-        phones.forEach(p => {
-          syll += this.xfSyllPhone[p.content]
-        })
-        syll += ']'
-        return syll
-      }
-    },
-    // 获取所有的音素
-    getPhones (syll) {
-      let phones = []
-      if (Array.isArray(syll)) {
-        syll.forEach(item => {
-          if (Array.isArray(item.phone)) {
-            item.phone.forEach(p => {
-              phones.push(p)
-            })
-          } else {
-            phones.push(item.phone)
-          }
-        })
-      } else {
-        if (syll) {
-          if (Array.isArray(syll.phone)) {
-            syll.phone.forEach(item => {
-              phones.push(item)
-            })
-          } else {
-            phones.push(syll.phone)
-          }
-        }
-      }
-      return phones
     },
     initGuideSwiper () {
       this.$nextTick(() => {

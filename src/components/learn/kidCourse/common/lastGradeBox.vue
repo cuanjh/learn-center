@@ -47,11 +47,11 @@ import { mapState } from 'vuex'
 import Bus from '../../../../bus'
 
 export default {
+  props: ['score'],
   data () {
     return {
       isShowGradeModal: false,
       chapterList: [],
-      score: '',
       promptBox: false
     }
   },
@@ -126,7 +126,7 @@ export default {
         }, 3000)
         return false
       }
-      Bus.$emit('showScoreDetail', this.chapterList)
+      Bus.$emit('showScoreDetail')
     },
     showLastGradeBox (chapterList) {
       console.log(chapterList)
