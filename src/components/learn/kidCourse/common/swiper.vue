@@ -10,6 +10,7 @@
               <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '" @click="showWordPanel($event, index)"></span>
             </p>
           </div>
+          <div class="result-out" v-text="resultOut"></div>
           <ise-area
             ref="ise"
             :isEvaluation="true"
@@ -108,7 +109,8 @@ export default {
       time: 0, // 录音计时
       isVip: false,
       isLast: false,
-      tip: ''
+      tip: '',
+      resultOut: ''
     }
   },
   components: {
@@ -157,7 +159,8 @@ export default {
     ...mapState({
       xfLang: state => state.xfLang,
       kidRecordList: state => state.kidRecordList,
-      tips: state => state.learn.tips
+      tips: state => state.learn.tips,
+      xfSpeechType: state => state.xfSpeechType
     })
   },
   methods: {
@@ -364,6 +367,9 @@ export default {
         this.time++
       }, 1000)
       Recorder.startRecording()
+      if (this.xfSpeechType === 'iat') {
+        this.$parent.$emit('startIatRecorder')
+      }
     },
     // 停止录音
     stopRecord () {
@@ -371,6 +377,9 @@ export default {
       this.time = 0
       Recorder.stopRecording()
       this.$refs['ise'][this.curPage - 1].stopRecord()
+      if (this.xfSpeechType === 'iat') {
+        this.$parent.$emit('stopIatRecorder')
+      }
     },
     // 播放录音
     playRecord (flag) {
@@ -415,10 +424,10 @@ export default {
         }
         let url = process.env.QINIU_DOMAIN + qiniuUrl
         // 讯飞语音测评服务
-        if (this.isVip) {
+        if (this.isVip && this.xfSpeechType === 'ise') {
           _this.xfISE({language: _this.xfLang[_this.chapterCode.split('-')[0]], text: content, url: url}).then(res => {
             console.log(res)
-            if (res.code === '0' && res.data.read_sentence.rec_paper.read_chapter.except_info === '0') {
+            if (res.code === '0') {
               let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
               if (!xfISEResult) {
                 xfISEResult = {}
@@ -467,28 +476,7 @@ export default {
     },
     // 录音保存后，动画效果
     recordAnimate () {
-      console.log($('.ise-area .play').offset())
-      let offset = $('.swiper-slide-active .ise-area .play').offset()
-      $('.record-save-animat').css({
-        left: offset.left,
-        top: offset.top
-      })
-      $('.record-save-animat').show()
-      let targetOffest = $('.record-box .record-icon').offset()
-      console.log(targetOffest)
-      $('.record-save-animat').stop().animate({
-        left: targetOffest.left,
-        top: targetOffest.top
-      }, {
-        duration: 800,
-        specialEasing: {
-          left: 'linear',
-          top: 'swing'
-        },
-        complete: () => {
-          $('.record-save-animat').hide()
-        }
-      })
+      bus.$emit('recordAnimate')
     },
     // 评测结果处理
     iseResultSet () {
@@ -559,6 +547,50 @@ export default {
         } else {
           this.$parent.$emit('hideWordPanel')
           this.repeatIndex = -1
+        }
+      }
+    },
+    // 设置语音识别结果
+    setResultOut (resultOut) {
+      this.resultOut = resultOut
+      if (this.resultOut === '') {
+        $('.swiper-slide').find('.content p span').removeClass('right')
+        $('.swiper-slide').find('.content p span').removeClass('wrong')
+      }
+      // 文本匹配
+      $('.current-swiper .swiper-slide-active').find('.content p span').removeClass('right')
+      $('.current-swiper .swiper-slide-active').find('.content p span').removeClass('wrong')
+      let content = $('.current-swiper .swiper-slide-active').find('.content p').data('content')
+      let arr1 = content.toLowerCase()
+        .replace(new RegExp(/\?/, 'g'), ' ')
+        .replace(new RegExp(',', 'g'), ' ')
+        .replace(new RegExp(/\./, 'g'), ' ')
+        .replace(new RegExp('-', 'g'), ' ')
+        .replace(new RegExp('!', 'g'), ' ')
+        .replace(new RegExp('“', 'g'), ' ')
+        .replace(new RegExp('”', 'g'), ' ')
+        .replace(new RegExp('"', 'g'), ' ')
+        .replace(new RegExp(':', 'g'), ' ')
+        .trim(' ').split(' ')
+      let contentArr = []
+      for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i].trim().length > 0) {
+          contentArr.push(arr1[i].replace(new RegExp('—', 'g'), '').trim())
+        }
+      }
+      console.log('content', contentArr)
+      let arr = resultOut.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').split(' ')
+      let result = []
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].trim().length > 0) {
+          result.push(arr[i].trim())
+        }
+      }
+      for (let j = 0; j < result.length; j++) {
+        if (result[j] === contentArr[j]) {
+          $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('right')
+        } else {
+          $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('wrong')
         }
       }
     }
@@ -705,16 +737,10 @@ export default {
   }
 }
 
-.record-save-animat {
-  position: absolute;
-  display: none;
-  z-index: 999999;
-  i {
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    background: url('../../../../../static/images/kidcontent/icon-record-list.png') no-repeat center;
-    background-size: cover;
-  }
+.result-out {
+  height: 20px;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
 }
 </style>

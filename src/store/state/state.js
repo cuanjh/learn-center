@@ -11,6 +11,7 @@ export default {
   isCanRecord: false, // 判断浏览器是否可以录音
   langCodesSel: [], // 课程相关
   kidRecordList: [], // kid录音列表
+  xfSpeechType: '', // 讯飞语音分类,asr 语音听写（识别）, ise 语音评测
   xfLang: {
     'KEN': 'en_us'
   },

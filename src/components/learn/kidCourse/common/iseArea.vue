@@ -11,7 +11,7 @@
         <div class="tip" v-show="isShowStopTip && isRecording"></div>
       </transition>
     </div>
-    <div class="user" :style="{transform: 'translateX(-'+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" >
+    <div class="user" v-show="xfSpeechType == 'ise'" :style="{transform: 'translateX(-'+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" >
       <img :src="photo" alt="" @click="goWordListBox()">
       <div class="user-img-circle circle1" v-if="!isVip"></div>
       <div class="user-img-circle circle2" v-if="!isVip"></div>
@@ -31,6 +31,7 @@
         <p>.</p>
       </div>
     </div>
+    <div :style="{width: '50px'}" v-show="xfSpeechType !== 'ise'"></div>
   </div>
 </template>
 
@@ -68,7 +69,8 @@ export default {
   computed: {
     ...mapState({
       kidRecordList: state => state.kidRecordList,
-      isCanRecord: state => state.isCanRecord
+      isCanRecord: state => state.isCanRecord,
+      xfSpeechType: state => state.xfSpeechType
     }),
     isHaveRecord () {
       let order = this.id.split('-').pop()
@@ -102,9 +104,11 @@ export default {
       } else {
         this.translateX = 0
       }
-      this.isShowScoring = true
       // 判断是否需要语音测评
       this.$emit('startEvaluate')
+      if (this.xfSpeechType === 'ise') {
+        this.isShowScoring = true
+      }
     },
     playRecord () {
       this.isPlaying = !this.isPlaying
@@ -165,7 +169,7 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: 36px;
+  margin-top: 8px;
 }
 
 .play {

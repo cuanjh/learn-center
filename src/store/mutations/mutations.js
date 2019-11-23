@@ -95,5 +95,9 @@ export default {
   // 更新浏览器是否可以录音
   updateCanRecord (state, flag) {
     state.isCanRecord = flag
+  },
+  // 更新讯飞语音分类
+  updatexfSpeechType (state, flag) {
+    state.xfSpeechType = flag
   }
 }
