@@ -8,12 +8,12 @@
           :id="chapterCode + '-' + item.code">
           <img class="picture" :src="item.image | urlFix('imageView2/0/w/668/h/270/format/jpg')" alt="">
           <div class="content">
-            <i :class="{'playing': isPlay}" @click="playSourceSound(index)"></i>
+            <i @click="playSourceSound(index)"></i>
             <p :data-content="item.content || item.word" data-step="1">
               <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '" @click="showWordPanel($event, index)"></span>
             </p>
           </div>
-          <div class="result-out" v-text="resultOut"></div>
+          <div class="result-out"></div>
           <ise-area
             ref="ise"
             :isEvaluation="true"
@@ -24,41 +24,14 @@
             @startEvaluate="startEvaluate"
             @goWordListBox="goWordListBox"
           />
-
+          <div class="shade"></div>
         </div>
         <div class="swiper-slide">
           <last-grade-box v-show="isLast"/>
+          <div class="shade"></div>
         </div>
       </div>
     </div>
-
-    <!-- <div class="nocurrent-swiper left-swiper swiper-container swiper-no-swiping">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide" v-for="item in list" :key="'left-swiper-' + item.code">
-          <img class="picture" :src="item.image" alt="">
-          <div class="content">
-            <i></i>
-            <p :data-content="item.content || item.word">
-              <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '"></span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="nocurrent-swiper right-swiper swiper-container swiper-no-swiping">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide" v-for="item in list" :key="'right-swiper-' + item.code">
-          <img class="picture" :src="item.image" alt="">
-          <div class="content">
-            <i></i>
-            <p :data-content="item.content || item.word">
-              <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '"></span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div> -->
 
     <div class="swiper-page-container">
       <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面哦！</span></div>
@@ -110,8 +83,7 @@ export default {
       time: 0, // 录音计时
       isVip: false,
       isLast: false,
-      tip: '',
-      resultOut: ''
+      tip: ''
     }
   },
   components: {
@@ -130,7 +102,6 @@ export default {
     })
   },
   mounted () {
-    $('.left-swiper').hide()
     setTimeout(() => {
       this.showMose = false
     }, 5000)
@@ -216,75 +187,13 @@ export default {
         this.setProgress()
         setTimeout(() => {
           this.initSwiper()
-        }, 100)
+        }, 0)
         this.isLast = true
       })
     },
     // 获取数据后，初始化swiper
-    // initSwiper () {
-    //   var swiper1 = new Swiper('.current-swiper', {
-    //     // virtualTranslate: true,
-    //     mousewheel: true,
-    //     allowTouchMove: false,
-    //     on: {
-    //       init: () => {
-    //         this.iseResultSet()
-    //         this.playSourceSound(this.curPage - 1)
-    //       },
-    //       transitionStart: () => {
-    //         // alert('transition')
-    //       },
-    //       slideChange: () => {
-    //         console.log(this.curPage, this.totalPage)
-    //         console.log('改变了，activeIndex为' + swiper1.activeIndex)
-    //         this.repeatIndex = -1
-    //         this.$parent.$emit('hideWordPanel')
-    //         let activeIndex = swiper1.activeIndex
-    //         this.curPage = activeIndex + 1
-    //         if (this.curPage === this.totalPage) {
-    //           // swiper2.slideTo(activeIndex + 1)
-    //           $('.right-swiper').hide()
-    //           swiper2.slideTo(activeIndex + 1)
-    //           bus.$emit('busLastGradeBox', this.list)
-    //           return false
-    //         }
-    //         if (activeIndex === 0) {
-    //           $('.left-swiper').hide()
-    //           return false
-    //         }
-    //         $('.left-swiper').show()
-    //         $('.right-swiper').show()
-    //         this.isPlay = false
-    //         this.playSourceSound(activeIndex)
-    //         this.setProgress()
-    //         swiper2.slideTo(activeIndex - 1)
-    //         swiper3.slideTo(activeIndex + 1)
-    //         setTimeout(() => {
-    //           this.iseResultSet()
-    //         }, 100)
-    //         if (this.list.length === activeIndex + 1) {
-    //           let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
-    //           this.setPartComplete({part_code: activityCode})
-    //         }
-    //         console.log(this.curPage)
-    //       }
-    //     }
-    //   })
-    //   var swiper2 = new Swiper('.left-swiper', {
-    //     noSwiping: true,
-    //     observer: true, // 修改swiper自己或子元素时，自动初始化swiper
-    //     observeParents: true // 修改swiper的父元素时，自动初始化swiper
-    //   })
-    //   var swiper3 = new Swiper('.right-swiper', {
-    //     initialSlide: 1,
-    //     noSwiping: true
-    //   })
-    //   console.log(swiper1)
-    //   console.log(swiper2)
-    //   console.log(swiper3)
-    // },
     initSwiper () {
-      var swiper1 = new Swiper('#certify .swiper-container', {
+      var swiper1 = new Swiper('.current-swiper', {
         watchSlidesProgress: true,
         slidesPerView: 'auto',
         centeredSlides: true,
@@ -293,6 +202,7 @@ export default {
         allowTouchMove: false,
         on: {
           init: () => {
+            console.log(swiper1)
             this.iseResultSet()
             this.playSourceSound(this.curPage - 1)
           },
@@ -303,13 +213,15 @@ export default {
             this.$parent.$emit('hideWordPanel')
             let activeIndex = swiper1.activeIndex
             this.curPage = activeIndex + 1
+            this.setProgress()
+            this.isPlay = false
+            $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
             if (this.curPage === this.totalPage) {
               console.log('最后一张显示')
               return false
             }
-            this.isPlay = false
+
             this.playSourceSound(activeIndex)
-            this.setProgress()
             setTimeout(() => {
               this.iseResultSet()
             }, 100)
@@ -320,6 +232,7 @@ export default {
             console.log(this.curPage)
           },
           progress: function (progress) {
+            console.log(progress)
             for (let i = 0; i < this.slides.length; i++) {
               let slide = this.slides.eq(i)
               let slideProgress = this.slides[i].progress
@@ -327,8 +240,9 @@ export default {
               if (Math.abs(slideProgress) > 1) {
                 modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
               }
-              let translate = slideProgress * modify * 260 + 'px'
+              let translate = slideProgress * modify * 290 + 'px'
               let scale = 1 - Math.abs(slideProgress) / 3
+              console.log(scale)
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
               slide.transform('translateX(' + translate + ') scale(' + scale + ')')
               slide.css('zIndex', zIndex)
@@ -423,19 +337,23 @@ export default {
         this.audio.src = item.sound
         this.audio.oncanplay = () => {
           this.audio.play()
+          $('.current-swiper .swiper-slide-active').find('.content i').addClass('playing')
           this.isPlay = true
         }
         this.audio.onended = () => {
+          $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
           this.isPlay = false
         }
       } else {
         this.audio.pause()
+        $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
         this.isPlay = false
       }
     },
     // 暂停原始录音播放
     pauseSourceSound () {
       this.audio.pause()
+      $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
       this.isPlay = false
     },
     // 开始录音
@@ -633,8 +551,8 @@ export default {
     },
     // 设置语音识别结果
     setResultOut (resultOut) {
-      this.resultOut = resultOut
-      if (this.resultOut === '') {
+      $('.current-swiper .swiper-slide-active').find('.result-out').text(resultOut)
+      if (resultOut === '') {
         $('.swiper-slide').find('.content p span').removeClass('right')
         $('.swiper-slide').find('.content p span').removeClass('wrong')
       }
@@ -688,12 +606,10 @@ export default {
 }
 .current-swiper {
   // width:668px;
-  height:480px;
+  height:490px;
   // border-radius:10px;
   margin:0 auto;
-  // box-shadow:0 0 20px rgba(0,0,0,0.05);
   position:relative;
-  z-index:99;
   background: #fff;
   .picture {
     width: 100%;
@@ -736,59 +652,6 @@ export default {
     box-shadow:0px 3px 10px 0px rgba(196,208,213,0.1);
   }
 }
-.left-swiper {
-  position:absolute;
-  left:50px;
-  top:103px;
-  z-index:1;
-}
-.right-swiper {
-  position:absolute;
-  right:50px;
-  left:auto;
-  top:103px;
-  z-index:1;
-}
-.nocurrent-swiper {
-  width:400px;
-  height:274px;
-  border-radius:8px;
-  box-shadow:0 0 20px rgba(0,0,0,0.05);
-  background: #fff;
-  .swiper-slide {
-    background: #fff;
-  }
-  .picture {
-    width: 100%;
-    max-height: 190px;
-  }
-  .content {
-    display: inline-flex;
-    padding: 12px 0 0 12px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #3C5B6F;
-  }
-  i {
-    display: inline-block;
-    width: 14px;
-    height: 12px;
-    margin: 3px 12px 0 0;
-    background-image: url('../../../../../static/images/kid/icon-laba.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-}
-.nocurrent-swiper:before {
-  content:'';
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(237,240,240,0.5);
-  z-index:99;
-}
 
 .swiper-page-container {
   width: 100%;
@@ -830,29 +693,20 @@ export default {
   }
 }
 
+.swiper-slide-prev .shade,
+.swiper-slide-next .shade {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, .5);
+  top: 0;
+  z-index: 2;
+}
+
 .result-out {
   height: 20px;
   font-size: 14px;
   text-align: center;
   margin-top: 8px;
-}
-</style>
-<style scoped>
-#certify {
-  position: relative;
-  width: 1200px;
-  margin: 0 auto
-}
-#certify .swiper-container {
-  padding-bottom: 60px;
-}
-#certify .swiper-slide {
-  width:668px;
-  height:480px;
-  background: #fff;
-  border-radius: 8px;
-}
-#certify .swiper-slide-active {
-  box-shadow:0px 3px 10px 0px rgba(196,208,213,0.1);
 }
 </style>

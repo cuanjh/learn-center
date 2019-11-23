@@ -79,8 +79,8 @@ export default {
     this.kidContentHeight = $('.kid-stage-container').height() - 150
     let lang = this.code.split('-')[0]
     if (lang === 'KEN') {
-      // this.updatexfSpeechType('ise')
-      this.updatexfSpeechType('iat')
+      this.updatexfSpeechType('ise')
+      // this.updatexfSpeechType('iat')
     } else {
       this.updatexfSpeechType('iat')
     }
