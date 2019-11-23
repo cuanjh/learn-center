@@ -155,6 +155,9 @@ export default {
           break
       }
       this.isShowScoring = false
+    },
+    noResultAlert () {
+      this.isShowScoring = false
     }
   }
 }

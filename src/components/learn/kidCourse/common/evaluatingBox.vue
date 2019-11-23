@@ -670,6 +670,22 @@ export default {
                 }
                 &.on {
                   background-image: url('../../../../../static/images/kid/star-on.png');
+                  animation: scaleDraw .5s ease-in-out;
+                }
+                &.on:nth-child(1) {
+                  animation-delay: .5s;
+                }
+                &.on:nth-child(2) {
+                  animation-delay: 1s;
+                }
+                &.on:nth-child(3) {
+                  animation-delay: 1.5s;
+                }
+                &.on:nth-child(4) {
+                  animation-delay: 2s;
+                }
+                &.on:nth-child(5) {
+                  animation-delay: 2.5s;
                 }
                 &.half {
                   background-image: url('../../../../../static/images/kid/star-half.png');
@@ -898,6 +914,14 @@ export default {
         }
       }
     }
+  }
+}
+@keyframes scaleDraw { /*定义关键帧、scaleDrew是需要绑定到选择器的关键帧名称*/
+  0% {
+    transform: scale(1); /*开始为原始大小*/
+  }
+  50% {
+    transform: scale(2);
   }
 }
 .blue {

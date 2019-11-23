@@ -114,18 +114,20 @@ export default {
     }
     i {
       display: inline-block;
-      width: 340px;
-      height: 228px;
+      width: 377px;
+      height: 262px;
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
       &.pic-novip-1 {
+        width: 430px;
         background-image: url('../../../../../static/images/kid/pic-novip-1.png');
       }
       &.pic-novip-2 {
         background-image: url('../../../../../static/images/kid/pic-novip-2.png');
       }
       &.pic-novip-3 {
+        height: 298px;
         background-image: url('../../../../../static/images/kid/pic-novip-3.png');
       }
     }
