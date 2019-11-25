@@ -292,7 +292,8 @@ export default {
             init: () => {
               this.iseResultSet(0)
             },
-            slideChange: () => {
+            slideNextTransitionStart: () => {
+              console.log(swiperScore.activeIndex)
               this.curSwiperPage = swiperScore.activeIndex
               this.audio.pause()
               this.isPlay = false

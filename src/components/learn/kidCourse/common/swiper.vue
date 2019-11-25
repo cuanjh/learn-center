@@ -98,13 +98,6 @@ export default {
       this.tip = this.tips.micphone
       this.$refs['tipbox'].$emit('tipbox-show')
     })
-    // 获取课程数据
-    this.initData()
-  },
-  mounted () {
-    setTimeout(() => {
-      this.showMose = false
-    }, 5000)
     // 拉取讯飞测评数据
     this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
       if (res.success) {
@@ -112,6 +105,13 @@ export default {
         this.getAvarageScore()
       }
     })
+    // 获取课程数据
+    this.initData()
+  },
+  mounted () {
+    setTimeout(() => {
+      this.showMose = false
+    }, 5000)
     // 初始化录音插件
     this.initRecorder()
     // 获取qiniu token
@@ -233,6 +233,9 @@ export default {
             if (this.curPage === this.totalPage) {
               console.log('最后一张显示')
               this.isLast = true
+              this.audio.pause()
+              $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
+              this.isPlay = false
               return false
             }
             this.isLast = false

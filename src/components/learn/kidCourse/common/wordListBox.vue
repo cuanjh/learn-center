@@ -3,7 +3,7 @@
   <div class="word-modal-box" v-show="showWordBox">
     <div class="word-box-content">
       <div class="close-img-box" @click="closeModal()"></div>
-      <div v-if="isVip !== 1">
+      <div v-if="!isVip">
         <noVip-guide-box />
       </div>
       <div class="words-content" v-else>
@@ -38,15 +38,9 @@ export default {
   computed: {
     ...mapState({
       userInfo: state => state.userInfo, // 用户信息
-      xfSyllPhone: state => state.xfSyllPhone // 因素的对应表
-    }),
-    // 是否vip
-    isVip () {
-      if (!this.userInfo || !this.userInfo.member_info) {
-        return 0
-      }
-      return this.userInfo.member_info.member_type
-    }
+      xfSyllPhone: state => state.xfSyllPhone, // 因素的对应表
+      isVip: state => state.isVip
+    })
   },
   methods: {
     showWordListBox (words) {
