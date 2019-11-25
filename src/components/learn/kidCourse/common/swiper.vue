@@ -204,7 +204,6 @@ export default {
         setTimeout(() => {
           this.initSwiper()
         }, 0)
-        this.isLast = true
       })
     },
     // 获取数据后，初始化swiper
@@ -234,9 +233,10 @@ export default {
             $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
             if (this.curPage === this.totalPage) {
               console.log('最后一张显示')
+              this.isLast = true
               return false
             }
-
+            this.isLast = false
             this.playSourceSound(activeIndex)
             setTimeout(() => {
               this.iseResultSet()

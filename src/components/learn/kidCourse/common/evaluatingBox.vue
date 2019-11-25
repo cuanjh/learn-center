@@ -496,7 +496,7 @@ export default {
       .user-avatar {
         display: flex;
         width: 100%;
-        padding: 22px 32px;
+        padding: 20px 32px;
         background: #2CA0E5;
         border-radius: 8px 8px 0 0;
         img {
@@ -604,7 +604,7 @@ export default {
             padding-bottom: 16px;
           }
           .swiper-slide, .coreWord-slide {
-            max-height: 430px;
+            max-height: 360px;
             overflow-y: auto;
             width: 83%;
             padding: 20px 26px;
