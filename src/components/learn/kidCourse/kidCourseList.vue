@@ -926,7 +926,7 @@ export default {
       console.log(this.buyChapters)
       if (parseInt(this.isVip) === 1 || (parseInt(this.isVip) !== 1 && (this.hasPurchased || item.code.toLowerCase().indexOf('level1-unit1-chapter1') > -1))) {
         let code = item.code
-        this.$router.push({path: '/app/kid-stage', query: {code: code, type: type}})
+        this.$router.push({path: '/kid/kid-stage', query: {code: code, type: type}})
       } else {
         let obj = {
           className: 'vipIcon',

@@ -121,7 +121,7 @@ export default {
     // 分享我的绘本
     shareMyRecord () {
       this.isShowGradeModal = false
-      this.$router.push({path: '/app/kid-record-list', query: {code: this.chapterCode, type: this.curType}})
+      this.$router.push({path: '/kid/kid-record-list', query: {code: this.chapterCode, type: this.curType}})
     },
     // 我的评分详情
     gradeDetails () {

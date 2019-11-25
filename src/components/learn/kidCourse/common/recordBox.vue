@@ -1,6 +1,6 @@
 <template>
   <div class="record-box" @mouseenter="isShowTip = true" @mouseleave="isShowTip = false" v-show="kidRecordList.length > 0">
-    <router-link :to="{path: '/app/kid-record-list', query: {code: chapterCode, type: type}}" class="record-icon">
+    <router-link :to="{path: '/kid/kid-record-list', query: {code: chapterCode, type: type}}" class="record-icon">
       <i></i>
       <span>{{ kidRecordList.length }}</span>
     </router-link>

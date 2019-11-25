@@ -27,7 +27,7 @@
           <div class="shade"></div>
         </div>
         <div class="swiper-slide" v-show="xfSpeechType === 'ise'">
-          <last-grade-box :score="avaScore" v-show="isLast"/>
+          <last-grade-box ref="lastGradeBox" v-show="isLast"/>
           <div class="shade"></div>
         </div>
       </div>
@@ -71,7 +71,6 @@ export default {
       showMose: true,
       list: [],
       totalPage: 0,
-      avaScore: 0,
       curPage: 1,
       audio: new Audio(),
       recordAudio: new Audio(),
@@ -81,7 +80,6 @@ export default {
       repeatIndex: -1,
       timerInterval: null, // 录音间隔器
       time: 0, // 录音计时
-      isVip: false,
       isLast: false,
       tip: ''
     }
@@ -100,13 +98,13 @@ export default {
       this.tip = this.tips.micphone
       this.$refs['tipbox'].$emit('tipbox-show')
     })
+    // 获取课程数据
+    this.initData()
   },
   mounted () {
     setTimeout(() => {
       this.showMose = false
     }, 5000)
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-    this.isVip = userInfo.member_info.member_type === 1
     // 拉取讯飞测评数据
     this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
       if (res.success) {
@@ -116,8 +114,6 @@ export default {
     })
     // 初始化录音插件
     this.initRecorder()
-    // 获取课程数据
-    this.initData()
     // 获取qiniu token
     this.getUploadFileToken().then(res => {
       if (res.success) {
@@ -141,7 +137,8 @@ export default {
       kidRecordList: state => state.kidRecordList,
       tips: state => state.learn.tips,
       xfSpeechType: state => state.xfSpeechType,
-      xfSyllPhone: state => state.xfSyllPhone
+      xfSyllPhone: state => state.xfSyllPhone,
+      isVip: state => state.isVip
     }),
     formCode () {
       return this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1) + '-' + this.curPage
@@ -216,8 +213,8 @@ export default {
         autoplay: false,
         mousewheel: true,
         allowTouchMove: false,
-        preventClicksPropagation: true,
-        slideToClickedSlide: true,
+        // preventClicksPropagation: true,
+        // slideToClickedSlide: true,
         on: {
           init: () => {
             console.log(swiper1)
@@ -246,6 +243,7 @@ export default {
             if (this.list.length === activeIndex + 1) {
               let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
               this.setPartComplete({part_code: activityCode})
+              this.getAvarageScore()
               this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
             }
             console.log(this.curPage)
@@ -705,7 +703,8 @@ export default {
           count++
         }
       })
-      this.avaScore = Math.round(sumScore * 1.0 / count)
+      let avaScore = Math.round(sumScore * 1.0 / count)
+      this.$refs['lastGradeBox'].setAvarageScore(avaScore)
     }
   }
 }

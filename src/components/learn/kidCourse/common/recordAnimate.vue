@@ -19,21 +19,23 @@ export default {
         top: offset.top
       })
       $('.record-save-animat').show()
-      let targetOffest = $('.record-box .record-icon').offset()
-      console.log(targetOffest)
-      $('.record-save-animat').stop().animate({
-        left: targetOffest.left,
-        top: targetOffest.top
-      }, {
-        duration: 800,
-        specialEasing: {
-          left: 'linear',
-          top: 'swing'
-        },
-        complete: () => {
-          $('.record-save-animat').hide()
-        }
-      })
+      setTimeout(() => {
+        let targetOffest = $('.record-box .record-icon').offset()
+        console.log('targetOffest', targetOffest)
+        $('.record-save-animat').stop().animate({
+          left: targetOffest.left,
+          top: targetOffest.top
+        }, {
+          duration: 800,
+          specialEasing: {
+            left: 'linear',
+            top: 'swing'
+          },
+          complete: () => {
+            $('.record-save-animat').hide()
+          }
+        })
+      }, 10)
     })
   }
 }

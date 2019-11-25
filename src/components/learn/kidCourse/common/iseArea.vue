@@ -11,16 +11,23 @@
         <div class="tip" v-show="isShowStopTip && isRecording"></div>
       </transition>
     </div>
-    <div class="user" v-show="xfSpeechType == 'ise'" :style="{transform: 'translateX(-'+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" >
+    <div
+      class="user"
+      v-show="xfSpeechType == 'ise'"
+      @mouseenter="isShowUserTip = true"
+      @mouseleave="isShowUserTip = false"
+      :style="{transform: 'translateX(-'+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" >
       <img :src="photo" alt="" @click="goWordListBox()">
       <div class="user-img-circle circle1" v-if="!isVip"></div>
       <div class="user-img-circle circle2" v-if="!isVip"></div>
       <div :class="['mask', scoreClass]" v-show="score && isVip" @click="goWordListBox()">
         <span>{{ score }}</span>
       </div>
-      <router-link :to="{path: '/app/vip-home'}" target="_blank" class="icon-vip-tip" v-if="!isVip && translateX === 0">
-        <span>VIP专属智能评分</span>
-      </router-link>
+      <transition name="fade" mode="out-in">
+        <router-link :to="{path: '/app/vip-home'}" target="_blank" class="icon-vip-tip" v-if="!isVip && translateX === 0 && isShowUserTip">
+          <span>VIP专属智能评分</span>
+        </router-link>
+      </transition>
       <!-- 评分中。。。。 -->
       <div class="reviewing-tip" v-show="isShowScoring && isVip && translateX === 0">
         <p>评</p>
@@ -46,6 +53,7 @@ export default {
       isShowScoring: false,
       isRecording: false,
       isShowStopTip: false,
+      isShowUserTip: false,
       isPlaying: false,
       translateX: 116,
       timerInterval: null,
@@ -110,6 +118,10 @@ export default {
         this.translateX = 116
       } else {
         this.translateX = 0
+        this.isShowUserTip = true
+        setTimeout(() => {
+          this.isShowUserTip = false
+        }, 3000)
       }
       // 判断是否需要语音测评
       this.$emit('startEvaluate')

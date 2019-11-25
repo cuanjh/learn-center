@@ -4,7 +4,7 @@
       <div class="evaluating-content">
         <div class="close-img" @click="closeModal()"></div>
         <!-- 非会员显示 -->
-        <div class="evaluating" v-if="isVip !== 1">
+        <div class="evaluating" v-if="!isVip">
           <noVip-guide-box />
         </div>
         <!-- 是会员 -->
@@ -180,15 +180,9 @@ export default {
     ...mapState({
       userInfo: state => state.userInfo, // 用户信息
       xfSyllPhone: state => state.xfSyllPhone, // 因素的对应表
-      kidRecordList: state => state.kidRecordList
+      kidRecordList: state => state.kidRecordList,
+      isVip: state => state.isVip
     }),
-    // 是否vip
-    isVip () {
-      if (!this.userInfo || !this.userInfo.member_info) {
-        return 0
-      }
-      return this.userInfo.member_info.member_type
-    },
     chapterCode () {
       return this.$route.query.code
     },
@@ -342,7 +336,7 @@ export default {
     // 立即强化/听儿歌
     strengthening () {
       if (this.type === 'draw') {
-        this.$router.push({path: '/app/kid-stage?code=' + this.chapterCode + '&type=word'})
+        this.$router.push({path: '/kid/kid-stage?code=' + this.chapterCode + '&type=word'})
       } else {
         let courseCode = this.chapterCode.split('-').slice(0, 2).join('-')
         this.$router.push({path: '/app/kid-course-list/' + courseCode})
