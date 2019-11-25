@@ -6,7 +6,7 @@
       <div v-if="isVip !== 1">
         <noVip-guide-box />
       </div>
-      <div v-else>
+      <div class="words-content" v-else>
         <word-item :newWords="newWords"/>
       </div>
     </div>
@@ -97,12 +97,14 @@ export default {
   background-color: rgba(0, 0, 0, .5);
   z-index:99999999;
   overflow: hidden;
+  .words-content {
+    width: 470px;
+  }
   .word-box-content {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 470px;
     // min-height: 260px;
     // max-height: 600px;
     background: #fff;
