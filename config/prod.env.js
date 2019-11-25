@@ -7,9 +7,9 @@ module.exports = {
   HOME_URL: '"https://test-learn.talkmate.com/app/index"',
   REDIRECT_URL: '"https://test-learn.talkmate.com/app/pay-success"',
   QINIU_DOMAIN: '"https://uploadfile1.talkmate.com/"',
-  XF_APPID: "'5db3aa5f'",
-  XF_APIKEY: "'b1ae2466345960371e55acb5a22363eb'",
-  XF_APISECRET: "'7cffb16b750c97db72ba8ae22cb5353f'",
+  XF_APPID: "'5db2a3a5'",
+  XF_APIKEY: "'10f99fcd8ab002df84b084dbe02ed007'",
+  XF_APISECRET: "'ef93a8654dcee437c4cd8099b683efe5'",
   KID_SHARE: '"https://mobile-static.talkmate.com/operate/activities/html/miniRecordShare/index.html"', // 线上
   // KID_SHARE: '"http://test-learn.talkmate.com:82/miniRecordShare/index.html"' // 测试
   APP_KEY: '"talkmateVersion"',

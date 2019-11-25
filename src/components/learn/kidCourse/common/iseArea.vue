@@ -3,7 +3,7 @@
     <div class="play" :style="{transform: 'translateX('+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" @click="playRecord">
       <span v-for="n in 5" :key="n" :style="{height: playLineHeight[n - 1] + 'px'}"></span>
     </div>
-    <div class="record" @mouseenter="isShowStopTip = true" @mouseleave="isShowStopTip = false">
+    <div class="record">
       <div class="micro-phone" @click="recordOpt"></div>
       <div class="circle circle1" v-show="isRecording"></div>
       <div class="circle circle2" v-show="isRecording"></div>
@@ -95,6 +95,9 @@ export default {
       }
       this.isRecording = !this.isRecording
       this.isShowStopTip = true
+      setTimeout(() => {
+        this.isShowStopTip = false
+      }, 1000)
       if (this.isRecording) {
         this.$emit('startRecord')
       } else {

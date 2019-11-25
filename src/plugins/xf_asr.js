@@ -110,8 +110,8 @@ class IatRecorder {
     })
   }
   connectWebsocket () {
-    var url = 'wss://iat-api.xfyun.cn/v2/iat'
-    var host = 'iat-api.xfyun.cn'
+    var url = this.url
+    var host = this.host
     var apiKey = this.apiKey
     var apiSecret = this.apiSecret
     var date = new Date().toGMTString()
