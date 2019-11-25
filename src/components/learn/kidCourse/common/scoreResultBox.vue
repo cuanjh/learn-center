@@ -44,7 +44,6 @@ export default {
           this.scoreClass = 'nice'
           break
       }
-      this.scoreClass = 'perfect'
       if (this.isVip) {
         this.isShowScoreResult = true
         setTimeout(() => {
