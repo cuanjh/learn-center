@@ -2,7 +2,7 @@
   <transition name="fade">
     <div class="grade-content">
       <!-- 70分以下的显示 -->
-      <div class="no-good" v-if="isVip !== 1 || score < 70 || !score">
+      <div class="no-good" v-if="!isVip || score < 70 || !score">
         <p class="title">
           <span>炫耀一下</span>
           <span>让小伙伴听听你的声音吧~</span>
@@ -15,7 +15,7 @@
       <div class="good" v-else>
         <p class="title">
           <span>棒棒哒!</span>
-          <span>你超越了全国<em> {{beyondFriend}} </em>的小可爱</span>
+          <span>你超越了全国<em> {{beyondFriendResult}} </em>的小可爱</span>
         </p>
         <div class="center-box">
           <div class="center-good-img">
@@ -27,9 +27,9 @@
       </div>
       <div class="btns">
         <p class="btn share" @click="shareMyRecord()"><span>分享我的专属绘本</span></p>
-        <p class="btn grade-details" :class="{'no-vip': isVip !== 1}" @click="gradeDetails()" >
-          <i class="icon-vip" v-if="isVip !== 1"></i>
-          {{isVip !== 1 ? '会员评分详情' : '评分详情'}}
+        <p class="btn grade-details" :class="{'no-vip': !isVip}" @click="gradeDetails()" >
+          <i class="icon-vip" v-if="!isVip"></i>
+          {{!isVip ? '会员评分详情' : '评分详情'}}
         </p>
       </div>
       <!--提示-->
@@ -43,16 +43,17 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import Bus from '../../../../bus'
+import { mapState } from 'vuex'
 
 export default {
-  props: ['score'],
   data () {
     return {
       isShowGradeModal: false,
       chapterList: [],
-      promptBox: false
+      promptBox: false,
+      score: 0,
+      beyondFriendResult: ''
     }
   },
   created () {
@@ -63,15 +64,8 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo // 用户信息
+      isVip: state => state.isVip
     }),
-    // 是否vip
-    isVip () {
-      if (!this.userInfo || !this.userInfo.member_info) {
-        return 0
-      }
-      return this.userInfo.member_info.member_type
-    },
     chapterCode () {
       let code = this.$route.query.code
       return code
@@ -79,33 +73,6 @@ export default {
     curType () {
       let type = this.$route.query.type
       return type
-    },
-    beyondFriend () {
-      if (this.score >= 98 && this.score <= 99) {
-        return '95%'
-      } else if (this.score >= 96 && this.score <= 97) {
-        return '93%'
-      } else if (this.score >= 94 && this.score <= 95) {
-        return '91%'
-      } else if (this.score >= 91 && this.score <= 93) {
-        return '90%'
-      } else if (this.score >= 89 && this.score <= 90) {
-        return '85%'
-      } else if (this.score >= 86 && this.score <= 88) {
-        return '83%'
-      } else if (this.score >= 84 && this.score <= 85) {
-        return '80%'
-      } else if (this.score >= 81 && this.score <= 83) {
-        return '79%'
-      } else if (this.score >= 79 && this.score <= 80) {
-        return '77%'
-      } else if (this.score >= 76 && this.score <= 78) {
-        return '75%'
-      } else if (this.score >= 73 && this.score <= 75) {
-        return '72%'
-      } else if (this.score >= 70 && this.score <= 72) {
-        return '68%'
-      }
     }
   },
   mounted () {
@@ -114,12 +81,12 @@ export default {
   methods: {
     // 分享我的绘本
     shareMyRecord () {
-      this.$router.push({path: '/app/kid-record-list', query: {code: this.chapterCode, type: this.curType}})
+      this.$router.push({path: '/kid/kid-record-list', query: {code: this.chapterCode, type: this.curType}})
     },
     // 我的评分详情
     gradeDetails () {
       // let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (this.isVip === 1 && !this.score) {
+      if (this.isVip && !this.score) {
         this.promptBox = true
         setTimeout(() => {
           this.promptBox = false
@@ -127,6 +94,10 @@ export default {
         return false
       }
       Bus.$emit('showScoreDetail')
+    },
+    setAvarageScore (score) {
+      this.score = score
+      this.beyondFriendResult = this.beyondFriend()
     },
     showLastGradeBox (chapterList) {
       console.log(chapterList)
@@ -158,6 +129,33 @@ export default {
       }
       this.score = Math.round(totalScore / data.length)
       console.log(this.score)
+    },
+    beyondFriend () {
+      if (this.score >= 98 && this.score <= 99) {
+        return '95%'
+      } else if (this.score >= 96 && this.score <= 97) {
+        return '93%'
+      } else if (this.score >= 94 && this.score <= 95) {
+        return '91%'
+      } else if (this.score >= 91 && this.score <= 93) {
+        return '90%'
+      } else if (this.score >= 89 && this.score <= 90) {
+        return '85%'
+      } else if (this.score >= 86 && this.score <= 88) {
+        return '83%'
+      } else if (this.score >= 84 && this.score <= 85) {
+        return '80%'
+      } else if (this.score >= 81 && this.score <= 83) {
+        return '79%'
+      } else if (this.score >= 79 && this.score <= 80) {
+        return '77%'
+      } else if (this.score >= 76 && this.score <= 78) {
+        return '75%'
+      } else if (this.score >= 73 && this.score <= 75) {
+        return '72%'
+      } else if (this.score >= 70 && this.score <= 72) {
+        return '68%'
+      }
     }
   }
 }

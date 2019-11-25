@@ -38,6 +38,7 @@ export default {
       counterDownTimeout: null,
       resultText: '',
       resultOut: '',
+      isRouterAlive: true,
       langObj: {
         KEN: 'en_us',
         KFR: 'fr_fr',

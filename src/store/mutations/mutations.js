@@ -40,6 +40,9 @@ export default {
   // 更新用户信息
   updateUserInfo (state, data) {
     state.userInfo = data.info
+    if (data.info.member_info.member_type === 1) {
+      state.isVip = true
+    }
     sessionStorage.setItem('userInfo', JSON.stringify(state.userInfo))
     console.log('userInfo', state.userInfo)
   },

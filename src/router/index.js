@@ -30,6 +30,7 @@ const kidRecordList = r => require.ensure([], () => r(require('@/components/lear
 const yuyin = r => require.ensure([], () => r(require('@/components/learn/kidCourse/testYuyin.vue')), 'test-yuyin')
 const testWorker = r => require.ensure([], () => r(require('@/components/learn/kidCourse/testWorker.vue')), 'test-yuyin')
 
+const kid = r => require.ensure([], () => r(require('@/components/kid/kid.vue')), 'kid')
 // 学习 --- 我的
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue')), 'user')
 const userCourse = r => require.ensure([], () => r(require('@/components/learn/user/userCourse.vue')), 'user-course')
@@ -139,24 +140,6 @@ export default[
         path: 'kid-course-list/:courseCode',
         name: 'kidCourseList',
         component: kidCourseList
-      },
-      {
-        path: 'kid-stage',
-        name: 'kidStage',
-        component: kidStage,
-        props: (route) => ({
-          code: route.query.code,
-          type: route.query.type
-        })
-      },
-      {
-        path: 'kid-record-list',
-        name: 'kidRecordList',
-        component: kidRecordList,
-        props: (route) => ({
-          code: route.query.code,
-          type: route.query.type
-        })
       },
       {
         path: 'index',
@@ -390,6 +373,30 @@ export default[
       {
         path: 'user-guide',
         component: userGuide
+      }
+    ]
+  },
+  {
+    path: '/kid',
+    component: kid,
+    children: [
+      {
+        path: 'kid-stage',
+        name: 'kidStage',
+        component: kidStage,
+        props: (route) => ({
+          code: route.query.code,
+          type: route.query.type
+        })
+      },
+      {
+        path: 'kid-record-list',
+        name: 'kidRecordList',
+        component: kidRecordList,
+        props: (route) => ({
+          code: route.query.code,
+          type: route.query.type
+        })
       }
     ]
   },
