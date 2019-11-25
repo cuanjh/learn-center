@@ -46,7 +46,6 @@ export default {
       isShowScoring: false,
       isRecording: false,
       isShowStopTip: false,
-      isEvaluated: false,
       isPlaying: false,
       translateX: 116,
       timerInterval: null,
@@ -59,15 +58,6 @@ export default {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.photo = userInfo.photo
     this.isVip = userInfo.member_info.member_type === 1
-    let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-    let findIndex = xfISEResult.findIndex(item => {
-      return item.form_code === this.formCode
-    })
-    if (findIndex === -1) {
-      this.isEvaluated = false
-    } else {
-      this.isEvaluated = true
-    }
   },
   computed: {
     ...mapState({
@@ -84,6 +74,17 @@ export default {
         return true
       }
       return false
+    },
+    isEvaluated () {
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      let findIndex = xfISEResult.findIndex(item => {
+        return item.form_code === this.formCode
+      })
+      if (findIndex === -1) {
+        return false
+      } else {
+        return true
+      }
     }
   },
   methods: {

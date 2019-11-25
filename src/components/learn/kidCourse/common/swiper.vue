@@ -17,7 +17,7 @@
           <ise-area
             ref="ise"
             :isEvaluation="true"
-            :formCode="formCode"
+            :formCode="chapterCode + '-' + type.charAt(0).toUpperCase() + type.slice(1) + '-' + (index + 1)"
             @startRecord="startRecord"
             @stopRecord="stopRecord"
             @playRecord="playRecord"
@@ -463,6 +463,7 @@ export default {
               }
               localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
               this.getAvarageScore()
+              this.$refs['scoreResult'].setScoreResult(formObj.score)
               this.iseResultSet()
             } else {
               this.tip = '评分不成功，请根据句子发音！'
@@ -721,7 +722,6 @@ export default {
   // border-radius:10px;
   margin:0 auto;
   position:relative;
-  background: #fff;
   .picture {
     width: 100%;
     height: 270px;
