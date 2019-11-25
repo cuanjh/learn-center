@@ -2,7 +2,7 @@
 <transition name="fade" >
   <div class="score-result-box" v-show="isShowScoreResult" v-if="!noResult">
     <div :class="['score-result-content', scoreClass]" >
-      <span class="score">{{ score }}</span>
+      <span class="score" id="AnimatScore" >{{ score }}</span>
     </div>
     <audio id="myYeah" src="../../../../../static/sounds/yeah.mp3"></audio>
   </div>
@@ -15,9 +15,9 @@ import $ from 'jquery'
 export default {
   data () {
     return {
-      isShowScoreResult: false,
       score: '',
       scoreClass: '',
+      isShowScoreResult: false,
       isVip: false,
       noResult: ''
     }
@@ -62,12 +62,16 @@ export default {
           }
           $('#myYeah')[0].play()
         }, 300)
+        setTimeout(() => {
+          $('#AnimatScore').fadeIn(500)
+        }, 400)
       }
       setTimeout(() => {
         this.isShowScoreResult = false
         $('.perfect').css({'background-image': ''})
         $('.good').css({'background-image': ''})
         $('.nice').css({'background-image': ''})
+        $('#AnimatScore').hide()
       }, 2000)
     },
     noSetScoreResult (str) {

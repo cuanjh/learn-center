@@ -201,7 +201,6 @@ export default {
         setTimeout(() => {
           this.initSwiper()
         }, 0)
-        this.isLast = true
       })
     },
     // 获取数据后，初始化swiper
@@ -233,9 +232,10 @@ export default {
             $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
             if (this.curPage === this.totalPage) {
               console.log('最后一张显示')
+              this.isLast = true
               return false
             }
-
+            this.isLast = false
             this.playSourceSound(activeIndex)
             setTimeout(() => {
               this.iseResultSet()
@@ -440,6 +440,12 @@ export default {
           _this.xfISE({language: _this.xfLang[_this.chapterCode.split('-')[0]], text: content, url: url}).then(res => {
             console.log(res)
             if (res.code === '0') {
+              if (JSON.parse(res.data.read_sentence.rec_paper.read_chapter.is_rejected)) {
+                this.tip = '评分不成功，请根据句子发音！'
+                this.$refs['tipbox'].$emit('tipbox-show')
+                this.$refs['ise'][this.curPage - 1].noResultAlert()
+                return
+              }
               let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
               if (!xfISEResult) {
                 xfISEResult = []
@@ -465,10 +471,6 @@ export default {
               this.getAvarageScore()
               this.$refs['scoreResult'].setScoreResult(formObj.score)
               this.iseResultSet()
-            } else {
-              this.tip = '评分不成功，请根据句子发音！'
-              this.$refs['tipbox'].$emit('tipbox-show')
-              this.$refs['ise'][this.curPage - 1].noResultAlert()
             }
           })
         }
