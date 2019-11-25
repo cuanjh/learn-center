@@ -55,13 +55,13 @@ export default {
     // 点击播放自己的录音
     playRecordWordSound (word, index) {
       $('.icon-horn').removeClass('playing')
-      console.log(this.kidRecordList)
+      console.log(this.kidRecordList, word, index)
       if (!this.isPlay) {
         let curorder = this.stringPop(word.form_code)
         let item = this.kidRecordList.filter(res => {
           return res.list_order === curorder
         })
-        this.audio.src = item.record_sound_url
+        this.audio.src = item[0].record_sound_url
         this.audio.oncanplay = () => {
           this.audio.play()
           this.isPlay = true
