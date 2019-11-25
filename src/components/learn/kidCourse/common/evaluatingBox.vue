@@ -292,13 +292,14 @@ export default {
             init: () => {
               this.iseResultSet(0)
             },
-            slideChangeTransitionStart: () => {
+            slideNextTransitionStart: () => {
+              console.log(swiperScore.activeIndex)
               this.curSwiperPage = swiperScore.activeIndex
               this.audio.pause()
               this.isPlay = false
               let key = this.evaluatingData[swiperScore.activeIndex].form_code
               let index = this.stringPop(key)
-              this.iseResultSet(index - 1)
+              this.iseResultSet(this.curSwiperPage)
             }
           }
         })
@@ -408,6 +409,7 @@ export default {
     },
     // 评测结果处理
     iseResultSet (page) {
+      console.log('page' + page)
       let words = this.evaluatingData[page].words_score
       $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('right')
       $('.swiper-slide-active .grade-color').find('.sentence span').removeClass('wrong')

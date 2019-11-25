@@ -349,7 +349,7 @@ export default {
 }
 .record-swiper {
   width: 100%;
-  padding: 0 7%;
+  padding: 0 7% 3%;
   flex: 1;
   display: flex;
   flex-direction: column;

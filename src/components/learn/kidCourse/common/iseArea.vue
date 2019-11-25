@@ -85,6 +85,9 @@ export default {
     },
     isEvaluated () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      if (!xfISEResult) {
+        return false
+      }
       let findIndex = xfISEResult.findIndex(item => {
         return item.form_code === this.formCode
       })

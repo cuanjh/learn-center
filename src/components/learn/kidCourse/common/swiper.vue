@@ -98,13 +98,6 @@ export default {
       this.tip = this.tips.micphone
       this.$refs['tipbox'].$emit('tipbox-show')
     })
-    // 获取课程数据
-    this.initData()
-  },
-  mounted () {
-    setTimeout(() => {
-      this.showMose = false
-    }, 5000)
     // 拉取讯飞测评数据
     this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
       if (res.success) {
@@ -112,6 +105,13 @@ export default {
         this.getAvarageScore()
       }
     })
+    // 获取课程数据
+    this.initData()
+  },
+  mounted () {
+    setTimeout(() => {
+      this.showMose = false
+    }, 5000)
     // 初始化录音插件
     this.initRecorder()
     // 获取qiniu token
@@ -222,7 +222,7 @@ export default {
           },
           slideChange: () => {
             console.log(this.curPage, this.totalPage, swiper1.progress)
-            console.log('改变了，activeIndex为' + this.activeIndex)
+            console.log('改变了，activeIndex为' + swiper1.activeIndex)
             this.repeatIndex = -1
             this.$parent.$emit('hideWordPanel')
             let activeIndex = swiper1.activeIndex
@@ -233,6 +233,9 @@ export default {
             if (this.curPage === this.totalPage) {
               console.log('最后一张显示')
               this.isLast = true
+              this.audio.pause()
+              $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
+              this.isPlay = false
               return false
             }
             this.isLast = false
@@ -246,10 +249,10 @@ export default {
               this.getAvarageScore()
               this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
             }
-            console.log(this.curPage)
+            console.log('curPage' + this.curPage)
           },
           progress: function (progress) {
-            console.log(progress)
+            // console.log(progress)
             for (let i = 0; i < this.slides.length; i++) {
               let slide = this.slides.eq(i)
               let slideProgress = this.slides[i].progress
@@ -259,7 +262,7 @@ export default {
               }
               let translate = slideProgress * modify * 290 + 'px'
               let scale = 1 - Math.abs(slideProgress) / 3
-              console.log(scale)
+              // console.log(scale)
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
               slide.transform('translateX(' + translate + ') scale(' + scale + ')')
               slide.css('zIndex', zIndex)
@@ -522,7 +525,7 @@ export default {
         }
         this.$refs['ise'][this.curPage - 1].setScore(formObj.score)
         this.iseWords = formObj.words_score
-        console.log(this.iseWords)
+        console.log('iseWords' + this.iseWords)
         $('.swiper-slide-active').find('.content p span').removeClass('right')
         $('.swiper-slide-active').find('.content p span').removeClass('wrong')
 
