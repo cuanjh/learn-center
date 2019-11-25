@@ -83,8 +83,8 @@ export default {
       // this.updatexfSpeechType('iat')
     } else {
       this.updatexfSpeechType('iat')
+      this.initIatRecorder()
     }
-    this.initIatRecorder()
   },
   methods: {
     ...mapMutations([
@@ -93,11 +93,11 @@ export default {
     initIatRecorder () {
       let arr = this.code.split('-')
       let language = this.langObj[arr[0]]
-      let url = 'wss: //iat-api.xfyun.cn/v2/iat'
+      let url = 'wss://iat-api.xfyun.cn/v2/iat'
       let host = 'iat-api.xfyun.cn'
       // 语音识别小语种配置
       if (arr[0] !== 'KEN') {
-        url = 'wss: //iat-niche-api.xfyun.cn/v2/iat'
+        url = 'wss://iat-niche-api.xfyun.cn/v2/iat'
         host = 'iat-niche-api.xfyun.cn'
       }
       this.iatRecorder = new ASR.IatRecorder({

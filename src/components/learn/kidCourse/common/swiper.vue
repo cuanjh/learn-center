@@ -216,6 +216,8 @@ export default {
         autoplay: false,
         mousewheel: true,
         allowTouchMove: false,
+        preventClicksPropagation: true,
+        slideToClickedSlide: true,
         on: {
           init: () => {
             console.log(swiper1)
