@@ -280,7 +280,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    background:rgba(151,151,151, .7);
+    background:rgba(151,151,151, .5);
     border-radius: 50%;
     top: 0;
     text-align: center;

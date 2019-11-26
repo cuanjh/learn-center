@@ -1,11 +1,11 @@
 <template>
   <div class="nav-container">
     <div class="left">
-      <router-link class="back" :to="{path:'/app/kid-course-list/' + chapterCode.split('-').slice(0, 2).join('-')}">
+      <a class="back" @click="back()">
         <i></i>
-      </router-link>
+      </a>
       <span>{{ chapterDes }}</span>
-      <span data-intro="this is a tooltip">{{ type == 'draw' ? '绘本阅读' : '绘本单词' }}</span>
+      <span data-intro="this is a tooltip">{{ type == 'draw' ? '绘本阅读' : '核心单词' }}</span>
     </div>
     <record-box :chapterCode="chapterCode" :type="type"/>
   </div>
@@ -13,6 +13,7 @@
 
 <script>
 import RecordBox from './recordBox.vue'
+import bus from '../../../../bus'
 export default {
   props: ['chapterCode', 'type'],
   data () {
@@ -25,6 +26,12 @@ export default {
     chapterDes () {
       let arr = this.chapterCode.toLowerCase().split('-')
       return '课程' + ((parseInt(arr[3].replace('unit', '')) - 1) * 6 + parseInt(arr[4].replace('chapter', '')))
+    }
+  },
+  methods: {
+    back () {
+      bus.$emit('thisAudioPause')
+      this.$router.push({path: '/app/kid-course-list/' + this.chapterCode.split('-').slice(0, 2).join('-')})
     }
   }
 }

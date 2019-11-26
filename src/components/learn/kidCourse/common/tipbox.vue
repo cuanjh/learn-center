@@ -1,5 +1,5 @@
 <template>
-  <div id="tipbox-container" v-show="show">
+  <!-- <div id="tipbox-container" v-show="show">
     <div class="tipbox">
       <div class="head">{{$t("tipbox.title")}}</div>
       <div class="body">
@@ -9,47 +9,80 @@
         <div class="btn continue" @click="close">{{$t("tipbox.close")}}</div>
       </div>
     </div>
+  </div> -->
+  <div class="prompt-container" v-show="show">
+    <div class="promptbox">
+      <div class="close-img" @click="close()"></div>
+      <div class="head">{{$t("tipbox.title")}}</div>
+      <div class="body">
+        <span>{{tip}}</span>
+      </div>
+      <div class="footer">
+        <div class="btn continue" @click="close()">{{$t("tipbox.close")}}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import dialog from '../../../../plugins/dialog'
 
 export default {
   props: ['tip'],
   data () {
     return {
-      show: false,
-      window: {}
+      show: false
     }
   },
   created () {
     this.$on('tipbox-show', () => {
-      this.window = dialog({
-        content: document.querySelector('.tipbox')
-      }).showModal()
+      console.log(this.tip)
+      this.show = true
     })
   },
   methods: {
     close () {
-      this.window.remove()
+      this.show = false
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.tipbox {
-  // position: relative;
-  text-align: center;
-  width: 480px;
-  background: #fff;
-  height: auto;
-  border-radius: 4px;
-  // left: 50%;
-  // margin-left: -240px;
-  // margin-top: -100px;
-  // top: 50%;
+.prompt-container {
+  position: fixed;
+  width:100%;
+  height:100%;
+  top:0px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  z-index:99999999;
+  overflow: hidden;
+  .promptbox {
+    text-align: center;
+    width: 480px;
+    background: #fff;
+    height: auto;
+    border-radius: 4px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .close-img {
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 30px;
+    height: 30px;
+    background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;
+    background-size: cover;
+    cursor: pointer;
+    &:hover {
+      opacity: .8;
+    }
+  }
   .head {
     font-size: 1.7em;
     padding: 10px 0;

@@ -336,6 +336,8 @@ export default {
     },
     // 立即强化/听儿歌
     strengthening () {
+      this.audio.pause()
+      this.isPlay = false
       if (this.type === 'draw') {
         this.$router.push({path: '/kid/kid-stage?code=' + this.chapterCode + '&type=word'})
       } else {
