@@ -38,7 +38,7 @@
       <!--领取过月卡了-->
       <div class="prompt-box" v-show="promptBox">
         <div>
-          <span class="content">你还没有录音评测哦，快去录音吧！</span>
+          <span class="content">你还没有录音哦，快去录音吧！</span>
         </div>
       </div>
     </div>
@@ -100,6 +100,7 @@ export default {
     // 我的评分详情
     gradeDetails () {
       if (!this.isVip) {
+        this.isShowGradeModal = false
         Bus.$emit('showNoVipModal')
         return false
       }
@@ -114,6 +115,9 @@ export default {
       Bus.$emit('showScoreDetail')
     },
     beyondFriend () {
+      if (!this.score) {
+        return false
+      }
       let d = new Date()
       let scoreIndex = (d.getMonth() + 1) % 3 - 1
       return this.xfISEScoreMatch[this.score][scoreIndex]

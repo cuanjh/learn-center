@@ -55,7 +55,6 @@ export default {
       isShowStopTip: false,
       isShowUserTip: false,
       isPlaying: false,
-      isVip: false,
       translateX: 116,
       timerInterval: null,
       score: '',
@@ -65,13 +64,13 @@ export default {
   mounted () {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.photo = userInfo.photo
-    this.isVip = userInfo.member_info.member_type === 1
   },
   computed: {
     ...mapState({
       kidRecordList: state => state.kidRecordList,
       isCanRecord: state => state.isCanRecord,
-      xfSpeechType: state => state.xfSpeechType
+      xfSpeechType: state => state.xfSpeechType,
+      isVip: state => state.isVip
     }),
     isHaveRecord () {
       let order = this.formCode.split('-').pop()
@@ -128,7 +127,7 @@ export default {
       }
       // 判断是否需要语音测评
       this.$emit('startEvaluate')
-      if (this.xfSpeechType === 'ise') {
+      if (this.xfSpeechType === 'ise' && this.isVip) {
         this.isShowScoring = true
       }
     },
