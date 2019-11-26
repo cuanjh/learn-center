@@ -66,7 +66,8 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo // 用户信息
+      userInfo: state => state.userInfo, // 用户信息
+      xfISEScoreMatch: state => state.xfISEScoreMatch
     }),
     // 是否vip
     isVip () {
@@ -84,31 +85,9 @@ export default {
       return type
     },
     beyondFriend () {
-      if (this.score >= 98 && this.score <= 99) {
-        return '95%'
-      } else if (this.score >= 96 && this.score <= 97) {
-        return '93%'
-      } else if (this.score >= 94 && this.score <= 95) {
-        return '91%'
-      } else if (this.score >= 91 && this.score <= 93) {
-        return '90%'
-      } else if (this.score >= 89 && this.score <= 90) {
-        return '85%'
-      } else if (this.score >= 86 && this.score <= 88) {
-        return '83%'
-      } else if (this.score >= 84 && this.score <= 85) {
-        return '80%'
-      } else if (this.score >= 81 && this.score <= 83) {
-        return '79%'
-      } else if (this.score >= 79 && this.score <= 80) {
-        return '77%'
-      } else if (this.score >= 76 && this.score <= 78) {
-        return '75%'
-      } else if (this.score >= 73 && this.score <= 75) {
-        return '72%'
-      } else if (this.score >= 70 && this.score <= 72) {
-        return '68%'
-      }
+      let d = new Date()
+      let scoreIndex = (d.getMonth() + 1) % 3 - 1
+      return this.xfISEScoreMatch[this.score][scoreIndex]
     }
   },
   mounted () {
