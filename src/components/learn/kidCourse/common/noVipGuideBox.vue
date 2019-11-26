@@ -41,6 +41,7 @@
 import Bus from '../../../../bus'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
+import { mapActions } from 'vuex'
 
 export default {
   data () {
@@ -56,7 +57,12 @@ export default {
   mounted () {
     this.initGuideSwiper()
   },
+  computed: {
+  },
   methods: {
+    ...mapActions({
+      getUserInfo: 'getUserInfo'
+    }),
     initGuideSwiper () {
       var guideSwiper = new Swiper('#swiper-lists', {
         loop: false,
@@ -77,6 +83,12 @@ export default {
       console.log(guideSwiper)
     },
     closeModal () {
+      this.getUserInfo().then(res => {
+        console.log(res)
+        if (res.info.member_info.member_type === 1) {
+          Bus.$emit('upUserVip')
+        }
+      })
       this.isShowNoVipModal = false
     }
   }

@@ -55,11 +55,11 @@ export default {
       isShowStopTip: false,
       isShowUserTip: false,
       isPlaying: false,
+      isVip: false,
       translateX: 116,
       timerInterval: null,
       score: '',
-      scoreClass: '',
-      isVip: false
+      scoreClass: ''
     }
   },
   mounted () {
@@ -444,4 +444,5 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
 </style>

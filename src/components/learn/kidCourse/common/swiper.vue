@@ -31,10 +31,16 @@
           <div class="shade"></div>
         </div> -->
       </div>
+      <!-- 提示刚刚充了会员 -->
+      <div class="prompt-box" v-show="isPromptBox">
+        <div>
+          <span class="content">刚刚开通会员权益，快去再录一次吧！</span>
+        </div>
+      </div>
     </div>
 
     <div class="swiper-page-container">
-      <div class="mouse-text" v-show="showMose"><i></i><span>上下滚动鼠标可切换页面哦！</span></div>
+      <div class="mouse-text" v-show="isShowMose"><i></i><span>上下滚动鼠标可切换页面哦！</span></div>
       <p>
         <span>{{ curPage }}</span> / <span>{{ totalPage }}</span>
       </p>
@@ -70,19 +76,20 @@ export default {
   props: ['chapterCode', 'type'],
   data () {
     return {
-      showMose: true,
       list: [],
       totalPage: 0,
       curPage: 1,
       audio: new Audio(),
       recordAudio: new Audio(),
       isPlay: false,
+      isLast: false,
+      isPromptBox: false,
+      isShowMose: true,
       qiniuToken: '',
       iseWords: [],
       repeatIndex: -1,
       timerInterval: null, // 录音间隔器
       time: 0, // 录音计时
-      isLast: false,
       tip: ''
     }
   },
@@ -102,6 +109,12 @@ export default {
       $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
       this.isPlay = false
     })
+    bus.$on('upUserVip', () => {
+      this.isPromptBox = true
+      setTimeout(() => {
+        this.isPromptBox = false
+      }, 3000)
+    })
     this.$on('showTip', () => {
       this.tip = this.tips.micphone
       this.$refs['tipbox'].$emit('tipbox-show')
@@ -120,7 +133,7 @@ export default {
   },
   mounted () {
     setTimeout(() => {
-      this.showMose = false
+      this.isShowMose = false
     }, 5000)
     // 初始化录音插件
     this.initRecorder()
@@ -742,7 +755,8 @@ export default {
         }
       })
       let avaScore = Math.round(sumScore * 1.0 / count)
-      this.$refs['lastGradeBox'].setAvarageScore(avaScore)
+      console.log(avaScore)
+      // this.$refs['lastGradeBox'].setAvarageScore(avaScore)
     }
   }
 }
@@ -800,6 +814,30 @@ export default {
     border-radius:10px;
     box-shadow: 0 8px 30px #ddd;
     box-shadow:0px 3px 10px 0px rgba(196,208,213,0.1);
+  }
+  .prompt-box {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    div {
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+    .content {
+      font-size:16px;
+      font-weight:400;
+      color:rgba(255,255,255,1);
+      background: rgba(0, 0, 0, 74);
+      line-height:22px;
+      padding: 10px 16px;
+      border-radius: 4px;
+    }
   }
 }
 
