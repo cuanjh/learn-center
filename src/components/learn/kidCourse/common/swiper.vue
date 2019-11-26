@@ -26,10 +26,10 @@
           />
           <div class="shade"></div>
         </div>
-        <div class="swiper-slide" v-show="xfSpeechType === 'ise'">
+        <!-- <div class="swiper-slide" v-show="xfSpeechType === 'ise'">
           <last-grade-box ref="lastGradeBox" v-show="isLast"/>
           <div class="shade"></div>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -200,9 +200,9 @@ export default {
         console.log(this.list)
         console.log('=========', data)
         this.totalPage = this.list.length
-        if (this.xfSpeechType === 'ise') {
-          this.totalPage = this.list.length + 1
-        }
+        // if (this.xfSpeechType === 'ise') {
+        //   this.totalPage = this.list.length + 1
+        // }
         this.curPage = 1
         this.setProgress()
         setTimeout(() => {
@@ -259,15 +259,11 @@ export default {
             bus.$emit('thisAudioPause')
           },
           progress: function (progress) {
-            // console.log(progress)
             for (let i = 0; i < this.slides.length; i++) {
               let slide = this.slides.eq(i)
               let slideProgress = this.slides[i].progress
-              let modify = 1
-              if (Math.abs(slideProgress) > 1) {
-                modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
-              }
-              let translate = slideProgress * modify * 290 + 'px'
+              console.log('slideProgress', slideProgress)
+              let translate = slideProgress * 290 + 'px'
               console.log(translate)
               let scale = 1 - Math.abs(slideProgress) / 3
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
@@ -721,6 +717,9 @@ export default {
     },
     getAvarageScore () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      if (xfISEResult.length === 0) {
+        return
+      }
       let sumScore = 0
       let count = 0
       xfISEResult.forEach(item => {
