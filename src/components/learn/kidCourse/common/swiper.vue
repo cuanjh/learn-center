@@ -103,13 +103,15 @@ export default {
       this.tip = this.tips.micphone
       this.$refs['tipbox'].$emit('tipbox-show')
     })
-    // 拉取讯飞测评数据
-    this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
-      if (res.success) {
-        localStorage.setItem('xfISEResult', JSON.stringify(res.forms))
-        this.getAvarageScore()
-      }
-    })
+    if (this.xfSpeechType === 'ise') {
+      // 拉取讯飞测评数据
+      this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
+        if (res.success) {
+          localStorage.setItem('xfISEResult', JSON.stringify(res.forms))
+          this.getAvarageScore()
+        }
+      })
+    }
     // 获取课程数据
     this.initData()
   },
@@ -224,7 +226,9 @@ export default {
         slideToClickedSlide: true,
         on: {
           init: () => {
-            this.iseResultSet()
+            if (this.xfSpeechType === 'ise') {
+              this.iseResultSet()
+            }
             this.playSourceSound(this.curPage - 1)
           },
           slideChange: () => {
@@ -237,24 +241,22 @@ export default {
             this.setProgress()
             this.isPlay = false
             $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
-            if (this.curPage === this.totalPage) {
-              console.log('最后一张显示')
-              this.isLast = true
-              bus.$emit('thisAudioPause')
-              return false
-            }
             this.isLast = false
             this.playSourceSound(activeIndex)
-            setTimeout(() => {
-              this.iseResultSet()
-            }, 100)
-            if (this.list.length === activeIndex + 1) {
+            if (this.xfSpeechType === 'ise') {
+              setTimeout(() => {
+                this.iseResultSet()
+              }, 100)
+            }
+            if (this.list.length === this.curPage) {
               let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
               this.setPartComplete({part_code: activityCode})
-              this.getAvarageScore()
-              this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
             }
             console.log('curPage' + this.curPage)
+          },
+          reachEnd: () => {
+            this.isLast = true
+            bus.$emit('thisAudioPause')
           },
           progress: function (progress) {
             // console.log(progress)
@@ -481,6 +483,9 @@ export default {
               this.getAvarageScore()
               this.$refs['scoreResult'].setScoreResult(formObj.score)
               this.iseResultSet()
+              if (this.list.length === this.curPage) {
+                this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
+              }
             }
           })
         }
@@ -513,7 +518,7 @@ export default {
     },
     goWordListBox () {
       console.log(this.iseWords)
-      if (this.iseWords.length === 0) {
+      if (this.isVip && this.iseWords.length === 0) {
         this.tip = '当前没有评测结果，请重新录音哦！'
         this.$refs['tipbox'].$emit('tipbox-show')
         return false
@@ -791,7 +796,7 @@ export default {
 }
 
 .swiper-slide-active {
-  box-shadow: 0px 3px 20px #ddd !important;
+  box-shadow: 0px 3px 10px 0px rgba(196,208,213,0.1) !important;
 }
 
 .swiper-page-container {
@@ -845,8 +850,11 @@ export default {
 }
 
 .result-out {
-  height: 20px;
-  font-size: 14px;
+  height: 22px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #BEBEBE;
+  line-height: 22px;
   text-align: center;
   margin-top: 8px;
 }
