@@ -4,7 +4,7 @@
       <div class="grade-content">
         <div class="close-img" @click="closeModal()"></div>
         <!-- 70分以下的显示 -->
-        <div class="no-good" v-if="isVip !== 1 || score < 70 || !score">
+        <div class="no-good" v-if="!isVip || score < 70 || !score">
           <p class="title">
             <span>炫耀一下</span>
             <span>让小伙伴听听你的声音吧~</span>
@@ -17,7 +17,7 @@
         <div class="good" v-else>
           <p class="title">
             <span>棒棒哒!</span>
-            <span>你超越了全国<em> {{beyondFriend}} </em>的小可爱</span>
+            <span>你超越了全国<em> {{beyondFriendResult}} </em>的小可爱</span>
           </p>
           <div class="center-box">
             <div class="center-good-img">
@@ -29,16 +29,16 @@
         </div>
         <div class="btns">
           <p class="btn share" @click="shareMyRecord()"><span>分享我的专属绘本</span></p>
-          <p class="btn grade-details" :class="{'no-vip': isVip !== 1}" @click="gradeDetails()" >
-            <i class="icon-vip" v-if="isVip !== 1"></i>
-            {{isVip !== 1 ? '会员评分详情' : '评分详情'}}
+          <p class="btn grade-details" :class="{'no-vip': !isVip}" @click="gradeDetails()" >
+            <i class="icon-vip" v-if="!isVip"></i>
+            {{!isVip ? '会员评分详情' : '评分详情'}}
           </p>
         </div>
       </div>
       <!--领取过月卡了-->
       <div class="prompt-box" v-show="promptBox">
         <div>
-          <span class="content">你还没有录音哦，快去录音吧！</span>
+          <span class="content">你还没有录音评测哦，快去录音吧！</span>
         </div>
       </div>
     </div>
@@ -53,29 +53,26 @@ export default {
   data () {
     return {
       isShowGradeModal: false,
+      beyondFriendResult: '',
+      promptBox: false,
       chapterList: [],
-      score: '',
-      promptBox: false
+      score: ''
     }
   },
   created () {
-    Bus.$on('busGradeBox', data => {
-      console.log(data)
-      this.showGradeBox(data)
+    Bus.$on('busGradeBox', () => {
+      this.getAvarageScore()
+      this.beyondFriendResult = this.beyondFriend()
+      this.isShowGradeModal = true
     })
   },
   computed: {
     ...mapState({
       userInfo: state => state.userInfo, // 用户信息
-      xfISEScoreMatch: state => state.xfISEScoreMatch
+      xfISEScoreMatch: state => state.xfISEScoreMatch,
+      kidRecordList: state => state.kidRecordList,
+      isVip: state => state.isVip
     }),
-    // 是否vip
-    isVip () {
-      if (!this.userInfo || !this.userInfo.member_info) {
-        return 0
-      }
-      return this.userInfo.member_info.member_type
-    },
     chapterCode () {
       let code = this.$route.query.code
       return code
@@ -83,23 +80,21 @@ export default {
     curType () {
       let type = this.$route.query.type
       return type
-    },
-    beyondFriend () {
-      let d = new Date()
-      let scoreIndex = (d.getMonth() + 1) % 3 - 1
-      return this.xfISEScoreMatch[this.score][scoreIndex]
     }
   },
   mounted () {
     console.log('localXfISEResult==>', this.localXfISEResult)
   },
   methods: {
-    closeModal () {
-      this.isShowGradeModal = false
-    },
     // 分享我的绘本
     shareMyRecord () {
-      this.isShowGradeModal = false
+      if (this.kidRecordList.length === 0) {
+        this.promptBox = true
+        setTimeout(() => {
+          this.promptBox = false
+        }, 3000)
+        return false
+      }
       this.$router.push({path: '/kid/kid-record-list', query: {code: this.chapterCode, type: this.curType}})
     },
     // 我的评分详情
@@ -108,7 +103,7 @@ export default {
         Bus.$emit('showNoVipModal')
         return false
       }
-      if (!this.score) {
+      if (this.isVip && !this.score) {
         this.promptBox = true
         setTimeout(() => {
           this.promptBox = false
@@ -116,39 +111,31 @@ export default {
         return false
       }
       this.isShowGradeModal = false
-      Bus.$emit('showScoreDetail', this.chapterList)
+      Bus.$emit('showScoreDetail')
     },
-    showGradeBox (chapterList) {
-      console.log(chapterList)
-      this.chapterList = chapterList
-      let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (!localXfResult) {
+    beyondFriend () {
+      let d = new Date()
+      let scoreIndex = (d.getMonth() + 1) % 3 - 1
+      return this.xfISEScoreMatch[this.score][scoreIndex]
+    },
+    closeModal () {
+      this.isShowGradeModal = false
+    },
+    getAvarageScore () {
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      if (xfISEResult.length === 0) {
         return
       }
-      let totalScore = 0
-      let data = []
-      if (this.curType === 'draw') {
-        Object.entries(localXfResult).forEach(item => {
-          chapterList.forEach(li => {
-            if (item[0].indexOf(li.code) > -1) {
-              totalScore += parseFloat(item[1].total_score)
-              data.push(item[1])
-            }
-          })
-        })
-      } else {
-        Object.entries(localXfResult).forEach(item => {
-          chapterList.forEach(li => {
-            if (item[0] === li.code) {
-              totalScore += parseFloat(item[1].total_score)
-              data.push(item[1])
-            }
-          })
-        })
-      }
-      this.score = Math.round(totalScore / data.length)
+      let sumScore = 0
+      let count = 0
+      xfISEResult.forEach(item => {
+        if (item.form_code.indexOf(this.chapterCode + '-' + this.curType.charAt(0).toUpperCase() + this.curType.slice(1) + '-') > -1) {
+          sumScore += item.score
+          count++
+        }
+      })
+      this.score = Math.round(sumScore * 1.0 / count)
       console.log(this.score)
-      this.isShowGradeModal = true
     }
   }
 }
