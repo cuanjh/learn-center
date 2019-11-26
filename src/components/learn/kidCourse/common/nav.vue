@@ -13,7 +13,6 @@
 
 <script>
 import RecordBox from './recordBox.vue'
-import bus from '../../../../bus'
 export default {
   props: ['chapterCode', 'type'],
   data () {

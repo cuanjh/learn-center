@@ -26,6 +26,7 @@ import TestYuyin from './testYuyin.vue'
 
 import ASR from '../../../plugins/xf_asr.js'
 import { mapMutations, mapActions } from 'vuex'
+import bus from '../../../bus'
 
 export default {
   props: ['code', 'type'],
