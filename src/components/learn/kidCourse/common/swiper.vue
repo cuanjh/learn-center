@@ -460,7 +460,7 @@ export default {
             console.log(res)
             if (res.code === '0') {
               if (JSON.parse(res.data.read_sentence.rec_paper.read_chapter.is_rejected)) {
-                this.$refs['scoreResult'].setScoreResult('')
+                this.$refs['scoreResult'].setScoreResult('tryAgain')
                 this.$refs['ise'][this.curPage - 1].noResultAlert()
                 return
               }

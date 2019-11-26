@@ -185,6 +185,7 @@ export default {
     },
     noResultAlert () {
       this.isShowScoring = false
+      this.repeatRecord = false
     }
   }
 }

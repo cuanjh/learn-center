@@ -35,30 +35,48 @@ export default {
   methods: {
     setScoreResult (score) {
       console.log('评分===》', score)
-      if (score) {
+      if (!isNaN(score)) {
         this.score = Math.round(score)
-      } else {
-        this.score = ''
       }
       this.scoreClass = ''
+      let audioId = ''
       switch (true) {
         case score >= 80:
           this.scoreClass = 'perfect'
+          audioId = 'perfect'
           break
         case score >= 60:
           this.scoreClass = 'good'
+          audioId = 'good'
           break
-        case score === '':
+        case score === 'tryAgain':
           this.scoreClass = 'tryAgain'
+          audioId = 'tryAgain'
+          break
+        case score === 'iatPerfect':
+          this.scoreClass = 'iatPerfect'
+          audioId = 'perfect'
+          break
+        case score === 'iatNice':
+          this.scoreClass = 'good'
+          audioId = 'good'
+          break
+        case score === 'iatKeepTrying':
+          this.scoreClass = 'iatKeepTrying'
+          audioId = 'niceTry'
           break
         default:
           this.scoreClass = 'niceTry'
+          audioId = 'niceTry'
           break
+      }
+      if (isNaN(score)) {
+        this.score = ''
       }
       if (this.isVip) {
         this.isShowScoreResult = true
         setTimeout(() => {
-          $('#' + this.scoreClass)[0].play()
+          $('#' + audioId)[0].play()
         }, 300)
         setTimeout(() => {
           $('#AnimatScore').fadeIn(500)
@@ -132,6 +150,21 @@ export default {
     &.tryAgain {
       height: 384px;
       background-image: url('../../../../../static/images/kid/pic-try-again.gif');
+    }
+    &.iatPerfect {
+      width: 537px;
+      height: 379px;
+      background-image: url('../../../../../static/images/kid/pic-iat-perfect.png');
+    }
+    &.iatNice {
+      width: 539px;
+      height: 537px;
+      background-image: url('../../../../../static/images/kid/pic-iat-perfect.png');
+    }
+    &.iatKeepTrying {
+      width: 539px;
+      height: 537px;
+      background-image: url('../../../../../static/images/kid/pic-iat-keep-trying.png');
     }
   }
 }
