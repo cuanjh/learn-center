@@ -94,6 +94,11 @@ export default {
     Tipbox
   },
   created () {
+    bus.$on('thisAudioPause', () => {
+      this.audio.pause()
+      $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
+      this.isPlay = false
+    })
     this.$on('showTip', () => {
       this.tip = this.tips.micphone
       this.$refs['tipbox'].$emit('tipbox-show')
@@ -213,13 +218,12 @@ export default {
         mousewheel: {
           eventsTarged: '.kid-stage-container'
         },
+        loop: false,
         allowTouchMove: false,
         preventClicksPropagation: true,
         slideToClickedSlide: true,
-        loop: false,
         on: {
           init: () => {
-            console.log(swiper1)
             this.iseResultSet()
             this.playSourceSound(this.curPage - 1)
           },
@@ -236,9 +240,7 @@ export default {
             if (this.curPage === this.totalPage) {
               console.log('最后一张显示')
               this.isLast = true
-              this.audio.pause()
-              $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
-              this.isPlay = false
+              bus.$emit('thisAudioPause')
               return false
             }
             this.isLast = false
@@ -266,7 +268,6 @@ export default {
               let translate = slideProgress * modify * 290 + 'px'
               console.log(translate)
               let scale = 1 - Math.abs(slideProgress) / 3
-              // console.log(scale)
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
               slide.transform('translateX(' + translate + ') scale(' + scale + ')')
               slide.css('zIndex', zIndex)
@@ -374,19 +375,16 @@ export default {
           this.isPlay = false
         }
       } else {
-        this.audio.pause()
-        $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
-        this.isPlay = false
+        bus.$emit('thisAudioPause')
       }
     },
     // 暂停原始录音播放
     pauseSourceSound () {
-      this.audio.pause()
-      $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
-      this.isPlay = false
+      bus.$emit('thisAudioPause')
     },
     // 开始录音
     startRecord () {
+      bus.$emit('thisAudioPause')
       this.timerInterval = setInterval(() => {
         this.time++
       }, 1000)
@@ -515,6 +513,11 @@ export default {
     },
     goWordListBox () {
       console.log(this.iseWords)
+      if (this.iseWords.length === 0) {
+        this.tip = '当前没有评测结果，请重新录音哦！'
+        this.$refs['tipbox'].$emit('tipbox-show')
+        return false
+      }
       this.$refs.WordListBox.showWordListBox(this.iseWords)
     },
     // 录音保存后，动画效果

@@ -182,6 +182,7 @@ export default {
       this.$refs['progress'].setProgress(progress)
     },
     back () {
+      bus.$emit('thisAudioPause')
       let arr = this.code.split('-')
       if (arr[0] === 'KEN') {
         // 保存测评信息

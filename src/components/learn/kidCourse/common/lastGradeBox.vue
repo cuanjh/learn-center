@@ -64,6 +64,7 @@ export default {
   },
   computed: {
     ...mapState({
+      kidRecordList: state => state.kidRecordList,
       isVip: state => state.isVip
     }),
     chapterCode () {
@@ -81,6 +82,13 @@ export default {
   methods: {
     // 分享我的绘本
     shareMyRecord () {
+      if (this.kidRecordList.length === 0) {
+        this.promptBox = true
+        setTimeout(() => {
+          this.promptBox = false
+        }, 3000)
+        return false
+      }
       this.$router.push({path: '/kid/kid-record-list', query: {code: this.chapterCode, type: this.curType}})
     },
     // 我的评分详情

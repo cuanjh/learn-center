@@ -5,7 +5,7 @@
         <i></i>
       </a>
       <span>{{ chapterDes }}</span>
-      <span data-intro="this is a tooltip">{{ type == 'draw' ? '绘本阅读' : '绘本单词' }}</span>
+      <span data-intro="this is a tooltip">{{ type == 'draw' ? '绘本阅读' : '核心单词' }}</span>
     </div>
     <record-box :chapterCode="chapterCode" :type="type"/>
   </div>
@@ -13,6 +13,7 @@
 
 <script>
 import RecordBox from './recordBox.vue'
+import bus from '../../../../bus'
 export default {
   props: ['chapterCode', 'type'],
   data () {
