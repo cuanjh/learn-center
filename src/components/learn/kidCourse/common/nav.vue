@@ -41,6 +41,7 @@ export default {
       this.$emit('back')
     },
     scoreReport () {
+      console.log('点击语言报告')
       Bus.$emit('busGradeBox')
     }
   }

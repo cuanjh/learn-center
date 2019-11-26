@@ -234,7 +234,7 @@ export default {
         centeredSlides: true,
         autoplay: false,
         mousewheel: {
-          eventsTarged: '.kid-stage-container'
+          eventsTarged: '.kid-content'
         },
         loop: false,
         allowTouchMove: false,
