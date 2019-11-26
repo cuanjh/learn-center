@@ -1,11 +1,14 @@
 <template>
   <div class="nav-container">
     <div class="left">
-      <a href="javascript:;" @click="back" class="back">
-        <i></i>
-      </a>
-      <span>{{ chapterDes }}</span>
-      <span data-intro="this is a tooltip">{{ type == 'draw' ? '绘本阅读' : '核心单词' }}</span>
+      <div>
+        <a href="javascript:;" @click="back" class="back">
+          <i></i>
+        </a>
+        <span>{{ chapterDes }}</span>
+        <span data-intro="this is a tooltip">{{ type == 'draw' ? '绘本阅读' : '核心单词' }}</span>
+      </div>
+      <a class="score-report" @click="scoreReport()" v-show="xfSpeechType === 'ise'"><span>语音评分报告</span></a>
     </div>
     <record-box :chapterCode="chapterCode" :type="type"/>
   </div>
@@ -13,6 +16,9 @@
 
 <script>
 import RecordBox from './recordBox.vue'
+import Bus from '../../../../bus'
+import { mapState } from 'vuex'
+
 export default {
   props: ['chapterCode', 'type'],
   data () {
@@ -22,6 +28,9 @@ export default {
     RecordBox
   },
   computed: {
+    ...mapState({
+      xfSpeechType: state => state.xfSpeechType
+    }),
     chapterDes () {
       let arr = this.chapterCode.toLowerCase().split('-')
       return '课程' + ((parseInt(arr[3].replace('unit', '')) - 1) * 6 + parseInt(arr[4].replace('chapter', '')))
@@ -30,6 +39,9 @@ export default {
   methods: {
     back () {
       this.$emit('back')
+    },
+    scoreReport () {
+      Bus.$emit('busGradeBox')
     }
   }
 }
@@ -40,6 +52,8 @@ export default {
   width: 100%;
   height: 76px;
   background: #fff;
+  display: flex;
+  justify-content: space-between;
   .back {
     margin-left: 76px;
     min-width: 42px;
@@ -74,6 +88,17 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    padding-right: 30px;
+  }
+  .score-report {
+    &:hover {
+      span {
+        opacity: .8;
+      }
+    }
   }
 }
 </style>

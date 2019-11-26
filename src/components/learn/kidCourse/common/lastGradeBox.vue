@@ -49,18 +49,13 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      isShowGradeModal: false,
       chapterList: [],
       promptBox: false,
-      score: 0,
+      score: '',
       beyondFriendResult: ''
     }
   },
   created () {
-    Bus.$on('busLastGradeBox', data => {
-      console.log(data)
-      this.showLastGradeBox(data)
-    })
   },
   computed: {
     ...mapState({
@@ -109,37 +104,6 @@ export default {
     setAvarageScore (score) {
       this.score = score
       this.beyondFriendResult = this.beyondFriend()
-    },
-    showLastGradeBox (chapterList) {
-      console.log(chapterList)
-      this.chapterList = chapterList
-      let localXfResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (!localXfResult) {
-        return
-      }
-      let totalScore = 0
-      let data = []
-      if (this.curType === 'draw') {
-        Object.entries(localXfResult).forEach(item => {
-          chapterList.forEach(li => {
-            if (item[0].indexOf(li.code) > -1) {
-              totalScore += parseFloat(item[1].total_score)
-              data.push(item[1])
-            }
-          })
-        })
-      } else {
-        Object.entries(localXfResult).forEach(item => {
-          chapterList.forEach(li => {
-            if (item[0] === li.code) {
-              totalScore += parseFloat(item[1].total_score)
-              data.push(item[1])
-            }
-          })
-        })
-      }
-      this.score = Math.round(totalScore / data.length)
-      console.log(this.score)
     },
     beyondFriend () {
       if (this.score >= 98 && this.score <= 99) {
