@@ -17,7 +17,7 @@
         <div class="good" v-else>
           <p class="title">
             <span>棒棒哒!</span>
-            <span>你超越了全国<em> {{beyondFriendResult}} </em>的小可爱</span>
+            <span>你超越了全国<em> {{beyondFriendResult + '%'}} </em>的小可爱</span>
           </p>
           <div class="center-box">
             <div class="center-good-img">
@@ -115,7 +115,7 @@ export default {
       Bus.$emit('showScoreDetail')
     },
     beyondFriend () {
-      if (!this.score) {
+      if (!this.score || this.score < 70) {
         return false
       }
       let d = new Date()

@@ -371,6 +371,8 @@ export default {
     },
     // 播放原始音频
     playSourceSound (index) {
+      this.recordAudio.pause()
+      this.$refs['ise'][index].resetPlay()
       if (!this.isPlay) {
         let item = this.list[index]
         this.audio.src = item.sound
