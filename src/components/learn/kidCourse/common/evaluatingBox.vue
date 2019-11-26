@@ -291,11 +291,14 @@ export default {
             slideNextTransitionStart: () => {
               console.log(swiperScore.activeIndex)
               this.curSwiperPage = swiperScore.activeIndex
-              this.audio.pause()
-              this.isPlay = false
               let key = this.evaluatingData[swiperScore.activeIndex].form_code
               let index = this.stringPop(key)
               this.iseResultSet(this.curSwiperPage)
+            },
+            slideChange: () => {
+              this.audio.pause()
+              $('.mother-grade').find('.icon-horn').removeClass('playing')
+              this.isPlay = false
             }
           }
         })
@@ -303,6 +306,9 @@ export default {
       /* eslint-enable */
     },
     closeModal () {
+      this.audio.pause()
+      $('.mother-grade').find('.icon-horn').removeClass('playing')
+      this.isPlay = false
       this.isShowEvaluatingModal = false
     },
     // 立即强化/听儿歌

@@ -85,8 +85,9 @@ export default {
     }
     &:hover {
       i {
-        width: 42px;
-        height: 42px;
+        // width: 42px;
+        // height: 42px;
+        transform: scale(1.1);
         box-shadow:0px 4px 9px -4px rgba(24,193,255,1);
       }
     }
