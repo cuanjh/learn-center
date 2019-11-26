@@ -6,9 +6,12 @@
           <i></i>
         </a>
         <span>{{ chapterDes }}</span>
-        <span data-intro="this is a tooltip">{{ type == 'draw' ? '绘本阅读' : '核心单词' }}</span>
+        <span>{{ type == 'draw' ? '绘本阅读' : '核心单词' }}</span>
       </div>
-      <a class="score-report" @click="scoreReport()" v-show="xfSpeechType === 'ise'"><span>语音评分报告</span></a>
+      <a class="score-report" @click="scoreReport()" v-show="xfSpeechType === 'ise' && isShowIseReport">
+        <p v-show="isShowAnimate"></p>
+        <i></i>
+      </a>
     </div>
     <record-box :chapterCode="chapterCode" :type="type"/>
   </div>
@@ -22,7 +25,18 @@ import { mapState } from 'vuex'
 export default {
   props: ['chapterCode', 'type'],
   data () {
-    return {}
+    return {
+      isShowIseReport: false,
+      isShowAnimate: true
+    }
+  },
+  created () {
+    Bus.$on('setIsShowIseReport', (flag) => {
+      this.isShowIseReport = flag
+      setTimeout(() => {
+        this.isShowAnimate = false
+      }, 5000)
+    })
   },
   components: {
     RecordBox
@@ -94,11 +108,63 @@ export default {
     padding-right: 30px;
   }
   .score-report {
-    &:hover {
-      span {
-        opacity: .8;
-      }
+    position: relative;
+    i {
+      position: relative;
+      display: inline-block;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background-image: url('../../../../../static/images/kid/icon-ise-report.png');
+      background-repeat: no-repeat;
+      background-size: cover;
     }
+    p {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      background: #89DA31;
+      border-radius: 50%;
+      animation: ani 2s linear infinite;
+      -moz-animation: ani 2s linear infinite;
+      -webkit-animation: ani 2s linear infinite;
+    }
+  }
+}
+
+@keyframes ani {
+  0%{
+    width: 38px;
+    height: 38px;
+    background: #89DA31;
+    border-radius: 50%;
+  }
+  25%{
+    margin-left: -6px;
+    margin-top: -6px;
+    width: 50px;
+    height: 50px;
+    background: rgba(137, 218, 49, .25);
+  }
+  50%{
+    margin-left: -9px;
+    margin-top: -9px;
+    width: 56px;
+    height: 56px;
+    background: rgba(137, 218, 49, .1);
+  }
+  75%{
+    margin-left: -6px;
+    margin-top: -6px;
+    width: 50px;
+    height: 50px;
+    background: rgba(137, 218, 49, .25);
+  }
+  100%{
+    width: 38px;
+    height: 38px;
+    background: #89DA31;
+    border-radius: 50%;
   }
 }
 </style>

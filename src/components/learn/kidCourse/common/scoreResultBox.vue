@@ -5,6 +5,10 @@
       <span class="score" id="AnimatScore" >{{ score }}</span>
     </div>
     <audio id="myYeah" src="../../../../../static/sounds/yeah.mp3"></audio>
+    <audio id="good" src="../../../../../static/sounds/good.mp3"></audio>
+    <audio id="perfect" src="../../../../../static/sounds/perfect.mp3"></audio>
+    <audio id="niceTry" src="../../../../../static/sounds/nice_try.mp3"></audio>
+    <audio id="tryAgain" src="../../../../../static/sounds/try_again.mp3"></audio>
   </div>
 </transition>
 </template>
@@ -31,7 +35,11 @@ export default {
   methods: {
     setScoreResult (score) {
       console.log('评分===》', score)
-      this.score = Math.round(score)
+      if (score) {
+        this.score = Math.round(score)
+      } else {
+        this.score = ''
+      }
       this.scoreClass = ''
       switch (true) {
         case score >= 80:
@@ -40,14 +48,17 @@ export default {
         case score >= 60:
           this.scoreClass = 'good'
           break
+        case score === '':
+          this.scoreClass = 'tryAgain'
+          break
         default:
-          this.scoreClass = 'nice'
+          this.scoreClass = 'niceTry'
           break
       }
       if (this.isVip) {
         this.isShowScoreResult = true
         setTimeout(() => {
-          $('#myYeah')[0].play()
+          $('#' + this.scoreClass)[0].play()
         }, 300)
         setTimeout(() => {
           $('#AnimatScore').fadeIn(500)
@@ -111,12 +122,16 @@ export default {
         color: #515151;
       }
     }
-    &.nice {
-      background-image: url('../../../../../static/images/kid/pic-nice-try.png');
+    &.niceTry {
+      height: 384px;
+      background-image: url('../../../../../static/images/kid/pic-nice-try.gif');
       .score {
-        top: 68%;
         color: #FF685F;
       }
+    }
+    &.tryAgain {
+      height: 384px;
+      background-image: url('../../../../../static/images/kid/pic-try-again.gif');
     }
   }
 }

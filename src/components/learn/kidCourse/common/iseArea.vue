@@ -51,6 +51,7 @@ export default {
       photo: '',
       playLineHeight: [8, 16, 24, 16, 8],
       isShowScoring: false,
+      repeatRecord: false,
       isRecording: false,
       isShowStopTip: false,
       isShowUserTip: false,
@@ -99,6 +100,8 @@ export default {
   },
   methods: {
     recordOpt () {
+      if (this.repeatRecord && !this.isRecording) return
+      this.repeatRecord = true
       if (!this.isCanRecord) {
         this.$parent.$emit('showTip')
         return false
@@ -130,6 +133,9 @@ export default {
       if (this.xfSpeechType === 'ise' && this.isVip) {
         this.isShowScoring = true
       }
+    },
+    evaluateFinished () {
+      this.repeatRecord = false
     },
     playRecord () {
       this.isPlaying = !this.isPlaying

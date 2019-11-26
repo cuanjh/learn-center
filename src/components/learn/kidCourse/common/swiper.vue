@@ -26,10 +26,6 @@
           />
           <div class="shade"></div>
         </div>
-        <!-- <div class="swiper-slide" v-show="xfSpeechType === 'ise'">
-          <last-grade-box ref="lastGradeBox" v-show="isLast"/>
-          <div class="shade"></div>
-        </div> -->
       </div>
       <!-- 提示刚刚充了会员 -->
       <div class="prompt-box" v-show="isPromptBox">
@@ -82,7 +78,6 @@ export default {
       audio: new Audio(),
       recordAudio: new Audio(),
       isPlay: false,
-      isLast: false,
       isPromptBox: false,
       isShowMose: true,
       qiniuToken: '',
@@ -233,9 +228,10 @@ export default {
         slidesPerView: 'auto',
         centeredSlides: true,
         autoplay: false,
-        mousewheel: {
-          eventsTarged: '.kid-stage-container'
-        },
+        mousewheel: true,
+        // mousewheel: {
+        //   eventsTarged: '.kid-stage-container'
+        // },
         loop: false,
         allowTouchMove: false,
         preventClicksPropagation: true,
@@ -257,13 +253,6 @@ export default {
             this.setProgress()
             this.isPlay = false
             $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
-            if (this.curPage === this.totalPage) {
-              console.log('最后一张显示')
-              this.isLast = true
-              bus.$emit('thisAudioPause')
-              return false
-            }
-            this.isLast = false
             this.playSourceSound(activeIndex)
             if (this.xfSpeechType === 'ise') {
               setTimeout(() => {
@@ -277,8 +266,8 @@ export default {
             console.log('curPage' + this.curPage)
           },
           reachEnd: () => {
-            this.isLast = true
             bus.$emit('thisAudioPause')
+            bus.$emit('setIsShowIseReport', true)
           },
           progress: function (progress) {
             for (let i = 0; i < this.slides.length; i++) {
@@ -471,8 +460,7 @@ export default {
             console.log(res)
             if (res.code === '0') {
               if (JSON.parse(res.data.read_sentence.rec_paper.read_chapter.is_rejected)) {
-                this.tip = '评分不成功，请根据句子发音！'
-                this.$refs['tipbox'].$emit('tipbox-show')
+                this.$refs['scoreResult'].setScoreResult('')
                 this.$refs['ise'][this.curPage - 1].noResultAlert()
                 return
               }
@@ -501,6 +489,7 @@ export default {
               this.getAvarageScore()
               this.$refs['scoreResult'].setScoreResult(formObj.score)
               this.iseResultSet()
+              this.$refs['ise'][this.curPage - 1].evaluateFinished()
               if (this.list.length === this.curPage) {
                 this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
               }
