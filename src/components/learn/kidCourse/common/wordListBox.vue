@@ -1,25 +1,23 @@
 <template>
 <transition name="fade">
-  <div class="word-modal-box" v-show="showWordBox">
+  <div class="word-modal-box" v-show="showWordBox && isVip">
     <div class="word-box-content">
       <div class="close-img-box" @click="closeModal()"></div>
-      <div v-if="!isVip">
+      <!-- <div v-if="!isVip">
         <noVip-guide-box />
-      </div>
-      <div class="words-content" v-else>
+      </div> -->
+      <div class="words-content" >
         <word-item :newWords="newWords"/>
       </div>
     </div>
   </div>
+  <!-- <noVip-guide-box v-else/> -->
 </transition>
 </template>
 
 <script>
 import WordItem from './wordItem.vue'
 import { mapState } from 'vuex'
-import NoVipGuideBox from './noVipGuideBox.vue'
-import Swiper from 'swiper'
-import 'swiper/dist/css/swiper.min.css'
 
 export default {
   data () {
@@ -29,11 +27,9 @@ export default {
     }
   },
   components: {
-    WordItem,
-    NoVipGuideBox
+    WordItem
   },
   mounted () {
-    this.initGuideSwiper()
   },
   computed: {
     ...mapState({
@@ -49,31 +45,6 @@ export default {
     },
     closeModal () {
       this.showWordBox = false
-    },
-    initGuideSwiper () {
-      this.$nextTick(() => {
-        var guideSwiper2 = new Swiper('.word-box-content #swiper-lists', {
-          loop: false,
-          autoplay: false, // 自动轮播
-          paginationClickable: true,
-          observer: true, // 修改swiper自己或子元素时，自动初始化swiper
-          observeParents: true, // 修改swiper的父元素时，自动初始化swiper
-          initialSlide: 0,
-          centeredSlides: true,
-          slidesPerView: 'auto',
-          slideToClickedSlide: true,
-          mousewheel: true,
-          allowTouchMove: true,
-          pagination: {
-            el: '.swiper-pagination'
-          },
-          on: {
-            init: () => {
-            }
-          }
-        })
-        console.log(guideSwiper2)
-      })
     }
   }
 }

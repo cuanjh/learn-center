@@ -43,6 +43,7 @@
     <score-result-box ref="scoreResult"/>
     <grade-box ref="gradeBox"/>
     <evaluating-box />
+    <noVip-guide-box ref="noVipGuideBox"/>
     <word-list-box ref="WordListBox"/>
     <tipbox ref="tipbox" :tip="tip"/>
   </div>
@@ -61,6 +62,7 @@ import EvaluatingBox from './evaluatingBox.vue'
 import WordListBox from './wordListBox.vue'
 import LastGradeBox from './lastGradeBox.vue'
 import ScoreResultBox from './scoreResultBox.vue'
+import NoVipGuideBox from './noVipGuideBox.vue'
 import Tipbox from './tipbox.vue'
 import bus from '../../../../bus'
 
@@ -91,6 +93,7 @@ export default {
     WordListBox,
     LastGradeBox,
     ScoreResultBox,
+    NoVipGuideBox,
     Tipbox
   },
   created () {
@@ -241,6 +244,12 @@ export default {
             this.setProgress()
             this.isPlay = false
             $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
+            if (this.curPage === this.totalPage) {
+              console.log('最后一张显示')
+              this.isLast = true
+              bus.$emit('thisAudioPause')
+              return false
+            }
             this.isLast = false
             this.playSourceSound(activeIndex)
             if (this.xfSpeechType === 'ise') {
@@ -518,6 +527,10 @@ export default {
     },
     goWordListBox () {
       console.log(this.iseWords)
+      if (!this.isVip) {
+        bus.$emit('showNoVipModal')
+        return false
+      }
       if (this.isVip && this.iseWords.length === 0) {
         this.tip = '当前没有评测结果，请重新录音哦！'
         this.$refs['tipbox'].$emit('tipbox-show')

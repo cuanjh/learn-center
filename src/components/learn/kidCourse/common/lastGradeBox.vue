@@ -93,7 +93,10 @@ export default {
     },
     // 我的评分详情
     gradeDetails () {
-      // let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      if (!this.isVip) {
+        Bus.$emit('showNoVipModal')
+        return false
+      }
       if (this.isVip && !this.score) {
         this.promptBox = true
         setTimeout(() => {

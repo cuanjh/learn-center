@@ -1,14 +1,10 @@
 <template>
   <transition name="fade">
-    <div class="evaluating-modal-box" v-show="isShowEvaluatingModal">
+    <div class="evaluating-modal-box" v-show="isShowEvaluatingModal && isVip">
       <div class="evaluating-content">
         <div class="close-img" @click="closeModal()"></div>
-        <!-- 非会员显示 -->
-        <div class="evaluating" v-if="!isVip">
-          <noVip-guide-box />
-        </div>
         <!-- 是会员 -->
-        <div class="evaluating" v-else>
+        <div class="evaluating">
           <!-- 这是绘本阅读 -->
           <div class="user-avatar">
             <img :src="userInfo ? userInfo.photo : ''" alt="">
@@ -123,7 +119,6 @@ import Bus from '../../../../bus'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
 import EvaluatingWord from './evaluatingWord.vue'
-import NoVipGuideBox from './noVipGuideBox.vue'
 
 const lengths = 5
 const starOn = 'on'
@@ -147,8 +142,7 @@ export default {
     }
   },
   components: {
-    EvaluatingWord,
-    NoVipGuideBox
+    EvaluatingWord
   },
   created () {
     Bus.$on('showScoreDetail', (params) => {
@@ -224,7 +218,7 @@ export default {
   },
   mounted () {
     this.initWordData()
-    this.initGuideSwiper()
+    // this.initGuideSwiper()
     console.log(this.kidRecordList)
   },
   methods: {
@@ -282,6 +276,8 @@ export default {
         var swiperScore = new Swiper('.swiper-evaluating', {
           loop: false,
           autoplay: false, //自动轮播
+          observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+          observeParents: true, // 修改swiper的父元素时，自动初始化swiper
           initialSlide: 0,
           centeredSlides:true,
           slidesPerView: 'auto',
@@ -305,31 +301,6 @@ export default {
         })
       })
       /* eslint-enable */
-    },
-    initGuideSwiper () {
-      this.$nextTick(() => {
-        var guideSwiper = new Swiper('.evaluating #swiper-lists', {
-          loop: false,
-          autoplay: false, // 自动轮播
-          paginationClickable: true,
-          observer: true, // 修改swiper自己或子元素时，自动初始化swiper
-          observeParents: true, // 修改swiper的父元素时，自动初始化swiper
-          initialSlide: 0,
-          centeredSlides: true,
-          slidesPerView: 'auto',
-          slideToClickedSlide: true,
-          mousewheel: true,
-          allowTouchMove: true,
-          pagination: {
-            el: '.swiper-pagination'
-          },
-          on: {
-            init: () => {
-            }
-          }
-        })
-        console.log(guideSwiper)
-      })
     },
     closeModal () {
       this.isShowEvaluatingModal = false

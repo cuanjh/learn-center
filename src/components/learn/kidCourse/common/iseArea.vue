@@ -24,9 +24,9 @@
         <span>{{ score }}</span>
       </div>
       <transition name="fade" mode="out-in">
-        <router-link :to="{path: '/app/vip-home'}" target="_blank" class="icon-vip-tip" v-if="!isVip && translateX === 0 && isShowUserTip">
+        <a href="javascript:;" class="icon-vip-tip" v-if="!isVip && translateX === 0 && isShowUserTip">
           <span>VIP专属智能评分</span>
-        </router-link>
+        </a>
       </transition>
       <!-- 评分中。。。。 -->
       <div class="reviewing-tip" v-show="isShowScoring && isVip && translateX === 0">
