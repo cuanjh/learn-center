@@ -6,37 +6,32 @@
 
 <script>
 import $ from 'jquery'
-import bus from '../../../../bus'
 export default {
   data () {
     return {}
   },
-  created () {
-    bus.$on('recordAnimate', () => {
+  methods: {
+    show () {
       let offset = $('.swiper-slide-active .ise-area .play').offset()
       $('.record-save-animat').css({
         left: offset.left,
         top: offset.top
       })
       $('.record-save-animat').show()
-      setTimeout(() => {
-        let targetOffest = $('.record-box .record-icon').offset()
-        console.log('targetOffest', targetOffest)
-        $('.record-save-animat').stop().animate({
-          left: targetOffest.left,
-          top: targetOffest.top
-        }, {
-          duration: 800,
-          specialEasing: {
-            left: 'linear',
-            top: 'swing'
-          },
-          complete: () => {
-            $('.record-save-animat').hide()
-          }
-        })
-      }, 10)
-    })
+      $('.record-save-animat').stop().animate({
+        left: $('body').width() - 156,
+        top: 10
+      }, {
+        duration: 800,
+        specialEasing: {
+          left: 'linear',
+          top: 'swing'
+        },
+        complete: () => {
+          $('.record-save-animat').hide()
+        }
+      })
+    }
   }
 }
 </script>

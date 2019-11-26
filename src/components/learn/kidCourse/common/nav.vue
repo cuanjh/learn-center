@@ -1,9 +1,9 @@
 <template>
   <div class="nav-container">
     <div class="left">
-      <router-link class="back" :to="{path:'/app/kid-course-list/' + chapterCode.split('-').slice(0, 2).join('-')}">
+      <a href="javascript:;" @click="back" class="back">
         <i></i>
-      </router-link>
+      </a>
       <span>{{ chapterDes }}</span>
       <span data-intro="this is a tooltip">{{ type == 'draw' ? '绘本阅读' : '绘本单词' }}</span>
     </div>
@@ -25,6 +25,11 @@ export default {
     chapterDes () {
       let arr = this.chapterCode.toLowerCase().split('-')
       return '课程' + ((parseInt(arr[3].replace('unit', '')) - 1) * 6 + parseInt(arr[4].replace('chapter', '')))
+    }
+  },
+  methods: {
+    back () {
+      this.$emit('back')
     }
   }
 }

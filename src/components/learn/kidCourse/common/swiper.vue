@@ -10,7 +10,7 @@
           <div class="content">
             <i @click="playSourceSound(index)"></i>
             <p :data-content="item.content || item.word" data-step="1">
-              <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '" @click="showWordPanel($event, index)"></span>
+              <span v-for="(content, index) in item.formatContent" :key="index" v-html="content.indexOf('-') > -1 ? content : ' ' + content" @click="showWordPanel($event, index)"></span>
             </p>
           </div>
           <div class="result-out"></div>
@@ -200,7 +200,7 @@ export default {
         this.setProgress()
         setTimeout(() => {
           this.initSwiper()
-        }, 0)
+        }, 10)
       })
     },
     // 获取数据后，初始化swiper
@@ -210,10 +210,13 @@ export default {
         slidesPerView: 'auto',
         centeredSlides: true,
         autoplay: false,
-        mousewheel: true,
+        mousewheel: {
+          eventsTarged: '.kid-stage-container'
+        },
         allowTouchMove: false,
         preventClicksPropagation: true,
         slideToClickedSlide: true,
+        loop: false,
         on: {
           init: () => {
             console.log(swiper1)
@@ -261,6 +264,7 @@ export default {
                 modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
               }
               let translate = slideProgress * modify * 290 + 'px'
+              console.log(translate)
               let scale = 1 - Math.abs(slideProgress) / 3
               // console.log(scale)
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
@@ -293,7 +297,7 @@ export default {
         return ''
       }
       let result = []
-      let arr = content.replace(new RegExp('\\n', 'g'), '<br/>').split(' ')
+      let arr = content.replace(new RegExp('\\n', 'g'), '<br/>').replace(new RegExp('—', 'g'), ' ').split(' ')
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].trim().length > 0) {
           if (arr[i].indexOf('<br/>') > -1) {
@@ -332,6 +336,11 @@ export default {
           } else {
             if (arr[i].trim() === '—') {
               result.push(arr[i].trim())
+              continue
+            } else if (arr[i].trim().indexOf('-') > -1) {
+              let arr1 = arr[i].trim().split('-')
+              result.push(arr1[0])
+              result.push('-' + arr1[1])
             } else {
               result.push(arr[i].trim())
             }
@@ -346,8 +355,8 @@ export default {
         let audio = new Audio()
         audio.src = url
       } else {
-        // let image = new Image()
-        // image.src = url
+        let image = new Image()
+        image.src = url
       }
     },
     // 播放原始音频
@@ -510,7 +519,7 @@ export default {
     },
     // 录音保存后，动画效果
     recordAnimate () {
-      bus.$emit('recordAnimate')
+      this.$parent.$emit('recordAnimate')
     },
     // 评测结果处理
     iseResultSet () {
@@ -568,47 +577,51 @@ export default {
     },
     // 设置语音识别结果
     setResultOut (resultOut) {
-      $('.current-swiper .swiper-slide-active').find('.result-out').text(resultOut)
-      if (resultOut === '') {
-        $('.swiper-slide').find('.content p span').removeClass('right')
-        $('.swiper-slide').find('.content p span').removeClass('wrong')
-      }
-      // 文本匹配
-      $('.current-swiper .swiper-slide-active').find('.content p span').removeClass('right')
-      $('.current-swiper .swiper-slide-active').find('.content p span').removeClass('wrong')
-      let content = $('.current-swiper .swiper-slide-active').find('.content p').data('content')
-      let arr1 = content.toLowerCase()
-        .replace(new RegExp(/\?/, 'g'), ' ')
-        .replace(new RegExp(',', 'g'), ' ')
-        .replace(new RegExp(/\./, 'g'), ' ')
-        .replace(new RegExp('-', 'g'), ' ')
-        .replace(new RegExp('!', 'g'), ' ')
-        .replace(new RegExp('“', 'g'), ' ')
-        .replace(new RegExp('”', 'g'), ' ')
-        .replace(new RegExp('"', 'g'), ' ')
-        .replace(new RegExp(':', 'g'), ' ')
-        .trim(' ').split(' ')
-      let contentArr = []
-      for (let i = 0; i < arr1.length; i++) {
-        if (arr1[i].trim().length > 0) {
-          contentArr.push(arr1[i].replace(new RegExp('—', 'g'), '').trim())
+      this.$nextTick(() => {
+        $('.current-swiper .swiper-slide-active').find('.result-out').text(resultOut)
+        if (resultOut === '') {
+          $('.swiper-slide').find('.content p span').removeClass('right')
+          $('.swiper-slide').find('.content p span').removeClass('wrong')
         }
-      }
-      console.log('content', contentArr)
-      let arr = resultOut.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').split(' ')
-      let result = []
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i].trim().length > 0) {
-          result.push(arr[i].trim())
+        // 文本匹配
+        $('.current-swiper .swiper-slide-active').find('.content p span').removeClass('right')
+        $('.current-swiper .swiper-slide-active').find('.content p span').removeClass('wrong')
+        let content = $('.current-swiper .swiper-slide-active').find('.content p').data('content')
+        let arr1 = content.toLowerCase()
+          .replace(new RegExp(/\?/, 'g'), ' ')
+          .replace(new RegExp(',', 'g'), ' ')
+          .replace(new RegExp(/\./, 'g'), ' ')
+          .replace(new RegExp('-', 'g'), ' ')
+          .replace(new RegExp('!', 'g'), ' ')
+          .replace(new RegExp('“', 'g'), ' ')
+          .replace(new RegExp('”', 'g'), ' ')
+          .replace(new RegExp('"', 'g'), ' ')
+          .replace(new RegExp(':', 'g'), ' ')
+          .trim(' ').split(' ')
+        let contentArr = []
+        for (let i = 0; i < arr1.length; i++) {
+          let item = arr1[i].trim().replace(new RegExp('—', 'g'), '').trim()
+          if (item.length > 0) {
+            contentArr.push(item)
+          }
         }
-      }
-      for (let j = 0; j < result.length; j++) {
-        if (result[j] === contentArr[j]) {
-          $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('right')
-        } else {
-          $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('wrong')
+        console.log('resultOut', resultOut)
+        console.log('content', contentArr)
+        let arr = resultOut.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').split(' ')
+        let result = []
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].trim().length > 0) {
+            result.push(arr[i].trim())
+          }
         }
-      }
+        for (let j = 0; j < result.length; j++) {
+          if (result[j] === contentArr[j]) {
+            $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('right')
+          } else {
+            $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('wrong')
+          }
+        }
+      })
     },
     // 获取句子中所有的单词
     getWords (sentence) {
@@ -724,7 +737,7 @@ export default {
 }
 .current-swiper {
   // width:668px;
-  height:490px;
+  height:500px;
   // border-radius:10px;
   margin:0 auto;
   position:relative;
@@ -768,6 +781,14 @@ export default {
     box-shadow: 0 8px 30px #ddd;
     box-shadow:0px 3px 10px 0px rgba(196,208,213,0.1);
   }
+}
+
+.swiper-wrapper {
+  align-items: center;
+}
+
+.swiper-slide-active {
+  box-shadow: 0px 3px 20px #ddd !important;
 }
 
 .swiper-page-container {

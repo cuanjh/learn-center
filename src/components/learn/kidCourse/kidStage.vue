@@ -1,13 +1,13 @@
 <template>
   <div class="kid-stage-container">
-    <nav-comp :chapterCode="code" :type="type"/>
+    <nav-comp @back="back" :chapterCode="code" :type="type"/>
     <progress-bar ref="progress"/>
     <div class="kid-content">
       <div class="kid-content-wrap" :style="{height: kidContentHeight + 'px'}">
         <swiper-comp ref="swiper" :chapterCode="code" :type="type" @setProgress="setProgress"/>
       </div>
     </div>
-    <record-animate />
+    <record-animate ref="recordAnimate"/>
     <word-panel ref="wordPanel"/>
     <test-yuyin v-show="false" :chapterCode="code"/>
     <guide v-show="false"/>
@@ -25,7 +25,7 @@ import RecordAnimate from './common/recordAnimate.vue'
 import TestYuyin from './testYuyin.vue'
 
 import ASR from '../../../plugins/xf_asr.js'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 
 export default {
   props: ['code', 'type'],
@@ -74,10 +74,9 @@ export default {
     this.$on('stopIatRecorder', () => {
       this.stop()
     })
-  },
-  mounted () {
-    console.log('kid-stage-container', $('.kid-stage-container').height())
-    this.kidContentHeight = $('.kid-stage-container').height() - 150
+    this.$on('recordAnimate', () => {
+      this.$refs['recordAnimate'].show()
+    })
     let lang = this.code.split('-')[0]
     if (lang === 'KEN') {
       this.updatexfSpeechType('ise')
@@ -87,9 +86,16 @@ export default {
       this.initIatRecorder()
     }
   },
+  mounted () {
+    console.log('kid-stage-container', $('.kid-stage-container').height())
+    this.kidContentHeight = $('.kid-stage-container').height() - 150
+  },
   methods: {
     ...mapMutations([
       'updatexfSpeechType'
+    ]),
+    ...mapActions([
+      'xfISEUpload'
     ]),
     initIatRecorder () {
       let arr = this.code.split('-')
@@ -120,10 +126,12 @@ export default {
         onMessage: (e) => {
           let jsonData = JSON.parse(e.data)
           if (jsonData.data && jsonData.data.result) {
+            console.log('onMessage result', jsonData.data.result)
             this.setResult(jsonData.data.result)
           }
         },
         onStart: () => {
+          this.$refs['swiper'].setResultOut('')
           this.counterDown()
         }
       })
@@ -154,7 +162,6 @@ export default {
         this.resultText = this.resultOut
       }
       resultStr = this.resultText + str
-      console.log(resultStr)
       this.resultOut = resultStr
       this.$refs['swiper'].setResultOut(this.resultOut)
     },
@@ -173,6 +180,14 @@ export default {
     setProgress (progress) {
       console.log(progress)
       this.$refs['progress'].setProgress(progress)
+    },
+    back () {
+      let arr = this.code.split('-')
+      if (arr[0] === 'KEN') {
+        // 保存测评信息
+        this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
+      }
+      this.$router.push({path: '/app/kid-course-list/' + arr.slice(0, 2).join('-')})
     }
   },
   watch: {
