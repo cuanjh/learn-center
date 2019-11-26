@@ -1,9 +1,9 @@
 <template>
   <div class="record-box" @mouseenter="isShowTip = true" @mouseleave="isShowTip = false" v-show="kidRecordList.length > 0">
-    <router-link :to="{path: '/kid/kid-record-list', query: {code: chapterCode, type: type}}" class="record-icon">
+    <a @click="goRecordListPage()" class="record-icon">
       <i></i>
       <span>{{ kidRecordList.length }}</span>
-    </router-link>
+    </a>
     <transition name="fade" mode="out-in">
       <div class="tip" v-show="isShowTip">
         <span>我的{{ type=='draw' ? '绘本' : '单词' }}录音</span>
@@ -14,6 +14,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import bus from '../../../../bus'
 export default {
   props: ['chapterCode', 'type'],
   data () {
@@ -35,6 +36,10 @@ export default {
     ]),
     initData () {
       this.getKidRecordList({chapter_code: this.chapterCode, teacher_module: this.type})
+    },
+    goRecordListPage () {
+      bus.$emit('thisAudioPause')
+      this.$router.push({path: '/kid/kid-record-list', query: {code: this.chapterCode, type: this.type}})
     }
   }
 }

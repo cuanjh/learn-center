@@ -52,10 +52,10 @@ export default {
   created () {
     Bus.$on('showNoVipModal', () => {
       this.isShowNoVipModal = true
+      this.initGuideSwiper()
     })
   },
   mounted () {
-    this.initGuideSwiper()
   },
   computed: {
   },
@@ -65,19 +65,21 @@ export default {
     }),
     initGuideSwiper () {
       var guideSwiper = new Swiper('#swiper-lists', {
-        loop: false,
-        autoplay: false, // 自动轮播
-        paginationClickable: true,
         observer: true, // 修改swiper自己或子元素时，自动初始化swiper
         observeParents: true, // 修改swiper的父元素时，自动初始化swiper
+        loop: false,
         initialSlide: 0,
-        centeredSlides: true,
-        slidesPerView: 'auto',
-        slideToClickedSlide: true,
+        autoplay: {
+          delay: 1500,
+          stopOnLastSlide: false,
+          disableOnInteraction: false
+        },
         mousewheel: true,
         allowTouchMove: true,
+        paginationClickable: true,
         pagination: {
-          el: '.swiper-pagination'
+          el: '.swiper-pagination',
+          clickable: true
         }
       })
       console.log(guideSwiper)
