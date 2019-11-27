@@ -490,6 +490,13 @@ export default {
               localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
               this.getAvarageScore()
               this.$refs['scoreResult'].setScoreResult(formObj.score)
+              let isShowKidGuide = localStorage.getItem('isShowKidGuide')
+              if (isShowKidGuide !== '1' && this.isVip) {
+                setTimeout(() => {
+                  bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
+                  localStorage.setItem('isShowKidGuide', '1')
+                }, 3500)
+              }
               this.iseResultSet()
               this.$refs['ise'][this.curPage - 1].evaluateFinished()
               if (this.list.length === this.curPage) {

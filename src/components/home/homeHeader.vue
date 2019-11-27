@@ -43,7 +43,8 @@
 
   @media screen and (max-width: 1024px) {
     .home-head .content {
-      width: 960px;
+      /* width: 960px; */
+      width: 100%;
     }
   }
 </style>
