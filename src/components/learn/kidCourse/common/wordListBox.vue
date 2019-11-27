@@ -70,23 +70,21 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    // min-height: 260px;
-    // max-height: 600px;
     background: #fff;
     box-shadow:0px 24px 24px 0px rgba(0,0,0,0.12);
     border-radius:8px;
-    .close-img-box {
-      position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 30px;
-      height: 30px;
-      background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;
-      background-size: cover;
-      cursor: pointer;
-      &:hover {
-        opacity: .8;
-      }
+  }
+  .close-img-box {
+    position: absolute;
+    top: -44px;
+    right: 0px;
+    width: 30px;
+    height: 30px;
+    background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;
+    background-size: cover;
+    cursor: pointer;
+    &:hover {
+      opacity: .8;
     }
   }
 }

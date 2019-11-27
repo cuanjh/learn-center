@@ -168,8 +168,8 @@ export default {
     background:linear-gradient(180deg,rgba(44,152,249,1) 0%,rgba(36,119,229,1) 100%);
     .close-img {
       position: absolute;
-      top: -30px;
-      right: -30px;
+      top: -44px;
+      right: 0px;
       width: 30px;
       height: 30px;
       background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;
@@ -316,5 +316,7 @@ export default {
     padding: 10px 16px;
     border-radius: 4px;
   }
+}
+@media (max-height: 610px){
 }
 </style>

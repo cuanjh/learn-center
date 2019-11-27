@@ -91,6 +91,8 @@ export default {
           Bus.$emit('upUserVip')
         }
       })
+      let circle = localStorage.getItem('showCircle')
+      Bus.$emit('localShowCircle', circle)
       this.isShowNoVipModal = false
     }
   }
@@ -121,8 +123,8 @@ export default {
   background: #fff;
   .close-img {
     position: absolute;
-    top: -30px;
-    right: -30px;
+    top: -44px;
+    right: 0px;
     width: 30px;
     height: 30px;
     background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;
@@ -209,8 +211,22 @@ export default {
       }
     }
   }
-  .item {
-    margin-bottom: 32px;
+}
+@media (max-height: 610px){
+  .lists {
+    padding: 12px 32px 12px;
+  }
+  .lists .item p {
+    padding-bottom: 0;
+  }
+  .lists .item i {
+    transform: scale(.9);
+  }
+  .title {
+    padding: 16px 0;
+  }
+  .guide-box {
+    max-height: 420px;
   }
 }
 </style>
@@ -225,5 +241,10 @@ export default {
 }
 .swiper-container-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet.swiper-pagination-bullet-active {
   background: #0581D1!important;
+}
+@media (max-height: 610px){
+  .swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction {
+    bottom: 26px;
+  }
 }
 </style>

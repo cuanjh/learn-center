@@ -18,8 +18,8 @@
       @mouseleave="isShowUserTip = false"
       :style="{transform: 'translateX(-'+ translateX +'px)'}" >
       <img :src="photo" alt="" @click="goWordListBox()">
-      <div class="user-img-circle circle1" v-if="!isVip"></div>
-      <div class="user-img-circle circle2" v-if="!isVip"></div>
+      <div class="user-img-circle circle1" v-if="!isVip && showCircle !== '1'"></div>
+      <div class="user-img-circle circle2" v-if="!isVip && showCircle !== '1'"></div>
       <div :class="['mask', scoreClass]" v-show="score && isVip" @click="goWordListBox()">
         <span>{{ score }}</span>
       </div>
@@ -44,6 +44,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import bus from '../../../../bus'
 
 export default {
   props: ['formCode'],
@@ -60,12 +61,19 @@ export default {
       translateX: 116,
       timerInterval: null,
       score: '',
-      scoreClass: ''
+      scoreClass: '',
+      showCircle: ''
     }
+  },
+  created () {
+    bus.$on('localShowCircle', (data) => {
+      this.showCircle = data
+    })
   },
   mounted () {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.photo = userInfo.photo
+    this.showCircle = localStorage.getItem('showCircle')
   },
   computed: {
     ...mapState({
@@ -165,6 +173,10 @@ export default {
     // 点击头像出现录音评测的弹框
     goWordListBox () {
       console.log('弹录录音的列表=>')
+      this.showCircle = localStorage.getItem('showCircle')
+      if (this.showCircle !== '1' && !this.isVip) {
+        localStorage.setItem('showCircle', '1')
+      }
       this.$emit('goWordListBox')
     },
     setScore (score) {
@@ -292,12 +304,12 @@ export default {
     top: 0;
     text-align: center;
     span {
-      line-height: 50px;
-      font-size: 16px;
-      font-weight: normal;
+      line-height: 48px;
+      font-size: 18px;
+      font-weight: bold;
       color: #fff;
       font-family: 'DIN-BlackItalic,DIN';
-      text-shadow:0px 1px 3px rgba(0,0,0,0.5);
+      text-shadow:0px 1px 3px rgba(0,0,0,0.6);
     }
   }
   .perfect {

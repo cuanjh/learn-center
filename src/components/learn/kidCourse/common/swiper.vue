@@ -239,6 +239,12 @@ export default {
             this.playSourceSound(this.curPage - 1)
           },
           slideChange: () => {
+            let showCircle = localStorage.getItem('showCircle')
+            if (showCircle !== '1' && !this.isVip) {
+              localStorage.setItem('showCircle', '1')
+            }
+            let circle = localStorage.getItem('showCircle')
+            bus.$emit('localShowCircle', circle)
             console.log(this.curPage, this.totalPage, swiper1.progress)
             console.log('改变了，activeIndex为' + swiper1.activeIndex)
             this.$parent.$emit('hideWordPanel')
@@ -479,6 +485,13 @@ export default {
               localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
               this.getAvarageScore()
               this.$refs['scoreResult'].setScoreResult(formObj.score)
+              let isShowKidGuide = localStorage.getItem('isShowKidGuide')
+              if (isShowKidGuide !== '1' && this.isVip) {
+                setTimeout(() => {
+                  bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
+                  localStorage.setItem('isShowKidGuide', '1')
+                }, 3500)
+              }
               this.iseResultSet()
               this.$refs['ise'][this.curPage - 1].evaluateFinished()
               if (this.list.length === this.curPage) {
@@ -914,5 +927,22 @@ export default {
   line-height: 22px;
   text-align: center;
   margin-top: 8px;
+}
+@media (max-height: 610px){
+  .current-swiper {
+    height:450px;
+    margin:0 auto;
+    position:relative;
+    .picture {
+      width: 100%;
+      height: 200px;
+    }
+    .swiper-slide {
+      height:400px;
+    }
+  }
+  .swiper-page-container {
+    margin-top: 0;
+  }
 }
 </style>
