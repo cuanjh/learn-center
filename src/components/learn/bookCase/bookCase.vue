@@ -68,8 +68,8 @@
         </a>
       </div>
       <ul class="course-item">
-        <li v-for="(item, index) in courseLangs"
-          :key="index" @click="routerGo(item)">
+        <li v-for="(item, index) in courseLangs" :class="item.letter"
+          :key="item.letter + index" @click="routerGo(item)">
           <div class="imgBox">
             <img :src="qnUrl(item.flag)" alt="">
           </div>
