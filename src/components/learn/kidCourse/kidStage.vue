@@ -115,9 +115,10 @@ export default {
         onClose: () => {
           this.stop()
           this.reset()
-          setTimeout(() => {
-            this.$refs['swiper'].setResultOut('')
-          }, 2000)
+          this.$refs['swiper'].iatFinished()
+          // setTimeout(() => {
+          //   this.$refs['swiper'].setResultOut('')
+          // }, 2000)
         },
         onError: (data) => {
           this.stop()
