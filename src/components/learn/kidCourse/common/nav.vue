@@ -8,10 +8,17 @@
         <span>{{ chapterDes }}</span>
         <span>{{ type == 'draw' ? '绘本阅读' : '核心单词' }}</span>
       </div>
-      <a class="score-report" @click="scoreReport()" v-show="xfSpeechType === 'ise' && isShowIseReport">
-        <p v-show="isShowAnimate"></p>
-        <i></i>
-      </a>
+      <div id="score-report" v-show="xfSpeechType === 'ise' && isShowIseReport">
+        <a class="score-report" @click="scoreReport()" @mouseenter="isShowReportTip = true" @mouseleave="isShowReportTip = false">
+          <p v-show="isShowAnimate"></p>
+          <i></i>
+        </a>
+        <transition name="fade" mode="out-in">
+          <div class="report-tip" v-show="isShowReportTip">
+            <span>语音评分报告</span>
+          </div>
+        </transition>
+      </div>
     </div>
     <record-box :chapterCode="chapterCode" :type="type"/>
   </div>
@@ -27,7 +34,8 @@ export default {
   data () {
     return {
       isShowIseReport: false,
-      isShowAnimate: true
+      isShowAnimate: true,
+      isShowReportTip: false
     }
   },
   created () {
@@ -109,27 +117,51 @@ export default {
     justify-content: space-between;
     padding-right: 30px;
   }
-  .score-report {
+  #score-report {
     position: relative;
-    i {
-      position: relative;
+    .score-report {
       display: inline-block;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background-image: url('../../../../../static/images/kid/icon-ise-report.png');
+      position: relative;
+      width: 100%;
+      height: 100%;
+      i {
+        position: relative;
+        display: inline-block;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background-image: url('../../../../../static/images/kid/icon-ise-report.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      p {
+        position: absolute;
+        width: 38px;
+        height: 38px;
+        background: #89DA31;
+        border-radius: 50%;
+        animation: ani 2s linear infinite;
+        -moz-animation: ani 2s linear infinite;
+        -webkit-animation: ani 2s linear infinite;
+      }
+    }
+    .report-tip {
+      position: absolute;
+      width: 153px;
+      height: 77px;
+      background: url('../../../../../static/images/kidcontent/pic-blue-record-list.png');
       background-repeat: no-repeat;
       background-size: cover;
-    }
-    p {
-      position: absolute;
-      width: 38px;
-      height: 38px;
-      background: #89DA31;
-      border-radius: 50%;
-      animation: ani 2s linear infinite;
-      -moz-animation: ani 2s linear infinite;
-      -webkit-animation: ani 2s linear infinite;
+      top: 32px;
+      left: -56px;
+      text-align: center;
+      line-height: 80px;
+      span {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        margin-left: 0;
+      }
     }
   }
 }
@@ -168,5 +200,12 @@ export default {
     background: #89DA31;
     border-radius: 50%;
   }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

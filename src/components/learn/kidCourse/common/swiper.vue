@@ -927,7 +927,8 @@ export default {
 }
 
 .result-out {
-  height: 22px;
+  min-height: 22px;
+  padding: 0 20px;
   font-size: 16px;
   font-weight: 400;
   color: #BEBEBE;
