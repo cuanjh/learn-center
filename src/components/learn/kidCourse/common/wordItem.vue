@@ -91,7 +91,7 @@ export default {
   width: 470px;
   min-height: 260px;
   max-height: 600px;
-  padding: 24px 32px;
+  padding: 0px 32px;
   overflow-y: auto;
 }
 .word-item::-webkit-scrollbar { /*滚动条整体样式*/
@@ -137,6 +137,7 @@ export default {
         height:16px;
         background: url('../../../../../static/images/kid/icon-laba.png') no-repeat center;
         background-size: cover;
+        margin-top: 5px;
       }
       .playing {
         background-image: url('../../../../../static/images/kid/icon-laba.gif');
@@ -164,6 +165,9 @@ export default {
       font-weight:bold;
       line-height:35px;
       color: #3C5B6F;
+      padding: 15px 23px;
+      border-radius: 4px;
+      background:rgba(0,0,0,.02);
       em {
         font-size:22px;
         font-weight:bold;
@@ -174,8 +178,10 @@ export default {
 }
 .wrong {
   color: #FF3B30 !important;
+  background:rgba(253,58,47,.02)!important;
 }
 .right {
   color: #1FBD3A !important;
+  background:rgba(31,189,58,.02)!important;
 }
 </style>

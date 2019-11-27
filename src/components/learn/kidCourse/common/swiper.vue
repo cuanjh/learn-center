@@ -244,6 +244,12 @@ export default {
             this.playSourceSound(this.curPage - 1)
           },
           slideChange: () => {
+            let showCircle = localStorage.getItem('showCircle')
+            if (showCircle !== '1' && !this.isVip) {
+              localStorage.setItem('showCircle', '1')
+            }
+            let circle = localStorage.getItem('showCircle')
+            bus.$emit('localShowCircle', circle)
             console.log(this.curPage, this.totalPage, swiper1.progress)
             console.log('改变了，activeIndex为' + swiper1.activeIndex)
             this.repeatIndex = -1

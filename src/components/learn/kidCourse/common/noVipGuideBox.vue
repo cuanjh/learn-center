@@ -91,6 +91,8 @@ export default {
           Bus.$emit('upUserVip')
         }
       })
+      let circle = localStorage.getItem('showCircle')
+      Bus.$emit('localShowCircle', circle)
       this.isShowNoVipModal = false
     }
   }
@@ -121,8 +123,8 @@ export default {
   background: #fff;
   .close-img {
     position: absolute;
-    top: -30px;
-    right: -30px;
+    top: -44px;
+    right: 0px;
     width: 30px;
     height: 30px;
     background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;

@@ -446,15 +446,15 @@ export default {
     width: 669px;
     min-height: 200px;
     position: absolute;
-    top: 50%;
+    top: 52%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius:8px;
     background: #fff;
     .close-img {
       position: absolute;
-      top: -30px;
-      right: -30px;
+      top: -44px;
+      right: 0px;
       width: 30px;
       height: 30px;
       background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;
@@ -582,7 +582,7 @@ export default {
             max-height: 360px;
             overflow-y: auto;
             width: 83%;
-            padding: 20px 26px;
+            padding: 24px 26px;
             background: #fff;
             box-shadow:0px 0px 16px 0px rgba(0,0,0,0.14);
             border-radius:8px;
@@ -595,6 +595,7 @@ export default {
               background-image: url('../../../../../static/images/kid/icon-laba.png');
               background-repeat: no-repeat;
               background-size: cover;
+              margin-top: 5px;
             }
             .playing {
               background-image: url('../../../../../static/images/kid/icon-laba.gif');
@@ -652,6 +653,9 @@ export default {
               font-weight:bold;
               line-height:35px;
               color: #3C5B6F;
+              padding: 15px 23px;
+              border-radius: 4px;
+              background:rgba(0,0,0,.02);
               em {
                 font-size:26px;
                 line-height:28px;
@@ -767,9 +771,11 @@ export default {
 }
 .wrong {
   color: #FF3B30 !important;
+  background:rgba(253,58,47,.02)!important;
 }
 .right {
   color: #1FBD3A !important;
+  background:rgba(31,189,58,.02)!important;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;

@@ -77,8 +77,8 @@ export default {
     border-radius:8px;
     .close-img-box {
       position: absolute;
-      top: -30px;
-      right: -30px;
+      top: -44px;
+      right: 0px;
       width: 30px;
       height: 30px;
       background: url('../../../../../static/images/kid/icon-close.png') no-repeat center;
