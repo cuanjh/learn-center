@@ -79,6 +79,27 @@ const router = new VueRouter({
   }
 })
 
+if (!navigator.onLine) {
+  ElementUI.MessageBox({
+    title: '信息',
+    message: '您可能没有连接网络哦！！！'
+  })
+}
+
+// 监听断网友好提醒
+window.addEventListener('offline', () => {
+  console.log(ElementUI)
+  ElementUI.MessageBox({
+    title: '信息',
+    message: '您可能没有连接网络哦！！！'
+  })
+})
+
+// 监听联网重新刷新页面
+window.addEventListener('online', () => {
+  window.location.reload()
+})
+
 router.beforeEach((to, from, next) => {
   // 记录上一个页面的scroll位置
   if (from.name) {
@@ -86,6 +107,7 @@ router.beforeEach((to, from, next) => {
     let scrollTop = contentElem ? contentElem.scrollTop : '0'
     store.state.course.scrollPos[from.name] = scrollTop
   }
+
   if (to.matched.some(m => m.meta.auth)) {
     let isLogin = Cookie.getCookie('isLogin')
     if (isLogin === '1') {

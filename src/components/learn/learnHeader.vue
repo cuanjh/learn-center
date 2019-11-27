@@ -232,7 +232,7 @@ export default {
   background: #0581D1;
   position: fixed;
   top: 0px;
-  z-index: 99999;
+  z-index: 999;
 }
 .header-box .content {
   width: 1200px;

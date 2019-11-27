@@ -1,6 +1,6 @@
 <template>
   <div class="ise-area">
-    <div class="play" :style="{transform: 'translateX('+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" @click="playRecord">
+    <div class="play" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord">
       <span v-for="n in 5" :key="n" :style="{height: playLineHeight[n - 1] + 'px'}"></span>
     </div>
     <div class="record">
@@ -16,7 +16,7 @@
       v-show="xfSpeechType == 'ise'"
       @mouseenter="isShowUserTip = true"
       @mouseleave="isShowUserTip = false"
-      :style="{transform: 'translateX(-'+ ((isEvaluated && isVip) ? '0' : translateX) +'px)'}" >
+      :style="{transform: 'translateX(-'+ translateX +'px)'}" >
       <img :src="photo" alt="" @click="goWordListBox()">
       <div class="user-img-circle circle1" v-if="!isVip"></div>
       <div class="user-img-circle circle2" v-if="!isVip"></div>

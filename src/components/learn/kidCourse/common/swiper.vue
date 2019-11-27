@@ -9,14 +9,13 @@
           <img class="picture" :src="item.image | urlFix('imageView2/0/w/2001/h/900/format/jpg')" alt="">
           <div class="content">
             <i @click="playSourceSound(index)"></i>
-            <p :data-content="item.content || item.word" data-step="1">
+            <p :data-content="item.content || item.word" data-isevaluate="">
               <span v-for="(content, index) in item.formatContent" :key="index" v-html="content.indexOf('-') > -1 ? content : ' ' + content" @click="showWordPanel($event, index)"></span>
             </p>
           </div>
           <div class="result-out"></div>
           <ise-area
             ref="ise"
-            :isEvaluation="true"
             :formCode="chapterCode + '-' + type.charAt(0).toUpperCase() + type.slice(1) + '-' + (index + 1)"
             @startRecord="startRecord"
             @stopRecord="stopRecord"
@@ -82,7 +81,6 @@ export default {
       isShowMose: true,
       qiniuToken: '',
       iseWords: [],
-      repeatIndex: -1,
       timerInterval: null, // 录音间隔器
       time: 0, // 录音计时
       tip: ''
@@ -238,15 +236,11 @@ export default {
         slideToClickedSlide: true,
         on: {
           init: () => {
-            if (this.xfSpeechType === 'ise') {
-              this.iseResultSet()
-            }
             this.playSourceSound(this.curPage - 1)
           },
           slideChange: () => {
             console.log(this.curPage, this.totalPage, swiper1.progress)
             console.log('改变了，activeIndex为' + swiper1.activeIndex)
-            this.repeatIndex = -1
             this.$parent.$emit('hideWordPanel')
             let activeIndex = swiper1.activeIndex
             this.curPage = activeIndex + 1
@@ -254,11 +248,6 @@ export default {
             this.isPlay = false
             $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
             this.playSourceSound(activeIndex)
-            if (this.xfSpeechType === 'ise') {
-              setTimeout(() => {
-                this.iseResultSet()
-              }, 100)
-            }
             if (this.list.length === this.curPage) {
               let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
               this.setPartComplete({part_code: activityCode})
@@ -556,8 +545,9 @@ export default {
         this.$refs['ise'][this.curPage - 1].setScore(formObj.score)
         this.iseWords = formObj.words_score
         console.log('iseWords' + this.iseWords)
-        $('.swiper-slide-active').find('.content p span').removeClass('right')
-        $('.swiper-slide-active').find('.content p span').removeClass('wrong')
+        $('.current-swiper .swiper-slide-active').find('.content p').data('isevaluate', '1')
+        $('.current-swiper .swiper-slide-active').find('.content p span').removeClass('right')
+        $('.current-swiper .swiper-slide-active').find('.content p span').removeClass('wrong')
 
         this.iseWords.forEach((word, index) => {
           let score = parseInt(word.score)
@@ -583,17 +573,25 @@ export default {
       }
     },
     showWordPanel (event, index) {
+      let isEvaluate = $('.swiper-slide-active').find('.content p').data('isevaluate')
+      if (isEvaluate !== '1') {
+        return
+      }
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      this.iseWords = []
+      if (xfISEResult && xfISEResult.length > 0) {
+        let formObj = xfISEResult.find(item => {
+          return item.form_code === this.formCode
+        })
+        if (!formObj) {
+          return false
+        }
+        this.iseWords = formObj.words_score
+      }
       if (this.iseWords.length > 0 && this.iseWords[index]) {
         let offset = $(event.target).offset()
         let word = this.iseWords[index]
-        if (this.repeatIndex !== index) {
-          this.$parent.$emit('hideWordPanel')
-          this.$parent.$emit('showWordPanel', {word: word, offset: offset})
-          this.repeatIndex = index
-        } else {
-          this.$parent.$emit('hideWordPanel')
-          this.repeatIndex = -1
-        }
+        this.$parent.$emit('showWordPanel', {word: word, offset: offset})
       }
     },
     // 设置语音识别结果
@@ -650,7 +648,7 @@ export default {
       if (Array.isArray(sentence)) {
         sentence.forEach(sentence => {
           sentence.word.forEach(word => {
-            if (word.content !== 'sil' && word.content !== 'fil') {
+            if (word.content !== 'sil' && word.content !== 'fil' && word.dp_message === '0') {
               let w = {}
               w['word'] = word.content
               w['score'] = word.total_score
@@ -663,7 +661,7 @@ export default {
       } else {
         if (Array.isArray(sentence.word)) {
           sentence.word.forEach(word => {
-            if (word.content !== 'sil' && word.content !== 'fil') {
+            if (word.content !== 'sil' && word.content !== 'fil' && word.dp_message === '0') {
               let w = {}
               w['word'] = word.content
               w['score'] = Math.round(parseFloat(word.total_score))
@@ -781,7 +779,7 @@ export default {
 }
 .current-swiper {
   // width:668px;
-  height:500px;
+  height:580px;
   // border-radius:10px;
   margin:0 auto;
   position:relative;
@@ -856,7 +854,7 @@ export default {
 }
 
 .swiper-slide-active {
-  box-shadow: 0px 3px 10px 0px rgba(196,208,213,0.1) !important;
+  box-shadow: 0px 27px 80px -42px rgba(0,0,0,0.14) !important;
 }
 
 .swiper-page-container {
@@ -865,7 +863,6 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 20px;
   p {
     width: 90px;
     height: 45px;

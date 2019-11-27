@@ -1,28 +1,30 @@
 <template>
   <transition name="fade" mode="out-in">
-    <div class="word-panel" :style="{left: left + 'px', top: top + 'px'}" v-show="isShow">
-      <div class="triangle_border_down">
-        <span></span>
-      </div>
-      <div class="word">
-        {{ word }}
-        <i :class="{'playing': isPlaytts}" @click="read"></i>
-      </div>
-      <table class="syll-phone">
-        <tr v-for="(phone, index) in phones" :key="index">
-          <td>{{ (index == 0) ? syll : '' }}</td>
-          <td>{{ '音素 ' + phone.phoneme }}</td>
-          <td>{{ phone.state == 0 ? '朗读正常' : '未朗读' }}</td>
-        </tr>
-      </table>
-      <div class="ise-area">
-        <div class="play" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord">
-          <span v-for="n in 5" :key="n" :style="{height: playLineHeight[n - 1] + 'px'}"></span>
+    <div class="word-panel-container" v-show="isShow" @click="isShow = false">
+      <div class="word-panel" :style="{left: left + 'px', top: top + 'px'}">
+        <div class="triangle_border_down">
+          <span></span>
         </div>
-        <div class="record">
-          <div class="micro-phone" @click="recordOpt"></div>
-          <div class="circle circle1" v-show="isRecording"></div>
-          <div class="circle circle2" v-show="isRecording"></div>
+        <div class="word">
+          {{ word }}
+          <i :class="{'playing': isPlaytts}" @click="read"></i>
+        </div>
+        <table class="syll-phone">
+          <tr v-for="(phone, index) in phones" :key="index">
+            <td>{{ (index == 0) ? syll : '' }}</td>
+            <td>{{ '音素 ' + phone.phoneme }}</td>
+            <td>{{ phone.state == 0 ? '朗读正常' : '未朗读' }}</td>
+          </tr>
+        </table>
+        <div class="ise-area">
+          <div class="play" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord">
+            <span v-for="n in 5" :key="n" :style="{height: playLineHeight[n - 1] + 'px'}"></span>
+          </div>
+          <div class="record">
+            <div class="micro-phone" @click="recordOpt"></div>
+            <div class="circle circle1" v-show="isRecording"></div>
+            <div class="circle circle2" v-show="isRecording"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -200,6 +202,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.word-panel-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, .24);
+  z-index: 1;
+}
 .word-panel {
   position: absolute;
   padding: 24px;
@@ -253,7 +264,7 @@ export default {
   border-style:solid;
   border-color:transparent transparent #fff;/*黄 透明 透明 */
   position:absolute;
-  left: 75px;
+  left: 84px;
   top: -9px;
 }
 
