@@ -245,14 +245,12 @@ export default {
             }
             let circle = localStorage.getItem('showCircle')
             bus.$emit('localShowCircle', circle)
-            console.log(this.curPage, this.totalPage, swiper1.progress)
-            console.log('改变了，activeIndex为' + swiper1.activeIndex)
-            this.$parent.$emit('hideWordPanel')
+
+            this.reset(swiper1.previousIndex)
+
             let activeIndex = swiper1.activeIndex
             this.curPage = activeIndex + 1
             this.setProgress()
-            this.isPlay = false
-            $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
             this.playSourceSound(activeIndex)
             if (this.list.length === this.curPage) {
               let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
@@ -778,6 +776,15 @@ export default {
         score = 'iatKeepTrying'
       }
       this.$refs['scoreResult'].setScoreResult(score)
+    },
+    reset (preIndex) {
+      this.$parent.$emit('hideWordPanel')
+      Recorder.stopRecording()
+      clearInterval(this.timerInterval)
+      this.time = 0
+      this.isPlay = false
+      $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
+      this.$refs['ise'][preIndex].reset()
     }
   }
 }

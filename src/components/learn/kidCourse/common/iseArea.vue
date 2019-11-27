@@ -164,6 +164,14 @@ export default {
         n++
       }, 300)
     },
+    reset () {
+      this.repeatRecord = false
+      this.isRecording = false
+      this.isPlaying = false
+      if (this.timerInterval) {
+        clearInterval(this.timerInterval)
+      }
+    },
     resetPlay () {
       clearInterval(this.timerInterval)
       this.timerInterval = null
