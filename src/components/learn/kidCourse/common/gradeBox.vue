@@ -317,4 +317,6 @@ export default {
     border-radius: 4px;
   }
 }
+@media (max-height: 610px){
+}
 </style>

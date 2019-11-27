@@ -81,7 +81,7 @@
             <!-- 不同显示70分以下 -->
             <div class="bottom-prompt" v-if="itemClasslass != 5">
               <p class="bottom-title blue">读的真棒！</p>
-              <p>共有<em class="blue">{{evaluatingData.length}}</em>个</p>
+              <p>共有<em class="blue">{{coreWords.length}}</em>个</p>
               <p>核心单词需要强化，快去学习一下吧～</p>
             </div>
             <!-- 70分以上 -->
@@ -783,5 +783,12 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
+@media (max-height: 610px){
+  .evaluating-modal-box .evaluating-content {
+    width: 600px;
+  }
+  .evaluating-modal-box .evaluating-content .evaluating .content-box .swiper-content .swiper-slide {
+    max-height: 260px
+  }
+}
 </style>

@@ -931,4 +931,21 @@ export default {
   text-align: center;
   margin-top: 8px;
 }
+@media (max-height: 610px){
+  .current-swiper {
+    height:450px;
+    margin:0 auto;
+    position:relative;
+    .picture {
+      width: 100%;
+      height: 200px;
+    }
+    .swiper-slide {
+      height:400px;
+    }
+  }
+  .swiper-page-container {
+    margin-top: 0;
+  }
+}
 </style>

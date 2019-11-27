@@ -184,4 +184,10 @@ export default {
   color: #1FBD3A !important;
   background:rgba(31,189,58,.02)!important;
 }
+@media (max-height: 610px){
+  .word-item {
+    width: 400px;
+    max-height: 400px;
+  }
+}
 </style>
