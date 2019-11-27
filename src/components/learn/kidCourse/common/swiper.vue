@@ -608,8 +608,8 @@ export default {
       this.$nextTick(() => {
         $('.current-swiper .swiper-slide-active').find('.result-out').text(resultOut)
         if (resultOut === '') {
-          $('.swiper-slide').find('.content p span').removeClass('right')
-          $('.swiper-slide').find('.content p span').removeClass('wrong')
+          $('.swiper-slide-active').find('.content p span').removeClass('right')
+          $('.swiper-slide-active').find('.content p span').removeClass('wrong')
         }
         // 文本匹配
         $('.current-swiper .swiper-slide-active').find('.content p span').removeClass('right')
@@ -755,6 +755,25 @@ export default {
       let avaScore = Math.round(sumScore * 1.0 / count)
       console.log(avaScore)
       // this.$refs['lastGradeBox'].setAvarageScore(avaScore)
+    },
+    iatFinished () {
+      this.$refs['ise'][this.curPage - 1].evaluateFinished()
+      // this.$refs['scoreResult'].setScoreResult('iatPerfect')
+      // this.$refs['scoreResult'].setScoreResult('iatNice')
+      let total = $('.current-swiper .swiper-slide-active').find('.content p span').length
+      let right = $('.current-swiper .swiper-slide-active').find('.content p span.right').length
+      let wrong = $('.current-swiper .swiper-slide-active').find('.content p span.wrong').length
+      console.log(total)
+      console.log(right)
+      console.log(wrong)
+      let score = 'iatNice'
+      if (right === total) {
+        score = 'iatPerfect'
+      }
+      if (wrong === total) {
+        score = 'iatKeepTrying'
+      }
+      this.$refs['scoreResult'].setScoreResult(score)
     }
   }
 }

@@ -58,12 +58,12 @@ export default {
           audioId = 'perfect'
           break
         case score === 'iatNice':
-          this.scoreClass = 'good'
-          audioId = 'good'
+          this.scoreClass = 'iatNice'
+          audioId = 'myYeah'
           break
         case score === 'iatKeepTrying':
           this.scoreClass = 'iatKeepTrying'
-          audioId = 'niceTry'
+          audioId = 'myYeah'
           break
         default:
           this.scoreClass = 'niceTry'
@@ -159,7 +159,7 @@ export default {
     &.iatNice {
       width: 539px;
       height: 537px;
-      background-image: url('../../../../../static/images/kid/pic-iat-perfect.png');
+      background-image: url('../../../../../static/images/kid/pic-iat-nice.png');
     }
     &.iatKeepTrying {
       width: 539px;
