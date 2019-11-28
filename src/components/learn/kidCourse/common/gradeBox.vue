@@ -22,11 +22,10 @@
               <span>你超越了全国<em> {{beyondFriendResult + '%'}} </em>的小可爱</span>
             </p>
             <div class="center-box">
-              <div class="center-good-img">
-                <p class="grade">
+              <div class="center-good-img"></div>
+                <p class="grade-bg-img">
                   <span><em>{{score}}</em>分</span>
                 </p>
-              </div>
             </div>
           </div>
           <div class="btns">
@@ -176,7 +175,7 @@ export default {
       border-radius:16px;
       background:linear-gradient(180deg,rgba(44,152,249,1) 0%,rgba(36,119,229,1) 100%);
       // animation: heartbeat 1s cubic-bezier(.68,.01,.05,1.4);
-      animation:heartbeat .5s ease-in-out;
+      animation:heartbeat .3s ease-in-out;
     }
     .close-img {
       position: absolute;
@@ -219,10 +218,21 @@ export default {
         display: inline-block;
         width: 100%;
         height: 100%;
-        background: url('../../../../../static/images/kid/pic-img-up.png') no-repeat center;
+        background: url('../../../../../static/images/kid/pic-grade-box-img.png') no-repeat center;
         background-size: cover;
         margin: 0 auto;
         // animation: sport 1.5s ease-in forwards;
+        animation:gradeAni .3s ease-in-out;
+      }
+      .grade-bg-img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 267px;
+        height: 197px;
+        background: url('../../../../../static/images/kid/pic-vip-img.png') no-repeat center;
+        background-size: cover;
       }
       .center-nogood-img {
         position: relative;
@@ -246,10 +256,11 @@ export default {
         background: url('../../../../../static/images/kid/pic-nogood.png') no-repeat center;
         background-size: cover;
       }
-      .grade {
+      .grade-bg-img span {
         position: absolute;
-        top: 102px;
-        right: 184px;
+        top: 50%;
+        right: 50%;
+        transform: translate(100%, -50%);
         font-size:38px;
         font-weight:500;
         color:rgba(255,255,255,1);
