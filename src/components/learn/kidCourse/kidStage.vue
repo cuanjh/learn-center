@@ -203,12 +203,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.kid-stage-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  // display: flex;
+  // flex-direction: column;
+  overflow: hidden;
+}
 .kid-content {
   height: 100%;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  // display: flex;
+  // flex-direction: row;
+  // align-items: center;
   background-image: url('../../../../static/images/kid/pic-kid-content-bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -217,14 +225,18 @@ export default {
     width: 100%;
     max-height: 530px;
     background: rgba(0, 0, 0, 0);
+    padding-top: 6%;
   }
 }
-.kid-stage-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+@media (max-width: 1300px){
+  .kid-stage-container {
+    overflow: auto;
+  }
+  .kid-content {
+    height: 108%;
+    .kid-content-wrap {
+      padding-top: 3%;
+    }
+  }
 }
 </style>

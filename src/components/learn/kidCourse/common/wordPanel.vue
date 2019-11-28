@@ -392,4 +392,9 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+@media (max-width: 1300px){
+  .word-panel-container {
+    height: 120%;
+  }
+}
 </style>
