@@ -664,7 +664,7 @@ export default {
       if (Array.isArray(sentence)) {
         sentence.forEach(sentence => {
           sentence.word.forEach(word => {
-            if (word.content !== 'sil' && word.content !== 'fil' && word.dp_message === '0') {
+            if (word.content !== 'sil' && word.content !== 'fil' && (word.dp_message === '0' || word.dp_message === '16')) {
               let w = {}
               w['word'] = word.content
               w['score'] = word.total_score
@@ -677,7 +677,7 @@ export default {
       } else {
         if (Array.isArray(sentence.word)) {
           sentence.word.forEach(word => {
-            if (word.content !== 'sil' && word.content !== 'fil' && word.dp_message === '0') {
+            if (word.content !== 'sil' && word.content !== 'fil' && (word.dp_message === '0' || word.dp_message === '16')) {
               let w = {}
               w['word'] = word.content
               w['score'] = Math.round(parseFloat(word.total_score))
@@ -959,6 +959,19 @@ export default {
   }
   .swiper-page-container {
     margin-top: 0;
+  }
+}
+@media (max-width: 1300px){
+  .current-swiper {
+    height: auto;
+    padding-bottom: 40px;
+    .swiper-slide {
+      height: auto;
+      padding-bottom: 30px;
+    }
+    .swiper-slide-active {
+      box-shadow: 0px 17px 80px -42px rgba(0,0,0,0.14) !important;
+    }
   }
 }
 </style>

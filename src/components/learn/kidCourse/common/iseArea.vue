@@ -302,13 +302,9 @@ export default {
     z-index: -1;
     background:rgba(245,166,35,.09);
     border-radius: 50%;
-    &.circle1 {
-      transform:scale(1.3);
-    }
-    &.circle2 {
-      background:rgba(245,166,35,.04);
-      transform:scale(1.7);
-    }
+    animation: aniUser 1s linear infinite;
+    -moz-animation: aniUser 1s linear infinite;
+    -webkit-animation: aniUser 1s linear infinite;
   }
   .mask {
     position: absolute;
@@ -393,6 +389,7 @@ export default {
     }
   }
 }
+
 @keyframes hover {
   0% {
     transform: scale(.5);
@@ -411,6 +408,35 @@ export default {
     -webkit-text-stroke: 1px #78c624;
   }
 }
+
+@keyframes aniUser {
+ 0% {
+  transform: scale(1);
+  opacity: 1;
+  background:rgba(245,166,35,0);
+ }
+ 25% {
+  transform: scale(1.1);
+  opacity: 0.75;
+  background:rgba(245,166,35,.74);
+ }
+ 50% {
+  transform: scale(1.35);
+  opacity: 0.45;
+  background:rgba(245,166,35,.25);
+ }
+ 75% {
+  transform: scale(1.55);
+  opacity: 0.45;
+  background:rgba(245,166,35,.1);
+ }
+ 100% {
+  transform: scale(1.75);
+  opacity: 0;
+  background:rgba(245,166,35,.04);
+ }
+}
+
 .circle {
   position: absolute;
   top: 0px;

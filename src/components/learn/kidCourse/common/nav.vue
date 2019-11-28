@@ -10,7 +10,8 @@
       </div>
       <div id="score-report" v-show="xfSpeechType === 'ise' && isShowIseReport">
         <a class="score-report" @click="scoreReport()" @mouseenter="isShowReportTip = true" @mouseleave="isShowReportTip = false">
-          <p v-show="isShowAnimate"></p>
+          <p class="ripples1" v-show="isShowAnimate"></p>
+          <p class="ripples2" v-show="isShowAnimate"></p>
           <i></i>
         </a>
         <transition name="fade" mode="out-in">
@@ -64,6 +65,7 @@ export default {
     },
     scoreReport () {
       console.log('点击语言报告')
+      Bus.$emit('thisAudioPause')
       Bus.$emit('busGradeBox')
     }
   }
@@ -140,9 +142,12 @@ export default {
         height: 38px;
         background: #89DA31;
         border-radius: 50%;
-        animation: ani 2s linear infinite;
-        -moz-animation: ani 2s linear infinite;
-        -webkit-animation: ani 2s linear infinite;
+        animation: ani 1s linear infinite;
+        -moz-animation: ani 1s linear infinite;
+        -webkit-animation: ani 1s linear infinite;
+        &.ripples2 {
+          animation-delay: .6s
+        }
       }
     }
     .report-tip {
@@ -165,41 +170,32 @@ export default {
     }
   }
 }
-
 @keyframes ani {
-  0%{
-    width: 38px;
-    height: 38px;
-    background: #89DA31;
-    border-radius: 50%;
-  }
-  25%{
-    margin-left: -6px;
-    margin-top: -6px;
-    width: 50px;
-    height: 50px;
-    background: rgba(137, 218, 49, .25);
-  }
-  50%{
-    margin-left: -9px;
-    margin-top: -9px;
-    width: 56px;
-    height: 56px;
-    background: rgba(137, 218, 49, .1);
-  }
-  75%{
-    margin-left: -6px;
-    margin-top: -6px;
-    width: 50px;
-    height: 50px;
-    background: rgba(137, 218, 49, .25);
-  }
-  100%{
-    width: 38px;
-    height: 38px;
-    background: #89DA31;
-    border-radius: 50%;
-  }
+ 0% {
+  transform: scale(1);
+  opacity: 1;
+  background: rgb(137, 218, 49);
+ }
+ 25% {
+  transform: scale(1.1);
+  opacity: 0.75;
+  background: rgba(137, 218, 49, .85);
+ }
+ 50% {
+  transform: scale(1.35);
+  opacity: 0.45;
+  background: rgba(137, 218, 49, .65);
+ }
+ 75% {
+  transform: scale(1.55);
+  opacity: 0.45;
+  background: rgba(137, 218, 49, .35);
+ }
+ 100% {
+  transform: scale(1.75);
+  opacity: 0;
+  background: rgba(137, 218, 49, 0);
+ }
 }
 
 .fade-enter-active, .fade-leave-active {

@@ -2,37 +2,40 @@
   <transition name="fade">
     <div class="grade-modal-box" v-show="isShowGradeModal">
       <div class="grade-content">
-        <div class="close-img" @click="closeModal()"></div>
-        <!-- 70分以下的显示 -->
-        <div class="no-good" v-if="!isVip || score < 70 || !score">
-          <p class="title">
-            <span>炫耀一下</span>
-            <span>让小伙伴听听你的声音吧~</span>
-          </p>
-          <div class="center-box">
-            <div class="center-nogood-img"></div>
-          </div>
-        </div>
-        <!-- 70分以上的显示 -->
-        <div class="good" v-else>
-          <p class="title">
-            <span>棒棒哒!</span>
-            <span>你超越了全国<em> {{beyondFriendResult + '%'}} </em>的小可爱</span>
-          </p>
-          <div class="center-box">
-            <div class="center-good-img">
-              <p class="grade">
-                <span><em>{{score}}</em>分</span>
-              </p>
+        <div class="grade-modal">
+          <div class="close-img" @click="closeModal()"></div>
+          <!-- 70分以下的显示 -->
+          <div class="no-good" v-if="!isVip || score < 70 || !score">
+            <p class="title">
+              <span>炫耀一下</span>
+              <span>让小伙伴听听你的声音吧~</span>
+            </p>
+            <div class="center-box">
+              <div class="center-nogood-img"></div>
+              <div class="center-img"></div>
             </div>
           </div>
-        </div>
-        <div class="btns">
-          <p class="btn share" @click="shareMyRecord()"><span>分享我的专属绘本</span></p>
-          <p class="btn grade-details" :class="{'no-vip': !isVip}" @click="gradeDetails()" >
-            <i class="icon-vip" v-if="!isVip"></i>
-            {{!isVip ? '会员评分详情' : '评分详情'}}
-          </p>
+          <!-- 70分以上的显示 -->
+          <div class="good" v-else>
+            <p class="title">
+              <span>棒棒哒!</span>
+              <span>你超越了全国<em> {{beyondFriendResult + '%'}} </em>的小可爱</span>
+            </p>
+            <div class="center-box">
+              <div class="center-good-img">
+                <p class="grade">
+                  <span><em>{{score}}</em>分</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="btns">
+            <p class="btn share" @click="shareMyRecord()"><span>分享我的专属绘本</span></p>
+            <p class="btn grade-details" :class="{'no-vip': !isVip}" @click="gradeDetails()" >
+              <i class="icon-vip" v-if="!isVip"></i>
+              {{!isVip ? '会员评分详情' : '评分详情'}}
+            </p>
+          </div>
         </div>
       </div>
       <!--领取过月卡了-->
@@ -162,10 +165,19 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    // max-width: 868px;
-    // max-height: 560px;
+    // max-width: 720px;
+    // max-height: 470px;
     border-radius:16px;
-    background:linear-gradient(180deg,rgba(44,152,249,1) 0%,rgba(36,119,229,1) 100%);
+    // background:linear-gradient(180deg,rgba(44,152,249,1) 0%,rgba(36,119,229,1) 100%);
+
+    .grade-modal {
+      width: 100%;
+      height: 100%;
+      border-radius:16px;
+      background:linear-gradient(180deg,rgba(44,152,249,1) 0%,rgba(36,119,229,1) 100%);
+      // animation: heartbeat 1s cubic-bezier(.68,.01,.05,1.4);
+      animation:heartbeat .5s ease-in-out;
+    }
     .close-img {
       position: absolute;
       top: -44px;
@@ -217,11 +229,22 @@ export default {
         display: inline-block;
         width: 333px;
         height: 213px;
-        background: url('../../../../../static/images/kid/pic-novip-img.png') no-repeat center;
+        background: url('../../../../../static/images/kid/pic-vip-grade.png') no-repeat center;
         background-size: cover;
         margin: 0 auto;
         margin-top: 46px;
         // animation: sport 1.5s ease-in forwards;
+        animation:gradeAni .3s ease-in-out;
+      }
+      .center-img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 156px;
+        height: 174px;
+        background: url('../../../../../static/images/kid/pic-nogood.png') no-repeat center;
+        background-size: cover;
       }
       .grade {
         position: absolute;
@@ -287,8 +310,27 @@ export default {
     opacity: 1;
   }
 }
+@keyframes heartbeat {
+  0% {
+    transform: scale(.9,.9);
+    opacity:1;
+  }
+  35% {
+    transform: scale(1.05,1.05);
+    opacity:1;
+  }
+  98% {
+    transform: scale(0.98,0.98);
+    opacity:1;
+  }
+  100% {
+    transform: scale(1,1);
+    opacity:1;
+  }
+}
+
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity .3s;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
@@ -317,6 +359,18 @@ export default {
     border-radius: 4px;
   }
 }
+
+@keyframes gradeAni {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 @media (max-height: 610px){
 }
 </style>
