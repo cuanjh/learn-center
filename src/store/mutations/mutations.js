@@ -23,6 +23,9 @@ export default {
       let obj = item
       let name = item.name
       if (!item.pinyin && !item.letter) {
+        if (name === '藏语') {
+          name = 'zang语'
+        }
         let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
         obj['pinyin'] = pinyin
         obj['letter'] = pinyin.slice(0, 1).toUpperCase()

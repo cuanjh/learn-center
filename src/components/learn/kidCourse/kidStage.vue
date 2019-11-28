@@ -4,7 +4,11 @@
     <progress-bar ref="progress"/>
     <div class="kid-content">
       <div class="kid-content-wrap" :style="{height: kidContentHeight + 'px'}">
-        <swiper-comp ref="swiper" :chapterCode="code" :type="type" @setProgress="setProgress"/>
+        <swiper-comp
+          ref="swiper"
+          :chapterCode="code"
+          :type="type"
+          @setProgress="setProgress"/>
       </div>
     </div>
     <record-animate ref="recordAnimate"/>
@@ -35,6 +39,7 @@ export default {
     return {
       notSupportTip: '请试用chrome浏览器且域名为localhost或127.0.0.1测试',
       iatRecorder: null,
+      isIatFinished: false,
       counterDownTime: 0,
       counterDownTimeout: null,
       resultText: '',
@@ -73,10 +78,17 @@ export default {
     })
     // 停止语音识别
     this.$on('stopIatRecorder', () => {
+      this.isIatFinished = true
       this.stop()
     })
     this.$on('recordAnimate', () => {
       this.$refs['recordAnimate'].show()
+    })
+
+    this.$on('reset', () => {
+      this.isIatFinished = false
+      this.stop()
+      this.reset()
     })
     let lang = this.code.split('-')[0]
     if (lang === 'KEN') {
@@ -115,7 +127,11 @@ export default {
         onClose: () => {
           this.stop()
           this.reset()
-          this.$refs['swiper'].iatFinished()
+          if (this.isIatFinished) {
+            this.$refs['swiper'].iatFinished()
+          } else {
+            this.$refs['swiper'].setResultOut('')
+          }
           // setTimeout(() => {
           //   this.$refs['swiper'].setResultOut('')
           // }, 2000)
@@ -129,7 +145,9 @@ export default {
           let jsonData = JSON.parse(e.data)
           if (jsonData.data && jsonData.data.result) {
             console.log('onMessage result', jsonData.data.result)
-            this.setResult(jsonData.data.result)
+            if (this.isIatFinished) {
+              this.setResult(jsonData.data.result)
+            }
           }
         },
         onStart: () => {

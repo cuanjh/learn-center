@@ -1,6 +1,6 @@
 <template>
   <transition name="fade" mode="out-in">
-    <div class="word-panel-container" v-show="isShow" @click="isShow = false">
+    <div class="word-panel-container" v-show="isShow">
       <div class="word-panel" :style="{left: left + 'px', top: top + 'px'}">
         <div class="triangle_border_down">
           <span></span>
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import IseArea from './iseArea.vue'
 import Recorder from '../../../../plugins/recorder.js'
 import TTS from '../../../../plugins/xf_tts'
@@ -66,6 +67,20 @@ export default {
     })
   },
   mounted () {
+    $('.word-panel-container').click((e) => {
+      console.log($(e.target).offset())
+      let clickLeft = $(e.target).offset().left
+      let clickTop = $(e.target).offset().top
+      let left = $('.word-panel').offset().left
+      let top = $('.word-panel').offset().top
+      let width = $('.word-panel').width()
+      let height = $('.word-panel').height()
+      if (clickLeft >= left - 5 && clickLeft <= left + width && clickTop > top - 5 && clickTop <= top + height) {
+        this.isShow = true
+      } else {
+        this.hide()
+      }
+    })
     window.onresize = () => {
       this.isShow = false
     }
@@ -93,7 +108,6 @@ export default {
     },
     recordOpt () {
       this.isRecording = !this.isRecording
-      this.isShowStopTip = true
       if (this.isRecording) {
         this.startRecord()
       } else {

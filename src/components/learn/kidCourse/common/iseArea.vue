@@ -116,10 +116,17 @@ export default {
         return false
       }
       this.isRecording = !this.isRecording
-      this.isShowStopTip = true
-      setTimeout(() => {
+      let isShowStopTip = localStorage.getItem('isShowStopTip')
+      if (isShowStopTip === '1') {
         this.isShowStopTip = false
-      }, 1000)
+      } else {
+        this.isShowStopTip = true
+        setTimeout(() => {
+          this.isShowStopTip = false
+          localStorage.setItem('isShowStopTip', 1)
+        }, 2000)
+      }
+
       if (this.isRecording) {
         this.$emit('startRecord')
       } else {

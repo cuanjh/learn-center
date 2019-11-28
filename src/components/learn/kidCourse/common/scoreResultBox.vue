@@ -86,6 +86,7 @@ export default {
         this.isShowScoreResult = false
         $('#AnimatScore').hide()
         this.scoreClass = ''
+        this.$parent.$emit('recordAnimate')
       }, 2000)
     }
   }

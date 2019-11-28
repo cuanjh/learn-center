@@ -25,7 +25,7 @@ export default {
         duration: 800,
         specialEasing: {
           left: 'linear',
-          top: 'swing'
+          top: 'linear'
         },
         complete: () => {
           $('.record-save-animat').hide()

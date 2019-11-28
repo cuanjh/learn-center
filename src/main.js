@@ -24,7 +24,6 @@ import emoji from './tool/emoji.js'
 require('./../static/css/animate.css')
 require('./../static/css/reset.css')
 require('./../static/css/style.css')
-
 require('./../static/bootstrap.min.js')
 
 Vue.use(VueRouter)
@@ -98,6 +97,16 @@ window.addEventListener('offline', () => {
 // 监听联网重新刷新页面
 window.addEventListener('online', () => {
   window.location.reload()
+})
+
+window.addEventListener('click', () => {
+  if (!navigator.onLine) {
+    ElementUI.MessageBox({
+      title: '信息',
+      message: '您可能没有连接网络哦！！！'
+    })
+    return false
+  }
 })
 
 router.beforeEach((to, from, next) => {

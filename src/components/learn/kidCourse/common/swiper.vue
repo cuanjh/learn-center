@@ -112,6 +112,9 @@ export default {
       this.tip = this.tips.micphone
       this.$refs['tipbox'].$emit('tipbox-show')
     })
+    this.$on('recordAnimate', () => {
+      this.recordAnimate()
+    })
     if (this.xfSpeechType === 'ise') {
       // 拉取讯飞测评数据
       this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
@@ -121,10 +124,10 @@ export default {
         }
       })
     }
-    // 获取课程数据
-    this.initData()
   },
   mounted () {
+    // 获取课程数据
+    this.initData()
     setTimeout(() => {
       this.isShowMose = false
     }, 5000)
@@ -187,37 +190,30 @@ export default {
     },
     // 初始化数据
     initData () {
-      this.getKidCourseContent({chapter_code: this.chapterCode}).then(res => {
-        console.log(res)
-        let data = []
-        switch (this.type) {
-          case 'draw':
-            data = res.teacherContent.draw_contents
-            break
-          default:
-            data = res.teacherContent.words
-            break
-        }
-        this.list = []
-        data.forEach(item => {
-          let obj = item
-          obj['formatContent'] = this.formatContent(obj.content || obj.word)
-          this.preload(item.sound)
-          this.preload(item.image)
-          this.list.push(obj)
-        })
-        console.log(this.list)
-        console.log('=========', data)
-        this.totalPage = this.list.length
-        // if (this.xfSpeechType === 'ise') {
-        //   this.totalPage = this.list.length + 1
-        // }
-        this.curPage = 1
-        this.setProgress()
-        setTimeout(() => {
-          this.initSwiper()
-        }, 10)
+      let teacherContent = JSON.parse(localStorage.getItem('kidTeacherContent'))
+      let data = []
+      switch (this.type) {
+        case 'draw':
+          data = teacherContent.draw_contents
+          break
+        default:
+          data = teacherContent.words
+          break
+      }
+      this.list = []
+      data.forEach(item => {
+        let obj = item
+        obj['formatContent'] = this.formatContent(obj.content || obj.word)
+        this.preload(item.sound)
+        this.preload(item.image)
+        this.list.push(obj)
       })
+      console.log(this.list)
+      console.log('=========', data)
+      this.totalPage = this.list.length
+      this.curPage = 1
+      this.setProgress()
+      this.initSwiper()
     },
     // 获取数据后，初始化swiper
     initSwiper () {
@@ -230,6 +226,9 @@ export default {
         // mousewheel: {
         //   eventsTarged: '.kid-stage-container'
         // },
+        observer: true,
+        observeParents: true,
+        observeSlideChildren: true,
         loop: false,
         allowTouchMove: false,
         preventClicksPropagation: true,
@@ -365,7 +364,10 @@ export default {
     // 播放原始音频
     playSourceSound (index) {
       this.recordAudio.pause()
-      this.$refs['ise'][index].resetPlay()
+      if (this.$refs['ise']) {
+        this.$refs['ise'][index].resetPlay()
+      }
+
       if (!this.isPlay) {
         let item = this.list[index]
         this.audio.src = item.sound
@@ -393,7 +395,7 @@ export default {
         this.time++
       }, 1000)
       Recorder.startRecording()
-      if (this.xfSpeechType === 'iat') {
+      if (this.xfSpeechType === 'iat' && this.isVip) {
         this.$parent.$emit('startIatRecorder')
       }
     },
@@ -515,7 +517,10 @@ export default {
             // 返回成功之后再处理 返回失败具体提示
             if (res.success) {
               this.getKidRecordList({chapter_code: this.chapterCode, teacher_module: this.type})
-              this.recordAnimate()
+              if (!this.isVip) {
+                this.recordAnimate()
+                this.$refs['ise'][this.curPage - 1].reset()
+              }
             }
           })
         })
@@ -785,6 +790,9 @@ export default {
       this.isPlay = false
       $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
       this.$refs['ise'][preIndex].reset()
+      if (this.xfSpeechType === 'iat') {
+        this.$parent.$emit('reset')
+      }
     }
   }
 }

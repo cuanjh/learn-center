@@ -21,7 +21,6 @@ let recorderWorker = new Worker()
 
 // 记录处理的缓存音频
 let buffer = []
-let AudioContext = window.AudioContext || window.webkitAudioContext
 let notSupportTip = '请试用chrome浏览器且域名为localhost或127.0.0.1测试'
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
 
@@ -33,6 +32,8 @@ class IatRecorder {
   constructor (config) {
     this.config = config
     this.state = 'ing'
+    let AudioContext = window.AudioContext || window.webkitAudioContext
+    this.context = new AudioContext()
     this.language = config.language || 'zh_cn'
     this.accent = config.accent || 'mandarin'
     this.url = config.url || 'wss://iat-api.xfyun.cn/v2/iat'
@@ -45,12 +46,10 @@ class IatRecorder {
 
   start () {
     this.stop()
-    if (navigator.getUserMedia && AudioContext) {
+    if (navigator.getUserMedia && this.context) {
       this.state = 'ing'
       if (!this.recorder) {
-        var context = new AudioContext()
-        this.context = context
-        this.recorder = context.createScriptProcessor(0, 1, 1)
+        this.recorder = this.context.createScriptProcessor(0, 1, 1)
 
         var getMediaSuccess = (stream) => {
           var mediaStream = this.context.createMediaStreamSource(stream)
@@ -239,6 +238,5 @@ class IatRecorder {
   }
 }
 export default {
-  IatRecorder,
-  AudioContext
+  IatRecorder
 }
