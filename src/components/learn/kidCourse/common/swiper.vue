@@ -953,4 +953,17 @@ export default {
     margin-top: 0;
   }
 }
+@media (max-width: 1300px){
+  .current-swiper {
+    height: auto;
+    padding-bottom: 40px;
+    .swiper-slide {
+      height: auto;
+      padding-bottom: 30px;
+    }
+    .swiper-slide-active {
+      box-shadow: 0px 17px 80px -42px rgba(0,0,0,0.14) !important;
+    }
+  }
+}
 </style>
