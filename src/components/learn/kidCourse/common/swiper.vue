@@ -252,14 +252,12 @@ export default {
             this.setProgress()
             this.playSourceSound(activeIndex)
             if (this.list.length === this.curPage) {
+              bus.$emit('thisAudioPause')
+              bus.$emit('setIsShowIseReport', true)
               let activityCode = this.chapterCode + '-' + this.type.charAt(0).toUpperCase() + this.type.slice(1)
               this.setPartComplete({part_code: activityCode})
             }
             console.log('curPage' + this.curPage)
-          },
-          reachEnd: () => {
-            bus.$emit('thisAudioPause')
-            bus.$emit('setIsShowIseReport', true)
           },
           progress: function (progress) {
             for (let i = 0; i < this.slides.length; i++) {
