@@ -89,7 +89,9 @@ export default {
       this.getUserInfo().then(res => {
         console.log(res)
         if (res.info.member_info.member_type === 1) {
-          Bus.$emit('upUserVip')
+          // Bus.$emit('upUserVip')
+          let msg = '刚刚开通会员权益，快去再录一次吧！'
+          Bus.$emit('show-prompt', msg)
         }
       })
       let circle = localStorage.getItem('showCircle')

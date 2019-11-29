@@ -113,8 +113,10 @@ export default {
       console.log(this.repeatRecord)
       if (this.repeatRecord && !this.isRecording) return
       if (this.timeCount === 0) {
-        alert('录音时间太短！！！')
-        return
+        let msg = '录音时间不能小于1秒哦！'
+        bus.$emit('show-prompt', msg)
+        this.reset()
+        return false
       }
       this.timeCount = 0
       setTimeout(() => {

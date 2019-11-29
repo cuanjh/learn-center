@@ -37,12 +37,6 @@
           </div>
         </div>
       </div>
-      <!--领取过月卡了-->
-      <div class="prompt-box" v-show="promptBox">
-        <div>
-          <span class="content">你还没有录音哦，快去录音吧！</span>
-        </div>
-      </div>
     </div>
   </transition>
 </template>
@@ -56,7 +50,6 @@ export default {
     return {
       isShowGradeModal: false,
       beyondFriendResult: '',
-      promptBox: false,
       chapterList: [],
       score: ''
     }
@@ -91,10 +84,8 @@ export default {
     // 分享我的绘本
     shareMyRecord () {
       if (this.kidRecordList.length === 0) {
-        this.promptBox = true
-        setTimeout(() => {
-          this.promptBox = false
-        }, 3000)
+        let msg = '你还没有录音哦，快去录音吧！'
+        Bus.$emit('show-prompt', msg)
         return false
       }
       this.$router.push({path: '/kid/kid-record-list', query: {code: this.chapterCode, type: this.curType}})
@@ -107,10 +98,8 @@ export default {
         return false
       }
       if (this.isVip && !this.score) {
-        this.promptBox = true
-        setTimeout(() => {
-          this.promptBox = false
-        }, 3000)
+        let msg = '你还没有录音哦，快去录音吧！'
+        Bus.$emit('show-prompt', msg)
         return false
       }
       this.isShowGradeModal = false
@@ -345,30 +334,6 @@ export default {
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
-}
-.prompt-box {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  div {
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-  }
-  .content {
-    font-size:16px;
-    font-weight:400;
-    color:rgba(255,255,255,1);
-    background: rgba(0, 0, 0, 74);
-    line-height:22px;
-    padding: 10px 16px;
-    border-radius: 4px;
-  }
 }
 
 @keyframes gradeAni {

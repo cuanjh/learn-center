@@ -1,6 +1,6 @@
 <template>
   <div class="swiper" id="certify">
-    <div class="current-swiper swiper-container">
+    <div class="current-swiper swiper-container" :id="'current-swiper-' + chapterCode + '-' + type">
       <div class="swiper-wrapper">
         <div class="swiper-slide"
           v-for="(item, index) in list"
@@ -26,12 +26,6 @@
           <div class="shade"></div>
         </div>
       </div>
-      <!-- 提示刚刚充了会员 -->
-      <div class="prompt-box" v-show="isPromptBox">
-        <div>
-          <span class="content">刚刚开通会员权益，快去再录一次吧！</span>
-        </div>
-      </div>
     </div>
 
     <div class="swiper-page-container">
@@ -47,6 +41,7 @@
     <noVip-guide-box ref="noVipGuideBox"/>
     <word-list-box ref="WordListBox"/>
     <tipbox ref="tipbox" :tip="tip"/>
+    <prompt-box />
   </div>
 </template>
 
@@ -65,6 +60,7 @@ import LastGradeBox from './lastGradeBox.vue'
 import ScoreResultBox from './scoreResultBox.vue'
 import NoVipGuideBox from './noVipGuideBox.vue'
 import Tipbox from './tipbox.vue'
+import PromptBox from './promptBox.vue'
 import bus from '../../../../bus'
 
 export default {
@@ -73,11 +69,11 @@ export default {
     return {
       list: [],
       totalPage: 0,
+      swiper: null,
       curPage: 1,
       audio: new Audio(),
       recordAudio: new Audio(),
       isPlay: false,
-      isPromptBox: false,
       isShowMose: true,
       qiniuToken: '',
       iseWords: [],
@@ -94,19 +90,14 @@ export default {
     LastGradeBox,
     ScoreResultBox,
     NoVipGuideBox,
-    Tipbox
+    Tipbox,
+    PromptBox
   },
   created () {
     bus.$on('thisAudioPause', () => {
       this.audio.pause()
       $('.current-swiper .swiper-slide-active').find('.content i').removeClass('playing')
       this.isPlay = false
-    })
-    bus.$on('upUserVip', () => {
-      this.isPromptBox = true
-      setTimeout(() => {
-        this.isPromptBox = false
-      }, 3000)
     })
     this.$on('showTip', () => {
       this.tip = this.tips.micphone
@@ -217,7 +208,7 @@ export default {
     },
     // 获取数据后，初始化swiper
     initSwiper () {
-      var swiper1 = new Swiper('.current-swiper', {
+      this.swiper = new Swiper('#current-swiper-' + this.chapterCode + '-' + this.type, {
         watchSlidesProgress: true,
         slidesPerView: 'auto',
         centeredSlides: true,
@@ -238,6 +229,7 @@ export default {
             this.playSourceSound(this.curPage - 1)
           },
           slideChange: () => {
+            console.log(this.swiper)
             let showCircle = localStorage.getItem('showCircle')
             if (showCircle !== '1' && !this.isVip) {
               localStorage.setItem('showCircle', '1')
@@ -245,9 +237,9 @@ export default {
             let circle = localStorage.getItem('showCircle')
             bus.$emit('localShowCircle', circle)
 
-            this.reset(swiper1.previousIndex)
+            this.reset(this.swiper.previousIndex)
 
-            let activeIndex = swiper1.activeIndex
+            let activeIndex = this.swiper.activeIndex
             this.curPage = activeIndex + 1
             this.setProgress()
             this.playSourceSound(activeIndex)
@@ -282,7 +274,7 @@ export default {
           }
         }
       })
-      console.log(swiper1)
+      console.log('initSwiper', this.swiper)
     },
     // 设置学习进度
     setProgress () {
@@ -408,7 +400,9 @@ export default {
     // 播放录音
     playRecord (flag) {
       console.log('playRecord', flag)
-      let item = this.kidRecordList[this.curPage - 1]
+      let item = this.kidRecordList.filter(record => {
+        return record.list_order === this.curPage
+      })[0]
       if (!item) return
       let index = this.curPage - 1
       if (flag) {
@@ -877,30 +871,6 @@ export default {
     border-radius:10px;
     box-shadow: 0 8px 30px #ddd;
     box-shadow:0px 3px 10px 0px rgba(196,208,213,0.1);
-  }
-  .prompt-box {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    div {
-      width: 100%;
-      height: 100%;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-    }
-    .content {
-      font-size:16px;
-      font-weight:400;
-      color:rgba(255,255,255,1);
-      background: rgba(0, 0, 0, 74);
-      line-height:22px;
-      padding: 10px 16px;
-      border-radius: 4px;
-    }
   }
 }
 
