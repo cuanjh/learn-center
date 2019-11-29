@@ -16,7 +16,7 @@
           </table>
         </div>
         <p class="grade-color">
-          <span class="score" :class="{'right': colorClass(form.score) == 'right', 'wrong': colorClass(form.score) == 'wrong'}"><em>{{Math.round(form.score)}}</em>分</span>
+          <span class="score" :class="{'right': colorClass(form.score) == 'right', 'wrong': colorClass(form.score) == 'wrong'}">{{Math.round(form.score)}}<em>分</em></span>
         </p>
       </div>
     </li>
@@ -157,16 +157,20 @@ ul{
       background-image: url('../../../../../static/images/kid/icon-laba.gif');
     }
     .score {
-      font-size:16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 91px;
+      height: 65px;
+      font-size:26px;
       font-weight:bold;
-      line-height:35px;
+      line-height:65px;
       color: #3C5B6F;
-      padding: 15px 23px;
       border-radius: 4px;
-      background:rgba(0,0,0,.02);
+      background:rgba(0,0,0,.01);
       em {
-        font-size:26px;
-        line-height:28px;
+        font-size:16px;
+        padding-top: 8px;
       }
     }
   }
@@ -176,11 +180,11 @@ ul{
 }
 .wrong {
   color: #FF3B30 !important;
-  background:rgba(253,58,47,.02)!important;
+  background:rgba(253,58,47,.01)!important;
 }
 .right {
   color: #1FBD3A !important;
-  background:rgba(31,189,58,.02)!important;
+  background:rgba(31,189,58,.01)!important;
 }
 @media (max-height: 610px){
 }

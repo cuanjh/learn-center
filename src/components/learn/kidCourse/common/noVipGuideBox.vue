@@ -67,10 +67,11 @@ export default {
       var guideSwiper = new Swiper('#swiper-lists', {
         observer: true, // 修改swiper自己或子元素时，自动初始化swiper
         observeParents: true, // 修改swiper的父元素时，自动初始化swiper
-        loop: false,
+        speed: 500,
+        loop: true,
         initialSlide: 0,
         autoplay: {
-          delay: 1500,
+          delay: 5000,
           stopOnLastSlide: false,
           disableOnInteraction: false
         },
@@ -114,7 +115,7 @@ export default {
 }
 .guide-box {
   width: 669px;
-  min-height: 260px;
+  min-height: 460px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -211,10 +212,16 @@ export default {
       }
     }
   }
+  .swiper-container {
+    padding-bottom: 30px;
+  }
 }
 @media (max-height: 610px){
   .lists {
     padding: 12px 32px 12px;
+    .swiper-container {
+      padding-bottom: 10px;
+    }
   }
   .lists .item p {
     padding-bottom: 0;

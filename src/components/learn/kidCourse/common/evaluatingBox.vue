@@ -38,7 +38,7 @@
                           <p class="sentence" :data-content="item.sentence">
                             <span v-for="(content, index) in item.formatContent" :key="index" v-html="content + ' '"></span>
                           </p>
-                          <span class="score" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}"><em>{{item.score}}</em>分</span>
+                          <span class="score" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}">{{item.score}}<em>分</em></span>
                         </div>
                       </div>
                       <div class="bottom-line">
@@ -68,7 +68,7 @@
                               </table>
                             </div>
                             <p class="grade-score-color">
-                              <span class="score" :class="{'right': colorClass(w.score) == 'right', 'wrong': colorClass(w.score) == 'wrong'}"><em>{{Math.round(w.score)}}</em>分</span>
+                              <span class="score" :class="{'right': colorClass(w.score) == 'right', 'wrong': colorClass(w.score) == 'wrong'}">{{Math.round(w.score)}}<em>分</em></span>
                             </p>
                           </div>
                         </li>
@@ -80,7 +80,7 @@
             </div>
             <!-- 不同显示70分以下 -->
             <div class="bottom-prompt" v-if="itemClasslass != 5">
-              <p class="bottom-title blue">读的真棒！</p>
+              <p class="bottom-title blue">读的真棒!</p>
               <p>共有<em class="blue">{{coreWords.length}}</em>个</p>
               <p>核心单词需要强化，快去学习一下吧～</p>
             </div>
@@ -649,16 +649,20 @@ export default {
               }
             }
             .score {
-              font-size:16px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 91px;
+              height: 65px;
+              font-size:26px;
               font-weight:bold;
-              line-height:35px;
+              line-height:65px;
               color: #3C5B6F;
-              padding: 15px 23px;
               border-radius: 4px;
-              background:rgba(0,0,0,.02);
+              background:rgba(0,0,0,.01);
               em {
-                font-size:26px;
-                line-height:28px;
+                font-size:16px;
+                padding-top: 8px;
               }
             }
             ul {
@@ -771,11 +775,11 @@ export default {
 }
 .wrong {
   color: #FF3B30 !important;
-  background:rgba(253,58,47,.02)!important;
+  background:rgba(253,58,47,.01)!important;
 }
 .right {
   color: #1FBD3A !important;
-  background:rgba(31,189,58,.02)!important;
+  background:rgba(31,189,58,.01)!important;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;

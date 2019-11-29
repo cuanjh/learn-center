@@ -25,6 +25,7 @@
 </template>
 
 <script>
+// import bus from '../../../../bus'
 
 export default {
   props: ['tip'],
