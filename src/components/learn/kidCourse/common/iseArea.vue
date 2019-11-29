@@ -268,6 +268,7 @@ export default {
     height: 14px;
   }
   &.loading {
+    opacity: 1;
     span:nth-child(1), span:nth-child(5) {
       animation: load1 0.7s ease infinite;
       -webkit-animation: load1 0.7s ease infinite;
