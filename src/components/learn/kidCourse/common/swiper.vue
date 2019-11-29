@@ -263,9 +263,7 @@ export default {
             for (let i = 0; i < this.slides.length; i++) {
               let slide = this.slides.eq(i)
               let slideProgress = this.slides[i].progress
-              console.log('slideProgress', slideProgress)
               let translate = slideProgress * 290 + 'px'
-              console.log(translate)
               let scale = 1 - Math.abs(slideProgress) / 3
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
               slide.transform('translateX(' + translate + ') scale(' + scale + ')')

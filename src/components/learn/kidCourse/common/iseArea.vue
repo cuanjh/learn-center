@@ -109,6 +109,7 @@ export default {
   },
   methods: {
     recordOpt () {
+      console.log(this.repeatRecord)
       if (this.repeatRecord && !this.isRecording) return
       this.repeatRecord = true
       if (!this.isCanRecord) {
@@ -302,9 +303,10 @@ export default {
     z-index: -1;
     background:rgba(245,166,35,.09);
     border-radius: 50%;
-    animation: aniUser 1s linear infinite;
-    -moz-animation: aniUser 1s linear infinite;
-    -webkit-animation: aniUser 1s linear infinite;
+    animation: aniUser 2s linear infinite;
+    &.circle2 {
+      animation-delay: 1s;
+    }
   }
   .mask {
     position: absolute;
@@ -416,22 +418,22 @@ export default {
   background:rgba(245,166,35,0);
  }
  25% {
-  transform: scale(1.1);
+  transform: scale(1.2);
   opacity: 0.75;
   background:rgba(245,166,35,.74);
  }
  50% {
-  transform: scale(1.35);
+  transform: scale(1.4);
   opacity: 0.45;
   background:rgba(245,166,35,.25);
  }
  75% {
-  transform: scale(1.55);
+  transform: scale(1.65);
   opacity: 0.45;
   background:rgba(245,166,35,.1);
  }
  100% {
-  transform: scale(1.75);
+  transform: scale(1.85);
   opacity: 0;
   background:rgba(245,166,35,.04);
  }
