@@ -16,8 +16,8 @@
           </tr>
         </table>
         <div class="ise-area">
-          <div class="play" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord">
-            <span v-for="n in 5" :key="n" :style="{height: playLineHeight[n - 1] + 'px'}"></span>
+          <div class="play" :class="{'loading': isPlayAudio}" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord" >
+            <span v-for="n in 5" :key="n"></span>
           </div>
           <div class="record">
             <div class="micro-phone" @click="recordOpt"></div>
@@ -50,9 +50,9 @@ export default {
       timerInterval: null,
       timerIntervalPlay: null,
       time: 0,
-      playLineHeight: [8, 16, 24, 16, 8],
       isPlaying: false,
       isPlaytts: false,
+      isPlayAudio: false,
       translateX: 116,
       ttsRecorder: null
     }
@@ -78,6 +78,7 @@ export default {
         this.isShow = true
       } else {
         this.hide()
+        Recorder.stopRecordSoud()
       }
     })
     window.onresize = () => {
@@ -102,7 +103,7 @@ export default {
       this.timerInterval = null
       this.timerIntervalPlay = null
       this.time = 0
-      this.playLineHeight = [8, 16, 24, 16, 8]
+      this.isPlayAudio = false
       this.isPlaying = false
       this.translateX = 116
     },
@@ -150,22 +151,11 @@ export default {
     resetPlay () {
       clearInterval(this.timerIntervalPlay)
       this.timerIntervalPlay = null
-      this.playLineHeight = [8, 16, 24, 16, 8]
+      this.isPlayAudio = false
       this.isPlaying = false
     },
     recordPlaying () {
-      if (this.timerIntervalPlay) return
-      let n = 1
-      this.timerIntervalPlay = setInterval(() => {
-        if (n % 3 === 0) {
-          this.playLineHeight = [6, 14, 22, 14, 6]
-        } else if (n % 3 === 1) {
-          this.playLineHeight = [8, 16, 24, 16, 8]
-        } else if (n % 3 === 2) {
-          this.playLineHeight = [10, 18, 26, 18, 10]
-        }
-        n++
-      }, 300)
+      this.isPlayAudio = true
     },
     // 播放科大讯飞合成的语音
     read () {
@@ -301,12 +291,69 @@ export default {
   span {
     background: #fff;
     width: 3px;
+    height: 8px;
     border-radius: 2px;
     margin-left: 2px;
     margin-right: 2px;
   }
+  span:nth-child(2){
+    height: 14px;
+  }
+  span:nth-child(3){
+    height: 20px;
+  }
+  span:nth-child(4){
+    height: 14px;
+  }
+  &.loading {
+    opacity: 1;
+    span:nth-child(1), span:nth-child(5) {
+      animation: load1 0.7s ease infinite;
+      -webkit-animation: load1 0.7s ease infinite;
+      -ms-animation: load1 0.7s ease infinite;
+      -moz-animation: load1 0.7s ease infinite;
+      -o-animation: load1 0.7s ease infinite;
+    }
+    span:nth-child(2), span:nth-child(4) {
+      animation: load2 0.7s ease infinite;
+      -webkit-animation: load2 0.7s ease infinite;
+      -ms-animation: load2 0.7s ease infinite;
+      -moz-animation: load2 0.7s ease infinite;
+      -o-animation: load2 0.7s ease infinite;
+    }
+    span:nth-child(3) {
+      animation: load3 0.7s ease infinite;
+      -webkit-animation: load3 0.7s ease infinite;
+      -ms-animation: load3 0.7s ease infinite;
+      -moz-animation: load3 0.7s ease infinite;
+      -o-animation: load3 0.7s ease infinite;
+    }
+  }
 }
-
+@keyframes load3 {
+  0%, 100%{
+    height: 26px;
+  }
+  50%{
+    height: 20px;
+  }
+}
+@keyframes load2 {
+  0%, 100%{
+    height: 20px;
+  }
+  50%{
+    height: 14px;
+  }
+}
+@keyframes load1 {
+  0%, 100%{
+    height: 8px;
+  }
+  50%{
+    height: 14px;
+  }
+}
 .record {
   z-index: 2;
   position: relative;

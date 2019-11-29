@@ -1,6 +1,6 @@
 <template>
   <div class="ise-area">
-    <div class="play" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord" :class="{'loading': isPlayAudio}">
+    <div class="play" :class="{'loading': isPlayAudio}" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord">
       <span v-for="n in 5" :key="n"></span>
     </div>
     <div class="record">
@@ -51,7 +51,6 @@ export default {
   data () {
     return {
       photo: '',
-      playLineHeight: [8, 16, 24, 16, 8],
       isShowScoring: false,
       repeatRecord: false,
       isRecording: false,
@@ -159,22 +158,7 @@ export default {
       this.isPlaying = !this.isPlaying
       this.$emit('playRecord', this.isPlaying)
     },
-    removeLoading () {
-      this.isPlayAudio = false
-    },
     recordPlaying () {
-      // if (this.timerInterval) return
-      // let n = 1
-      // this.timerInterval = setInterval(() => {
-      //   if (n % 3 === 0) {
-      //     this.playLineHeight = [6, 14, 22, 14, 6]
-      //   } else if (n % 3 === 1) {
-      //     this.playLineHeight = [8, 16, 24, 16, 8]
-      //   } else if (n % 3 === 2) {
-      //     this.playLineHeight = [10, 18, 26, 18, 10]
-      //   }
-      //   n++
-      // }, 300)
       this.isPlayAudio = true
     },
     reset () {
@@ -188,7 +172,6 @@ export default {
     resetPlay () {
       clearInterval(this.timerInterval)
       this.timerInterval = null
-      // this.playLineHeight = [8, 16, 24, 16, 8]
       this.isPlayAudio = false
       this.isPlaying = false
     },
