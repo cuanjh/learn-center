@@ -153,18 +153,18 @@ export default {
       background-image: url('../../../../../static/images/kid/pic-try-again.gif');
     }
     &.iatPerfect {
-      width: 537px;
-      height: 379px;
+      width: 424px;
+      height: 424px;
       background-image: url('../../../../../static/images/kid/pic-iat-perfect.png');
     }
     &.iatNice {
-      width: 539px;
-      height: 537px;
+      width: 424px;
+      height: 424px;
       background-image: url('../../../../../static/images/kid/pic-iat-nice.png');
     }
     &.iatKeepTrying {
-      width: 539px;
-      height: 537px;
+      width: 424px;
+      height: 424px;
       background-image: url('../../../../../static/images/kid/pic-iat-keep-trying.png');
     }
   }

@@ -481,13 +481,6 @@ export default {
               localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
               this.getAvarageScore()
               this.$refs['scoreResult'].setScoreResult(formObj.score)
-              let isShowKidGuide = localStorage.getItem('isShowKidGuide')
-              if (isShowKidGuide !== '1' && this.isVip) {
-                setTimeout(() => {
-                  bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
-                  localStorage.setItem('isShowKidGuide', '1')
-                }, 3500)
-              }
               this.iseResultSet()
               this.$refs['ise'][this.curPage - 1].evaluateFinished()
               if (this.list.length === this.curPage) {
@@ -542,6 +535,12 @@ export default {
     // 录音保存后，动画效果
     recordAnimate () {
       this.$parent.$emit('recordAnimate')
+      setTimeout(() => {
+        let isShowKidGuide3 = localStorage.getItem('isShowKidGuide3')
+        if (isShowKidGuide3 !== '1' && this.curPage === this.totalPage) {
+          bus.$emit('kidGuideShow3', $('#score-report'))
+        }
+      }, 1500)
     },
     // 评测结果处理
     iseResultSet () {
@@ -579,7 +578,6 @@ export default {
         if (isShowKidGuide !== '1' && this.isVip) {
           setTimeout(() => {
             bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
-            localStorage.setItem('isShowKidGuide', '1')
           }, 3500)
         }
       }

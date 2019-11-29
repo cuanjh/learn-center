@@ -60,6 +60,7 @@ export default {
       isPlaying: false,
       translateX: 116,
       timerInterval: null,
+      timeCount: 1,
       score: '',
       scoreClass: '',
       showCircle: ''
@@ -111,6 +112,14 @@ export default {
     recordOpt () {
       console.log(this.repeatRecord)
       if (this.repeatRecord && !this.isRecording) return
+      if (this.timeCount === 0) {
+        alert('录音时间太短！！！')
+        return
+      }
+      this.timeCount = 0
+      setTimeout(() => {
+        this.timeCount = 1
+      }, 1000)
       this.repeatRecord = true
       if (!this.isCanRecord) {
         this.$parent.$emit('showTip')
@@ -173,6 +182,7 @@ export default {
       }, 300)
     },
     reset () {
+      this.timeCount = 1
       this.repeatRecord = false
       this.isRecording = false
       this.isPlaying = false

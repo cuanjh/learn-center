@@ -14,7 +14,9 @@
     <record-animate ref="recordAnimate"/>
     <word-panel ref="wordPanel"/>
     <test-yuyin v-show="false" :chapterCode="code"/>
-    <guide v-show="false"/>
+    <guide1 />
+    <guide2 />
+    <guide3 />
   </div>
 </template>
 
@@ -24,7 +26,9 @@ import NavComp from './common/nav.vue'
 import ProgressBar from './common/progress.vue'
 import SwiperComp from './common/swiper.vue'
 import WordPanel from './common/wordPanel.vue'
-import Guide from './common/guide.vue'
+import Guide1 from './common/guide.vue'
+import Guide2 from './common/guide2.vue'
+import Guide3 from './common/guide3.vue'
 import RecordAnimate from './common/recordAnimate.vue'
 import TestYuyin from './testYuyin.vue'
 
@@ -59,7 +63,9 @@ export default {
     SwiperComp,
     WordPanel,
     TestYuyin,
-    Guide,
+    Guide1,
+    Guide2,
+    Guide3,
     RecordAnimate
   },
   created () {
