@@ -666,8 +666,9 @@ export default {
               let w = {}
               w['word'] = word.content
               w['score'] = word.total_score
-              w['phonemes'] = this.getPhones(word.syll)
-              w['phonetic_symbol'] = this.getSylls(this.getPhones(word.syll))
+              // w['phonemes'] = this.getPhones(word.syll)
+              // w['phonetic_symbol'] = this.getSylls(this.getPhones(word.syll))
+              w['syllInfos'] = this.getSyllInfos(word.syll)
               words.push(w)
             }
           })
@@ -679,8 +680,9 @@ export default {
               let w = {}
               w['word'] = word.content
               w['score'] = Math.round(parseFloat(word.total_score))
-              w['phonemes'] = this.getPhones(word.syll)
-              w['phonetic_symbol'] = this.getSylls(this.getPhones(word.syll))
+              // w['phonemes'] = this.getPhones(word.syll)
+              // w['phonetic_symbol'] = this.getSylls(this.getPhones(word.syll))
+              w['syllInfos'] = this.getSyllInfos(word.syll)
               words.push(w)
             }
           })
@@ -688,12 +690,43 @@ export default {
           let w = {}
           w['word'] = sentence.word.content
           w['score'] = Math.round(parseFloat(sentence.word.total_score))
-          w['phonemes'] = this.getPhones(sentence.word.syll)
-          w['phonetic_symbol'] = this.getSylls(this.getPhones(sentence.word.syll))
+          // w['phonemes'] = this.getPhones(sentence.word.syll)
+          // w['phonetic_symbol'] = this.getSylls(this.getPhones(sentence.word.syll))
+          w['syllInfos'] = this.getSyllInfos(sentence.word.syll)
           words.push(w)
         }
       }
       return words
+    },
+    getSyllInfos (syll) {
+      let sylls = []
+      if (Array.isArray(syll)) {
+        syll.forEach(s => {
+          let syllObj = {}
+          syllObj['score'] = Math.round(s.syll_score)
+          syllObj['content'] = this.getSyllPhones(s.phone)
+          sylls.push(syllObj)
+        })
+      } else {
+        if (syll) {
+          let syllObj = {}
+          syllObj['score'] = Math.round(syll.syll_score)
+          syllObj['content'] = this.getSyllPhones(syll.phone)
+          sylls.push(syllObj)
+        }
+      }
+      return sylls
+    },
+    getSyllPhones (phone) {
+      let content = ''
+      if (Array.isArray(phone)) {
+        phone.forEach(p => {
+          content += this.xfSyllPhone[p.content]
+        })
+      } else {
+        content = this.xfSyllPhone[phone.content]
+      }
+      return content
     },
     // 获取所有的音素
     getPhones (syll) {
