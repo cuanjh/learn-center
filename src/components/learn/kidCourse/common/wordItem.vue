@@ -7,10 +7,9 @@
         <i class="icon-horn" @click="startTTS($event, item.word)"></i>
       </p>
       <table class="syllable">
-        <tr v-for="(phone, index) in item.phonemes" :key="'phone-' + index">
-          <td class="first">{{ (index == 0) ? item.phonetic_symbol : '' }}</td>
-          <td>{{ '音素 ' + phone.phoneme }}</td>
-          <td>{{ phone.state == 0 ? '朗读正常' : '未朗读' }}</td>
+        <tr v-for="(syll, index) in item.syllInfos" :key="'phone-' + index">
+          <td>{{ '音节 [' + syll.content + ']' }}</td>
+          <td>{{ syll.score >= 60 ? '读得真棒' : '继续加油' }}</td>
         </tr>
       </table>
     </div>
@@ -31,6 +30,8 @@ export default {
   props: ['newWords'],
   data () {
     return {}
+  },
+  mounted () {
   },
   methods: {
     colorClass (totalScore) {
@@ -146,15 +147,11 @@ export default {
     .syllable {
       tr {
         td {
-          padding: 6px 12px 0 0;
+          padding: 6px 6px 0 0;
           font-size: 14px;
           color: #5D717F;
           line-height: 20px;
           font-weight: 400;
-          &:first-child {
-            font-size: 16px;
-            font-weight: 500;
-          }
         }
       }
     }

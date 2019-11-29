@@ -11,9 +11,8 @@
         </div>
         <table class="syll-phone">
           <tr v-for="(phone, index) in phones" :key="index">
-            <td>{{ (index == 0) ? syll : '' }}</td>
-            <td>{{ '音素 ' + phone.phoneme }}</td>
-            <td>{{ phone.state == 0 ? '朗读正常' : '未朗读' }}</td>
+            <td>{{ '音节 [' + phone.content + ']' }}</td>
+            <td>{{ phone.score >= 60 ? '读得真棒' : '继续加油' }}</td>
           </tr>
         </table>
         <div class="ise-area">
@@ -91,7 +90,8 @@ export default {
       this.left = params.offset.left - 70
       this.top = params.offset.top + 35
       this.word = params.word.word
-      this.phones = params.word.phonemes
+      // this.phones = params.word.phonemes
+      this.phones = params.word.syllInfos
       this.syll = params.word.phonetic_symbol
       this.isShow = true
     },
@@ -256,15 +256,11 @@ export default {
   .syll-phone {
     tr {
       td {
-        padding: 6px 12px 0 0;
+        padding: 6px 6px 0 0;
         font-size: 14px;
         color: #5D717F;
         line-height: 20px;
         font-weight: 400;
-        &:first-child {
-          font-size: 16px;
-          font-weight: 500;
-        }
       }
     }
   }
