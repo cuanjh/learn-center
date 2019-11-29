@@ -8,10 +8,9 @@
             <i class="icon-horn" :id="'word' + index" @click="playRecordWordSound(form, index)"></i>
           </p>
           <table class="syllable">
-            <tr v-for="(phone, index) in form.words_score[0].phonemes" :key="index">
-              <td class="first">{{ (index == 0) ? phone.phonetic_symbol : '' }}</td>
-              <td>{{ '音素 ' + phone.phoneme }}</td>
-              <td>{{ phone.state == 0 ? '朗读正常' : '未朗读' }}</td>
+            <tr v-for="(word, index) in form.words_score[0].syllInfos" :key="index">
+              <td>{{ '音节 [' + word.content + ']' }}</td>
+              <td>{{ word.score >= 60 ? '读得真棒' : '继续加油' }}</td>
             </tr>
           </table>
         </div>
@@ -85,21 +84,6 @@ export default {
 ul{
   padding-top: 12px;
   li {
-    .syllable {
-      tr {
-        td {
-          padding: 6px 12px 0 0;
-          font-size: 14px;
-          color: #5D717F;
-          line-height: 20px;
-          font-weight: 400;
-          &:first-child {
-            font-size: 16px;
-            font-weight: 500;
-          }
-        }
-      }
-    }
     .li-item {
       padding: 16px 0 14px;
       border-top: 1px solid rgba(151, 151, 151, .13);
@@ -130,15 +114,11 @@ ul{
       .syllable {
         tr {
           td {
-            padding: 6px 12px 0 0;
+            padding: 6px 6px 0 0;
             font-size: 14px;
             color: #5D717F;
             line-height: 20px;
             font-weight: 400;
-            &:first-child {
-              font-size: 16px;
-              font-weight: 500;
-            }
           }
         }
       }

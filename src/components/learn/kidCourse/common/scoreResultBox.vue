@@ -86,8 +86,11 @@ export default {
         this.isShowScoreResult = false
         $('#AnimatScore').hide()
         this.scoreClass = ''
+        $('.score-result-content').css({
+          'background-image': ''
+        })
         this.$parent.$emit('recordAnimate')
-      }, 2000)
+      }, 1800)
     }
   }
 }

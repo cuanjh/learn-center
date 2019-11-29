@@ -1,7 +1,7 @@
 <template>
   <div class="ise-area">
-    <div class="play" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord">
-      <span v-for="n in 5" :key="n" :style="{height: playLineHeight[n - 1] + 'px'}"></span>
+    <div class="play" :class="{'loading': isPlayAudio}" :style="{transform: 'translateX('+ translateX +'px)'}" @click="playRecord">
+      <span v-for="n in 5" :key="n"></span>
     </div>
     <div class="record">
       <div class="micro-phone" @click="recordOpt"></div>
@@ -51,13 +51,13 @@ export default {
   data () {
     return {
       photo: '',
-      playLineHeight: [8, 16, 24, 16, 8],
       isShowScoring: false,
       repeatRecord: false,
       isRecording: false,
       isShowStopTip: false,
       isShowUserTip: false,
       isPlaying: false,
+      isPlayAudio: false,
       translateX: 116,
       timerInterval: null,
       timeCount: 1,
@@ -168,18 +168,7 @@ export default {
       this.$emit('playRecord', this.isPlaying)
     },
     recordPlaying () {
-      if (this.timerInterval) return
-      let n = 1
-      this.timerInterval = setInterval(() => {
-        if (n % 3 === 0) {
-          this.playLineHeight = [6, 14, 22, 14, 6]
-        } else if (n % 3 === 1) {
-          this.playLineHeight = [8, 16, 24, 16, 8]
-        } else if (n % 3 === 2) {
-          this.playLineHeight = [10, 18, 26, 18, 10]
-        }
-        n++
-      }, 300)
+      this.isPlayAudio = true
     },
     reset () {
       this.timeCount = 1
@@ -193,7 +182,7 @@ export default {
     resetPlay () {
       clearInterval(this.timerInterval)
       this.timerInterval = null
-      this.playLineHeight = [8, 16, 24, 16, 8]
+      this.isPlayAudio = false
       this.isPlaying = false
     },
     // 点击头像出现录音评测的弹框
@@ -257,12 +246,69 @@ export default {
   span {
     background: #fff;
     width: 3px;
+    height: 8px;
     border-radius: 2px;
     margin-left: 2px;
     margin-right: 2px;
   }
+  span:nth-child(2){
+    height: 14px;
+  }
+  span:nth-child(3){
+    height: 20px;
+  }
+  span:nth-child(4){
+    height: 14px;
+  }
+  &.loading {
+    opacity: 1;
+    span:nth-child(1), span:nth-child(5) {
+      animation: load1 0.7s ease infinite;
+      -webkit-animation: load1 0.7s ease infinite;
+      -ms-animation: load1 0.7s ease infinite;
+      -moz-animation: load1 0.7s ease infinite;
+      -o-animation: load1 0.7s ease infinite;
+    }
+    span:nth-child(2), span:nth-child(4) {
+      animation: load2 0.7s ease infinite;
+      -webkit-animation: load2 0.7s ease infinite;
+      -ms-animation: load2 0.7s ease infinite;
+      -moz-animation: load2 0.7s ease infinite;
+      -o-animation: load2 0.7s ease infinite;
+    }
+    span:nth-child(3) {
+      animation: load3 0.7s ease infinite;
+      -webkit-animation: load3 0.7s ease infinite;
+      -ms-animation: load3 0.7s ease infinite;
+      -moz-animation: load3 0.7s ease infinite;
+      -o-animation: load3 0.7s ease infinite;
+    }
+  }
 }
-
+@keyframes load3 {
+  0%, 100%{
+    height: 26px;
+  }
+  50%{
+    height: 20px;
+  }
+}
+@keyframes load2 {
+  0%, 100%{
+    height: 20px;
+  }
+  50%{
+    height: 14px;
+  }
+}
+@keyframes load1 {
+  0%, 100%{
+    height: 8px;
+  }
+  50%{
+    height: 14px;
+  }
+}
 .record {
   z-index: 2;
   position: relative;
@@ -425,7 +471,7 @@ export default {
  0% {
   transform: scale(1);
   opacity: 1;
-  background:rgba(245,166,35,0);
+  background:rgba(245,166,35,.8);
  }
  25% {
   transform: scale(1.2);

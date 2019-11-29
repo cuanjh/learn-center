@@ -525,10 +525,10 @@ export default {
       }
       @keyframes load1 {
         0%, 100%{
-          height: 14px;
+          height: 8px;
         }
         50%{
-          height: 8px;
+          height: 14px;
         }
       }
     }
