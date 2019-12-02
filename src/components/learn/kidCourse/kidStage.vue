@@ -253,7 +253,7 @@ export default {
     padding-top: 6%;
   }
 }
-@media (max-width: 1300px){
+@media (max-height: 675px){
   .kid-stage-container {
     overflow: auto;
   }
