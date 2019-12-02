@@ -106,6 +106,9 @@ export default {
     this.$on('recordAnimate', () => {
       this.recordAnimate()
     })
+    this.$on('reset', () => {
+      this.reset(this.curPage - 1)
+    })
     if (this.xfSpeechType === 'ise') {
       // 拉取讯飞测评数据
       this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
