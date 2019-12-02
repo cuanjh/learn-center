@@ -151,9 +151,10 @@ export default {
           let jsonData = JSON.parse(e.data)
           if (jsonData.data && jsonData.data.result) {
             console.log('onMessage result', jsonData.data.result)
-            if (this.isIatFinished) {
-              this.setResult(jsonData.data.result)
-            }
+            // if (this.isIatFinished) {
+            //   this.setResult(jsonData.data.result)
+            // }
+            this.setResult(jsonData.data.result)
           }
         },
         onStart: () => {
