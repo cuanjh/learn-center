@@ -37,6 +37,7 @@
           </div>
         </div>
       </div>
+      <audio id="complete-success" src="../../../../../static/sounds/complete.mp3"></audio>
     </div>
   </transition>
 </template>
@@ -44,6 +45,7 @@
 <script>
 import { mapState } from 'vuex'
 import Bus from '../../../../bus'
+import $ from 'jquery'
 
 export default {
   data () {
@@ -59,6 +61,9 @@ export default {
       this.getAvarageScore()
       this.beyondFriendResult = this.beyondFriend()
       this.isShowGradeModal = true
+      setTimeout(() => {
+        $('#complete-success')[0].play()
+      }, 300)
     })
   },
   computed: {
@@ -88,6 +93,8 @@ export default {
         Bus.$emit('show-prompt', msg)
         return false
       }
+      $('#complete-success')[0].pause()
+      $('#complete-success')[0].currentTime = 0
       this.$router.push({path: '/kid/kid-record-list', query: {code: this.chapterCode, type: this.curType}})
     },
     // 我的评分详情
@@ -103,6 +110,8 @@ export default {
         return false
       }
       this.isShowGradeModal = false
+      $('#complete-success')[0].pause()
+      $('#complete-success')[0].currentTime = 0
       Bus.$emit('showScoreDetail')
     },
     beyondFriend () {
@@ -115,6 +124,8 @@ export default {
     },
     closeModal () {
       this.isShowGradeModal = false
+      $('#complete-success')[0].pause()
+      $('#complete-success')[0].currentTime = 0
     },
     getAvarageScore () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
