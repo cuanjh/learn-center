@@ -116,6 +116,7 @@ export default {
         let msg = '录音时间不能小于1秒哦！'
         bus.$emit('show-prompt', msg)
         this.reset()
+        this.$parent.$emit('reset')
         return false
       }
       this.timeCount = 0
