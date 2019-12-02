@@ -1,6 +1,6 @@
 <template>
   <div class="swiper" id="certify">
-    <div class="current-swiper swiper-container" :id="'current-swiper-' + chapterCode + '-' + type">
+    <div class="current-swiper swiper-container " :id="'current-swiper-' + chapterCode + '-' + type">
       <div class="swiper-wrapper">
         <div class="swiper-slide"
           v-for="(item, index) in list"
@@ -389,6 +389,7 @@ export default {
       if (this.xfSpeechType === 'iat' && this.isVip) {
         this.$parent.$emit('startIatRecorder')
         this.swiper.mousewheel.disable()
+        $('.current-swiper').addClass('swiper-no-swiping')
       }
     },
     // 停止录音
@@ -400,6 +401,7 @@ export default {
       if (this.xfSpeechType === 'iat') {
         this.$parent.$emit('stopIatRecorder')
         this.swiper.mousewheel.enable()
+        $('.current-swiper').removeClass('swiper-no-swiping')
       }
     },
     // 播放录音
@@ -534,12 +536,14 @@ export default {
     // 录音保存后，动画效果
     recordAnimate () {
       this.$parent.$emit('recordAnimate')
-      setTimeout(() => {
-        let isShowKidGuide3 = localStorage.getItem('isShowKidGuide3')
-        if (isShowKidGuide3 !== '1' && this.curPage === this.totalPage) {
-          bus.$emit('kidGuideShow3', $('#score-report'))
-        }
-      }, 1500)
+      if (this.xfSpeechType === 'ise') {
+        setTimeout(() => {
+          let isShowKidGuide3 = localStorage.getItem('isShowKidGuide3')
+          if (isShowKidGuide3 !== '1' && this.curPage === this.totalPage) {
+            bus.$emit('kidGuideShow3', $('#score-report'))
+          }
+        }, 1500)
+      }
     },
     // 评测结果处理
     iseResultSet () {
@@ -799,6 +803,9 @@ export default {
       console.log(total)
       console.log(right)
       console.log(wrong)
+      if (right === 0 && wrong === 0) {
+        return false
+      }
       let score = 'iatNice'
       if (right === total) {
         score = 'iatPerfect'
@@ -807,6 +814,9 @@ export default {
         score = 'iatKeepTrying'
       }
       this.$refs['scoreResult'].setScoreResult(score)
+      // this.$refs['ise'][this.curPage - 1].stopRecord()
+      // clearInterval(this.timerInterval)
+      this.stopRecord()
     },
     reset (preIndex) {
       this.$parent.$emit('hideWordPanel')
