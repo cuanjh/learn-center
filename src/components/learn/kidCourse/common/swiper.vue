@@ -385,6 +385,7 @@ export default {
       Recorder.startRecording()
       if (this.xfSpeechType === 'iat' && this.isVip) {
         this.$parent.$emit('startIatRecorder')
+        this.swiper.mousewheel.disable()
       }
     },
     // 停止录音
@@ -395,6 +396,7 @@ export default {
       this.$refs['ise'][this.curPage - 1].stopRecord()
       if (this.xfSpeechType === 'iat') {
         this.$parent.$emit('stopIatRecorder')
+        this.swiper.mousewheel.enable()
       }
     },
     // 播放录音
