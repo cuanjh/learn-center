@@ -25,6 +25,9 @@
             <div class="circle circle2" v-show="isRecording"></div>
           </div>
         </div>
+        <div class="audio-track" v-show="false">
+          <canvas id="myCanvas" width="300px" height="58px"></canvas>
+        </div>
       </div>
     </div>
   </transition>
@@ -54,7 +57,7 @@ export default {
       isPlaytts: false,
       isPlayAudio: false,
       translateX: 116,
-      ttsRecorder: null
+      wavData: null
     }
   },
   components: {
@@ -94,6 +97,7 @@ export default {
       // this.phones = params.word.phonemes
       this.phones = params.word.syllInfos
       this.syll = params.word.phonetic_symbol
+      this.initTTSRecorder()
       this.isShow = true
     },
     hide () {
@@ -159,6 +163,18 @@ export default {
     },
     // 播放科大讯飞合成的语音
     read () {
+      let blob = new Blob([this.wavData], {type: 'audio/wav'})
+      let audio = new Audio()
+      audio.src = URL.createObjectURL(blob)
+      audio.oncanplay = () => {
+        this.isPlaytts = true
+        audio.play()
+      }
+      audio.onended = () => {
+        this.isPlaytts = false
+      }
+    },
+    initTTSRecorder () {
       let word = this.word
       let ttsRecorder = new TTS.TtsRecorder({
         lang: 'en',
@@ -182,16 +198,9 @@ export default {
             let pcm2wav = new PCM2WAV()
             pcm2wav.write(u8arr, (res) => {
               let data = pcm2wav.read()
-              let blob = new Blob([data], {type: 'audio/wav'})
-              let audio = new Audio()
-              audio.src = URL.createObjectURL(blob)
-              audio.oncanplay = () => {
-                this.isPlaytts = true
-                audio.play()
-              }
-              audio.onended = () => {
-                this.isPlaytts = false
-              }
+              console.log(data)
+              this.wavData = data
+              // this.initAudioTrack(data)
             })
           }
         },
@@ -200,6 +209,28 @@ export default {
         }
       })
       ttsRecorder.start()
+    },
+    initAudioTrack (data) {
+      let result = []
+      for (var i = 0; i < data.length; i = i + 64) {
+        let item = data[i]
+        result.push(item)
+      }
+      console.log('result', result)
+      let c = document.getElementById('myCanvas')
+      c.height = c.height
+      let ctx = c.getContext('2d')
+      ctx.strokeStyle = '#6ADB9B'
+      // 中轴线
+      ctx.moveTo(0, 29)
+      ctx.lineTo(300, 29)
+      // 音轨
+      for (var j = 1; j <= result.length; j++) {
+        let r = Math.round(result[j] * 32 / 460)
+        ctx.moveTo(j + 0.5, 29 - r)
+        ctx.lineTo(j + 0.5, 29 + r)
+      }
+      ctx.stroke()
     }
   }
 }
@@ -452,6 +483,12 @@ export default {
 @media (max-width: 1300px){
   .word-panel-container {
     height: 120%;
+  }
+}
+
+.audio-track {
+  canvas {
+    background: #19504C;
   }
 }
 </style>
