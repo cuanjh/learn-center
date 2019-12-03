@@ -248,7 +248,6 @@ export default {
   background-size: cover;
   background-position-y: center;
   .kid-content-wrap {
-    background: pink;
     width: 100%;
     height: 100%!important;
     padding-top: 6%;
