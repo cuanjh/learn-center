@@ -104,8 +104,7 @@ export default {
     })
     this.$on('showTip', () => {
       this.tip = this.tips.micphone
-      // this.$refs['tipbox'].$emit('tipbox-show')
-      bus.$emit('tipbox-show', this.tip)
+      this.$refs['tipbox'].$emit('tipbox-show')
     })
     this.$on('recordAnimate', () => {
       this.recordAnimate()
@@ -183,8 +182,7 @@ export default {
         this.updateCanRecord(flag)
         if (!flag) {
           this.tip = this.tips.micphone
-          // this.$refs['tipbox'].$emit('tipbox-show')
-          bus.$emit('tipbox-show', this.tip)
+          this.$refs['tipbox'].$emit('tipbox-show')
         }
       })
     },
@@ -549,8 +547,7 @@ export default {
       }
       if (this.isVip && this.iseWords.length === 0) {
         this.tip = '当前没有评测结果，请重新录音哦！'
-        // this.$refs['tipbox'].$emit('tipbox-show')
-        bus.$emit('tipbox-show', this.tip)
+        this.$refs['tipbox'].$emit('tipbox-show')
         return false
       }
       this.$refs.WordListBox.showWordListBox(this.iseWords)

@@ -25,23 +25,17 @@
 </template>
 
 <script>
-import bus from '../../../../bus'
+// import bus from '../../../../bus'
 
 export default {
-  // props: ['tip'],
+  props: ['tip'],
   data () {
     return {
-      tip: '',
       show: false
     }
   },
   created () {
-    // this.$on('tipbox-show', () => {
-    //   console.log(this.tip)
-    //   this.show = true
-    // })
-    bus.$on('tipbox-show', (msg) => {
-      this.tip = msg
+    this.$on('tipbox-show', () => {
       console.log(this.tip)
       this.show = true
     })
