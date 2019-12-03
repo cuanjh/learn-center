@@ -10,7 +10,7 @@
           <div class="content">
             <i @click="playSourceSound(index)"></i>
             <p :data-content="item.content || item.word" data-isevaluate="">
-              <span v-for="(content, index) in item.formatContent" :key="index" v-html="content.indexOf('-') > -1 ? content : ' ' + content" @click="showWordPanel($event, index)"></span>
+              <span v-for="(content, index) in item.formatContent" :data-content="content" :key="index" v-html="content.indexOf('-') > -1 ? content : ' ' + content" @click="showWordPanel($event, index)"></span>
             </p>
           </div>
           <div class="result-out"></div>
@@ -291,54 +291,63 @@ export default {
         return ''
       }
       let result = []
-      let arr = content.replace(new RegExp('\\n', 'g'), '<br/>').replace(new RegExp('—', 'g'), ' ').split(' ')
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i].trim().length > 0) {
-          if (arr[i].indexOf('<br/>') > -1) {
-            let r = arr[i].split('<br/>')
-            for (let l = 0; l < r.length; l++) {
-              if (r[l].trim().length > 0) {
-                let tag = ''
-                if (l === 0) {
-                  tag = '<br/>'
+      let arrBR = content.split('\n')
+      console.log(arrBR)
+      for (let m = 0; m < arrBR.length; m++) {
+        let arr = arrBR[m].split(' ')
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].trim().length > 0) {
+            if (arr[i] === '<br/>') {
+              result.push('<br/>')
+            } else if (arr[i].indexOf('<br/>') > -1) {
+              let r = arr[i].split('<br/>')
+              for (let l = 0; l < r.length; l++) {
+                if (r[l].trim().length > 0) {
+                  let tag = ''
+                  if (l === 0) {
+                    tag = '<br/>'
+                  }
+                  result.push(r[l].trim() + tag)
                 }
-                result.push(r[l].trim() + tag)
               }
-            }
-          } else if (arr[i].indexOf('?') > -1) {
-            let r = arr[i].split('?')
-            for (let j = 0; j < r.length; j++) {
-              if (r[j].trim().length > 0) {
-                let tag = ''
-                if (j === 0) {
-                  tag = '?'
+            } else if (arr[i].indexOf('?') > -1) {
+              let r = arr[i].split('?')
+              for (let j = 0; j < r.length; j++) {
+                if (r[j].trim().length > 0) {
+                  let tag = ''
+                  if (j === 0) {
+                    tag = '?'
+                  }
+                  result.push(r[j].trim() + tag)
                 }
-                result.push(r[j].trim() + tag)
               }
-            }
-          } else if (arr[i].indexOf('”') > -1) {
-            let r = arr[i].split('”')
-            for (let k = 0; k < r.length; k++) {
-              if (r[k].trim().length > 0) {
-                let tag = ''
-                if (k === 0) {
-                  tag = '”'
+            } else if (arr[i].indexOf('”') > -1) {
+              let r = arr[i].split('”')
+              for (let k = 0; k < r.length; k++) {
+                if (r[k].trim().length > 0) {
+                  let tag = ''
+                  if (k === 0) {
+                    tag = '”'
+                  }
+                  result.push(r[k].trim() + tag)
                 }
-                result.push(r[k].trim() + tag)
               }
-            }
-          } else {
-            if (arr[i].trim() === '—') {
-              result.push(arr[i].trim())
-              continue
-            } else if (arr[i].trim().indexOf('-') > -1) {
-              let arr1 = arr[i].trim().split('-')
-              result.push(arr1[0])
-              result.push('-' + arr1[1])
             } else {
-              result.push(arr[i].trim())
+              if (arr[i].trim() === '—') {
+                result.push(arr[i].trim())
+                continue
+              } else if (arr[i].trim().indexOf('-') > -1) {
+                let arr1 = arr[i].trim().split('-')
+                result.push(arr1[0])
+                result.push('-' + arr1[1])
+              } else {
+                result.push(arr[i].trim())
+              }
             }
           }
+        }
+        if (arrBR.length > 1 && m === 0) {
+          result.push('<br/>')
         }
       }
       return result
@@ -647,11 +656,46 @@ export default {
             result.push(arr[i].trim())
           }
         }
-        for (let j = 0; j < result.length; j++) {
-          if (result[j] === this.contentArr[j]) {
-            $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('right')
+        // for (let j = 0; j < result.length; j++) {
+        //   if (result[j] === this.contentArr[j]) {
+        //     $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('right')
+        //   } else {
+        //     $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('wrong')
+        //   }
+        // }
+        if (result.length === 0) {
+          return false
+        }
+        let spanArr = $('.current-swiper .swiper-slide-active').find('.content p span')
+        for (let s = 0; s < spanArr.length; s++) {
+          let span = spanArr[s]
+          let content = $(span).data('content')
+          if (content === '—') {
+            continue
+          }
+          content = content
+            .toLowerCase()
+            .replace(new RegExp(/\?/, 'g'), '')
+            .replace(new RegExp(',', 'g'), '')
+            .replace(new RegExp(/\./, 'g'), '')
+            .replace(new RegExp('-', 'g'), '')
+            .replace(new RegExp('!', 'g'), '')
+            .replace(new RegExp('“', 'g'), '')
+            .replace(new RegExp('”', 'g'), '')
+            .replace(new RegExp('"', 'g'), '')
+            .replace(new RegExp(':', 'g'), '')
+            .replace(new RegExp('<br/>', 'g'), '')
+            .replace(new RegExp('¡', 'g'), '')
+          let findIndex = result.findIndex(r => {
+            return r === content
+          })
+          if (!result[s] && findIndex === -1) {
+            return
+          }
+          if (findIndex > -1) {
+            $(span).addClass('right')
           } else {
-            $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('wrong')
+            $(span).addClass('wrong')
           }
         }
       })
