@@ -8,7 +8,7 @@
       <i class="go-vip"></i>
     </router-link>
     <div class="lists">
-      <div class="swiper-container" id="swiper-lists">
+      <div class="swiper-container" id="novip-swiper-lists">
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <div class="item">
@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <div class="swiper-pagination"></div>
+        <div class="swiper-pagination" id="novip-pagination"></div>
       </div>
     </div>
   </div>
@@ -46,13 +46,16 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      isShowNoVipModal: false
+      isShowNoVipModal: false,
+      guideSwiper: null
     }
   },
   created () {
     Bus.$on('showNoVipModal', () => {
-      this.isShowNoVipModal = true
       this.initGuideSwiper()
+      this.isShowNoVipModal = true
+      this.guideSwiper.autoplay.start()
+      this.guideSwiper.mousewheel.enable()
     })
   },
   mounted () {
@@ -64,9 +67,7 @@ export default {
       getUserInfo: 'getUserInfo'
     }),
     initGuideSwiper () {
-      var guideSwiper = new Swiper('#swiper-lists', {
-        observer: true, // 修改swiper自己或子元素时，自动初始化swiper
-        observeParents: true, // 修改swiper的父元素时，自动初始化swiper
+      this.guideSwiper = new Swiper('#novip-swiper-lists', {
         speed: 500,
         loop: true,
         initialSlide: 0,
@@ -76,14 +77,16 @@ export default {
           disableOnInteraction: false
         },
         mousewheel: true,
+        observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+        observeParents: true, // 修改swiper的父元素时，自动初始化swiper
+        observeSlideChildren: true,
         allowTouchMove: true,
-        paginationClickable: true,
         pagination: {
           el: '.swiper-pagination',
           clickable: true
         }
       })
-      console.log(guideSwiper)
+      console.log(this.guideSwiper)
     },
     closeModal () {
       this.getUserInfo().then(res => {
@@ -97,6 +100,8 @@ export default {
       let circle = localStorage.getItem('showCircle')
       Bus.$emit('localShowCircle', circle)
       this.isShowNoVipModal = false
+      this.guideSwiper.autoplay.stop()
+      this.guideSwiper.mousewheel.disable()
     }
   }
 }
