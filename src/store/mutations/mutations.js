@@ -102,6 +102,10 @@ export default {
   updateCanRecord (state, flag) {
     state.isCanRecord = flag
   },
+  // 讯飞服务量判断
+  updatexfSpeechState (state, flag) {
+    state.xfSpeechState = flag
+  },
   // 更新讯飞语音分类
   updatexfSpeechType (state, flag) {
     state.xfSpeechType = flag

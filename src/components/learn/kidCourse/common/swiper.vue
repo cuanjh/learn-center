@@ -154,6 +154,7 @@ export default {
       kidRecordList: state => state.kidRecordList,
       tips: state => state.learn.tips,
       xfSpeechType: state => state.xfSpeechType,
+      xfSpeechState: state => state.xfSpeechState,
       xfSyllPhone: state => state.xfSyllPhone,
       isVip: state => state.isVip
     }),
@@ -521,7 +522,7 @@ export default {
             // 返回成功之后再处理 返回失败具体提示
             if (res.success) {
               this.getKidRecordList({chapter_code: this.chapterCode, teacher_module: this.type})
-              if (!this.isVip) {
+              if (!(this.isVip && this.xfSpeechState)) {
                 this.recordAnimate()
                 this.$refs['ise'][this.curPage - 1].reset()
               }

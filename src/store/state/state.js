@@ -13,6 +13,7 @@ export default {
   langCodesSel: [], // 课程相关
   kidRecordList: [], // kid录音列表
   xfISEResult: {},
+  xfSpeechState: true, // true: 有服务量，false: 用完
   xfSpeechType: '', // 讯飞语音分类,asr 语音听写（识别）, ise 语音评测
   xfISEScoreMatch: {
     100: [99, 99, 99],

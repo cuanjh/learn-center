@@ -33,7 +33,7 @@ import RecordAnimate from './common/recordAnimate.vue'
 import TestYuyin from './testYuyin.vue'
 
 import ASR from '../../../plugins/xf_asr.js'
-import { mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import bus from '../../../bus'
 
 export default {
@@ -85,11 +85,7 @@ export default {
     // 停止语音识别
     this.$on('stopIatRecorder', () => {
       this.stop()
-      if (this.tip) {
-        // this.$refs['swiper'].stopRecord()
-      } else {
-        this.isIatFinished = true
-      }
+      this.isIatFinished = true
     })
     this.$on('recordAnimate', () => {
       this.$refs['recordAnimate'].show()
@@ -112,10 +108,17 @@ export default {
   mounted () {
     console.log('kid-stage-container', $('.kid-stage-container').height())
     this.kidContentHeight = $('.kid-stage-container').height() - 150
+    this.updatexfSpeechState(true)
+  },
+  computed: {
+    ...mapState({
+      xfSpeechState: state => state.xfSpeechState
+    })
   },
   methods: {
     ...mapMutations([
-      'updatexfSpeechType'
+      'updatexfSpeechType',
+      'updatexfSpeechState'
     ]),
     ...mapActions([
       'xfISEUpload'
@@ -161,8 +164,9 @@ export default {
             // }
             this.setResult(jsonData.data.result)
           } else {
+            this.updatexfSpeechState(false)
             this.tip = '今日语音识别服务量已用完！请明天再试哦！'
-            bus.$emit('tipbox-show', this.tip)
+            bus.$emit('show-prompt', this.tip)
           }
         },
         onStart: () => {
@@ -172,7 +176,7 @@ export default {
       })
     },
     start () {
-      if (this.tip) {
+      if (!this.xfSpeechState) {
         return false
       }
       this.resultOut = ''
