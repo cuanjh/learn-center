@@ -133,11 +133,12 @@ export default {
         onClose: () => {
           this.stop()
           this.reset()
-          if (this.isIatFinished) {
-            this.$refs['swiper'].iatFinished()
-          } else {
-            this.$refs['swiper'].setResultOut('')
-          }
+          // if (this.isIatFinished) {
+          //   this.$refs['swiper'].iatFinished()
+          // } else {
+          //   this.$refs['swiper'].setResultOut('')
+          // }
+          this.$refs['swiper'].iatFinished()
           // setTimeout(() => {
           //   this.$refs['swiper'].setResultOut('')
           // }, 2000)
@@ -200,9 +201,9 @@ export default {
         return false
       }
       this.counterDownTime++
-      this.counterDownTimeout = setTimeout(() => {
-        this.counterDown()
-      }, 1000)
+      // this.counterDownTimeout = setTimeout(() => {
+      //   this.counterDown()
+      // }, 1000)
     },
     setProgress (progress) {
       console.log(progress)
@@ -253,7 +254,7 @@ export default {
     padding-top: 6%;
   }
 }
-@media (max-width: 1300px){
+@media (max-height: 675px){
   .kid-stage-container {
     overflow: auto;
   }

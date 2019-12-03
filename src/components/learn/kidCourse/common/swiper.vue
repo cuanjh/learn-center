@@ -1,6 +1,6 @@
 <template>
   <div class="swiper" id="certify">
-    <div class="current-swiper swiper-container" :id="'current-swiper-' + chapterCode + '-' + type">
+    <div class="current-swiper swiper-container " :id="'current-swiper-' + chapterCode + '-' + type">
       <div class="swiper-wrapper">
         <div class="swiper-slide"
           v-for="(item, index) in list"
@@ -79,7 +79,8 @@ export default {
       iseWords: [],
       timerInterval: null, // 录音间隔器
       time: 0, // 录音计时
-      tip: ''
+      tip: '',
+      contentArr: []
     }
   },
   components: {
@@ -389,6 +390,7 @@ export default {
       if (this.xfSpeechType === 'iat' && this.isVip) {
         this.$parent.$emit('startIatRecorder')
         this.swiper.mousewheel.disable()
+        $('.current-swiper').addClass('swiper-no-swiping')
       }
     },
     // 停止录音
@@ -400,6 +402,7 @@ export default {
       if (this.xfSpeechType === 'iat') {
         this.$parent.$emit('stopIatRecorder')
         this.swiper.mousewheel.enable()
+        $('.current-swiper').removeClass('swiper-no-swiping')
       }
     },
     // 播放录音
@@ -534,12 +537,14 @@ export default {
     // 录音保存后，动画效果
     recordAnimate () {
       this.$parent.$emit('recordAnimate')
-      setTimeout(() => {
-        let isShowKidGuide3 = localStorage.getItem('isShowKidGuide3')
-        if (isShowKidGuide3 !== '1' && this.curPage === this.totalPage) {
-          bus.$emit('kidGuideShow3', $('#score-report'))
-        }
-      }, 1500)
+      if (this.xfSpeechType === 'ise') {
+        setTimeout(() => {
+          let isShowKidGuide3 = localStorage.getItem('isShowKidGuide3')
+          if (isShowKidGuide3 !== '1' && this.curPage === this.totalPage) {
+            bus.$emit('kidGuideShow3', $('#score-report'))
+          }
+        }, 1500)
+      }
     },
     // 评测结果处理
     iseResultSet () {
@@ -626,15 +631,15 @@ export default {
           .replace(new RegExp('"', 'g'), ' ')
           .replace(new RegExp(':', 'g'), ' ')
           .trim(' ').split(' ')
-        let contentArr = []
+        this.contentArr = []
         for (let i = 0; i < arr1.length; i++) {
           let item = arr1[i].trim().replace(new RegExp('—', 'g'), '').trim()
           if (item.length > 0) {
-            contentArr.push(item)
+            this.contentArr.push(item)
           }
         }
         console.log('resultOut', resultOut)
-        console.log('content', contentArr)
+        console.log('content', this.contentArr)
         let arr = resultOut.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').split(' ')
         let result = []
         for (let i = 0; i < arr.length; i++) {
@@ -643,7 +648,7 @@ export default {
           }
         }
         for (let j = 0; j < result.length; j++) {
-          if (result[j] === contentArr[j]) {
+          if (result[j] === this.contentArr[j]) {
             $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('right')
           } else {
             $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('wrong')
@@ -793,12 +798,16 @@ export default {
       this.$refs['ise'][this.curPage - 1].evaluateFinished()
       // this.$refs['scoreResult'].setScoreResult('iatPerfect')
       // this.$refs['scoreResult'].setScoreResult('iatNice')
-      let total = $('.current-swiper .swiper-slide-active').find('.content p span').length
+      // let total = $('.current-swiper .swiper-slide-active').find('.content p span').length
+      let total = this.contentArr.length
       let right = $('.current-swiper .swiper-slide-active').find('.content p span.right').length
       let wrong = $('.current-swiper .swiper-slide-active').find('.content p span.wrong').length
       console.log(total)
       console.log(right)
       console.log(wrong)
+      if (right === 0 && wrong === 0) {
+        return false
+      }
       let score = 'iatNice'
       if (right === total) {
         score = 'iatPerfect'
@@ -807,6 +816,9 @@ export default {
         score = 'iatKeepTrying'
       }
       this.$refs['scoreResult'].setScoreResult(score)
+      // this.$refs['ise'][this.curPage - 1].stopRecord()
+      // clearInterval(this.timerInterval)
+      this.stopRecord()
     },
     reset (preIndex) {
       this.$parent.$emit('hideWordPanel')
