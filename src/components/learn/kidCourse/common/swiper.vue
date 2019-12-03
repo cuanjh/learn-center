@@ -24,8 +24,8 @@
               @startEvaluate="startEvaluate"
               @goWordListBox="goWordListBox"
             />
-            <div class="shade"></div>
           </div>
+          <div class="shade"></div>
         </div>
       </div>
     </div>
