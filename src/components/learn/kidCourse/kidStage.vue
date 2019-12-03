@@ -41,7 +41,6 @@ export default {
   inject: ['reload'],
   data () {
     return {
-      notSupportTip: '请试用chrome浏览器且域名为localhost或127.0.0.1测试',
       iatRecorder: null,
       isIatFinished: false,
       counterDownTime: 0,
