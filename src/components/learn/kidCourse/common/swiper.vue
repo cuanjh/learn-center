@@ -995,7 +995,7 @@ export default {
     height: auto;
     padding-bottom: 40px;
     .swiper-slide {
-      height: auto;
+      // height: auto;
       padding-bottom: 30px;
     }
     .swiper-slide-active {

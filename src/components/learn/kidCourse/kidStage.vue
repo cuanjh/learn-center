@@ -264,4 +264,9 @@ export default {
     }
   }
 }
+@media (max-width: 1300px){
+  .kid-content-wrap {
+    padding-top: 3%!important;
+  }
+}
 </style>
