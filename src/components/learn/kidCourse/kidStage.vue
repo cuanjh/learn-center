@@ -139,9 +139,9 @@ export default {
           //   this.$refs['swiper'].setResultOut('')
           // }
           this.$refs['swiper'].iatFinished()
-          setTimeout(() => {
-            this.$refs['swiper'].setResultOut(this.resultOut)
-          }, 10)
+          // setTimeout(() => {
+          //   this.$refs['swiper'].setResultOut(this.resultOut)
+          // }, 10)
         },
         onError: (data) => {
           this.stop()
