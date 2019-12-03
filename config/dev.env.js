@@ -15,8 +15,8 @@ module.exports = merge(prodEnv, {
   // XF_APIKEY: "'10f99fcd8ab002df84b084dbe02ed007'", // 正式
   // XF_APISECRET: "'ef93a8654dcee437c4cd8099b683efe5'", // 正式
   XF_APPID: "'5db3aa5f'",
-  XF_APIKEY: "'7cffb16b750c97db72ba8ae22cb5353f'",
-  XF_APISECRET: "'b1ae2466345960371e55acb5a22363eb'",
+  XF_APIKEY: "'b1ae2466345960371e55acb5a22363eb'",
+  XF_APISECRET: "'7cffb16b750c97db72ba8ae22cb5353f'",
   KID_SHARE: '"https://mobile-static.talkmate.com/operate/activities/html/miniRecordShare/index.html"', // 线上
   // KID_SHARE: '"http://test-learn.talkmate.com:82/miniRecordShare/index.html"' // 测试
   APP_KEY: '"talkmateVersion"',
