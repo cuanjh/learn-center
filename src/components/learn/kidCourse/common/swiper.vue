@@ -671,11 +671,11 @@ export default {
         let spanArr = $('.current-swiper .swiper-slide-active').find('.content p span')
         for (let s = 0; s < spanArr.length; s++) {
           let span = spanArr[s]
-          let content = $(span).data('content')
-          if (content === '—') {
+          let content1 = $(span).data('content')
+          if (content1 === '—') {
             continue
           }
-          content = content
+          content1 = content1
             .toLowerCase()
             .replace(new RegExp(/\?/, 'g'), '')
             .replace(new RegExp(',', 'g'), '')
@@ -689,10 +689,11 @@ export default {
             .replace(new RegExp('<br/>', 'g'), '')
             .replace(new RegExp('¡', 'g'), '')
           let findIndex = result.findIndex(r => {
-            return r === content
+            return r === content1
           })
+          console.log(content1, findIndex)
           if (!result[s] && findIndex === -1) {
-            return
+            continue
           }
           if (findIndex > -1) {
             $(span).addClass('right')
