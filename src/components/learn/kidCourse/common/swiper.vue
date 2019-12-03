@@ -79,7 +79,8 @@ export default {
       iseWords: [],
       timerInterval: null, // 录音间隔器
       time: 0, // 录音计时
-      tip: ''
+      tip: '',
+      contentArr: []
     }
   },
   components: {
@@ -630,15 +631,15 @@ export default {
           .replace(new RegExp('"', 'g'), ' ')
           .replace(new RegExp(':', 'g'), ' ')
           .trim(' ').split(' ')
-        let contentArr = []
+        this.contentArr = []
         for (let i = 0; i < arr1.length; i++) {
           let item = arr1[i].trim().replace(new RegExp('—', 'g'), '').trim()
           if (item.length > 0) {
-            contentArr.push(item)
+            this.contentArr.push(item)
           }
         }
         console.log('resultOut', resultOut)
-        console.log('content', contentArr)
+        console.log('content', this.contentArr)
         let arr = resultOut.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').split(' ')
         let result = []
         for (let i = 0; i < arr.length; i++) {
@@ -647,7 +648,7 @@ export default {
           }
         }
         for (let j = 0; j < result.length; j++) {
-          if (result[j] === contentArr[j]) {
+          if (result[j] === this.contentArr[j]) {
             $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('right')
           } else {
             $('.current-swiper .swiper-slide-active').find('.content p span:nth-child(' + (j + 1) + ')').addClass('wrong')
@@ -797,7 +798,8 @@ export default {
       this.$refs['ise'][this.curPage - 1].evaluateFinished()
       // this.$refs['scoreResult'].setScoreResult('iatPerfect')
       // this.$refs['scoreResult'].setScoreResult('iatNice')
-      let total = $('.current-swiper .swiper-slide-active').find('.content p span').length
+      // let total = $('.current-swiper .swiper-slide-active').find('.content p span').length
+      let total = this.contentArr.length
       let right = $('.current-swiper .swiper-slide-active').find('.content p span.right').length
       let wrong = $('.current-swiper .swiper-slide-active').find('.content p span.wrong').length
       console.log(total)
