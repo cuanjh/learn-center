@@ -248,9 +248,9 @@ export default {
   background-size: cover;
   background-position-y: center;
   .kid-content-wrap {
+    background: pink;
     width: 100%;
-    max-height: 530px;
-    background: rgba(0, 0, 0, 0);
+    height: 100%!important;
     padding-top: 6%;
   }
 }
