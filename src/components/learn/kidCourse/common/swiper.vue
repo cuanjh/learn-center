@@ -337,6 +337,12 @@ export default {
                   result.push(r[k].trim() + tag)
                 }
               }
+            } else if (arr[i].indexOf('《') > -1) {
+              let r = arr[i].split('《')
+              if (r[0].length > 0) {
+                result.push(r[0])
+              }
+              result.push('《' + r[1])
             } else {
               if (arr[i].trim() === '—') {
                 result.push(arr[i].trim())
@@ -645,6 +651,8 @@ export default {
           .replace(new RegExp('”', 'g'), ' ')
           .replace(new RegExp('"', 'g'), ' ')
           .replace(new RegExp(':', 'g'), ' ')
+          .replace(new RegExp('《', 'g'), ' ')
+          .replace(new RegExp('》', 'g'), ' ')
           .trim(' ').split(' ')
         this.contentArr = []
         for (let i = 0; i < arr1.length; i++) {
@@ -687,16 +695,20 @@ export default {
             .replace(new RegExp('-', 'g'), '')
             .replace(new RegExp('—', 'g'), '')
             .replace(new RegExp('!', 'g'), '')
+            .replace(new RegExp('《', 'g'), '')
+            .replace(new RegExp('》', 'g'), '')
             .replace(new RegExp('“', 'g'), '')
             .replace(new RegExp('”', 'g'), '')
             .replace(new RegExp('"', 'g'), '')
             .replace(new RegExp(':', 'g'), '')
             .replace(new RegExp('<br/>', 'g'), '')
             .replace(new RegExp('¡', 'g'), '')
+            .replace(new RegExp('¿', 'g'), '')
+            .replace(new RegExp('\'', 'g'), '’')
           let findIndex = result.findIndex(r => {
             return r === content1
           })
-          console.log(content1, findIndex)
+          console.log(content1, findIndex, result)
           if (!result[s] && findIndex === -1) {
             continue
           }
