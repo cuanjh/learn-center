@@ -249,8 +249,7 @@ export default {
   background-position-y: center;
   .kid-content-wrap {
     width: 100%;
-    max-height: 530px;
-    background: rgba(0, 0, 0, 0);
+    height: 100%!important;
     padding-top: 6%;
   }
 }
@@ -263,6 +262,11 @@ export default {
     .kid-content-wrap {
       padding-top: 3%;
     }
+  }
+}
+@media (max-width: 1300px){
+  .kid-content-wrap {
+    padding-top: 3%!important;
   }
 }
 </style>

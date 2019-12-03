@@ -7,23 +7,25 @@
           :key="'current-swiper-' + item.code"
           :id="chapterCode + '-' + item.code">
           <img class="picture" :src="item.image | urlFix('imageView2/0/w/2001/h/900/format/jpg')" alt="">
-          <div class="content">
-            <i @click="playSourceSound(index)"></i>
-            <p :data-content="item.content || item.word" data-isevaluate="">
-              <span v-for="(content, index) in item.formatContent" :data-content="content" :key="index" v-html="content.indexOf('-') > -1 ? content : ' ' + content" @click="showWordPanel($event, index)"></span>
-            </p>
+          <div class="slide-content">
+            <div class="content">
+              <i @click="playSourceSound(index)"></i>
+              <p :data-content="item.content || item.word" data-isevaluate="">
+                <span v-for="(content, index) in item.formatContent" :data-content="content" :key="index" v-html="content.indexOf('-') > -1 ? content : ' ' + content" @click="showWordPanel($event, index)"></span>
+              </p>
+            </div>
+            <div class="result-out"></div>
+            <ise-area
+              ref="ise"
+              :formCode="chapterCode + '-' + type.charAt(0).toUpperCase() + type.slice(1) + '-' + (index + 1)"
+              @startRecord="startRecord"
+              @stopRecord="stopRecord"
+              @playRecord="playRecord"
+              @startEvaluate="startEvaluate"
+              @goWordListBox="goWordListBox"
+            />
+            <div class="shade"></div>
           </div>
-          <div class="result-out"></div>
-          <ise-area
-            ref="ise"
-            :formCode="chapterCode + '-' + type.charAt(0).toUpperCase() + type.slice(1) + '-' + (index + 1)"
-            @startRecord="startRecord"
-            @stopRecord="stopRecord"
-            @playRecord="playRecord"
-            @startEvaluate="startEvaluate"
-            @goWordListBox="goWordListBox"
-          />
-          <div class="shade"></div>
         </div>
       </div>
     </div>
@@ -900,6 +902,7 @@ export default {
     border-radius: 10px 10px 0 0;
   }
   .content {
+    position: relative;
     display: inline-flex;
     padding-top: 16px;
     padding-left: 16px;
@@ -907,6 +910,7 @@ export default {
     font-weight: 600;
     color: #3C5B6F;
     p {
+      margin-left: 30px;
       span {
         cursor: pointer;
       }
@@ -921,6 +925,7 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     cursor: pointer;
+    position: absolute;
   }
   .playing {
     background-image: url('../../../../../static/images/kid/icon-laba.gif');
@@ -932,6 +937,16 @@ export default {
     border-radius:10px;
     box-shadow: 0 8px 30px #ddd;
     box-shadow:0px 3px 10px 0px rgba(196,208,213,0.1);
+    position: relative;
+    .slide-content {
+      width: 100%;
+      min-height: 200px;
+      position: absolute;
+      bottom: 0;
+      background: #fff;
+      border-radius:0 0 10px 10px;
+      padding-bottom: 30px;
+    }
   }
 }
 
@@ -1024,7 +1039,7 @@ export default {
     height: auto;
     padding-bottom: 40px;
     .swiper-slide {
-      height: auto;
+      // height: auto;
       padding-bottom: 30px;
     }
     .swiper-slide-active {
