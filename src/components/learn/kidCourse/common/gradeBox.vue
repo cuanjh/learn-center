@@ -119,7 +119,7 @@ export default {
         return false
       }
       let d = new Date()
-      let scoreIndex = (d.getMonth() + 1) % 3 - 1
+      let scoreIndex = d.getMonth() % 3
       return this.xfISEScoreMatch[this.score][scoreIndex]
     },
     closeModal () {

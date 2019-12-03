@@ -53,7 +53,8 @@ export default {
         KFR: 'fr_fr',
         KSP: 'es_es'
       },
-      kidContentHeight: 0
+      kidContentHeight: 0,
+      tip: ''
     }
   },
   components: {
@@ -83,8 +84,12 @@ export default {
     })
     // 停止语音识别
     this.$on('stopIatRecorder', () => {
-      this.isIatFinished = true
       this.stop()
+      if (this.tip) {
+        // this.$refs['swiper'].stopRecord()
+      } else {
+        this.isIatFinished = true
+      }
     })
     this.$on('recordAnimate', () => {
       this.$refs['recordAnimate'].show()
@@ -155,6 +160,9 @@ export default {
             //   this.setResult(jsonData.data.result)
             // }
             this.setResult(jsonData.data.result)
+          } else {
+            this.tip = '今日语音识别服务量已用完！请明天再试哦！'
+            bus.$emit('tipbox-show', this.tip)
           }
         },
         onStart: () => {
@@ -164,6 +172,9 @@ export default {
       })
     },
     start () {
+      if (this.tip) {
+        return false
+      }
       this.resultOut = ''
       this.resultText = ''
       this.iatRecorder.start()
