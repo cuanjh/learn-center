@@ -15,6 +15,10 @@
     <summary-comp ref="summary" @goBack="goBack"/>
     <record-list ref="record"/>
     <word-panel ref="wordPanel"/>
+    <sentence-box/>
+    <evaluating-box />
+    <noVip-guide-box />
+    <prompt-box />
   </div>
 </template>
 
@@ -39,6 +43,12 @@ import Loader from '../../plugins/loader'
 import SoundManager from '../../plugins/soundManager'
 import bus from '../../bus'
 import minx from './form/minx'
+
+// 语音弹框
+import SentenceBox from '../common/yuyin/sentenceBox'
+import EvaluatingBox from '../common/yuyin/evaluatingBox'
+import NoVipGuideBox from '../common/yuyin/noVipGuideBox'
+import PromptBox from '../common/yuyin/promptBox'
 
 // 结束标志位
 let END = -1
@@ -81,7 +91,11 @@ export default {
     Combo,
     SummaryComp,
     RecordList,
-    WordPanel
+    WordPanel,
+    SentenceBox,
+    EvaluatingBox,
+    NoVipGuideBox,
+    PromptBox
   },
   created () {
     this.$on('nextSlide', () => {

@@ -6,7 +6,6 @@
       <span></span>
       <span></span>
       <span></span>
-      <span></span>
     </div>
     <div class="record">
       <div class="record-decibel" v-show="recordState === 0">
@@ -18,7 +17,7 @@
       </div>
     </div>
     <div class="user" :style="{'transform': 'translateX(' + translateX + 'px)'}">
-      <img class="photo" :src="photo" alt="">
+      <img class="photo" :src="photo" alt="" @click="goWordListBox()">
       <div :class="['mask', scoreClass]" v-show="isVip" @click="goWordListBox()">
         <span>{{ score }}</span>
         <p class="score-desc" v-text="scoreDesc" v-show="translateX > 0"></p>
@@ -28,7 +27,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions, mapState } from 'vuex'
 import _ from 'lodash'
 import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
@@ -39,9 +38,9 @@ export default {
   props: ['code', 'sentence'],
   data () {
     return {
-      isVip: false,
-      xfSpeechType: '',
-      xfLang: null,
+      // isVip: false,
+      // xfSpeechType: '',
+      // xfLang: null,
       isShowScoring: false,
       recordState: -1, // -1: 开始录音, 0: 正在录音, 1: 录音结束
       translateX: 0,
@@ -56,14 +55,15 @@ export default {
       animat: false, // 播放自己录音的动画
       recordActivity: false, // 录音是否激活
       time: 0, // 累计时间
-      timerInterval: null // 时间间隔器
+      timerInterval: null, // 时间间隔器
+      iseWords: [] // 测评的单词
     }
   },
   created () {
     this.$on('init', () => {
-      this.isVip = this.$store.state.isVip
-      this.xfSpeechType = this.$store.state.xfSpeechType
-      this.xfLang = this.$store.state.xfLang
+      // this.isVip = this.$store.state.isVip
+      // this.xfSpeechType = this.$store.state.xfSpeechType
+      // this.xfLang = this.$store.state.xfLang
     })
   },
   watch: {
@@ -72,6 +72,13 @@ export default {
         this.recordStop()
       }
     }
+  },
+  computed: {
+    ...mapState({
+      xfSpeechType: state => state.xfSpeechType,
+      xfLang: state => state.xfLang,
+      isVip: state => state.isVip
+    })
   },
   mounted () {
     console.log('录音组件父组件的数值', this.sentence, this.code)
@@ -93,7 +100,7 @@ export default {
       updateCanRecord: 'updateCanRecord'
     }),
     reset () {
-      this.isVip = false
+      // this.isVip = false
       this.xfSpeechType = ''
       this.xfLang = null
       this.isShowScoring = false
@@ -227,6 +234,7 @@ export default {
                     let words = XFSentence.getWords(res.data.read_sentence.rec_paper.read_chapter.sentence)
                     formObj['words_score'] = words
                     console.log('fromObj', formObj)
+                    this.iseWords = formObj.words_score
                     let formIndex = xfISEResult.findIndex(item => {
                       return item.form_code === _this.code
                     })
@@ -278,7 +286,19 @@ export default {
       }
       this.isShowScoring = false
     },
-    goWordListBox () {}
+    goWordListBox () {
+      // 弹录音列表
+      console.log(this.iseWords)
+      if (!this.isVip) {
+        bus.$emit('showNoVipModal')
+        return false
+      }
+      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      if (xfISEResult.length === 0) {
+        return false
+      }
+      bus.$emit('showWordListBox', this.iseWords)
+    }
   }
 }
 </script>
@@ -303,15 +323,18 @@ export default {
     cursor: pointer;
     span {
       width: 3px;
-      height: 6px;
+      height: 8px;
       margin: 0 1px;
       background: #0581D1;
       border-radius: 4px;
+      &:nth-child(2) {
+        height: 14px;
+      }
       &:nth-child(3) {
-        height: 11px;
+        height: 20px;
       }
       &:nth-child(4) {
-        height: 11px;
+        height: 14px;
       }
     }
   }
@@ -342,6 +365,7 @@ export default {
       object-fit: cover;
     }
     .mask {
+      cursor: pointer;
       position: absolute;
       width: 100%;
       height: 100%;
@@ -403,51 +427,49 @@ export default {
 }
 
 .playing {
-  span:nth-child(3),span:nth-child(4) {
-    animation: loading1 0.7s ease infinite;
-    -webkit-animation: loading1 0.7s ease infinite;
-    -ms-animation: loading1 0.7s ease infinite;
-    -moz-animation: loading1 0.7s ease infinite;
-    -o-animation: loading1 0.7s ease infinite;
+  span:nth-child(3) {
+    animation: load3 0.7s ease infinite;
+    -webkit-animation: load3 0.7s ease infinite;
+    -ms-animation: load3 0.7s ease infinite;
+    -moz-animation: load3 0.7s ease infinite;
+    -o-animation: load3 0.7s ease infinite;
   }
-  @keyframes loading1 {
+  @keyframes load3 {
     0%, 100%{
-      height: 11px;
+      height: 26px;
     }
     50%{
       height: 20px;
     }
   }
-  span:nth-child(1),
-  span:nth-child(6){
-    animation: loading2 0.7s ease infinite;
-    -webkit-animation: loading2 0.7s ease infinite;
-    -ms-animation: loading2 0.7s ease infinite;
-    -moz-animation: loading2 0.7s ease infinite;
-    -o-animation: loading2 0.7s ease infinite;
+  span:nth-child(2), span:nth-child(4) {
+    animation: load2 0.7s ease infinite;
+    -webkit-animation: load2 0.7s ease infinite;
+    -ms-animation: load2 0.7s ease infinite;
+    -moz-animation: load2 0.7s ease infinite;
+    -o-animation: load2 0.7s ease infinite;
   }
-  @keyframes loading2 {
+  @keyframes load2 {
     0%, 100%{
-      height: 7px;
+      height: 20px;
     }
     50%{
-      height: 11px;
+      height: 14px;
     }
   }
-  span:nth-child(2),
-  span:nth-child(5) {
-    animation: loading3 0.7s ease infinite;
-    -webkit-animation: loading3 0.7s ease infinite;
-    -ms-animation: loading3 0.7s ease infinite;
-    -moz-animation: loading3 0.7s ease infinite;
-    -o-animation: loading3 0.7s ease infinite;
+  span:nth-child(1), span:nth-child(5) {
+    animation: load1 0.7s ease infinite;
+    -webkit-animation: load1 0.7s ease infinite;
+    -ms-animation: load1 0.7s ease infinite;
+    -moz-animation: load1 0.7s ease infinite;
+    -o-animation: load1 0.7s ease infinite;
   }
-  @keyframes loading3 {
+  @keyframes load1 {
     0%, 100%{
-      height: 7px;
+      height: 8px;
     }
     50%{
-      height: 16px;
+      height: 14px;
     }
   }
 }

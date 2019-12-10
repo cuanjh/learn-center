@@ -89,7 +89,7 @@ export default {
   methods: {
     initSwiper () {
       let that = this
-      that.mySwiper = new Swiper('.swiper-container', {
+      that.mySwiper = new Swiper('#pro-swiper', {
         init: false,
         slidesPerView: 'auto',
         spaceBetween: 168,

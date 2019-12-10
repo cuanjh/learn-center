@@ -34,8 +34,8 @@
           </ul>
         </div>
       </div>
-      <div class="evaluate-report">
-        <p><i></i><span>查看语音评分报告</span></p>
+      <div class="evaluate-report" @click="lookScoreReport()">
+        <p ><i></i><span>查看语音评分报告</span></p>
         <i class="go-vip"></i>
       </div>
       <div v-if="hasRecord" class="core-summary-content">
@@ -73,6 +73,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import bus from '../../bus'
 
 export default {
   data () {
@@ -200,6 +201,11 @@ export default {
     },
     close () {
       this.isShow = false
+    },
+    lookScoreReport () {
+      console.log('弹语音评分报告')
+      this.$emit('coreSummary-hide')
+      bus.$emit('showScoreDetail')
     }
   }
 }

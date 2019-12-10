@@ -57,6 +57,9 @@ export default {
       this.iseResultSet()
     })
   },
+  mounted () {
+    console.log('form-code', this.form)
+  },
   methods: {
     reset () {
       this.isShow = false
