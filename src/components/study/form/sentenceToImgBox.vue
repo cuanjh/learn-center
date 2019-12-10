@@ -26,7 +26,7 @@ import $ from 'jquery'
 import TrumpetComp from '../common/trumpet'
 import common from '../../../plugins/common'
 import SoundManager from '../../../plugins/soundManager'
-import minx from './minx'
+import bus from '../../../bus'
 
 export default {
   props: ['form'],
@@ -51,17 +51,20 @@ export default {
       this.resetData()
     })
   },
-  mixins: [minx.shake],
   methods: {
     playAudio () {
       this.$refs['trumpet'].play(true)
     },
     check (item) {
+      let score = 0
+      this.$parent.$emit('setSwiperMousewheel', false)
       if (this.curForm.form_id === item.form_id) {
+        score = 1
         $('#form' + item.form_id).addClass('correct')
         SoundManager.playSnd('correct', () => {
           this.curIndex++
           if (this.curIndex === this.form.data.length) {
+            this.$parent.$emit('setSwiperMousewheel', true)
             this.$parent.$emit('nextForm')
             return
           }
@@ -77,6 +80,15 @@ export default {
           $('#form' + item.form_id).removeClass('wrong')
         })
       }
+      let imgWrap = $('#form' + item.form_id)
+      let offset = imgWrap.offset()
+      console.log(imgWrap)
+      let obj = {
+        left: offset.left + (imgWrap.width() - 200) / 2,
+        top: offset.top + (imgWrap.height() - 85) / 2
+      }
+      bus.$emit('calCoinStudy', {formCode: item.code, score: score, offset: obj})
+      bus.$emit('setStudyFormScore', {formCode: item.code, score: score})
     },
     resetData () {
       this.isShow = false

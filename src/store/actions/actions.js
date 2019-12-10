@@ -2,6 +2,7 @@ import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken, clearCookie, httpAsse
 import config from '../../api/config'
 import cookie from '../../tool/cookie'
 import _ from 'lodash'
+import md5 from 'md5'
 
 export default {
   // 新登录接口手机快速登录
@@ -210,7 +211,20 @@ export default {
       forms[params.chapterCode + '-' + key] = value
     })
     console.log(forms)
-    // return httpLogin(config.postProgress, { forms: JSON.stringify(forms) })
+    return httpLogin(config.postProgress, { forms: JSON.stringify(forms) })
+  },
+  // 保存获得的金币
+  postCoins ({ commit, state }, params) {
+    var userid = cookie.getCookie('user_id')
+    var verify = cookie.getCookie('verify')
+    var coinsToken = md5(userid + verify + params.coins)
+    // console.log('postCoin, coins_token is %s', coinsToken)
+
+    var apiPath = config.coinsIncrease
+    if (params.coins < 0) {
+      apiPath = config.coinsReduce
+    }
+    return httpLogin(apiPath, { coins: params.coins, coins_token: coinsToken, course_code: params.CourseCode })
   },
   // 获取学习进度
   getProgress ({commit}, params) {
@@ -269,6 +283,14 @@ export default {
   // 设置内容模块解锁
   setChapterUnlock ({commit}, params) {
     return httpLogin(config.studyProgressUnlockApi, params)
+  },
+  // 获取解锁的课程
+  getUnlockChapter ({ commit }, courseCode) {
+    return httpLogin(config.unlockChapter, { course_code: courseCode })
+  },
+  // 上报统计结果
+  postActivityRecord ({ commit, state }, params) {
+    return httpLogin(config.activityRecord, params)
   },
   // 讯飞语音评测
   xfISE ({commit}, params) {

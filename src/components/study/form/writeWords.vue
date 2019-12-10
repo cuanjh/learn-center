@@ -5,7 +5,7 @@
       <img :src="form.image" alt="">
     </div>
     <div class="content">
-      <span class="text" v-show="!innerlocked">{{ form.sentence }}</span>
+      <span class="text" v-show="!innerlocked"></span>
       <input type="text"
         @input="check()"
         @keydown.90="preventUndo($event)"
@@ -25,6 +25,7 @@ import NextComp from '../common/next'
 import soundCtrl from '../../../plugins/soundCtrl'
 import SoundManager from '../../../plugins/soundManager'
 import minx from './minx'
+import bus from '../../../bus'
 
 export default {
   props: ['form'],
@@ -69,14 +70,29 @@ export default {
       soundCtrl.play()
     },
     check () {
+      this.$parent.$emit('setSwiperMousewheel', false)
+      let score = 0
       if (this.input === this.form.sentence) {
+        score = 1
         SoundManager.playSnd('correct')
         soundCtrl.play(this.exit)
       } else {
         if (this.input.length === this.form.sentence.length) {
           this.shake($(this.$el))
           SoundManager.playSnd('wrong')
+          this.$parent.$emit('setSwiperMousewheel', true)
         }
+      }
+      if (this.input.length === this.form.sentence.length) {
+        let imgWrap = $('.img-wrap', this.$el)
+        let offset = imgWrap.offset()
+        console.log(imgWrap)
+        let obj = {
+          left: offset.left + (imgWrap.width() - 200) / 2,
+          top: offset.top + (imgWrap.height() - 85) / 2
+        }
+        bus.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
+        bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
       }
     },
     preventUndo (e) {
@@ -89,8 +105,11 @@ export default {
       this.check()
     },
     exit () {
-      this.innerlocked = false
-      this.$parent.$emit('nextForm')
+      this.$parent.$emit('setSwiperMousewheel', true)
+      setTimeout(() => {
+        this.innerlocked = false
+        this.$parent.$emit('nextForm')
+      }, 1000)
     }
   }
 }

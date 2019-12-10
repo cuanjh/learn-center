@@ -6,14 +6,14 @@
       </a>
     </div>
     <div class="content">
-      <transition-group class="sentences" name="flip-list" tag="div">
+      <div class="sentences">
         <a
           :id="'sentence' + index"
-          v-for="(item, index) in sentences" :key="form.code + index"
-          @click="check(item, index)">
-          {{ item.sentence }}
+          v-for="(sentence, index) in sentences" :key="form.code + index"
+          @click="check(sentence, index)">
+          {{ sentence }}
         </a>
-      </transition-group>
+      </div>
     </div>
   </div>
 </template>
@@ -24,11 +24,12 @@ import $ from 'jquery'
 
 import soundCtrl from '../../../plugins/soundCtrl'
 import SoundManager from '../../../plugins/soundManager'
+import bus from '../../../bus'
 export default {
   props: ['form'],
   data () {
     return {
-      sentences: this.form.sentences
+      sentences: this.getSentences()
     }
   },
   created () {
@@ -36,7 +37,7 @@ export default {
       console.log('imgToSentence init')
       soundCtrl.setSnd(this.form.sound)
       soundCtrl.play()
-      this.sentences = _.shuffle(this.sentences)
+      this.sentences = this.getSentences()
     })
 
     this.$on('break', () => {
@@ -47,25 +48,52 @@ export default {
     play () {
       soundCtrl.play()
     },
-    check (item, index) {
-      if (this.form.sentence === item.sentence) {
+    check (sentence, index) {
+      let score = 0
+      this.$parent.$emit('setSwiperMousewheel', false)
+      if (this.form.sentence === sentence) {
+        score = 1
         $('#sentence' + index, this.$el).addClass('correct')
         SoundManager.playSnd('correct', () => {
           $('#sentence' + index, this.$el).removeClass('correct')
+          this.$parent.$emit('setSwiperMousewheel', true)
           this.$parent.$emit('nextForm')
         })
       } else {
+        score = 0
         $('#sentence' + index, this.$el).addClass('wrong')
         // 选择错误震动
         $('#sentence' + index, this.$el).addClass('shake')
         setTimeout(() => {
           $('#sentence' + index, this.$el).removeClass('shake')
-          this.sentences = _.shuffle(this.sentences)
+          this.sentences = this.getSentences()
         }, 800)
         SoundManager.playSnd('wrong', () => {
+          this.$parent.$emit('setSwiperMousewheel', true)
           $('#sentence' + index, this.$el).removeClass('wrong')
         })
       }
+      let imgWrap = $('.img-wrap', this.$el)
+      let offset = imgWrap.offset()
+      console.log(imgWrap)
+      let obj = {
+        left: offset.left + (imgWrap.width() - 200) / 2,
+        top: offset.top + (imgWrap.height() - 85) / 2
+      }
+
+      bus.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+    },
+    // 从句子数组中随机抽出3个句子进行选择（包含正确的句子）
+    getSentences () {
+      let answer = this.form.sentence
+      let arr = [answer]
+      let options = this.form.sentences.filter((sentence) => {
+        return sentence !== answer
+      })
+      arr = arr.concat(_.sampleSize(options, 2))
+      arr = _.shuffle(arr)
+      return arr
     },
     resetData () {
     }
@@ -74,7 +102,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.flip-list-move {
-  transition: transform 1s;
-}
 </style>

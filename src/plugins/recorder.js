@@ -215,44 +215,47 @@ class Recorder {
         xhr.send(fd);
     }
     // 录音上传到七牛
-    uploadQiniu(token, code, sentence, callback) {
+    uploadQiniu(token, code, sentence) {
       var that = this;
-      var config = {
-        useCdnDomain: true,
-        region: qiniu.region.z0
-      };
-      var courseCode = code.split('-')[0] + '-' +code.split('-')[1]
-      var putExtra = {
-        fname: "",
-        params: {
-          'x:course_code': courseCode,
-          'x:form_code': code,
-          'x:user_id': Cookie.getCookie('user_id'),
-          'x:sentence': sentence
-        },
-        mimeType: [] || null
-      };
-      var key = this.GetKey(code);
-      var next = function(res) {
-        console.log(res)
-      }
-      var error = function(err) {
-        console.log(err)
-      }
-      var complete = function(res) {
-        console.log(res);
-      }
-      var observer = {
-        next: next,
-        error: error,
-        complete: complete
-      };
+      return new Promise((resolve, reject) => {
+        var config = {
+            useCdnDomain: true,
+            region: qiniu.region.z0
+        };
+        var courseCode = code.split('-')[0] + '-' +code.split('-')[1]
+        var putExtra = {
+            fname: "",
+            params: {
+                'x:course_code': courseCode,
+                'x:form_code': code,
+                'x:user_id': Cookie.getCookie('user_id'),
+                'x:sentence': sentence
+            },
+            mimeType: [] || null
+        };
+        var key = this.GetKey(code);
+        var next = function(res) {
+            console.log(res)
+        }
+        var error = function(err) {
+            console.log(err)
+            reject(err)
+        }
+        var complete = function(res) {
+            console.log(res);
+            resolve(key)
+        }
+        var observer = {
+            next: next,
+            error: error,
+            complete: complete
+        };
         var observable = qiniu.upload(this.getBlob(), key, token, putExtra, config);
         var subscription = observable.subscribe(observer);
         console.log('observable--------',observable)
         console.log('subscription------',subscription)
-      // subscription.unsubscribe();
-
+        // subscription.unsubscribe();
+      })
     }
     GetKey (code) {
         var date = new Date()
@@ -379,7 +382,6 @@ let init = (callback, config) => {
 
 export default {
     recorder: null,
-    recorderUrl: '',
     refuseRecord: false,
     audio: new Audio(),
     init: function (config, cb) {
@@ -424,8 +426,7 @@ export default {
         this.recorder.upload(url, cb);
     },
     uploadQiniu: function (token, code, sentence, cb) {
-      this.recorder.uploadQiniu(token, code, sentence)
-      this.recorderUrl = this.recorder.GetKey(code)
+      return this.recorder.uploadQiniu(token, code, sentence)
     },
     playRecording: function (cb) {
         if (this.recorder) this.recorder.play(this.audio, cb);

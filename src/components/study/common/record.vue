@@ -1,48 +1,56 @@
 <template>
   <div class="record-container">
-    <div class="start-record" v-if="!isRecord"><i class="start-img" @click.stop.prevent="startRecord()"></i></div>
-    <div class="record-content" v-if="isRecord">
-      <div class="recording-btns" @click.stop.prevent="recordStop()" v-if="recording">
-        <div class="record-decibel">
-          <span v-for="(height, index) in thumbHeightLeft" :key="'left' + index" :style="{'height': height + 'px'}"></span>
-        </div>
-        <div class="recording-img"></div>
-        <div class="record-decibel">
-          <span v-for="(height, index) in thumbHeightLeft" :key="'right' + index" :style="{'height': height + 'px'}"></span>
-        </div>
+    <div :class="['play', {'playing': animat}]" :style="{'transform': 'translateX(-' + translateX + 'px)'}" @click="playMySound">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="record">
+      <div class="record-decibel" v-show="recordState === 0">
+        <span v-for="(height, index) in thumbHeightLeft" :key="'left' + index" :style="{'height': height + 'px'}"></span>
       </div>
-      <div class="record-end-btns" :class="{'ending': eningAnimated}" v-if="!recording">
-        <div id="animatButton" class="record-playVoice-btn" @click.stop.prevent="playMySound()">
-          <i :class="{'loading': animat}" >
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </i>
-        </div>
-        <div class="record-clear-btn" @click.stop.prevent="againRecord()">
-          <i ></i>
-        </div>
+      <i @click.stop.prevent="recordOpt()"></i>
+      <div class="record-decibel" v-show="recordState === 0">
+        <span v-for="(height, index) in thumbHeightLeft" :key="'right' + index" :style="{'height': height + 'px'}"></span>
+      </div>
+    </div>
+    <div class="user" :style="{'transform': 'translateX(' + translateX + 'px)'}">
+      <img class="photo" :src="photo" alt="">
+      <div :class="['mask', scoreClass]" v-show="isVip" @click="goWordListBox()">
+        <span>{{ score }}</span>
+        <p class="score-desc" v-text="scoreDesc" v-show="translateX > 0"></p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import _ from 'lodash'
 import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 import SoundManager from '../../../plugins/soundManager'
+import XFSentence from '../../../plugins/xf_sentence'
 
 export default {
   props: ['code', 'sentence'],
   data () {
     return {
+      isVip: false,
+      xfSpeechType: '',
+      xfLang: null,
+      isShowScoring: false,
+      recordState: -1, // -1: 开始录音, 0: 正在录音, 1: 录音结束
+      translateX: 0,
+      photo: '',
+      score: '',
+      scoreClass: '',
+      scoreDesc: '评分中...',
       thumbHeightLeft: _.fill(Array(5), 2), // 左侧录音声音幅度
       thumbHeightRight: _.fill(Array(5), 2), // 右侧录音声音幅度
-      eningAnimated: false,
       isRecord: false, // 这个是表示是否开始录音
       recording: false, // 是否是正在录音
       animat: false, // 播放自己录音的动画
@@ -53,7 +61,9 @@ export default {
   },
   created () {
     this.$on('init', () => {
-      this.init()
+      this.isVip = this.$store.state.isVip
+      this.xfSpeechType = this.$store.state.xfSpeechType
+      this.xfLang = this.$store.state.xfLang
     })
   },
   watch: {
@@ -63,32 +73,68 @@ export default {
       }
     }
   },
-  cumputed: {
-    ...mapState({
-      qiniuToken: state => state.learn.qiniuToken
-    })
-  },
   mounted () {
     console.log('录音组件父组件的数值', this.sentence, this.code)
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.photo = userInfo.photo
     // 初始化
-    Recorder.init()
+    Recorder.init({inputSampleRate: 50400, sampleRate: 16000}, (flag) => {
+      this.updateCanRecord(flag)
+    })
   },
   methods: {
     ...mapActions({
-      getQiniuToken: 'learn/getQiniuToken' // 获取七牛token
+      getQiniuToken: 'learn/getQiniuToken', // 获取七牛token
+      xfISE: 'xfISE'
     }),
     ...mapMutations({
       updateQiniuToken: 'learn/updateQiniuToken', // 更新七牛token
-      'updateLocked': 'learn/updateLocked'
+      updateLocked: 'learn/updateLocked',
+      updateCanRecord: 'updateCanRecord'
     }),
+    reset () {
+      this.isVip = false
+      this.xfSpeechType = ''
+      this.xfLang = null
+      this.isShowScoring = false
+      this.recordState = -1 // -1: 开始录音, 0: 正在录音, 1: 录音结束
+      this.translateX = 0
+      this.photo = ''
+      this.score = ''
+      this.scoreClass = ''
+      this.scoreDesc = '评分中...'
+      this.thumbHeightLeft = _.fill(Array(5), 2) // 左侧录音声音幅度
+      this.thumbHeightRight = _.fill(Array(5), 2) // 右侧录音声音幅度
+      this.isRecord = false // 这个是表示是否开始录音
+      this.recording = false // 是否是正在录音
+      this.animat = false // 播放自己录音的动画
+      this.recordActivity = false // 录音是否激活
+      this.time = 0 // 累计时间
+      clearInterval(this.timerInterval)
+    },
+    recordOpt () {
+      this.recordState++
+      if (this.recordState === 1) {
+        this.isShowScoring = true
+        this.recordStop()
+        this.translateX = 120
+      } else {
+        this.translateX = 0
+        setTimeout(() => {
+          this.recordState = 0
+          this.startRecord()
+        }, 600)
+      }
+      if (this.recordState > 1) {
+        this.scoreClass = ''
+        this.scoreDesc = '评分中...'
+        this.score = ''
+        this.recordState = -1
+      }
+    },
     // 点击开始录音
     startRecord () {
-      if (this.recording) {
-        this.recordStop()
-        return
-      }
       this.isRecord = true
-      this.recording = true
       _.delay(() => {
         SoundManager.playSnd('recordPro')
       }, 500)
@@ -121,10 +167,7 @@ export default {
       console.log('record stop!!!!!')
       clearInterval(this.timerInterval)
       this.time = 0
-      this.recording = false
-      this.eningAnimated = false
       this.recordActivity = false
-      this.playMySound()
       this.uploadQiniu()
     },
     // 点击播放自己的录音
@@ -140,44 +183,215 @@ export default {
         Recorder.stopRecordSoud()
       }
     },
-    // 点击重新开始录音
-    againRecord (e) {
-      this.eningAnimated = true
-      setTimeout(() => {
-        this.startRecord()
-      }, 500)
-    },
     // 关闭录音
     closeRecord () {
       this.isRecord = false
-      this.recording = false
       this.animat = false
       Recorder.stopRecording()
       bus.$off('record_setVolume')
     },
     uploadQiniu () {
+      let _this = this
       let isHaveRecord = Recorder.isHaveRecord()
       if (isHaveRecord) {
         this.getQiniuToken().then(res => {
           if (res.success) {
             let qiniuToken = res.token
             console.log(qiniuToken)
-            Recorder.uploadQiniu(qiniuToken, this.code, this.sentence)
+            Recorder.uploadQiniu(qiniuToken, this.code, this.sentence).then(recorderUrl => {
+              let url = 'http://records.talkmate.com/' + recorderUrl
+              console.log(this.isVip, this.xfSpeechType)
+              // 讯飞语音测评服务
+              if (this.isVip && this.xfSpeechType === 'ise') {
+                _this.xfISE({language: this.xfLang[_this.code.split('-')[0]], text: _this.sentence, url: url}).then(res => {
+                  console.log(res)
+                  if (res.code === '0') {
+                    if (JSON.parse(res.data.read_sentence.rec_paper.read_chapter.is_rejected)) {
+                      this.setScore('')
+                      return
+                    }
+                    let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+                    if (!xfISEResult) {
+                      xfISEResult = []
+                    }
+                    let sentenceScore = res.data.read_sentence.rec_paper.read_chapter.total_score
+                    if (!Array.isArray(res.data.read_sentence.rec_paper.read_chapter.sentence.word)) {
+                      sentenceScore = res.data.read_sentence.rec_paper.read_chapter.sentence.word.total_score
+                    }
+                    let formObj = {
+                      form_code: _this.code,
+                      sentence: _this.sentence,
+                      score: Math.round(parseFloat(sentenceScore)),
+                      record_url: url
+                    }
+                    let words = XFSentence.getWords(res.data.read_sentence.rec_paper.read_chapter.sentence)
+                    formObj['words_score'] = words
+                    console.log('fromObj', formObj)
+                    let formIndex = xfISEResult.findIndex(item => {
+                      return item.form_code === _this.code
+                    })
+                    if (formIndex === -1) {
+                      xfISEResult.push(formObj)
+                    } else {
+                      xfISEResult.splice(formIndex, 1, formObj)
+                    }
+                    localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
+                    this.$parent.$emit('iseResultSet')
+                    this.setScore(formObj.score)
+                    // this.getAvarageScore()
+                    // this.$refs['scoreResult'].setScoreResult(formObj.score)
+                    // this.iseResultSet()
+                    // this.$refs['ise'][this.curPage - 1].evaluateFinished()
+                    // if (this.list.length === this.curPage) {
+                    //   this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
+                    // }
+                  }
+                })
+              }
+            })
           }
         })
       }
       console.log(isHaveRecord)
-    }
+    },
+    setScore (score) {
+      console.log(score)
+      if (score !== '') {
+        this.score = Math.round(parseFloat(score))
+      }
+
+      this.scoreClass = ''
+      this.scoreDesc = ''
+      switch (true) {
+        case score >= 80:
+          this.scoreClass = 'perfect'
+          this.scoreDesc = 'perfect!'
+          break
+        case score >= 60:
+          this.scoreClass = 'good'
+          this.scoreDesc = 'nice!'
+          break
+        default:
+          this.scoreClass = 'try'
+          this.scoreDesc = 'try again!'
+          break
+      }
+      this.isShowScoring = false
+    },
+    goWordListBox () {}
   }
 }
 </script>
 
 <style lang="less" scoped>
+.record-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  .play {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    z-index: 1;
+    transition: transform .5s ease-in;
+    cursor: pointer;
+    span {
+      width: 3px;
+      height: 6px;
+      margin: 0 1px;
+      background: #0581D1;
+      border-radius: 4px;
+      &:nth-child(3) {
+        height: 11px;
+      }
+      &:nth-child(4) {
+        height: 11px;
+      }
+    }
+  }
+  .record {
+    display: flex;
+    z-index: 2;
+    i {
+      cursor: pointer;
+      display: inline-block;
+      width: 70px;
+      height: 70px;
+      background: url('../../../../static/images/study/icon-record.png') no-repeat center;
+      background-size: cover;
+    }
+  }
+  .user {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    z-index: 1;
+    transition: transform .5s ease-in;
+    .photo {
+      width: 100%;
+      height: 100% !important;
+      border-radius: 50%!important;
+      object-fit: cover;
+    }
+    .mask {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background:rgba(151,151,151, .5);
+      border-radius: 50%;
+      top: 0;
+      text-align: center;
+      span {
+        line-height: 48px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        text-shadow:0px 1px 3px rgba(0,0,0,0.6);
+      }
+      .score-desc {
+        position: absolute;
+        top: -25px;
+        left: -15px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #fff;
+        width: 80px;
+      }
+    }
+    .perfect {
+      border: 2px solid #20C03B;
+      .score-desc {
+        color: #5CF676;
+      }
+    }
+    .good {
+      border: 2px solid #515151;
+      .score-desc {
+        color: #070707;
+      }
+    }
+    .try {
+      border: 2px solid #FF685F;
+      .score-desc {
+        color: #FF685F;
+      }
+    }
+  }
+}
 .record-decibel {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin: 0 10px;
   span {
     width: 2px;
     height: 2px;
@@ -185,6 +399,56 @@ export default {
     background: #fff;
     margin: 0 5px;
     transition: height 0.3s ease;
+  }
+}
+
+.playing {
+  span:nth-child(3),span:nth-child(4) {
+    animation: loading1 0.7s ease infinite;
+    -webkit-animation: loading1 0.7s ease infinite;
+    -ms-animation: loading1 0.7s ease infinite;
+    -moz-animation: loading1 0.7s ease infinite;
+    -o-animation: loading1 0.7s ease infinite;
+  }
+  @keyframes loading1 {
+    0%, 100%{
+      height: 11px;
+    }
+    50%{
+      height: 20px;
+    }
+  }
+  span:nth-child(1),
+  span:nth-child(6){
+    animation: loading2 0.7s ease infinite;
+    -webkit-animation: loading2 0.7s ease infinite;
+    -ms-animation: loading2 0.7s ease infinite;
+    -moz-animation: loading2 0.7s ease infinite;
+    -o-animation: loading2 0.7s ease infinite;
+  }
+  @keyframes loading2 {
+    0%, 100%{
+      height: 7px;
+    }
+    50%{
+      height: 11px;
+    }
+  }
+  span:nth-child(2),
+  span:nth-child(5) {
+    animation: loading3 0.7s ease infinite;
+    -webkit-animation: loading3 0.7s ease infinite;
+    -ms-animation: loading3 0.7s ease infinite;
+    -moz-animation: loading3 0.7s ease infinite;
+    -o-animation: loading3 0.7s ease infinite;
+  }
+  @keyframes loading3 {
+    0%, 100%{
+      height: 7px;
+    }
+    50%{
+      height: 16px;
+    }
   }
 }
 </style>

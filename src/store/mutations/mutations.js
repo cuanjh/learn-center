@@ -95,6 +95,9 @@ export default {
   updateIsAnonymous (state, flag) {
     state.isAnonymous = flag
   },
+  updateRecordForms (state, forms) {
+    state.recordForms = forms
+  },
   updateKidRecordList (state, records) {
     state.kidRecordList = records
   },

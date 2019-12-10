@@ -49,10 +49,13 @@
 
 <script>
 import $ from 'jquery'
+import _ from 'lodash'
 import Swiper from 'swiper'
 import { mapActions, mapState, mapMutations } from 'vuex'
 import IseArea from './iseArea.vue'
 import Recorder from '../../../../plugins/recorder'
+import xfSentence from '../../../../plugins/xf_sentence'
+import utils from '../../../../plugins/utils'
 import cookie from '../../../../tool/cookie'
 // import bus from '../../../../bus'
 import GradeBox from './gradeBox.vue'
@@ -154,7 +157,7 @@ export default {
       tips: state => state.learn.tips,
       xfSpeechType: state => state.xfSpeechType,
       xfSpeechState: state => state.xfSpeechState,
-      xfSyllPhone: state => state.xfSyllPhone,
+      xfIATScoreRange: state => state.xfIATScoreRange,
       isVip: state => state.isVip
     }),
     formCode () {
@@ -481,13 +484,17 @@ export default {
               if (!xfISEResult) {
                 xfISEResult = []
               }
+              let sentenceScore = res.data.read_sentence.rec_paper.read_chapter.total_score
+              if (!Array.isArray(res.data.read_sentence.rec_paper.read_chapter.sentence.word)) {
+                sentenceScore = res.data.read_sentence.rec_paper.read_chapter.sentence.word.total_score
+              }
               let formObj = {
                 form_code: this.formCode,
                 sentence: item.content || item.word,
-                score: Math.round(parseFloat(res.data.read_sentence.rec_paper.read_chapter.total_score)),
+                score: Math.round(parseFloat(sentenceScore)),
                 record_url: url
               }
-              let words = this.getWords(res.data.read_sentence.rec_paper.read_chapter.sentence)
+              let words = xfSentence.getWords(res.data.read_sentence.rec_paper.read_chapter.sentence)
               formObj['words_score'] = words
               console.log('fromObj', formObj)
               let formIndex = xfISEResult.findIndex(item => {
@@ -717,127 +724,6 @@ export default {
         }
       })
     },
-    // 获取句子中所有的单词
-    getWords (sentence) {
-      let words = []
-      if (Array.isArray(sentence)) {
-        sentence.forEach(sentence => {
-          sentence.word.forEach(word => {
-            if (word.content !== 'sil' && word.content !== 'fil' && (word.dp_message === '0' || word.dp_message === '16')) {
-              let w = {}
-              w['word'] = word.content
-              w['score'] = word.total_score
-              // w['phonemes'] = this.getPhones(word.syll)
-              // w['phonetic_symbol'] = this.getSylls(this.getPhones(word.syll))
-              w['syllInfos'] = this.getSyllInfos(word.syll)
-              words.push(w)
-            }
-          })
-        })
-      } else {
-        if (Array.isArray(sentence.word)) {
-          sentence.word.forEach(word => {
-            if (word.content !== 'sil' && word.content !== 'fil' && (word.dp_message === '0' || word.dp_message === '16')) {
-              let w = {}
-              w['word'] = word.content
-              w['score'] = Math.round(parseFloat(word.total_score))
-              // w['phonemes'] = this.getPhones(word.syll)
-              // w['phonetic_symbol'] = this.getSylls(this.getPhones(word.syll))
-              w['syllInfos'] = this.getSyllInfos(word.syll)
-              words.push(w)
-            }
-          })
-        } else {
-          let w = {}
-          w['word'] = sentence.word.content
-          w['score'] = Math.round(parseFloat(sentence.word.total_score))
-          // w['phonemes'] = this.getPhones(sentence.word.syll)
-          // w['phonetic_symbol'] = this.getSylls(this.getPhones(sentence.word.syll))
-          w['syllInfos'] = this.getSyllInfos(sentence.word.syll)
-          words.push(w)
-        }
-      }
-      return words
-    },
-    getSyllInfos (syll) {
-      let sylls = []
-      if (Array.isArray(syll)) {
-        syll.forEach(s => {
-          let syllObj = {}
-          syllObj['score'] = Math.round(s.syll_score)
-          syllObj['content'] = this.getSyllPhones(s.phone)
-          sylls.push(syllObj)
-        })
-      } else {
-        if (syll) {
-          let syllObj = {}
-          syllObj['score'] = Math.round(syll.syll_score)
-          syllObj['content'] = this.getSyllPhones(syll.phone)
-          sylls.push(syllObj)
-        }
-      }
-      return sylls
-    },
-    getSyllPhones (phone) {
-      let content = ''
-      if (Array.isArray(phone)) {
-        phone.forEach(p => {
-          content += this.xfSyllPhone[p.content]
-        })
-      } else {
-        content = this.xfSyllPhone[phone.content]
-      }
-      return content
-    },
-    // 获取所有的音素
-    getPhones (syll) {
-      let phones = []
-      if (Array.isArray(syll)) {
-        syll.forEach(item => {
-          if (Array.isArray(item.phone)) {
-            item.phone.forEach(p => {
-              let pObj = {}
-              pObj['phoneme'] = '[' + this.xfSyllPhone[p.content] + ']'
-              pObj['state'] = parseInt(p.dp_message)
-              phones.push(pObj)
-            })
-          } else {
-            let pObj = {}
-            pObj['phoneme'] = '[' + this.xfSyllPhone[item.content] + ']'
-            pObj['state'] = parseInt(item.dp_message)
-            phones.push(pObj)
-          }
-        })
-      } else {
-        if (syll) {
-          if (Array.isArray(syll.phone)) {
-            syll.phone.forEach(item => {
-              let pObj = {}
-              pObj['phoneme'] = '[' + this.xfSyllPhone[item.content] + ']'
-              pObj['state'] = parseInt(item.dp_message)
-              phones.push(pObj)
-            })
-          } else {
-            let pObj = {}
-            pObj['phoneme'] = '[' + this.xfSyllPhone[syll.phone.content] + ']'
-            pObj['state'] = parseInt(syll.phone.dp_message)
-            phones.push(pObj)
-          }
-        }
-      }
-      return phones
-    },
-    // 获取单词发音
-    getSylls (phones) {
-      if (phones) {
-        let syll = '['
-        phones.forEach(p => {
-          syll += p.phoneme.replace('[', '').replace(']', '')
-        })
-        syll += ']'
-        return syll
-      }
-    },
     getAvarageScore () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
       if (xfISEResult.length === 0) {
@@ -866,19 +752,24 @@ export default {
       console.log(total)
       console.log(right)
       console.log(wrong)
-      if (right === 0 && wrong === 0) {
-        return false
-      }
-      let score = 'iatNice'
-      if (right === total) {
-        score = 'iatPerfect'
-      }
-      if (wrong === total) {
-        score = 'iatKeepTrying'
-      }
-      this.$refs['scoreResult'].setScoreResult(score)
-      // this.$refs['ise'][this.curPage - 1].stopRecord()
-      // clearInterval(this.timerInterval)
+      console.log(Math.round((right * 1.0 / total).toFixed(2) * 100))
+      let scoreRate = Math.round((right * 1.0 / total).toFixed(2) * 100)
+      let score = 0
+      let scoreDesc = ''
+      _.forIn(this.xfIATScoreRange, (valArr, key) => {
+        let arr = key.split('-')
+        let start = parseInt(arr[0])
+        let end = parseInt(arr[1])
+        if (scoreRate >= start && scoreRate <= end) {
+          let sVal = parseInt(valArr[0].split('-')[0])
+          let eVal = parseInt(valArr[0].split('-')[1])
+          score = utils.getRndInteger(sVal, eVal)
+          scoreDesc = valArr[3]
+        }
+      })
+      console.log(score)
+      this.$refs['ise'][this.curPage - 1].setScore(score)
+      this.$refs['scoreResult'].setScoreResult(scoreDesc)
       this.stopRecord()
     },
     reset (preIndex) {

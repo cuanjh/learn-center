@@ -30,6 +30,7 @@ import TrumpetComp from '../common/trumpet'
 import soundCtrl from '../../../plugins/soundCtrl'
 import SoundManager from '../../../plugins/soundManager'
 import minx from './minx'
+import bus from '../../../bus'
 export default {
   props: ['form'],
   data () {
@@ -59,11 +60,17 @@ export default {
       soundCtrl.play()
     },
     fillWords (word, index) {
+      this.$parent.$emit('setSwiperMousewheel', false)
+      let score = 0
       let result = this.form.sentence_show.replace(/_+/g, word)
       if (this.form.answer === result) {
+        score = 1
         $('#word' + index, this.$el).addClass('correct')
         SoundManager.playSnd('correct', () => {
           $('#word' + index, this.$el).removeClass('correct')
+          this.$parent.$emit('setSwiperMousewheel', true)
+          this.isShow = false
+          this.$parent.$emit('nextForm')
         })
         this.sentence = result
         soundCtrl.play(this.exit)
@@ -71,13 +78,22 @@ export default {
         $('#word' + index, this.$el).addClass('wrong')
         this.shake($('#word' + index, this.$el))
         SoundManager.playSnd('wrong', () => {
+          this.$parent.$emit('setSwiperMousewheel', true)
           $('#word' + index, this.$el).removeClass('wrong')
         })
       }
+      let imgWrap = $('.img-wrap', this.$el)
+      let offset = imgWrap.offset()
+      console.log(imgWrap)
+      let obj = {
+        left: offset.left + (imgWrap.width() - 200) / 2,
+        top: offset.top + (imgWrap.height() - 85) / 2
+      }
+
+      bus.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
     },
     exit () {
-      this.isShow = false
-      this.$parent.$emit('nextForm')
     }
   }
 }

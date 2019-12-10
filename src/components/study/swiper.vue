@@ -1,6 +1,6 @@
 <template>
   <!-- Slider main container -->
-  <div class="swiper-container" v-show="isShow">
+  <div id="pro-swiper" class="swiper-container" v-show="isShow">
     <!-- Additional required wrapper -->
     <div class="swiper-wrapper">
       <!-- Slides -->
@@ -55,7 +55,9 @@ export default {
   created () {
     this.$on('init', () => {
       this.initSwiper()
-      this.mySwiper.init()
+      setTimeout(() => {
+        this.mySwiper.init()
+      }, 500)
     })
 
     this.$on('destroySwiper', () => {
@@ -70,6 +72,14 @@ export default {
         this.$emit('destroySwiper')
       } else {
         this.mySwiper.slideTo(this.mySwiper.activeIndex + 1)
+      }
+    })
+
+    this.$on('setSwiperMousewheel', (flag) => {
+      if (flag) {
+        this.mySwiper.mousewheel.enable()
+      } else {
+        this.mySwiper.mousewheel.disable()
       }
     })
   },
@@ -90,9 +100,7 @@ export default {
         grabCursor: true,
         observer: true,
         // setWrapperSize: true,
-        mousewheel: {
-          invert: true
-        },
+        mousewheel: true,
         on: {
           init: () => {
             this.isShow = true

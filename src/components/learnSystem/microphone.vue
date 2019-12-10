@@ -116,7 +116,6 @@ export default {
           this.getQiniuToken().then((res) => {
             this.updateQiniuToken(res)
             Recorder.uploadQiniu(this.qiniuToken, this.code, this.sentence)
-            console.log(Recorder.recorderUrl)
             this.isRecord = false
           })
         } else {

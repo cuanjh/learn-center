@@ -13,7 +13,6 @@
     </div>
     <div
       class="user"
-      v-show="xfSpeechType == 'ise'"
       @mouseenter="isShowUserTip = true"
       @mouseleave="isShowUserTip = false"
       :style="{transform: 'translateX(-'+ translateX +'px)'}" >
@@ -38,7 +37,6 @@
         <p>.</p>
       </div>
     </div>
-    <div :style="{width: '50px'}" v-show="xfSpeechType !== 'ise'"></div>
   </div>
 </template>
 
@@ -195,7 +193,11 @@ export default {
       if (this.showCircle !== '1' && !this.isVip) {
         localStorage.setItem('showCircle', '1')
       }
-      this.$emit('goWordListBox')
+      if (this.xfSpeechType === 'ise') {
+        this.$emit('goWordListBox')
+      } else {
+        alert('iat')
+      }
     },
     setScore (score) {
       console.log(score)

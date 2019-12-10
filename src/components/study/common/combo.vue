@@ -21,8 +21,8 @@ export default {
   methods: {
     show (params) {
       let offset = params.offset
-      this.left = offset.left - 60
-      this.top = offset.top - 10
+      this.left = offset.left
+      this.top = offset.top
       this.hits = params.hits
       switch (true) {
         case this.hits > 5:

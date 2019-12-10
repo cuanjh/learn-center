@@ -82,14 +82,15 @@ export default {
 
     this.$on('check', (form) => {
       console.log('check', form)
-      if (!this.isCheck) {
+      if (!this.isCheck || this.curIndex === this.slideForms.length) {
         return
       }
+
       let formObj = $('#form' + form.form_id)
       let offset = formObj.offset()
       let obj = {
-        left: offset.left + formObj.width() / 2,
-        top: offset.top + formObj.height() / 2
+        left: offset.left + (formObj[0].offsetWidth - 200) / 2,
+        top: offset.top + (formObj[0].offsetHeight - 85) / 2
       }
 
       let score = 0
@@ -107,7 +108,6 @@ export default {
               this.$refs['trumpet'].$emit('init')
             }, 100)
           } else {
-            this.resetData()
             this.$parent.$emit('nextSlide')
           }
         })
@@ -124,12 +124,12 @@ export default {
               this.$refs['trumpet'].$emit('init')
             }, 100)
           } else {
-            this.resetData()
             this.$parent.$emit('nextSlide')
           }
         })
       }
-      bus.$emit('calCoinStudy', {score: score, offset: obj})
+
+      bus.$emit('calCoinStudy', {formCode: this.curForm.code, score: score, offset: obj})
       if (this.selFormCode !== this.curForm.code) {
         bus.$emit('setStudyFormScore', {formCode: this.curForm.code, score: score})
         this.selFormCode = this.curForm.code

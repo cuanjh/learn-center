@@ -1,8 +1,6 @@
 <template>
-  <div class="form">
-    <a @click="check">
-      <img :src="form.image" alt="">
-    </a>
+  <div class="form" @click="check">
+    <img :src="form.image" alt="">
   </div>
 </template>
 
@@ -33,18 +31,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.form {
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  border-radius: 4px;
-  a {
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-  }
-}
 </style>

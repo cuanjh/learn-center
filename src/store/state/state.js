@@ -11,10 +11,21 @@ export default {
   isAnonymous: false,
   isCanRecord: false, // 判断浏览器是否可以录音
   langCodesSel: [], // 课程相关
+  recordForms: [], // 课程学习得分进度
   kidRecordList: [], // kid录音列表
   xfISEResult: {},
   xfSpeechState: true, // true: 有服务量，false: 用完
-  xfSpeechType: '', // 讯飞语音分类,asr 语音听写（识别）, ise 语音评测
+  xfSpeechType: '', // 讯飞语音分类,iat 语音听写（识别）, ise 语音评测
+  xfIATScoreRange: { // 语音识别分数计算规则已经对应的图像颜色 ['得分随机区间', '图像颜色', 'pro鼓励语', 'kid鼓励语']
+    '100-100': ['95-99', 'green', 'perfect!', 'iatPerfect'],
+    '90-99': ['90-94', 'green', 'fantastic!', 'iatPerfect'],
+    '80-89': ['80-89', 'green', 'excellent!', 'iatPerfect'],
+    '70-79': ['75-79', 'black', 'good!', 'iatNice'],
+    '60-69': ['60-74', 'black', 'great!', 'iatNice'],
+    '40-59': ['50-59', 'red', 'not bad!', 'iatKeepTrying'],
+    '20-39': ['30-49', 'red', 'keep it up!', 'iatKeepTrying'],
+    '0-19': ['20-29', 'red', 'try again!', 'iatKeepTrying']
+  },
   xfISEScoreMatch: {
     100: [99, 99, 99],
     99: [98, 97, 96],
@@ -49,7 +60,9 @@ export default {
     70: [68, 65, 66]
   },
   xfLang: {
-    'KEN': 'en_us'
+    'KEN': 'en_us',
+    'ENG': 'en_us',
+    'CHI': 'zh_cn'
   },
   xfSyllPhone: {
     'aa': 'ɑː',

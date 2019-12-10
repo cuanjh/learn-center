@@ -5,7 +5,7 @@
       <img :src="form.image" alt="">
     </div>
     <div class="content">
-      <span class="text" v-show="!isShow">{{ form.sentence }}</span>
+      <span class="text" v-show="!isShow"></span>
       <div class="make-sentence" v-show="isShow">
         <span class="sentence">
           <i v-for="(itm, index) in options"
@@ -35,6 +35,7 @@ import NextComp from '../common/next'
 import soundCtrl from '../../../plugins/soundCtrl'
 import SoundManager from '../../../plugins/soundManager'
 import minx from './minx'
+import bus from '../../../bus'
 export default {
   props: ['form'],
   data () {
@@ -80,21 +81,31 @@ export default {
       if (!this.words.length) this.check()
     },
     check () {
+      this.$parent.$emit('setSwiperMousewheel', false)
       // 选择完毕
       var sentence = this.options.join(' ')
       var answer = this.form.sentence
       answer = answer.split(/\s+/).join(' ')
-
+      let score = 0
       if (sentence === answer) {
+        score = 1
         SoundManager.playSnd('correct')
         soundCtrl.play(this.exit)
       } else {
         this.shake($(this.$el))
         SoundManager.playSnd('wrong')
-
         this.resetAll()
         this.playAudio()
       }
+      let imgWrap = $('.img-wrap', this.$el)
+      let offset = imgWrap.offset()
+      console.log(imgWrap)
+      let obj = {
+        left: offset.left + (imgWrap.width() - 200) / 2,
+        top: offset.top + (imgWrap.height() - 85) / 2
+      }
+      bus.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
     },
     resetAll () {
       this.options.length = 0
@@ -102,11 +113,15 @@ export default {
         this.options.push('')
       })
       this.words = _.shuffle(this.form.words)
+      this.$parent.$emit('setSwiperMousewheel', true)
     },
     exit () {
-      this.isShow = false
-      this.options.length = 0
-      this.$parent.$emit('nextForm')
+      this.$parent.$emit('setSwiperMousewheel', true)
+      setTimeout(() => {
+        this.isShow = false
+        this.options.length = 0
+        this.$parent.$emit('nextForm')
+      }, 500)
     }
   }
 }
@@ -138,6 +153,7 @@ export default {
 }
 .words {
   margin-top: 40px;
+  min-height: 50px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

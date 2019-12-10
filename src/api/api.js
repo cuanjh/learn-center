@@ -55,7 +55,7 @@ export const httpLogin = (_url, _params) => { // 已经登录
           resolve((res['data']))
         })
       } else {
-        if (res['data']['code'][0] === '1005') {
+        if (res['data']['code'][0] + '' === '1005') {
           Cookie.setCookie('isLogin', 0)
           window.location.href = process.env.LOGIN_URL // 回到登录
         } else {

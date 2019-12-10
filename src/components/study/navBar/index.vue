@@ -50,13 +50,7 @@ export default {
   },
   methods: {
     goBack () {
-      let isKid = localStorage.getItem('isKid')
-      let courseCode = this.part.id.split('-').slice(0, 2).join('-')
-      if (isKid === '1') {
-        this.$router.push({path: '/app/kid-course-list/' + courseCode})
-      } else {
-        this.$router.push({path: '/app/course-list/' + courseCode})
-      }
+      this.$parent.$emit('goBack')
     },
     changeSlide (index) {
       this.$parent.$emit('changeSlide', index)
