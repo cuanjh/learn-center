@@ -8,7 +8,7 @@
       <i class="go-vip"></i>
     </router-link>
     <div class="lists">
-      <div class="swiper-container" id="novip-swiper-lists">
+      <div class="swiper-container" id="novip-swiper-lists1">
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <div class="item">
@@ -67,7 +67,7 @@ export default {
       getUserInfo: 'getUserInfo'
     }),
     initGuideSwiper () {
-      this.guideSwiper = new Swiper('#novip-swiper-lists', {
+      this.guideSwiper = new Swiper('#novip-swiper-lists1', {
         speed: 500,
         loop: true,
         initialSlide: 0,

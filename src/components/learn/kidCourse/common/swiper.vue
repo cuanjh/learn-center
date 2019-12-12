@@ -515,31 +515,39 @@ export default {
                 this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
               }
             }
+            // 2-2: 保存录音到后台
+            this.saveRecord(qiniuUrl)
           })
+        } else {
+          // 2-2: 保存录音到后台
+          this.saveRecord(qiniuUrl)
         }
-        // 2-2: 保存录音到后台
-        let courseCode = this.chapterCode.split('-').slice(0, 2).join('-')
-        Recorder.getTime((duration) => {
-          // 请求后端接口
-          let params = {
-            sound_url: qiniuUrl,
-            sound_time: Math.round(duration),
-            course_code: courseCode,
-            code: item.code,
-            teacher_module: this.type
-          }
-          console.log(params)
-          this.getKidRecordSave(params).then(res => {
-            console.log('res', res)
-            // 返回成功之后再处理 返回失败具体提示
-            if (res.success) {
-              this.getKidRecordList({chapter_code: this.chapterCode, teacher_module: this.type})
-              if (!(this.isVip && this.xfSpeechState)) {
-                this.recordAnimate()
-                this.$refs['ise'][this.curPage - 1].reset()
-              }
+      })
+    },
+    saveRecord (qiniuUrl) {
+      // 2-2: 保存录音到后台
+      let courseCode = this.chapterCode.split('-').slice(0, 2).join('-')
+      let item = this.list[this.curPage - 1]
+      Recorder.getTime((duration) => {
+        // 请求后端接口
+        let params = {
+          sound_url: qiniuUrl,
+          sound_time: Math.round(duration),
+          course_code: courseCode,
+          code: item.code,
+          teacher_module: this.type
+        }
+        console.log(params)
+        this.getKidRecordSave(params).then(res => {
+          console.log('res', res)
+          // 返回成功之后再处理 返回失败具体提示
+          if (res.success) {
+            this.getKidRecordList({chapter_code: this.chapterCode, teacher_module: this.type})
+            if (!(this.isVip && this.xfSpeechState)) {
+              this.recordAnimate()
+              this.$refs['ise'][this.curPage - 1].reset()
             }
-          })
+          }
         })
       })
     },
@@ -549,10 +557,6 @@ export default {
     },
     goWordListBox () {
       console.log(this.iseWords)
-      if (!this.isVip) {
-        bus.$emit('showNoVipModal')
-        return false
-      }
       if (this.isVip && this.iseWords.length === 0) {
         this.tip = '当前没有评测结果，请重新录音哦！'
         this.$refs['tipbox'].$emit('tipbox-show')
@@ -769,9 +773,12 @@ export default {
         }
       })
       console.log(score)
-      this.$refs['ise'][this.curPage - 1].setScore(score)
+      let resultOut = $('.current-swiper .swiper-slide-active').find('.result-out').text()
+      if (resultOut) {
+        this.$refs['ise'][this.curPage - 1].setScore(score)
+        this.setIatSentenceResult(score)
+      }
       this.$refs['scoreResult'].setScoreResult(scoreDesc)
-      this.setIatSentenceResult(score)
       this.stopRecord()
     },
     reset (preIndex) {

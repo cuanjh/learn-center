@@ -194,7 +194,15 @@ export default {
       if (this.showCircle !== '1' && !this.isVip) {
         localStorage.setItem('showCircle', '1')
       }
+      if (!this.isVip) {
+        bus.$emit('showNoVipModal')
+        return false
+      }
       if (this.xfSpeechType === 'ise') {
+        console.log(this.score)
+        if (!this.score) {
+          return false
+        }
         this.$emit('goWordListBox')
       } else {
         let originSentence = $('.current-swiper .swiper-slide-active').find('.content p').html()

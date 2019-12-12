@@ -92,6 +92,7 @@ export default {
         if (!isShowKidGuide2 && this.isVip && this.xfSpeechType === 'iat') {
           setTimeout(() => {
             bus.$emit('kidGuideShow2', {ele: $('.swiper-slide-active .ise-area .user'), content: '智能小e帮你识别句子跟读'})
+            localStorage.setItem('isShowKidGuide2', '1')
           }, 100)
         }
       }, 1800)
@@ -145,6 +146,7 @@ export default {
       height: 384px;
       background-image: url('../../../../../static/images/kid/pic-good.gif');
       .score {
+        top: 52%;
         color: #515151;
       }
     }
