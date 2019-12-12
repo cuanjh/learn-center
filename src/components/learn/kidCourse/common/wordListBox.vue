@@ -7,6 +7,10 @@
         <noVip-guide-box />
       </div> -->
       <div class="words-content" >
+        <p class="title">
+          <i></i>
+          <span>智能机器人小e快马加鞭为你奉上精准评分</span>
+        </p>
         <word-item :newWords="newWords"/>
       </div>
     </div>
@@ -85,6 +89,23 @@ export default {
     cursor: pointer;
     &:hover {
       opacity: .8;
+    }
+  }
+  .title {
+    font-size:16px;
+    font-weight:400;
+    color:#919191;
+    line-height:17px;
+    text-align: center;
+    margin-top: 25px;
+    i {
+      display: block;
+      width: 48px;
+      height: 49px;
+      background-image: url('../../../../../static/images/common/icon-aie.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin: 0 auto 10px;
     }
   }
 }

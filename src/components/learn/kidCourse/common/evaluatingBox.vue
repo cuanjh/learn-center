@@ -13,7 +13,7 @@
                 <p class="nikename" v-text="userInfo ? userInfo.nickname : ''"></p>
                 <div class="star">
                   <span
-                    v-for="(itemClass,index) in itemClasslass"
+                    v-for="(itemClass,index) in starClasses"
                     :class="itemClass" class="star-item"
                     :key="index">
                   </span>
@@ -25,7 +25,7 @@
             </div>
           </div>
           <!-- 绘本阅读 -->
-          <div class="content-box" v-if="type == 'draw'">
+          <div class="content-box" v-if="type == 'draw' && xfSpeechType === 'ise'">
             <div class="swiper-content">
               <div class="swiper-container swiper-evaluating">
                 <div class="swiper-wrapper">
@@ -78,19 +78,9 @@
                 </div>
               </div>
             </div>
-            <!-- 不同显示70分以下 -->
-            <div class="bottom-prompt" v-if="itemClasslass != 5">
-              <p class="bottom-title blue">读得真棒!</p>
-              <p>共有<em class="blue">{{coreWords.length}}</em>个</p>
-              <p>核心单词需要强化，快去学习一下吧～</p>
-            </div>
-            <!-- 70分以上 -->
-            <div class="bottom-prompt" v-else>
-              <p>小朋友，你已经完成绘本阅读啦，<br/>去核心单词继续强化一下吧～</p>
-            </div>
           </div>
           <!-- 绘本单词学习完展示 -->
-          <div class="content-box" v-if="type == 'word'">
+          <div class="content-box" v-if="type == 'word' && xfSpeechType === 'ise'">
             <div class="coreWord-content">
               <div class="coreWord-slide">
                 <!-- 母语的句子 -->
@@ -101,10 +91,22 @@
                 <evaluating-word :evaluatingData="evaluatingData"/>
               </div>
             </div>
-            <!-- 核心单词 -->
-            <div class="bottom-prompt">
-              <p>小朋友，核心单词已经学完啦，<br/>去听首儿歌放松一下吧！</p>
-            </div>
+          </div>
+          <!-- 语音识别结果展示 -->
+          <iatresult-detail ref="iatResult" :iatResult="iatResult" v-if="xfSpeechType === 'iat'"/>
+          <!-- 不同显示70分以下 -->
+          <div class="bottom-prompt" v-if="type == 'draw' && starClasses != 5">
+            <p class="bottom-title blue">读得真棒!</p>
+            <p>共有<em class="blue">{{coreWords.length}}</em>个</p>
+            <p>核心单词需要强化，快去学习一下吧～</p>
+          </div>
+          <!-- 70分以上 -->
+          <div class="bottom-prompt" v-if="type == 'draw' && starClasses == 5">
+            <p>小朋友，你已经完成绘本阅读啦，<br/>去核心单词继续强化一下吧～</p>
+          </div>
+          <!-- 核心单词 -->
+          <div class="bottom-prompt" v-if="type == 'word'">
+            <p>小朋友，核心单词已经学完啦，<br/>去听首儿歌放松一下吧！</p>
           </div>
         </div>
       </div>
@@ -119,6 +121,7 @@ import Bus from '../../../../bus'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
 import EvaluatingWord from './evaluatingWord.vue'
+import IatresultDetail from './iatResultDetail'
 
 const lengths = 5
 const starOn = 'on'
@@ -131,24 +134,29 @@ export default {
       isShowEvaluatingModal: false,
       isShowEndPrompt: true,
       isHalf: true,
-      // totalScore: '',
       evaluatingData: [],
       curSwiperPage: 0,
       parentList: [],
-      averageScore: null,
       coreWords: [],
       audio: new Audio(),
-      isPlay: false
+      isPlay: false,
+      starClasses: [],
+      iatResult: []
     }
   },
   components: {
-    EvaluatingWord
+    EvaluatingWord,
+    IatresultDetail
   },
   created () {
-    Bus.$on('showScoreDetail', (params) => {
+    Bus.$on('showKidScoreDetail', (score) => {
       console.log('点击了评分详情', this.$router)
-      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      let curResult = xfISEResult.filter(item => {
+      this.starClasses = this.getStarClasses(score)
+      let xfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      if (this.xfSpeechType === 'iat') {
+        xfResult = JSON.parse(localStorage.getItem('xfIATResult'))
+      }
+      let curResult = xfResult.filter(item => {
         return item.form_code.toLowerCase().indexOf(this.chapterCode.toLowerCase() + '-' + this.type.toLowerCase()) > -1
       }).sort((obj1, obj2) => {
         if (obj1.form_code < obj2.form_code) {
@@ -159,13 +167,16 @@ export default {
           return 0
         }
       })
+      this.iatResult = curResult
       console.log(curResult)
       // this.parentList = params
-      if (this.type === 'draw') {
-        this.initData(curResult)
-        this.initEvaluSwiper()
-      } else {
-        this.initDataWord(curResult)
+      if (this.xfSpeechType === 'ise') {
+        if (this.type === 'draw') {
+          this.initData(curResult)
+          this.initEvaluSwiper()
+        } else {
+          this.initDataWord(curResult)
+        }
       }
       this.isShowEvaluatingModal = true
     })
@@ -175,6 +186,7 @@ export default {
       userInfo: state => state.userInfo, // 用户信息
       xfSyllPhone: state => state.xfSyllPhone, // 因素的对应表
       kidRecordList: state => state.kidRecordList,
+      xfSpeechType: state => state.xfSpeechType,
       isVip: state => state.isVip
     }),
     chapterCode () {
@@ -183,37 +195,6 @@ export default {
     // 是绘本还是单词
     type () {
       return this.$route.query.type
-    },
-    // 几颗星
-    itemClasslass () { // 星星的数组
-      let result = []
-      let total = this.averageScore
-      // // 几颗全星
-      if (total > 90) {
-        total = 5
-      } else if (total >= 80 && total <= 90) {
-        total = 4
-      } else if (total >= 60 && total < 80) {
-        total = 3
-      } else if (total > 30 && total < 60) {
-        total = 2
-      } else {
-        total = 1
-      }
-      console.log(total)
-      for (var i = 0; i < total; i++) { // 放全星
-        result.push(starOn)
-      }
-      // if (starhalf) { // 放半星
-      //   result.push(starHalf)
-      // }
-      if (result.length < lengths) { // 如果没有满到五个星就用灰色的星星补齐9
-        var offstar = lengths - result.length
-        for (var j = 0; j < offstar; j++) {
-          result.push(starOff)
-        }
-      }
-      return result
     }
   },
   mounted () {
@@ -230,32 +211,25 @@ export default {
       if (result.length === 0) {
         return
       }
-      let totalScore = 0
       let data = []
       result.forEach(item => {
         let sentence = item
         sentence['formatContent'] = this.formatContent(item.sentence)
-        totalScore += parseFloat(item.score)
         data.push(sentence)
       })
-      this.averageScore = totalScore / data.length
       this.evaluatingData = data
       console.log('initData===>', data)
-      console.log('average score', this.averageScore)
     },
     // 处理单词录音
     initDataWord (result) {
       if (result.length === 0) {
         return
       }
-      let totalScore = 0
       let data = []
       result.forEach(item => {
         let obj = item
-        totalScore += parseFloat(item.score)
         data.push(obj)
       })
-      this.averageScore = totalScore / data.length
       this.evaluatingData = data
     },
     // 是绘本的时候单词列表
@@ -308,6 +282,9 @@ export default {
     closeModal () {
       this.audio.pause()
       $('.mother-grade').find('.icon-horn').removeClass('playing')
+      if (this.xfSpeechType === 'iat') {
+        this.$refs['iatResult'].reset()
+      }
       this.isPlay = false
       this.isShowEvaluatingModal = false
     },
@@ -425,6 +402,37 @@ export default {
         this.audio.pause()
         this.isPlay = false
       }
+    },
+    // 几颗星
+    getStarClasses (score) { // 星星的数组
+      let result = []
+      let total = score
+      // // 几颗全星
+      if (total > 90) {
+        total = 5
+      } else if (total >= 80 && total <= 90) {
+        total = 4
+      } else if (total >= 60 && total < 80) {
+        total = 3
+      } else if (total > 30 && total < 60) {
+        total = 2
+      } else {
+        total = 1
+      }
+      console.log(total)
+      for (var i = 0; i < total; i++) { // 放全星
+        result.push(starOn)
+      }
+      // if (starhalf) { // 放半星
+      //   result.push(starHalf)
+      // }
+      if (result.length < lengths) { // 如果没有满到五个星就用灰色的星星补齐9
+        var offstar = lengths - result.length
+        for (var j = 0; j < offstar; j++) {
+          result.push(starOff)
+        }
+      }
+      return result
     }
   }
 }

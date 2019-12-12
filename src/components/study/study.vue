@@ -46,7 +46,7 @@ import minx from './form/minx'
 
 // 语音弹框
 import SentenceBox from '../common/yuyin/sentenceBox'
-import EvaluatingBox from '../common/yuyin/evaluatingBox'
+import EvaluatingBox from '../common/yuyin/evaluatingIatBox'
 import NoVipGuideBox from '../common/yuyin/noVipGuideBox'
 import PromptBox from '../common/yuyin/promptBox'
 

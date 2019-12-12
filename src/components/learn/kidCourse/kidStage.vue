@@ -13,6 +13,8 @@
     </div>
     <record-animate ref="recordAnimate"/>
     <word-panel ref="wordPanel"/>
+    <sentence-box />
+    <evaluateiat-box />
     <test-yuyin v-show="false" :chapterCode="code"/>
     <guide1 />
     <guide2 />
@@ -30,6 +32,8 @@ import Guide1 from './common/guide.vue'
 import Guide2 from './common/guide2.vue'
 import Guide3 from './common/guide3.vue'
 import RecordAnimate from './common/recordAnimate.vue'
+import SentenceBox from '../../common/yuyin/sentenceBox'
+import EvaluateiatBox from '../../common/yuyin/evaluatingIatBox'
 import TestYuyin from './testYuyin.vue'
 
 import ASR from '../../../plugins/xf_asr.js'
@@ -48,11 +52,6 @@ export default {
       resultText: '',
       resultOut: '',
       isRouterAlive: true,
-      langObj: {
-        KEN: 'en_us',
-        KFR: 'fr_fr',
-        KSP: 'es_es'
-      },
       kidContentHeight: 0,
       tip: ''
     }
@@ -66,7 +65,9 @@ export default {
     Guide1,
     Guide2,
     Guide3,
-    RecordAnimate
+    RecordAnimate,
+    SentenceBox,
+    EvaluateiatBox
   },
   created () {
     // 显示单词面板
@@ -108,11 +109,13 @@ export default {
   mounted () {
     console.log('kid-stage-container', $('.kid-stage-container').height())
     this.kidContentHeight = $('.kid-stage-container').height() - 150
+    localStorage.removeItem('xfIATResult')
     this.updatexfSpeechState(true)
   },
   computed: {
     ...mapState({
-      xfSpeechState: state => state.xfSpeechState
+      xfSpeechState: state => state.xfSpeechState,
+      xfIatlangObj: state => state.xfIatlangObj
     })
   },
   methods: {
@@ -125,7 +128,7 @@ export default {
     ]),
     initIatRecorder () {
       let arr = this.code.split('-')
-      let language = this.langObj[arr[0]]
+      let language = this.xfIatlangObj[arr[0]]
       let url = 'wss://iat-api.xfyun.cn/v2/iat'
       let host = 'iat-api.xfyun.cn'
       // 语音识别小语种配置
@@ -215,9 +218,9 @@ export default {
         return false
       }
       this.counterDownTime++
-      // this.counterDownTimeout = setTimeout(() => {
-      //   this.counterDown()
-      // }, 1000)
+      this.counterDownTimeout = setTimeout(() => {
+        this.counterDown()
+      }, 1000)
     },
     setProgress (progress) {
       console.log(progress)

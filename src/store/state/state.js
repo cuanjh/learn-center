@@ -59,6 +59,23 @@ export default {
     71: [68, 68, 67],
     70: [68, 65, 66]
   },
+  xfIatlangObj: {
+    KEN: 'en_us',
+    KFR: 'fr_fr',
+    KSP: 'es_es',
+    ENG: 'en_us',
+    CHI: 'zh_cn',
+    KOR: 'ko_kr',
+    JPN: 'ja_jp',
+    FRE: 'fr_fr',
+    SPA: 'es_es',
+    VIE: 'vi_VN',
+    GRE: 'de_DE',
+    RUS: 'ru-ru',
+    ARA: 'ar_il',
+    THA: 'th_TH',
+    BUL: 'bg_bg'
+  },
   xfLang: {
     'KEN': 'en_us',
     'ENG': 'en_us',

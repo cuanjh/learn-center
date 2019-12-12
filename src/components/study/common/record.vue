@@ -32,15 +32,12 @@ import _ from 'lodash'
 import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 import SoundManager from '../../../plugins/soundManager'
-import XFSentence from '../../../plugins/xf_sentence'
+// import XFSentence from '../../../plugins/xf_sentence'
 
 export default {
   props: ['code', 'sentence'],
   data () {
     return {
-      // isVip: false,
-      // xfSpeechType: '',
-      // xfLang: null,
       isShowScoring: false,
       recordState: -1, // -1: 开始录音, 0: 正在录音, 1: 录音结束
       translateX: 0,
@@ -61,10 +58,14 @@ export default {
   },
   created () {
     this.$on('init', () => {
-      // this.isVip = this.$store.state.isVip
-      // this.xfSpeechType = this.$store.state.xfSpeechType
-      // this.xfLang = this.$store.state.xfLang
     })
+  },
+  mounted () {
+    console.log('录音组件父组件的数值', this.sentence, this.code)
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.photo = userInfo.photo
+    // 初始化
+    Recorder.init()
   },
   watch: {
     time (val) {
@@ -77,17 +78,17 @@ export default {
     ...mapState({
       xfSpeechType: state => state.xfSpeechType,
       xfLang: state => state.xfLang,
-      isVip: state => state.isVip
-    })
-  },
-  mounted () {
-    console.log('录音组件父组件的数值', this.sentence, this.code)
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-    this.photo = userInfo.photo
-    // 初始化
-    Recorder.init({inputSampleRate: 50400, sampleRate: 16000}, (flag) => {
-      this.updateCanRecord(flag)
-    })
+      isVip: state => state.isVip,
+      xfIatlangObj: state => state.xfIatlangObj
+    }),
+    isCanIat () {
+      let flag = false
+      let lang = this.code.split('-')[0]
+      if (this.xfIatlangObj[lang]) {
+        flag = true
+      }
+      return flag
+    }
   },
   methods: {
     ...mapActions({
@@ -100,9 +101,6 @@ export default {
       updateCanRecord: 'updateCanRecord'
     }),
     reset () {
-      // this.isVip = false
-      this.xfSpeechType = ''
-      this.xfLang = null
       this.isShowScoring = false
       this.recordState = -1 // -1: 开始录音, 0: 正在录音, 1: 录音结束
       this.translateX = 0
@@ -124,12 +122,18 @@ export default {
       if (this.recordState === 1) {
         this.isShowScoring = true
         this.recordStop()
+        if (this.isCanIat) {
+          this.$parent.$emit('stopIatRecorder')
+        }
         this.translateX = 120
       } else {
         this.translateX = 0
         setTimeout(() => {
           this.recordState = 0
           this.startRecord()
+          if (this.isCanIat) {
+            this.$parent.$emit('startIatRecorder')
+          }
         }, 600)
       }
       if (this.recordState > 1) {
@@ -198,7 +202,7 @@ export default {
       bus.$off('record_setVolume')
     },
     uploadQiniu () {
-      let _this = this
+      // let _this = this
       let isHaveRecord = Recorder.isHaveRecord()
       if (isHaveRecord) {
         this.getQiniuToken().then(res => {
@@ -206,56 +210,56 @@ export default {
             let qiniuToken = res.token
             console.log(qiniuToken)
             Recorder.uploadQiniu(qiniuToken, this.code, this.sentence).then(recorderUrl => {
-              let url = 'http://records.talkmate.com/' + recorderUrl
-              console.log(this.isVip, this.xfSpeechType)
-              // 讯飞语音测评服务
-              if (this.isVip && this.xfSpeechType === 'ise') {
-                _this.xfISE({language: this.xfLang[_this.code.split('-')[0]], text: _this.sentence, url: url}).then(res => {
-                  console.log(res)
-                  if (res.code === '0') {
-                    if (JSON.parse(res.data.read_sentence.rec_paper.read_chapter.is_rejected)) {
-                      this.setScore('')
-                      return
-                    }
-                    let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-                    if (!xfISEResult) {
-                      xfISEResult = []
-                    }
-                    let sentenceScore = res.data.read_sentence.rec_paper.read_chapter.total_score
-                    if (!Array.isArray(res.data.read_sentence.rec_paper.read_chapter.sentence.word)) {
-                      sentenceScore = res.data.read_sentence.rec_paper.read_chapter.sentence.word.total_score
-                    }
-                    let formObj = {
-                      form_code: _this.code,
-                      sentence: _this.sentence,
-                      score: Math.round(parseFloat(sentenceScore)),
-                      record_url: url
-                    }
-                    let words = XFSentence.getWords(res.data.read_sentence.rec_paper.read_chapter.sentence)
-                    formObj['words_score'] = words
-                    console.log('fromObj', formObj)
-                    this.iseWords = formObj.words_score
-                    let formIndex = xfISEResult.findIndex(item => {
-                      return item.form_code === _this.code
-                    })
-                    if (formIndex === -1) {
-                      xfISEResult.push(formObj)
-                    } else {
-                      xfISEResult.splice(formIndex, 1, formObj)
-                    }
-                    localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
-                    this.$parent.$emit('iseResultSet')
-                    this.setScore(formObj.score)
-                    // this.getAvarageScore()
-                    // this.$refs['scoreResult'].setScoreResult(formObj.score)
-                    // this.iseResultSet()
-                    // this.$refs['ise'][this.curPage - 1].evaluateFinished()
-                    // if (this.list.length === this.curPage) {
-                    //   this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
-                    // }
-                  }
-                })
-              }
+              // let url = 'http://records.talkmate.com/' + recorderUrl
+              // console.log(this.isVip, this.xfSpeechType)
+              // // 讯飞语音测评服务
+              // if (this.isVip && this.xfSpeechType === 'ise') {
+              //   _this.xfISE({language: this.xfLang[_this.code.split('-')[0]], text: _this.sentence, url: url}).then(res => {
+              //     console.log(res)
+              //     if (res.code === '0') {
+              //       if (JSON.parse(res.data.read_sentence.rec_paper.read_chapter.is_rejected)) {
+              //         this.setScore('')
+              //         return
+              //       }
+              //       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+              //       if (!xfISEResult) {
+              //         xfISEResult = []
+              //       }
+              //       let sentenceScore = res.data.read_sentence.rec_paper.read_chapter.total_score
+              //       if (!Array.isArray(res.data.read_sentence.rec_paper.read_chapter.sentence.word)) {
+              //         sentenceScore = res.data.read_sentence.rec_paper.read_chapter.sentence.word.total_score
+              //       }
+              //       let formObj = {
+              //         form_code: _this.code,
+              //         sentence: _this.sentence,
+              //         score: Math.round(parseFloat(sentenceScore)),
+              //         record_url: url
+              //       }
+              //       let words = XFSentence.getWords(res.data.read_sentence.rec_paper.read_chapter.sentence)
+              //       formObj['words_score'] = words
+              //       console.log('fromObj', formObj)
+              //       this.iseWords = formObj.words_score
+              //       let formIndex = xfISEResult.findIndex(item => {
+              //         return item.form_code === _this.code
+              //       })
+              //       if (formIndex === -1) {
+              //         xfISEResult.push(formObj)
+              //       } else {
+              //         xfISEResult.splice(formIndex, 1, formObj)
+              //       }
+              //       localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
+              //       this.$parent.$emit('iseResultSet')
+              //       this.setScore(formObj.score)
+              //       // this.getAvarageScore()
+              //       // this.$refs['scoreResult'].setScoreResult(formObj.score)
+              //       // this.iseResultSet()
+              //       // this.$refs['ise'][this.curPage - 1].evaluateFinished()
+              //       // if (this.list.length === this.curPage) {
+              //       //   this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
+              //       // }
+              //     }
+              //   })
+              // }
             })
           }
         })

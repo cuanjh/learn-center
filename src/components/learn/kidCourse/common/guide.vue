@@ -42,7 +42,7 @@ export default {
   methods: {
     close () {
       this.isShow = false
-      bus.$emit('kidGuideShow2', $('.swiper-slide-active .ise-area .user'))
+      bus.$emit('kidGuideShow2', {ele: $('.swiper-slide-active .ise-area .user'), content: '点击这里查看评分详情'})
     }
   }
 }

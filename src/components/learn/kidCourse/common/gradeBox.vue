@@ -71,7 +71,8 @@ export default {
       userInfo: state => state.userInfo, // 用户信息
       xfISEScoreMatch: state => state.xfISEScoreMatch,
       kidRecordList: state => state.kidRecordList,
-      isVip: state => state.isVip
+      isVip: state => state.isVip,
+      xfSpeechType: state => state.xfSpeechType
     }),
     chapterCode () {
       let code = this.$route.query.code
@@ -112,7 +113,7 @@ export default {
       this.isShowGradeModal = false
       $('#complete-success')[0].pause()
       $('#complete-success')[0].currentTime = 0
-      Bus.$emit('showScoreDetail')
+      Bus.$emit('showKidScoreDetail', this.score)
     },
     beyondFriend () {
       if (!this.score || this.score < 70) {
@@ -128,13 +129,18 @@ export default {
       $('#complete-success')[0].currentTime = 0
     },
     getAvarageScore () {
-      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (xfISEResult.length === 0) {
-        return
-      }
       let sumScore = 0
       let count = 0
-      xfISEResult.forEach(item => {
+      let xfResult = []
+      if (this.xfSpeechType === 'ise') {
+        xfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      } else {
+        xfResult = JSON.parse(localStorage.getItem('xfIATResult'))
+      }
+      if (!xfResult || xfResult.length === 0) {
+        return
+      }
+      xfResult.forEach(item => {
         if (item.form_code.indexOf(this.chapterCode + '-' + this.curType.charAt(0).toUpperCase() + this.curType.slice(1) + '-') > -1) {
           sumScore += item.score
           count++

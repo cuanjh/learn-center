@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import { mapState } from 'vuex'
 import bus from '../../../../bus'
 
@@ -196,7 +197,9 @@ export default {
       if (this.xfSpeechType === 'ise') {
         this.$emit('goWordListBox')
       } else {
-        alert('iat')
+        let originSentence = $('.current-swiper .swiper-slide-active').find('.content p').html()
+        let resultSentence = $('.current-swiper .swiper-slide-active').find('.result-out').text()
+        bus.$emit('showIatSentenceBox', {originSentence, resultSentence})
       }
     },
     setScore (score) {

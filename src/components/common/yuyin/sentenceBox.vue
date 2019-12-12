@@ -10,16 +10,11 @@
         </p>
         <div class="sentence">
           <h2>原句: </h2>
-          <p class="original-sentence">
-            <span>¿Dónde </span>
-            <span>estabas?</span>
-          </p>
+          <p class="original-sentence" v-html="originSentence"></p>
         </div>
         <div class="sentence">
           <h2>你的跟读: </h2>
-          <p class="to-read">
-            <span>¿dasff estabas?</span>
-          </p>
+          <p class="to-read" v-text="resultSentence"></p>
         </div>
       </div>
     </div>
@@ -28,28 +23,21 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import bus from '../../../bus'
 
 export default {
   data () {
     return {
       showWordBox: false,
-      newSentence: []
+      originSentence: '',
+      resultSentence: ''
     }
   },
   created () {
-    bus.$on('showWordListBox', (sentence) => {
-      this.newSentence = sentence
+    bus.$on('showIatSentenceBox', (params) => {
+      this.originSentence = params.originSentence
+      this.resultSentence = params.resultSentence
       this.showWordBox = true
-    })
-  },
-  components: {
-  },
-  mounted () {
-  },
-  computed: {
-    ...mapState({
     })
   },
   methods: {
@@ -80,13 +68,15 @@ export default {
     overflow-y: auto;
     i {
       display: block;
-      width: 38px;
-      height: 38px;
-      background: #3EA8F4;
+      width: 48px;
+      height: 49px;
+      background-image: url('../../../../static/images/common/icon-aie.png');
+      background-repeat: no-repeat;
+      background-size: cover;
       margin: 0 auto 10px;
     }
     .title {
-      font-size:14px;
+      font-size:16px;
       font-weight:400;
       color:rgba(145,145,145,1);
       line-height:17px;
@@ -101,6 +91,11 @@ export default {
     background: #fff;
     box-shadow:0px 24px 24px 0px rgba(0,0,0,0.12);
     border-radius:8px;
+    .original-sentence {
+      font-size: 20px;
+      font-weight: 500;
+      color: #000000;
+    }
   }
   .close-img-box {
     position: absolute;
@@ -124,6 +119,11 @@ export default {
       color:rgba(117,115,115,1);
       line-height:21px;
       margin-bottom: 20px;
+    }
+    .to-read{
+      font-size: 20px;
+      font-weight: 500;
+      color: #000000;
     }
   }
 }

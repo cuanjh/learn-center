@@ -14,7 +14,7 @@
 </template>
 
 <script>
-// import Bus from '../../../../bus'
+import bus from '../../../../bus'
 import $ from 'jquery'
 import { mapState } from 'vuex'
 export default {
@@ -29,7 +29,8 @@ export default {
   },
   computed: {
     ...mapState({
-      isVip: state => state.isVip
+      isVip: state => state.isVip,
+      xfSpeechType: state => state.xfSpeechType
     })
   },
   methods: {
@@ -87,6 +88,12 @@ export default {
         $('#AnimatScore').hide()
         this.scoreClass = ''
         this.$parent.$emit('recordAnimate')
+        let isShowKidGuide2 = localStorage.getItem('isShowKidGuide2')
+        if (!isShowKidGuide2 && this.isVip && this.xfSpeechType === 'iat') {
+          setTimeout(() => {
+            bus.$emit('kidGuideShow2', {ele: $('.swiper-slide-active .ise-area .user'), content: '智能小e帮你识别句子跟读'})
+          }, 100)
+        }
       }, 1800)
     }
   }
@@ -122,7 +129,7 @@ export default {
       left: 0;
       font-size: 50px;
       font-weight: bold;
-      top: 51%;
+      top: 72%;
       left: 50%;
       transform: translate(-50%, -50%);
     }

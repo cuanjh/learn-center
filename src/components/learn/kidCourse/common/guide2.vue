@@ -1,7 +1,7 @@
 <template>
   <div class="guide-overlay" v-show="isShow" @click="isShow = false">
     <div class="cursor" :style="{left: left + 'px', top: top - 62 + 'px'}"></div>
-    <div class="cursor-desc" :style="{left: left - 230 + 'px', top: top - 77 + 'px'}">点击这里查看评分详情</div>
+    <div class="cursor-desc" :style="{left: left - 230 + 'px', top: top - 77 + 'px'}">{{ content }}</div>
   </div>
 </template>
 
@@ -19,16 +19,15 @@ export default {
     }
   },
   created () {
-    bus.$on('kidGuideShow2', (ele) => {
+    bus.$on('kidGuideShow2', (params) => {
+      let ele = params.ele
       localStorage.setItem('isShowKidGuide', '1')
       this.left = ele.offset().left - 10
       this.top = ele.offset().top - 5
       this.width = ele.width() + 20
       this.height = ele.height() + 10
-      this.content = ele.html()
+      this.content = params.content
       this.isShow = true
-      console.log(ele)
-      console.log(ele.html())
     })
   }
 }

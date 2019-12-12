@@ -205,7 +205,7 @@ export default {
     lookScoreReport () {
       console.log('弹语音评分报告')
       this.$emit('coreSummary-hide')
-      bus.$emit('showScoreDetail')
+      bus.$emit('showIatScoreDetail')
     }
   }
 }

@@ -8,7 +8,7 @@
         <span>{{ chapterDes }}</span>
         <span>{{ type == 'draw' ? '绘本阅读' : '核心单词' }}</span>
       </div>
-      <div id="score-report" v-show="xfSpeechType === 'ise' && isShowIseReport">
+      <div id="score-report" v-show="isShowIseReport">
         <a class="score-report" @click="scoreReport()" @mouseenter="isShowReportTip = true" @mouseleave="isShowReportTip = false">
           <p class="ripples1" v-show="isShowAnimate"></p>
           <p class="ripples2" v-show="isShowAnimate"></p>

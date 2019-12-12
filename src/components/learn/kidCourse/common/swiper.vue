@@ -78,6 +78,7 @@ export default {
       curPage: 1,
       audio: new Audio(),
       recordAudio: new Audio(),
+      recordUrl: '',
       isPlay: false,
       isShowMose: true,
       qiniuToken: '',
@@ -469,10 +470,10 @@ export default {
         if (!qiniuUrl) {
           return
         }
-        let url = process.env.QINIU_DOMAIN + qiniuUrl
+        this.recordUrl = process.env.QINIU_DOMAIN + qiniuUrl
         // 讯飞语音测评服务
         if (this.isVip && this.xfSpeechType === 'ise') {
-          _this.xfISE({language: _this.xfLang[_this.chapterCode.split('-')[0]], text: content, url: url}).then(res => {
+          _this.xfISE({language: _this.xfLang[_this.chapterCode.split('-')[0]], text: content, url: this.recordUrl}).then(res => {
             console.log(res)
             if (res.code === '0') {
               if (JSON.parse(res.data.read_sentence.rec_paper.read_chapter.is_rejected)) {
@@ -485,14 +486,14 @@ export default {
                 xfISEResult = []
               }
               let sentenceScore = res.data.read_sentence.rec_paper.read_chapter.total_score
-              if (!Array.isArray(res.data.read_sentence.rec_paper.read_chapter.sentence.word)) {
+              if (!Array.isArray(res.data.read_sentence.rec_paper.read_chapter.sentence) && !Array.isArray(res.data.read_sentence.rec_paper.read_chapter.sentence.word)) {
                 sentenceScore = res.data.read_sentence.rec_paper.read_chapter.sentence.word.total_score
               }
               let formObj = {
                 form_code: this.formCode,
                 sentence: item.content || item.word,
                 score: Math.round(parseFloat(sentenceScore)),
-                record_url: url
+                record_url: this.recordUrl
               }
               let words = xfSentence.getWords(res.data.read_sentence.rec_paper.read_chapter.sentence)
               formObj['words_score'] = words
@@ -726,7 +727,7 @@ export default {
     },
     getAvarageScore () {
       let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (xfISEResult.length === 0) {
+      if (!xfISEResult || xfISEResult.length === 0) {
         return
       }
       let sumScore = 0
@@ -770,6 +771,7 @@ export default {
       console.log(score)
       this.$refs['ise'][this.curPage - 1].setScore(score)
       this.$refs['scoreResult'].setScoreResult(scoreDesc)
+      this.setIatSentenceResult(score)
       this.stopRecord()
     },
     reset (preIndex) {
@@ -783,6 +785,32 @@ export default {
       if (this.xfSpeechType === 'iat') {
         this.$parent.$emit('reset')
       }
+    },
+    // 存储语音识别结果
+    setIatSentenceResult (score) {
+      let xfIATResult = JSON.parse(localStorage.getItem('xfIATResult'))
+      if (!xfIATResult) {
+        xfIATResult = []
+      }
+      let originSentence = $('.current-swiper .swiper-slide-active').find('.content p').html()
+      let resultSentence = $('.current-swiper .swiper-slide-active').find('.result-out').text()
+      let formObj = {
+        form_code: this.formCode,
+        originSentence: originSentence,
+        resultSentence: resultSentence,
+        score: score,
+        recordUrl: this.recordUrl
+      }
+      console.log('fromObj', formObj)
+      let formIndex = xfIATResult.findIndex(item => {
+        return item.form_code === this.formCode
+      })
+      if (formIndex === -1) {
+        xfIATResult.push(formObj)
+      } else {
+        xfIATResult.splice(formIndex, 1, formObj)
+      }
+      localStorage.setItem('xfIATResult', JSON.stringify(xfIATResult))
     }
   }
 }
