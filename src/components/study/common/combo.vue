@@ -18,6 +18,11 @@ export default {
       top: 0
     }
   },
+  created () {
+    this.$emit('show', (params) => {
+      this.show(params)
+    })
+  },
   methods: {
     show (params) {
       let offset = params.offset

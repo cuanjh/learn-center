@@ -668,7 +668,7 @@ export default {
         }
         console.log('resultOut', resultOut)
         console.log('content', this.contentArr)
-        let arr = resultOut.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').split(' ')
+        let arr = resultOut.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').replace(new RegExp('!', 'g'), '').split(' ')
         let result = []
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].trim().length > 0) {

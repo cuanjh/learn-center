@@ -70,10 +70,10 @@ export default {
     FRE: 'fr_fr',
     SPA: 'es_es',
     VIE: 'vi_VN',
-    GRE: 'de_DE',
+    GER: 'de_DE',
     RUS: 'ru-ru',
-    ARA: 'ar_il',
-    THA: 'th_TH',
+    // ARA: 'ar_il',
+    // THA: 'th_TH',
     BUL: 'bg_bg'
   },
   xfLang: {

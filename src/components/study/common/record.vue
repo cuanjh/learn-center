@@ -16,7 +16,7 @@
         <span v-for="(height, index) in thumbHeightLeft" :key="'right' + index" :style="{'height': height + 'px'}"></span>
       </div>
     </div>
-    <div class="user" :style="{'transform': 'translateX(' + translateX + 'px)'}">
+    <div class="user" :style="{'transform': 'translateX(' + translateX + 'px)'}" v-show="isCanIat && xfSpeechState">
       <img class="photo" :src="photo" alt="" @click="goWordListBox()">
       <div :class="['mask', scoreClass]" v-show="isVip" @click="goWordListBox()">
         <span>{{ score }}</span>
@@ -77,6 +77,7 @@ export default {
   computed: {
     ...mapState({
       xfSpeechType: state => state.xfSpeechType,
+      xfSpeechState: state => state.xfSpeechState,
       xfLang: state => state.xfLang,
       isVip: state => state.isVip,
       xfIatlangObj: state => state.xfIatlangObj
@@ -122,7 +123,7 @@ export default {
       if (this.recordState === 1) {
         this.isShowScoring = true
         this.recordStop()
-        if (this.isCanIat) {
+        if (this.isCanIat && this.xfSpeechState) {
           this.$parent.$emit('stopIatRecorder')
         }
         this.translateX = 120
@@ -131,7 +132,7 @@ export default {
         setTimeout(() => {
           this.recordState = 0
           this.startRecord()
-          if (this.isCanIat) {
+          if (this.isCanIat && this.xfSpeechState) {
             this.$parent.$emit('startIatRecorder')
           }
         }, 600)
@@ -210,6 +211,8 @@ export default {
             let qiniuToken = res.token
             console.log(qiniuToken)
             Recorder.uploadQiniu(qiniuToken, this.code, this.sentence).then(recorderUrl => {
+              let url = 'http://records.talkmate.com/' + recorderUrl
+              this.$emit('afterPostQiniu', url)
               // let url = 'http://records.talkmate.com/' + recorderUrl
               // console.log(this.isVip, this.xfSpeechType)
               // // 讯飞语音测评服务
@@ -291,17 +294,21 @@ export default {
       this.isShowScoring = false
     },
     goWordListBox () {
-      // 弹录音列表
-      console.log(this.iseWords)
-      if (!this.isVip) {
-        bus.$emit('showNoVipModal')
-        return false
+      if (this.xfSpeechType === 'ise') {
+        // 弹录音列表
+        console.log(this.iseWords)
+        if (!this.isVip) {
+          bus.$emit('showNoVipModal')
+          return false
+        }
+        let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+        if (xfISEResult.length === 0) {
+          return false
+        }
+        bus.$emit('showWordListBox', this.iseWords)
+      } else {
+        this.$parent.$emit('showIatSentenceBox')
       }
-      let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-      if (xfISEResult.length === 0) {
-        return false
-      }
-      bus.$emit('showWordListBox', this.iseWords)
     }
   }
 }

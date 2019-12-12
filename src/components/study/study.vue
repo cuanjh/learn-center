@@ -71,6 +71,7 @@ export default {
       curPartForms: {}, // 点击过的form
       slidesVal: [],
       curSlideIndex: 0,
+      isChangeSlide: false,
       totalCoins: 0,
       learnTime: 0, // 学习时长
       learnInterval: null, // 学习时长间隔器
@@ -118,8 +119,9 @@ export default {
       if (this.view === 'swiper') {
         this.$refs['swiper'].$emit('destroySwiper')
       }
-      console.log('changeSlide', index)
+      this.isChangeSlide = true
       this.curSlideIndex = index
+      console.log('changeSlide', index)
       let resource = this.getResource(this.curSlideIndex)
       this.changeSlide(Loader(resource))
     })
@@ -138,9 +140,9 @@ export default {
         this.continueCorrect++
         this.maxContinueHits = Math.max(this.continueCorrect, this.maxContinueHits)
         this.continueWrong = 0
-        this.$nextTick(() => {
-          this.$refs['combo'].show({offset: offset, hits: this.continueCorrect})
-        })
+        setTimeout(() => {
+          this.$refs['combo'].$emit('show', {offset: offset, hits: this.continueCorrect})
+        }, 10)
       } else {
         this.continueWrong++
         this.continueCorrect = 0
@@ -200,7 +202,9 @@ export default {
       this.postProgress({chapterCode: this.chapterCode, recordForms: this.recordForms})
       // 保存学习获得的金币, 累计金币数可为正数和负数，正数表示连对奖励的金币，负数表示连续做错扣除的金币
       if (this.continueCoins !== 0) {
-        this.postCoins({coins: this.continueCoins, courseCode: this.courseCode})
+        this.postCoins({coins: this.continueCoins, courseCode: this.courseCode}).then(res => {
+          this.continueCoins = 0
+        })
       }
       this.goBack()
     })
@@ -236,6 +240,7 @@ export default {
     this.getUserInfo()
   },
   mounted () {
+    localStorage.removeItem('xfIATResult')
     // 记录学习时长
     this.learnInterval = setInterval(() => {
       this.learnTime++
@@ -259,18 +264,19 @@ export default {
       console.log('unlockChapters', res)
       this.unlockChapters = res.unlock
     })
-    let lang = arr[0]
-    if (lang === 'ENG') {
-      this.updatexfSpeechType('ise')
-      // 拉取讯飞测评数据
-      this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
-        if (res.success) {
-          localStorage.setItem('xfISEResult', JSON.stringify(res.forms))
-        }
-      })
-    } else {
-      this.updatexfSpeechType('iat')
-    }
+    // let lang = arr[0]
+    // if (lang === 'ENG') {
+    //   this.updatexfSpeechType('ise')
+    //   // 拉取讯飞测评数据
+    //   this.xfISEPull({chapter_code: this.chapterCode}).then(res => {
+    //     if (res.success) {
+    //       localStorage.setItem('xfISEResult', JSON.stringify(res.forms))
+    //     }
+    //   })
+    // } else {
+    //   this.updatexfSpeechType('iat')
+    // }
+    this.updatexfSpeechType('iat')
     this.initData()
   },
   computed: {
@@ -342,14 +348,7 @@ export default {
         }
         this.slidesVal.push(val)
       })
-      for (let i = 0; i < this.slidesVal.length; i++) {
-        if (this.slidesVal[i] === -1) {
-          this.curSlideIndex = i
-          break
-        }
-      }
       console.log('slidesVal', this.slidesVal)
-      console.log('curSlideIndex', this.curSlideIndex)
     },
     getCoreParts () {
       let that = this
@@ -382,6 +381,13 @@ export default {
         console.log(this.partForms)
         this.setSlidesVal()
       }
+      for (let i = 0; i < this.slidesVal.length; i++) {
+        if (this.slidesVal[i] === -1 && !this.isChangeSlide) {
+          this.curSlideIndex = i
+          break
+        }
+      }
+      console.log('curSlideIndex', this.curSlideIndex)
       console.log('partForms', this.partForms)
       let resource = this.getResource(this.curSlideIndex)
       console.log('getResource', this.getResource(this.curSlideIndex))
@@ -449,22 +455,22 @@ export default {
       // 上报学习进度得分
       this.postProgress({chapterCode: this.chapterCode, recordForms: this.recordForms})
 
-      // 上报测评结果
-      let arr = this.id.split('-')
-      if (arr[0] === 'ENG') {
-        // 保存测评信息
-        this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
-      }
+      // 上报测评结果(仅识别)
+      // let arr = this.id.split('-')
+      // if (arr[0] === 'ENG') {
+      //   // 保存测评信息
+      //   this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
+      // }
       // 保存学习获得的金币, 累计金币数可为正数和负数，正数表示连对奖励的金币，负数表示连续做错扣除的金币
       if (this.continueCoins !== 0) {
-        this.postCoins({coins: this.continueCoins, courseCode: this.courseCode})
+        this.postCoins({coins: this.continueCoins, courseCode: this.courseCode}).then(res => {
+          this.continueCoins = 0
+        })
       }
 
       let unlockChapter = this.unlockChapters[this.chapterCode]
-      if (unlockChapter && !unlockChapter[this.part]) {
-        // 设置当前part完成
-        this.setPartComplete({part_code: this.id})
-      }
+      // 设置当前part完成
+      this.setPartComplete({part_code: this.id})
       if (this.part === 'A05') {
         if (unlockChapter && !unlockChapter['Core_complete']) {
           // 设置当前module完成
@@ -567,6 +573,7 @@ export default {
       this.slideForms = []
       this.slidesVal = []
       this.curSlideIndex = 0
+      this.isChangeSlide = false
     },
     // 计算本部分的正确率和完成率
     calPartRate () {
@@ -625,6 +632,7 @@ export default {
   },
   watch: {
     $route (to, from) {
+      localStorage.removeItem('xfIATResult')
       this.resetData()
       this.getPartForms()
     }

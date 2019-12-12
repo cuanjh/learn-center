@@ -4,12 +4,12 @@
       <next-comp @next="next"/>
       <img :src="form.image" alt="">
       <transition name="fade" mode="out-in">
-        <record-comp ref="recordItem" v-show="isShow" :sentence="form.sentence" :code="form.code"/>
+        <record-comp ref="recordItem" @afterPostQiniu="afterPostQiniu" v-show="isShow" :sentence="form.sentence" :code="form.code"/>
       </transition>
     </div>
     <div class="content">
       <p class="text" :data-content="form.sentence">
-        <span v-for="(w, index) in formatSentence" :data-content="w" :key="index" v-html="w" @click="showWordPanel($event, index)"></span>
+        <span v-for="(w, index) in formatSentence" :data-content="w" :key="index" v-html="(langCode == 'CHI' || langCode == 'JPN' || langCode == 'KOR') ? w : (w === '.' ? w : ' ' + w)" @click="showWordPanel($event, index)"></span>
       </p>
       <trumpet-comp ref="trumpet" :sound="form.sound" />
     </div>
@@ -38,22 +38,11 @@ export default {
       isIatFinished: false,
       counterDownTime: 0,
       counterDownTimeout: null,
+      score: 0,
+      contentArr: [],
       resultText: '',
       resultOut: '',
-      langObj: {
-        ENG: 'en_us',
-        CHI: 'zh_cn',
-        KOR: 'ko_kr',
-        JPN: 'ja_jp',
-        FRE: 'fr_fr',
-        SPA: 'es_es',
-        VIE: 'vi_VN',
-        GRE: 'de_DE',
-        RUS: 'ru-ru',
-        ARA: 'ar_il',
-        THA: 'th_TH',
-        BUL: 'bg_bg'
-      }
+      recordUrl: ''
     }
   },
   components: {
@@ -73,10 +62,13 @@ export default {
       this.initIatRecorder()
       this.$refs['trumpet'].$emit('init', false, () => {
         this.isShow = true
-        this.$refs.recordItem.$emit('init')
+        setTimeout(() => {
+          this.$refs.recordItem.$emit('init')
+        }, 10)
       })
       this.$refs.recordItem.closeRecord()
       this.formatSentence = this.formatContent(this.form.sentence)
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
     })
 
     this.$on('iseResultSet', () => {
@@ -93,6 +85,11 @@ export default {
       this.stop()
       this.isIatFinished = true
     })
+    this.$on('showIatSentenceBox', () => {
+      let originSentence = $('#pro-swiper .swiper-slide-active').find('.content p').html()
+      let resultSentence = this.resultOut
+      bus.$emit('showIatSentenceBox', {originSentence, resultSentence})
+    })
   },
   mounted () {
     console.log('form-code', this.form)
@@ -100,8 +97,12 @@ export default {
   computed: {
     ...mapState({
       xfSpeechState: state => state.xfSpeechState,
-      xfIatlangObj: state => state.xfIatlangObj
-    })
+      xfIatlangObj: state => state.xfIatlangObj,
+      xfIATScoreRange: state => state.xfIATScoreRange
+    }),
+    langCode () {
+      return this.form.code.split('-')[0]
+    }
   },
   methods: {
     ...mapMutations([
@@ -117,7 +118,6 @@ export default {
     },
     next () {
       this.$parent.$emit('nextForm')
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
     },
     // 格式化内容，添加span标签
     formatContent (content) {
@@ -129,7 +129,7 @@ export default {
       console.log(arrBR)
       for (let m = 0; m < arrBR.length; m++) {
         let arr = arrBR[m].split(' ')
-        if (this.form.code.indexOf('CHI') > -1) {
+        if (this.langCode === 'CHI' || this.langCode === 'JPN' || this.langCode === 'KOR') {
           arr = arrBR[m].split('')
         }
         for (let i = 0; i < arr.length; i++) {
@@ -255,7 +255,7 @@ export default {
         onClose: () => {
           this.stop()
           this.resetIAT()
-          // this.$refs['swiper'].iatFinished()
+          this.iatFinished()
         },
         onError: (data) => {
           this.stop()
@@ -297,7 +297,6 @@ export default {
     },
     setResult (data) {
       var str = ''
-      var resultStr = ''
       let ws = data.ws
       for (let i = 0; i < ws.length; i++) {
         str = str + ws[i].cw[0].w
@@ -307,8 +306,8 @@ export default {
       if (data.pgs === 'apd') {
         this.resultText = this.resultOut
       }
-      resultStr = this.resultText + str
-      this.resultOut = resultStr
+      this.resultText = this.resultText + str
+      this.resultOut = this.resultText
       this.setResultOut(this.resultOut)
       console.log(this.resultOut)
     },
@@ -338,7 +337,7 @@ export default {
         $('#pro-swiper .swiper-slide-active').find('.content p span').removeClass('wrong')
         let content = $('#pro-swiper .swiper-slide-active').find('.content p').data('content')
         let split = ' '
-        if (this.form.code.indexOf('CHI') > -1) {
+        if (this.langCode === 'CHI' || this.langCode === 'JPN' || this.langCode === 'KOR') {
           split = ''
         }
         let arr1 = content.toLowerCase()
@@ -363,7 +362,7 @@ export default {
         }
         console.log('resultOut', resultOut)
         console.log('content', this.contentArr)
-        let arr = resultOut.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').split(split)
+        let arr = resultOut.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').replace(new RegExp('!', 'g'), '').split(split)
         let result = []
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].trim().length > 0) {
@@ -398,6 +397,10 @@ export default {
             .replace(new RegExp('¡', 'g'), '')
             .replace(new RegExp('¿', 'g'), '')
             .replace(new RegExp('\'', 'g'), '’')
+            .replace(new RegExp('à', 'g'), 'à')
+            .replace(new RegExp('ộ', 'g'), 'ộ')
+            .replace(new RegExp('è', 'g'), 'è')
+            .replace(new RegExp('ó', 'g'), 'ó')
           let findIndex = result.findIndex(r => {
             return r === content1
           })
@@ -423,7 +426,7 @@ export default {
       console.log(wrong)
       console.log(Math.round((right * 1.0 / total).toFixed(2) * 100))
       let scoreRate = Math.round((right * 1.0 / total).toFixed(2) * 100)
-      let score = 0
+      this.score = 0
       let scoreDesc = ''
       _.forIn(this.xfIATScoreRange, (valArr, key) => {
         let arr = key.split('-')
@@ -432,14 +435,43 @@ export default {
         if (scoreRate >= start && scoreRate <= end) {
           let sVal = parseInt(valArr[0].split('-')[0])
           let eVal = parseInt(valArr[0].split('-')[1])
-          score = utils.getRndInteger(sVal, eVal)
+          this.score = utils.getRndInteger(sVal, eVal)
           scoreDesc = valArr[3]
         }
       })
-      console.log(score, scoreDesc)
-      // this.$refs['ise'][this.curPage - 1].setScore(score)
-      // this.$refs['scoreResult'].setScoreResult(scoreDesc)
-      this.stopRecord()
+      console.log(this.score, scoreDesc)
+      this.$refs['recordItem'].setScore(this.score)
+      this.$refs['recordItem'].recordStop()
+    },
+    // 存储语音识别结果
+    setIatSentenceResult () {
+      let xfIATResult = JSON.parse(localStorage.getItem('xfIATResult'))
+      if (!xfIATResult) {
+        xfIATResult = []
+      }
+      let originSentence = $('#pro-swiper .swiper-slide-active').find('.content p').html()
+      let resultSentence = this.resultOut
+      let formObj = {
+        form_code: this.form.code,
+        originSentence: originSentence,
+        resultSentence: resultSentence,
+        score: this.score,
+        recordUrl: this.recordUrl
+      }
+      console.log('fromObj', formObj)
+      let formIndex = xfIATResult.findIndex(item => {
+        return item.form_code === this.form.code
+      })
+      if (formIndex === -1) {
+        xfIATResult.push(formObj)
+      } else {
+        xfIATResult.splice(formIndex, 1, formObj)
+      }
+      localStorage.setItem('xfIATResult', JSON.stringify(xfIATResult))
+    },
+    afterPostQiniu (url) {
+      this.recordUrl = url
+      this.setIatSentenceResult()
     }
   }
 }
