@@ -16,7 +16,8 @@
     <record-list ref="record"/>
     <word-panel ref="wordPanel"/>
     <sentence-box/>
-    <evaluating-box />
+    <evaluating-iat-box />
+    <grade-iat-box />
     <noVip-guide-box />
     <prompt-box />
   </div>
@@ -46,9 +47,10 @@ import minx from './form/minx'
 
 // 语音弹框
 import SentenceBox from '../common/yuyin/sentenceBox'
-import EvaluatingBox from '../common/yuyin/evaluatingIatBox'
+import EvaluatingIatBox from '../common/yuyin/evaluatingIatBox'
 import NoVipGuideBox from '../common/yuyin/noVipGuideBox'
 import PromptBox from '../common/yuyin/promptBox'
+import GradeIatBox from '../common/yuyin/gradeIatBox'
 
 // 结束标志位
 let END = -1
@@ -94,9 +96,10 @@ export default {
     RecordList,
     WordPanel,
     SentenceBox,
-    EvaluatingBox,
+    EvaluatingIatBox,
     NoVipGuideBox,
-    PromptBox
+    PromptBox,
+    GradeIatBox
   },
   created () {
     this.$on('nextSlide', () => {
