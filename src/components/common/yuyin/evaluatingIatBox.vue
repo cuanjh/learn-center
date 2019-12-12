@@ -33,13 +33,13 @@
             </div>
           </div>
         </div>
-        <!-- 不同显示70分以下 -->
-        <div class="bottom-prompt" v-if="starClasses != 5">
+        <!-- 5颗星的显示 -->
+        <div class="bottom-prompt" v-if="totalStart != 5">
           <p class="bottom-title blue">读得真棒!</p>
           <p>共有<em class="blue">{{coreWords.length}}</em>个</p>
           <p>核心单词需要强化，快去学习一下吧～</p>
         </div>
-        <!-- 70分以上 -->
+        <!-- 5颗星一下的显示 -->
         <div class="bottom-prompt" v-else>
           <p>小朋友，你已经完成绘本阅读啦，<br/>去核心单词继续强化一下吧～</p>
         </div>
@@ -64,13 +64,13 @@ export default {
       starClasses: [],
       iatResult: [],
       playAudio: new Audio(),
-      coreWords: []
+      coreWords: [],
+      totalStart: 0
     }
   },
   created () {
     bus.$on('showIATScoreDetail', (score) => {
       this.getStarClass(score)
-      this.initWordData()
       this.iatResult = []
       this.isShowEvaluatingModal = true
       setTimeout(() => {
@@ -126,6 +126,7 @@ export default {
         total = 1
       }
       console.log(total)
+      this.totalStart = total
       for (var i = 0; i < total; i++) { // 放全星
         this.starClasses.push(starOn)
       }
@@ -139,16 +140,6 @@ export default {
     play (item) {
       this.playAudio.src = item.recordUrl
       this.playAudio.play()
-    },
-    // 是绘本的时候单词列表
-    initWordData () {
-      this.getKidCourseContent({chapter_code: this.chapterCode}).then(res => {
-        console.log('单词列表====>', res)
-        this.coreWords = []
-        res.teacherContent.words.forEach(item => {
-          this.coreWords.push(item.word)
-        })
-      })
     }
   }
 }
