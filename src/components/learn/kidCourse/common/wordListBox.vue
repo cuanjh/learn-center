@@ -3,9 +3,6 @@
   <div class="word-modal-box" v-show="showWordBox && isVip">
     <div class="word-box-content">
       <div class="close-img-box" @click="closeModal()"></div>
-      <!-- <div v-if="!isVip">
-        <noVip-guide-box />
-      </div> -->
       <div class="words-content" >
         <p class="title">
           <i></i>
@@ -15,7 +12,6 @@
       </div>
     </div>
   </div>
-  <!-- <noVip-guide-box v-else/> -->
 </transition>
 </template>
 

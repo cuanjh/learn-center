@@ -3,8 +3,7 @@
     <div class="iat-result-item" :id="item.form_code" v-for="item in iatResult" :key="item.form_code">
       <i class='icon-horn' @click="play(item, $event)"></i>
       <div class="grade-color">
-        <p class="sentence" v-html="item.originSentence">
-        </p>
+        <p class="sentence" v-html="item.originSentence"></p>
         <span :class="['score', {'right': item.score >= 80, 'wrong': item.score < 60}]">{{item.score}}<em>分</em></span>
       </div>
     </div>
@@ -19,6 +18,9 @@ export default {
     return {
       playAudio: null
     }
+  },
+  mounted () {
+    console.log(this.iatResult)
   },
   methods: {
     play (item, event) {
@@ -54,7 +56,7 @@ export default {
   margin: 28px 48px 14px;
   box-shadow:0px 0px 16px 0px rgba(0,0,0,0.14);
   border-radius: 8px;
-  white-space: nowrap;
+  // white-space: nowrap;
   -webkit-overflow-scrolling: touch;
   overflow-y: auto;
   overflow: -moz-scrollbars-none;
@@ -91,11 +93,7 @@ export default {
       font-size:18px;
       font-weight:500;
       color:#3c5b6f;
-      span {
-        font-size:18px;
-        font-weight:500;
-        color:#3c5b6f;
-      }
+      max-width: 430px;
     }
     .score {
       display: flex;

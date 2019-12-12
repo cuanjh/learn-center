@@ -19,7 +19,7 @@
                   </span>
                 </div>
               </div>
-              <a href="javascript:;" class="go-intensify" @click="strengthening()">
+              <a href="javascript:;" class="go-intensify" @click="strengthening()" style="transition: none">
                 {{type == 'draw' ? '立即强化' : '听首儿歌'}}
               </a>
             </div>
@@ -49,7 +49,7 @@
                         </p>
                       </div>
                     </div>
-                    <!-- 讯飞的识别列表音节 v-if="!Array.isArray(score.sentence)" -->
+                    <!-- 讯飞的识别列表音节 -->
                     <div >
                       <ul>
                         <li v-for="(w, index) in item.words_score" :key="'sentence-word' + index">
@@ -61,7 +61,6 @@
                               </p>
                               <table class="syllable">
                                 <tr v-for="(syll, index) in w.syllInfos" :key="index">
-                                  <!-- <td class="first">{{ (index == 0) ? w.phonetic_symbol : '' }}</td> -->
                                   <td>{{ '音节 [' + syll.content + ']' }}</td>
                                   <td>{{ syll.score >= 60 ? '读得真棒' : '继续加油' }}</td>
                                 </tr>
@@ -94,14 +93,14 @@
           </div>
           <!-- 语音识别结果展示 -->
           <iatresult-detail ref="iatResult" :iatResult="iatResult" v-if="xfSpeechType === 'iat'"/>
-          <!-- 不同显示70分以下 -->
-          <div class="bottom-prompt" v-if="type == 'draw' && starClasses != 5">
+          <!-- 5颗星以下 -->
+          <div class="bottom-prompt" v-if="type == 'draw' && totalStart != 5">
             <p class="bottom-title blue">读得真棒!</p>
             <p>共有<em class="blue">{{coreWords.length}}</em>个</p>
             <p>核心单词需要强化，快去学习一下吧～</p>
           </div>
-          <!-- 70分以上 -->
-          <div class="bottom-prompt" v-if="type == 'draw' && starClasses == 5">
+          <!-- 5颗星 -->
+          <div class="bottom-prompt" v-if="type == 'draw' && totalStart === 5">
             <p>小朋友，你已经完成绘本阅读啦，<br/>去核心单词继续强化一下吧～</p>
           </div>
           <!-- 核心单词 -->
@@ -141,7 +140,8 @@ export default {
       audio: new Audio(),
       isPlay: false,
       starClasses: [],
-      iatResult: []
+      iatResult: [],
+      totalStart: 0
     }
   },
   components: {
@@ -152,6 +152,8 @@ export default {
     Bus.$on('showKidScoreDetail', (score) => {
       console.log('点击了评分详情', this.$router)
       this.starClasses = this.getStarClasses(score)
+      console.log(this.starClasses)
+      console.log(this.totalStart)
       let xfResult = JSON.parse(localStorage.getItem('xfISEResult'))
       if (this.xfSpeechType === 'iat') {
         xfResult = JSON.parse(localStorage.getItem('xfIATResult'))
@@ -169,7 +171,6 @@ export default {
       })
       this.iatResult = curResult
       console.log(curResult)
-      // this.parentList = params
       if (this.xfSpeechType === 'ise') {
         if (this.type === 'draw') {
           this.initData(curResult)
@@ -420,6 +421,7 @@ export default {
         total = 1
       }
       console.log(total)
+      this.totalStart = total
       for (var i = 0; i < total; i++) { // 放全星
         result.push(starOn)
       }
