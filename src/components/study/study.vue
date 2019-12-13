@@ -262,7 +262,6 @@ export default {
     let arr = this.id.split('-')
     this.chapterCode = arr.slice(0, 5).join('-')
     this.courseCode = arr.slice(0, 2).join('-')
-    this.part = arr.pop()
     this.getUnlockChapter(this.courseCode).then(res => {
       console.log('unlockChapters', res)
       this.unlockChapters = res.unlock
@@ -455,6 +454,8 @@ export default {
       return _.flattenDeep(resource)
     },
     finishStudy () {
+      let arr = this.id.split('-')
+      let part = arr.pop()
       // 上报学习进度得分
       this.postProgress({chapterCode: this.chapterCode, recordForms: this.recordForms})
 
@@ -474,7 +475,7 @@ export default {
       let unlockChapter = this.unlockChapters[this.chapterCode]
       // 设置当前part完成
       this.setPartComplete({part_code: this.id})
-      if (this.part === 'A05') {
+      if (part === 'A05') {
         if (unlockChapter && !unlockChapter['Core_complete']) {
           // 设置当前module完成
           this.setModuleComplete({chapter_code: this.chapterCode, module: 'core_complete'})
