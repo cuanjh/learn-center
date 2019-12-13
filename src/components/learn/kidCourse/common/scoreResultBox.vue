@@ -9,6 +9,7 @@
     <audio id="perfect" src="../../../../../static/sounds/perfect.mp3"></audio>
     <audio id="niceTry" src="../../../../../static/sounds/nice_try.mp3"></audio>
     <audio id="tryAgain" src="../../../../../static/sounds/try_again.mp3"></audio>
+    <audio id="noRecord" src="../../../../../static/sounds/try_again.mp3"></audio>
   </div>
 </transition>
 </template>
@@ -50,9 +51,13 @@ export default {
           this.scoreClass = 'good'
           audioId = 'good'
           break
-        case score === 'tryAgain':
+        case score < 60:
           this.scoreClass = 'tryAgain'
           audioId = 'tryAgain'
+          break
+        case score === 'noRecord':
+          this.scoreClass = 'noRecord'
+          audioId = 'noRecord'
           break
         case score === 'iatPerfect':
           this.scoreClass = 'iatPerfect'
@@ -126,27 +131,24 @@ export default {
     transform: translate(-50%, -50%);
     .score {
       position: absolute;
-      top: 0;
-      left: 0;
       font-size: 50px;
       font-weight: bold;
-      top: 72%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
     &.perfect {
-      width: 262px;
-      height: 398px;
+      width: 250px;
+      height: 336px;
       background-image: url('../../../../../static/images/kid/pic-perfect.gif');
       .score {
         color: #20C03B;
       }
     }
     &.good {
-      height: 384px;
+      height: 364px;
       background-image: url('../../../../../static/images/kid/pic-good.gif');
       .score {
-        top: 52%;
         color: #515151;
       }
     }
@@ -158,8 +160,14 @@ export default {
       }
     }
     &.tryAgain {
-      height: 384px;
+      width: 250px;
+      height: 340px;
       background-image: url('../../../../../static/images/kid/pic-try-again.gif');
+    }
+    &.noRecord {
+      width: 250px;
+      height: 232px;
+      background-image: url('../../../../../static/images/kid/pic-no-record.gif');
     }
     &.iatPerfect {
       width: 424px;
