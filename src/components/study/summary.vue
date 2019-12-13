@@ -161,6 +161,9 @@ export default {
     this.$on('coreSummary-hide', () => {
       this.isShow = false
     })
+    bus.$on('proContinueLearn', () => {
+      this.$parent.$emit('continueLearn')
+    })
   },
   computed: {
     ...mapState({

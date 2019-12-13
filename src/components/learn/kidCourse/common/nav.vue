@@ -28,7 +28,7 @@
 <script>
 import RecordBox from './recordBox.vue'
 import Bus from '../../../../bus'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   props: ['chapterCode', 'type'],
@@ -60,7 +60,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'xfISEUpload'
+    ]),
     back () {
+      this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
       this.$emit('back')
     },
     scoreReport () {
