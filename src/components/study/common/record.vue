@@ -118,7 +118,7 @@ export default {
       this.recordState++
       if (this.recordState === 1) {
         this.recordStop()
-        if (this.isCanIat && this.xfSpeechState) {
+        if (this.isCanIat && this.xfSpeechState && this.isVip) {
           this.$parent.$emit('stopIatRecorder')
         }
       } else {
@@ -126,7 +126,7 @@ export default {
         setTimeout(() => {
           this.recordState = 0
           this.startRecord()
-          if (this.isCanIat && this.xfSpeechState) {
+          if (this.isCanIat && this.xfSpeechState && this.isVip) {
             this.$parent.$emit('startIatRecorder')
           }
         }, 600)
@@ -208,8 +208,10 @@ export default {
             let qiniuToken = res.token
             console.log(qiniuToken)
             Recorder.uploadQiniu(qiniuToken, this.code, this.sentence).then(recorderUrl => {
-              let url = 'http://records.talkmate.com/' + recorderUrl
-              this.$emit('afterPostQiniu', url)
+              if (this.isVip) {
+                let url = 'http://records.talkmate.com/' + recorderUrl
+                this.$emit('afterPostQiniu', url)
+              }
               // let url = 'http://records.talkmate.com/' + recorderUrl
               // console.log(this.isVip, this.xfSpeechType)
               // // 讯飞语音测评服务
@@ -291,13 +293,13 @@ export default {
       this.isShowScoring = false
     },
     goWordListBox () {
+      if (!this.isVip) {
+        bus.$emit('showNoVipModal')
+        return false
+      }
       if (this.xfSpeechType === 'ise') {
         // 弹录音列表
         console.log(this.iseWords)
-        if (!this.isVip) {
-          bus.$emit('showNoVipModal')
-          return false
-        }
         let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
         if (xfISEResult.length === 0) {
           return false
