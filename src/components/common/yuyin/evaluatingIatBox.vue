@@ -24,12 +24,13 @@
         </div>
         <div class="content-box">
           <!-- 原句子 -->
-          <div class="mother-sentence-box" v-for="item in iatResult" :key="item.form_code">
-            <i class="icon-horn" @click="play(item)"></i>
-            <div class="grade-color">
-              <p class="sentence" v-html="item.originSentence">
-              </p>
-              <span :class="['score', {'right': item.score >= 80, 'wrong': item.score < 60}]">{{item.score}}<em>分</em></span>
+          <div class="iat-result">
+            <div class="iat-result-item" :id="item.form_code" v-for="item in iatResult" :key="item.form_code">
+              <i class='icon-horn' @click="play(item, $event)"></i>
+              <div class="grade-color">
+                <p class="sentence" v-html="item.originSentence"></p>
+                <span :class="['score', {'right': item.score >= 80, 'wrong': item.score < 60}]">{{item.score}}<em>分</em></span>
+              </div>
             </div>
           </div>
         </div>
@@ -52,6 +53,7 @@
 <script>
 import bus from '../../../bus'
 import { mapState, mapActions } from 'vuex'
+import $ from 'jquery'
 
 const lengths = 5
 const starOn = 'on'
@@ -85,11 +87,7 @@ export default {
       userInfo: state => state.userInfo // 用户信息
     }),
     chapterCode () {
-      return this.$route.query.code
-    },
-    // 是绘本还是单词
-    type () {
-      return this.$route.query.type
+      return this.$route.query.id
     }
   },
   methods: {
@@ -97,14 +95,8 @@ export default {
       'getKidCourseContent'
     ]),
     continueStudy () {
-      // 立即强化/听儿歌
-      this.playAudio.pause()
-      if (this.type === 'draw') {
-        this.$router.push({path: '/kid/kid-stage?code=' + this.chapterCode + '&type=word'})
-      } else {
-        let courseCode = this.chapterCode.split('-').slice(0, 2).join('-')
-        this.$router.push({path: '/app/kid-course-list/' + courseCode})
-      }
+      this.closeModal()
+      bus.$emit('proContinueLearn')
     },
     // 初始化swiper
     closeModal () {
@@ -137,9 +129,21 @@ export default {
         }
       }
     },
-    play (item) {
-      this.playAudio.src = item.recordUrl
-      this.playAudio.play()
+    play (item, event) {
+      $('.iat-result-item').find('i').removeClass('playing')
+      if (this.playAudio) {
+        this.playAudio.pause()
+      }
+      let audio = new Audio()
+      audio.src = item.recordUrl
+      this.playAudio = audio
+      audio.addEventListener('canplay', () => {
+        $('#' + item.form_code).find('i').addClass('playing')
+        audio.play()
+      })
+      audio.addEventListener('ended', () => {
+        $('#' + item.form_code).find('i').removeClass('playing')
+      })
     }
   }
 }
@@ -262,18 +266,69 @@ export default {
       }
     }
     .content-box {
-      min-height: 262px;
-      max-height: 430px;
-      margin: 28px 48px 14px;
-      box-shadow:0px 0px 16px 0px rgba(0,0,0,0.14);
-      border-radius: 8px;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      overflow-y: auto;
-      overflow: -moz-scrollbars-none;
-      overflow: -moz-scrollbars-none;
-      &::-webkit-scrollbar {
-        display: none;
+      .iat-result {
+        min-height: 262px;
+        max-height: 430px;
+        margin: 28px 48px 14px;
+        box-shadow:0px 0px 16px 0px rgba(0,0,0,0.14);
+        border-radius: 8px;
+        // white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        overflow-y: auto;
+        overflow: -moz-scrollbars-none;
+        overflow: -moz-scrollbars-none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      .iat-result-item {
+        padding: 20px 24px 20px;
+        border-bottom: 1px solid rgba(151, 151, 151, .13);
+        &:last-child {
+          border-bottom: 0px;
+        }
+        .icon-horn {
+          cursor: pointer;
+          display: inline-block;
+          width:20px;
+          height:16px;
+          background-image: url('../../../../static/images/kid/icon-laba.png');
+          background-repeat: no-repeat;
+          background-size: cover;
+          margin-top: 5px;
+        }
+        .playing {
+          background-image: url('../../../../static/images/kid/icon-laba.gif');
+        }
+        .grade-color {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .sentence {
+            font-size:18px;
+            font-weight:500;
+            color:#3c5b6f;
+            max-width: 430px;
+          }
+          .score {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 91px;
+            height: 65px;
+            font-size:26px;
+            font-weight:bold;
+            line-height:65px;
+            color: #3C5B6F;
+            border-radius: 4px;
+            background:rgba(0,0,0,.01);
+            em {
+              font-size:16px;
+              padding-top: 8px;
+            }
+          }
+        }
       }
     }
     .icon-horn {
@@ -288,28 +343,6 @@ export default {
     }
     .playing {
       background-image: url('../../../../static/images/kid/icon-laba.gif');
-    }
-    .mother-sentence-box {
-      padding: 20px 24px 20px;
-      border-bottom: 1px solid rgba(151, 151, 151, .13);
-      &:last-child {
-        border-bottom: 0px;
-      }
-      .grade-color {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .sentence {
-          font-size:18px;
-          font-weight:500;
-          color:#3c5b6f;
-          span {
-            font-size:18px;
-            font-weight:500;
-            color:#3c5b6f;
-          }
-        }
-      }
     }
     .score {
       display: flex;
@@ -326,30 +359,6 @@ export default {
       em {
         font-size:16px;
         padding-top: 8px;
-      }
-    }
-    ul {
-      li {
-        .li-item {
-          padding: 16px 0 14px;
-          border-top: 1px solid rgba(151, 151, 151, .13);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        .review-item {
-          .core-word {
-            display: flex;
-            align-items: center;
-            .word {
-              font-size: 18px;
-              font-weight: 500;
-              line-height: 28px;
-              color: #3C5B6F;
-              margin-right: 10px;
-            }
-          }
-        }
       }
     }
   }

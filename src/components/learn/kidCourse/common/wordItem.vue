@@ -1,21 +1,23 @@
 <template>
 <div class="word-item">
   <div class="item" v-for="(item, index) in newWords" :key="index">
-    <div class="review-item">
-      <p class="core-word">
-        <span class="word" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}">{{item.word}}</span>
-        <i class="icon-horn" @click="startTTS($event, item.word)"></i>
+    <div class="item-content" v-if="parseInt(item.score) > 0">
+      <div class="review-item">
+        <p class="core-word">
+          <span class="word" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}">{{item.word}}</span>
+          <i class="icon-horn" @click="startTTS($event, item.word)"></i>
+        </p>
+        <table class="syllable">
+          <tr v-for="(syll, index) in item.syllInfos" :key="'phone-' + index">
+            <td>{{ '音节 [' + syll.content + ']' }}</td>
+            <td>{{ syll.score >= 60 ? '读得真棒' : '继续加油' }}</td>
+          </tr>
+        </table>
+      </div>
+      <p class="score-color">
+        <span class="score" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}">{{Math.round(item.score)}}<em>分</em></span>
       </p>
-      <table class="syllable">
-        <tr v-for="(syll, index) in item.syllInfos" :key="'phone-' + index">
-          <td>{{ '音节 [' + syll.content + ']' }}</td>
-          <td>{{ syll.score >= 60 ? '读得真棒' : '继续加油' }}</td>
-        </tr>
-      </table>
     </div>
-    <p class="score-color">
-      <span class="score" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}">{{Math.round(item.score)}}<em>分</em></span>
-    </p>
   </div>
 </div>
 
@@ -94,24 +96,15 @@ export default {
   max-height: 600px;
   padding: 0px 32px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  overflow: -moz-scrollbars-none;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
-.word-item::-webkit-scrollbar { /*滚动条整体样式*/
-  width: 1px;     /*高宽分别对应横竖滚动条的尺寸*/
-  height: 1px;
-  scrollbar-arrow-color:#fff;
-}
-.word-item::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-  border-radius: 5px;
-  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);
-  background: rgba(0,0,0,0);
-  scrollbar-arrow-color:#fff;
-}
-.word-item::-webkit-scrollbar-track {/*滚动条里面轨道*/
-  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);
-  border-radius: 0;
-  background: rgba(0,0,0,0);
-}
-.item {
+.item .item-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
