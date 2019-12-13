@@ -121,12 +121,10 @@ export default {
     recordOpt () {
       this.recordState++
       if (this.recordState === 1) {
-        this.isShowScoring = true
         this.recordStop()
         if (this.isCanIat && this.xfSpeechState) {
           this.$parent.$emit('stopIatRecorder')
         }
-        this.translateX = 120
       } else {
         this.translateX = 0
         setTimeout(() => {
@@ -174,6 +172,9 @@ export default {
     },
     // 点击停止录音
     recordStop () {
+      this.recordState = 1
+      this.isShowScoring = true
+      this.translateX = 120
       Recorder.stopRecording()
       bus.$off('record_setVolume')
       console.log('record stop!!!!!')

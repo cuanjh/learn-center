@@ -297,6 +297,7 @@ export default {
     },
     setResult (data) {
       var str = ''
+      let resultStr = ''
       let ws = data.ws
       for (let i = 0; i < ws.length; i++) {
         str = str + ws[i].cw[0].w
@@ -306,9 +307,11 @@ export default {
       if (data.pgs === 'apd') {
         this.resultText = this.resultOut
       }
-      this.resultText = this.resultText + str
-      this.resultOut = this.resultText
-      this.setResultOut(this.resultOut)
+      resultStr = this.resultText + str
+      if (resultStr.trim()) {
+        this.resultOut = resultStr
+        this.setResultOut(resultStr)
+      }
       console.log(this.resultOut)
     },
     counterDown () {
