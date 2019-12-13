@@ -62,11 +62,8 @@ export default {
       this.initIatRecorder()
       this.$refs['trumpet'].$emit('init', false, () => {
         this.isShow = true
-        setTimeout(() => {
-          this.$refs.recordItem.$emit('init')
-        }, 10)
       })
-      this.$refs.recordItem.closeRecord()
+      this.$refs['recordItem'].closeRecord()
       this.formatSentence = this.formatContent(this.form.sentence)
       bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
     })

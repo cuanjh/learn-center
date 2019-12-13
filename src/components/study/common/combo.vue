@@ -19,7 +19,7 @@ export default {
     }
   },
   created () {
-    this.$emit('show', (params) => {
+    this.$on('show', (params) => {
       this.show(params)
     })
   },

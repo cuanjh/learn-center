@@ -90,7 +90,7 @@ export default {
         top: offset.top + (imgWrap.height() - 85) / 2
       }
 
-      bus.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
+      this.$parent.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
       bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
     },
     exit () {

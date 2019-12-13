@@ -81,7 +81,7 @@ export default {
         top: offset.top + (imgWrap.height() - 85) / 2
       }
 
-      bus.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
+      this.$parent.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
       bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
     },
     // 从句子数组中随机抽出3个句子进行选择（包含正确的句子）

@@ -129,7 +129,7 @@ export default {
         })
       }
 
-      bus.$emit('calCoinStudy', {formCode: this.curForm.code, score: score, offset: obj})
+      this.$parent.$emit('calCoinStudy', {formCode: this.curForm.code, score: score, offset: obj})
       if (this.selFormCode !== this.curForm.code) {
         bus.$emit('setStudyFormScore', {formCode: this.curForm.code, score: score})
         this.selFormCode = this.curForm.code

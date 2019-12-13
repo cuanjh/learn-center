@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     changeSlide (index) {
-      if (this.part.curSlideIndex === index) return
+      if (this.part.curSlideIndex === index || this.part.slidesVal[index] === -1) return
       this.$emit('changeSlide', index)
     }
   }

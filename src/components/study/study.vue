@@ -11,7 +11,7 @@
       </div>
     </transition>
     <gold-animate ref="goldAnimate"/>
-    <combo ref="combo"/>
+    <combo-comp ref="combo"/>
     <summary-comp ref="summary" @goBack="goBack"/>
     <record-list ref="record"/>
     <word-panel ref="wordPanel"/>
@@ -35,7 +35,7 @@ import ChoiceComp from './choice'
 import SummaryComp from './summary'
 import RecordList from './recordList'
 import GoldAnimate from './common/goldAnimate'
-import Combo from './common/combo'
+import ComboComp from './common/combo'
 import WordPanel from './common/wordPanel'
 
 // 插件
@@ -91,7 +91,7 @@ export default {
     'swiper': SwiperComp,
     'choice': ChoiceComp,
     GoldAnimate,
-    Combo,
+    ComboComp,
     SummaryComp,
     RecordList,
     WordPanel,
@@ -130,7 +130,7 @@ export default {
     })
 
     // 计算学习金币
-    bus.$on('calCoinStudy', (params) => {
+    this.$on('calCoinStudy', (params) => {
       // score: 1 正确, 0 错误
       let score = params.score
       let offset = params.offset
@@ -140,12 +140,11 @@ export default {
         return false
       }
       if (score) {
+        console.log('score', score)
         this.continueCorrect++
         this.maxContinueHits = Math.max(this.continueCorrect, this.maxContinueHits)
         this.continueWrong = 0
-        setTimeout(() => {
-          this.$refs['combo'].$emit('show', {offset: offset, hits: this.continueCorrect})
-        }, 10)
+        this.$refs['combo'].$emit('show', {offset: offset, hits: this.continueCorrect})
       } else {
         this.continueWrong++
         this.continueCorrect = 0

@@ -56,10 +56,6 @@ export default {
       iseWords: [] // 测评的单词
     }
   },
-  created () {
-    this.$on('init', () => {
-    })
-  },
   mounted () {
     console.log('录音组件父组件的数值', this.sentence, this.code)
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))

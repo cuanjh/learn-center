@@ -82,6 +82,10 @@ export default {
         this.mySwiper.mousewheel.disable()
       }
     })
+
+    this.$on('calCoinStudy', (params) => {
+      this.$parent.$emit('calCoinStudy', params)
+    })
   },
   mounted () {
 
