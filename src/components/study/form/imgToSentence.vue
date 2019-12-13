@@ -1,5 +1,5 @@
 <template>
-  <div class="form">
+  <div :class="['form', form.form_show_type]">
     <div class="img-wrap">
       <a @click="play">
         <img :src="form.image" alt="">
@@ -35,6 +35,7 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('imgToSentence init')
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 0})
       soundCtrl.setSnd(this.form.sound)
       soundCtrl.play()
       this.sentences = this.getSentences()

@@ -1,5 +1,5 @@
 <template>
-  <div class="form">
+  <div :class="['form', form.form_show_type]">
     <div class="img-wrap">
       <img :src="form.image" alt="">
     </div>

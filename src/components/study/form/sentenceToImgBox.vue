@@ -1,5 +1,5 @@
 <template>
-  <div class="choice-box">
+  <div :class="['choice-box', form.form_show_type]">
     <div class="sentence-box" v-show="isShow">
       <a class="text-box" @click="playAudio">
         <span>
@@ -43,6 +43,8 @@ export default {
   },
   created () {
     this.$on('init', () => {
+      bus.$emit('setStudyFormScore', {formCode: this.form.data[0].code, score: 0})
+      bus.$emit('setStudyFormScore', {formCode: this.form.data[1].code, score: 0})
       this.isShow = true
       this.pos = common.randomItems(['0', '50%'])
       this.$refs['trumpet'].$emit('init', this.form.data[0])

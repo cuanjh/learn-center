@@ -1,5 +1,5 @@
 <template>
-  <div class="form" @click="check">
+  <div :class="['form', form.form_show_type]">
     <img :src="form.image" alt="">
   </div>
 </template>

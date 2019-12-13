@@ -1,5 +1,5 @@
 <template>
-  <div class="form">
+  <div :class="['form', form.form_show_type]">
     <div class="img-wrap">
       <next-comp />
       <img :src="form.image" alt="">
@@ -51,6 +51,7 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('makeSentence init')
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 0})
       this.isShow = true
       this.resetAll()
       this.playAudio()

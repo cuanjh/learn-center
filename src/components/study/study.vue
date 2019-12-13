@@ -175,12 +175,12 @@ export default {
           this.$emit('animateGold', offset)
         }
       }
-      // 连错大于3次
+      // 连错大于3次 (不再扣除金币)
       if (this.continueWrong >= this.minWrongNum && !isLearned) {
         // 计算累计金币数
-        this.continueCoins -= this.baseWrongCoin
-        coins = Math.max(this.totalCoins - this.baseWrongCoin, 0)
-        this.totalCoins = coins
+        // this.continueCoins -= this.baseWrongCoin
+        // coins = Math.max(this.totalCoins - this.baseWrongCoin, 0)
+        // this.totalCoins = coins
       }
     })
 
@@ -214,11 +214,12 @@ export default {
     // 继续学习
     this.$on('continueLearn', () => {
       // 核心课程学完，直接学习下一个核心课程
-      if (this.part.indexOf('A0') > -1) {
-        let coreNum = parseInt(this.part.replace('A0', '')) + 1
+      if (this.id.indexOf('A0') > -1) {
+        let part = this.id.split('-').pop()
+        let coreNum = parseInt(part.replace('A0', '')) + 1
         if (coreNum <= 5) {
-          let id = this.chapterCode + '-A0' + coreNum
-          this.$router.push({path: 'study', query: {id: id}})
+          let nextId = this.chapterCode + '-A0' + coreNum
+          this.$router.push({path: 'study', query: {id: nextId}})
         } else {
           this.goBack()
         }
@@ -487,7 +488,7 @@ export default {
           this.setChapterUnlock({chapter_code: this.chapterCode, module: 'improvement'})
         }
         let nextChapterCode = this.getNextChapterCode()
-        if (this.unlockChapters[nextChapterCode] && !this.unlockChapters[nextChapterCode]['Core']) {
+        if (!this.unlockChapters[nextChapterCode]) {
           // 解锁下一课程
           this.setChapterUnlock({chapter_code: nextChapterCode, module: 'core'})
         }
