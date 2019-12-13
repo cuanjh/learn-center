@@ -1,5 +1,5 @@
 <template>
-  <div class="form">
+  <div :class="['form', form.form_show_type]">
     <div class="img-wrap">
       <next-comp @next="next"/>
       <img :src="form.image" alt="">
@@ -58,6 +58,7 @@ export default {
 
     this.$on('init', () => {
       console.log('repeatSpeak init')
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
       this.updatexfSpeechState(true)
       this.initIatRecorder()
       this.$refs['trumpet'].$emit('init', false, () => {
@@ -65,7 +66,6 @@ export default {
       })
       this.$refs['recordItem'].closeRecord()
       this.formatSentence = this.formatContent(this.form.sentence)
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
     })
 
     this.$on('iseResultSet', () => {

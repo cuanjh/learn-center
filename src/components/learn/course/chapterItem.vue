@@ -582,7 +582,6 @@ export default {
       }
     },
     drawProgress (type, retObj) {
-      console.log(retObj)
       let chapterCode = this.currentChapterCode
       if (type === 'core') {
         for (let i = 1; i <= 5; i++) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="form">
+  <div :class="['form', form.form_show_type]">
     <div class="img-wrap">
       <img :src="form.image" alt="">
     </div>
@@ -21,9 +21,9 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('autospeak init')
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
       this.$refs['trumpet'].$emit('init', false, () => {
         this.$parent.$emit('nextForm')
-        bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
         console.log(this.form)
       })
     })

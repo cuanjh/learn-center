@@ -1,5 +1,5 @@
 <template>
-  <div class="form">
+  <div :class="['form', form.form_show_type]">
     <div class="img-wrap">
       <next-comp />
       <img :src="form.image" alt="">
@@ -41,6 +41,7 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('writeWords init')
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
       this.input = ''
       this.innerlocked = true
       this.focus()
