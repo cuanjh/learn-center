@@ -47,10 +47,14 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('fillGap init')
+      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 0})
       this.isShow = true
       this.sentence = this.form.sentence_show
       this.words = _.shuffle(this.form.options)
       this.playAudio()
+    })
+    this.$on('break', () => {
+      this.isShow = false
     })
   },
   mixins: [minx.shake],
