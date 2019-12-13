@@ -457,9 +457,6 @@ export default {
         background-size: cover;
         width: 18px;
         height: 16px;
-        position: absolute;
-        left: 10px;
-        top: 16px;
         cursor: pointer;
         &.trumpetPlaying {
           background: url('../../../../static/images/learnSystem/trumpet_grey.gif') no-repeat center;
