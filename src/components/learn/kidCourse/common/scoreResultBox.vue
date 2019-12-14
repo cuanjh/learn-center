@@ -9,7 +9,7 @@
     <audio id="perfect" src="../../../../../static/sounds/perfect.mp3"></audio>
     <audio id="niceTry" src="../../../../../static/sounds/nice_try.mp3"></audio>
     <audio id="tryAgain" src="../../../../../static/sounds/try_again.mp3"></audio>
-    <audio id="noRecord" src="../../../../../static/sounds/try_again.mp3"></audio>
+    <audio id="noRecord" src="../../../../../static/sounds/no_record.mp3"></audio>
   </div>
 </transition>
 </template>
