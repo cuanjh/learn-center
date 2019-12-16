@@ -98,8 +98,8 @@ export default {
           bus.$emit('show-prompt', msg)
         }
       })
-      let circle = localStorage.getItem('showCircle')
-      bus.$emit('localShowCircle', circle)
+      let circle = localStorage.getItem('showProCircle')
+      bus.$emit('localShowProCircle', circle)
       this.isShowNoVipModal = false
       this.guideSwiper.autoplay.stop()
       this.guideSwiper.mousewheel.disable()

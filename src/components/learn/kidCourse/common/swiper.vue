@@ -65,7 +65,8 @@ import LastGradeBox from './lastGradeBox.vue'
 import ScoreResultBox from './scoreResultBox.vue'
 import NoVipGuideBox from './noVipGuideBox.vue'
 import Tipbox from './tipbox.vue'
-import PromptBox from './promptBox.vue'
+// import PromptBox from './promptBox.vue'
+import PromptBox from '../../../common/yuyin/promptBox.vue'
 import bus from '../../../../bus'
 
 export default {

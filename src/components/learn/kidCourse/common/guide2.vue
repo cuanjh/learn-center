@@ -1,7 +1,11 @@
 <template>
   <div class="guide-overlay" v-show="isShow" @click="isShow = false">
-    <div class="cursor" :style="{left: left + 'px', top: top - 62 + 'px'}"></div>
-    <div class="cursor-desc" :style="{left: left - 230 + 'px', top: top - 77 + 'px'}">{{ content }}</div>
+    <div class="guide2-content" :style="{left: left + 'px', top: top - 62 + 'px'}">
+      <!-- <div class="cursor" ></div> -->
+      <!-- :style="{left: left - 230 + 'px', top: top - 77 + 'px'}" -->
+      <div class="cursor-desc" >{{ content }}</div>
+      <div class="cursor" ></div>
+    </div>
   </div>
 </template>
 
@@ -20,9 +24,11 @@ export default {
   },
   created () {
     bus.$on('kidGuideShow2', (params) => {
+      console.log(params)
       let ele = params.ele
       localStorage.setItem('isShowKidGuide', '1')
-      this.left = ele.offset().left - 10
+      // this.left = ele.offset().left - 10
+      this.left = ele.offset().left - 270
       this.top = ele.offset().top - 5
       this.width = ele.width() + 20
       this.height = ele.height() + 10
@@ -59,9 +65,16 @@ export default {
   -o-transition: all .3s ease-out;
   transition: all .3s ease-out;
 }
-
-.cursor {
+.guide2-content {
   position: absolute;
+  height: 60px;
+  min-width: 312px;
+  display: flex;
+  justify-content: space-around;
+}
+.cursor {
+  // position: absolute;
+  // right: -55px;
   width: 45px;
   height: 60px;
   background-image: url('../../../../../static/images/kid/hand-right-down.png');
@@ -70,9 +83,11 @@ export default {
 }
 
 .cursor-desc {
-  position: absolute;
+  // position: absolute;
   font-size: 22px;
   font-weight: 500;
   color: #fff;
+  margin-top: -12px;
+  margin-right: 12px;
 }
 </style>

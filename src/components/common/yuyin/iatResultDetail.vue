@@ -77,13 +77,13 @@ export default {
     display: inline-block;
     width:20px;
     height:16px;
-    background-image: url('../../../../../static/images/kid/icon-laba.png');
+    background-image: url('../../../../static/images/kid/icon-laba.png');
     background-repeat: no-repeat;
     background-size: cover;
     margin-top: 5px;
   }
   .playing {
-    background-image: url('../../../../../static/images/kid/icon-laba.gif');
+    background-image: url('../../../../static/images/kid/icon-laba.gif');
   }
   .grade-color {
     display: flex;

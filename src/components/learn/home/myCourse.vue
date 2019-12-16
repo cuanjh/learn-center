@@ -420,7 +420,10 @@ export default {
 
       window._czc.push(['_trackEvent', '学习系统', '首页', '开始学习', '', '.start-learn'])
       if (this.curChapterCode === this.learnInfo.current_chapter_code) {
-        this.$router.push({path: '/learn/stage/' + this.curChapterCode + '-A0' + this.curCourseObj['courseCore']})
+        console.log(this.curChapterCode, this.curCourseObj['courseCore'])
+        // this.$router.push({path: '/learn/stage/' + this.curChapterCode + '-A0' + this.curCourseObj['courseCore']})
+        let curCodeId = this.curChapterCode + '-A0' + this.curCourseObj['courseCore']
+        this.$router.push({ path: '/study', query: {id: curCodeId} })
       } else {
         this.changeChapter(this.curChapterCode)
       }
@@ -435,7 +438,10 @@ export default {
         await this.getCourseTestRanking(chapterCode)
         await this.homeworkContent(chapterCode + '-A8')
       }
-      this.$router.push({path: '/learn/stage/' + chapterCode + '-A0' + this.curCourseObj['courseCore']})
+      // this.$router.push({path: '/learn/stage/' + chapterCode + '-A0' + this.curCourseObj['courseCore']})
+      let curCodeId = chapterCode + '-A0' + this.curCourseObj['courseCore']
+      console.log(chapterCode, this.curCourseObj['courseCore'])
+      this.$router.push({ path: '/study', query: {id: curCodeId} })
     },
     goCourseList () {
       bus.$emit('radioPause')

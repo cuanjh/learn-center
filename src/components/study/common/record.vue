@@ -16,9 +16,18 @@
         <span v-for="(height, index) in thumbHeightLeft" :key="'right' + index" :style="{'height': height + 'px'}"></span>
       </div>
     </div>
-    <div class="user" :style="{'transform': 'translateX(' + translateX + 'px)'}" v-show="isCanIat && xfSpeechState">
+    <div class="user"
+        :style="{'transform': 'translateX(' + translateX + 'px)'}"
+        v-show="isCanIat && xfSpeechState"
+        @mouseenter="isShowProUserTip = true"
+        @mouseleave="isShowProUserTip = false">
       <img class="photo" :src="photo" alt="" @click="goWordListBox()">
-      <div :class="['mask', scoreClass]" v-show="isVip" @click="goWordListBox()">
+      <div class="user-img-circle circle1" v-if="!isVip && showProCircle !== '1'"></div>
+      <div class="user-img-circle circle2" v-if="!isVip && showProCircle !== '1'"></div>
+      <transition name="fade" mode="out-in">
+        <a href="javascript:;" class="icon-vip-tip" v-if="!isVip && translateX > 0 && isShowProUserTip"></a>
+      </transition>
+      <div :class="['mask', scoreClass]" v-show="isVip && translateX > 0 && score" @click="goWordListBox()">
         <span>{{ score }}</span>
         <p class="score-desc" v-text="scoreDesc" v-show="translateX > 0"></p>
       </div>
@@ -53,13 +62,23 @@ export default {
       recordActivity: false, // 录音是否激活
       time: 0, // 累计时间
       timerInterval: null, // 时间间隔器
-      iseWords: [] // 测评的单词
+      iseWords: [], // 测评的单词
+      showProCircle: '',
+      isShowProUserTip: false
     }
+  },
+  created () {
+    bus.$on('localShowProCircle', (data) => {
+      this.showProCircle = data
+      this.scoreClass = ''
+      this.scoreDesc = ''
+    })
   },
   mounted () {
     console.log('录音组件父组件的数值', this.sentence, this.code)
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     this.photo = userInfo.photo
+    this.showProCircle = localStorage.getItem('showProCircle')
     // 初始化
     Recorder.init()
   },
@@ -178,6 +197,10 @@ export default {
       this.time = 0
       this.recordActivity = false
       this.uploadQiniu()
+      this.isShowProUserTip = true
+      setTimeout(() => {
+        this.isShowProUserTip = false
+      }, 3000)
     },
     // 点击播放自己的录音
     playMySound () {
@@ -293,21 +316,26 @@ export default {
       this.isShowScoring = false
     },
     goWordListBox () {
+      this.showProCircle = localStorage.getItem('showProCircle')
+      if (this.showProCircle !== '1' && !this.isVip) {
+        localStorage.setItem('showProCircle', '1')
+      }
       if (!this.isVip) {
         bus.$emit('showNoVipModal')
         return false
       }
-      if (this.xfSpeechType === 'ise') {
-        // 弹录音列表
-        console.log(this.iseWords)
-        let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
-        if (xfISEResult.length === 0) {
-          return false
-        }
-        bus.$emit('showWordListBox', this.iseWords)
-      } else {
-        this.$parent.$emit('showIatSentenceBox')
+      console.log(this.iseWords)
+      let xfIATResult = JSON.parse(localStorage.getItem('xfIATResult'))
+      if (!xfIATResult) {
+        return false
       }
+      this.$parent.$emit('showIatSentenceBox')
+      // if (this.xfSpeechType === 'ise') {
+      //   // 弹录音列表
+      //   bus.$emit('showWordListBox', this.iseWords)
+      // } else {
+      //   this.$parent.$emit('showIatSentenceBox')
+      // }
     }
   }
 }
@@ -369,10 +397,39 @@ export default {
     z-index: 1;
     transition: transform .5s ease-in;
     .photo {
+      cursor: pointer;
       width: 100%;
       height: 100% !important;
       border-radius: 50%!important;
       object-fit: cover;
+    }
+    .user-img-circle {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      width: 50px;
+      height: 50px;
+      z-index: -1;
+      background:rgba(245,166,35,.09);
+      border-radius: 50%;
+      animation: aniUser 2s linear infinite;
+      &.circle2 {
+        animation-delay: 1s;
+      }
+    }
+    .icon-vip-tip {
+      position: absolute;
+      top: -44px;
+      left: -40px;
+      display: inline-block;
+      width: 124px;
+      height: 38px;
+      background: url('../../../../static/images/study/pic-noVip-pro.png') no-repeat center;
+      background-size: cover;
+      text-align: center;
     }
     .mask {
       cursor: pointer;
@@ -419,6 +476,33 @@ export default {
       }
     }
   }
+}
+@keyframes aniUser {
+ 0% {
+  transform: scale(1);
+  opacity: 1;
+  background:rgba(255,255,255,.4);
+ }
+ 25% {
+  transform: scale(1.2);
+  opacity: 0.75;
+  background:rgba(255,255,255,.3);
+ }
+ 50% {
+  transform: scale(1.4);
+  opacity: 0.45;
+  background:rgba(255,255,255,.2);
+ }
+ 75% {
+  transform: scale(1.65);
+  opacity: 0.45;
+  background:rgba(255,255,255,.12);
+ }
+ 100% {
+  transform: scale(1.85);
+  opacity: 0;
+  background:rgba(255,255,255,.11);
+ }
 }
 .record-decibel {
   display: flex;

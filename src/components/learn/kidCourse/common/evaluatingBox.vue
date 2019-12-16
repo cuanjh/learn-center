@@ -123,7 +123,7 @@ import Bus from '../../../../bus'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
 import EvaluatingWord from './evaluatingWord.vue'
-import IatresultDetail from './iatResultDetail'
+import IatresultDetail from '../../../common/yuyin/iatResultDetail'
 
 const lengths = 5
 const starOn = 'on'

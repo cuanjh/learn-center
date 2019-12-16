@@ -164,6 +164,9 @@ export default {
     bus.$on('proContinueLearn', () => {
       this.$parent.$emit('continueLearn')
     })
+    bus.$on('courseSummaryShow', () => {
+      this.$emit('coreSummary-show', this.id)
+    })
   },
   computed: {
     ...mapState({
@@ -207,8 +210,14 @@ export default {
     },
     lookScoreReport () {
       console.log('弹语音评分报告')
+      let iatResult = JSON.parse(localStorage.getItem('xfIATResult'))
+      if (!iatResult) {
+        let msg = '你还没有录音，快去录音吧！'
+        bus.$emit('show-prompt', msg)
+        return false
+      }
       this.$emit('coreSummary-hide')
-      bus.$emit('busGradeIATModal')
+      bus.$emit('showIatResultDetail')
     }
   }
 }

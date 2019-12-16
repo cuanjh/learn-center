@@ -12,7 +12,7 @@
       </div>
       <div class="right">
         <gold-box :totalCoins="part.totalCoins"></gold-box>
-        <setting />
+        <setting  v-show="false"/>
       </div>
     </div>
   </div>

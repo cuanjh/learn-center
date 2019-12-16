@@ -64,7 +64,10 @@ export default {
       'xfISEUpload'
     ]),
     back () {
-      this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
+      let xfISEResult = localStorage.getItem('xfISEResult')
+      if (xfISEResult) {
+        this.xfISEUpload({forms: xfISEResult})
+      }
       this.$emit('back')
     },
     scoreReport () {

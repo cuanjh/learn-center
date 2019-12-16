@@ -78,11 +78,14 @@ export default {
     ...mapMutations({
     }),
     ...mapActions({
-      getUploadPhotoUrl: 'user/getUploadPhotoUrl'
+      getUploadPhotoUrl: 'user/getUploadPhotoUrl',
+      updateInfo: 'updateUserInfo',
+      getUserInfo: 'getUserInfo' // 获取用户信息
     }),
     // 用于隐藏图片
     hidePicture () {
       $('#avatar-modal').hide()
+      this.getUserInfo()
     },
     closeUploadView () {
       $('#avatar-modal').hide()

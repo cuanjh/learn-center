@@ -14,7 +14,7 @@
         </div>
         <div class="sentence">
           <h2>你的跟读: </h2>
-          <p class="to-read" v-text="resultSentence"></p>
+          <p class="to-read" :class="{'red' : !resultSentence}" v-text="resultSentence ? resultSentence : 'No record!'"></p>
         </div>
       </div>
     </div>
@@ -124,6 +124,9 @@ export default {
       font-size: 20px;
       font-weight: 500;
       color: #000000;
+      &.red {
+        color: #FF3B30;
+      }
     }
   }
 }
