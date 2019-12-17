@@ -462,7 +462,7 @@ export default {
         font-size: 16px;
         font-weight: 500;
         color: #fff;
-        width: 80px;
+        width: 90px;
       }
     }
     .perfect {

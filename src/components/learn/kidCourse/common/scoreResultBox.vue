@@ -1,7 +1,7 @@
 <template>
 <transition name="fade" >
   <div class="score-result-box" v-show="isShowScoreResult">
-    <div :class="['score-result-content', scoreClass]" >
+    <div :class="['score-result-content', scoreClass]" :style="{backgroundImage: 'url('+ gifUrl +')'}">
       <span class="score" id="AnimatScore" >{{ score }}</span>
     </div>
     <audio id="myYeah" src="../../../../../static/sounds/yeah.mp3"></audio>
@@ -23,6 +23,7 @@ export default {
     return {
       score: '',
       scoreClass: '',
+      gifUrl: '',
       isShowScoreResult: false
     }
   },
@@ -45,37 +46,43 @@ export default {
       switch (true) {
         case score >= 80:
           this.scoreClass = 'perfect'
+          this.gifUrl = '../../../../../static/sounds/pic-perfect.gif'
           audioId = 'perfect'
           break
         case score >= 60:
           this.scoreClass = 'good'
+          this.gifUrl = '../../../../../static/sounds/pic-good.gif'
           audioId = 'good'
           break
         case score < 60:
           this.scoreClass = 'tryAgain'
+          this.gifUrl = '../../../../../static/sounds/pic-try-again.gif'
           audioId = 'tryAgain'
           break
         case score === 'noRecord':
           this.scoreClass = 'noRecord'
+          this.gifUrl = '../../../../../static/sounds/pic-no-record.gif'
           audioId = 'noRecord'
           break
-        case score === 'iatPerfect':
-          this.scoreClass = 'iatPerfect'
-          audioId = 'perfect'
-          break
-        case score === 'iatNice':
-          this.scoreClass = 'iatNice'
-          audioId = 'myYeah'
-          break
-        case score === 'iatKeepTrying':
-          this.scoreClass = 'iatKeepTrying'
-          audioId = 'myYeah'
-          break
+        // case score === 'iatPerfect':
+        //   this.scoreClass = 'iatPerfect'
+        //   audioId = 'perfect'
+        //   break
+        // case score === 'iatNice':
+        //   this.scoreClass = 'iatNice'
+        //   audioId = 'myYeah'
+        //   break
+        // case score === 'iatKeepTrying':
+        //   this.scoreClass = 'iatKeepTrying'
+        //   audioId = 'myYeah'
+        //   break
         default:
           this.scoreClass = 'niceTry'
+          this.gifUrl = '../../../../../static/sounds/pic-nice-try.gif'
           audioId = 'niceTry'
           break
       }
+      this.gifUrl += this.gifUrl + '?' + Math.random()
       if (isNaN(score)) {
         this.score = ''
       }
@@ -92,6 +99,7 @@ export default {
         this.isShowScoreResult = false
         $('#AnimatScore').hide()
         this.scoreClass = ''
+        this.gifUrl = ''
         if (score !== 'noRecord') {
           this.$parent.$emit('recordAnimate')
         }
@@ -142,21 +150,21 @@ export default {
     &.perfect {
       width: 250px;
       height: 336px;
-      background-image: url('../../../../../static/images/kid/pic-perfect.gif');
+      // background-image: url('../../../../../static/images/kid/pic-perfect.gif');
       .score {
         color: #20C03B;
       }
     }
     &.good {
       height: 364px;
-      background-image: url('../../../../../static/images/kid/pic-good.gif');
+      // background-image: url('../../../../../static/images/kid/pic-good.gif');
       .score {
         color: #515151;
       }
     }
     &.niceTry {
       height: 384px;
-      background-image: url('../../../../../static/images/kid/pic-nice-try.gif');
+      // background-image: url('../../../../../static/images/kid/pic-nice-try.gif');
       .score {
         color: #FF685F;
       }
@@ -164,27 +172,27 @@ export default {
     &.tryAgain {
       width: 250px;
       height: 340px;
-      background-image: url('../../../../../static/images/kid/pic-try-again.gif');
+      // background-image: url('../../../../../static/images/kid/pic-try-again.gif');
     }
     &.noRecord {
       width: 250px;
       height: 232px;
-      background-image: url('../../../../../static/images/kid/pic-no-record.gif');
+      // background-image: url('../../../../../static/images/kid/pic-no-record.gif');
     }
     &.iatPerfect {
       width: 424px;
       height: 424px;
-      background-image: url('../../../../../static/images/kid/pic-iat-perfect.png');
+      // background-image: url('../../../../../static/images/kid/pic-iat-perfect.png');
     }
     &.iatNice {
       width: 424px;
       height: 424px;
-      background-image: url('../../../../../static/images/kid/pic-iat-nice.png');
+      // background-image: url('../../../../../static/images/kid/pic-iat-nice.png');
     }
     &.iatKeepTrying {
       width: 424px;
       height: 424px;
-      background-image: url('../../../../../static/images/kid/pic-iat-keep-trying.png');
+      // background-image: url('../../../../../static/images/kid/pic-iat-keep-trying.png');
     }
   }
 }

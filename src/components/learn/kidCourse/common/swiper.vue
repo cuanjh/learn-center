@@ -11,7 +11,7 @@
             <div class="content">
               <i @click="playSourceSound(index)"></i>
               <p :data-content="item.content || item.word" data-isevaluate="">
-                <span v-for="(content, index) in item.formatContent" :data-content="content" :key="index" v-html="content.indexOf('-') > -1 ? content : ' ' + content" @click="showWordPanel($event, index)"></span>
+                <span v-for="(content, index) in item.formatContent" :data-content="content" :key="index" v-html="(content.indexOf('-') > -1 || content === '?') ? content : ' ' + content" @click="showWordPanel($event, index)"></span>
               </p>
             </div>
             <div class="result-out" v-show="false"></div>
@@ -322,11 +322,10 @@ export default {
               let r = arr[i].split('?')
               for (let j = 0; j < r.length; j++) {
                 if (r[j].trim().length > 0) {
-                  let tag = ''
+                  result.push(r[j].trim())
                   if (j === 0) {
-                    tag = '?'
+                    result.push('?')
                   }
-                  result.push(r[j].trim() + tag)
                 }
               }
             } else if (arr[i].indexOf('”') > -1) {
@@ -361,7 +360,8 @@ export default {
           }
         }
         if (arrBR.length > 1 && m === 0) {
-          result.push('<br/>')
+          let last = result.pop()
+          result.push(last + '<br/>')
         }
       }
       return result
