@@ -14,7 +14,7 @@
                 <span v-for="(content, index) in item.formatContent" :data-content="content" :key="index" v-html="content.indexOf('-') > -1 ? content : ' ' + content" @click="showWordPanel($event, index)"></span>
               </p>
             </div>
-            <div class="result-out"></div>
+            <div class="result-out" v-show="false"></div>
             <ise-area
               ref="ise"
               :formCode="chapterCode + '-' + type.charAt(0).toUpperCase() + type.slice(1) + '-' + (index + 1)"
@@ -983,7 +983,20 @@ export default {
     margin-top: 0;
   }
 }
-@media (max-width: 1300px){
+@media (max-width: 1300px) {
+  .current-swiper {
+    height: auto;
+    padding-bottom: 40px;
+    .swiper-slide {
+      // height: auto;
+      padding-bottom: 30px;
+    }
+    .swiper-slide-active {
+      box-shadow: 0px 17px 80px -42px rgba(0,0,0,0.14) !important;
+    }
+  }
+}
+@media (max-height: 750px) {
   .current-swiper {
     height: auto;
     padding-bottom: 40px;

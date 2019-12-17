@@ -170,6 +170,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isVip: state => state.isVip,
       finishedInfo: state => state.learn.finishedInfo
     })
   },
@@ -210,8 +211,13 @@ export default {
     },
     lookScoreReport () {
       console.log('弹语音评分报告')
+      if (!this.isVip) {
+        this.$emit('coreSummary-hide')
+        bus.$emit('showNoVipModalPro', 'last')
+        return false
+      }
       let iatResult = JSON.parse(localStorage.getItem('xfIATResult'))
-      if (!iatResult) {
+      if (!iatResult && this.isVip) {
         let msg = '你还没有录音，快去录音吧！'
         bus.$emit('show-prompt', msg)
         return false

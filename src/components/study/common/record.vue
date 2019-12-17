@@ -329,7 +329,7 @@ export default {
         localStorage.setItem('showProCircle', '1')
       }
       if (!this.isVip) {
-        bus.$emit('showNoVipModal')
+        bus.$emit('showNoVipModalPro')
         return false
       }
       console.log(this.iseWords)
