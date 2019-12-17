@@ -17,7 +17,7 @@
     <word-panel ref="wordPanel"/>
     <sentence-box/>
     <evaluating-iat-box />
-    <noVip-guide-box />
+    <noVip-guide-pro-box />
     <prompt-box />
     <yuyin-guide-box />
   </div>
@@ -48,7 +48,7 @@ import minx from './form/minx'
 // 语音弹框
 import SentenceBox from '../common/yuyin/sentenceBox'
 import EvaluatingIatBox from '../common/yuyin/evaluatingIatBox'
-import NoVipGuideBox from '../common/yuyin/noVipGuideBox'
+import NoVipGuideProBox from '../common/yuyin/noVipGuideProBox'
 import PromptBox from '../common/yuyin/promptBox'
 import YuyinGuideBox from '../common/yuyin/yuyinGuideBox'
 
@@ -99,7 +99,7 @@ export default {
     WordPanel,
     SentenceBox,
     EvaluatingIatBox,
-    NoVipGuideBox,
+    NoVipGuideProBox,
     PromptBox,
     YuyinGuideBox
   },

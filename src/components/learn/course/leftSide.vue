@@ -8,6 +8,7 @@
               <span v-text='courseBaseInfo.name'></span>
             <p >
               <i :class="{active:navCourse}" @mouseenter="navCourse = true"></i>
+              <learn-course-list :subscribeLangCourses="subscribeLangCourses"  v-show="navCourse"></learn-course-list>
             </p>
           </div>
           <p class="course-old">{{$t('course.finished')}}&nbsp;<span v-text="finishedChapter + '/' + chapterNum"></span>&nbsp;{{$t('course.classHour')}}</p>
@@ -49,7 +50,7 @@
         <span>学习指南</span>
       </li>
     </ul> -->
-    <learn-course-list :subscribeLangCourses="subscribeLangCourses"  v-show="navCourse"></learn-course-list>
+    <!-- <learn-course-list :subscribeLangCourses="subscribeLangCourses"  v-show="navCourse"></learn-course-list> -->
     <router-view></router-view>
   </div>
 </template>

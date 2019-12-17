@@ -81,8 +81,8 @@ export default {
   border-radius: 4px;
   background-color: #ffffff;
   box-shadow: 0 2px 9px 0 rgba(112, 112, 112, 0.5);
-  top: 65px;
-  left: 19px;
+  top: 32px;
+  left: -129px;
   z-index: 9999999;
 }
 

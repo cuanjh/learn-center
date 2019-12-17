@@ -48,11 +48,16 @@ export default {
   data () {
     return {
       isShowNoVipModal: false,
-      guideSwiper: null
+      guideSwiper: null,
+      isLast: ''
     }
   },
   created () {
-    bus.$on('showNoVipModal', () => {
+    bus.$on('showNoVipModalPro', (params) => {
+      console.log(params)
+      if (params) {
+        this.isLast = params
+      }
       this.initGuideSwiper()
       this.isShowNoVipModal = true
       this.guideSwiper.autoplay.start()
@@ -100,6 +105,9 @@ export default {
       })
       let circle = localStorage.getItem('showProCircle')
       bus.$emit('localShowProCircle', circle)
+      if (this.isLast) {
+        bus.$emit('courseSummaryShow')
+      }
       this.isShowNoVipModal = false
       this.guideSwiper.autoplay.stop()
       this.guideSwiper.mousewheel.disable()
