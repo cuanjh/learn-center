@@ -70,7 +70,7 @@ export default {
 .nav-container {
   position: relative;
   height: 100%;
-  max-width: 1540px;
+  max-width: 1200px;
   // margin: 0 140px;
   margin: 0 auto;
 }
