@@ -293,26 +293,24 @@ export default {
       }
       console.log(isHaveRecord)
     },
-    setScore (score) {
+    setScore (params) {
+      let score = params.score
+      this.scoreDesc = params.scoreDesc
       console.log(score)
       if (score !== '') {
         this.score = Math.round(parseFloat(score))
       }
 
       this.scoreClass = ''
-      this.scoreDesc = ''
       switch (true) {
         case score >= 80:
           this.scoreClass = 'perfect'
-          this.scoreDesc = 'perfect!'
           break
         case score >= 60:
           this.scoreClass = 'good'
-          this.scoreDesc = 'nice!'
           break
         default:
           this.scoreClass = 'try'
-          this.scoreDesc = 'try again!'
           break
       }
       $('#showScore')[0].play()

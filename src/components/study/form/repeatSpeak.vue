@@ -436,11 +436,19 @@ export default {
           let sVal = parseInt(valArr[0].split('-')[0])
           let eVal = parseInt(valArr[0].split('-')[1])
           this.score = utils.getRndInteger(sVal, eVal)
-          scoreDesc = valArr[3]
+          scoreDesc = valArr[2]
         }
       })
+      if (scoreRate === 0 && right === 0 && wrong === 0) {
+        this.score = -1
+        scoreDesc = 'no record.'
+      }
+      if (right === 0) {
+        this.score = 0
+        scoreDesc = 'try again!'
+      }
       console.log(this.score, scoreDesc)
-      this.$refs['recordItem'].setScore(this.score)
+      this.$refs['recordItem'].setScore({score: this.score, scoreDesc: scoreDesc})
       this.$refs['recordItem'].recordStop()
     },
     // 存储语音识别结果

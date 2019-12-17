@@ -49,7 +49,6 @@ export default {
   props: ['formCode'],
   data () {
     return {
-      photo: '',
       isShowScoring: false,
       repeatRecord: false,
       isRecording: false,
@@ -71,8 +70,6 @@ export default {
     })
   },
   mounted () {
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-    this.photo = userInfo.photo
     this.showCircle = localStorage.getItem('showCircle')
   },
   computed: {
@@ -80,6 +77,7 @@ export default {
       kidRecordList: state => state.kidRecordList,
       isCanRecord: state => state.isCanRecord,
       xfSpeechType: state => state.xfSpeechType,
+      userInfo: state => state.userInfo,
       isVip: state => state.isVip
     }),
     isHaveRecord () {
@@ -105,6 +103,13 @@ export default {
       } else {
         return true
       }
+    },
+    photo () {
+      let url = ''
+      if (this.userInfo) {
+        url = this.userInfo.photo
+      }
+      return url
     }
   },
   methods: {
@@ -362,6 +367,7 @@ export default {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit: cover;
   }
   .user-img-circle {
     position: absolute;

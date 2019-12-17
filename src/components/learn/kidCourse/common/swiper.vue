@@ -775,8 +775,11 @@ export default {
       })
       console.log(score)
       console.log(scoreDesc)
-      if (scoreRate === 0) {
+      if (scoreRate === 0 && right === 0 && wrong === 0) {
         score = 'noRecord'
+      }
+      if (right === 0) {
+        score = 0
       }
       let resultOut = $('.current-swiper .swiper-slide-active').find('.result-out').text()
       if (resultOut) {
