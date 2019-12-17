@@ -13,19 +13,24 @@
           <div class="swiper-slide">
             <div class="item">
               <p>1. 智能评分颜色说明</p>
-              <i class="pic-novip-1"></i>
+              <i class="pic-novip-1" v-if="xfSpeechType === 'ise'"></i>
+              <i class="pic-novip-iat-1" v-else></i>
             </div>
           </div>
           <div class="swiper-slide">
             <div class="item">
               <p>2. 专属智能评分</p>
-              <i class="pic-novip-2"></i>
+              <i class="pic-novip-2" ></i>
             </div>
           </div>
           <div class="swiper-slide">
-            <div class="item">
-              <p>3.专属评分详情</p>
+            <div class="item" v-if="xfSpeechType === 'ise'">
+              <p>3.智能小e单词评分分析</p>
               <i class="pic-novip-3"></i>
+            </div>
+            <div class="item" v-else>
+              <p>3.智能小e句子跟读识别</p>
+              <i class="pic-novip-iat-3"></i>
             </div>
           </div>
         </div>
@@ -41,7 +46,7 @@
 import Bus from '../../../../bus'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   data () {
@@ -61,6 +66,9 @@ export default {
   mounted () {
   },
   computed: {
+    ...mapState({
+      xfSpeechType: state => state.xfSpeechType
+    })
   },
   methods: {
     ...mapActions({
@@ -210,12 +218,22 @@ export default {
         width: 430px;
         background-image: url('../../../../../static/images/kid/pic-novip-1.png');
       }
+      &.pic-novip-iat-1 {
+        width: 430px;
+        background-image: url('../../../../../static/images/kid/pic-novip-iat-1.png');
+      }
       &.pic-novip-2 {
         background-image: url('../../../../../static/images/kid/pic-novip-2.png');
       }
       &.pic-novip-3 {
+        width: 408px;
         height: 298px;
         background-image: url('../../../../../static/images/kid/pic-novip-3.png');
+      }
+      &.pic-novip-iat-3 {
+        width: 408px;
+        height: 290px;
+        background-image: url('../../../../../static/images/kid/pic-novip-iat-3.png');
       }
     }
   }

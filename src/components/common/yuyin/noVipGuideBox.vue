@@ -25,7 +25,7 @@
             </div>
             <div class="swiper-slide">
               <div class="item">
-                <p>3.专属评分详情</p>
+                <p>3.智能小e句子跟读识别</p>
                 <i class="pic-novip-3"></i>
               </div>
             </div>
@@ -209,14 +209,17 @@ export default {
       background-size: cover;
       &.pic-novip-1 {
         width: 430px;
-        background-image: url('../../../../static/images/kid/pic-novip-1.png');
+        background-image: url('../../../../static/images/kid/pic-novip-iat-1.png');
       }
       &.pic-novip-2 {
-        background-image: url('../../../../static/images/kid/pic-novip-2.png');
+        width: 370px;
+        height: 244px;
+        background-image: url('../../../../static/images/kid/pic-novip-pro-2.png');
       }
       &.pic-novip-3 {
-        height: 298px;
-        background-image: url('../../../../static/images/kid/pic-novip-3.png');
+        width: 408px;
+        height: 290px;
+        background-image: url('../../../../static/images/kid/pic-novip-iat-3.png');
       }
     }
   }
