@@ -111,4 +111,9 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+@media (max-height: 750px) {
+  .word-item {
+    max-height: 500px!important;
+  }
+}
 </style>

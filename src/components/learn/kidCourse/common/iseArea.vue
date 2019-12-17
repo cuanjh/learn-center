@@ -145,6 +145,7 @@ export default {
       }
 
       if (this.isRecording) {
+        this.translateX = 116
         this.$emit('startRecord')
       } else {
         this.$emit('stopRecord')
@@ -249,7 +250,7 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: 20px;
 }
 
 .play {

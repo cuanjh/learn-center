@@ -92,7 +92,9 @@ export default {
         this.isShowScoreResult = false
         $('#AnimatScore').hide()
         this.scoreClass = ''
-        this.$parent.$emit('recordAnimate')
+        if (score !== 'noRecord') {
+          this.$parent.$emit('recordAnimate')
+        }
         let isShowKidGuide2 = localStorage.getItem('isShowKidGuide2')
         if (!isShowKidGuide2 && this.isVip && this.xfSpeechType === 'iat') {
           setTimeout(() => {
