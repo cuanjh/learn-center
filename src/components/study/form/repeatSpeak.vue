@@ -439,13 +439,13 @@ export default {
           scoreDesc = valArr[2]
         }
       })
-      if (scoreRate === 0 && right === 0 && wrong === 0) {
-        this.score = -1
-        scoreDesc = 'no record.'
-      }
       if (right === 0) {
         this.score = 0
         scoreDesc = 'try again!'
+      }
+      if (scoreRate === 0 && right === 0 && wrong === 0) {
+        this.score = ''
+        scoreDesc = 'no record.'
       }
       console.log(this.score, scoreDesc)
       this.$refs['recordItem'].setScore({score: this.score, scoreDesc: scoreDesc})

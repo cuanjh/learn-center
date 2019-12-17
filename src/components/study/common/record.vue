@@ -27,7 +27,7 @@
       <transition name="fade" mode="out-in">
         <a href="javascript:;" class="icon-vip-tip" v-if="!isVip && translateX > 0 && isShowProUserTip"></a>
       </transition>
-      <div :class="['mask', scoreClass]" v-show="isVip && translateX > 0 && score" @click="goWordListBox()">
+      <div :class="['mask', scoreClass]" v-show="isVip && translateX > 0 " @click="goWordListBox()">
         <span>{{ score }}</span>
         <p class="score-desc" v-text="scoreDesc" v-show="translateX > 0"></p>
       </div>
