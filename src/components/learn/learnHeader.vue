@@ -723,6 +723,7 @@ export default {
   height: 34px;
   border-radius: 50%;
   border: 2px solid #fff;
+  object-fit: cover;
 }
 
 .learn-user .active {

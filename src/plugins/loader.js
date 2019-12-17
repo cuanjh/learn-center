@@ -18,7 +18,8 @@ function perLoad(data, cb) {
   var loadObject;
 
   // 保证测评和学习系统公用loader
-  var assetsApi = Cookie.getCookie('assetsApi')
+  // var assetsApi = Cookie.getCookie('assetsApi')
+  var assetsApi = 'https://course-assets1.talkmate.com/'
   if (data.url && !(data.url.indexOf('http') > -1)) {
     data.url = assetsApi + data.url;
   }
