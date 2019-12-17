@@ -389,7 +389,7 @@ export default {
     top: 0;
     text-align: center;
     span {
-      line-height: 48px;
+      line-height: 50px;
       font-size: 18px;
       font-weight: bold;
       color: #fff;
@@ -398,13 +398,16 @@ export default {
     }
   }
   .perfect {
-    border: 2px solid #20C03B;
+    // border: 2px solid #20C03B;
+    background: rgba(74, 214, 96, .9);
   }
   .good {
-    border: 2px solid #515151;
+    // border: 2px solid #515151;
+    background: rgba(119, 119, 134,.9);
   }
   .try {
-    border: 2px solid #FF685F;
+    // border: 2px solid #FF685F;
+    background: rgba(255, 91, 91, .9);
   }
   .icon-vip-tip {
     position: absolute;

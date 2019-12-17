@@ -32,12 +32,14 @@
         <p class="score-desc" v-text="scoreDesc" v-show="translateX > 0"></p>
       </div>
     </div>
+    <audio id="showScore" src="../../../../static/sounds/show_score.mp3"></audio>
   </div>
 </template>
 
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex'
 import _ from 'lodash'
+import $ from 'jquery'
 import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 import SoundManager from '../../../plugins/soundManager'
@@ -313,7 +315,15 @@ export default {
           this.scoreDesc = 'try again!'
           break
       }
+      $('#showScore')[0].play()
       this.isShowScoring = false
+      let ShowProGuide = localStorage.getItem('isShowProGuide')
+      if (!ShowProGuide) {
+        setTimeout(() => {
+          bus.$emit('ShowGuideBox', {ele: $('.record-container .user .photo'), content: '智能小e帮你识别句子跟读'})
+          localStorage.setItem('isShowProGuide', '1')
+        }, 100)
+      }
     },
     goWordListBox () {
       this.showProCircle = localStorage.getItem('showProCircle')
@@ -441,7 +451,7 @@ export default {
       top: 0;
       text-align: center;
       span {
-        line-height: 48px;
+        line-height: 50px;
         font-size: 18px;
         font-weight: bold;
         color: #fff;
@@ -458,19 +468,22 @@ export default {
       }
     }
     .perfect {
-      border: 2px solid #20C03B;
+      // border: 2px solid #20C03B;
+      background: rgba(74, 214, 96, .9);
       .score-desc {
         color: #5CF676;
       }
     }
     .good {
-      border: 2px solid #515151;
+      // border: 2px solid #515151;
+      background: rgba(119, 119, 134,.9);
       .score-desc {
         color: #070707;
       }
     }
     .try {
-      border: 2px solid #FF685F;
+      // border: 2px solid #FF685F;
+      background: rgba(255, 91, 91, .9);
       .score-desc {
         color: #FF685F;
       }

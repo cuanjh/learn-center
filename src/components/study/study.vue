@@ -19,6 +19,7 @@
     <evaluating-iat-box />
     <noVip-guide-box />
     <prompt-box />
+    <yuyin-guide-box />
   </div>
 </template>
 
@@ -49,6 +50,7 @@ import SentenceBox from '../common/yuyin/sentenceBox'
 import EvaluatingIatBox from '../common/yuyin/evaluatingIatBox'
 import NoVipGuideBox from '../common/yuyin/noVipGuideBox'
 import PromptBox from '../common/yuyin/promptBox'
+import YuyinGuideBox from '../common/yuyin/yuyinGuideBox'
 
 // 结束标志位
 let END = -1
@@ -98,7 +100,8 @@ export default {
     SentenceBox,
     EvaluatingIatBox,
     NoVipGuideBox,
-    PromptBox
+    PromptBox,
+    YuyinGuideBox
   },
   created () {
     this.$on('nextSlide', () => {
