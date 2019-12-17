@@ -774,12 +774,16 @@ export default {
         }
       })
       console.log(score)
+      console.log(scoreDesc)
+      if (scoreRate === 0) {
+        score = 'noRecord'
+      }
       let resultOut = $('.current-swiper .swiper-slide-active').find('.result-out').text()
       if (resultOut) {
         this.$refs['ise'][this.curPage - 1].setScore(score)
         this.setIatSentenceResult(score)
       }
-      this.$refs['scoreResult'].setScoreResult(scoreDesc)
+      this.$refs['scoreResult'].setScoreResult(score)
       this.stopRecord()
     },
     reset (preIndex) {
