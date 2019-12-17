@@ -197,6 +197,10 @@ export default {
   setKidCurrentChapter ({ commit }, params) {
     return httpLogin(config.setCurChapter, params)
   },
+  // 课程的核心课程切课信息
+  getCorePartInfo ({commit, state}, params) {
+    return httpLogin(config.corePartInfoApi, params)
+  },
   // 获取目录结构
   getCatalog ({ commit }, params) {
     return httpLogin(config.studyCatalogApi, params)

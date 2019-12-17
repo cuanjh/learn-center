@@ -62,7 +62,9 @@ export default {
       view: 'swiper',
       chapterCode: '',
       unlockChapters: null,
+      langCode: '',
       courseCode: '',
+      curLevel: '',
       isShow: false,
       thunk: null, // promise
       partForms: [],
@@ -258,7 +260,9 @@ export default {
     })
     let arr = this.id.split('-')
     this.chapterCode = arr.slice(0, 5).join('-')
+    this.langCode = arr.slice(0, 1).join('-')
     this.courseCode = arr.slice(0, 2).join('-')
+    this.curLevelCode = arr.slice(0, 3).join('-')
     this.getUnlockChapter(this.courseCode).then(res => {
       console.log('unlockChapters', res)
       this.unlockChapters = res.unlock
@@ -295,6 +299,9 @@ export default {
   methods: {
     ...mapActions([
       'getUserInfo',
+      'getCatalog',
+      'getChapterContent',
+      'getCorePartInfo',
       'getProgress',
       'getStudyCoinRules',
       'postProgress',
@@ -357,17 +364,30 @@ export default {
         return that.id.indexOf(item.chapter_code) > -1
       })[0]
     },
-    getPartForms () {
-      let curChapterContent = JSON.parse(localStorage.getItem('curChapterContent'))
+    async getPartForms () {
+      let res1 = await this.getCatalog({course_code: this.courseCode})
+      let catalogs = res1.catalogInfo.catalogs
+      let curLevel = catalogs.find(item => {
+        return item.code === this.curLevelCode
+      })
+      let curLevelChapters = curLevel.chapters
+      let curChapterObj = curLevelChapters.find(item => {
+        return item.code === this.chapterCode
+      })
+      let chapterUrl = curChapterObj.chapter_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
+      let curChapterContent = await this.getChapterContent(chapterUrl)
       console.log('curChapterContent', curChapterContent)
       if (this.id.indexOf('A0') > -1) {
         let allForms = curChapterContent.coreLessons.parts[0].slides
-        let coreParts = this.getCoreParts()
+        let corePartInfos = await this.getCorePartInfo({lang_code: this.langCode})
+        let coreParts = corePartInfos.parts_info.find(item => {
+          return this.chapterCode.indexOf(item.chapter_code) > -1
+        })
         console.log(coreParts)
         let core = this.id.split('-').pop()
         let coreNum = parseInt(core.replace('A0', ''))
         let part = coreParts.parts[coreNum - 1]
-        let slides = part.Slides
+        let slides = part.slides
         let startSlideIndex = slides[0] - 1
         let endSlideIndex = slides[slides.length - 1]
         this.partForms = allForms.slice(startSlideIndex, endSlideIndex)

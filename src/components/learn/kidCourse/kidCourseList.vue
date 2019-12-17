@@ -816,7 +816,8 @@ export default {
         console.log(num)
         // 判断非会员是否购买了课程
         if (parseInt(this.isVip) === 1 || this.buyChapters.indexOf(this.curChapterCode) > -1 || this.hasPurchased) {
-          this.$router.push({ name: 'stage', params: {id: id} })
+          // this.$router.push({ name: 'stage', params: {id: id} })
+          this.$router.push({ path: '/study', query: {id: id} })
         } else {
           Bus.$emit('showBuyChapterPanel', this.curChapterCode)
           return false
