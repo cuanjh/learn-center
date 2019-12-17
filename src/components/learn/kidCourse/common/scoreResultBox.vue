@@ -97,9 +97,9 @@ export default {
       }
       setTimeout(() => {
         this.isShowScoreResult = false
-        $('#AnimatScore').hide()
         this.scoreClass = ''
         this.gifUrl = ''
+        $('#AnimatScore').hide()
         if (score !== 'noRecord') {
           this.$parent.$emit('recordAnimate')
         }
