@@ -19,7 +19,7 @@
       <img :src="photo" alt="" @click="goWordListBox()">
       <div class="user-img-circle circle1" v-if="!isVip && showCircle !== '1'"></div>
       <div class="user-img-circle circle2" v-if="!isVip && showCircle !== '1'"></div>
-      <div :class="['mask', scoreClass]" v-show="score && isVip" @click="goWordListBox()">
+      <div :class="['mask', scoreClass]" v-show="isVip" @click="goWordListBox()">
         <span>{{ score }}</span>
       </div>
       <transition name="fade" mode="out-in">
@@ -146,6 +146,10 @@ export default {
 
       if (this.isRecording) {
         this.translateX = 116
+        if (this.xfSpeechType === 'iat') {
+          this.scoreClass = ''
+          this.score = ''
+        }
         this.$emit('startRecord')
       } else {
         this.$emit('stopRecord')
@@ -219,6 +223,7 @@ export default {
     setScore (score) {
       console.log(score)
       this.score = Math.round(parseFloat(score))
+      console.log(score)
       this.scoreClass = ''
       switch (true) {
         case score >= 80:

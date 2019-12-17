@@ -90,8 +90,8 @@ export default {
       }
       setTimeout(() => {
         this.isShowScoreResult = false
-        $('#AnimatScore').hide()
         this.scoreClass = ''
+        $('#AnimatScore').hide()
         if (score !== 'noRecord') {
           this.$parent.$emit('recordAnimate')
         }

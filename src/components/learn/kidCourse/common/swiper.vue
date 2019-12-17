@@ -781,6 +781,7 @@ export default {
       if (scoreRate === 0 && right === 0 && wrong === 0) {
         score = 'noRecord'
       }
+      console.log(score)
       let resultOut = $('.current-swiper .swiper-slide-active').find('.result-out').text()
       if (resultOut) {
         this.$refs['ise'][this.curPage - 1].setScore(score)
