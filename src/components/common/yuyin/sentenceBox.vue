@@ -64,7 +64,7 @@ export default {
     width: 470px;
     min-height: 300px;
     max-height: 600px;
-    padding: 20px 32px;
+    padding: 20px 32px 0;
     overflow-y: auto;
     i {
       display: block;
@@ -111,7 +111,7 @@ export default {
     }
   }
   .sentence {
-    margin-bottom: 30px;
+    margin-bottom: 64px;
     h2 {
       margin-top: 20px;
       font-size:16px;

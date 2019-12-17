@@ -459,9 +459,9 @@ export default {
       }
       .score-desc {
         position: absolute;
-        top: -25px;
+        top: -40px;
         left: -15px;
-        font-size: 12px;
+        font-size: 16px;
         font-weight: 500;
         color: #fff;
         width: 80px;
@@ -485,7 +485,8 @@ export default {
       // border: 2px solid #FF685F;
       background: rgba(255, 91, 91, .9);
       .score-desc {
-        color: #FF685F;
+        // color: #FF685F;
+        color: #FF5C52;
       }
     }
   }
