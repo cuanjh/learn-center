@@ -434,7 +434,11 @@ export default {
       let item = this.kidRecordList.filter(record => {
         return record.list_order === this.curPage
       })[0]
-      if (!item) return
+      if (!item) {
+        let msg = '没有识别到正确录音，再录一次吧！'
+        bus.$emit('show-prompt', msg)
+        return
+      }
       let index = this.curPage - 1
       if (flag) {
         this.recordAudio.src = item.record_sound_url

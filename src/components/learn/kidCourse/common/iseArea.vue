@@ -16,7 +16,9 @@
       @mouseenter="isShowUserTip = true"
       @mouseleave="isShowUserTip = false"
       :style="{transform: 'translateX(-'+ translateX +'px)'}" >
-      <img :src="photo" alt="" @click="goWordListBox()">
+      <div class="img-photo">
+        <img :src="photo" alt="" @click="goWordListBox()">
+      </div>
       <div class="user-img-circle circle1" v-if="!isVip && showCircle !== '1'"></div>
       <div class="user-img-circle circle2" v-if="!isVip && showCircle !== '1'"></div>
       <div :class="['mask', scoreClass]" v-show="isVip" @click="goWordListBox()">
@@ -42,7 +44,7 @@
 
 <script>
 import $ from 'jquery'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import bus from '../../../../bus'
 
 export default {
@@ -113,6 +115,8 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+    ]),
     recordOpt () {
       console.log(this.repeatRecord)
       if (this.repeatRecord && !this.isRecording) return
@@ -199,7 +203,8 @@ export default {
     },
     // 点击头像出现录音评测的弹框
     goWordListBox () {
-      console.log('弹录录音的列表=>')
+      console.log('弹录录音的列表=>', this.isDredge)
+      console.log(this.score)
       this.showCircle = localStorage.getItem('showCircle')
       if (this.showCircle !== '1' && !this.isVip) {
         localStorage.setItem('showCircle', '1')
@@ -208,9 +213,12 @@ export default {
         bus.$emit('showNoVipModal')
         return false
       }
+      // let msg = '没有识别到你的录音哦，再说一次吧'
       if (this.xfSpeechType === 'ise') {
         console.log(this.score)
         if (!this.score) {
+          let msg = '没有识别到正确录音，再录一次吧！'
+          bus.$emit('show-prompt', msg)
           return false
         }
         this.$emit('goWordListBox')
@@ -369,6 +377,12 @@ export default {
   cursor: pointer;
   z-index: 1;
   transition: transform .5s ease-in;
+  .img-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #a9aaa7;
+  }
   img {
     width: 50px;
     height: 50px;
@@ -396,7 +410,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    background:rgba(151,151,151, .5);
+    // background:rgba(151,151,151, .5);
     border-radius: 50%;
     top: 0;
     text-align: center;

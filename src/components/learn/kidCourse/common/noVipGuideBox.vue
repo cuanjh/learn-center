@@ -46,7 +46,7 @@
 import Bus from '../../../../bus'
 import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 
 export default {
   data () {
@@ -67,10 +67,13 @@ export default {
   },
   computed: {
     ...mapState({
-      xfSpeechType: state => state.xfSpeechType
+      xfSpeechType: state => state.xfSpeechType,
+      isDredge: state => state.isDredge
     })
   },
   methods: {
+    ...mapMutations([
+    ]),
     ...mapActions({
       getUserInfo: 'getUserInfo'
     }),

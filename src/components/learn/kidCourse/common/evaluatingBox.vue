@@ -56,7 +56,7 @@
                     <div >
                       <ul>
                         <li v-for="(w, index) in item.words_score" :key="'sentence-word' + index">
-                          <div class="li-item" v-if="w.score > 0">
+                          <div class="li-item">
                             <div class="review-item">
                               <p class="core-word">
                                 <span class="word" :class="{'right': colorClass(w.score) == 'right', 'wrong': colorClass(w.score) == 'wrong'}">{{w.word}}</span>
