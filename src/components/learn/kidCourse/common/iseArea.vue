@@ -217,7 +217,7 @@ export default {
       if (this.xfSpeechType === 'ise') {
         console.log(this.score)
         if (!this.score) {
-          let msg = '没有识别到正确录音，再录一次吧！'
+          let msg = '没有识别到你的录音哦，再说一次吧'
           bus.$emit('show-prompt', msg)
           return false
         }

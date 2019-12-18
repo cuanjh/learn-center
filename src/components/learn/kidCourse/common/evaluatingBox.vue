@@ -505,6 +505,10 @@ export default {
               font-weight:500;
               color:rgba(255,255,255,1);
               line-height:42px;
+              max-width: 300px;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
             }
             .star {
               .star-item {
