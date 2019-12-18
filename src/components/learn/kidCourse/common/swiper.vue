@@ -324,7 +324,8 @@ export default {
                 if (r[j].trim().length > 0) {
                   result.push(r[j].trim())
                   if (j === 0) {
-                    result.push('?')
+                    let last = result.pop()
+                    result.push(last + '?')
                   }
                 }
               }
