@@ -22,7 +22,9 @@ export default {
   },
   created () {
     bus.$on('closeAudio', () => {
-      this.playAudio.pause()
+      if (this.playAudio) {
+        this.playAudio.pause()
+      }
     })
   },
   mounted () {
