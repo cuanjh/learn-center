@@ -1,9 +1,6 @@
 /* eslint-disable */
 import bus from '../bus'
 import Cookie from '../tool/cookie'
-import { userInfo } from 'os';
-import { Upload } from 'element-ui';
-import { resolve, reject } from 'any-promise';
 var qiniu = require('qiniu-js')
 // or
 // import * as qiniu from 'qiniu-js'
@@ -20,6 +17,7 @@ class Recorder {
         this.config             = _config || {};
         this.config.sampleBits  = this.config.sampleBits || 16; //采样数位 8, 16
         this.config.sampleRate  = this.config.sampleRate || 11025; //采样率(1/6 44100)
+        this.config.inputSampleRate = this.config.inputSampleRate || 44100
         // 是否支持录音
 
         this.canRecording     = (navigator.getUserMedia != null)
@@ -33,7 +31,7 @@ class Recorder {
 
             buffer: [], //录音缓存
 
-            inputSampleRate: this.context.sampleRate, //输入采样率
+            inputSampleRate: this.config.inputSampleRate, //输入采样率
 
             inputSampleBits: 16, //输入采样数位 8, 16
 
@@ -165,9 +163,21 @@ class Recorder {
         return this.audioData.encodeWAV();
     }
     //回放
-    play(audio) {
+    play(audio, cb) {
         audio.src = window.URL.createObjectURL(this.getBlob());
-        audio.play();
+        // 录音加载完成
+        audio.oncanplay = function () {
+            audio.play()
+            if (cb) {
+                cb(false)
+            }
+        }
+        // 录音播放结束
+        audio.onended = function () {
+            if (cb) {
+                cb(true)
+            }
+        }
     }
     getSoundTime(cb) {
         let audio = new Audio;
@@ -205,44 +215,47 @@ class Recorder {
         xhr.send(fd);
     }
     // 录音上传到七牛
-    uploadQiniu(token, code, sentence, callback) {
+    uploadQiniu(token, code, sentence) {
       var that = this;
-      var config = {
-        useCdnDomain: true,
-        region: qiniu.region.z0
-      };
-      var courseCode = code.split('-')[0] + '-' +code.split('-')[1]
-      var putExtra = {
-        fname: "",
-        params: {
-          'x:course_code': courseCode,
-          'x:form_code': code,
-          'x:user_id': Cookie.getCookie('user_id'),
-          'x:sentence': sentence
-        },
-        mimeType: [] || null
-      };
-      var key = this.GetKey(code);
-      var next = function(res) {
-        console.log(res)
-      }
-      var error = function(err) {
-        console.log(err)
-      }
-      var complete = function(res) {
-        console.log(res);
-      }
-      var observer = {
-        next: next,
-        error: error,
-        complete: complete
-      };
+      return new Promise((resolve, reject) => {
+        var config = {
+            useCdnDomain: true,
+            region: qiniu.region.z0
+        };
+        var courseCode = code.split('-')[0] + '-' +code.split('-')[1]
+        var putExtra = {
+            fname: "",
+            params: {
+                'x:course_code': courseCode,
+                'x:form_code': code,
+                'x:user_id': Cookie.getCookie('user_id'),
+                'x:sentence': sentence
+            },
+            mimeType: [] || null
+        };
+        var key = this.GetKey(code);
+        var next = function(res) {
+            console.log(res)
+        }
+        var error = function(err) {
+            console.log(err)
+            reject(err)
+        }
+        var complete = function(res) {
+            console.log(res);
+            resolve(key)
+        }
+        var observer = {
+            next: next,
+            error: error,
+            complete: complete
+        };
         var observable = qiniu.upload(this.getBlob(), key, token, putExtra, config);
         var subscription = observable.subscribe(observer);
         console.log('observable--------',observable)
         console.log('subscription------',subscription)
-      // subscription.unsubscribe();
-
+        // subscription.unsubscribe();
+      })
     }
     GetKey (code) {
         var date = new Date()
@@ -279,6 +292,7 @@ class Recorder {
                 complete: complete
             }
             // var fileKey = that.GetFileKey();
+            
             var observable = qiniu.upload(that.getBlob(), fileKey, token, putExtra, config)
             var subscription = observable.subscribe(observer);
         })
@@ -368,26 +382,28 @@ let init = (callback, config) => {
 
 export default {
     recorder: null,
-    recorderUrl: '',
     refuseRecord: false,
     audio: new Audio(),
-    init: function () {
+    init: function (config, cb) {
         init( (rec) => {
+            var flag = false
             if (rec) {
                 this.recorder = rec;
+                flag = true;
             } else {
                 this.recorder = false;
+                flag = false;
             }
-        });
+            if (cb) {
+                cb(flag)
+            }
+        }, config);
     },
     uploadQiniuVoice: function(token, fileKe, callback){
         return this.recorder.uploadQiniuVoice(token, fileKe)
     },
     uploadQiniuVideo: function(file, token, fileKey, callback) {
         return this.recorder.uploadQiniuVideo(file, token, fileKey)
-    },
-    getBlobData: function (file) {
-        return this.recorder ? this.recorder.GetBlobVideo(file) : null;
     },
     startRecording: function () {
         if (this.recorder) {
@@ -410,11 +426,10 @@ export default {
         this.recorder.upload(url, cb);
     },
     uploadQiniu: function (token, code, sentence, cb) {
-      this.recorder.uploadQiniu(token, code, sentence)
-      this.recorderUrl = this.recorder.GetKey(code)
+      return this.recorder.uploadQiniu(token, code, sentence)
     },
-    playRecording: function () {
-        if (this.recorder) this.recorder.play(this.audio);
+    playRecording: function (cb) {
+        if (this.recorder) this.recorder.play(this.audio, cb);
     },
     stopRecordSoud: function () {
         this.audio.pause();
@@ -424,6 +439,13 @@ export default {
     },
     getTime: function (cb) {
         return this.recorder ? this.recorder.getSoundTime(cb) : 0;
+    },
+    isHaveRecord: function () {
+        var flag = false
+        if (this.recorder && this.recorder.getBlob()) {
+            flag = true
+        }
+        return flag
     },
     // 是否激活
     isActivity: function (speakwork, canRecord) {

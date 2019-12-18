@@ -23,6 +23,9 @@ export default {
       let obj = item
       let name = item.name
       if (!item.pinyin && !item.letter) {
+        if (name === '藏语') {
+          name = 'zang语'
+        }
         let pinyin = _.flattenDeep(simplePinyin(name, { pinyinOnly: false })).join('')
         obj['pinyin'] = pinyin
         obj['letter'] = pinyin.slice(0, 1).toUpperCase()
@@ -40,6 +43,9 @@ export default {
   // 更新用户信息
   updateUserInfo (state, data) {
     state.userInfo = data.info
+    if (data.info.member_info.member_type === 1) {
+      state.isVip = true
+    }
     sessionStorage.setItem('userInfo', JSON.stringify(state.userInfo))
     console.log('userInfo', state.userInfo)
   },
@@ -88,5 +94,26 @@ export default {
   // 更新匿名状态
   updateIsAnonymous (state, flag) {
     state.isAnonymous = flag
+  },
+  updateRecordForms (state, forms) {
+    state.recordForms = forms
+  },
+  updateKidRecordList (state, records) {
+    state.kidRecordList = records
+  },
+  // 更新浏览器是否可以录音
+  updateCanRecord (state, flag) {
+    state.isCanRecord = flag
+  },
+  // 讯飞服务量判断
+  updatexfSpeechState (state, flag) {
+    state.xfSpeechState = flag
+  },
+  // 更新讯飞语音分类
+  updatexfSpeechType (state, flag) {
+    state.xfSpeechType = flag
+  },
+  updatexfISEResult (state, result) {
+    state.xfISEResult = result
   }
 }

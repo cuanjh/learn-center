@@ -45,12 +45,17 @@ export const httpLogin = (_url, _params) => { // 已经登录
 
   return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign, {params: _params})
     .then(res => {
+      if (!res['data']) {
+        return new Promise((resolve, reject) => {
+          resolve()
+        })
+      }
       if (res['data']['success']) {
         return new Promise((resolve, reject) => {
           resolve((res['data']))
         })
       } else {
-        if (res['data']['code'][0] === '1005') {
+        if (res['data']['code'][0] + '' === '1005') {
           Cookie.setCookie('isLogin', 0)
           window.location.href = process.env.LOGIN_URL // 回到登录
         } else {
@@ -131,6 +136,11 @@ export const httpNoLogin = (_url, _params) => { // 未登录
   return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign + paramsStr)
     .then(res => {
       // return res['data']
+      if (!res['data']) {
+        return new Promise((resolve, reject) => {
+          resolve()
+        })
+      }
       if (res['data']['success']) {
         return new Promise((resolve, reject) => {
           resolve((res['data']))

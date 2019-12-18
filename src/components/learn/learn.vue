@@ -5,7 +5,7 @@
     <div class="learn-cover learn-all-hide-cover" v-show="coverShow" @click="coverHide"></div> <!-- 遮罩 -->
     <div class="learn-cover learn-all-hide-cover" v-show="anonymousCover"></div>
     <transition name="fade" mode="out-in">
-      <router-view></router-view>
+      <router-view v-if="isRouterAlive"></router-view>
     </transition>
     <!-- 底部 -->
     <voice-player v-show="isShow" />
@@ -37,8 +37,14 @@ import cookie from '../../tool/cookie'
 import UserLoginRegistBox from '../common/userLoginRegistBox.vue'
 
 export default {
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
   data () {
     return {
+      isRouterAlive: true,
       isShow: false,
       isShowBuyChapter: false
     }
@@ -178,6 +184,12 @@ export default {
         $('.headerShow').show()
         $('.learn-wrap').css('padding-top', '62px')
       }
+    },
+    reload () {
+      this.isRouterAlive = false
+      this.$nextTick(() => {
+        this.isRouterAlive = true
+      })
     }
   }
 }

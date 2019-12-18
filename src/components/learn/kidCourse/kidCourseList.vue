@@ -368,6 +368,7 @@ export default {
       getCourseContent: 'course/getCourseContent',
       getRecord: 'course/getRecord',
       getProgress: 'getProgress',
+      getKidCourseContent: 'getKidCourseContent',
       getOneCourseSub: 'getOneCourseSub',
       getCourseTestRanking: 'getCourseTestRanking',
       getHomeworkContent: 'getHomeworkContent',
@@ -815,7 +816,8 @@ export default {
         console.log(num)
         // 判断非会员是否购买了课程
         if (parseInt(this.isVip) === 1 || this.buyChapters.indexOf(this.curChapterCode) > -1 || this.hasPurchased) {
-          this.$router.push({ name: 'stage', params: {id: id} })
+          // this.$router.push({ name: 'stage', params: {id: id} })
+          this.$router.push({ path: '/study', query: {id: id} })
         } else {
           Bus.$emit('showBuyChapterPanel', this.curChapterCode)
           return false
@@ -894,7 +896,6 @@ export default {
       //   Bus.$emit('showBuyChapterPanel', chapterCode)
       //   return false
       // }
-
       localStorage.setItem('currentChapterCode', chapterCode)
       if (chapterCode === this.curChapterCode) {
         if (this.isShow) {
@@ -926,7 +927,10 @@ export default {
       console.log(this.buyChapters)
       if (parseInt(this.isVip) === 1 || (parseInt(this.isVip) !== 1 && (this.hasPurchased || item.code.toLowerCase().indexOf('level1-unit1-chapter1') > -1))) {
         let code = item.code
-        this.$router.push({path: '/app/kid-stage', query: {code: code, type: type}})
+        this.getKidCourseContent({chapter_code: code}).then(res => {
+          localStorage.setItem('kidTeacherContent', JSON.stringify(res.teacherContent))
+          this.$router.push({path: '/kid/kid-stage', query: {code: code, type: type}})
+        })
       } else {
         let obj = {
           className: 'vipIcon',

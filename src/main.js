@@ -24,7 +24,6 @@ import emoji from './tool/emoji.js'
 require('./../static/css/animate.css')
 require('./../static/css/reset.css')
 require('./../static/css/style.css')
-
 require('./../static/bootstrap.min.js')
 
 Vue.use(VueRouter)
@@ -79,6 +78,37 @@ const router = new VueRouter({
   }
 })
 
+if (!navigator.onLine) {
+  ElementUI.MessageBox({
+    title: '信息',
+    message: '您可能没有连接网络哦！！！'
+  })
+}
+
+// 监听断网友好提醒
+window.addEventListener('offline', () => {
+  console.log(ElementUI)
+  ElementUI.MessageBox({
+    title: '信息',
+    message: '您可能没有连接网络哦！！！'
+  })
+})
+
+// 监听联网重新刷新页面
+window.addEventListener('online', () => {
+  window.location.reload()
+})
+
+window.addEventListener('click', () => {
+  if (!navigator.onLine) {
+    ElementUI.MessageBox({
+      title: '信息',
+      message: '您可能没有连接网络哦！！！'
+    })
+    return false
+  }
+})
+
 router.beforeEach((to, from, next) => {
   // 记录上一个页面的scroll位置
   if (from.name) {
@@ -86,6 +116,7 @@ router.beforeEach((to, from, next) => {
     let scrollTop = contentElem ? contentElem.scrollTop : '0'
     store.state.course.scrollPos[from.name] = scrollTop
   }
+
   if (to.matched.some(m => m.meta.auth)) {
     let isLogin = Cookie.getCookie('isLogin')
     if (isLogin === '1') {
@@ -139,6 +170,16 @@ const i18n = new VueI18n({
   locale: Vue.config.lang,
   messages: moreLanguage
 })
+
+// import Worker from './plugins/file.worker.js'
+// const worker = new Worker()
+// worker.postMessage({a: 1})
+// worker.onmessage = (event) => {
+//   console.log(event)
+// }
+// worker.addEventListener('message', (event) => {
+//   console.log('message')
+// })
 
 // store.subscribe((mutation, state) => {
 //   console.log(mutation.type)

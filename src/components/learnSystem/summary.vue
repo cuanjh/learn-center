@@ -201,7 +201,8 @@ export default {
       let curChapterCode = arr.slice(0, 5).join('-')
       let core = parseInt(this.core.replace('A0', ''))
       if (core < 5) {
-        this.$router.push('/learn/stage/' + curChapterCode + '-A0' + (core + 1))
+        // this.$router.push('/learn/stage/' + curChapterCode + '-A0' + (core + 1))
+        this.$router.push({ path: '/study', query: {id: curChapterCode + '-A0' + (core + 1)} })
       } else {
         this.back()
       }

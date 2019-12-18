@@ -28,9 +28,10 @@
     "lodash": "^4.17.10",
     "md5": "^2.2.1",
     "moment": "^2.22.2",
+    "mp3-mediarecorder": "^3.4.5",
     "qiniu-js": "^2.4.0",
     "simple-pinyin": "^3.0.2",
-    "swiper": "^4.4.2",
+    "swiper": "^4.5.0",
     "thenjs": "^2.1.0",
     "vue": "^2.5.2",
     "vue-datepicker2": "^2.3.0-dev",
@@ -42,7 +43,8 @@
     "vue-seamless-scroll": "^1.1.16",
     "vue-spinner": "^1.0.3",
     "vue-validator": "^3.0.0-alpha.2",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "waveheader": "0.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -103,7 +105,8 @@
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.9.1",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "worker-loader": "^2.0.0"
   },
   "engines": {
     "node": ">= 6.0.0",

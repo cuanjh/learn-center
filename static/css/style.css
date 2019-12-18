@@ -1246,3 +1246,11 @@ html.lt-ie10 .row > [class*="col-sm-preffix-"],
 html.lt-ie10 .row > [class*="col-md-preffix-"],
 html.lt-ie10 .row > [class*="col-lg-preffix-"] {
   margin-left: auto; }
+
+.right {
+  color: green;
+}
+.wrong {
+  color: red;
+  cursor: pointer;
+}

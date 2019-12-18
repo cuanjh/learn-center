@@ -120,6 +120,7 @@ export default {
     this.getTradeRecord()
     this.getCoinsProduct()
     this.getMemberProductsList()
+    console.log('userInfo', this.userInfo)
   },
   computed: {
     ...mapState({

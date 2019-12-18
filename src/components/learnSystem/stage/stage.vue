@@ -400,7 +400,7 @@ export default {
     //   this.initData()
     // }
     // 弹出提示
-
+    Recorder.init()
     this.$nextTick(() => {
       if (
         Recorder.isActivity() !== true &&
@@ -840,7 +840,7 @@ export default {
         var payload = {
           activityCode: _this.id,
           coins: _this.coin,
-          correctHits: _this.continue_correct,
+          correctHits: _this.max_continue_correct,
           learnTime: _this.last_time,
           correctRate: cr,
           courseCompleteRate: ccr

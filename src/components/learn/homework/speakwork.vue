@@ -238,19 +238,19 @@ export default {
         this.getQiniuToken().then((res) => {
           this.updateQiniuToken(res)
           console.log('res======>', res)
-          Recorder.uploadQiniu(this.qiniuToken, code, sentence)
-          let recorderUrl = Recorder.recorderUrl
-          // 请求后端接口
-          this.homeworkPub({ code, sound_url: recorderUrl, sound_time: time }).then(res => {
-            console.log('res', res)
-            // 返回成功之后再处理 返回失败具体提示
-            this.homework.has_done = true
-            this.isShow = false
-            this.recordShow = false
-            this.mShow = false
-            this.lastShow = false
-            this.animat = false
-            that.$emit('initData')
+          Recorder.uploadQiniu(this.qiniuToken, code, sentence).then(recorderUrl => {
+            // 请求后端接口
+            this.homeworkPub({ code, sound_url: recorderUrl, sound_time: time }).then(res => {
+              console.log('res', res)
+              // 返回成功之后再处理 返回失败具体提示
+              this.homework.has_done = true
+              this.isShow = false
+              this.recordShow = false
+              this.mShow = false
+              this.lastShow = false
+              this.animat = false
+              that.$emit('initData')
+            })
           })
         })
       })

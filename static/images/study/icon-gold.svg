@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>gold copy 4复制@2x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="29.4086334%" y1="13.5351614%" x2="110.988324%" y2="104.022555%" id="linearGradient-1">
+            <stop stop-color="#FFDE16" offset="0%"></stop>
+            <stop stop-color="#F6A800" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-11.2589518%" y1="15.4703776%" x2="100%" y2="79.9112956%" id="linearGradient-2">
+            <stop stop-color="#FFF154" offset="0%"></stop>
+            <stop stop-color="#FFC713" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="34.6743584%" y1="0%" x2="85.8760834%" y2="107.855225%" id="linearGradient-3">
+            <stop stop-color="#FFF2A0" offset="0%"></stop>
+            <stop stop-color="#FFC62F" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="24.1699219%" y1="-18.4004617%" x2="63.0123171%" y2="83.0464183%" id="linearGradient-4">
+            <stop stop-color="#FFD8AF" offset="0%"></stop>
+            <stop stop-color="#F09900" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="听音选图-有文字" transform="translate(-1300.000000, -165.000000)">
+            <g id="gold-copy-4复制" transform="translate(1300.000000, 165.000000)">
+                <path d="M14.8978568,29.7957137 C23.125716,29.7957137 29.7957137,23.125716 29.7957137,14.8978568 C29.7957137,6.6699977 23.125716,0 14.8978568,0 C6.6699977,0 0,6.6699977 0,14.8978568 C0,23.125716 6.6699977,29.7957137 14.8978568,29.7957137 Z" id="Oval" fill="#FFFFFF"></path>
+                <g id="金币-copy-2" opacity="0.699999988">
+                    <path d="M14.8978568,29.7957137 C23.125716,29.7957137 29.7957137,23.125716 29.7957137,14.8978568 C29.7957137,6.6699977 23.125716,0 14.8978568,0 C6.6699977,0 0,6.6699977 0,14.8978568 C0,23.125716 6.6699977,29.7957137 14.8978568,29.7957137 Z" id="Oval" fill="url(#linearGradient-1)"></path>
+                    <circle id="Oval" fill="url(#linearGradient-2)" cx="14.8978568" cy="14.8978568" r="11.9182855"></circle>
+                    <path d="M16.7240572,9.72642389 C17.5166186,9.72642389 18.1588449,10.3656067 18.1588449,11.1538453 C18.1588449,11.9427349 17.5166186,12.5819176 16.7240572,12.5819176 C15.9314958,12.5819176 15.2898985,11.9427349 15.2898985,11.1538453 C15.2898985,10.3656067 15.9314958,9.72642389 16.7240572,9.72642389 L16.7240572,9.72642389 Z M20.3604043,14.9948001 L20.3604043,9.10286269 C20.3604043,8.19095324 19.5401662,7.44892842 18.531223,7.44892842 L10.7597182,7.44892842 C9.75580716,7.44892842 8.9387141,8.18769874 8.9387141,9.0950519 L8.9387141,13.7613466 C8.9387141,19.1605535 11.3176563,21.9216669 17.1505307,23.293111 L17.3493001,23.3399757 L18.4022745,20.6413486 L18.1953279,20.5723533 C14.6942194,19.4098478 13.2487384,17.7350847 13.3959284,14.9948001 L20.3604043,14.9948001 Z" id="Fill-1" stroke="url(#linearGradient-4)" stroke-width="0.5" fill="url(#linearGradient-3)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

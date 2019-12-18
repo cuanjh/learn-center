@@ -218,7 +218,8 @@
   }
   @media screen and (max-width: 1024px) {
     .link-lists {
-      width: 960px;
+      /* width: 960px; */
+      width: 100%;
     }
     .contact-our {
       width: 960px;
@@ -229,6 +230,10 @@
 
     .icp-record {
       width: 960px;
+    }
+    .footer .copyright {
+      /* width: 960px; */
+      width: 100%;
     }
   }
 </style>

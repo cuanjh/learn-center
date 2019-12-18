@@ -1,6 +1,7 @@
 export default {
   loginInfo: {}, // 登录信息
   userInfo: null, // 用户信息
+  isVip: false,
   courseLangsList: [], // 官方课程列表
   recommendRadioTeachers: [], // 推荐的电台主播
   FileQiniuToken: '', // 获取上传七牛的token
@@ -8,5 +9,126 @@ export default {
   recommendRadioPage: 1,
   recommendRadios: [],
   isAnonymous: false,
-  langCodesSel: [] // 课程相关
+  isCanRecord: false, // 判断浏览器是否可以录音
+  langCodesSel: [], // 课程相关
+  recordForms: [], // 课程学习得分进度
+  kidRecordList: [], // kid录音列表
+  xfISEResult: {},
+  xfSpeechState: true, // true: 有服务量，false: 用完
+  xfSpeechType: '', // 讯飞语音分类,iat 语音听写（识别）, ise 语音评测
+  xfIATScoreRange: { // 语音识别分数计算规则已经对应的图像颜色 ['得分随机区间', '图像颜色', 'pro鼓励语', 'kid鼓励语']
+    '100-100': ['95-99', 'green', 'perfect!', 'iatPerfect'],
+    '90-99': ['90-94', 'green', 'fantastic!', 'iatPerfect'],
+    '80-89': ['80-89', 'green', 'excellent!', 'iatPerfect'],
+    '70-79': ['75-79', 'black', 'good!', 'iatNice'],
+    '60-69': ['60-74', 'black', 'great!', 'iatNice'],
+    '40-59': ['50-59', 'red', 'not bad!', 'iatKeepTrying'],
+    '20-39': ['30-49', 'red', 'keep it up!', 'iatKeepTrying'],
+    '0-19': ['20-29', 'red', 'try again!', 'iatKeepTrying']
+  },
+  xfISEScoreMatch: {
+    100: [99, 99, 99],
+    99: [98, 97, 96],
+    98: [96, 96, 95],
+    97: [95, 95, 94],
+    96: [94, 94, 93],
+    95: [92, 93, 92],
+    94: [91, 92, 91],
+    93: [90, 91, 90],
+    92: [89, 90, 89],
+    91: [88, 89, 88],
+    90: [87, 88, 87],
+    89: [86, 87, 86],
+    88: [85, 86, 85],
+    87: [84, 85, 84],
+    86: [83, 84, 83],
+    85: [82, 83, 82],
+    84: [81, 82, 81],
+    83: [80, 81, 81],
+    82: [80, 80, 80],
+    81: [79, 79, 79],
+    80: [78, 78, 78],
+    79: [77, 77, 77],
+    78: [75, 75, 76],
+    77: [74, 74, 74],
+    76: [73, 73, 72],
+    75: [72, 72, 71],
+    74: [71, 71, 70],
+    73: [70, 70, 69],
+    72: [69, 69, 69],
+    71: [68, 68, 67],
+    70: [68, 65, 66]
+  },
+  xfIatlangObj: {
+    KEN: 'en_us',
+    KFR: 'fr_fr',
+    KSP: 'es_es',
+    ENG: 'en_us',
+    CHI: 'zh_cn',
+    KOR: 'ko_kr',
+    JPN: 'ja_jp',
+    FRE: 'fr_fr',
+    SPA: 'es_es',
+    VIE: 'vi_VN',
+    GER: 'de_DE',
+    RUS: 'ru-ru',
+    // ARA: 'ar_il',
+    // THA: 'th_TH',
+    BUL: 'bg_bg'
+  },
+  xfLang: {
+    'KEN': 'en_us',
+    'ENG': 'en_us',
+    'CHI': 'zh_cn'
+  },
+  xfSyllPhone: {
+    'aa': 'ɑː',
+    'ae': 'æ',
+    'ah': 'ʌ',
+    'ao': 'ɔː',
+    'ar': 'eə',
+    'aw': 'aʊ',
+    'ax': 'ə',
+    'ay': 'aɪ',
+    'eh': 'e',
+    'er': 'ɜː',
+    'ey': 'eɪ',
+    'ih': 'ɪ',
+    'ir': 'ɪə',
+    'iy': 'iː',
+    'oo': 'ɒ',
+    'ow': 'əʊ',
+    'oy': 'ɒɪ',
+    'uh': 'ʊ',
+    'uw': 'uː',
+    'ur': 'ʊə',
+    'b': 'b',
+    'ch': 'tʃ',
+    'd': 'd',
+    'dh': 'ð',
+    'f': 'f',
+    'g': 'g',
+    'hh': 'h',
+    'jh': 'dʒ',
+    'k': 'k',
+    'l': 'l',
+    'm': 'm',
+    'n': 'n',
+    'ng': 'ŋ',
+    'p': 'p',
+    'r': 'r',
+    's': 's',
+    'sh': 'ʃ',
+    't': 't',
+    'th': 'θ',
+    'v': 'v',
+    'w': 'w',
+    'y': 'j',
+    'z': 'z',
+    'zh': 'ʒ',
+    'dr': 'dr',
+    'dz': 'dz',
+    'tr': 'tr',
+    'ts': 'ts'
+  }
 }

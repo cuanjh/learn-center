@@ -1,6 +1,8 @@
 import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken, clearCookie, httpAssets } from '../../api/api'
 import config from '../../api/config'
 import cookie from '../../tool/cookie'
+import _ from 'lodash'
+import md5 from 'md5'
 
 export default {
   // 新登录接口手机快速登录
@@ -195,6 +197,10 @@ export default {
   setKidCurrentChapter ({ commit }, params) {
     return httpLogin(config.setCurChapter, params)
   },
+  // 课程的核心课程切课信息
+  getCorePartInfo ({commit, state}, params) {
+    return httpLogin(config.corePartInfoApi, params)
+  },
   // 获取目录结构
   getCatalog ({ commit }, params) {
     return httpLogin(config.studyCatalogApi, params)
@@ -203,9 +209,33 @@ export default {
   getKidCourseContent ({commit}, params) {
     return httpLogin(config.umKidCourseContent, params)
   },
+  postProgress ({ commit }, params) {
+    let forms = {}
+    _.forIn(params.recordForms, (value, key) => {
+      forms[params.chapterCode + '-' + key] = value
+    })
+    console.log(forms)
+    return httpLogin(config.postProgress, { forms: JSON.stringify(forms) })
+  },
+  // 保存获得的金币
+  postCoins ({ commit, state }, params) {
+    var userid = cookie.getCookie('user_id')
+    var verify = cookie.getCookie('verify')
+    var coinsToken = md5(userid + verify + params.coins)
+    // console.log('postCoin, coins_token is %s', coinsToken)
+
+    var apiPath = config.coinsIncrease
+    if (params.coins < 0) {
+      apiPath = config.coinsReduce
+    }
+    return httpLogin(apiPath, { coins: params.coins, coins_token: coinsToken, course_code: params.CourseCode })
+  },
   // 获取学习进度
   getProgress ({commit}, params) {
     return httpLogin(config.getProgressApi, params)
+  },
+  getStudyCoinRules ({ commit, state }) {
+    return httpLogin(config.coinRules)
   },
   // 获取章节资源内容
   getChapterContent ({ commit, state }, chapterUrl) {
@@ -228,8 +258,11 @@ export default {
     return httpLogin(config.umKidRecordState, params)
   },
   // 录音列表接口
-  getKidRecordLists ({commit}, params) {
-    return httpLogin(config.umKidRecordLists, params)
+  getKidRecordList ({commit}, params) {
+    return httpLogin(config.umKidRecordListApi, params).then(res => {
+      commit('updateKidRecordList', res.records)
+      return res
+    })
   },
   // 保存录音接口
   getKidRecordSave ({commit}, params) {
@@ -254,5 +287,27 @@ export default {
   // 设置内容模块解锁
   setChapterUnlock ({commit}, params) {
     return httpLogin(config.studyProgressUnlockApi, params)
+  },
+  // 获取解锁的课程
+  getUnlockChapter ({ commit }, courseCode) {
+    return httpLogin(config.unlockChapter, { course_code: courseCode })
+  },
+  // 上报统计结果
+  postActivityRecord ({ commit, state }, params) {
+    return httpLogin(config.activityRecord, params)
+  },
+  // 讯飞语音评测
+  xfISE ({commit}, params) {
+    return httpLogin(config.xfISEApi, params)
+  },
+  // 上报讯飞测评结果
+  xfISEUpload ({commit}, params) {
+    return httpLogin(config.xfISEUploadApi, params)
+  },
+  // 拉取讯飞测评结果
+  xfISEPull ({commit}, params) {
+    return httpLogin(config.xfISEPullApi, params).then(res => {
+      return res
+    })
   }
 }

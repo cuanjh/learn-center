@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-slide">
+  <div class="swiper-slide" :id="item.code">
     <div class="slide-content">
       <div class="draw-img">
         <img class="img-box" v-if="type == 'draw'" :src="item.image | urlFix('imageView2/0/w/2000/h/900/format/jpg')" alt="" @click="playMother('mother-sound'+index, $event)">
@@ -8,7 +8,7 @@
       </div>
       <div class="draw-desc">
         <div class="no-record">
-          <p class="text"><i :class="'trumpet trumpet' + index" @click="playMother('mother-sound'+index)"></i> {{item.content || item.word}}</p>
+          <div class="text"><i :class="'trumpet trumpet' + index" @click="playMother('mother-sound'+index)"></i><p :data-content="item.content || item.word" v-html="formatContent"></p></div>
           <div class="start-button" @click.stop.prevent="startRecord('mother-sound'+index)">
             <i class="start-img" :class="{'showStart': showStart}" v-if="!isRecord"></i>
           </div>
@@ -54,12 +54,12 @@
 <script>
 import { mapMutations, mapState, mapActions } from 'vuex'
 import $ from 'jquery'
+import _ from 'lodash'
 import bus from '../../../bus'
 import Recorder from '../../../plugins/recorder'
 import Cookie from '../../../tool/cookie.js'
-
 export default {
-  props: ['item', 'index', 'type', 'courseCode'],
+  props: ['item', 'index', 'type', 'chapterCode'],
   data () {
     return {
       showTipsStop: 1,
@@ -74,7 +74,8 @@ export default {
       playing: false,
       isRecord: false,
       recordActivity: false, // 录音是否激活
-      qiniuUrl: ''
+      qiniuUrl: '',
+      contentArr: []
     }
   },
   created () {
@@ -87,26 +88,117 @@ export default {
       this.animat = params
       this.recording = params
       Recorder.stopRecording()
-      bus.$off('record_setVolume')
+    })
+    bus.$on('yuyinSet', (text) => {
+      $('.swiper-slide-active').find('.text p span').removeClass('right')
+      $('.swiper-slide-active').find('.text p span').removeClass('wrong')
+      let content = $('.swiper-slide-active').find('.text p').data('content')
+      let arr1 = content.toLowerCase()
+        .replace(new RegExp(/\?/, 'g'), ' ')
+        .replace(new RegExp(',', 'g'), ' ')
+        .replace(new RegExp(/\./, 'g'), ' ')
+        .replace(new RegExp('-', 'g'), ' ')
+        .replace(new RegExp('!', 'g'), ' ')
+        .replace(new RegExp('“', 'g'), ' ')
+        .replace(new RegExp('”', 'g'), ' ')
+        .replace(new RegExp('"', 'g'), ' ')
+        .replace(new RegExp(':', 'g'), ' ')
+        .trim(' ').split(' ')
+      let contentArr = []
+      for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i].trim().length > 0) {
+          contentArr.push(arr1[i].replace(new RegExp('—', 'g'), '').trim())
+        }
+      }
+      console.log('content', contentArr)
+      let arr = text.toLowerCase().replace(new RegExp(/\?/, 'g'), ' ').replace(new RegExp(',', 'g'), ' ').replace(new RegExp(/\./, 'g'), ' ').replace(new RegExp('\'', 'g'), '’').split(' ')
+      let result = []
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].trim().length > 0) {
+          result.push(arr[i].trim())
+        }
+      }
+      for (let j = 0; j < result.length; j++) {
+        if (result[j] === contentArr[j]) {
+          $('.swiper-slide-active').find('.text p span:nth-child(' + (j + 1) + ')').addClass('right')
+        } else {
+          $('.swiper-slide-active').find('.text p span:nth-child(' + (j + 1) + ')').addClass('wrong')
+        }
+      }
+      console.log(result)
     })
   },
   mounted () {
-    console.log('11111111')
     // 初始化
-    Recorder.init()
+    Recorder.init({inputSampleRate: 50400, sampleRate: 16000})
   },
   computed: {
     ...mapState({
       speakwork: state => state.learn.speakwork,
       canRecord: state => state.learn.canRecord,
-      FileQiniuToken: state => state.FileQiniuToken // 七牛的token
-    })
+      FileQiniuToken: state => state.FileQiniuToken, // 七牛的token
+      xfLang: state => state.xfLang
+    }),
+    formatContent () {
+      let content = this.item.content || this.item.word
+      if (!content) {
+        return ''
+      }
+      let result = ''
+      let arr = content.replace(new RegExp('\\n', 'g'), '<br/>').split(' ')
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].trim().length > 0) {
+          if (arr[i].indexOf('<br/>') > -1) {
+            let r = arr[i].split('<br/>')
+            for (let l = 0; l < r.length; l++) {
+              if (r[l].trim().length > 0) {
+                let tag = ''
+                if (l === 0) {
+                  tag = '<br/>'
+                }
+                result += '<span> ' + r[l].trim() + ' </span>' + tag
+              }
+            }
+          } else if (arr[i].indexOf('?') > -1) {
+            let r = arr[i].split('?')
+            for (let j = 0; j < r.length; j++) {
+              if (r[j].trim().length > 0) {
+                let tag = ''
+                if (j === 0) {
+                  tag = '?'
+                }
+                result += '<span> ' + r[j].trim() + tag + ' </span>'
+              }
+            }
+          } else if (arr[i].indexOf('”') > -1) {
+            let r = arr[i].split('”')
+            for (let k = 0; k < r.length; k++) {
+              if (r[k].trim().length > 0) {
+                let tag = ''
+                if (k === 0) {
+                  tag = '”'
+                }
+                result += '<span> ' + r[k].trim() + tag + ' </span>'
+              }
+            }
+          } else {
+            if (arr[i].trim() === '—') {
+              result += arr[i].trim()
+            } else {
+              result += '<span> ' + arr[i].trim() + ' </span>'
+            }
+          }
+        }
+      }
+      return result
+    }
   },
   methods: {
-    ...mapActions({
-      getUploadFileToken: 'getUploadFileToken', // 上传七牛
-      getKidRecordSave: 'getKidRecordSave'
-    }),
+    ...mapActions([
+      'getUploadFileToken', // 上传七牛
+      'getKidRecordSave',
+      'xfISE' // 讯飞语音评测
+    ]),
     ...mapMutations({
       updateFileQiniuToken: 'updateFileQiniuToken', // 更新上传七牛token
       updateSpeakWork: 'learn/updateSpeakWork'
@@ -126,12 +218,12 @@ export default {
         return
       }
       // 判断是否在录音
-      if (!this.checkRecording()) {
-        alert('对不起：无法打开麦克风！')
-        this.isRecord = false
-        this.recording = false
-        return false
-      }
+      // if (!this.checkRecording()) {
+      //   alert('对不起：无法打开麦克风！')
+      //   this.isRecord = false
+      //   this.recording = false
+      //   return false
+      // }
       this.isRecord = true
       setTimeout(() => {
         this.showRecordingImg = true
@@ -155,13 +247,10 @@ export default {
         this.showTipSave = 1
       }
       Recorder.stopRecording()
-      bus.$off('record_setVolume')
-      console.log('record stop!!!!!')
       this.recording = false
       this.playing = true
       this.recordActivity = false
       this.showRecordingImg = false
-      // this.$emit('updateTipStop')
       JSON.stringify(localStorage.setItem('recordTipStop', 2))
       this.startMySound()
     },
@@ -175,11 +264,8 @@ export default {
     startMySound () {
       this.animat = !this.animat
       if (this.animat) {
-        let audio = Recorder.audio
         Recorder.playRecording()
-        audio.addEventListener('ended', () => {
-          this.animat = false
-        })
+        this.animat = false
       } else {
         Recorder.stopRecordSoud()
       }
@@ -190,14 +276,13 @@ export default {
       this.playing = false
       this.startRecord(e)
     },
-    // 点击保存录音上次七牛云
-    async saveVoice (card) {
+    // 点击保存录音上传七牛云
+    saveVoice (card) {
       $('.img-box').removeAttr('style', 'pointer-events')
       this.isDisable = true
       setTimeout(() => {
         this.isDisable = false
       }, 2000)
-      console.log(card, this.courseCode)
       let code = card.code
       let content = card.content ? card.content : card.word
       console.log('code,content', code, content)
@@ -211,7 +296,7 @@ export default {
       JSON.stringify(localStorage.setItem('recordTipSave', 2))
       let _this = this
       // 上传七牛
-      await _this.getUploadFileToken().then(res => {
+      _this.getUploadFileToken().then(res => {
         _this.updateFileQiniuToken(res)
         console.log('Token', res)
         let date = new Date()
@@ -222,13 +307,28 @@ export default {
         Recorder.uploadQiniuVoice(_this.FileQiniuToken, fileAudioKey).then(data => {
           console.log('data', data)
           _this.qiniuUrl = data.key
+          let url = process.env.QINIU_DOMAIN + _this.qiniuUrl
+          // 讯飞语音测评服务
+          _this.xfISE({language: _this.xfLang[_this.chapterCode.split('-')[0]], text: content, url: url}).then(res => {
+            console.log(res)
+            if (res.code === '0' && res.data.read_sentence.rec_paper.read_chapter.except_info === '0') {
+              let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
+              if (!xfISEResult) {
+                xfISEResult = {}
+              }
+              let id = this.chapterCode + '-' + this.item.code
+              _.set(xfISEResult, id, res.data.read_sentence.rec_paper.read_chapter.sentence)
+              localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
+            }
+          })
           console.log('qiniuUrl', _this.qiniuUrl)
+          let courseCode = this.chapterCode.split('-').slice(0, 2).join('-')
           if (_this.qiniuUrl) {
             // 请求后端接口
             let params = {
               sound_url: this.qiniuUrl,
               sound_time: time,
-              course_code: this.courseCode,
+              course_code: courseCode,
               code: code,
               teacher_module: this.type
             }
@@ -244,7 +344,6 @@ export default {
                 this.playing = false
                 this.animat = false
                 Recorder.stopRecording()
-                bus.$off('record_setVolume')
                 this.$emit('initRecordState')
                 setTimeout(() => {
                   this.isRecord = false
@@ -265,7 +364,6 @@ export default {
       this.recording = false
       this.showRecordingImg = false
       Recorder.stopRecording()
-      bus.$off('record_setVolume')
       setTimeout(() => {
         this.isRecord = false
         this.heightHide = false
@@ -359,9 +457,6 @@ export default {
         background-size: cover;
         width: 18px;
         height: 16px;
-        position: absolute;
-        left: 10px;
-        top: 16px;
         cursor: pointer;
         &.trumpetPlaying {
           background: url('../../../../static/images/learnSystem/trumpet_grey.gif') no-repeat center;
@@ -788,4 +883,5 @@ export default {
   transition:all 1s ease;
   z-index: 2;
 }
+
 </style>

@@ -118,11 +118,11 @@ export default {
       'getUserInfo',
       'getLearnInfoV5',
       'getkidRecordShare',
-      'getKidRecordLists'
+      'getKidRecordList'
     ]),
     async initDataList () {
       // 录音列表
-      let res = await this.getKidRecordLists({chapter_code: this.code, teacher_module: this.type})
+      let res = await this.getKidRecordList({chapter_code: this.code, teacher_module: this.type})
       this.recordLists = res.records
       console.log('kid record Lists', this.recordLists)
       await this.swiperInit()
@@ -202,7 +202,9 @@ export default {
       /* eslint-enable */
     },
     goKidStage () {
-      this.$router.push({path: '/app/kid-stage', query: {code: this.code, type: this.type}})
+      let arr = this.code.split('-')
+      // this.$router.push({path: '/kid/kid-stage', query: {code: this.code, type: this.type}})
+      this.$router.push({path: '/app/kid-course-list/' + arr.slice(0, 2).join('-')})
     },
     // 播放录音
     playClik (id1, id2) {
@@ -340,7 +342,7 @@ export default {
 }
 .record-swiper {
   width: 100%;
-  padding: 0 7%;
+  padding: 0 7% 3%;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -516,10 +518,10 @@ export default {
       }
       @keyframes load1 {
         0%, 100%{
-          height: 14px;
+          height: 8px;
         }
         50%{
-          height: 8px;
+          height: 14px;
         }
       }
     }

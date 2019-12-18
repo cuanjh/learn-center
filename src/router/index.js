@@ -27,7 +27,10 @@ const bookMiniDetails = r => require.ensure([], () => r(require('@/components/le
 const kidCourseList = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidCourseList.vue')), 'kid-course-list')
 const kidStage = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidStage.vue')), 'kid-stage')
 const kidRecordList = r => require.ensure([], () => r(require('@/components/learn/kidCourse/kidRecordList.vue')), 'kid-record-list')
+const yuyin = r => require.ensure([], () => r(require('@/components/learn/kidCourse/testYuyin.vue')), 'test-yuyin')
+const testWorker = r => require.ensure([], () => r(require('@/components/learn/kidCourse/testWorker.vue')), 'test-yuyin')
 
+const kid = r => require.ensure([], () => r(require('@/components/kid/kid.vue')), 'kid')
 // 学习 --- 我的
 const user = r => require.ensure([], () => r(require('@/components/learn/user/user.vue')), 'user')
 const userCourse = r => require.ensure([], () => r(require('@/components/learn/user/userCourse.vue')), 'user-course')
@@ -73,6 +76,8 @@ const userGuide = r => require.ensure([], () => r(require('@/components/learnSys
 const download = r => require.ensure([], () => r(require('@/components/common/download.vue')), 'download')
 const paySuccess = r => require.ensure([], () => r(require('@/components/learn/home/paySuccess.vue')), 'paySuccess')
 
+// 新版学习系统
+const study = r => require.ensure([], () => r(require('@/components/study/study.vue')), 'study')
 export default[
   {
     path: '/',
@@ -135,24 +140,6 @@ export default[
         path: 'kid-course-list/:courseCode',
         name: 'kidCourseList',
         component: kidCourseList
-      },
-      {
-        path: 'kid-stage',
-        name: 'kidStage',
-        component: kidStage,
-        props: (route) => ({
-          code: route.query.code,
-          type: route.query.type
-        })
-      },
-      {
-        path: 'kid-record-list',
-        name: 'kidRecordList',
-        component: kidRecordList,
-        props: (route) => ({
-          code: route.query.code,
-          type: route.query.type
-        })
       },
       {
         path: 'index',
@@ -390,7 +377,47 @@ export default[
     ]
   },
   {
+    path: '/kid',
+    component: kid,
+    children: [
+      {
+        path: 'kid-stage',
+        name: 'kidStage',
+        component: kidStage,
+        props: (route) => ({
+          code: route.query.code,
+          type: route.query.type
+        })
+      },
+      {
+        path: 'kid-record-list',
+        name: 'kidRecordList',
+        component: kidRecordList,
+        props: (route) => ({
+          code: route.query.code,
+          type: route.query.type
+        })
+      }
+    ]
+  },
+  {
+    path: '/study',
+    component: study,
+    props: (route) => ({
+      id: route.query.id
+    })
+  },
+  {
     path: '/download',
     component: download
+  },
+  // 测试语音识别
+  {
+    path: '/yuyin',
+    component: yuyin
+  },
+  {
+    path: '/worker',
+    component: testWorker
   }
 ]
