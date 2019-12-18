@@ -137,6 +137,7 @@ export default {
       }
     },
     playRecord (flag) {
+      console.log(flag)
       this.isPlaying = !this.isPlaying
       if (flag) {
         Recorder.playRecording((data) => {
