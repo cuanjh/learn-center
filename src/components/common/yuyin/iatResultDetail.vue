@@ -65,12 +65,12 @@ export default {
   box-shadow:0px 0px 16px 0px rgba(0,0,0,0.14);
   border-radius: 8px;
   // white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
+  // -webkit-overflow-scrolling: touch;
   overflow-y: auto;
-  overflow: -moz-scrollbars-none;
-  overflow: -moz-scrollbars-none;
+  // overflow: -moz-scrollbars-none;
+  // overflow: -moz-scrollbars-none;
   &::-webkit-scrollbar {
-    display: none;
+    // display: none;
   }
 }
 
@@ -135,5 +135,10 @@ export default {
 .right {
   color: #1FBD3A !important;
   background:rgba(31,189,58,.01)!important;
+}
+@media (max-height: 630px){
+  .iat-result {
+    max-height: 380px;
+  }
 }
 </style>

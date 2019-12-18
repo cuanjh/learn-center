@@ -799,7 +799,7 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-@media (max-height: 610px){
+@media (max-height: 630px){
   .evaluating-modal-box .evaluating-content {
     width: 600px;
   }
