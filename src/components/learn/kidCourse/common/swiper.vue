@@ -504,15 +504,22 @@ export default {
               let words = xfSentence.getWords(res.data.read_sentence.rec_paper.read_chapter.sentence)
               formObj['words_score'] = words
               console.log('fromObj', formObj)
-              let formIndex = xfISEResult.findIndex(item => {
-                return item.form_code === this.formCode
-              })
-              if (formIndex === -1) {
-                xfISEResult.push(formObj)
-              } else {
-                xfISEResult.splice(formIndex, 1, formObj)
+              // let formIndex = xfISEResult.findIndex(item => {
+              //   return item.form_code === this.formCode
+              // })
+              let result = []
+              for (let i = 0; i < xfISEResult.length; i++) {
+                if (xfISEResult[i].form_code !== this.formCode) {
+                  result.push(xfISEResult[i])
+                }
               }
-              localStorage.setItem('xfISEResult', JSON.stringify(xfISEResult))
+              result.push(formObj)
+              // if (formIndex === -1) {
+              //   xfISEResult.push(formObj)
+              // } else {
+              //   xfISEResult.splice(formIndex, 1, formObj)
+              // }
+              localStorage.setItem('xfISEResult', JSON.stringify(result))
               this.getAvarageScore()
               this.$refs['scoreResult'].setScoreResult(formObj.score)
               this.iseResultSet()

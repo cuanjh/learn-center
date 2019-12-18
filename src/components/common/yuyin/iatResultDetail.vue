@@ -12,12 +12,18 @@
 
 <script>
 import $ from 'jquery'
+import bus from '../../../bus'
 export default {
   props: ['iatResult'],
   data () {
     return {
       playAudio: null
     }
+  },
+  created () {
+    bus.$on('closeAudio', () => {
+      this.playAudio.pause()
+    })
   },
   mounted () {
     console.log(this.iatResult)
