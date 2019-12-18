@@ -475,7 +475,10 @@ export default {
       } else {
         xfIATResult.splice(formIndex, 1, formObj)
       }
-      localStorage.setItem('xfIATResult', JSON.stringify(xfIATResult))
+      console.log(resultSentence)
+      if (resultSentence) {
+        localStorage.setItem('xfIATResult', JSON.stringify(xfIATResult))
+      }
     },
     afterPostQiniu (url) {
       this.recordUrl = url

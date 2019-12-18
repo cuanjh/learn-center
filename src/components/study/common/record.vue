@@ -21,7 +21,9 @@
         v-show="isCanIat && xfSpeechState"
         @mouseenter="isShowProUserTip = true"
         @mouseleave="isShowProUserTip = false">
-      <img class="photo" :src="photo" alt="" @click="goWordListBox()">
+      <div class="photo-img" @click="goWordListBox()">
+        <img class="photo" :src="photo" alt="" >
+      </div>
       <div class="user-img-circle circle1" v-if="!isVip && showProCircle !== '1'"></div>
       <div class="user-img-circle circle2" v-if="!isVip && showProCircle !== '1'"></div>
       <transition name="fade" mode="out-in">
@@ -309,6 +311,9 @@ export default {
         case score >= 60:
           this.scoreClass = 'good'
           break
+        case score === '':
+          this.scoreClass = 'noRecord'
+          break
         default:
           this.scoreClass = 'try'
           break
@@ -333,10 +338,6 @@ export default {
         return false
       }
       console.log(this.iseWords)
-      let xfIATResult = JSON.parse(localStorage.getItem('xfIATResult'))
-      if (!xfIATResult) {
-        return false
-      }
       this.$parent.$emit('showIatSentenceBox')
       // if (this.xfSpeechType === 'ise') {
       //   // 弹录音列表
@@ -404,6 +405,12 @@ export default {
     border-radius: 50%;
     z-index: 1;
     transition: transform .5s ease-in;
+    .photo-img {
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
     .photo {
       cursor: pointer;
       width: 100%;
@@ -477,6 +484,13 @@ export default {
       background: rgba(119, 119, 134,.9);
       .score-desc {
         color: #070707;
+      }
+    }
+    .noRecord {
+      background: none;
+      .score-desc {
+        // color: #FF685F;
+        color: #FF5C52;
       }
     }
     .try {

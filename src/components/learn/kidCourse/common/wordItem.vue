@@ -1,7 +1,7 @@
 <template>
 <div class="word-item">
   <div class="item" v-for="(item, index) in newWords" :key="index">
-    <div class="item-content" v-if="parseInt(item.score) > 0">
+    <div class="item-content">
       <div class="review-item">
         <p class="core-word">
           <span class="word" :class="{'right': colorClass(item.score) == 'right', 'wrong': colorClass(item.score) == 'wrong'}">{{item.word}}</span>
