@@ -98,10 +98,10 @@ export default {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overflow-y: auto;
-  overflow: -moz-scrollbars-none;
-  overflow: -moz-scrollbars-none;
+  // overflow: -moz-scrollbars-none;
+  // overflow: -moz-scrollbars-none;
   &::-webkit-scrollbar {
-    display: none;
+    // display: none;
   }
 }
 .item .item-content {

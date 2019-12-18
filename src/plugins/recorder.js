@@ -432,7 +432,8 @@ export default {
         if (this.recorder) this.recorder.play(this.audio, cb);
     },
     stopRecordSoud: function () {
-        this.audio.pause();
+      this.currentTime = 0;
+      this.audio.pause();
     },
     getSndData: function () {
         return this.recorder ? this.recorder.getBlob() : null;

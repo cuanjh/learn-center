@@ -105,7 +105,22 @@ export default {
         Bus.$emit('showNoVipModal')
         return false
       }
-      if (this.isVip && !this.score) {
+      let iatResult = []
+      if (this.xfSpeechType === 'ise') {
+        iatResult = JSON.parse(localStorage.getItem('xfISEResult'))
+      } else {
+        iatResult = JSON.parse(localStorage.getItem('xfIATResult'))
+      }
+      console.log(this.score)
+      if ((!iatResult || iatResult.length === 0)) {
+        let msg = '你还没有录音哦，快去录音吧！'
+        Bus.$emit('show-prompt', msg)
+        return false
+      }
+      if (this.score === 0) {
+        this.score = true
+      }
+      if (!this.score) {
         let msg = '你还没有录音哦，快去录音吧！'
         Bus.$emit('show-prompt', msg)
         return false
