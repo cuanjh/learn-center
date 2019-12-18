@@ -53,6 +53,7 @@ export default {
       isShowGradeModal: false,
       beyondFriendResult: '',
       chapterList: [],
+      xfResult: [],
       score: ''
     }
   },
@@ -105,7 +106,7 @@ export default {
         Bus.$emit('showNoVipModal')
         return false
       }
-      if (this.isVip && !this.score) {
+      if (this.isVip && !this.score && this.xfResult.length === 0) {
         let msg = '你还没有录音哦，快去录音吧！'
         Bus.$emit('show-prompt', msg)
         return false
@@ -131,16 +132,16 @@ export default {
     getAvarageScore () {
       let sumScore = 0
       let count = 0
-      let xfResult = []
+      this.xfResult = []
       if (this.xfSpeechType === 'ise') {
-        xfResult = JSON.parse(localStorage.getItem('xfISEResult'))
+        this.xfResult = JSON.parse(localStorage.getItem('xfISEResult'))
       } else {
-        xfResult = JSON.parse(localStorage.getItem('xfIATResult'))
+        this.xfResult = JSON.parse(localStorage.getItem('xfIATResult'))
       }
-      if (!xfResult || xfResult.length === 0) {
+      if (!this.xfResult || this.xfResult.length === 0) {
         return
       }
-      xfResult.forEach(item => {
+      this.xfResult.forEach(item => {
         if (item.form_code.indexOf(this.chapterCode + '-' + this.curType.charAt(0).toUpperCase() + this.curType.slice(1) + '-') > -1) {
           sumScore += item.score
           count++

@@ -82,7 +82,8 @@ export default {
           audioId = 'niceTry'
           break
       }
-      this.gifUrl += this.gifUrl + '?' + Math.random()
+      let timestamp = new Date().getTime()
+      this.gifUrl += this.gifUrl + '?timestamp=' + timestamp
       if (isNaN(score)) {
         this.score = ''
       }
