@@ -69,6 +69,7 @@ export default {
     // 初始化swiper
     closeModal () {
       this.isShowEvaluatingModal = false
+      bus.$emit('closeAudio')
       bus.$emit('courseSummaryShow')
     }
   }

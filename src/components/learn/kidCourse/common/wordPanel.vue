@@ -57,7 +57,8 @@ export default {
       isPlaytts: false,
       isPlayAudio: false,
       translateX: 116,
-      wavData: null
+      wavData: null,
+      readAudio: null
     }
   },
   components: {
@@ -114,6 +115,13 @@ export default {
     recordOpt () {
       this.isRecording = !this.isRecording
       if (this.isRecording) {
+        Recorder.stopRecordSoud()
+        clearInterval(this.timerIntervalPlay)
+        this.timerIntervalPlay = null
+        this.time = 0
+        this.isPlayAudio = false
+        this.isPlaying = false
+        this.translateX = 116
         this.startRecord()
       } else {
         this.stopRecord()
@@ -139,6 +147,8 @@ export default {
     playRecord (flag) {
       console.log(flag)
       this.isPlaying = !this.isPlaying
+      this.readAudio.pause()
+      this.isPlaytts = false
       if (flag) {
         Recorder.playRecording((data) => {
           if (data) {
@@ -165,13 +175,16 @@ export default {
     // 播放科大讯飞合成的语音
     read () {
       let blob = new Blob([this.wavData], {type: 'audio/wav'})
-      let audio = new Audio()
-      audio.src = URL.createObjectURL(blob)
-      audio.oncanplay = () => {
+      this.readAudio = new Audio()
+      // let audio = new Audio()
+      this.readAudio.src = URL.createObjectURL(blob)
+      this.readAudio.oncanplay = () => {
         this.isPlaytts = true
-        audio.play()
+        this.readAudio.play()
+        Recorder.stopRecordSoud()
+        this.isPlayAudio = false
       }
-      audio.onended = () => {
+      this.readAudio.onended = () => {
         this.isPlaytts = false
       }
     },

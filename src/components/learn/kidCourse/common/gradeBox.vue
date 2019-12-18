@@ -53,8 +53,8 @@ export default {
       isShowGradeModal: false,
       beyondFriendResult: '',
       chapterList: [],
-      xfResult: [],
-      score: ''
+      score: '',
+      xfResult: []
     }
   },
   created () {
@@ -106,7 +106,8 @@ export default {
         Bus.$emit('showNoVipModal')
         return false
       }
-      if (this.isVip && !this.score && this.xfResult.length === 0) {
+      console.log(this.score)
+      if (!this.score && this.xfResult && this.xfResult.length === 0) {
         let msg = '你还没有录音哦，快去录音吧！'
         Bus.$emit('show-prompt', msg)
         return false

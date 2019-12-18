@@ -120,17 +120,19 @@ export default {
     recordOpt () {
       console.log(this.repeatRecord)
       if (this.repeatRecord && !this.isRecording) return
-      if (this.timeCount === 0) {
-        let msg = '录音时间不能小于1秒哦！'
-        bus.$emit('show-prompt', msg)
-        this.reset()
-        this.$parent.$emit('reset')
-        return false
+      if (this.xfSpeechType === 'ise') {
+        if (this.timeCount === 0) {
+          let msg = '录音时间不能小于1秒哦！'
+          bus.$emit('show-prompt', msg)
+          this.reset()
+          this.$parent.$emit('reset')
+          return false
+        }
+        this.timeCount = 0
+        setTimeout(() => {
+          this.timeCount = 1
+        }, 1000)
       }
-      this.timeCount = 0
-      setTimeout(() => {
-        this.timeCount = 1
-      }, 1000)
       this.repeatRecord = true
       if (!this.isCanRecord) {
         this.$parent.$emit('showTip')
