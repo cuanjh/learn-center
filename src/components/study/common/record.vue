@@ -134,6 +134,7 @@ export default {
       this.recording = false // 是否是正在录音
       this.animat = false // 播放自己录音的动画
       this.recordActivity = false // 录音是否激活
+      Recorder.stopRecordSoud()
       this.time = 0 // 累计时间
       clearInterval(this.timerInterval)
     },
@@ -146,6 +147,8 @@ export default {
         }
       } else {
         this.translateX = 0
+        Recorder.stopRecordSoud()
+        this.animat = false
         setTimeout(() => {
           this.recordState = 0
           this.startRecord()

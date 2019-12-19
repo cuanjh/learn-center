@@ -126,7 +126,7 @@ export default {
         }
       })
     }
-    bus.$on('kidRecording', (flag) => {
+    bus.$on('kidRecordingSwiperMouse', (flag) => {
       if (flag) {
         this.swiper.mousewheel.disable()
         $('.current-swiper').addClass('swiper-no-swiping')
@@ -420,13 +420,14 @@ export default {
         this.time++
       }, 1000)
       Recorder.startRecording()
+      let index = this.curPage - 1
+      this.$refs['ise'][index].resetPlay()
+      this.recordAudio.pause()
       if (this.xfSpeechType === 'iat' && this.isVip) {
         this.$parent.$emit('startIatRecorder')
-        // this.swiper.mousewheel.disable()
-        // $('.current-swiper').addClass('swiper-no-swiping')
       }
       if (this.isVip) {
-        bus.$emit('kidRecording', true)
+        bus.$emit('kidRecordingSwiperMouse', true)
       }
     },
     // 停止录音
@@ -437,8 +438,6 @@ export default {
       this.$refs['ise'][this.curPage - 1].stopRecord()
       if (this.xfSpeechType === 'iat') {
         this.$parent.$emit('stopIatRecorder')
-        // this.swiper.mousewheel.enable()
-        // $('.current-swiper').removeClass('swiper-no-swiping')
       }
     },
     // 播放录音
@@ -497,6 +496,7 @@ export default {
               if (JSON.parse(res.data.read_sentence.rec_paper.read_chapter.is_rejected)) {
                 this.$refs['scoreResult'].setScoreResult('noRecord')
                 this.$refs['ise'][this.curPage - 1].noResultAlert()
+                bus.$emit('kidRecordingSwiperMouse', false)
                 return
               }
               let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
@@ -539,7 +539,6 @@ export default {
               if (this.list.length === this.curPage) {
                 this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
               }
-              bus.$emit('kidRecording', false)
             }
             // 2-2: 保存录音到后台
             this.saveRecord(qiniuUrl)
@@ -548,6 +547,7 @@ export default {
           // 2-2: 保存录音到后台
           this.saveRecord(qiniuUrl)
         }
+        bus.$emit('kidRecordingSwiperMouse', false)
       })
     },
     saveRecord (qiniuUrl) {
@@ -815,7 +815,7 @@ export default {
       }
       this.$refs['scoreResult'].setScoreResult(score)
       this.stopRecord()
-      bus.$emit('kidRecording', false)
+      bus.$emit('kidRecordingSwiperMouse', false)
     },
     reset (preIndex) {
       this.$parent.$emit('hideWordPanel')
