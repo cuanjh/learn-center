@@ -188,6 +188,9 @@ export default {
         this.thumbHeightLeft = res
         this.thumbHeightRight = copyReverse
       })
+      if (this.isVip) {
+        bus.$emit('proRdcording', true)
+      }
     },
     // 点击停止录音
     recordStop () {

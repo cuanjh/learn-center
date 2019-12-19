@@ -126,6 +126,15 @@ export default {
         }
       })
     }
+    bus.$on('kidRecording', (flag) => {
+      if (flag) {
+        this.swiper.mousewheel.disable()
+        $('.current-swiper').addClass('swiper-no-swiping')
+      } else {
+        this.swiper.mousewheel.enable()
+        $('.current-swiper').removeClass('swiper-no-swiping')
+      }
+    })
   },
   mounted () {
     // 获取课程数据
@@ -413,8 +422,11 @@ export default {
       Recorder.startRecording()
       if (this.xfSpeechType === 'iat' && this.isVip) {
         this.$parent.$emit('startIatRecorder')
-        this.swiper.mousewheel.disable()
-        $('.current-swiper').addClass('swiper-no-swiping')
+        // this.swiper.mousewheel.disable()
+        // $('.current-swiper').addClass('swiper-no-swiping')
+      }
+      if (this.isVip) {
+        bus.$emit('kidRecording', true)
       }
     },
     // 停止录音
@@ -425,8 +437,8 @@ export default {
       this.$refs['ise'][this.curPage - 1].stopRecord()
       if (this.xfSpeechType === 'iat') {
         this.$parent.$emit('stopIatRecorder')
-        this.swiper.mousewheel.enable()
-        $('.current-swiper').removeClass('swiper-no-swiping')
+        // this.swiper.mousewheel.enable()
+        // $('.current-swiper').removeClass('swiper-no-swiping')
       }
     },
     // 播放录音
@@ -527,6 +539,7 @@ export default {
               if (this.list.length === this.curPage) {
                 this.xfISEUpload({forms: localStorage.getItem('xfISEResult')})
               }
+              bus.$emit('kidRecording', false)
             }
             // 2-2: 保存录音到后台
             this.saveRecord(qiniuUrl)
@@ -585,6 +598,7 @@ export default {
           let isShowKidGuide3 = localStorage.getItem('isShowKidGuide3')
           if (isShowKidGuide3 !== '1' && this.curPage === this.totalPage) {
             bus.$emit('kidGuideShow3', $('#score-report'))
+            localStorage.setItem('isShowKidGuide3', '1')
           }
         }, 1500)
       }
@@ -801,6 +815,7 @@ export default {
       }
       this.$refs['scoreResult'].setScoreResult(score)
       this.stopRecord()
+      bus.$emit('kidRecording', false)
     },
     reset (preIndex) {
       this.$parent.$emit('hideWordPanel')

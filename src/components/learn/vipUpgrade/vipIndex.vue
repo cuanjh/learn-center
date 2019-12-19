@@ -314,6 +314,7 @@ export default {
     this.getMemberProductsList()
     console.log('会员列表卡片充值', this.productList)
     this.getMemberCardPrdv1()
+    console.log(this.userInfo)
   },
   computed: {
     ...mapState({
@@ -371,6 +372,17 @@ export default {
       Bus.$emit('showCommonModal', obj)
     },
     goBuy (item) {
+      console.log(this.userInfo)
+      if (!this.userInfo.phonenumber || !this.userInfo.email) {
+        let obj = {
+          className: 'warnIcon',
+          description: '请先绑定后充值！',
+          btnDesc: '确定',
+          isLink: false
+        }
+        Bus.$emit('showCommonModal', obj)
+        return false
+      }
       let OBJ = item
       let jsonStr = JSON.stringify(OBJ)
       localStorage.setItem('userBuy', jsonStr)
@@ -380,7 +392,17 @@ export default {
     },
     // 激活码激活
     showConfirm () {
-      console.log('确定激活码？', this.isActivation)
+      console.log('确定激活码？', this.isActivation, this.userInfo)
+      if (!this.userInfo.phonenumber || !this.userInfo.email) {
+        let obj = {
+          className: 'warnIcon',
+          description: '请先绑定后充值！',
+          btnDesc: '确定',
+          isLink: false
+        }
+        Bus.$emit('showCommonModal', obj)
+        return false
+      }
       var _memberType = this.ui.member_info.member_type
       // this.$refs.alert.$emit('UserVipCode', this.activateNum)
       let activeCode = this.isActivation.toUpperCase()

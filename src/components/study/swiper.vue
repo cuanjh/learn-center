@@ -20,7 +20,6 @@
 </template>
 
 <script>
-// import Swiper from 'swiper'
 import Swiper from 'swiper/dist/js/swiper.esm.bundle'
 import 'swiper/dist/css/swiper.css'
 
@@ -31,6 +30,7 @@ import SentenceToImgBox from './form/sentenceToImgBox'
 import WriteWords from './form/writeWords'
 import MakeSentence from './form/makeSentence'
 import FillGap from './form/fillGap'
+import bus from '../../bus'
 
 // import utils from '../../plugins/utils'
 
@@ -85,6 +85,13 @@ export default {
 
     this.$on('calCoinStudy', (params) => {
       this.$parent.$emit('calCoinStudy', params)
+    })
+    bus.$on('proRdcording', (data) => {
+      if (data) {
+        this.mySwiper.mousewheel.disable()
+      } else {
+        this.mySwiper.mousewheel.enable()
+      }
     })
   },
   mounted () {
