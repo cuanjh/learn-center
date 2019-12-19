@@ -192,7 +192,7 @@ export default {
         this.thumbHeightRight = copyReverse
       })
       if (this.isVip) {
-        bus.$emit('proRdcording', true)
+        bus.$emit('proRdcordingSwiperMousew', false)
       }
     },
     // 点击停止录音

@@ -450,7 +450,7 @@ export default {
       console.log(this.score, scoreDesc)
       this.$refs['recordItem'].setScore({score: this.score, scoreDesc: scoreDesc})
       this.$refs['recordItem'].recordStop()
-      bus.$emit('proRdcording', false)
+      bus.$emit('proRdcordingSwiperMousew', true)
     },
     // 存储语音识别结果
     setIatSentenceResult () {

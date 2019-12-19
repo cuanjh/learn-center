@@ -547,7 +547,6 @@ export default {
           // 2-2: 保存录音到后台
           this.saveRecord(qiniuUrl)
         }
-        bus.$emit('kidRecordingSwiperMouse', false)
       })
     },
     saveRecord (qiniuUrl) {
@@ -576,6 +575,7 @@ export default {
           }
         })
       })
+      bus.$emit('kidRecordingSwiperMouse', false)
     },
     // 点击最后的出现评测的弹框
     goGradeBox () {
