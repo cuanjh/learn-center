@@ -373,7 +373,7 @@ export default {
     },
     goBuy (item) {
       console.log(this.userInfo)
-      if (!this.userInfo.phonenumber || !this.userInfo.email) {
+      if (!this.userInfo.phonenumber && !this.userInfo.email) {
         let obj = {
           className: 'warnIcon',
           description: '请先绑定后充值！',
@@ -393,7 +393,7 @@ export default {
     // 激活码激活
     showConfirm () {
       console.log('确定激活码？', this.isActivation, this.userInfo)
-      if (!this.userInfo.phonenumber || !this.userInfo.email) {
+      if (!this.userInfo.phonenumber && !this.userInfo.email) {
         let obj = {
           className: 'warnIcon',
           description: '请先绑定后充值！',
