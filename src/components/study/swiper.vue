@@ -87,11 +87,6 @@ export default {
       this.$parent.$emit('calCoinStudy', params)
     })
     bus.$on('proRdcordingSwiperMousew', (res) => {
-      // if (data) {
-      //   this.mySwiper.mousewheel.disable()
-      // } else {
-      //   this.mySwiper.mousewheel.enable()
-      // }
       this.$emit('setSwiperMousewheel', res)
     })
   },

@@ -493,7 +493,7 @@ export default {
       }
     }
     .noRecord {
-      background: none;
+      background: transparent;
       .score-desc {
         // color: #FF685F;
         color: #FF5C52;
