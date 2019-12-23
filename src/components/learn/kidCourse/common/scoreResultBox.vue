@@ -104,12 +104,16 @@ export default {
         if (score !== 'noRecord') {
           this.$parent.$emit('recordAnimate')
         }
+        let isShowKidGuide = localStorage.getItem('isShowKidGuide')
         let isShowKidGuide2 = localStorage.getItem('isShowKidGuide2')
         if (!isShowKidGuide2 && this.isVip && this.xfSpeechType === 'iat') {
           setTimeout(() => {
             bus.$emit('kidGuideShow2', {ele: $('.swiper-slide-active .ise-area .user'), content: '智能小e帮你识别句子跟读'})
             localStorage.setItem('isShowKidGuide2', '1')
           }, 100)
+        }
+        if (isShowKidGuide && this.isVip && this.xfSpeechType === 'ise') {
+          bus.$emit('kidRecordingSwiperMouse', false)
         }
       }, 1800)
     }

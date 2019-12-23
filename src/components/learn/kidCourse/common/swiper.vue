@@ -642,10 +642,6 @@ export default {
             bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
             bus.$emit('kidRecordingSwiperMouse', false)
           }, 3500)
-        } else {
-          setTimeout(() => {
-            bus.$emit('kidRecordingSwiperMouse', false)
-          }, 500)
         }
       }
     },
@@ -821,7 +817,9 @@ export default {
       }
       this.$refs['scoreResult'].setScoreResult(score)
       this.stopRecord()
-      bus.$emit('kidRecordingSwiperMouse', false)
+      setTimeout(() => {
+        bus.$emit('kidRecordingSwiperMouse', false)
+      }, 200)
     },
     reset (preIndex) {
       this.$parent.$emit('hideWordPanel')
