@@ -498,7 +498,7 @@ export default {
                 this.$refs['ise'][this.curPage - 1].noResultAlert()
                 setTimeout(() => {
                   bus.$emit('kidRecordingSwiperMouse', false)
-                }, 800)
+                }, 300)
                 return
               }
               let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
@@ -643,7 +643,9 @@ export default {
             bus.$emit('kidRecordingSwiperMouse', false)
           }, 3500)
         } else {
-          bus.$emit('kidRecordingSwiperMouse', false)
+          setTimeout(() => {
+            bus.$emit('kidRecordingSwiperMouse', false)
+          }, 500)
         }
       }
     },
