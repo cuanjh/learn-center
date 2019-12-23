@@ -496,7 +496,9 @@ export default {
               if (JSON.parse(res.data.read_sentence.rec_paper.read_chapter.is_rejected)) {
                 this.$refs['scoreResult'].setScoreResult('noRecord')
                 this.$refs['ise'][this.curPage - 1].noResultAlert()
-                bus.$emit('kidRecordingSwiperMouse', false)
+                setTimeout(() => {
+                  bus.$emit('kidRecordingSwiperMouse', false)
+                }, 800)
                 return
               }
               let xfISEResult = JSON.parse(localStorage.getItem('xfISEResult'))
@@ -575,7 +577,6 @@ export default {
           }
         })
       })
-      // bus.$emit('kidRecordingSwiperMouse', false)
     },
     // 点击最后的出现评测的弹框
     goGradeBox () {
