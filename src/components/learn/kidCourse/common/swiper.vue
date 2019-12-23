@@ -575,7 +575,7 @@ export default {
           }
         })
       })
-      bus.$emit('kidRecordingSwiperMouse', false)
+      // bus.$emit('kidRecordingSwiperMouse', false)
     },
     // 点击最后的出现评测的弹框
     goGradeBox () {
@@ -639,7 +639,10 @@ export default {
         if (isShowKidGuide !== '1' && this.isVip) {
           setTimeout(() => {
             bus.$emit('kidGuideShow', $('.current-swiper .swiper-slide-active .content').find('p'))
+            bus.$emit('kidRecordingSwiperMouse', false)
           }, 3500)
+        } else {
+          bus.$emit('kidRecordingSwiperMouse', false)
         }
       }
     },
