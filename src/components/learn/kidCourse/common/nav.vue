@@ -66,7 +66,7 @@ export default {
     back () {
       let xfISEResult = localStorage.getItem('xfISEResult')
       if (xfISEResult) {
-        this.xfISEUpload({forms: xfISEResult})
+        // this.xfISEUpload({forms: xfISEResult})
       }
       this.$emit('back')
     },

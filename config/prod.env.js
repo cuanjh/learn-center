@@ -2,7 +2,7 @@
 module.exports = {
   NODE_ENV: '"production"',
   // API_HOST: '"http://dev.api.talkmate.com"',
-  API_HOST: '"https://api.talkmate.com"',
+  API_HOST: '"https://wapi.talkmate.com"',
   LOGIN_URL: '"https://test-learn.talkmate.com"',
   HOME_URL: '"https://test-learn.talkmate.com/app/index"',
   REDIRECT_URL: '"https://test-learn.talkmate.com/app/pay-success"',

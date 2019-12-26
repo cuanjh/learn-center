@@ -31,7 +31,7 @@
         </div> -->
         <div class='learn-user' @mouseenter="showExit" >
           <router-link :to="{path: (userInfo ? '/app/user/course' : '/auth/login')}">
-            <img :src="userInfo ? userInfo.photo : './../../../static/images/learnIndex/user-photo.svg'"  />
+            <img :src="photo ? photo : './../../../static/images/learnIndex/user-photo.svg'"  />
             <span v-show="isActive" class="active"></span>
           </router-link>
           <transition name="fade">
@@ -104,17 +104,11 @@ export default {
       console.log('header', this.userInfo.member_info.member_type)
       return this.userInfo.member_info.member_type
     },
-    ui () {
-      let userId = cookie.getCookie('user_id')
-      if (userId) {
-        let ui = this.userInfo
-        if (Object.keys(ui).length === 0) {
-          ui = JSON.parse(sessionStorage.getItem('userInfo'))
-        }
-        return ui
-      } else {
-        return null
+    photo () {
+      if (this.userInfo) {
+        return this.userInfo.photo
       }
+      return ''
     }
   },
   watch: {

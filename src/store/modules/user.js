@@ -275,7 +275,7 @@ const mutations = {
   },
   // 创建微信支付订单
   createWeixinOrderMutation (state, response) {
-    state.payWeixin.aliWebPayUrl = 'http://dev.api.talkmate.com/qrcode.php?data=' + response.code_url
+    state.payWeixin.aliWebPayUrl = process.env.API_HOST + '/qrcode.php?data=' + response.code_url
     state.payWeixin.productId = response.productId
     state.payWeixin.tradeNo = response.trade_no
     console.log('创建微信支付订单返回', state.payWeixin)

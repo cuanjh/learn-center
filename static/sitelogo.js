@@ -271,7 +271,7 @@
     },
 
     submitDone: function (data) {
-      var uploadUrl = 'https://course-assets1.talkmate.com/' + data.photo;
+      var uploadUrl = 'https://uploadfile1.talkmate.com/' + data.photo;
       $('#defaultUserImg').attr('src', uploadUrl)
       $('#avatar-modal').fadeOut();
       this.$uploadUrl.attr('value', uploadUrl)

@@ -248,6 +248,7 @@ export default {
   width: 70px;
   height: 70px;
   border-radius: 50%;
+  object-fit: cover;
   border: 5px solid #F1F4F6;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;

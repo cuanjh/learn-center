@@ -85,10 +85,15 @@ export default {
     // 用于隐藏图片
     hidePicture () {
       $('#avatar-modal').hide()
-      this.getUserInfo()
+      setTimeout(() => {
+        this.getUserInfo()
+      }, 1000)
     },
     closeUploadView () {
       $('#avatar-modal').hide()
+      setTimeout(() => {
+        this.getUserInfo()
+      }, 1000)
     }
   }
 }
