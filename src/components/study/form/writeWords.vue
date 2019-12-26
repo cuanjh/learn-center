@@ -1,8 +1,8 @@
 <template>
   <div :class="['form', form.form_show_type]">
     <div class="img-wrap">
-      <next-comp />
-      <img :src="form.image" alt="">
+      <next-comp @next="next"/>
+      <img :src="form.image" alt="" @click="playAudio">
     </div>
     <div class="content">
       <span class="text" v-show="!innerlocked"></span>
@@ -25,7 +25,6 @@ import NextComp from '../common/next'
 import soundCtrl from '../../../plugins/soundCtrl'
 import SoundManager from '../../../plugins/soundManager'
 import minx from './minx'
-import bus from '../../../bus'
 
 export default {
   props: ['form'],
@@ -41,7 +40,6 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('writeWords init')
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
       this.input = ''
       this.innerlocked = true
       this.focus()
@@ -93,7 +91,7 @@ export default {
           top: offset.top + (imgWrap.height() - 85) / 2
         }
         this.$parent.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
-        bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+        this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
       }
     },
     preventUndo (e) {
@@ -111,11 +109,18 @@ export default {
         this.innerlocked = false
         this.$parent.$emit('nextForm')
       }, 1000)
+    },
+    next () {
+      this.$emit('next')
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+.img-wrap {
+  img {
+    cursor: pointer;
+  }
+}
 </style>

@@ -58,7 +58,7 @@ export default {
 
     this.$on('init', () => {
       console.log('repeatSpeak init')
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
+      this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
       this.updatexfSpeechState(true)
       this.initIatRecorder()
       this.$refs['trumpet'].$emit('init', false, () => {

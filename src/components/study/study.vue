@@ -192,10 +192,11 @@ export default {
     })
 
     // 每个form学完记录得分，params {formCode, score}
-    bus.$on('setStudyFormScore', (params) => {
+    this.$on('setStudyFormScore', (params) => {
       console.log(params)
       let key = params.formCode.split('-').slice(5).join('-')
       _.set(this.recordForms, [key], params.score)
+      console.log('setStudyFormScore', this.recordForms)
       this.updateRecordForms(this.recordForms)
       this.setSlidesVal()
     })

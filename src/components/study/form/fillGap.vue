@@ -30,7 +30,6 @@ import TrumpetComp from '../common/trumpet'
 import soundCtrl from '../../../plugins/soundCtrl'
 import SoundManager from '../../../plugins/soundManager'
 import minx from './minx'
-import bus from '../../../bus'
 export default {
   props: ['form'],
   data () {
@@ -47,7 +46,6 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('fillGap init')
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 0})
       this.isShow = true
       this.sentence = this.form.sentence_show
       this.words = _.shuffle(this.form.options)
@@ -95,7 +93,7 @@ export default {
       }
 
       this.$parent.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+      this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
     },
     exit () {
     }

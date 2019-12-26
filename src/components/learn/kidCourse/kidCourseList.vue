@@ -858,7 +858,8 @@ export default {
     jumpVipPage (isActive, id) {
       if (parseInt(this.isVip) === 1 || this.hasPurchased) {
         if (isActive) {
-          this.$router.push({ name: 'stage', params: {id: id} })
+          // this.$router.push({ name: 'stage', params: {id: id} })
+          this.$router.push({ path: '/study', query: {id: id} })
         } else {
           this.tips = '学习需要循序渐进, <br>请先完成前面课程的学习哦！'
           Bus.$emit('setContinueLearn', this.tips)

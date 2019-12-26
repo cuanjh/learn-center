@@ -38,7 +38,6 @@ import common from '../../plugins/common'
 import utils from '../../plugins/utils'
 import soundCtrl from '../../plugins/soundCtrl'
 import SoundManager from '../../plugins/soundManager'
-import bus from '../../bus'
 export default {
   props: ['slideForms'],
   data () {
@@ -131,7 +130,7 @@ export default {
 
       this.$parent.$emit('calCoinStudy', {formCode: this.curForm.code, score: score, offset: obj})
       if (this.selFormCode !== this.curForm.code) {
-        bus.$emit('setStudyFormScore', {formCode: this.curForm.code, score: score})
+        this.$parent.$emit('setStudyFormScore', {formCode: this.curForm.code, score: score})
         this.selFormCode = this.curForm.code
       }
     })

@@ -14,6 +14,7 @@ minx.shake = {
 minx.isLearned = {
   methods: {
     isLearned (formCode) {
+      console.log('recordForms', this.recordForms)
       let key = formCode.split('-').slice(5).join('-')
       let flag = false
       if (this.recordForms[key] === 0 || this.recordForms[key] === 1) {

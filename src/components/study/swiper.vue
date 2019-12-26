@@ -31,6 +31,8 @@ import WriteWords from './form/writeWords'
 import MakeSentence from './form/makeSentence'
 import FillGap from './form/fillGap'
 import bus from '../../bus'
+import minx from './form/minx'
+import { mapState } from 'vuex'
 
 // import utils from '../../plugins/utils'
 
@@ -67,6 +69,7 @@ export default {
 
     this.$on('nextForm', () => {
       console.log('nextForm', this.mySwiper.activeIndex, this.mySwiper.realIndex, this.mySwiper.previousIndex)
+      this.setIsLearn(this.mySwiper.activeIndex)
       if (this.slideForms.length - 1 === this.mySwiper.activeIndex) {
         this.$parent.$emit('nextSlide')
         this.$emit('destroySwiper')
@@ -86,12 +89,21 @@ export default {
     this.$on('calCoinStudy', (params) => {
       this.$parent.$emit('calCoinStudy', params)
     })
+    this.$on('setStudyFormScore', (params) => {
+      this.$parent.$emit('setStudyFormScore', params)
+    })
     bus.$on('proRdcordingSwiperMousew', (res) => {
       this.$emit('setSwiperMousewheel', res)
     })
   },
   mounted () {
 
+  },
+  mixins: [minx.isLearned],
+  computed: {
+    ...mapState({
+      recordForms: state => state.recordForms
+    })
   },
   methods: {
     initSwiper () {
@@ -124,7 +136,7 @@ export default {
           },
           slideChange: () => {
             console.log('slideChange', this.mySwiper.activeIndex, this.mySwiper.realIndex, this.mySwiper.previousIndex)
-            console.log(that.$refs)
+            this.setIsLearn(this.mySwiper.previousIndex)
             // 重置前一个组件数据
             that.$refs['comp-' + that.mySwiper.previousIndex][0].$emit('break')
             // 初始化当前组件
@@ -144,6 +156,16 @@ export default {
           clickable: true
         }
       })
+    },
+    setIsLearn (index) {
+      let comp = this.$refs['comp-' + index]
+      if (comp && comp[0]['form']) {
+        let form = comp[0]['form']
+        let isLearn = this.isLearned(form.code)
+        if (!isLearn) {
+          this.$parent.$emit('setStudyFormScore', {formCode: form.code, score: 0})
+        }
+      }
     }
   }
 }

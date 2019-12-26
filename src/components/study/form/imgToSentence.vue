@@ -24,7 +24,6 @@ import $ from 'jquery'
 
 import soundCtrl from '../../../plugins/soundCtrl'
 import SoundManager from '../../../plugins/soundManager'
-import bus from '../../../bus'
 export default {
   props: ['form'],
   data () {
@@ -35,7 +34,6 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('imgToSentence init')
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 0})
       soundCtrl.setSnd(this.form.sound)
       soundCtrl.play()
       this.sentences = this.getSentences()
@@ -83,7 +81,7 @@ export default {
       }
 
       this.$parent.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+      this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
     },
     // 从句子数组中随机抽出3个句子进行选择（包含正确的句子）
     getSentences () {

@@ -26,7 +26,6 @@ import $ from 'jquery'
 import TrumpetComp from '../common/trumpet'
 import common from '../../../plugins/common'
 import SoundManager from '../../../plugins/soundManager'
-import bus from '../../../bus'
 
 export default {
   props: ['form'],
@@ -43,8 +42,6 @@ export default {
   },
   created () {
     this.$on('init', () => {
-      bus.$emit('setStudyFormScore', {formCode: this.form.data[0].code, score: 0})
-      bus.$emit('setStudyFormScore', {formCode: this.form.data[1].code, score: 0})
       this.isShow = true
       this.pos = common.randomItems(['0', '50%'])
       this.$refs['trumpet'].$emit('init', this.form.data[0])
@@ -90,7 +87,7 @@ export default {
         top: offset.top + (imgWrap.height() - 85) / 2
       }
       this.$parent.$emit('calCoinStudy', {formCode: item.code, score: score, offset: obj})
-      bus.$emit('setStudyFormScore', {formCode: item.code, score: score})
+      this.$parent.$emit('setStudyFormScore', {formCode: item.code, score: score})
     },
     resetData () {
       this.isShow = false

@@ -1,7 +1,7 @@
 <template>
   <div :class="['form', form.form_show_type]">
     <div class="img-wrap">
-      <next-comp />
+      <next-comp @next="next"/>
       <img :src="form.image" alt="">
     </div>
     <div class="content">
@@ -35,7 +35,6 @@ import NextComp from '../common/next'
 import soundCtrl from '../../../plugins/soundCtrl'
 import SoundManager from '../../../plugins/soundManager'
 import minx from './minx'
-import bus from '../../../bus'
 export default {
   props: ['form'],
   data () {
@@ -51,7 +50,6 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('makeSentence init')
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 0})
       this.isShow = true
       this.resetAll()
       this.playAudio()
@@ -106,7 +104,7 @@ export default {
         top: offset.top + (imgWrap.height() - 85) / 2
       }
       this.$parent.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+      this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
     },
     resetAll () {
       this.options.length = 0
@@ -123,6 +121,9 @@ export default {
         this.options.length = 0
         this.$parent.$emit('nextForm')
       }, 500)
+    },
+    next () {
+      this.$parent.$emit('nextForm')
     }
   }
 }

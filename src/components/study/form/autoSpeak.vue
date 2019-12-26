@@ -12,7 +12,6 @@
 
 <script>
 import TrumpetComp from '../common/trumpet'
-import bus from '../../../bus'
 export default {
   props: ['form'],
   components: {
@@ -21,7 +20,7 @@ export default {
   created () {
     this.$on('init', () => {
       console.log('autospeak init')
-      bus.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
+      this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: 1})
       this.$refs['trumpet'].$emit('init', false, () => {
         this.$parent.$emit('nextForm')
         console.log(this.form)
