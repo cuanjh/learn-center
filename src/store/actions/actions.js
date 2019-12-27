@@ -1,4 +1,4 @@
-import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken, clearCookie, httpAssets } from '../../api/api'
+import { httpNoLogin, httpLogin, httpSnsUrl, httpGetToken, clearCookie, httpAssets, httpLoginPost } from '../../api/api'
 import config from '../../api/config'
 import cookie from '../../tool/cookie'
 import _ from 'lodash'
@@ -302,7 +302,7 @@ export default {
   },
   // 上报讯飞测评结果
   xfISEUpload ({commit}, params) {
-    return httpLogin(config.xfISEUploadApi, params)
+    return httpLoginPost(config.xfISEUploadApi, params)
   },
   // 拉取讯飞测评结果
   xfISEPull ({commit}, params) {

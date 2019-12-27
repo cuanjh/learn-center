@@ -77,6 +77,69 @@ export const httpLogin = (_url, _params) => { // 已经登录
     })
 }
 
+export const httpLoginPost = (_url, _params) => { // 已经登录
+  if (!_params) { // 无参数请求情况
+    _params = {}
+  }
+  _params.appKey = process.env.APP_KEY
+  let secret = process.env.APP_SECRET
+  _params.HTTP_API_VERSION = '4.1'
+  _params.timeStamp = Moment().format('YYYYMMDDHHmmss')
+  _params.reqId = randomString(16)
+  _params.device_id = Cookie.getCookie('device_id')
+  _params.user_id = Cookie.getCookie('user_id') ? Cookie.getCookie('user_id') : ''
+  _params.verify = Cookie.getCookie('verify') ? Cookie.getCookie('verify') : ''
+  // let paramsStr = ''
+  let str = ''
+  let keys = Object.keys(_params).sort()
+  keys.forEach(key => {
+    let val = _params[key]
+    if ((typeof val === 'object') && val.constructor === Array) {
+      val.forEach(item => {
+        // paramsStr += '&' + key + '=' + item
+        str += key + item
+      })
+    } else {
+      // paramsStr += '&' + key + '=' + val
+      str += key + val
+    }
+  })
+  let sign = MD5(secret + str).toUpperCase()
+  _params['sign'] = sign
+  let origin = '/apiprefix'
+  if (process.env.NODE_ENV === 'production') {
+    origin = process.env.API_HOST
+  }
+  return Vue.http.post(origin + _url, _params, {emulateJSON: true})
+    .then(res => {
+      if (!res['data']) {
+        return new Promise((resolve, reject) => {
+          resolve()
+        })
+      }
+      if (res['data']['success']) {
+        return new Promise((resolve, reject) => {
+          resolve((res['data']))
+        })
+      } else {
+        if (res['data']['code'][0] + '' === '1005') {
+          Cookie.setCookie('isLogin', 0)
+          window.location.href = process.env.LOGIN_URL // 回到登录
+        } else {
+          return new Promise((resolve, reject) => {
+            let code = res['data']['code'][0]
+            let obj = res['data']
+            obj['errorMsg'] = errorCode.get(code)
+            resolve(obj)
+          })
+        }
+      }
+    }, error => {
+      // 请求异常处理
+      console.log(error)
+    })
+}
+
 export const httpGetToken = (_url) => { // 已经登录
   var data = {
     HTTP_API_VERSION: config.API_VERSION,
