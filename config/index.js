@@ -11,15 +11,14 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      // '/apiprefix': {
-      //   // target: 'http://dev.api.talkmate.com',
-      //   target: process.env.NODE_ENV === 'production' ? 'https://wapi.talkmate.com': 'https://wapi.talkmate.com',
-      //   secure: true,
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     '^/apiprefix': '/'
-      //   }
-      // }
+      '/apiprefix': {
+        target: 'http://dev.api.talkmate.com',
+        secure: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/apiprefix': '/'
+        }
+      }
     },
 
     // Various Dev Server settings

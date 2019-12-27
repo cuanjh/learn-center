@@ -42,8 +42,12 @@ export const httpLogin = (_url, _params) => { // 已经登录
     }
   })
   let sign = MD5(secret + str).toUpperCase()
-
-  return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign, {params: _params})
+  _params['sign'] = sign
+  let origin = '/apiprefix'
+  if (process.env.NODE_ENV === 'production') {
+    origin = process.env.API_HOST
+  }
+  return Vue.http.get(origin + _url, {params: _params})
     .then(res => {
       if (!res['data']) {
         return new Promise((resolve, reject) => {
@@ -131,9 +135,14 @@ export const httpNoLogin = (_url, _params) => { // 未登录
       str += key + val
     }
   })
+  console.log(paramsStr)
   let sign = MD5(secret + str).toUpperCase()
-
-  return Vue.http.jsonp(process.env.API_HOST + _url + '?sign=' + sign + paramsStr)
+  _params['sign'] = sign
+  let origin = '/apiprefix'
+  if (process.env.NODE_ENV === 'production') {
+    origin = process.env.API_HOST
+  }
+  return Vue.http.get(origin + _url, {params: _params})
     .then(res => {
       // return res['data']
       if (!res['data']) {
