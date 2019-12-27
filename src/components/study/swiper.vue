@@ -161,6 +161,9 @@ export default {
       let comp = this.$refs['comp-' + index]
       if (comp && comp[0]['form']) {
         let form = comp[0]['form']
+        if (!form.code) {
+          return false
+        }
         let isLearn = this.isLearned(form.code)
         if (!isLearn) {
           this.$parent.$emit('setStudyFormScore', {formCode: form.code, score: 0})
