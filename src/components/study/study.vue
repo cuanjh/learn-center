@@ -325,9 +325,11 @@ export default {
     initData () {
       // 获取课程进度
       this.getProgress({chapter_code: this.chapterCode}).then(progress => {
-        this.recordForms = progress.record.forms
-        console.log('recordForms', this.recordForms)
-        this.updateRecordForms(this.recordForms)
+        if (progress.record.forms) {
+          this.recordForms = progress.record.forms
+          console.log('recordForms', this.recordForms)
+          this.updateRecordForms(this.recordForms)
+        }
         this.getPartForms()
       })
     },
@@ -508,7 +510,7 @@ export default {
           this.setChapterUnlock({chapter_code: this.chapterCode, module: 'improvement'})
         }
         let nextChapterCode = this.getNextChapterCode()
-        if (!this.unlockChapters[nextChapterCode]) {
+        if (!this.unlockChapters[nextChapterCode] || !(this.unlockChapters[nextChapterCode] && this.unlockChapters[nextChapterCode].Core)) {
           // 解锁下一课程
           this.setChapterUnlock({chapter_code: nextChapterCode, module: 'core'})
         }

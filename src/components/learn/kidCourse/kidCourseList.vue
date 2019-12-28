@@ -544,7 +544,10 @@ export default {
 
       let progressObj = await this.getProgress({chapter_code: this.curChapterCode})
       console.log('progressObj', progressObj)
-      let forms = progressObj.record.forms
+      let forms = {}
+      if (Object.keys(progressObj.record).length > 0) {
+        forms = progressObj.record.forms
+      }
       console.log(Object.keys(forms))
       let formsKey = Object.keys(forms)
       this.curChapterData['core'] = []
