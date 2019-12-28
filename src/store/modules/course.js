@@ -137,7 +137,7 @@ const actions = {
   },
   getProgress ({ commit }, currentChapterCode) {
     return httpLogin(config.getProgressApi, { chapter_code: currentChapterCode, state: '' }).then((res) => {
-      if (res.state !== 0) {
+      if (res.record && res.record.forms) {
         commit('updateCurChapterProgress', res.record.forms)
       } else {
         commit('updateCurChapterProgress', '')
