@@ -31,7 +31,8 @@ export default {
   data () {
     return {
       input: '',
-      innerlocked: false
+      innerlocked: false,
+      ischecked: false
     }
   },
   components: {
@@ -74,7 +75,9 @@ export default {
       if (this.input === this.form.sentence) {
         score = 1
         SoundManager.playSnd('correct')
-        soundCtrl.play(this.exit)
+        setTimeout(() => {
+          this.exit()
+        }, 1700)
       } else {
         if (this.input.length === this.form.sentence.length) {
           this.shake($(this.$el))
@@ -91,7 +94,10 @@ export default {
           top: offset.top + (imgWrap.height() - 85) / 2
         }
         this.$parent.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
-        this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+        if (!this.ischecked) {
+          this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+          this.ischecked = true
+        }
       }
     },
     preventUndo (e) {
@@ -105,10 +111,8 @@ export default {
     },
     exit () {
       this.$parent.$emit('setSwiperMousewheel', true)
-      setTimeout(() => {
-        this.innerlocked = false
-        this.$parent.$emit('nextForm')
-      }, 1000)
+      this.innerlocked = false
+      this.$parent.$emit('nextForm')
     },
     next () {
       this.$emit('next')

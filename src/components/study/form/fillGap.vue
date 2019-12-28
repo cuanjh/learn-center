@@ -36,7 +36,7 @@ export default {
     return {
       isShow: false,
       sentence: '',
-      finished: false,
+      ischecked: false,
       words: []
     }
   },
@@ -75,7 +75,6 @@ export default {
           this.$parent.$emit('nextForm')
         })
         this.sentence = result
-        soundCtrl.play(this.exit)
       } else {
         $('#word' + index, this.$el).addClass('wrong')
         this.shake($('#word' + index, this.$el))
@@ -93,7 +92,10 @@ export default {
       }
 
       this.$parent.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
-      this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+      if (!this.ischecked) {
+        this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+        this.ischecked = true
+      }
     },
     exit () {
     }

@@ -2,7 +2,7 @@
   <div :class="['form', form.form_show_type]">
     <div class="img-wrap">
       <next-comp @next="next"/>
-      <img :src="form.image" alt="">
+      <img :src="form.image" alt="" @click="playAudio">
     </div>
     <div class="content">
       <span class="text" v-show="!isShow"></span>
@@ -41,7 +41,8 @@ export default {
     return {
       isShow: false,
       options: [],
-      words: []
+      words: [],
+      ischecked: false
     }
   },
   components: {
@@ -89,7 +90,9 @@ export default {
       if (sentence === answer) {
         score = 1
         SoundManager.playSnd('correct')
-        soundCtrl.play(this.exit)
+        setTimeout(() => {
+          this.exit()
+        }, 1700)
       } else {
         this.shake($(this.$el))
         SoundManager.playSnd('wrong')
@@ -104,7 +107,10 @@ export default {
         top: offset.top + (imgWrap.height() - 85) / 2
       }
       this.$parent.$emit('calCoinStudy', {formCode: this.form.code, score: score, offset: obj})
-      this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+      if (!this.ischecked) {
+        this.$parent.$emit('setStudyFormScore', {formCode: this.form.code, score: score})
+        this.ischecked = true
+      }
     },
     resetAll () {
       this.options.length = 0
@@ -116,11 +122,9 @@ export default {
     },
     exit () {
       this.$parent.$emit('setSwiperMousewheel', true)
-      setTimeout(() => {
-        this.isShow = false
-        this.options.length = 0
-        this.$parent.$emit('nextForm')
-      }, 500)
+      this.isShow = false
+      this.options.length = 0
+      this.$parent.$emit('nextForm')
     },
     next () {
       this.$parent.$emit('nextForm')
@@ -130,6 +134,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.img-wrap {
+  cursor: pointer;
+}
 .make-sentence {
   width: 100%;
   display: flex;
