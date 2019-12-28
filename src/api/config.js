@@ -135,7 +135,8 @@ export default {
   // 学习系统
   qiniuToken: '/qiniu_token/corpus', // 获取上传语料的token
   coinRules: '/study/coin_rules',
-  postProgress: '/chapters_state/progress', // 上传学习结果
+  // postProgress: '/chapters_state/progress', // 上传学习结果
+  postProgress: '/studyv1/records/upload/v2', // 上传学习结果
   coinsIncrease: '/account/coins_increase', // 增加金币
   coinsReduce: '/account/coins_reduce', // 减少金币
   courseTestRanking: '/course_test/ranking', // 返回本课程测试的排行榜数据

@@ -215,7 +215,7 @@ export default {
       forms[params.chapterCode + '-' + key] = value
     })
     console.log(forms)
-    return httpLogin(config.postProgress, { forms: JSON.stringify(forms) })
+    return httpLoginPost(config.postProgress, { forms: JSON.stringify(forms) })
   },
   // 保存获得的金币
   postCoins ({ commit, state }, params) {

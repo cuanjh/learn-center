@@ -325,11 +325,9 @@ export default {
     initData () {
       // 获取课程进度
       this.getProgress({chapter_code: this.chapterCode}).then(progress => {
-        if (progress.state > 0) {
-          this.recordForms = progress.record.forms
-          console.log('recordForms', this.recordForms)
-          this.updateRecordForms(this.recordForms)
-        }
+        this.recordForms = progress.record.forms
+        console.log('recordForms', this.recordForms)
+        this.updateRecordForms(this.recordForms)
         this.getPartForms()
       })
     },
