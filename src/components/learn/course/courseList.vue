@@ -90,7 +90,6 @@ export default {
       getLearnInfo: 'course/getLearnInfo',
       getCourseContent: 'course/getCourseContent',
       getUnlockChapter: 'course/getUnlockChapter',
-      getRecord: 'course/getRecord',
       getProgress: 'course/getProgress',
       getChapterContent: 'course/getChapterContent',
       setCurrentChapter: 'course/setCurrentChapter',
@@ -142,7 +141,6 @@ export default {
       await this.getCourseContent(this.contentUrl)
       await this.getChapterContent()
       await this.setCurrentChapter(this.currentChapterCode)
-      await this.getRecord(this.currentChapterCode + '-A0')
       await this.getProgress(this.currentChapterCode)
       await this.homeworkContent(this.currentChapterCode + '-A8')
       await this.getCourseTestRanking(this.currentChapterCode)

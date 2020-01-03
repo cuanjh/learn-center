@@ -366,7 +366,6 @@ export default {
       getSubCourses: 'getSubCourses', // 新的课程列表接口
       getUnlockChapter: 'course/getUnlockChapter',
       getCourseContent: 'course/getCourseContent',
-      getRecord: 'course/getRecord',
       getProgress: 'getProgress',
       getKidCourseContent: 'getKidCourseContent',
       getOneCourseSub: 'getOneCourseSub',
@@ -539,8 +538,6 @@ export default {
         return item.chapter_code === this.curChapterCode.split('-').slice(2, 5).join('-')
       }).parts
       console.log(curChapterCoreParts)
-
-      await this.getRecord(this.curChapterCode + '-A0')
 
       let progressObj = await this.getProgress({chapter_code: this.curChapterCode})
       console.log('progressObj', progressObj)

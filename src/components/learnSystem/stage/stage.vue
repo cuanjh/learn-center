@@ -498,7 +498,6 @@ export default {
       getUserInfo: 'getUserInfo',
       getLearnInfo: 'course/getLearnInfo',
       getCourseContent: 'course/getCourseContent',
-      getRecord: 'course/getRecord',
       getCatalog: 'getCatalog',
       getChapterContent: 'getChapterContent',
       setModuleComplete: 'setModuleComplete',
@@ -657,7 +656,6 @@ export default {
       await this.getCourseContent(this.contentUrl)
       await this.getChapterContent()
 
-      await this.getRecord(this.currentChapterCode + '-A0')
       await this.getProgress({chapter_code: this.currentChapterCode})
       console.log(5555)
       this.initData()

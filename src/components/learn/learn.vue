@@ -105,7 +105,6 @@ export default {
       getCourseContent: 'course/getCourseContent',
       getProgress: 'course/getProgress',
       getChapterContent: 'course/getChapterContent',
-      getRecord: 'course/getRecord',
       getCourseTestRanking: 'course/getCourseTestRanking',
       homeworkContent: 'course/homeworkContent',
       setCurrentChapter: 'course/setCurrentChapter',
@@ -153,7 +152,6 @@ export default {
         // $('body,html').animate({ scrollTop: top }, 100, 'linear')
       }
 
-      await that.getRecord(that.currentChapterCode + '-A0')
       await that.getProgress(that.currentChapterCode)
       await that.getCourseTestRanking(that.currentChapterCode)
       await that.homeworkContent(that.currentChapterCode + '-A8')

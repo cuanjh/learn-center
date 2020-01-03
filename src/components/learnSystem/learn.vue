@@ -74,7 +74,6 @@ export default {
       getUserInfo: 'user/getUserInfo',
       getUnlockChapter: 'course/getUnlockChapter',
       getCourseContent: 'course/getCourseContent',
-      getRecord: 'course/getRecord',
       getProgress: 'course/getProgress'
     }),
     ...mapMutations({
@@ -92,7 +91,6 @@ export default {
       await this.getCourseContent(this.contentUrl)
       await this.getChapterContent()
 
-      await this.getRecord(this.currentChapterCode + '-A0')
       await this.getProgress(this.currentChapterCode)
     }
   }
