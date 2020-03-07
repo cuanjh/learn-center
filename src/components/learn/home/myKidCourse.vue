@@ -63,6 +63,7 @@ export default {
   },
   methods: {
     goCourseList () {
+      window.zhuge.track('学习系统-首页-开始学习')
       this.$router.push({path: '/app/kid-course-list/' + this.kidCourseBaseInfo.code})
     }
   }

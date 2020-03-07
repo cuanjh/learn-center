@@ -75,6 +75,7 @@ export default {
     ]),
     // 点击电台主播
     loadRecommendTeachers () {
+      window.zhuge.track('学习系统-map-点击电台主播')
       window._czc.push(['_trackEvent', '学习系统', '首页', '电台主播', '', '.wal-partners'])
       this.isShowEndangerPanel = false
       this.getAllRadioTeachers().then(res => {
@@ -82,6 +83,7 @@ export default {
       })
     },
     loadCourses () {
+      window.zhuge.track('学习系统-map-点击课程分布')
       window._czc.push(['_trackEvent', '学习系统', '首页', '课程分布', '', '.wal-courses'])
       this.isShowEndangerPanel = false
       this.$parent.$refs.map.$emit('loadCourseLangs', this.courseLangsList)
@@ -91,11 +93,13 @@ export default {
       this.isShowSearch = false
     },
     search () {
+      window.zhuge.track('学习系统-map-语种搜索')
       window._czc.push(['_trackEvent', '学习系统', '首页', '语种搜索', '', '.search'])
       let key = this.searchKey
       Bus.$emit('mapSearch', key)
     },
     selectEndanger (item) {
+      window.zhuge.track('学习系统-map-' + '濒危语种：' + item.text)
       window._czc.push(['_trackEvent', '学习系统', '首页', '濒危语种：' + item.text, '', '.endangered'])
       this.activeEndanger = item.val
       this.getEndangeredMap({degree: this.activeEndanger}).then(res => {

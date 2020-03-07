@@ -109,6 +109,7 @@ export default {
       await this.userEditPwd({phonenumber: this.$route.params.phone, code: this.phoneCode, password: this.pwd2}).then((res) => {
         console.log('修改密码成功', res)
         if (res.success) {
+          window.zhuge.track('登录-找回密码-重置手机密码')
           this.$router.push({path: '/auth/login'})
         } else {
           this.errText = errCode[res.code]

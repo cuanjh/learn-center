@@ -53,6 +53,7 @@ export default {
         password: this.pwd1
       }).then(res => {
         if (res.success) {
+          window.zhuge.track('登录-找回密码-重置邮箱密码')
           this.$router.push({path: '/auth/login'})
         } else {
           this.loading = false

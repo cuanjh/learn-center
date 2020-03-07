@@ -417,6 +417,7 @@ export default {
         return false
       }
 
+      window.zhuge.track('学习系统-首页-开始学习')
       window._czc.push(['_trackEvent', '学习系统', '首页', '开始学习', '', '.start-learn'])
       if (this.curChapterCode === this.learnInfo.current_chapter_code) {
         console.log(this.curChapterCode, this.curCourseObj['courseCore'])

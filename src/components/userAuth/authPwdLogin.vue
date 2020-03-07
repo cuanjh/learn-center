@@ -193,6 +193,7 @@ export default {
         if (_this.type === 1) {
           desc = '手机密码登录'
         }
+        window.zhuge.track('登录-' + desc)
         window._czc.push(['_trackEvent', '学习系统', '登录', desc, '', 'button'])
         _this.$router.push({path: '/app/index'})
       } else {

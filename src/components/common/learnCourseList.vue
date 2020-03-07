@@ -60,6 +60,7 @@ export default {
       console.log(course)
       let courseCode = course.code
       let courseType = course.course_type
+      window.zhuge.track('学习系统-选择订阅课程-' + course.name['zh-cn'])
       localStorage.removeItem('kidTabActive')
       if (courseType === 3) {
         localStorage.setItem('isKid', '1')

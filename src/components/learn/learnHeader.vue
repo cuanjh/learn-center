@@ -177,6 +177,7 @@ export default {
       this.showExitState = false
     },
     jumpSystem () {
+      window.zhuge.track('学习系统-点击退出')
       window._czc.push(['_trackEvent', '学习系统', 'header', '退出', '', '.user-login-out'])
       Bus.$emit('radioPause')
       this.logout().then((res) => {
@@ -208,6 +209,7 @@ export default {
         Bus.$emit('showGoLoginBox')
         return false
       }
+      window.zhuge.track('学习系统-点击跳转到会员页面')
       window._czc.push(['_trackEvent', '学习系统', 'header', '跳转到会员', '', 'VIP'])
       // this.$router.push({path: '/app/vip-home'})
       let routeUrl = this.$router.resolve({

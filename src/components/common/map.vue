@@ -234,7 +234,7 @@ export default {
         }
 
         let obj = lanList.find((x) => {
-          return x.lan_code === lang.lang_code
+          return x.code === lang.lang_code + '-Basic'
         })
 
         if (obj) {
@@ -432,6 +432,7 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
           '</p>' +
         '</div>'
     } else if (that._type === 'course') {
+      window.zhuge.track('学习系统-map-点击课程分布-' + that._data.name)
       text = '了解详情'
       sContent =
         '<div>' +
@@ -442,7 +443,7 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
             '</span>' +
           '</p>' +
           '<p style="font-size: 12px; font-weight: 500; color: #2A9FE4; margin-left: 6px; margin-top: 4px; text-decoration: underline;">' +
-            '<a href="./book-details/' + that._data.lan_code + '-Basic">' +
+            '<a href="./book-details/' + that._data.code + '">' +
               text +
             '</a>' +
           '</p>' +

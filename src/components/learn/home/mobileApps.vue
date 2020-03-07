@@ -25,6 +25,7 @@
 export default {
   methods: {
     learnMore () {
+      window.zhuge.track('学习系统-首页-点击了解更多')
       window._czc.push(['_trackEvent', '学习系统', '首页', 'app了解更多', '', '.more'])
       let routeData = this.$router.resolve({path: '/app/introduce-app'})
       window.open(routeData.href, '_blank')

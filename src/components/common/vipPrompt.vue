@@ -43,6 +43,9 @@ export default {
       if (this.isVip === 1) {
         desc = '升级会员'
       }
+      window.zhuge.track('学习系统-点击进入会员中心', {
+        name: desc
+      })
       window._czc.push(['_trackEvent', '学习系统', 'VIP banner', desc, '', '.vip-btn'])
       // this.$router.push({ path: '/app/vip-home' })
       let routeUrl = this.$router.resolve({

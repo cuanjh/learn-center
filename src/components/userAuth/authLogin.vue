@@ -257,6 +257,7 @@ export default {
       this.sendCode({phonenumber: this.phone, codeLen: '4'}).then(res => {
         console.log('发送验证码', res)
         if (res.success) {
+          window.zhuge.track('登录-点击获取验证码')
           $('input[type="text"]').css('border-color', '#E6EBEE')
           this.errText = ''
           this.timer = setInterval(() => {
@@ -288,6 +289,7 @@ export default {
       // 快速登录，有手机号就正常登录没有就相当于注册登录
       await _this.userLogin({phonenumber: _this.phone, code: _this.phoneCode})
       if (_this.loginInfo.success) {
+        window.zhuge.track('登录-手机验证码登录')
         $('input[type="text"]').css('border-color', '#E6EBEE')
         this.errText = ''
         // 先把localStorage里面的用户的信息和cookie里面的用户信息都清除了
@@ -309,6 +311,7 @@ export default {
     weixinGoLogin () {
       this.delCommonCookie()
       this.userSnsLogin({ty: 'wx'}).then((res) => {
+        window.zhuge.track('登录-微信')
         window._czc.push(['_trackEvent', '学习系统', '登录', '微信第三方登录', '', '.weixin'])
         console.log('res', res)
         window.location.href = res
@@ -317,6 +320,7 @@ export default {
     weiboGoLogin () {
       this.delCommonCookie()
       this.userSnsLogin({ty: 'wb'}).then((res) => {
+        window.zhuge.track('登录-微博')
         window._czc.push(['_trackEvent', '学习系统', '登录', '微博第三方登录', '', '.weibo'])
         console.log('res', res)
         window.location.href = res
@@ -325,6 +329,7 @@ export default {
     qqGoLogin () {
       this.delCommonCookie()
       this.userSnsLogin({ty: 'qq'}).then((res) => {
+        window.zhuge.track('登录-qq')
         window._czc.push(['_trackEvent', '学习系统', '登录', 'qq第三方登录', '', '.qq'])
         console.log('res', res)
         window.location.href = res
