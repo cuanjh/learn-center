@@ -365,7 +365,7 @@ export default {
   .play {
     position: absolute;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     width: 50px;
     height: 50px;
@@ -374,10 +374,10 @@ export default {
     z-index: 1;
     transition: transform .5s ease-in;
     cursor: pointer;
+    padding: 0 10px;
     span {
       width: 3px;
       height: 8px;
-      margin: 0 1px;
       background: #0581D1;
       border-radius: 4px;
       &:nth-child(2) {

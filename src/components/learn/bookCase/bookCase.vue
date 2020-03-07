@@ -213,6 +213,7 @@ export default {
     },
     search () {
       this.courseLangs = this.defaultCourseLangs.filter((item) => {
+        console.log(item)
         return item.letter.toUpperCase() === this.searchVal.toUpperCase() || item.pinyin.indexOf(this.searchVal) > -1 || item.name.indexOf(this.searchVal) > -1 || item.lan_code.toUpperCase() === this.searchVal.toUpperCase()
       })
     }
