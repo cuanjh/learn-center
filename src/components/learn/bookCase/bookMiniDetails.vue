@@ -255,6 +255,9 @@ export default {
       this.getOneCourseSub({course_code: this.miniCode}).then(res => {
         console.log('状态返回===》', res)
         if (res.success) {
+          window.zhuge.track('学习系统-点击订阅课程', {
+            code: this.miniCode
+          })
           this.btnState = '1'
           this.btnDesc = '开始学习'
         }

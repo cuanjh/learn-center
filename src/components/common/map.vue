@@ -432,7 +432,9 @@ ComplexCustomOverlay.prototype.initialize = function (map) {
           '</p>' +
         '</div>'
     } else if (that._type === 'course') {
-      window.zhuge.track('学习系统-map-点击课程分布-' + that._data.name)
+      window.zhuge.track('学习系统-map-点击课程分布', {
+        name: that._data.name
+      })
       text = '了解详情'
       sContent =
         '<div>' +

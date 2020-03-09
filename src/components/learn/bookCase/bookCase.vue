@@ -204,11 +204,17 @@ export default {
     routerGo (item) {
       console.log('item', item)
       let langCode = item['code']
+      window.zhuge.track('学习系统-书架', {
+        name: item.name
+      })
       // this.$router.push({path: '/app/book-details/' + langCode + '-Basic'})
       this.$router.push({path: '/app/book-details/' + langCode})
     },
     routerGoKid (item) {
       let langCode = item['code']
+      window.zhuge.track('学习系统-书架', {
+        name: item.name + '-Mini'
+      })
       this.$router.push({path: '/app/book-mini-details/' + langCode})
     },
     search () {

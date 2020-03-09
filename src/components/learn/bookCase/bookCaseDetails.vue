@@ -367,6 +367,9 @@ export default {
       let arr = this.courseCode.split('-')
       let courseCode = (arr.length > 1) ? this.courseCode : this.courseCode.toUpperCase() + '-Basic'
       this.postPurchaseCourse({ code: courseCode }).then((res) => {
+        window.zhuge.track('学习系统-点击订阅课程', {
+          code: courseCode
+        })
         this.refreshSubscribeCourses()
       })
     },
