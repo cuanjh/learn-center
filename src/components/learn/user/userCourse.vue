@@ -214,6 +214,7 @@ export default {
     })
   },
   mounted () {
+    window.zhuge.track('学习系统-用户中心-课程')
     this.$parent.$emit('activeNavUserItem', 'course')
     this.$parent.$emit('navItem', 'user')
     this.getLearnCourses()

@@ -86,6 +86,7 @@ export default {
     }
   },
   mounted () {
+    window.zhuge.track('学习系统-用户中心-钱包')
     this.$parent.$emit('activeNavUserItem', 'wallet')
     this.$parent.$emit('navItem', 'user')
     let ui = JSON.parse(sessionStorage.getItem('userInfo'))
@@ -139,6 +140,7 @@ export default {
         return false
       }
       console.log('购买的金币明细', productItem)
+      window.zhuge.track('学习系统-用户中心-钱包-购买金币', productItem)
       Bus.$emit('showBuyMoneyBox', productItem, this.type)
     },
     // 收支明细样式

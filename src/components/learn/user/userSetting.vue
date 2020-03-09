@@ -219,6 +219,7 @@ export default {
     })
   },
   mounted () {
+    window.zhuge.track('学习系统-用户中心-设置')
     this.$parent.$emit('activeNavUserItem', 'setting')
     this.$parent.$emit('navItem', 'user')
     // let ui = JSON.parse(sessionStorage.getItem('userInfo'))

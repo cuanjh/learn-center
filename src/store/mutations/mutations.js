@@ -42,7 +42,14 @@ export default {
   },
   // 更新用户信息
   updateUserInfo (state, data) {
-    window.zhuge.identify(data.info.user_id, data.info)
+    let obj = {
+      name: data.info.nickname,
+      avatar: data.info.photo,
+      talkmate_id: data.info.talkmate_id,
+      email: data.info.email,
+      gender: data.info.gender
+    }
+    window.zhuge.identify(data.info.user_id, obj)
     state.userInfo = data.info
     if (data.info.member_info.member_type === 1) {
       state.isVip = true

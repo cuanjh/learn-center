@@ -54,6 +54,7 @@ export default {
     DocItem
   },
   mounted () {
+    window.zhuge.track('学习系统-用户中心-档案')
     this.$parent.$emit('activeNavUserItem', 'doc')
     this.$parent.$emit('navItem', 'user')
 

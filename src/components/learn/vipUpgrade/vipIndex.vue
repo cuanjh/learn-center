@@ -385,6 +385,7 @@ export default {
       }
       let OBJ = item
       let jsonStr = JSON.stringify(OBJ)
+      window.zhuge.track('学习系统-会员中心-选择会员卡', item)
       localStorage.setItem('userBuy', jsonStr)
       this.$router.push({
         path: '/app/vip-user-buy'
@@ -410,6 +411,9 @@ export default {
         console.log('激活码返回', res)
         if (res.success) {
           // this.alertConfirm(res.member_info.money)
+          window.zhuge.track('学习系统-会员中心-激活码激活会员', {
+            activeCode: activeCode
+          })
           let obj = {
             className: 'okIcon',
             description: '激活码激活成功',
