@@ -944,6 +944,14 @@ export default {
     goKidSongs (item) {
       console.log('儿歌详情每一个===>', item)
       if (parseInt(this.isVip) === 1 || (parseInt(this.isVip) !== 1 && (this.hasPurchased || item.code.toLowerCase().indexOf('level1-unit1-chapter1') > -1))) {
+        let arr = item.code.split('-')
+        window.zhuge.track('学习系统学习数据', {
+          lang: arr[0] + '-' + arr[1],
+          level: arr[2],
+          unit: arr[3],
+          chapter: arr[4],
+          part: 'song'
+        })
         Bus.$emit('showSongsModal', item.code)
         this.showSongs = true
         $('body').css('overflow', 'hidden')

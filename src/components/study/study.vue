@@ -476,6 +476,13 @@ export default {
     },
     finishStudy () {
       let arr = this.id.split('-')
+      window.zhuge.track('学习系统学习数据', {
+        lang: arr[0] + '-' + arr[1],
+        level: arr[2],
+        unit: arr[3],
+        chapter: arr[4],
+        part: arr[5]
+      })
       let part = arr.pop()
       // 上报学习进度得分
       this.postProgress({chapterCode: this.chapterCode, recordForms: this.recordForms})

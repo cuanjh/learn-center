@@ -99,7 +99,9 @@ export default {
       Bus.$emit('mapSearch', key)
     },
     selectEndanger (item) {
-      window.zhuge.track('学习系统-map-' + '濒危语种：' + item.text)
+      window.zhuge.track('学习系统-map-' + '濒危语种', {
+        group: item.text
+      })
       window._czc.push(['_trackEvent', '学习系统', '首页', '濒危语种：' + item.text, '', '.endangered'])
       this.activeEndanger = item.val
       this.getEndangeredMap({degree: this.activeEndanger}).then(res => {
