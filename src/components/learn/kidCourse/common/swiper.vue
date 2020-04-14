@@ -6,7 +6,7 @@
           v-for="(item, index) in list"
           :key="'current-swiper-' + item.code"
           :id="chapterCode + '-' + item.code">
-          <img class="picture" :src="item.image | urlFix('imageView2/0/w/2001/h/900/format/jpg')" alt="">
+          <img class="picture" :src="item.image.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/') | urlFix('imageView2/0/w/2001/h/900/format/jpg')" alt="">
           <div class="slide-content">
             <div class="content">
               <i @click="playSourceSound(index)"></i>
