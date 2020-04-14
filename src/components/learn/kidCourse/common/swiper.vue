@@ -395,7 +395,7 @@ export default {
 
       if (!this.isPlay) {
         let item = this.list[index]
-        this.audio.src = item.sound
+        this.audio.src = item.sound.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
         this.audio.oncanplay = () => {
           this.audio.play()
           $('.current-swiper .swiper-slide-active').find('.content i').addClass('playing')
