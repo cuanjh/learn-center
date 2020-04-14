@@ -216,8 +216,8 @@ export default {
       data.forEach(item => {
         let obj = item
         obj['formatContent'] = this.formatContent(obj.content || obj.word)
-        this.preload(item.sound)
-        this.preload(item.image)
+        this.preload(item.sound.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/'))
+        this.preload(item.image.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/'))
         this.list.push(obj)
       })
       console.log(this.list)
