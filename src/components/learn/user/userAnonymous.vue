@@ -157,10 +157,8 @@ export default {
     }),
     ...mapActions({
       getUserInfo: 'getUserInfo', // 获取用户信息
-      // sendCode: 'user/sendCode',
       userExistsPhone: 'userExistsPhone', // 验证手机号是否存在
       userExistsEmail: 'userExistsEmail', // 验证邮箱是否存在
-      // sendCode: 'getSendCode', // 发送验证码
       // resetAnonymous: 'user/resetAnonymous',
       anonymousUserBindEmail: 'anonymousUserBindEmail'
     }),

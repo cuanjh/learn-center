@@ -160,6 +160,7 @@ export default {
   umUserPwdLoginApi: '/umv1/user/login/pwd', // 密码登录接口
   umUserEditPwdApi: '/umv1/user/edit/pwd', // 用户信息里面修改密码
   umSendCodeApi: '/umv1/sms/send', // 发送验证码接口
+  umSendCodeV2: '/umv1/sms/send/v2', // 增加人机验证
   umUserInfoApi: '/umv1/user/info', // 获取用户信息接口
   umUpdateUserInfoApi: '/umv1/user/edit/info', // 修改用户信息
   umUserBindPhoneApi: '/umv1/user/sns/bind/phone', // 绑定手机号码

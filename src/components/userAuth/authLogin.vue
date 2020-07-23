@@ -20,7 +20,19 @@
                   @blur="phoneBlur"
                   @keyup.enter="getCode">
         </div>
-        <div class="item phone-code">
+        <div class="item verify-code" v-show="false">
+          <input  id="imgCode"
+                  type="text"
+                  placeholder="输入验证码"
+                  v-model="imgCode"
+                  @keyup.enter="goLogin">
+          <img :src="imgCodeUrl" v-if="imgCodeUrl" alt="图片验证码" @click="getCodeUrl">
+        </div>
+        <div id="__nc" class="ncContainer" v-if="!isNC">
+          <div id="nc"></div>
+        </div>
+        <!-- <div id="ncDom" class="nc-container" v-show="false"></div> -->
+        <div class="item phone-code" v-else>
           <input  id="phoneCode"
                   type="text"
                   readonly="readonly"
@@ -30,14 +42,6 @@
                   v-model="phoneCode"
                   @keyup.enter="goLogin">
           <button v-bind:disabled="!isGetCode" @click="getCode">{{ time === 60 ? message :time+'s' }}</button>
-        </div>
-        <div class="item verify-code" v-show="false">
-          <input  id="imgCode"
-                  type="text"
-                  placeholder="输入验证码"
-                  v-model="imgCode"
-                  @keyup.enter="goLogin">
-          <img :src="imgCodeUrl" alt="图片验证码" @click="getCodeUrl">
         </div>
       </div>
       <div class="err-tip"><p v-show="errText">{{errText}}</p></div>
@@ -143,6 +147,7 @@ export default {
     return {
       message: '获取',
       headerTitle: '',
+      isNC: false,
       // shoeAreaCode: false, // 显示区域编码
       goPhone: true, // true 手机号 false 邮箱
       phone: '',
@@ -153,13 +158,19 @@ export default {
       imgCodeUrl: '', // 图片验证码
       time: 60,
       timer: null, // 定时器
-      type: 0 // 0验证码登录 1手机密码登录 2邮箱登录
+      type: 0, // 0验证码登录 1手机密码登录 2邮箱登录
+      aliSessionId: '',
+      aliToken: '',
+      aliSign: '',
+      aliScene: 'nc_message'
     }
   },
   components: {
     AuthPwdLogin
   },
   mounted () {
+    // 初始化滑块认证
+    this.ncCaptchaVerify()
     // this.getCodeUrl()
     let userId = Cookie.getCookie('user_id')
     console.log('userId', userId)
@@ -190,7 +201,7 @@ export default {
       getCaptchaUrl: 'user/getCaptchaUrl',
       login: 'user/login',
       userLogin: 'userLogin',
-      sendCode: 'getSendCode',
+      sendCode: 'getSendCodeV2',
       userSnsLogin: 'userSnsLogin',
       getUserInfo: 'getUserInfo'
     }),
@@ -254,21 +265,29 @@ export default {
         return false
       }
       // 发送验证码
-      this.sendCode({phonenumber: this.phone, codeLen: '4'}).then(res => {
+      this.sendCode({phonenumber: this.phone, codeLen: '4', appName: 'Talkmate', aliSessionId: this.aliSessionId, aliToken: this.aliToken, aliSign: this.aliSign, aliScene: this.aliScene}).then(res => {
         console.log('发送验证码', res)
         if (res.success) {
           window.zhuge.track('登录-点击获取验证码')
           $('input[type="text"]').css('border-color', '#E6EBEE')
-          this.errText = ''
-          this.timer = setInterval(() => {
-            --this.time
-            if (this.time === 0) {
-              this.time = 60
-              this.message = '重新获取'
-              clearInterval(this.timer)
-              this.tim = null
-            }
-          }, 1000)
+          if (res.data.Code === 100) {
+            this.errText = ''
+            this.timer = setInterval(() => {
+              --this.time
+              if (this.time === 0) {
+                this.time = 60
+                this.message = '重新获取'
+                clearInterval(this.timer)
+                this.tim = null
+              }
+            }, 1000)
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '验证不通过'
+            })
+            return false
+          }
         } else {
           this.errText = errCode[res.code]
         }
@@ -357,6 +376,102 @@ export default {
       Cookie.setCookieAuto('verify', info.verify)
       Cookie.setCookie('is_anonymous', info.is_anonymous)
       Cookie.setCookie('hasPhone', info.hasPhone)
+    },
+    ncCaptchaVerify () {
+      let ncToken = ['FFFF0N000000000094A1', (new Date()).getTime(), Math.random()].join(':')
+      // let NCOpt = {
+      //   // 声明滑动验证需要渲染的目标元素ID。
+      //   renderTo: '#ncDom',
+      //   // 应用类型标识。它和使用场景标识（scene字段）一起决定了滑动验证的业务场景与后端对应使用的策略模型。您可以在人机验证控制台的配置管理页签找到对应的appkey字段值，请务必正确填写。
+      //   appkey: 'FFFF0N000000000094A1',
+      //   // 使用场景标识。它和应用类型标识（appkey字段）一起决定了滑动验证的业务场景与后端对应使用的策略模型。您可以在人机验证控制台的配置管理页签找到对应的scene值，请务必正确填写。
+      //   scene: 'nc_message',
+      //   // 滑动验证码的主键，请勿将该字段定义为固定值。确保每个用户每次打开页面时，其token值都是不同的。系统默认的格式为：'您的appkey'+'时间戳'+'随机数'。
+      //   token: ncToken,
+      //   // 滑动条的宽度。
+      //   customWidth: 300,
+      //   // 业务键字段，可为空。为便于线上问题的排查，建议您按照线上问题定位文档中推荐的方法配置该字段值。
+      //   trans: { key1: 'code0' },
+      //   // 语言。PC端Web页面场景默认支持18国语言，详细配置方法请参见自定义文案与多语言文档。
+      //   language: 'cn',
+      //   // 是否启用。一般情况，保持默认值（true）即可。
+      //   isEnabled: true,
+      //   // 内部网络请求的超时时间。一般情况建议保持默认值（3000ms）。
+      //   timeout: 3000,
+      //   // 允许服务器超时重复次数，默认5次。超过重复次数后将触发报错。
+      //   times: 5,
+      //   // 前端滑动验证通过时会触发该回调参数。您可以在该回调参数中将请求标识（token）、会话ID（sessionid）、签名串（sig）字段记录下来，随业务请求一同发送至您的服务端调用验签。
+      //   callback: (data) => {
+      //     window.console && console.log(ncToken)
+      //     window.console && console.log(data.csessionid)
+      //     window.console && console.log(data.sig)
+      //   }
+      // }
+      /* eslint-disable */
+      // var nc = new noCaptcha(NCOpt)
+      /* eslint-enable */
+      // 用于自定义文案。详细配置方法请参见自定义文案与多语言文档。
+      // nc.upLang('cn', {
+      //   _startTEXT: '请按住滑块，拖动到最右边',
+      //   _yesTEXT: '验证通过',
+      //   _error300: '哎呀，出错了，点击<a href="javascript:__nc.reset()">刷新</a>再来一次',
+      //   _errorNetwork: '网络不给力，请<a href="javascript:__nc.reset()">点击刷新</a>'
+      // })
+
+      /* eslint-disable */
+      var nc1 = NoCaptcha.init({
+        // 声明滑动验证需要渲染的目标元素ID。
+        renderTo: '#nc',
+        // 应用类型标识。它和使用场景标识（scene字段）一起决定了滑动验证的业务场景与后端对应使用的策略模型。您可以在人机验证控制台的配置管理页签找到对应的appkey字段值，请务必正确填写。
+        appkey: 'FFFF0N000000000094A1',
+        // 使用场景标识。它和应用类型标识（appkey字段）一起决定了滑动验证的业务场景与后端对应使用的策略模型。您可以在人机验证控制台的配置管理页签找到对应的scene值，请务必正确填写。
+        scene: 'nc_message',
+        // 滑动验证码的主键，请勿将该字段定义为固定值。确保每个用户每次打开页面时，其token值都是不同的。系统默认的格式为：'您的appkey'+'时间戳'+'随机数'。
+        token: ncToken,
+        // 滑动条的宽度。
+        // customWidth: 300,
+        // 业务键字段，可为空。为便于线上问题的排查，建议您按照线上问题定位文档中推荐的方法配置该字段值。
+        trans: { key1: 'code0' },
+        // 语言。PC端Web页面场景默认支持18国语言，详细配置方法请参见自定义文案与多语言文档。
+        language: 'cn',
+        // 是否启用。一般情况，保持默认值（true）即可。
+        // isEnabled: true,
+        // 内部网络请求的超时时间。一般情况建议保持默认值（3000ms）。
+        timeout: 3000,
+        // 允许服务器超时重复次数，默认5次。超过重复次数后将触发报错。
+        retryTimes: 5,
+        // 验证通过后，验证码组件是否自动隐藏，默认不隐藏（false）。
+        bannerHidden: false,
+	      // 是否默认不渲染，默认值false。当设置为true时，不自动渲染，需要自行调用show方法进行渲染。
+        initHidden: false,
+        // 前端滑动验证通过时会触发该回调参数。您可以在该回调参数中将请求标识（token）、会话ID（sessionid）、签名串（sig）字段记录下来，随业务请求一同发送至您的服务端调用验签。
+        callback: (data) => {
+          window.console && console.log(ncToken)
+          window.console && console.log(data.csessionid)
+          window.console && console.log(data.sig)
+          this.aliSessionId = data.csessionid
+          this.aliToken = ncToken
+          this.aliSign = data.sig
+          setTimeout(() => {
+            this.isNC = true
+          }, 1000)
+        }
+      })
+      NoCaptcha.setEnabled(true)
+      // 请务必在此处调用一次reset()方法。
+      nc1.reset(); 
+      // 用于配置滑动验证的自定义文案。详细信息，请参见自定义文案与多语言文档。
+      NoCaptcha.upLang('cn', {
+        //加载状态提示。
+        'LOADING':"加载中...", 
+        //等待滑动状态提示。
+       'SLIDER_LABEL': "请按住滑块，拖动到最右边", 
+        //验证通过状态提示。
+        'CHECK_Y':"验证通过", 
+        //验证失败触发拦截状态提示。
+        'ERROR_TITLE':"非常抱歉，这出错了..." 
+      });
+      /* eslint-enable */
     }
   }
 }
@@ -432,6 +547,7 @@ html,body{-webkit-text-size-adjust:none;}
     .item {
       overflow: hidden;
       position: relative;
+      margin-top: 16px;
       .areacode {
         position: absolute;
         cursor: pointer;
@@ -453,9 +569,6 @@ html,body{-webkit-text-size-adjust:none;}
     }
     .item:nth-child(1) {
       margin-top: 20px;
-    }
-    .item:nth-child(2) {
-      margin-top: 10px;
     }
   }
   .phone-resigter .item input {
@@ -729,4 +842,115 @@ html,body{-webkit-text-size-adjust:none;}
   .phone-resigter .item input:focus {
     border-color: #2A9FE4FF;
   }
+</style>
+
+<style>
+/* .nc-container {
+  margin-top: 16px;
+  font-size: 13px;
+}
+.nc_scale {
+  height: 44px;
+  border-radius: 84px;
+}
+
+.nc-container .nc_scale .nc_bg {
+  width: 0;
+  border-top-left-radius: 84px;
+  border-bottom-left-radius: 84px;
+  left: 25px;
+}
+
+.nc-container .nc_scale span {
+  width: 50px;
+  height: 50px;
+  line-height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #a7c2d5;
+  box-shadow: 4px 0px 12px 0px rgba(0,0,0,0.12);
+  top: -3px;
+}
+
+.nc-container .nc_scale .scale_text {
+  font-size: 13px;
+}
+
+.nc-container .scale_text.scale_text span[data-nc-lang="_startTEXT"] {
+  border-radius: 84px;
+  box-shadow: 0px 1px 9px 0px rgba(0,0,0,0.07) inset;
+}
+
+.nc-container .nc_scale .btn_ok {
+  border-color: #FFFFFF;
+  line-height: 45px;
+  font-size: 45px;
+}
+
+.nc-container .nc_scale .nc-align-center.scale_text2 {
+  background: #76c61d;
+  border-radius: 84px;
+}
+
+.nc-container .scale_text.scale_text.slidetounlock span[data-nc-lang="_yesTEXT"] {
+  box-shadow: none;
+} */
+
+.ncContainer {
+  width: 100% !important;
+  margin-top: 16px !important;
+  height: 44px !important;
+}
+
+._nc {
+  font-size: 13px !important;
+}
+._nc .stage1 {
+  height: 44px !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+._nc .stage1 .slider {
+  height: 44px !important;
+  left: 0 !important;
+  right: 0 !important;
+  border-radius: 84px !important;
+}
+
+._nc .stage1 .button {
+  border-radius: 50% !important;
+  width: 50px !important;
+  height: 50px !important;
+  box-shadow: 4px 0px 12px 0px rgba(219, 166, 166, 0.12) !important;
+  top: -3px !important;
+  left: -2px;
+}
+
+._nc .icon-slide-arrow {
+  font-size: 26px !important;
+  left: 13px !important;
+  color: #a7c2d5 !important;
+}
+
+._nc .stage1 .track div, ._nc .stage1 .label {
+  height: 44px !important;
+  line-height: 44px !important;
+  font-size: 13px !important;
+}
+
+._nc .stage1 .track {
+  border-top-left-radius: 84px !important;
+  border-bottom-left-radius: 84px !important;
+}
+
+._nc .icon-ok {
+  font-size: 45px !important;
+}
+
+._nc .stage1 .icon.yes {
+  background-position: -40px 0 !important;
+  margin-top: 1px !important;
+  margin-left: -7px !important;
+}
 </style>

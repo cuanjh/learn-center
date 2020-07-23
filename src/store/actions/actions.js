@@ -35,6 +35,9 @@ export default {
   getSendCode ({commit}, params) {
     return httpNoLogin(config.umSendCodeApi, params)
   },
+  getSendCodeV2 ({commit}, params) {
+    return httpNoLogin(config.umSendCodeV2, params)
+  },
   // 获取用户信息
   getUserInfo ({commit}) {
     return httpLogin(config.umUserInfoApi).then((res) => {

@@ -268,8 +268,6 @@ export default {
     }),
     ...mapActions({
       getUserInfo: 'getUserInfo', // 获取用户信息
-      // sendCode: 'user/sendCode',
-      sendCode: 'getSendCode', // 发送验证码
       userExistsPhone: 'userExistsPhone', // 验证手机号是否存在
       bindEmail: 'user/bindEmail',
       userExistsEmail: 'userExistsEmail', // 验证邮箱是否存在
