@@ -443,7 +443,9 @@ const mutations = {
     state.levelDetail = levelDetail.slice(0, state.courseBaseInfo.level_num)
     let curChapterCode = state.learnInfo.current_chapter_code
     state.curLevel = curChapterCode.split('-')[2]
+    // console.log('data.info.courseBaseInfo', data.info.courseBaseInfo)
     state.assetsUrl = data.info.courseBaseInfo.content_config.assets_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
+    state.assetsUrl = 'https://course-assets1.talkmate.com/'
     Cookie.setCookie('assetsApi', state.assetsUrl)
     state.contentUrl = state.courseBaseInfo.content_config.content_url.replace('http://course-assets.talkmate.com/', 'https://course-assets1.talkmate.com/')
     state.currentChapterCode = curChapterCode
