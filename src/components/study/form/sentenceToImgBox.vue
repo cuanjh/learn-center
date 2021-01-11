@@ -44,8 +44,10 @@ export default {
   },
   created () {
     this.$on('init', () => {
-      this.isShow = true
+      this.curForm = this.form.data[0]
+      this.curIndex = 0
       this.pos = common.randomItems(['0', '50%'])
+      this.isShow = true
       this.$refs['trumpet'].$emit('init', this.form.data[0])
     })
     this.$on('break', () => {
@@ -71,6 +73,7 @@ export default {
             return
           }
           this.pos = common.randomItems(['0', '50%'])
+          console.log(this.curIndex)
           this.curForm = this.form.data[this.curIndex]
           this.$refs['trumpet'].$emit('init', this.curForm)
           $('#form' + item.form_id).removeClass('correct')
