@@ -27,6 +27,8 @@ import TrumpetComp from '../common/trumpet'
 import common from '../../../plugins/common'
 import SoundManager from '../../../plugins/soundManager'
 
+import minx from './minx'
+
 export default {
   props: ['form'],
   data () {
@@ -50,6 +52,7 @@ export default {
       this.resetData()
     })
   },
+  mixins: [minx.shake],
   methods: {
     playAudio () {
       this.$refs['trumpet'].play(true)
