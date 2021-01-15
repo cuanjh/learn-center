@@ -145,7 +145,7 @@ export default {
       getUserInfo: 'getUserInfo'
     }),
     qnUrl (url) {
-      return url.split('?')[0] + '?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1'
+      return url.split('?')[0].replace('http://course-assets.talkmate.com', 'https://course-assets1.talkmate.com') + '?imageView2/2/w/120/h/120/format/jpg/q/100!/interlace/1'
     },
     showDetails (type, index) {
       if (type === 'hot') {
